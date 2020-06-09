@@ -1,0 +1,271 @@
+% !TEX root = ../CategoricalCoDesign.tex
+\section{Thinking about tradeoffs}
+So far, the discussion has been purely qualitative: While we discussed how
+categories can describe the way that one resource can be turned into another,
+this kind of modelling did not allow for quantitative statements. For example, it
+is good to know that we can obtain motion from electric power, but, how fast can
+we go with a certain amount of power?
+
+To achieve a quantitative theory, we need to introduce two aspects.
+First, we need to specify various degrees of resources and functionality.
+For this, we will use the idea of partial orders.
+Second, we need to describe how these various degrees map to each other.
+For this, it is important to describe monotone maps.
+
+\AC{ Why do we need the posets? make a concrete example. E.g. We can
+have two resources, "time" and "money" that we care about when we prepare the cakes.
+
+Introduce pareto fronts (antichain, upper sets, lower sets) with relation to
+a specific example. }
+\subsection{Partially ordered sets}
+
+We will assume that functionality and resources
+are \emph{partially-ordered sets} (or \emph{posets}).%
+
+
+\gray{
+Such ordering arise naturally in engineering as criteria for judging whether one design is better or worse than another.\AC{expand}
+}
+
+\begin{definition}[Partially ordered set]
+    A \emph{partially-ordered set} is a tuple $ \tup{P, \leq}$,
+where $P$ is a set (also called the \emph{carrier set}), together with a
+relation $\leq$ on $P$ that is reflexive, transitive, and antisymmetric.%
+\end{definition}
+
+\todo{Recall definitions of the properties above.}
+
+
+
+\begin{example}[Singleton poset]\label{ex:singleton}
+If a set has only one element, say $\singleton$, then there is a unique order relation on it (\cref{fig:singleton}). We denote the resulting poset again by $\singleton$.
+\end{example}
+\begin{figure}[h!]
+   \centering
+   \includesag{40_dpcatfig_singleton}
+   \caption{\label{fig:singleton}}
+\end{figure}
+
+
+\begin{example}[Booleans]\label{ex:bool}
+The booleans $\Bool$ is a poset with carrier set $\{\true,\false\}$ and the order relation given by $b_1 \leq_\Bool b_2$ iff $b_1 \Imp b_2$, that is, $\false \leq_\Bool \true$. This relation should be familiar from the following table:
+\[
+\begin{array}{cc|ccc}
+a & b & a \leq_\Bool b & a \wedge b & a \vee b \\ \hline
+\true&\true&\true&\true&\true\\
+\true&\false&\false&\false&\true\\
+\false&\true&\true&\false&\true\\
+\false&\false&\true&\false&\false
+\end{array}
+\]
+In addition to the operation $\Imp\colon\Bool\times \Bool\to\Bool$, called \emph{implies}, there are also the familiar \emph{and} ($\wedge$) and \emph{or} ($\vee$) operations. Note that $\wedge$ and $\vee$ are commutative ($b\wedge c = c\wedge b$), whereas $\Imp$ is not.
+\end{example}
+
+\GZ{
+\begin{figure}[h!]
+   \centering
+   %\includegraphics[scale=0.33]{dpcatfig_boolean}
+   \includesag{40_dpcatfig_boolean}
+   \caption{\label{fig:boolean}}
+\end{figure}}
+\AC{The problem with the above figure is that it is not clear what direction is $\leq$. 
+Also what direction is $\Rightarrow$.}
+
+
+\begin{example}[Reals]
+The real numbers $\mathbb{R}$ is a poset with carrier $a\in \mathbb{R}$ and order relation given by the usual ordering $r_1 \leq r_2$.
+\end{example}
+
+
+A \emph{Hasse diagram} is a way to visualize a poset by being economical about the arrows that we use. In a Hasse diagram elements are points, and if $a \leq b$ then $a$ is drawn lower than $b$ and with an edge connected to it~(\cref{fig:dpcatfig_hasse}).
+
+\GZ{
+Category theory is all about organizing and layering structures. Given systems $A$ and $B$, we say that $A\leq B$ if, whenever $x$ is connected to $y$ in $A$, then $x$ is connected to $y$ in $B$.}
+
+
+\begin{example}
+\label{ex:hasseinclusion}
+
+\AC{I would move this example after Set and do Set + inclusion to give an example
+of two categories with same objects but different morphisms}
+\GZ{but we don't have a notion of order there, right?}
+
+\GZ{Given a set $X$ consider its power set $\powerset{X}$. We can give it an order by inclusion of subsets. Consider $X=\{a,b,c\}$: its powerset $\powerset{X}$ can be depicted as:}
+\begin{center}
+\includesag{40_dpcatfig_power}
+\end{center}
+\end{example}
+
+\begin{figure}[h!]
+   \centering
+   \includesag{40_dpcatfig_hasse}
+   \caption{\label{fig:hasse}}
+\end{figure}
+
+\begin{example}[Discrete partially ordered sets]
+\label{ex:discreteposet}
+{Every set $X$ can be considered as a \emph{discrete poset} $(X,=)$. Discrete posets are represented as collection of points:}
+\begin{center}
+\includesag{40_discrete}
+\end{center}
+\end{example}
+
+\AC{Move later}
+\begin{definition}[Opposite of a poset]
+
+    The \emph{opposite} of a  poset $\langle A, \leq \rangle $ is the poset $\langle A\op, \leq\op\rangle $ that has the same elements as~$A$ and the reverse ordering.
+    For a given~$x \in A$, we use~$x^*$ to represent its corresponding copy in~$A\op$;
+    note that~$x$ and~$x^*$ are distinct.
+    Reversing the order means that, for all $x,y\in A$,
+    \begin{equation}
+        x \leq y \quad \Leftrightarrow \quad y^* \leq\op x^*.
+    \end{equation}
+
+\end{definition}
+
+\begin{figure}[h!]
+   \centering
+   \includesag{40_dpcatfig_opposite}
+   \caption{\label{fig:opposite}}
+\end{figure}
+
+
+\begin{example}[Credit and debt]
+   Let us define the set $\text{USD}=\{\$0.00,\$0.01,\$0.02,\dots\}$
+   of all US dollars monetary quantities approximated to the cent.
+   From this set we can define two posets:
+       $\text{USD}^{+} = \tup{\text{USD}, \leq}$
+       and $\text{USD}^{-} = \tup{\text{USD}, \geq}$
+       that are opposite of each other.
+   If the context is that, given two quantities~$\$1$ and~$\$2$,
+   we prefer~$\$1$ to~$\$2$ (for example because it is a cost to pay to acquire a component), then we are working in~$\text{USD}^{+}$,
+   otherwise we are working in~$\text{USD}^{-}$ (for example
+   because it represents the price at which we are selling our product).
+
+   Traditionally, in double-entry ledger systems, the numbers were not
+   written with negative signs, but rather in color: red and black.
+   From this convention we get the idioms ``being in the black''
+   and ``being in the red''.
+
+\end{example}
+
+
+\subsection{Staring at Pareto fronts}
+\AC{Design = compromise = pareto front.
+Draw some pareto front (for continuous, discrete poset) and 
+use those diagrams to explain the notions.
+All these notions are very graphical.}
+
+\subsubsection{Chains and Antichains} \label{sec:chains-antichains}
+
+
+\begin{definition}[Chain in a poset]
+\label{def:chain}
+Given a poset $S$, a \emph{chain} is a sequence of points ${s_i}$ in~$S$ where two successives points are comparable:
+\begin{equation}
+    i \leq j \Rightarrow s_i \leq s_j.
+\end{equation}
+\end{definition}
+
+ 
+\begin{definition}[Antichain in a poset]
+\label{def:antichain}
+An \emph{antichain} is a subset $S$ of a poset where no elements are comparable. If $a,b \in S$, then $a \leq b$ implies $a=b$.
+\end{definition}
+
+We denote the set of antichains of a poset $P$ by $\antichains P$.
+
+\GZ{\begin{example}
+Let's consider the poset $\tup{P,\leq}$ where $a\leq b$ if $a$ is a divisor of $b$ and $P=\{1,5,10,11,13,15\}$. A chain of $P$ is $\{1,5,10,15\}$. An antichain of $P$ is $\{10,11,13\}$.
+\end{example}
+
+\begin{example}
+Consider \cref{ex:hasseinclusion}. Examples of chains are 
+\begin{equation}
+    \{\varnothing,\{a\},\{a,b\},\{a,b,c\}\}, \quad  \{\varnothing,\{b\},\{b,c\},\{a,b,c\}\}.
+\end{equation}
+
+Examples of antichains are
+\begin{equation}
+    \{\{a\},\{b\},\{c\}\}, \quad \{ \{a,b\},\{a,c\}, \{b,c\}\}.
+\end{equation}
+\end{example}}
+
+\todo{add here comments, examples and figures}
+
+\subsubsection{Upper and lower sets}
+
+% also called cone
+\begin{definition}[Upper set]
+\label{def:upperset}An upper set is a subset $U$ of a poset $X$ such
+that, if a point is inside, all points above it are inside as well.
+In formulas:
+\begin{equation}
+\text{$U$ is an upperset} \equiv \forall x\in U, \forall y\in X\colon x\leq y \Imp y\in U.
+% \begin{prooftree}
+%      \AxiomC{x\in U}
+%      \AxiomC{x \leq y}
+%      \BinaryInfC{y \in U}
+%  \end{prooftree}
+\end{equation}
+\end{definition}
+
+\begin{definition}[Lower set]
+\label{def:lowerset}
+\todo[inline]{as above}
+\end{definition}
+
+\todo[inline]{Examples}
+
+\subsubsection{From antichains to uppersets and viceversa}
+
+
+\begin{definition}[Upper closure]
+\label{def:upperclosure}
+Given a point $p$ in a poset $P$, its upper closure $\uparrow p$ is the subset of $P$ that is ``above'' $p$:
+    \begin{equation}
+        \uparrow p = \{ q\in P \colon p \leq q\}.
+    \end{equation}
+    The upper closure of a set is the union of the upper closures of its points:
+    \begin{equation}
+        \uparrow S = \bigcup_{p\in S}\uparrow p.
+    \end{equation}
+\end{definition}
+
+\AC{And lower closure}
+
+\AC{Equivalently: upper set is closed to upper closure}
+
+\AC{Give the functions that convert one to another and explain the subtletlies.
+Example: take ${x\in R : x>0}$ as a poset that is not downward closed.}
+
+\begin{definition}
+\label{def:Min}
+$\Min \colon \powerset(P) \to \antichains P$ is the monotone map that sends a subset $S$ of a poset to the minimal elements of that subset, i.e., those elements $a \in S$ such that $a \leq b$ for all $b \in S$.
+\end{definition}
+\AC{this can be empty}
+\begin{definition}
+\label{def:Max}
+$\Max \colon \powerset(P) \to \antichains P$ is the monotone map that sends a subset $S$ of a poset to the maximal elements of that subset, i.e., those elements $a \in S$ such that $a \geq b$ for all $b \in S$.
+\end{definition}
+\AC{this can be empty}
+
+
+\todo{Before that, define monotone map, power set notation, power poset relation, antichains relations}
+
+
+\begin{definition}[Downward closed set]
+\label{def:downward-closed-upperset}
+An upper set $S$ is downward-closed in a poset $P$ if
+\begin{equation}
+    S =\, \uparrow \Min S
+\end{equation}
+The set of downward-closed upper sets of $P$ is denoted $\dcuppersets P$.
+\end{definition}
+
+\GZ{
+\begin{example}[Upper and lower sets in $\Bool$]
+The booleans $\{\false, \true \}$ form a preorder with $\false \leq \true:(\Bool,\leq)$ . The subset $\{\false\} \subseteq \Bool$ is not an upper set, since $\false \leq \true$ and $\true \notin \{\false \}$.	
+\end{example}}
+
+\todo{add here comments, examples and figures}

@@ -1,0 +1,229 @@
+% !TEX root = ../CategoricalCoDesign.tex
+\section{Monotonicity is a fact of life}
+\subsection{Monotone maps}
+\AC{Add some motivation from design. E.g. generalization of "non-decreasing" and "non-increasing" from real numbers to partial orders}
+\begin{definition}[Monotone map]
+A monotone map between two posets
+$\tup{A, \leq_A}$ and $\tup{B, \leq_B}$ is a map that preserves the ordering, in the sense that 
+\begin{equation}
+ a \leq_A b \quad \Imp \quad f(a) \leq_B f(b).
+\end{equation}
+
+A monotone map is an \emph{isomorphism} if the other direction
+of the implication holds as well:
+\begin{equation}
+ a \leq_A b \quad \Leftrightarrow \quad f(a) \leq_B f(b).
+\end{equation}
+\end{definition}
+
+% This is also called a \emph{homomorphism} between two posets.
+\GZ{
+\begin{remark}
+Given a preorder $A$, $\id_A$ is monotone, since for $a_1,a_2\in A$, one has:
+\begin{equation}
+a_1\leq_A a_2 \Imp a_1=a_1\then \id_A \leq_A a_2\then \id_A = a_2.
+\end{equation}
+\end{remark}
+}
+
+
+\begin{example}
+\GZ{In \cref{ex:hasseinclusion} we presented the poset arising from the power set of a set $A=\{a,b,c\}$ and ordered via subset inclusion. The map $\vert \cdot \vert \colon \powerset{A}\to \mathbb{N}$ (cardinality), is a monotone map:}
+\begin{center}
+\includesag{40_dpcatfig_exmonotone}
+\end{center}
+\end{example}
+Monotonicity is a compositional property.
+
+\begin{lemma}Given three posets $A, B, C$ and two monotone maps $f\colon A
+\to B$ and  $g\colon B \to C$, the composite map $f\then g\colon  A \to C$ is
+monotone as well.
+\end{lemma}
+\GZ{
+\begin{proof}
+Consider $a_1,a_2 \in A$, $b_1,b_2\in B$. We have 
+\begin{equation}
+\begin{aligned}
+        a_1\leq_A a_2 &\Imp f(a_1)\leq_Q f(a_2)\\ 
+        b_1\leq_B b_2 &\Imp g(b_1)\leq_C g(b_2).
+\end{aligned}
+\end{equation}
+By substituting the above, one has
+\begin{equation}
+    a_1\leq_A a_2 \Imp (f\then g)(a_1) \leq_C (f\then g)(a_2),
+\end{equation}
+which is the monotonicity condition for $(f\then g)$.
+\end{proof}}
+
+\GZ{
+\begin{lemma}
+Consider a discrete poset $A$ and a poset $B$. Any map $f\colon A\to B$ is monotone.
+\end{lemma}
+\begin{proof}
+Since $A$ is a discrete poset, one has
+\begin{equation}
+    a_1\leq_A a_2 \iff a_1=a_2.
+\end{equation}
+Therefore, one has
+\begin{equation}
+    a_1\leq_A a_2 \Imp a_1=a_2 \Imp f(a_1)=f(a_2) \Imp f(a_1)\leq_B f(a_2).
+\end{equation}
+\end{proof}}
+Unless indicated otherwise, in this paper all maps between two posets
+are assumed to be monotone or will turn out to be monotone.
+
+\subsection{A poset as a category}
+\AC{This part is subtle for beginner. A poset is a category,
+but also there is a category of posets. Make a nice "informal" drawing to explain this.}
+
+
+A single poset $\tup{P, \leq}$ can be described as a category, in which
+each point $p\in P$ is an object, and there is a morphism between
+$p$ and $q$ if and only if $p \leq q$.
+
+\begin{figure}[h!]
+   \centering
+   \todo{figure fig:poset-as-category}
+   \caption{\label{fig:poset-as-category}}
+\end{figure}
+
+This is a ``thin'' category, which means that there is at most one morphism
+between two objects.
+
+The transitive property of a partial order becomes the composition law
+of a category. In a poset, if $p \leq q$ and $q \leq r$, then $p \leq r$.
+In a category, if there is a morphism $m_1\colon p \to q$ and
+another $m_2\colon q \to r$, then there exists the morphism
+$(m_1 \then m_2)\colon p \to r$.
+
+
+
+\subsection{The category $\Pos$ of posets and monotone maps}
+
+
+
+We will instance \cref{def:categorymain} to describe the category of posets and monotone
+functions, called $\Pos$.
+
+\begin{definition}[Category $\Pos$]
+    The category $\Pos$ is defined by:
+    \begin{compactenum}
+    \item \emph{Objects}: The objects of this category are all posets.
+    \item \emph{Morphisms}: The morphisms between any pair of posets $X, Y$
+    are the monotone maps from $X$ to $Y$.
+    \item \emph{Identity morphism}:  The identity morphism for the poset $X$
+    is the identity function $\text{Id}_X$.
+    \item \emph{Composition operation}: The composition operation is function
+    composition.
+    \end{compactenum}
+\end{definition}
+
+Occasionally we will write $f \colon A \to_{\Pos} B$ to emphasize that a monotone map between posets is a morphism in the category of posets, called~$\Pos$.
+
+
+
+\subsection{Composing posets}
+
+\AC{ At this point you can re-do the constructions}
+\subsubsection{Product of posets}
+
+\begin{definition}[Product of posets]
+Given two posets $\tup{A, \leq_A}$
+and  $\tup{B, \leq_B}$, the product poset is $\tup{A \times B, \leq_{A\times B}}$, where $A \times B$ is the Cartesian product of two sets (\cref{def:cartesian-product}) and the order $\leq_{A\times B}$ is given by
+\begin{equation}
+        \langle a_1, b_1 \rangle
+        \leq_{A\times B}
+        \langle a_2, b_2 \rangle
+        \quad
+        \Leftrightarrow
+        \quad
+        ( a_1 \leq_A a_2) \wedge
+        (b_1 \leq_B b_2).
+    \end{equation}
+\end{definition}
+
+\begin{figure}[h!]
+\todo{fig:poset-product}
+\end{figure}
+
+\begin{example}
+Consider now the two posets
+\begin{center}
+\includesag{40_exposet_1}
+\end{center}
+Their product is depicted as
+\begin{center}
+\includesag{40_exposet_2}
+\end{center}
+\end{example}
+
+\subsubsection{Disjoint union of posets}
+
+\todo{intro}
+
+\begin{definition}[Disjoint union of posets]
+Given two posets $\tup{A, \leq_A} $ and $\tup{B, \leq_B} $,
+we can define their disjoint union $\tup{ A + B, \leq_{A + B}}$, where $A + B$
+is the disjoint union of two sets (\cref{def:disjoint-union}), and the
+order $\leq_{A + B}$ is given by:
+\begin{equation}
+    x \leq_{A + B} y \quad\equiv\quad
+    \begin{cases}
+        x \leq_A y, & \text{if } x,y \in A, \\
+        x \leq_B y, & \text{if } x,y \in B, \\
+        \false,  & \text{otherwise}.
+    \end{cases}
+\end{equation}
+\end{definition}
+
+
+\begin{figure}[h!]
+    \centering
+    \includesag{40_disjoint_union}
+    %\includegraphics[scale=0.33]{dpcatfig_poset_disjoint_union}
+    \caption{\label{fig:poset-coproduct}}
+\end{figure}
+
+
+\AC{Add example here.}
+
+
+\paragraph{A note on pre-orders}
+
+    The theory of design problems can be easily generalized to preorders, i.e. posets without the antisymmetry property; this means that there could be two elements $a$ and $b$ such that $a\leq b$ and $a \geq b$ but $a \neq b$.
+
+    \AC{add picture about preorders}
+
+    This is actually common in practice---for example, if the order relation comes from human judgement, such as customer preference, all bets are off regarding the consistency of the relation.
+
+    We will only refer to posets for two reasons: (1)~the exposition is smoother, and (2)~given a preorder, computation will always involve passing to the poset representation.
+
+    This means that, given a preorder, we can consider the poset of its equivalence classes, by means of the following equivalence relation:
+    \begin{equation}
+        a \simeq b \quad \equiv \quad (a \leq b) \wedge (b \leq a).
+    \end{equation}%
+    
+\begin{shaded}
+\begin{definition}[Functor]
+\label{def:functor}
+Given the categories $\CatC$ and $\CatD$, to specify a \emph{functor} $F\colon \CatC\to \CatD$ from $\CatC$ to $\CatD$,
+\begin{compactenum}
+    \item for every object $c\in \ObC,$ one specifies and object $F(c)\in \ObD$;
+    \item for every morphism $f\colon c_1\to c_2$ in $\CatC$, one specifies a morphism $F(f)\colon F(c_1)\to F(c_2)$ in $\CatD$.
+\end{compactenum}
+The above constituents must satisfy the following two properties:
+\begin{compactenum}[(a)]
+    \item For every object $c\in \ObC$, one has $F(\id_c)=\id_{F(c)}$.
+    \item For every three objects $c_1,c_2,c_3 \in \ObC$ and two morphisms $f\in \CatC(c_1,c_2)$, $g\in \CatC(c_2,c_3)$, the equation $F(f\then g)=F(f)\then F(g)$ holds in $\CatD$.
+\end{compactenum}
+\end{definition}
+
+\begin{definition}[Full and faithful functors]
+\label{def:functorfullfaith}
+A functor $F\colon \CatC \to \CatD$ is \emph{full} (resp.\ \emph{faithful} if for each pair of objects $x,y\in \CatC$, the function
+\begin{equation}
+    F\colon \CatC(x,y)\to \CatD(F(x),F(y))
+\end{equation}
+is surjective (resp.\ injective).
+\end{definition}
+\end{shaded}

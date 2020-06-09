@@ -1,0 +1,232 @@
+% !TEX root = ../CategoricalCoDesign.tex
+\section{Feedback in design}
+\begin{shaded}
+\begin{definition}[Symmetric monoidal category]
+Let $\tup{\CatC,\otimes,\singleton}$ be a monoidal category (\cref{def:monoidal_cat}). A \emph{symmetric structure} on it consists of one component. For any objects $c,d\in\Ob_\CatC$ an isomorphism $\sigma_{c,d}\colon (c\otimes d)\To{\cong}(d\otimes c)$, called the \emph{braiding}. The braiding must satisfy:
+\begin{enumerate}
+	\item \emph{Naturality:} Given any morphisms $f_1\colon c_1\to d_1$ and $f_2\colon c_2\to d_2$, the following diagram must commute:
+	\begin{equation}
+	\includesag{50_sym_1}
+	\end{equation}
+	\item \emph{Triangles identities:} Given any objects $c,d\in\Ob_\CatC$, the following diagrams must commute:
+\begin{equation}
+	\includesag{50_sym_2}
+\end{equation}
+\item \emph{Hexagon identities:} Given any objects $c,d,e\in \Ob_\CatC$, the following diagram must commute:
+\begin{equation}
+    \includesag{50_sym_3}
+\end{equation}
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Traced monoidal category]
+A symmetric monoidal category $\tup{\CatC, \otimes, \singleton, \sigma}$ is said to be \emph{traced} if equipped with a family of functions
+\begin{equation}
+    \Tr_{A,B}^X\colon \CatC(A\otimes X, B\otimes X)\to \CatC(A,B),
+\end{equation}
+satisfying the following axioms:
+\begin{compactenum}
+    \item \emph{Vanishing:} For all morphisms $f\colon A\to B$ in $\CatC$,
+    \begin{equation}
+    \Tr_{A,B}^1(f)=f.
+    \end{equation}
+    Furthermore, for all morphisms $f\colon A\otimes X \otimes Y \to B\otimes X \otimes Y$ in $\CatC$:
+    \begin{equation}
+        \Tr_{A,B}^{X\otimes Y}(f)=\Tr_{A,B}^X\left(
+        \Tr_{A\otimes X,B\otimes X}^Y(f)\right)
+    \end{equation}
+    \item \emph{Superposing:} For all morphisms $f\colon A\otimes X\to B\otimes X$ in $\CatC$:
+    \begin{equation}
+        \Tr_{C\otimes A,C\otimes B}^{X}(\id_C\otimes f)=\id_C\otimes \Tr_{A,B}^X(f)
+    \end{equation}
+    \item \emph{Yanking:} 
+    \begin{equation}
+    \Tr_{X,X}^X\left(\sigma_{X,X}\right)=\id_X.
+    \end{equation}
+\end{compactenum}
+\end{definition}
+\end{shaded}
+
+\begin{example}Consider a vehicle motor that weighs a certain amount but can also carry some weight:
+\[
+\includesag{50_motor1}
+\]
+In the diagram, we haven't added anything to the weight of the motor, so currently all the motor is carrying is itself. Also, note that we are considering $\text{CO}_2\op$ since we want to optimize toward \emph{less} CO$_2$. Fix a given amount of CO$_2$ and fuel. In that case, closing the loop corresponds to drawing a line $(c^\ast = c)$ in the graph of $\text{weight}\op \times \text{weight}$ and taking only solutions under the line in Figure~\ref{fig:weightcarrier}.
+\begin{figure}[h!]
+\centering
+\includesag{50_carrier}
+\caption{The shaded area marks a portion of the feasibility set of a traced design problem, `motor'. Note that it is not an upper set in the subspace ``weight $\times$ weight'' of `motor'.}
+\label{fig:weightcarrier}
+\end{figure}
+\end{example}
+
+Note that the shaded area is \emph{not} an upper set. This is permissible, since the actual feasible set of `motor' is a subset of CO$_2 \times$ fuel, and there, it is an upper set.
+\todo{change this example}
+Suppose we are given a design problem with a resource and a functionality of the same type $C$:
+\[
+\includesag{50_trace}
+\]
+
+Can we ``close the loop'', as in the following diagram?
+\[\label{eq:looped}
+\includesag{50_trace2}
+\]
+
+It turns out that we can give a well-defined semantics to this loop-closing operation, which coincides with the notion of a \emph{trace} in category theory.
+
+The following is the formal definition of the trace operation for design problems.
+
+\begin{definition}[Trace of a design problem]
+\label{def:dp-trace}
+Given a design problem $f\colon \F{C} \times \F{A} \tickar \R{C} \times \R{B}$, we can define
+its \emph{trace} $\Tr_{\F{A},\R{B}}^C(f) \colon \F{A} \tickar \R{B}$ as follows:
+%
+\begin{equation}
+\label{eq:tracedef}
+\begin{aligned}
+	\Tr_{\F{A},\R{B}}^C(f) \colon  \F{A}\op \times \R{B} &\toinPos \Bool \\
+	\tup{\F{a}^*, \R{b}} &\mapsto \bigvee_{c\in C}
+		f(
+			\tup{\F{a}^*, \R{c}^*},
+			\tup{\F{b}, \R{c}}
+		).
+\end{aligned}
+\end{equation}
+\end{definition}
+
+
+Think of drawing a loop as a way of writing down the following requirement: Something that produces $C$ should not use up more of $C$ than it produces.
+
+
+\subsubsection{Trace axioms}
+We will show that the loop operation $\Tr_{A,B}^C$ corresponds to the \emph{trace} in $\DP$. Intuitively, forming a loop models the idea of feedback in a control-theoretic setting---the output of a process influences the choice of input---while the idea of ``trace'' of a monoidal category comes from the trace of a square matrix $(\Tr A = \sum_i a_{ii})$, which defines the categorical trace in the (monoidal) category of vector spaces. The connection between the two is more apparent if one decomposes the trace of a square matrix as a set of properties that any linear map from a space to itself should satisfy. One can find the trace axioms in any standard text on category theory, e.g. \cite{maclane}; these are equivalent to certain diagrammatic conditions \cite{joyal96}, as in Table~\ref{fig:traceaxioms}.
+
+\begin{table}[h!]
+    \caption{The trace axioms in diagrammatic form \cite{joyal}.
+    \label{fig:traceaxioms}
+    }
+\centering
+\begin{tabular}{cc}
+Vanishing I&Vanishing II\\
+\includesag{50_vanishing_1a_1b}&\includesag{50_vanishing_2a_2b}\\
+Superposing&Yanking\\
+\includesag{50_superposing_1_2}&\includesag{50_yanking}
+\end{tabular}
+\end{table}
+\todo{yanking as identity monoidal flip monoidal identity}
+We gave the definition of the trace operation (\cref{def:dp-trace}), but instead of proving that this formula satisfies all the trace axioms directly, we will instead prove that $\DP$ is \emph{compact closed} in Section~\ref{sec:compact_closed}. Compact closure implies that there is a unique trace, which we can then check against our definition.
+
+
+\GZ{
+\begin{proposition}
+For any two posets, $A,B \in\Ob_\DP$, the design problem $\sigma_{A,B}\colon A \times B \tickar B \times A $ given by
+\begin{equation}
+        \sigma_{A,B}(\tup{a_1,b_1}^*,\tup{b_2,a_2})\coloneqq a_1\leq_A a_2\wedge b_1\leq_B b_2.
+\end{equation}
+constitutes the braiding for a symmetric structure on $\tup{\DP,\otimes,\singleton}$. In other words, $\tup{\DP, \otimes, \singleton, \sigma}$ is a symmetric monoidal category.
+\end{proposition}
+
+\begin{proof}
+In this proof, given two elements of a post $A$, $a_1,a_2$, we denote for brevity $\leq_A$ by $\leq$.
+To prove that $\sigma_{A,B}$ is an isomorphism, we use \cref{def:monoidal_cat} and show $\sigma_{A,B}\then \sigma_{A,B}=\id_{A\times B}$. One has
+    \begin{equation}
+        \begin{aligned}
+           \left( \sigma_{A,B}\then \sigma_{A,B}\right) \left( \tup{a_1,b_1}^*,\tup{a_2,b_2}\right)&=\bigvee_{\tup{b,a}\in B\times A}\sigma_{A,B}(\tup{a_1,b_1}^*,\tup{b,a})\wedge \sigma_{A,B}(\tup{b,a}^*,\tup{a_2,b_2})\\
+           &=\left( (a_1\leq_A a) \wedge (b_1\leq_B b)\right)\wedge \left((a\leq_A a_2) \wedge (b\leq_B b_2)\right)\\
+           &=(a_1\leq_A a_2)\wedge (b_1\leq_Bb_2)\\
+           &=\id_{A\times B}.
+        \end{aligned}
+    \end{equation}
+    This also shows the second triangle identity, i.e. that $\sigma_{A,B}$ is its own identity.
+    For naturality, let's consider two morphisms (design problems) $f_1\colon A_1\tickar B_1$, $f_2\colon A_2\tickar B_2$. For brevity, denote $\sigma_{B_1\times B_2,B_2\times B_1}$ by $\sigma_B$ and $\sigma_{A_1\times A_2,A_2\times A_1}$ by $\sigma_A$. One has
+    \begin{equation}
+        \begin{aligned}
+           \left((f_1\otimes f_2)\then \sigma_B \right)\left( \tup{a_1,a_2}^*,\tup{b_2,b_1}\right)&=\bigvee_{\tup{b',b''}\in B_1\times B_2} \left(f_1\otimes f_2\right) \left( \tup{a_1,a_2}^*,\tup{b',b''}\right)\wedge \sigma_B\left(\tup{b',b''},\tup{b_2,b_1} \right)\\
+           &=\bigvee_{\tup{b',b''}\in B_1\times B_2}(f_1(a_1^*,b')\wedge f_2(a_2^*,b''))\wedge (\left(b'\leq b_1\right) \wedge \left(b''\leq b_2\right))\\
+           &= f_1(a_1^*,b_1) \wedge f_2(a_2^*,b_2),
+        \end{aligned}
+    \end{equation}
+    where the last step comes from the monotonicity of $f_1$ and $f_2$. Similarly,
+    \begin{equation}
+        \begin{aligned}
+           \left( \sigma_A \then (f_2\otimes f_1)\right)\left( \tup{a_1,a_2}^*,\tup{b_2,b_1}\right)&=\bigvee_{\tup{a'',a'}\in A_2\times A_1}\sigma_A\left(\tup{a_1,a_2}^*,\tup{a'',a'} \right)\wedge \left(f_2\otimes f_1\right) \left( \tup{a'',a'}^*,\tup{b_2,b_1}\right)\\
+           &=\bigvee_{\tup{a'',a'}\in A_2\times A_1}(\left(a_1\leq a'\right)\wedge \left(a_2\leq a''\right)) \wedge (f_2(a''^*,b_2)\wedge f_1(a'^*,b_1))\\
+           &= f_2(a_1^*,b_1) \wedge f_1(a_2^*,b_2).
+        \end{aligned}
+    \end{equation}
+    To show the first triangle identity, we write
+    \begin{equation}
+        \begin{aligned}
+           \left(\sigma_{\singleton \times A}\then \rho_A\right)\left( \tup{1,a_1}^*,a_2\right)&=\bigvee_{\tup{a',1}\in A\times \singleton}\sigma_{\singleton \times A}\left( \tup{1,a_1}^*,\tup{a',1}\right)\wedge \rho_A\left( \tup{a',1}^*,a_2\right)\\
+           &=\bigvee_{\tup{a',1}\in A\times \singleton} \left(1\leq 1\right) \wedge \left(a_1\leq a'\right)\wedge \left(a'\leq a_2\right)\\
+           &=a_1\leq a_2\\
+           &=\lambda_A\left( \tup{1,a_1}^*,a_2\right).
+        \end{aligned}
+    \end{equation}
+    The hexagon identities are more verbose. Consider $A,B,C\in \Ob_\DP$. For brevity, we denote $\alpha_{A,B,C}$ by $\alpha$, $\sigma_{A,B}\otimes \id_C$ by $\sigma'$, $\id_B \otimes \sigma_{A,C}$ by $\sigma''$, $(B\times A)\times C$ as $\Diamond$, and $B\times (A\times C)$ as $\Delta$. Recall that
+    \begin{equation}
+        \begin{aligned}
+            \sigma' \left(\tup{\tup{a_1,b_1},c_1}^*,\tup{b_2,\tup{a_2,c_2}} \right)&=\left( (a_1\leq a_2)  \wedge (b_1\leq b_2)\right)\wedge (c_1\leq c_2).
+        \end{aligned}
+    \end{equation}
+    One has
+    \begin{equation}
+        \begin{aligned}
+           \left(\sigma' \then \alpha \right) \left(\tup{\tup{a_1,b_1},c_1}^*,\tup{b_2,\tup{a_2,c_2}} \right)&=\bigvee_{\tup{\tup{b,a},c}\in \Diamond}\sigma' \left( \tup{\tup{a_1,b_1},c_1}^*,\tup{\tup{b,a},c}\right)\wedge \alpha \left( \tup{\tup{b,a},c}^*,\tup{b_2,\tup{a_2,c_2}}\right)\\
+           &=\bigvee_{\tup{\tup{b,a},c}\in \Diamond} (\left(a_1\leq a \right)\wedge \left( b_1\leq b\right)\wedge \left(c_1\leq c\right)) \wedge  (\left(b\leq b_2\right)\wedge \left( a\leq a_2\right)\wedge \left(c\leq c_2\right))\\
+           &=\left(b_1\leq b_2 \right)\wedge \left(a_1\leq a_2 \right)\wedge \left( c_1\leq c_2\right)\\
+           &=\underbrace{\alpha\left(\tup{\tup{b_1,a_1},c_1}^*,\tup{b_2,\tup{a_2,c_2}}\right)}_{\star}.
+        \end{aligned}
+    \end{equation}
+    Furthermore, consider 
+    \begin{equation}
+        \begin{aligned}
+           \left( \star \then \sigma''\right)\left( \tup{\tup{a_1,b_1},c_1}^*,\tup{b_3,\tup{c_3,a_3}}\right)&=\bigvee_{\tup{b_2,\tup{a_2,c_2}}\in \Delta} \star \left(\tup{\tup{a_1,b_1},c_1}^*, \tup{b_2,\tup{a_2,c_2}} \right)\wedge \sigma'' \left(\tup{b_2,\tup{a_2,c_2}}^*,\tup{b_3,\tup{c_3,a_3}} \right)\\
+           &=\bigvee_{\tup{b_2,\tup{a_2,c_2}}\in \Delta}(\left(b_1\leq b_2 \right)\wedge \left(a_1\leq a_2 \right)\wedge \left( c_1\leq c_2\right)) \wedge ((b_2\leq b_3)\wedge \left(a_2\leq a_3\right) \wedge \left(c_2\leq c_3\right))\\
+           &=(a_1\leq a_3) \wedge (b_1\leq b_3) \wedge (c_1\leq c_3).
+        \end{aligned}
+    \end{equation}
+    It is easy to see that following the other direction in the hexagon commutative diagram, one obtains the same result. With this we have proved that $\sigma$ is a valid braiding operation and hence that $\tup{\DP, \otimes, \singleton, \sigma}$ is a symmetric monoidal category.
+\end{proof}
+
+
+\begin{lemma}
+Trace as in~\cref{def:dp-trace} satisfies the trace axioms. In other words, $\tup{\DP, \otimes, \singleton, \sigma}$ is a traced monoidal category, with trace as in~\cref{eq:tracedef}.
+\end{lemma}
+\begin{proof}
+We prove the trace axioms one by one, starting from vanishing. Given any $A,B\in \Ob_\DP$ and $f\colon A\tickar B$ in $\CatC$, we have
+\begin{equation}
+    \begin{aligned}
+        \Tr_{A,B}^{\singleton}(f)(a^*,b)&=\bigvee_{1\in \singleton}f(\tup{a,1}^*,\tup{b,1})\\
+        &=f(\tup{a,1}^*,\tup{b,1})\\
+        &=f(a^*,b).
+    \end{aligned}
+\end{equation}
+Furthermore, for any morphism $f\colon A\times X \tickar B\times X$ in $\CatC$, one has
+\begin{equation}
+    \begin{aligned}
+        \Tr_{A,B}^{X\times Y}(f)(a^*,b)&=\bigvee_{\tup{x,y} \in X\times Y} f(\tup{a,\tup{x,y}}^*,\tup{b,\tup{x,y}})\\
+        &=\bigvee_{x \in X}f(\tup{a,x}^*,\tup{b,x})\wedge \bigvee_{y \in Y}f(\tup{a,y}^*,\tup{b,y})\\
+        &=\bigvee_{x \in X}\left(\bigvee_{y \in Y} f(\tup{\tup{a,x},y}^*,\tup{\tup{b,x},y})\right)\\
+        &=\Tr_{A,B}^X\left(
+        \Tr_{A\times X,B\times X}^Y(f)(\tup{a,x}^*,\tup{b,x})\right)
+    \end{aligned}
+\end{equation}
+For the superposing axiom, consider $f\colon A\times X\tickar B\times X$ in $\CatC$. One has
+\begin{equation}
+    \begin{aligned}
+        \Tr_{C\times A,C\times B}^{X}(\id_C\otimes f)(\tup{c_1,a}^*,\tup{c_2,b})&=\bigvee_{x\in X} \id_C(c_1^*,c_2)\wedge f(\tup{a,x}^*,\tup{b,x})\\
+        &=\id_C(c_1^*,c_2) \wedge f(\tup{a,x}^*,\tup{b,x})\\
+        &=(\id_C \otimes \Tr_{A,B}^X(f))(\tup{c_1,a}^*,\tup{c_2,b}).
+    \end{aligned}
+\end{equation}
+Finally, for yanking consider $\sigma_{X,X}$. One has
+\begin{equation}
+    \begin{aligned}
+        \Tr_{X,X}^{X}(\sigma_{X,X})(x_1^*,x_2)&=\bigvee_{x\in X} \sigma_{X,X}(\tup{x_1,x}^*,\tup{x,x_2}) \\
+        &=\bigvee_{x\in X} x_1\leq x_2 \wedge x\leq x\\
+        &=\id_X(x_1^*,x_2).
+    \end{aligned}
+\end{equation}
+\todo{here the notation is confusing, check with AC}
+\end{proof}}

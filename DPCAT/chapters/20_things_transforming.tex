@@ -1,0 +1,361 @@
+% !TEX root = ../CategoricalCoDesign.tex
+\section{Thinking about how things transform into each other}
+
+\subsection{Category theory helps reasoning about interfaces and transformations}
+\todo{Arrows should agree with profunctors notation}
+
+We argue that all the concepts of formal engineering design discussed in the
+previous section can be naturally described in the language of category theory.
+
+We will start with a simple example.
+
+In an electric car, electric power is turned by the engine into rotational
+motion of the axle, and then the rotational motion is converted into
+translational motion by the wheels and their friction with the road.
+
+In this simple setting, we can identify the key systems and subsystems: Car,
+engine, axle, wheels, and road.
+
+We can identify the functionality/resources of interest as: Electric
+power, rotational motion, and translational motion. Note that each of these quantities
+plays a dual role: For example, the rotational motion is something which is
+produced by the motor, so it is a functionality for the motor, while it
+is a resource for axle/wheels, because they need it to provide translational motion.
+
+For a first qualitative description of the scenario, we might choose to just
+keep track of what functionality/resource is converted into what.
+
+For this qualitative description, we can draw a diagram in which each resource
+is a point (\cref{fig:e1}).
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e1}
+    \caption{\label{fig:e1}}
+\end{figure}
+
+Furthermore, we can draw an arrow between two resources if we can obtain one
+from the other. In the example, we have described how power becomes rotational
+motion (arrow $\mathsf{converter}$) and how rotational motion becomes translational motion
+(arrow $\mathsf{wheel}$) (\cref{fig:e2}).
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e2}
+    \caption{\label{fig:e2}}
+\end{figure}
+
+In this representation, the arrows are the components of the system.
+We will learn how to compose these arrows according to the rules of category theory.
+
+If we use the semantics that an arrow from resource $X$ to resource $Y$ means ``Having $Y$ is
+enough to obtain $X$'', then, since $Y$ is enough for $Y$, we can add a self-loop for each
+resource (\cref{fig:e3}). We will call the self-loops \emph{identities} (\cref{fig:e3}).
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e3}
+    \caption{\label{fig:e3}}
+\end{figure}
+
+Furthermore, we might consider the idea of composition of arrows: if from $Y$ we
+can get $X$ and from $Z$ we can get $Y$, then from $Z$ we can get $X$. In our
+example, if the arrows $\mathsf{converter}$ and $\mathsf{wheel}$ exist, then also the arrow ``$\mathsf{converter}$ then $\mathsf{wheel}$''
+exists~(\cref{fig:e4}).
+
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e4}
+    \caption{\label{fig:e4}}
+\end{figure}
+
+
+A ``category'' is nothing more than this: It is an abstract mathematical
+structure whose two primitive notions are objects and arrows between objects.
+The following is the formal definition.
+
+\begin{shaded}
+\begin{definition}[Category] \label{def:categorymain}
+A \emph{category} $\CatC$ is defined by describing four components: the
+category's \emph{objects}, the category's \emph{morphisms},
+the \emph{identities} and the \emph{composition operations}. More precisely,
+a category consists of:
+\begin{compactenum}
+\item \emph{Objects}: A collection $\ObC$, whose elements are called \emph{objects}.
+\item \emph{Morphisms}: For every pair of objects $X, Y\in\ObC$, there is
+a way to define the set $\HomC(X, Y)$, which is called the ``hom-set from
+$X$ to $Y$''. The elements of this set are called \emph{morphisms}.
+\item \emph{Identity morphism}:  For each object $X$, there is
+an element $\id_X \in \HomC(X,X) $ which is called \emph{the identity
+morphism in $X$}.
+\item \emph{Composition operation}: There is a way to define the composition
+of two morphisms. Given a morphism $f \in  \HomC(X,Y) $ and a morphism $g \in \HomC(Y, Z)$, then
+there exists a morphism $f\then g$ in $\HomC(X, Z)$.
+
+In addition, there are two properties that must hold:
+
+\begin{compactenum}
+    \item Unitality: For a morphism $f\in\Hom(X,Y)$: 
+    \begin{equation}
+        \id_X \then f=f \then \id_Y.
+    \end{equation}
+    \item Associativity: The composition is associative, in the sense that for $f\in \HomC(X,Y)$, $g\in \HomC(Y,Z)$, and $h\in \HomC(Z,W)$:
+    \begin{equation}
+        (f\then g)\then h= f \then (g \then h).
+    \end{equation}
+\end{compactenum}
+
+\end{compactenum}
+\end{definition}
+\end{shaded}
+
+\AC{ Given that this is the first example of a category, let's list explicitly
+the category that we are using. (wheels, converters, energy, etc.) }
+
+The properties of a category allow us to save some ink in the drawing the
+corresponding graph:
+\begin{compactitem}
+\item We do not need to draw the identity arrows from one object to itself, because they always exist. (However, we will see how there might be multiple such loops.)
+\item  Whenever there are arrows $A\to B \to C$, we will not need to draw the arrows composition, because it always exists.
+\end{compactitem}
+
+With these conventions, we can just draw the arrows~$f$ and~$g$ in the diagram,
+and the rest of the diagram is implied (\cref{fig:e5}). Particularly, this example corresponds to the category $\CatC$ specified by 
+\begin{itemize}
+    \item $\Ob_\CatC=\{\text{electric power},\text{rotational motion},\text{translational motion}\}$.
+    \item E.g., we have morphisms $\mathsf{converter}$, $\mathsf{wheel}$, and $\mathsf{wheel}\text{ then }\mathsf{converter}$.
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e5}
+    \caption{\label{fig:e5} The grey arrows are implied by the properties
+    of a category.}
+\end{figure}
+
+\todo{move the following to the currency subsection. Check the direction of the arrows!}  
+
+We can slightly expand this example by noting the inverse transformations. In an electric car
+it is possible to regenerate power; that is, we can obtain rotational motion of the wheels from
+translational motion (via $\mathsf{move}$), and then convert the rotational motion into electric
+power (via $\mathsf{dynamo}$)~(\cref{fig:e6}).
+
+\todo[inline]{
+Add remark here explaining the
+relation between $;$ and $\circ$.
+}
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e6}
+    \caption{\label{fig:e6}}
+\end{figure}
+
+These arrows are not necessarily the same arrows as before; there might be different processes
+involved.
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e7}
+    \caption{\label{fig:e6-together}}
+\end{figure}
+
+Given the semantics of the arrows, all compositions of arrows exist, even if they are not drawn
+explicitly. For example, we can consider the composition~$f\then g \then k \then h$, which
+converts electric power into rotational motion into translational motion, then back to
+rotational motion and electric power. This is an arrow that has the same head and tail as the
+identity on electrical power~(\cref{fig:e8}). However, the arrows are not necessarily the same. In fact, we know that if these are physical systems, there will be some loss for the many conversions.
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e8}
+    %\includegraphics[scale=0.33]{dpcatfig_e8}
+    \caption{\label{fig:e8}}
+\end{figure}
+
+In fact, it is important to recognize that there might be two or more distinct
+arrows between two resources~(\cref{fig:e9}). Each arrow between $X$ and $Y$ represents a different way  to obtain~$X$ from~$Y$. This is what will make category theory powerful enough to reason about design.
+
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e9}
+    \caption{\label{fig:e9}}
+\end{figure}
+
+The directionality of the arrows is also important. While the convention of
+which resource is the tail and which the head is just a typographic convention,
+it might be the case that we know how to convert one resource into another, but
+not vice versa.
+
+\cref{fig:e10} shows an example of a diagram that describes a process which is definitely
+not invertible.
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e10}
+    \caption{\label{fig:e10}}
+\end{figure}
+\subsection{The currency category}
+\todo{For later - this will be more discursive. Definitions can be less formal. Symbols too heavy.
+Will put nice pictures.}
+\AC{I think here we can go to the incremental step of describing a category
+in which the resources are isomorphic to real numbers. Before, we say
+that fghk is not the identity, but really, if the resources are bool then fghk=identity.}
+In this section, we consider as an example the category of currency exchangers $\mathbf{Curr}$. To introduce what currencies are, we need the notion of units.
+\begin{definition}[Real with units]
+    Define $\mathbb{R}_\mathsf{g}$ to be the set of real numbers $\mathbb{R}$ with unit $\mathsf{g}$. Given $\unit[p]{\mathsf{a}} \in \mathbb{R}_\mathsf{a}$ and $\unit[q]{\mathsf{b}}\in \mathbb{R}_\mathsf{b}$, define
+    \begin{equation}
+    \begin{aligned}
+    \cdot \colon \mathbb{R}_\mathsf{a} \times \mathbb{R}_\mathsf{b} &\to \mathbb{R}_\mathsf{ab}\\
+    \tup{\unit[p]{\mathsf{a}},\unit[q]{\mathsf{b}}}&\mapsto r\coloneqq \unit[p\cdot q]{\mathsf{ab}}.
+    \end{aligned}
+    \end{equation}
+    Furthermore, note that two objects can be summed if and only if they share the same units. Note that from now on we will say $p\in \mathbb{R}_\mathsf{g}$ to mean $\unit[p]{\mathsf{g}}$, $p\in \mathbb{R}$.
+\end{definition}
+
+Consider two currencies, $\mathsf{C,D}$. A currency exchanger from $\mathsf{C}$ to $\mathsf{D}$ can be expressed as a pair $\tup{a,b}$, $a\in {\mathbb{R}_{>0}}_ {\frac{\mathsf{D}}{\mathsf{C}}}$ and $b\in {\mathbb{R}_{\geq 0}}_ {\mathsf{D}}$. The pair specifies an affine function of the form
+\begin{equation}
+        \begin{aligned}
+        \mathsf{CE}\colon \mathbb{R}_\mathsf{C}&\to \mathbb{R}_\mathsf{D}\\
+        \unit[p]{\mathsf{C}}&\mapsto \unit[q]{\mathsf{D}} \coloneqq a\cdot \unit[p]{\mathsf{C}} -b,
+        \end{aligned}
+    \end{equation}
+   where $a$ represents the exchange rate from $\mathsf{C}$ to $\mathsf{D}$, and $b$ represents the fixed commission of the currency exchanger. As an example, consider three currency exchange companies which operate on several currencies (\cref{tab:currencycompanies}).
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c|c}
+         operation name& details &$a$ (exchange rate)&$b$   (fixed commission)  \\
+         $A$&USD to CHF&\unitfrac[0.95]{USD}{CHF}&\unit[2]{CHF}\\
+         $B$&CHF to USD&\unitfrac[1.05]{CHF}{USD}&\unit[1.5]{USD}\\
+         $C$&USD to SGD&$a_\mathrm{1,US}$&$b_\mathrm{1,US}$    \end{tabular}\\[+5pt]
+         \begin{tabular}{c|c|c|c}
+         operation name& details &$a$ (exchange rate)&$b $ (fixed commission)  \\ $D$&USD to CHF&$\unitfrac[12]{CHF}{USD}$&$\unit[1]{USD}$\\
+         $E$&SGD to USD&$a_\mathrm{2,SU}$&$b_\mathrm{2,SU}$
+    \end{tabular}\\[+5pt]
+    \begin{tabular}{c|c|c|c}
+         operation name& details &$a$ (exchange rate)&$b $ (fixed commission)  \\
+        $F$& EUR to CHF&$a_\mathrm{3,EC}$&$b_\mathrm{3,EC}$\\
+        $G$& CHF to EUR&$a_\mathrm{3,CE}$&$b_\mathrm{3,CE}$
+    \end{tabular}
+    \caption{Three currency exchange companies operating different currencies. \AC{Let's put numbers}
+    \AC{Give name to the companies}
+    }
+    \label{tab:currencycompanies}
+\end{table}
+
+We can represent this information as a graph, where the nodes are the currencies and the edges are particular exchange operations (\cref{fig:currencygraph}).
+
+\begin{figure}[h]
+\begin{center}
+    \begin{tikzcd}[column sep = 5cm, row sep = 3cm]
+    \text{USD}\arrow[bend left=20, r,"A"]\arrow[bend right=20, r,"D",swap] 
+    \arrow[d,bend left=20,"C"]
+    &\text{CHF}
+    \arrow[d,bend left=20,"G"]
+    \arrow[l,"B"]\\
+    \text{SGD}\arrow[u,bend left=20,"E"]&
+    \text{EUR}
+    \arrow[u,bend left=20,"F"]
+    \end{tikzcd}
+\end{center}
+\caption{Three currency exchange companies operating different currencies as a graph \label{fig:currencygraph}}
+\end{figure}
+
+The graph representation seems enough to describe this as a category, where the objects are the currencies (USD,CHF,EUR, and SGD) and the morphisms are the different exchange operations. However, to properly define this category, we need to define composition and prove that the category is closed with respect to it. Given three currencies $\mathsf{X,Y,Z}$, a currency exchanger from $\mathsf{X}$ to $\mathsf{Y}$ $\tup{a,b}$, and a currency exchanger from $\mathsf{Y}$ to $\mathsf{Z}$ $\tup{c,d}$, one can define their composition as
+\begin{equation}
+\label{eq:currencycomp}
+    \tup{a,b}\then \tup{c,d}=\tup{\underbrace{c\cdot a}_{e},\underbrace{c\cdot b+d}_{f}}
+\end{equation}
+
+
+
+
+
+
+\begin{definition}[Composition of currency exchangers]
+\label{def:compositioncurrency}
+Consider three currencies $\mathsf{A,B,C}$. 
+Given two currency exchangers $\tup{a_\mathsf{AB},b_\mathsf{AB}}$, $\tup{c_\mathsf{BC},d_\mathsf{BC}}$, we define their composition as
+\begin{equation}
+\label{eq:currencycomp}
+    \tup{a_\mathsf{AB},b_\mathsf{AB}}\then \tup{c_\mathsf{BC},d_\mathsf{BC}}=\tup{c_\mathsf{BC}\cdot a_\mathsf{AB},c_\mathsf{BC}\cdot b_\mathsf{AB}+d_\mathsf{BC}}
+\end{equation}
+\end{definition}
+
+
+
+\begin{definition}[Category of currencies]
+    The category of currencies $\mathbf{Curr}$ is specified by:
+    \begin{compactenum}
+        \item \emph{Objects:} $\Ob_\mathbf{Curr}$ is a collection of currencies (units).
+        \item \emph{Morphisms:} Given two currencies $\mathsf{C},\mathsf{D}\in \Ob_{\mathbf{Curr}}$, morphisms between them are currency exchangers $\tup{a_\mathsf{CD},b_\mathsf{CD}}$. 
+        \item \emph{Identity morphism:} Given an object $C\in \Ob_\mathbf{Curr}$, the identity morphism is given by the currency exchanger with $a_\mathsf{CC}=1$ and $b_\mathsf{CC}=0$, i.e. $\tup{1_\mathsf{AA},0_\mathsf{AA}}$.
+        \item \emph{Composition of morphisms:} The composition of morphisms is given by \cref{def:compositioncurrency}.
+    \end{compactenum}
+\end{definition}
+
+\begin{lemma}
+    $\mathbf{Curr}$ is a category.
+\end{lemma}
+\begin{proof}
+    We need to show that the composition is unital and associative. For unitality, using the formula we just derived, it is easy to check that:
+    \begin{equation}
+        \begin{aligned}
+        \tup{a_\mathsf{AA},b_\mathsf{AA}}\then \tup{a_\mathsf{AB},b_\mathsf{AB}}&= \tup{a_\mathsf{AB},b_\mathsf{AB}}\then \tup{a_\mathsf{BB},b_\mathsf{BB}}\\
+        &=\tup{1\cdot a_\mathsf{AB},0+b_\mathsf{AB}}\\
+        &=\tup{a_\mathsf{AB},b_\mathsf{AB}}
+        \end{aligned}
+    \end{equation}
+    Finally, associativity follows from the derived closed form for composition.
+\end{proof}
+
+\begin{remark}
+Consider three currencies $\mathsf{A,B,C}$, and the currency exchangers $\tup{a_\mathsf{AB},b_\mathsf{AB}}$,
+$\tup{a_\mathsf{BC},b_\mathsf{BC}}$, and $\tup{a_\mathsf{CA},b_\mathsf{CA}}$. The composition of the currency exchangers reads:
+\begin{equation}
+    \begin{aligned}
+     \tup{a_\mathsf{AB},b_\mathsf{AB}}\then \tup{a_\mathsf{BC},b_\mathsf{BC}} \then \tup{a_\mathsf{CA},b_\mathsf{CA}} &=\tup{\underbrace{a_\mathsf{CA} a_\mathsf{BC} a_\mathsf{AB}}_{\diamond},\underbrace{a_\mathsf{CA}a_\mathsf{BC}b_\mathsf{AB}+a_\mathsf{CA}b_\mathsf{BC}+b_\mathsf{CA}}_{\star}}.
+    \end{aligned}
+\end{equation}
+Note that while $\diamond=1$ (exchange rates compensating), $\star\neq 0$, because of the commissions. This shows that there are multiple morphisms from $\mathsf{A}$ to $\mathsf{A}$.
+\end{remark}
+
+\AC{The category Curr represents the set of all possible currency exchangers that could
+ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that given 1 USD, will give you back 2 USD.}
+
+\AC{This highlights a recurring topic: often mathematicians will be happy to 
+define a broader category of objects, while, in practice, the engineer
+will find himself thinking about a more constrained set of objects.}
+
+\AC{Let's make a particular example. Suppose that we have three currency exchange 
+companies, which operate on the following currencies:}
+
+\AC{(Three tables; each table shows each row = a morphism). Each row
+is labeled as "op1", "op2", .../.}
+
+\AC{We can represent this information as a graph, where the nodes are the
+currencies and the edges are particular exchange operations.}
+
+\AC{(figure here)}
+
+\AC{As displayed, this is not a category. In fact, what's missing is...}
+
+\AC{We can make it into a category by computing its closure...}
+
+\AC{(Explain closure operation)}
+
+\AC{(Show how we can compute the homsets recursively. Show 
+that the homsets contain zero conversion (you don't get any money back)}
+
+\AC{(Say that one would be interested in finding the best conversions anyway.
+These conversions are supposed to be pareto fronts (we have a,b). }
+
+\AC{(Note, don't write: if bias is 0, then take the log of conversion rates, and they add: solve using Dijkstra.)}
+
+\AC{Prove: we only need to iterate a finite number of times. Sketch: 
+Optimal path would never pass through a currency multiple time. 
+(Valid with some slight assumption on the currency exchangers: you will
+always lose changing back and forth the same currency)}
+

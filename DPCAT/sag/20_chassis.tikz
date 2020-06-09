@@ -1,0 +1,31 @@
+\begin{tikzpicture}[oriented WD, bb min width =.7cm, bby=1.6ex, bbx=.7cm,bb port length=3pt]
+  \node[bb port sep=.8, bb={2}{1}, bb name=$\Sigma$] (Sigma1) {};
+  \node[bb port sep=1.6,bb min width=4.3em, bb={2}{3}, below right=-2.5 and 1 of Sigma1.south east, bb name=Chassis] (Chassis) {};
+  \node[bb port sep=.9,bb min width=4.3em, bb={2}{4}, below right=-3 and 2 of Chassis_out2, bb name=Motor] (Motor) {};
+	\node[bb port sep=.8, bb={2}{1}, right= of Motor.south east, bb name=$\Sigma$] (Sigma2) {};
+  \node[bb={2}{3}, fit={($(Sigma1.north west)+(0,1)$) (Chassis) (Motor) (Sigma2)}] (Y) {};
+  \draw[ar] (Y_in1') to (Sigma1_in2);
+  \draw[ar] (Y_in2') to (Chassis_in2);
+  \draw[ar] (Sigma1) to (Chassis_in1);
+  \draw[ar] (Chassis_out1) to (Motor_in1);
+  \draw[ar] (Chassis_out2) to (Motor_in2);
+  \draw[ar] let \p1=(Motor.south west), \p2=(Motor.south east), \n1={\y1-\bby},\n2=\bbportlen in
+  	(Chassis_out3) to (\x1-\n2,\n1) -- (\x2+\n2,\n1) to (Sigma2_in2);
+  \draw[ar] (Motor_out2) to (Y_out1');
+  \draw[ar] (Motor_out3) to (Y_out2');
+  \draw[ar] (Motor_out4) to (Sigma2_in1);
+  \draw[ar] (Sigma2_out1) to (Y_out3');
+  \draw[ar] let \p1=(Motor.north east), \p2=(Sigma1.north west), \n1={\y2+\bby},\n2=\bbportlen in
+  	(Motor_out1) to[in=0] (\x1+\n2,\n1) -- (\x2-\n2,\n1) to[out=180] (Sigma1_in1);
+	\draw[label]
+		node[left=.3 of Y_in1] {\footnotesize Extra payload}
+		node[left=.3 of Y_in2] {\footnotesize Velocity}
+		node[right=.3 of Y_out1] {\footnotesize Voltage}
+		node[right=.3 of Y_out2] {\footnotesize Current}
+		node[right=.3 of Y_out3] {\footnotesize Cost \$}
+		node[above right=.2 and 0 of Chassis_out1] {\tiny Torque}
+		node[above right=.2 and 0 of Chassis_out2] {\tiny Speed}
+		node[above right=.2 and 0 of Chassis_out3] {\tiny Cost \$}
+		node[above right=.3 and .3 of Motor_out1, align=center, font=\tiny] {Motor\\weight}
+	;
+\end{tikzpicture}

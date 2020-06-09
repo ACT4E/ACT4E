@@ -1,0 +1,270 @@
+% !TEX root = ../CategoricalCoDesign.tex
+\section{Concepts of  Formal Engineering Design}
+
+This chapter introduces the basic concepts of engineering design and the basic definitions of
+category theory, and describes how category theory can be a useful language for the purpose of
+formal engineering design.
+
+\subsection{Basic concepts of formal engineering design}
+
+We will informally introduce some of the basic nomenclature of engineering
+design~\cite{book-formal-engineering-design}. Later, all these concepts will find a formal
+definition in the language of category theory.
+
+\paragraph{Functionality and functional requirements}
+
+You are an engineer in front of an empty whiteboard, ready to start designing the next product.
+The first question to ask is: What is the \emph{purpose} of the product to be designed?
+
+The purpose of the product is expressed by the \emph{functional requirements}, sometimes called
+\emph{functional specifications}, or simply \emph{function}.
+
+Unfortunately, the word ``function'' conflicts with the mathematical concept. Therefore, we
+will talk  about \emph{functionality}. Moreover, we will never use the word ``function'', and
+instead use \emph{map} to denote the mathematical concept.
+
+\begin{example}
+    These are a few examples of functional requirements:
+
+    \begin{compactitem}
+        \item A car must be able to transport at least $n \geq 4$ passengers.
+        \item A battery must store at least $\unit[100]{kJ}$ of energy.
+        \item An autonomous vehicle should reach at least $\unit[20]{mph}$ while guaranteeing safety.
+    \end{compactitem}
+\end{example}
+
+\paragraph{Resources and resource constraints}
+
+We call \emph{resources} what we need to pay to realize the given functionality.
+In some contexts, these are better called \emph{costs}, or \emph{dependencies}.
+
+
+\begin{example}
+These are a few examples of resource constraints:
+\begin{compactitem}
+\item A car should not cost more than \unit[15000]{USD}.
+\item A battery should not weigh more than \unit[1]{kg}.
+\item A process should not take more than \unit[10]{s}.
+\end{compactitem}
+\end{example}
+
+\paragraph{Duality of functionality and resources}
+
+There is an interesting duality between functionality and resources.
+
+When designing systems, one is given functional requirements, as a \emph{lower bound} on the
+functionality to provide, and  resource constraints, which are an \emph{upper bound} on the
+resources to use.
+
+As far as design objectives go, most can be understood as either \emph{minimize resource use}
+or \emph{maximize functionality provided}.
+
+This duality between functionality and resources will be at the
+center of our formalization.
+
+\paragraph{Non-functional requirements}
+
+Functionality and resources do not cover all the requirements--- there is, for example, a
+large class of \emph{non-functional requirements}~\cite{olly} such as the extensibility and the
+maintainability of the system. Nevertheless, functionality and resources can express most of
+the requirements which can be quantitatively evaluated, at least prior to designing, assembling,
+and testing the entire system.
+
+\paragraph{Implementation space}
+
+The \emph{implementation space} or \textit{design space} is the set of all possible design choices that could be chosen;
+by \textit{implementation}, or the word ``design'', used as a noun, we mean one particular  set of choices. The implementation space is the set over which we are optimizing; an implementation is a particular point in that set~(\cref{fig:impspace}).
+
+\begin{figure}[h!]
+    \todo{Implementation space; a point inside}
+    \caption{An \emph{implementation} is a particular point in the implementation space.}
+    \label{fig:impspace}
+\end{figure}
+
+
+The interconnection between functionality, resources, and implementation spaces
+is as follows. We will assume that, given one implementation, we can evaluate it
+to know the functionality and the resources spaces~(\cref{fig:FIR}).
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_fir}
+    %\includegraphics[scale=0.33]{dpcatfig_fir}
+    \caption{\label{fig:FIR}}
+\end{figure}
+
+
+% \paragraph{Preference / utility}
+%
+% Both functionality and resources are ordered sets. In fact, the functional
+% requirements are usually specified as lower bounds, and the resource
+% constraints are specified as upper bounds.
+
+
+\paragraph{Systems and components}
+
+Engineers tend to approach complex design problems hierarchically.  The usual
+nomenclature refers to \textit{systems} being decomposed into \textit{components}.
+
+What is a system, and what is a component? Here is a great quote:
+
+\begin{quote}
+A system is composed of components; \\
+a component is something you understand.\\
+---Howard Aiken\footnote{
+Howard H. Aiken (1900-1973), creator of the MARK I computer.
+Quoted by Kenneth E. Iverson (1920-2004), creator of programming language APL.
+Quoted in this paper\cite{that-paper},
+  but ultimately sourceless and probably apocryphal.}
+\end{quote}
+
+The first part of the quote, "A system is composed of components", is plain as day as much as
+it is tautological. We could equally say: "A system is partitioned in parts".
+
+The second part, "a component is something you understand", is the insightful part: We call
+"system" what is not obvious to understand, even if we understand all its components
+separately.
+
+Whether something can be considered a component, an indivisible atom in the theory, depends on the context.
+%
+% This definition is, of course, an anthropocentric definition, as it is a
+% limitation of the human mind, related to the amount of neurons in the brain. It
+% also depends on what exactly is the task at hand with which we are confronted.
+
+
+\paragraph{Interfaces and interconnection}
+
+Components are \emph{interconnected} to create a system.
+This implies that we have defined the \emph{interfaces} of components, which
+have the dual function of delimiting when one component ends and another begins,
+and also to describe exactly what is the nature of their interaction.
+
+\begin{example}
+    \todo{Dynamical systems}
+\end{example}
+
+\begin{example}
+    \todo{Energy exchange}
+\end{example}
+
+In this paper, we will present a formalism in which the functionality and resources
+are the interfaces used for interconnection: Two components are connected
+if the resources required by the first correspond to the functionality
+provided by the second.
+%
+% Pictorially, the situation is as in \cref{fig:FIRFIR}.
+%
+% \begin{figure}[h!]
+%     \todo{F-I-R-F-I-R}
+%     \caption{\label{fig:FIRFIR}}
+% \end{figure}
+
+\AC{add example}
+\GZ{Question: Could we take one of the easy examples in your paper?}
+
+
+\paragraph{Abstraction}
+
+By \emph{abstraction}, one usually means that it is possible to ``zoom out'',
+in the sense that a system of components can be seen as a component itself,
+which can be part of larger systems.
+
+\todo{Say something about systems of systems}
+
+
+\paragraph{Compositionality}
+
+A \emph{compositional} property is a property that is preserved by interconnection and abstraction; assuming each component in a system satisfies that property, also the system as a whole satisfies the property.
+
+\begin{example}
+One can compose two electronic circuits by joining their terminals to obtain
+another electronic circuit. We would say that the property
+of being an electronic circuit is compositional.
+% However, in general the dynamics
+% of the two circuits could be arbitrarely different if the
+\end{example}
+
+
+
+\paragraph{Design Queries}
+
+\AC{Introduce the 3/4 usual queries}
+
+
+
+%\begin{example}
+%Let's consider a linear time-invariant system
+%    \begin{equation*}
+%    	\begin{align}
+%    		\dot{x}_1(t) &= A_1x_1(t)+B_1u_1(t)\\
+%    		y_1(t)&=C_1x_1(t)+D_1u_1(t),
+%    	\end{align}
+%    \end{equation*}
+%    where $u_1(t)$ represents the input of the system and $y_1(t)$ represents its output. If we now consider a second linear time-invariant system which has as input the output of the first linear system, we can write it as
+%    \begin{equation*}
+%    	\begin{align}
+%    		\dot{x}_2(t)&=A_2x_2(t)+B_2C_1x_1(t)+B_2D_1u_1(t)\\
+%    		y_2(t)&=C_2x_2(t)+D_2C_1x_1(t)+D_2D_1u_1(t).
+%    	\end{align}
+%    \end{equation*}
+%    These two systems can be re-written into a single system, which turns out to be linear time-invariant as well:
+%    \begin{equation*}
+%    \begin{align}
+%    	\begin{bmatrix}
+%    	\dot{x}_1(t)\\
+%    	\dot{x}_2(t)	
+%    	\end{bmatrix}&=
+%    	\begin{bmatrix}
+%    	A_1&0\\
+%    	B_2C_1&A_2
+%    	\end{bmatrix}\begin{bmatrix}
+%    	x_1(t)\\
+%    	x_2(t)
+%    	\end{bmatrix}+
+%    	\begin{bmatrix}
+%    		B_1\\
+%    		B_2D_1
+%    	\end{bmatrix}u_1(t)\\
+%    	\begin{bmatrix}
+%    	y_1(t)\\
+%    	y_2(t)	
+%    	\end{bmatrix}&=\begin{bmatrix}
+%    	C_1&0\\
+%    	D_2C_1&C_2
+%    	\end{bmatrix} \begin{bmatrix}
+%    	x_1(t)\\
+%    	x_2(t)
+%    	\end{bmatrix} + 
+%    	\begin{bmatrix}
+%    		D_1\\
+%    		D_2D_1
+%    	\end{bmatrix}u_1(t).
+%    \end{align}
+%    \end{equation*}
+%
+%\end{example}
+
+\todo{check commented example}
+
+%
+% In Censi's theory, one considers ``design problems''
+% as relations between ``resources''---such as batteries, motors, robots, etc.
+
+%
+% \begin{compactitem}
+%     \item a notion of ``resources''
+%     \item a notion of ``resource transformation'' (how one resource can be turned into another);
+%     \item a notion of composition (vertical and horizontal composition);
+%     \item and a notion of utility: one object may be more useful in the design space than another.
+% \end{compactitem}
+%
+% We will see that category theory provides a great way to describe all this
+% notions together in a clear framework.
+
+
+
+
+
+
+
+
