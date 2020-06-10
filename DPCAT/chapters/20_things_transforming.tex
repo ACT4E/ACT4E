@@ -110,6 +110,8 @@ In addition, there are two properties that must hold:
 \end{definition}
 \end{shaded}
 
+
+
 \AC{ Given that this is the first example of a category, let's list explicitly
 the category that we are using. (wheels, converters, energy, etc.) }
 
@@ -141,10 +143,14 @@ it is possible to regenerate power; that is, we can obtain rotational motion of 
 translational motion (via $\mathsf{move}$), and then convert the rotational motion into electric
 power (via $\mathsf{dynamo}$)~(\cref{fig:e6}).
 
-\todo[inline]{
-Add remark here explaining the
-relation between $;$ and $\circ$.
-}
+\begin{remark}
+We denote map composition in a somewhat unusual way---sometimes preferred by category-theorists and computer scientists---namely in \emph{diagrammatic order}. That is, given $f\colon A\to B$ and $g\colon B\to C$, we denote their composite by $(f\then g)\colon A\to C$, pronounced ``$f$ then $g$'' rather than the more typical $g\circ f$ (``$g$ after $f$'').
+
+Composition of maps is unital and associative: for any $f\colon A\to B$, $g\colon B\to C$, and $h\colon C\to D$, we have
+\begin{equation}
+(\id_A\then f)=f=(f \then \id_B)\qquad\text{and}\qquad f\then (g\then h)=(f\then g)\then h.
+\end{equation}
+\end{remark}
 
 \begin{figure}[h!]
     \centering
@@ -222,24 +228,24 @@ Consider two currencies, $\mathsf{C,D}$. A currency exchanger from $\mathsf{C}$ 
         \unit[p]{\mathsf{C}}&\mapsto \unit[q]{\mathsf{D}} \coloneqq a\cdot \unit[p]{\mathsf{C}} -b,
         \end{aligned}
     \end{equation}
-   where $a$ represents the exchange rate from $\mathsf{C}$ to $\mathsf{D}$, and $b$ represents the fixed commission of the currency exchanger. As an example, consider three currency exchange companies which operate on several currencies (\cref{tab:currencycompanies}).
+   where $a$ represents the exchange rate from $\mathsf{C}$ to $\mathsf{D}$, and $b$ represents the fixed commission of the currency exchanger. Note that one can define the identity currency exchanger, $\tup{1,0}$, which is equivalent to not change the money. As an example, consider three currency exchange companies which operate on several currencies (\cref{tab:currencycompanies}).
 \begin{table}[h]
     \centering
     \begin{tabular}{c|c|c|c}
          operation name& details &$a$ (exchange rate)&$b$   (fixed commission)  \\
-         $A$&USD to CHF&\unitfrac[0.95]{USD}{CHF}&\unit[2]{CHF}\\
-         $B$&CHF to USD&\unitfrac[1.05]{CHF}{USD}&\unit[1.5]{USD}\\
-         $C$&USD to SGD&$a_\mathrm{1,US}$&$b_\mathrm{1,US}$    \end{tabular}\\[+5pt]
+         $A$&USD to CHF&\unitfrac[0.95]{CHF}{USD}&\unit[2.0]{CHF}\\
+         $B$&CHF to USD&\unitfrac[1.05]{USD}{CHF}&\unit[1.5]{USD}\\
+         $C$&USD to SGD&\unitfrac[1.40]{SGD}{USD}&\unit[1.0]{SGD}    \end{tabular}\\[+5pt]
          \begin{tabular}{c|c|c|c}
-         operation name& details &$a$ (exchange rate)&$b $ (fixed commission)  \\ $D$&USD to CHF&$\unitfrac[12]{CHF}{USD}$&$\unit[1]{USD}$\\
-         $E$&SGD to USD&$a_\mathrm{2,SU}$&$b_\mathrm{2,SU}$
+         operation name& details &$a$ (exchange rate)&$b $ (fixed commission)  \\ $D$&USD to CHF&$\unitfrac[1.0]{CHF}{USD}$&\unit[1]{CHF}\\
+         $E$&SGD to USD&\unitfrac[0.72]{USD}{SGD}&\unit[3.0]{USD}
     \end{tabular}\\[+5pt]
     \begin{tabular}{c|c|c|c}
          operation name& details &$a$ (exchange rate)&$b $ (fixed commission)  \\
-        $F$& EUR to CHF&$a_\mathrm{3,EC}$&$b_\mathrm{3,EC}$\\
-        $G$& CHF to EUR&$a_\mathrm{3,CE}$&$b_\mathrm{3,CE}$
+        $F$& EUR to CHF&\unitfrac[1.2]{CHF}{EUR}&\unit[0]{CHF}\\
+        $G$& CHF to EUR&\unitfrac[1.0]{EUR}{CHF}&\unit[1]{EUR}
     \end{tabular}
-    \caption{Three currency exchange companies operating different currencies. \AC{Let's put numbers}
+    \caption{Three currency exchange companies operating different currencies.
     \AC{Give name to the companies}
     }
     \label{tab:currencycompanies}
@@ -263,88 +269,44 @@ We can represent this information as a graph, where the nodes are the currencies
 \caption{Three currency exchange companies operating different currencies as a graph \label{fig:currencygraph}}
 \end{figure}
 
-The graph representation seems enough to describe this as a category, where the objects are the currencies (USD,CHF,EUR, and SGD) and the morphisms are the different exchange operations. However, to properly define this category, we need to define composition and prove that the category is closed with respect to it. Given three currencies $\mathsf{X,Y,Z}$, a currency exchanger from $\mathsf{X}$ to $\mathsf{Y}$ $\tup{a,b}$, and a currency exchanger from $\mathsf{Y}$ to $\mathsf{Z}$ $\tup{c,d}$, one can define their composition as
+The graph representation seems enough to describe this as a category, where the objects are the currencies (USD,CHF,EUR, and SGD), the morphisms are the different exchange operations, and the identity morphisms are identity currency exchangers. However, to properly define this category, we need to define composition and prove that the category is closed with respect to it. Given three currencies $\mathsf{X,Y,Z}$, a currency exchanger $\tup{a,b}$ from $\mathsf{X}$ to $\mathsf{Y}$, and a currency exchanger $\tup{c,d}$ from $\mathsf{Y}$ to $\mathsf{Z}$, one can define their composition as
 \begin{equation}
+\begin{aligned}
 \label{eq:currencycomp}
-    \tup{a,b}\then \tup{c,d}=\tup{\underbrace{c\cdot a}_{e},\underbrace{c\cdot b+d}_{f}}
+    \tup{a,b}\then \tup{c,d}&=\tup{c\cdot a,c\cdot b+d}\\
+    &=\tup{e,f}.
+\end{aligned}
 \end{equation}
-
-
-
-
-
-
-\begin{definition}[Composition of currency exchangers]
-\label{def:compositioncurrency}
-Consider three currencies $\mathsf{A,B,C}$. 
-Given two currency exchangers $\tup{a_\mathsf{AB},b_\mathsf{AB}}$, $\tup{c_\mathsf{BC},d_\mathsf{BC}}$, we define their composition as
+Note that the result of the composition of currency exchangers is a currency exchanger: This is closure. Finally, we need to check unitality and associativity for composition. Given a currency exchanger $\tup{a,b}$ from $\mathsf{X}$ to $\mathsf{Y}$ one has
 \begin{equation}
-\label{eq:currencycomp}
-    \tup{a_\mathsf{AB},b_\mathsf{AB}}\then \tup{c_\mathsf{BC},d_\mathsf{BC}}=\tup{c_\mathsf{BC}\cdot a_\mathsf{AB},c_\mathsf{BC}\cdot b_\mathsf{AB}+d_\mathsf{BC}}
+    \begin{aligned}
+    \tup{1,0}\then \tup{a,b}&=\tup{a,b}\then \tup{1,0}\\
+    &=\tup{a,b},
+    \end{aligned}
 \end{equation}
-\end{definition}
-
-
+which is unitality. Furthermore, given a currency exchanger $\tup{c,d}$ from $\mathsf{Y}$ to $\mathsf{Z}$ and a currency exchanger $\tup{e,f}$ from $\mathsf{Z}$ to $\mathsf{W}$, one has
+\begin{equation}
+    \begin{aligned}
+    (\tup{a,b}\then \tup{c,d})\then \tup{e,f}&=\tup{a,b}\then( \tup{c,d}\then \tup{e,f})\\
+    &=\tup{eca, ecb+ed+f},
+    \end{aligned}
+\end{equation}
+which is associativity.
+We are now ready to properly define the category of currency exchangers $\mathbf{Curr}$.
 
 \begin{definition}[Category of currencies]
     The category of currencies $\mathbf{Curr}$ is specified by:
     \begin{compactenum}
-        \item \emph{Objects:} $\Ob_\mathbf{Curr}$ is a collection of currencies (units).
-        \item \emph{Morphisms:} Given two currencies $\mathsf{C},\mathsf{D}\in \Ob_{\mathbf{Curr}}$, morphisms between them are currency exchangers $\tup{a_\mathsf{CD},b_\mathsf{CD}}$. 
-        \item \emph{Identity morphism:} Given an object $C\in \Ob_\mathbf{Curr}$, the identity morphism is given by the currency exchanger with $a_\mathsf{CC}=1$ and $b_\mathsf{CC}=0$, i.e. $\tup{1_\mathsf{AA},0_\mathsf{AA}}$.
-        \item \emph{Composition of morphisms:} The composition of morphisms is given by \cref{def:compositioncurrency}.
+        \item \emph{Objects:} $\Ob_\mathbf{Curr}$ is a collection of currencies.
+        \item \emph{Morphisms:} Given two currencies $\mathsf{C},\mathsf{D}\in \Ob_{\mathbf{Curr}}$, morphisms between them are currency exchangers $\tup{a,b}$ from $\mathsf{C}$ to $\mathsf{D}$. 
+        \item \emph{Identity morphism:} Given an object $C\in \Ob_\mathbf{Curr}$, the identity morphism is given by the currency exchanger $\tup{1,0}$.
+        \item \emph{Composition of morphisms:} The composition of morphisms is given by composition of currency exchangers.
     \end{compactenum}
 \end{definition}
 
-\begin{lemma}
-    $\mathbf{Curr}$ is a category.
-\end{lemma}
-\begin{proof}
-    We need to show that the composition is unital and associative. For unitality, using the formula we just derived, it is easy to check that:
-    \begin{equation}
-        \begin{aligned}
-        \tup{a_\mathsf{AA},b_\mathsf{AA}}\then \tup{a_\mathsf{AB},b_\mathsf{AB}}&= \tup{a_\mathsf{AB},b_\mathsf{AB}}\then \tup{a_\mathsf{BB},b_\mathsf{BB}}\\
-        &=\tup{1\cdot a_\mathsf{AB},0+b_\mathsf{AB}}\\
-        &=\tup{a_\mathsf{AB},b_\mathsf{AB}}
-        \end{aligned}
-    \end{equation}
-    Finally, associativity follows from the derived closed form for composition.
-\end{proof}
+The category Curr represents the set of all possible currency exchangers that could
+ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that given 1 USD, will give you back 2 USD. This highlights a recurring topic: often mathematicians will be happy to define a broader category of objects, while, in practice, the engineer will find himself thinking about a more constrained set of objects.
 
-\begin{remark}
-Consider three currencies $\mathsf{A,B,C}$, and the currency exchangers $\tup{a_\mathsf{AB},b_\mathsf{AB}}$,
-$\tup{a_\mathsf{BC},b_\mathsf{BC}}$, and $\tup{a_\mathsf{CA},b_\mathsf{CA}}$. The composition of the currency exchangers reads:
-\begin{equation}
-    \begin{aligned}
-     \tup{a_\mathsf{AB},b_\mathsf{AB}}\then \tup{a_\mathsf{BC},b_\mathsf{BC}} \then \tup{a_\mathsf{CA},b_\mathsf{CA}} &=\tup{\underbrace{a_\mathsf{CA} a_\mathsf{BC} a_\mathsf{AB}}_{\diamond},\underbrace{a_\mathsf{CA}a_\mathsf{BC}b_\mathsf{AB}+a_\mathsf{CA}b_\mathsf{BC}+b_\mathsf{CA}}_{\star}}.
-    \end{aligned}
-\end{equation}
-Note that while $\diamond=1$ (exchange rates compensating), $\star\neq 0$, because of the commissions. This shows that there are multiple morphisms from $\mathsf{A}$ to $\mathsf{A}$.
-\end{remark}
-
-\AC{The category Curr represents the set of all possible currency exchangers that could
-ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that given 1 USD, will give you back 2 USD.}
-
-\AC{This highlights a recurring topic: often mathematicians will be happy to 
-define a broader category of objects, while, in practice, the engineer
-will find himself thinking about a more constrained set of objects.}
-
-\AC{Let's make a particular example. Suppose that we have three currency exchange 
-companies, which operate on the following currencies:}
-
-\AC{(Three tables; each table shows each row = a morphism). Each row
-is labeled as "op1", "op2", .../.}
-
-\AC{We can represent this information as a graph, where the nodes are the
-currencies and the edges are particular exchange operations.}
-
-\AC{(figure here)}
-
-\AC{As displayed, this is not a category. In fact, what's missing is...}
-
-\AC{We can make it into a category by computing its closure...}
-
-\AC{(Explain closure operation)}
 
 \AC{(Show how we can compute the homsets recursively. Show 
 that the homsets contain zero conversion (you don't get any money back)}
@@ -358,4 +320,15 @@ These conversions are supposed to be pareto fronts (we have a,b). }
 Optimal path would never pass through a currency multiple time. 
 (Valid with some slight assumption on the currency exchangers: you will
 always lose changing back and forth the same currency)}
+\begin{remark}
+Consider three currencies $\mathsf{A,B,C}$, and the currency exchangers $\tup{a_\mathsf{AB},b_\mathsf{AB}}$,
+$\tup{a_\mathsf{BC},b_\mathsf{BC}}$, and $\tup{a_\mathsf{CA},b_\mathsf{CA}}$. The composition of the currency exchangers reads:
+\begin{equation}
+    \begin{aligned}
+     \tup{a_\mathsf{AB},b_\mathsf{AB}}\then \tup{a_\mathsf{BC},b_\mathsf{BC}} \then \tup{a_\mathsf{CA},b_\mathsf{CA}} &=\tup{\underbrace{a_\mathsf{CA} a_\mathsf{BC} a_\mathsf{AB}}_{\diamond},\underbrace{a_\mathsf{CA}a_\mathsf{BC}b_\mathsf{AB}+a_\mathsf{CA}b_\mathsf{BC}+b_\mathsf{CA}}_{\star}}.
+    \end{aligned}
+\end{equation}
+Note that while $\diamond=1$ (exchange rates compensating), $\star\neq 0$, because of the commissions. This shows that there are multiple morphisms from $\mathsf{A}$ to $\mathsf{A}$.
+\end{remark}
+
 
