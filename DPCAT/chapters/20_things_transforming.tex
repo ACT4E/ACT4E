@@ -228,7 +228,7 @@ Consider two currencies, $\mathsf{C,D}$. A currency exchanger from $\mathsf{C}$ 
         \unit[p]{\mathsf{C}}&\mapsto \unit[q]{\mathsf{D}} \coloneqq a\cdot \unit[p]{\mathsf{C}} -b,
         \end{aligned}
     \end{equation}
-   where $a$ represents the exchange rate from $\mathsf{C}$ to $\mathsf{D}$, and $b$ represents the fixed commission of the currency exchanger. Note that one can define the identity currency exchanger, $\tup{1,0}$, which is equivalent to not change the money. As an example, consider three currency exchange companies which operate on several currencies (\cref{tab:currencycompanies}).
+   where $a$ represents the exchange rate from $\mathsf{C}$ to $\mathsf{D}$, and $b$ represents the fixed commission of the currency exchanger. Note that one can define the identity currency exchanger, $\tup{1,0}$, which is equivalent to not change the money. As an example, consider three currency exchange companies $\mathsf{ExchATM}$, $\mathsf{MoneyLah}$, and $\mathsf{Frankurrencies}$, which operate on several currencies (\cref{tab:currencycompanies}).
 \begin{table}[h]
     \centering
     \begin{tabular}{c|c|c|c}
@@ -246,7 +246,6 @@ Consider two currencies, $\mathsf{C,D}$. A currency exchanger from $\mathsf{C}$ 
         $G$& CHF to EUR&\unitfrac[1.0]{EUR}{CHF}&\unit[1]{EUR}
     \end{tabular}
     \caption{Three currency exchange companies operating different currencies.
-    \AC{Give name to the companies}
     }
     \label{tab:currencycompanies}
 \end{table}
@@ -305,30 +304,16 @@ We are now ready to properly define the category of currency exchangers $\mathbf
 \end{definition}
 
 The category Curr represents the set of all possible currency exchangers that could
-ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that given 1 USD, will give you back 2 USD. This highlights a recurring topic: often mathematicians will be happy to define a broader category of objects, while, in practice, the engineer will find himself thinking about a more constrained set of objects.
+ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that given 1 USD, will give you back 2 USD, or even not giving you back any money. This highlights a recurring topic: often mathematicians will be happy to define a broader category of objects, while, in practice, the engineer will find himself thinking about a more constrained set of objects. Particularly, one would like to find the best conversions, which can be expressed as \emph{pareto fronts}, since they are given as tuples $\tup{a,b}$. To do so, one only needs to iterate a finite number of times, since the optimal path (conversion morphism), if such a morphism exists, will never pass through the same currency more than once. This is valid if we assume the action of converting back and forth the same currency to have a cost (through the commission) different from 0. To see this, consider three currencies $\mathsf{A,B,C}$, a currency exchanger from $\mathsf{A}$ to $\mathsf{B}$  $\tup{a,b}$, a currency exchanger from $\mathsf{B}$ to $\mathsf{C}$ 
+$\tup{c,d}$, and a currency exchanger from $\mathsf{C}$ to $\mathsf{A}$ $\tup{e,f}$. The composition of the currency exchangers reads:
+\begin{equation}
+\tup{\underbrace{eca}_{\diamond}, \underbrace{ecb+ed+f}_{\star}}
+\end{equation}
+Assuming $e=a^{-1}$ (i.e., an exchange rate direction is not more profitable than the other), $\star\neq 0$, because of the commissions. This shows that there are multiple morphisms from $\mathsf{A}$ to $\mathsf{A}$, and that the identity morphism is the most convenient one.
 
-
-\AC{(Show how we can compute the homsets recursively. Show 
-that the homsets contain zero conversion (you don't get any money back)}
-
-\AC{(Say that one would be interested in finding the best conversions anyway.
-These conversions are supposed to be pareto fronts (we have a,b). }
 
 \AC{(Note, don't write: if bias is 0, then take the log of conversion rates, and they add: solve using Dijkstra.)}
 
-\AC{Prove: we only need to iterate a finite number of times. Sketch: 
-Optimal path would never pass through a currency multiple time. 
-(Valid with some slight assumption on the currency exchangers: you will
-always lose changing back and forth the same currency)}
-\begin{remark}
-Consider three currencies $\mathsf{A,B,C}$, and the currency exchangers $\tup{a_\mathsf{AB},b_\mathsf{AB}}$,
-$\tup{a_\mathsf{BC},b_\mathsf{BC}}$, and $\tup{a_\mathsf{CA},b_\mathsf{CA}}$. The composition of the currency exchangers reads:
-\begin{equation}
-    \begin{aligned}
-     \tup{a_\mathsf{AB},b_\mathsf{AB}}\then \tup{a_\mathsf{BC},b_\mathsf{BC}} \then \tup{a_\mathsf{CA},b_\mathsf{CA}} &=\tup{\underbrace{a_\mathsf{CA} a_\mathsf{BC} a_\mathsf{AB}}_{\diamond},\underbrace{a_\mathsf{CA}a_\mathsf{BC}b_\mathsf{AB}+a_\mathsf{CA}b_\mathsf{BC}+b_\mathsf{CA}}_{\star}}.
-    \end{aligned}
-\end{equation}
-Note that while $\diamond=1$ (exchange rates compensating), $\star\neq 0$, because of the commissions. This shows that there are multiple morphisms from $\mathsf{A}$ to $\mathsf{A}$.
-\end{remark}
+
 
 

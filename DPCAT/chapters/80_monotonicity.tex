@@ -26,12 +26,12 @@ a_1\leq_A a_2 \Imp a_1=a_1\then \id_A \leq_A a_2\then \id_A = a_2.
 
 
 \begin{example}
-In \cref{ex:hasseinclusion} we presented the poset arising from the power set of a set $A=\{a,b,c\}$ and ordered via subset inclusion. The map $\vert \cdot \vert \colon \powerset{A}\to \mathbb{N}$ (cardinality), is a monotone map:
+In \cref{ex:hasseinclusion} we presented the poset arising from the power set of a set $A=\{a,b,c\}$ and ordered via subset inclusion. The map $\vert \cdot \vert \colon \powerset(A)\to \mathbb{N}$ (cardinality), is a monotone map:
 \begin{center}
 \includesag{40_dpcatfig_exmonotone}
 \end{center}
 \end{example}
-Monotonicity is a compositional property.
+Note that monotonicity is a compositional property.
 
 \begin{lemma}Given three posets $A, B, C$ and two monotone maps $f\colon A
 \to B$ and  $g\colon B \to C$, the composite map $f\then g\colon  A \to C$ is
@@ -69,37 +69,30 @@ Unless indicated otherwise, in this paper all maps between two posets
 are assumed to be monotone or will turn out to be monotone.
 
 \subsection{A poset as a category}
-\AC{This part is subtle for beginner. A poset is a category,
-but also there is a category of posets. Make a nice "informal" drawing to explain this.}
-
 
 A single poset $\tup{P, \leq}$ can be described as a category, in which
 each point $p\in P$ is an object, and there is a morphism between
-$p$ and $q$ if and only if $p \leq q$.
+$p$ and $q$ if and only if $p \leq q$. This is a ``thin'' category, which means that there is at most one morphism
+between two objects: For any $p,q\in P$, there exist only one relation $p\leq q$ in $P$. The identity morphism is given by the reflexivity of posets, i.e. for any $p\in P$, $p\leq p$. Furthermore, composition is given by transitivity of posets, i.e. for $p,q,r \in P$, $p\leq q$ and $q\leq r$ implies $p\leq r$.
 
-\begin{figure}[h!]
-   \centering
-   \todo{figure fig:poset-as-category}
-   \caption{\label{fig:poset-as-category}}
-\end{figure}
+\begin{example}
+Let's revisit \cref{ex:hasseinclusion}, in which we had a poset $\powerset{\{a,b,c\}}$ with order given by the inclusion:
+\begin{center}
+\begin{tikzcd}
+& \{a,b,c\} & \\
+\{a,b\}\arrow{ru} & \{a,c\}\arrow{u} & \{b,c\}\arrow{lu}\\
+\{a\} \arrow{u}\arrow{ru}& \{b \}\arrow{lu}\arrow{ru} & \{c \}\arrow{u}\arrow{lu} \\
+&\varnothing \arrow{lu}\arrow{ru} \arrow{u}&
+\end{tikzcd}
+\end{center}
+This is a category $\CatC$, with $\ObC=\powerset{\{a,b,c\}}$ and morphisms given by the inclusion. Note that we omit to draw self-arrows for the identity morphisms. Composition is given by the transitivity of the poset. Note, for instance, that since $\{a\}\subset \{a,b\}$ and $\{a,b\} \subset \{a,b,c\}$, we can say $\{a\}\subset \{a,b,c\}$.
+\end{example}
 
-This is a ``thin'' category, which means that there is at most one morphism
-between two objects.
-
-The transitive property of a partial order becomes the composition law
-of a category. In a poset, if $p \leq q$ and $q \leq r$, then $p \leq r$.
-In a category, if there is a morphism $m_1\colon p \to q$ and
-another $m_2\colon q \to r$, then there exists the morphism
-$(m_1 \then m_2)\colon p \to r$.
 
 
 
 \subsection{The category $\Pos$ of posets and monotone maps}
-
-
-
-We will instance \cref{def:categorymain} to describe the category of posets and monotone
-functions, called $\Pos$.
+In the previous section, we described a poset as a category, where the objects are elements of the poset and the morphisms are given by the poset order. In this section, we want to lift this concept and describe a category in which the objects are posets themselves, and the morphisms are monotone functions between them. This category is called $\Pos$.
 
 \begin{definition}[Category $\Pos$]
     The category $\Pos$ is defined by:
@@ -114,7 +107,39 @@ functions, called $\Pos$.
     \end{compactenum}
 \end{definition}
 
-Occasionally we will write $f \colon A \to_{\Pos} B$ to emphasize that a monotone map between posets is a morphism in the category of posets, called~$\Pos$.
+Occasionally we will write $f \colon A \to_{\Pos} B$ to emphasize that a monotone map between posets is a morphism in the category of posets, called~$\Pos$. Note that morphisms in $\Pos$ are morphisms between posets, which we previously defined as categories. The notion of ``morphisms between categories'' is formally described through functors.
+
+\begin{shaded}
+\begin{definition}[Functor]
+\label{def:functor}
+Given the categories $\CatC$ and $\CatD$, to specify a \emph{functor} $F\colon \CatC\to \CatD$ from $\CatC$ to $\CatD$,
+\begin{compactenum}
+    \item for every object $c\in \ObC,$ one specifies and object $F(c)\in \ObD$;
+    \item for every morphism $f\colon c_1\to c_2$ in $\CatC$, one specifies a morphism $F(f)\colon F(c_1)\to F(c_2)$ in $\CatD$.
+\end{compactenum}
+The above constituents must satisfy the following two properties:
+\begin{compactenum}[(a)]
+    \item For every object $c\in \ObC$, one has $F(\id_c)=\id_{F(c)}$.
+    \item For every three objects $c_1,c_2,c_3 \in \ObC$ and two morphisms $f\in \CatC(c_1,c_2)$, $g\in \CatC(c_2,c_3)$, the equation $F(f\then g)=F(f)\then F(g)$ holds in $\CatD$.
+\end{compactenum}
+\end{definition}
+
+\begin{definition}[Full and faithful functors]
+\label{def:functorfullfaith}
+A functor $F\colon \CatC \to \CatD$ is \emph{full} (resp.\ \emph{faithful} if for each pair of objects $x,y\in \CatC$, the function
+\begin{equation}
+    F\colon \CatC(x,y)\to \CatD(F(x),F(y))
+\end{equation}
+is surjective (resp.\ injective).
+\end{definition}
+\end{shaded}
+
+\begin{lemma}
+A monotone function $F$ between posets $P,Q \in \Pos$ is a functor between the categories $P$ and $Q$.
+\end{lemma}
+\begin{proof}
+We start by specifying the functor $F$ by specifying its action on objects (elements of a poset) and on morphisms (order relation). A monotone function maps each element of a poset $p\in P$ to $F(p) \in Q$, and, given two posets $P$ and $Q$, it guarantees that for $p_1,p_2\in P$, $F(p_1),F(p_2)\in Q$,  $p_1\leq p_2$ implies $f(p_1)\leq f(p_2)$. We now need to check the two functor properties. First, consider the identity morphism for $p\in P$, namely $p\leq p$. The application of the functor results in the condition $f(p)\leq F(p)$, which is the identity morphism on $Q$. Finally, given three elements $p_1,p_2,p_3\in P$ and two morphisms $p_1\leq p_2$ and $p_2\leq p_3$, by applying the functor to the morphism composition $p_1\leq p_3$ one obtains $F(p_1)\leq F(p_3)$, which is the same as $F(p_1)\leq F(p_2)$ and $F(p_2)\leq F(p_3)$.
+\end{proof}
 
 
 
@@ -137,10 +162,6 @@ and  $\tup{B, \leq_B}$, the product poset is $\tup{A \times B, \leq_{A\times B}}
         (b_1 \leq_B b_2).
     \end{equation}
 \end{definition}
-
-\begin{figure}[h!]
-\todo{fig:poset-product}
-\end{figure}
 
 \begin{example}
 Consider now the two posets
@@ -188,38 +209,17 @@ order $\leq_{A + B}$ is given by:
 
     The theory of design problems can be easily generalized to preorders, i.e. posets without the antisymmetry property; this means that there could be two elements $a$ and $b$ such that $a\leq b$ and $a \geq b$ but $a \neq b$.
 
-    \AC{add picture about preorders}
+    \begin{equation}
+    \includesag{80_preorder}
+    \end{equation}
 
-    This is actually common in practice---for example, if the order relation comes from human judgement, such as customer preference, all bets are off regarding the consistency of the relation.
-
-    We will only refer to posets for two reasons: (1)~the exposition is smoother, and (2)~given a preorder, computation will always involve passing to the poset representation.
-
+    This is actually common in practice. For example, if the order relation comes from human judgement, such as customer preference, all bets are off regarding the consistency of the relation. We will only refer to posets for two reasons:
+    \begin{compactenum}
+        \item The exposition is smoother;
+        \item Given a preorder, computation will always involve passing to the poset representation.
+    \end{compactenum}
     This means that, given a preorder, we can consider the poset of its equivalence classes, by means of the following equivalence relation:
     \begin{equation}
         a \simeq b \quad \equiv \quad (a \leq b) \wedge (b \leq a).
     \end{equation}%
     
-\begin{shaded}
-\begin{definition}[Functor]
-\label{def:functor}
-Given the categories $\CatC$ and $\CatD$, to specify a \emph{functor} $F\colon \CatC\to \CatD$ from $\CatC$ to $\CatD$,
-\begin{compactenum}
-    \item for every object $c\in \ObC,$ one specifies and object $F(c)\in \ObD$;
-    \item for every morphism $f\colon c_1\to c_2$ in $\CatC$, one specifies a morphism $F(f)\colon F(c_1)\to F(c_2)$ in $\CatD$.
-\end{compactenum}
-The above constituents must satisfy the following two properties:
-\begin{compactenum}[(a)]
-    \item For every object $c\in \ObC$, one has $F(\id_c)=\id_{F(c)}$.
-    \item For every three objects $c_1,c_2,c_3 \in \ObC$ and two morphisms $f\in \CatC(c_1,c_2)$, $g\in \CatC(c_2,c_3)$, the equation $F(f\then g)=F(f)\then F(g)$ holds in $\CatD$.
-\end{compactenum}
-\end{definition}
-
-\begin{definition}[Full and faithful functors]
-\label{def:functorfullfaith}
-A functor $F\colon \CatC \to \CatD$ is \emph{full} (resp.\ \emph{faithful} if for each pair of objects $x,y\in \CatC$, the function
-\begin{equation}
-    F\colon \CatC(x,y)\to \CatD(F(x),F(y))
-\end{equation}
-is surjective (resp.\ injective).
-\end{definition}
-\end{shaded}

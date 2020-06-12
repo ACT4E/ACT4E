@@ -16,7 +16,43 @@ In ref to next section, reorganize the flow like this:
 
 3) What's missing and justifies DP.
 }
+\begin{definition}[Opposite of a poset]
 
+    The \emph{opposite} of a  poset $\langle A, \leq \rangle $ is the poset $\langle A\op, \leq\op\rangle $ that has the same elements as~$A$ and the reverse ordering.
+    For a given~$x \in A$, we use~$x^*$ to represent its corresponding copy in~$A\op$;
+    note that~$x$ and~$x^*$ are distinct.
+    Reversing the order means that, for all $x,y\in A$,
+    \begin{equation}
+        x \leq y \quad \Leftrightarrow \quad y^* \leq\op x^*.
+    \end{equation}
+
+\end{definition}
+
+\begin{figure}[h!]
+   \centering
+   \includesag{40_dpcatfig_opposite}
+   \caption{Opposite of a poset.\label{fig:opposite}}
+\end{figure}
+
+
+\begin{example}[Credit and debt]
+   Let us define the set $\text{USD}=\{\$0.00,\$0.01,\$0.02,\dots\}$
+   of all US dollars monetary quantities approximated to the cent.
+   From this set we can define two posets:
+       $\text{USD}^{+} = \tup{\text{USD}, \leq}$
+       and $\text{USD}^{-} = \tup{\text{USD}, \geq}$
+       that are opposite of each other.
+   If the context is that, given two quantities~$\$1$ and~$\$2$,
+   we prefer~$\$1$ to~$\$2$ (for example because it is a cost to pay to acquire a component), then we are working in~$\text{USD}^{+}$,
+   otherwise we are working in~$\text{USD}^{-}$ (for example
+   because it represents the price at which we are selling our product).
+
+   Traditionally, in double-entry ledger systems, the numbers were not
+   written with negative signs, but rather in color: red and black.
+   From this convention we get the idioms ``being in the black''
+   and ``being in the red''.
+
+\end{example}
 \begin{shaded}
 \begin{definition}[Galois connection]
 \label{def:galois}
@@ -36,3 +72,201 @@ The category $\mathbf{Gal}$ is specified by
     \item \emph{Identity morphism:} For each object $C\in \Ob_\mathbf{Gal}$, we define the identity morphism a pair of identity functions, such that $\text{Id}(C)=C\leq C$.
 \end{compactenum}
 \end{definition}
+
+\newpage
+\subsection{Notebook AC/GZ}
+
+\begin{lemma}
+$LF$ is a lattice with the following choices: ...
+\end{lemma}
+\begin{lemma}
+$UR$ is a lattice with the following choices: ...
+
+Note that the order on $\mathrm{L}F$ is $\subseteq$, and the order on $\mathrm{U}R$ is $\supseteq$.
+\end{lemma}
+
+
+\begin{align}
+    \leq_{LF} & \equiv \subseteq \\ 
+    \bot_{LF} & = \emptyset \\
+    \top_{LF} & = F \\
+    \vee_{LF} & \equiv \cup \\
+    \wedge_{LF} & \equiv \cap \\
+\end{align}
+\begin{align}
+    \leq_{UR} & \equiv \supseteq \\ 
+    \bot_{UR} & =  R\\
+    \top_{UR} & = \emptyset \\
+    \vee_{UR} &\equiv \cap\\
+    \wedge_{UR} & \equiv \cup \\
+\end{align}
+
+Consider the profunctor $d\colon F\tickar R$. 
+
+We can define the maps that work on single functionality 
+and resources:
+
+\begin{equation}
+    \begin{aligned}
+    \theta\colon F&\to \mathrm{U}R\\
+    f&\mapsto \{r\in R : d(f, r) \},
+    \end{aligned}
+\end{equation}
+
+\begin{equation}
+    \begin{aligned}
+    \psi\colon R&\to \mathrm{L}F\\
+    r&\mapsto \{f\in F : d(f, r) \},
+    \end{aligned}
+\end{equation}
+
+We can define the maps that work on multiple functionality 
+and resources:
+
+\begin{equation}
+    \begin{aligned}
+    \alpha\colon \mathrm{L}F&\to \mathrm{U}R\\
+    S&\mapsto \{r\in R : \exists f\in S\colon \ d(f,r)\},
+    \end{aligned}
+\end{equation}
+\begin{equation}
+    \begin{aligned}
+    \beta\colon \mathrm{U}R&\to \mathrm{L}F\\
+    T&\mapsto \{f\in F : \exists r\in T\colon \ d(f,r)\},
+    \end{aligned}
+\end{equation}
+\begin{equation}
+    \begin{aligned}
+    \delta \colon \mathrm{L}F&\to \mathrm{U}R\\
+    S&\mapsto \{r\in R : \forall {f\in S}\colon \ d(f,r)\},
+    \end{aligned}
+\end{equation}
+\begin{equation}
+    \begin{aligned}
+    \gamma \colon \mathrm{U}R&\to \mathrm{L}F\\
+    T&\mapsto \{f\in F : \forall {r\in T}\colon \ d(f,r)\},
+    \end{aligned}
+\end{equation}
+
+\todo[inline]{Can we define $\alpha,\delta$ ($\beta, \gamma$) in terms of $\theta$ ($\psi$)?}
+
+
+
+\begin{align}
+    \alpha(\emptyset_{F}) &= \emptyset_{R} \\
+    \alpha(\bot_{LF}) &= \top_{UR} \\
+    \alpha(F) &\subseteq \text{ any other }\alpha(\cdot) 
+    \\
+    A \subseteq B \ &\Rightarrow\ \alpha(A) \subseteq \alpha(B)
+    \\
+    A \leq_{LF} B \ &\Rightarrow\ \alpha(A) \geq_{UR} \alpha(B) \label{eq:1}\\
+    \alpha(A \cup B) &= \alpha(A) ? \alpha(B) \\
+    \alpha(A \cap B) &= \alpha(A) ? \alpha(B) 
+\end{align}
+
+\begin{align}
+    \beta(\emptyset_{R}) &= \emptyset_{F} \\
+    \beta(\top_{UR}) &= \bot_{LF} \\
+    \beta(\bot_{UR}) &= ... \\
+    A \subseteq B \ &\Rightarrow\ \beta(A) \subseteq \beta(B)     \\
+    A \geq_{UR} B \ &\Rightarrow\ \beta(A) \leq_{LF} \beta(B) \label{eq:1} \\
+    \beta(A \cup B) &= \beta(A) ? \beta(B) \\
+    \beta(A \cap B) &= \beta(A) ? \beta(B)
+\end{align}
+$\delta, \gamma$:
+\begin{align}
+\delta(\emptyset_F) &= R  \\
+    \delta(\bot_{LF}) &= \bot_{UR}  \\
+    \delta(\top_{LF}) &= ... \\
+    A \subseteq B \ &\Rightarrow\ \delta(A) \supseteq \delta(B)\\
+    A \leq_{LF} B \ &\Rightarrow\ \delta(A) \leq_{UR} \delta(B)
+    \\
+    \delta(A \cup B) &= \delta(A) ? \delta(B) \\
+    \delta(A \cap B) &= \delta(A) ? \delta(B)
+\end{align}
+\begin{align}
+   \gamma(\emptyset_R) &= F \\
+    \gamma(\top_{UR}) &= \top_{LF} \\
+    \gamma(\bot_{UR}) &= ... \\
+    A \subseteq B \ & \Rightarrow\ \gamma(A) \supseteq \gamma(B) \\
+    A \leq_{UR} B \ & \Rightarrow\ \gamma(A) \leq_{LF} \gamma(B) \\
+    \gamma(A \cup B) &= \gamma(A) ? \gamma(B) \\
+    \gamma(A \cap B) &= \gamma(A) ? \gamma(B) \\
+\end{align}
+
+
+\begin{definition}[Monotone Galois Connection]
+A monotone Galois connection between $A$ and $B$ is a pair of \textbf{order-preserving} functions $f:A\to B$ and $g:B\to A$ such that for all $a\in A$, $b\in B$:
+\begin{equation}
+    f(a) \leq_B b \quad \Leftrightarrow \quad a \leq_A g(b)
+\end{equation}
+This is equivalent to ask, for all $a\in A$, $b\in B$:
+\begin{equation}
+    a\leq_A g(f(a)) \qquad \text{and} \qquad b\geq_{B}f(g(b))
+\end{equation}
+\end{definition}
+
+
+
+\begin{definition}[Antitone Galois Connection]
+An antitone Galois connection between $A$ and $B$ is a pair of \textbf{order-reversing} functions $f:A\to B$ and $g:B\to A$ such that for all $a\in A$, $b\in B$:
+\begin{equation}
+    b \leq_B f(a) \quad \Leftrightarrow \quad a \leq_A g(b) 
+\end{equation}
+This is equivalent to ask for all $a\in A$, $b\in B$:
+\begin{equation}
+a \leq_A g(f(a))   \qquad \text{and} \qquad  b \leq_B f(g(b))
+\end{equation}
+\end{definition}
+
+
+\begin{lemma} $(\delta, \gamma)$~forms a \textbf{monotone} Galois connection between $LF$ and $UR$.
+\end{lemma}
+\begin{proof}
+
+Preliminarly note that $\delta$ and $\gamma$ are order-\textbf{preserving} and monotone. First of all, notice that $\delta \then \gamma$ is monotone as well (composition of monotone functions is monotone). We need to show that $\delta \then \gamma$ is increasing. 
+
+\end{proof}
+
+\begin{lemma} $(\alpha, \beta)$ forms an  \textbf{antitone} Galois connection between $LF$ and $UR$.
+\end{lemma}
+\begin{proof}
+Preliminarly note that $\alpha$ and $\beta$ are order \textbf{reversing}. For $S\in LF$, $T\in UR$, we want to show
+\begin{equation}
+    S\leq_{LF} \beta(\alpha(S)) \text{ and } T\leq_{UR} \alpha(\beta(T)).
+\end{equation}
+Let's start from the left. One has:
+\begin{equation}
+    \begin{aligned}
+    S&\leq_{LF} \beta(\alpha(S))\\
+    S&\subseteq \beta(\alpha(S))
+    \end{aligned}
+\end{equation}
+We know that $S\subseteq S$. Let's try out two cases (I know it's not the proof, but we may use these facts):
+\begin{itemize}
+    \item Assume $S=\emptyset_F$. We know that $\alpha(S)=\emptyset_R$, and we know that $\beta(\alpha(S))=\emptyset_F$. This means that $S\subseteq \beta(\alpha(S))$. 
+    \item Assume $S=F$. We know that $\alpha(S)$ includes any other $\alpha(F')$, $F' \in F$. Furthermore, $\beta(\alpha(F))$ will also include any other $\beta(R')$, $R'\in R$, but for sure $F\supseteq \beta(\alpha(F))$. If this is true, then $\beta(\alpha(F))=F$.
+\end{itemize}
+Now, can we use the two extreme cases to conclude something on any $S\in F$?
+
+\begin{equation}
+    \begin{aligned}
+    \beta(\alpha(S))&=\{f\in F\colon \exists r\in \alpha(S)\colon d(f,r)\}
+    \end{aligned}
+\end{equation}
+
+
+
+\end{proof}
+% We want to show that $\delta$ and $\gamma$ form a galois connection, i.e. that for $c\in \mathrm{L}F, d\in \mathrm{U}R$:
+% \begin{equation}
+%     \delta(c)\supseteq d \Leftrightarrow c\subseteq \gamma(d).
+% \end{equation}
+% Let's show the two directions.
+% \begin{itemize}
+%     \item For the $\Rightarrow$ direction one starts from $\alpha(a)\supseteq b$. Assume $d=\varnothing$, for which the left-hand side is always true. However, $\gamma(\varnothing)=\varnothing$, and $c\subseteq \varnothing$ does not make sense.
+% \end{itemize}
+
+
+
+

@@ -1,7 +1,52 @@
 % !TEX root = ../CategoricalCoDesign.tex
 \section{Thinking about how things connect to each other}
+The $\mathbf{Curr}$ category was a good example of how one can use category theory to think about things transform into each other. In this section, we want to think about how things connect to each other.
 \subsection{Trekking}
+Consider geographical locations expressed through coordinates $\tup{x,y}\in \mathbb{R}^2$. Furthermore, consider a map $\mathsf{alt}$ which, for a known place, returns its altitude (assuming smooth terrain):
+\begin{equation}
+    \begin{aligned}
+    \mathsf{alt}\colon \mathbb{R}^2&\to \mathbb{R}_{\geq 0}\\
+    \tup{x,y}&\to a.
+    \end{aligned}
+\end{equation}
+Furthermore, consider a human which can traverse trails with a maximum inclination of $\alpha>0$. We can think about this as a category (call it $\mathbf{trek}$), where objects are geographical locations $\tup{x,y}\in \mathbb{R}^2$ and morphisms are paths between them. The identity morphism for each location consists of the trivial path (i.e. not moving), and composition is given by paths concatenation. We can now think of the aforementioned human, willing to go from a location $\tup{x,y}$ to a location $\tup{v,w}$. Finding a path consists of finding at least a morphism in $\Hom_\mathbf{trek}(\tup{x,y},\tup{v,w})$ satisfying the condition on the maximum inclination $\alpha$. We can make the notion of geographical locations and paths more formal, by defining categories from graphs.
 
+
+\subsection{Mobility}
+Consider now the example of mobility. For a specific mode of transportation, say a car, we can define a graph $G_\mathrm{c}=(V_\mathrm{c},A_\mathrm{c},s_\mathrm{c},t_\mathrm{c})$, where $V$ represents geographical locations that the car can reach in a city and $A_\mathrm{c}$ represents the paths it can take (e.g. roads). Similarly, consider a graph $G_\mathrm{s}=(V_\mathrm{s},A_\mathrm{s},s_\mathrm{s},t_\mathrm{s})$, representing the subway system of a city, with stations $V_\mathrm{s}$ and lines going through paths $A_\mathrm{s}$. In the following, we want to express intermodality, i.e. someone reaching a certain location on a car and then deciding to take the subway. By considering the graph $G=(V,A,s,t)$, with $V=V_\mathrm{c}\cup V_\mathrm{s}$ and $A=A_\mathrm{c}\cup A_\mathrm{s}$, one obtains the desired intermodality. The arising graph can be seen as a new category, with objects $V$ and morphisms $A$.
+\begin{example}
+Consider a the car category with $V_\mathrm{c}=\{\mathsf{ETHZ},\mathsf{Oerlikon},\mathsf{Uetliberg}\}$ and arrows as in the following diagram:
+\begin{center}
+    \begin{tikzcd}
+    &\mathsf{Uetliberg}\arrow[dr]&\\
+    \mathsf{ETHZ}\arrow[rr]\arrow[ur]& &\mathsf{Oerlikon}
+    \end{tikzcd}
+\end{center}
+Furthermore, consider the subway category with $V_\mathrm{s}=\{\mathsf{ETHZ},\mathsf{Oerlikon},\mathsf{Seebach},\mathsf{Dietlikon}\}$ and arrows as in the following diagram:
+\begin{center}
+    \begin{tikzcd}
+    &&\mathsf{Dietlikon} \arrow[d,bend left=20]\\
+    \mathsf{ETHZ}\arrow[r,bend left= 20]&\mathsf{Oerlikon}\arrow[r,bend left= 20]\arrow[l,bend left= 20] &\mathsf{Seebach}\arrow[l,bend left= 20]\arrow[u,bend left=20]
+    \end{tikzcd}
+\end{center}
+The union of the two, which we call the \emph{intermodal graph}, can be represented as a graph (with \textcolor{red}{red} arrows for the car network and \textcolor{blue}{blue} arrows for the subway network):
+\begin{center}
+    \begin{tikzcd}
+    &\mathsf{Uetliberg}\arrow[dr,red]&\mathsf{Dietlikon} \arrow[d,bend left=20,blue]\\
+    \mathsf{ETHZ}\arrow[ur,red]\arrow[r,red]\arrow[r,bend left= 20,blue]&\mathsf{Oerlikon}\arrow[r,bend left= 20,blue]\arrow[l,bend left= 20,blue] &\mathsf{Seebach}\arrow[l,bend left= 20,blue]\arrow[u,bend left=20,blue]
+    \end{tikzcd}
+\end{center}
+\end{example}
+This concept is formalized with the union of categories
+\begin{definition}[Union of categories]
+Given two categories $\CatC,\CatD$, one can create the \emph{union} $\Cat{E}$ of the two, which is specified by:
+\begin{compactenum}
+\item \emph{Objects:} $\Ob_\Cat{E}=\Ob_\CatC \cup \Ob_\CatD$.
+\item \emph{Morphisms:} A morphism $f$ is given by considering the followng. If $f\in \Hom_\CatC(X,Y)$, then $f\in \Hom_\Cat{E}(X,Y)$. If $f\in \Hom_\CatD(X,Y)$, then $f\in \Hom_\Cat{E}(X,Y)$.
+\item \emph{Identity morphism:} For any morphism in $\Cat{E}$, the identity morphism remais the same as in the original category.
+\item \emph{Composition operation}: The composition of morphisms remains the same.
+\end{compactenum}
+\end{definition}
 
 \subsection{Generating categories from graphs}
 
@@ -15,13 +60,13 @@ Consider any graph $G=(V,A,s,t)$. One can define the category $\mathbf{Free}(G)$
 \end{definition}
 \end{shaded}
 
+With these two new definitions, we can see that $\mathbf{trek}$ is the free category on a graph with vertices given by geographical locations $\tup{x,y}\in \mathbb{R}^2$ and arrows given by paths between them. Particularly, a valid path $p\colon \tup{x,y}\mapsto \tup{v,w}$ for the vehicle to be able to reach a destination $\tup{v,w}$ from $\tup{x,y}$ can be written as a composition of paths $p_1\then \ldots \then p_n$, where $s(p_1)=\tup{x,y}$ and $t(p_n)=\tup{v,w}$, and
+\begin{equation}
+    \frac{\mathsf{alt}(t(p_i))-\mathsf{alt}(s(p_i))}{\vert t(p_i), s(p_i)\vert}\leq \alpha, \quad \forall i\in \{1,\ldots, n\},
+\end{equation}
+where $\vert \tup{x,y},\tup{v,w}\vert$ represents the distance $\sqrt{(v-x)^2+(w-y)^2}$.
 
-\subsection{Mobility}
 
-\AC{Ok now you have Free category of a graph; inevitable to sketch
-the application of mobility graph.}
-
-\AC{(What operation on categories is the adjoining of two different mobility graphs?)}
 
 \subsection{The Set category}
 

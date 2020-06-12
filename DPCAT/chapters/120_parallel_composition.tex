@@ -1,5 +1,33 @@
 % !TEX root = ../CategoricalCoDesign.tex
 \section{Parallel composition}
+
+\begin{example}
+After the X101 spontaneously combusted in low Earth orbit, the astronauts at Jeb's Spaceship Parts go on strike. They demand that the engineers take into account safety and living conditions on the future X102. As long as the propulsion and life support systems of the X102 do not interact, we can simply tensor the two design problems representing these systems into one, big co-design problem.
+\begin{equation}
+\includesag{50_engine_tensor_1_2}
+\end{equation}
+\end{example}
+In $\DP$, putting two design problems in parallel corresponds to forming their \emph{monoidal product}. 
+
+\begin{definition}[Monoidal product $\otimes$]\label{def:monoidalproduct}
+Given two design problems $f \colon \F{A} \tickar \R{B}$ and $g \colon \F{C} \tickar \R{D}$,
+the \emph{monoidal product} $f\otimes g \colon \F{A} \times \F{C} \tickar \R{B} \times \R{D}$ is their conjunction:
+\begin{equation}
+\begin{aligned}
+f \otimes g \colon (\F{A} \times \F{C})\op \times (\R{B} \times \R{D}) & \toinPos \Bool, \\
+\tup{\tup{\F{a}^*,\F{c}^*},\tup{\R{b},\R{d}}} &\mapsto f(\F{a}^*,\R{b}) \wedge g(\F{c}^*,\R{d}).
+\end{aligned}
+\end{equation}
+\end{definition}
+
+For $f \colon \F{A} \tickar \R{B}$ and $g \colon \F{C} \tickar \R{D}$, the product $[f \otimes g](\langle \F{a}^*, \F{c}^*\rangle, \langle \F{b},\F{d} \rangle)$ is true if \emph{both} $f(\F{a}^*,\R{b})$ and $g(\F{c}^*,\R{d})$ are true, and false otherwise.
+
+\begin{equation}
+\includesag{50_monoidal}
+\end{equation}
+
+
+The notion of monoidal product is formalized in category theory with the definition of monoidal category.
 \begin{shaded}
 \begin{definition}[Monoidal category]\label{def:monoidal_cat}
 Given a category $\CatC$, a \emph{monoidal structure} on $\CatC$ consists of:
@@ -26,31 +54,9 @@ for $a,b,c,d\in \Ob(\CatC)$.
 \end{definition}
 \end{shaded}
 
-In $\DP$, putting two design problems in parallel corresponds to forming their \emph{monoidal product}. 
 
-\begin{example}
-After the X101 spontaneously combusted in low Earth orbit, the astronauts at Jeb's Spaceship Parts go on strike. They demand that the engineers take into account safety and living conditions on the future X102. As long as the propulsion and life support systems of the X102 do not interact, we can simply tensor the two design problems representing these systems into one, big co-design problem.
-\[
-\includesag{50_engine_tensor_1_2}
-\]
-\end{example}
 
-\begin{definition}[Monoidal product $\otimes$]\label{def:monoidalproduct}
-Given two design problems $f \colon \F{A} \tickar \R{B}$ and $g \colon \F{C} \tickar \R{D}$,
-the \emph{monoidal product} $f\otimes g \colon \F{A} \times \F{C} \tickar \R{B} \times \R{D}$ is their conjunction:
-\begin{equation}
-\begin{aligned}
-f \otimes g \colon (\F{A} \times \F{C})\op \times (\R{B} \times \R{D}) & \toinPos \Bool, \\
-\tup{\tup{\F{a}^*,\F{c}^*},\tup{\R{b},\R{d}}} &\mapsto f(\F{a}^*,\R{b}) \wedge g(\F{c}^*,\R{d}).
-\end{aligned}
-\end{equation}
-\end{definition}
 
-For $f \colon \F{A} \tickar \R{B}$ and $g \colon \F{C} \tickar \R{D}$, the product $[f \otimes g](\langle \F{a}^*, \F{c}^*\rangle, \langle \F{b},\F{d} \rangle)$ is true if \emph{both} $f(\F{a}^*,\R{b})$ and $g(\F{c}^*,\R{d})$ are true, and false otherwise.
-
-\begin{equation}
-\includesag{50_monoidal}
-\end{equation}
 
 \GZ{
 \begin{lemma}
@@ -115,7 +121,7 @@ To show that $\DP$ is a monoidal category, we have to first identify the constit
     To prove that $\alpha_{A,B,C}$ is an isomorphism, we define its inverse $\alpha_{A,B,C}^{-1}\colon A\times (B\times C) \tickar (A\times B)\times C$ and show $\alpha_{A,B,C}^{-1}\then \alpha_{A,B,C}=\alpha_{A,B,C}\then \alpha_{A,B,C}^{-1}= \id_{A\times B\times C}$. One has
     \begin{equation}
         \begin{aligned}
-           \left( \alpha_{A,B,C}^{-1}\then \alpha_{A,B,C} \right)&(\tup{a_1,\tup{b_1,c_1}}^*,\tup{a_2,\tup{b_2,c_2}})\\
+           &\left( \alpha_{A,B,C}^{-1}\then \alpha_{A,B,C} \right)(\tup{a_1,\tup{b_1,c_1}}^*,\tup{a_2,\tup{b_2,c_2}})\\
            &=\bigvee_{\tup{\tup{a,b},c}\in (A\times B)\times C}
            \alpha_{A,B,C}^{-1}(\tup{a_1,\tup{b_1,c_1}}^*,\tup{\tup{a,b},c})\wedge \alpha_{A,B,C}(\tup{\tup{a,b},c},\tup{a_2,\tup{b_2,c_2}})\\
            &=\bigvee_{\tup{\tup{a,b},c}\in (A\times B)\times C}\left( a_1\leq_A a \wedge b_1\leq_B b \wedge c_1\leq_C c\right)\wedge \left(a\leq_A a_2\wedge b\leq_B b_2 \wedge c\leq_C c_2\right)\\
