@@ -1,0 +1,135 @@
+\section{Functors (TITLE TBD)}
+
+\todo{endofunctors, op as an example}
+\todo{pos to set is a forgetful functor}
+
+\subsection{A poset as a category}
+
+A single poset $\tup{P, \leq}$ can be described as a category, in which
+each point $p\in P$ is an object, and there is a morphism between
+$p$ and $q$ if and only if $p \leq q$. This is a ``thin'' category, which means that there is at most one morphism
+between two objects: For any $p,q\in P$, there exist only one relation $p\leq q$ in $P$. The identity morphism is given by the reflexivity of posets, i.e. for any $p\in P$, $p\leq p$. Furthermore, composition is given by transitivity of posets, i.e. for $p,q,r \in P$, $p\leq q$ and $q\leq r$ implies $p\leq r$.
+
+\begin{example}
+Let's revisit \cref{ex:hasseinclusion}, in which we had a poset $\powerset{\{a,b,c\}}$ with order given by the inclusion (\cref{fig:posetascat}).
+\begin{figure}[h!]
+\begin{center}
+\includesag{40_dpcatfig_power}
+\end{center}
+\caption{Power set as a category. \label{fig:posetascat}}
+\end{figure}
+This is a category $\CatC$, with $\ObC=\powerset{\{a,b,c\}}$ and morphisms given by the inclusion. Note that we omit to draw self-arrows for the identity morphisms. Composition is given by the transitivity of the poset. Note, for instance, that since $\{a\}\subseteq \{a,b\}$ and $\{a,b\} \subseteq \{a,b,c\}$, we can say $\{a\}\subseteq \{a,b,c\}$.
+\end{example}
+
+
+\subsection{Functors}
+\begin{shaded}
+\begin{definition}[Functor]
+\label{def:functor}
+Given the categories $\CatC$ and $\CatD$, to specify a \emph{functor} $F\colon \CatC\to \CatD$ from $\CatC$ to $\CatD$,
+\begin{compactenum}
+    \item for every object $c\in \ObC,$ one specifies and object $F(c)\in \ObD$;
+    \item for every morphism $f\colon c_1\to c_2$ in $\CatC$, one specifies a morphism $F(f)\colon F(c_1)\to F(c_2)$ in $\CatD$.
+\end{compactenum}
+The above constituents must satisfy the following two properties:
+\begin{compactenum}[(a)]
+    \item For every object $c\in \ObC$, one has $F(\id_c)=\id_{F(c)}$.
+    \item For every three objects $c_1,c_2,c_3 \in \ObC$ and two morphisms $f\in \CatC(c_1,c_2)$, $g\in \CatC(c_2,c_3)$, the equation 
+    \begin{equation}
+        F(f\then g)=F(f)\then F(g)
+    \end{equation}
+holds in $\CatD$.
+\end{compactenum}
+\end{definition}
+
+\begin{remark}
+A functor from a category to itself it is called an endofunctor.
+\end{remark}
+
+\begin{definition}[Full and faithful functors]
+\label{def:functorfullfaith}
+A functor $F\colon \CatC \to \CatD$ is \emph{full} (resp.\ \emph{faithful} if for each pair of objects $x,y\in \CatC$, the function
+\begin{equation}
+    F\colon \CatC(x,y)\to \CatD(F(x),F(y))
+\end{equation}
+is surjective (resp.\ injective).
+\end{definition}
+\end{shaded}
+
+\begin{lemma}
+A monotone function $F$ between posets $P,Q \in \Pos$ is a functor between the categories $P$ and $Q$.
+\end{lemma}
+\begin{proof}
+We start by specifying the functor $F$ by specifying its action on objects (elements of a poset) and on morphisms (order relation). A monotone function maps each element of a poset $p\in P$ to $F(p) \in Q$, and, given two posets $P$ and $Q$, it guarantees that for $p_1,p_2\in P$, $F(p_1),F(p_2)\in Q$,  $p_1\leq p_2$ implies $f(p_1)\leq f(p_2)$. We now need to check the two functor properties. First, consider the identity morphism for $p\in P$, namely $p\leq p$. The application of the functor results in the condition $f(p)\leq F(p)$, which is the identity morphism on $Q$. Finally, given three elements $p_1,p_2,p_3\in P$ and two morphisms $p_1\leq p_2$ and $p_2\leq p_3$, by applying the functor to the morphism composition $p_1\leq p_3$ one obtains $F(p_1)\leq F(p_3)$, which is the same as $F(p_1)\leq F(p_2)$ and $F(p_2)\leq F(p_3)$.
+\end{proof}
+
+\begin{shaded}
+\begin{definition}[Opposite category]
+Given a category $\CatC$, the \emph{opposite category} $\CatC\op$ has the same objects as $\CatC$, but a morphism $f\colon x\to y$ in $\CatC\op$ is the same as a morphism $f\colon y\to x$ in $\CatC$. Furthermore, a composite of morphisms $f\then g$ in $\CatC\op$ is the composite $g\then f$ in $\CatC$.
+\end{definition}
+\end{shaded}
+
+\begin{example}[Opposite of a poset]
+    The \emph{opposite} of a  poset $\langle A, \leq \rangle $ is the poset $\langle A\op, \leq\op\rangle $ that has the same elements as~$A$ and the reverse ordering (\cref{fig:opposite}).
+    For a given~$x \in A$, we use~$x^*$ to represent its corresponding copy in~$A\op$;
+    note that~$x$ and~$x^*$ are distinct.
+    Reversing the order means that, for all $x,y\in A$,
+    \begin{equation}
+        x \leq y \quad \Leftrightarrow \quad y^* \leq\op x^*.
+    \end{equation}
+    \begin{figure}[h!]
+   \centering
+   \includesag{40_dpcatfig_opposite}
+   \caption{Opposite of a poset.\label{fig:opposite}}
+\end{figure}
+Since a poset is a category, this is an example of the above definition
+\end{example}
+
+\todo{In the figure above, use Hasse notation if you want to call it a poset. }
+\todo{In the figure above, put the points inside a box labeled P and Pop. }
+
+\begin{example}[Credit and debt]
+   Let us define the set $\text{USD}=\{\$0.00,\$0.01,\$0.02,\dots\}$
+   of all US dollars monetary quantities approximated to the cent.
+   From this set we can define two posets:
+       $\text{USD}^{+} = \tup{\text{USD}, \leq}$
+       and $\text{USD}^{-} = \tup{\text{USD}, \geq}$
+       that are opposite of each other.
+   If the context is that, given two quantities~$\$1$ and~$\$2$,
+   we prefer~$\$1$ to~$\$2$ (for example because it is a cost to pay to acquire a component), then we are working in~$\text{USD}^{+}$,
+   otherwise we are working in~$\text{USD}^{-}$ (for example
+   because it represents the price at which we are selling our product).
+
+   Traditionally, in double-entry ledger systems, the numbers were not
+   written with negative signs, but rather in color: red and black.
+   From this convention we get the idioms ``being in the black''
+   and ``being in the red''.
+\end{example}
+
+\begin{shaded}
+\begin{definition}[Product category]
+Given two categories $\CatC$ and $\CatD$, one defines the \emph{product category} $\CatC \times \CatD$ to be the category specified as follows.
+\begin{compactenum}
+    \item \emph{Objects}: Objects are pairs $\tup{c,d}$, with $c\in \CatC$ and $d\in \CatD$.
+    \item \emph{Morphisms}: Morphisms are pairs $\tup{f,g}$, with $f\colon c\to c'$, $g\colon d\to d'$, $c,c'\in \CatC$, $d,d'\in \CatD$.
+    \item The composition of morphisms is defined componentwise, with the composition in $\CatC$ and $\CatD$. 
+\end{compactenum}
+\end{definition}
+
+\begin{definition}[Profunctor]
+Given two categories $\CatC$ and $\CatD$, a \emph{profunctor} from $\CatC$ to $\CatD$ is a functor of the form
+\begin{equation}
+    H\colon \CatD\op \times \CatC \to \Set.
+\end{equation}
+\end{definition}
+\begin{remark}
+One calls a profunctor $H\colon \CatD\op \times \CatC \to \Bool$ a \emph{boolean profunctor}.
+\end{remark}
+\end{shaded}
+
+\begin{lemma}
+The functor $\Pos \to \Set$ is a forgetful functor.
+\end{lemma}
+\begin{proof}
+\todo{TODO. Need to find a good way to define forgetful functors for us}
+\end{proof}

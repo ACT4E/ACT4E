@@ -2,6 +2,7 @@
 \section{Monotonicity is a fact of life}
 \subsection{Monotone maps}
 \AC{Add some motivation from design. E.g. generalization of "non-decreasing" and "non-increasing" from real numbers to partial orders}
+\todo{I would skip the "isomorphism" definition because we can't use it yet. Move to the end}
 \begin{definition}[Monotone map]
 A monotone map between two posets
 $\tup{A, \leq_A}$ and $\tup{B, \leq_B}$ is a map that preserves the ordering, in the sense that 
@@ -9,13 +10,13 @@ $\tup{A, \leq_A}$ and $\tup{B, \leq_B}$ is a map that preserves the ordering, in
  a \leq_A b \quad \Imp \quad f(a) \leq_B f(b).
 \end{equation}
 
-A monotone map is an \emph{isomorphism} if the other direction
+\noindent A monotone map is an \emph{isomorphism} if the other direction
 of the implication holds as well:
 \begin{equation}
  a \leq_A b \quad \Leftrightarrow \quad f(a) \leq_B f(b).
 \end{equation}
 \end{definition}
-
+\todo{the below uses "preorder" but we never defined it.}
 \begin{remark}
 Given a preorder $A$, $\id_A$ is monotone, since for $a_1,a_2\in A$, one has:
 \begin{equation}
@@ -26,12 +27,16 @@ a_1\leq_A a_2 \Imp a_1=a_1\then \id_A \leq_A a_2\then \id_A = a_2.
 
 
 \begin{example}
-In \cref{ex:hasseinclusion} we presented the poset arising from the power set of a set $A=\{a,b,c\}$ and ordered via subset inclusion. The map $\vert \cdot \vert \colon \powerset(A)\to \mathbb{N}$ (cardinality), is a monotone map:
+In \cref{ex:hasseinclusion} we presented the poset arising from the power set of a set $A=\{a,b,c\}$ and ordered via subset inclusion. The map $\vert \cdot \vert \colon \powerset(A)\to \mathbb{N}$ (cardinality), is a monotone map (\cref{fig:cardinality}).
+\begin{figure}[h!]
 \begin{center}
 \includesag{40_dpcatfig_exmonotone}
 \end{center}
+\caption{The map from the power set of a set to cardinality is a monotone map. \label{fig:cardinality}}
+\end{figure}
 \end{example}
-Note that monotonicity is a compositional property.
+
+\noindent Note that monotonicity is a compositional property.
 
 \begin{lemma}Given three posets $A, B, C$ and two monotone maps $f\colon A
 \to B$ and  $g\colon B \to C$, the composite map $f\then g\colon  A \to C$ is
@@ -41,7 +46,7 @@ monotone as well.
 Consider $a_1,a_2 \in A$, $b_1,b_2\in B$. We have 
 \begin{equation}
 \begin{aligned}
-        a_1\leq_A a_2 &\Imp f(a_1)\leq_Q f(a_2)\\ 
+        a_1\leq_A a_2 &\Imp f(a_1)\leq_B f(a_2)\\ 
         b_1\leq_B b_2 &\Imp g(b_1)\leq_C g(b_2).
 \end{aligned}
 \end{equation}
@@ -62,34 +67,15 @@ Since $A$ is a discrete poset, one has
 \end{equation}
 Therefore, one has
 \begin{equation}
-    a_1\leq_A a_2 \Imp a_1=a_2 \Imp f(a_1)=f(a_2) \Imp f(a_1)\leq_B f(a_2).
+\begin{aligned}
+    a_1\leq_A a_2 &\Imp a_1=a_2\\
+    &\Imp f(a_1)=f(a_2)\\
+    &\Imp f(a_1)\leq_B f(a_2).
+\end{aligned}
 \end{equation}
 \end{proof}
 Unless indicated otherwise, in this paper all maps between two posets
 are assumed to be monotone or will turn out to be monotone.
-
-\subsection{A poset as a category}
-
-A single poset $\tup{P, \leq}$ can be described as a category, in which
-each point $p\in P$ is an object, and there is a morphism between
-$p$ and $q$ if and only if $p \leq q$. This is a ``thin'' category, which means that there is at most one morphism
-between two objects: For any $p,q\in P$, there exist only one relation $p\leq q$ in $P$. The identity morphism is given by the reflexivity of posets, i.e. for any $p\in P$, $p\leq p$. Furthermore, composition is given by transitivity of posets, i.e. for $p,q,r \in P$, $p\leq q$ and $q\leq r$ implies $p\leq r$.
-
-\begin{example}
-Let's revisit \cref{ex:hasseinclusion}, in which we had a poset $\powerset{\{a,b,c\}}$ with order given by the inclusion:
-\begin{center}
-\begin{tikzcd}
-& \{a,b,c\} & \\
-\{a,b\}\arrow{ru} & \{a,c\}\arrow{u} & \{b,c\}\arrow{lu}\\
-\{a\} \arrow{u}\arrow{ru}& \{b \}\arrow{lu}\arrow{ru} & \{c \}\arrow{u}\arrow{lu} \\
-&\varnothing \arrow{lu}\arrow{ru} \arrow{u}&
-\end{tikzcd}
-\end{center}
-This is a category $\CatC$, with $\ObC=\powerset{\{a,b,c\}}$ and morphisms given by the inclusion. Note that we omit to draw self-arrows for the identity morphisms. Composition is given by the transitivity of the poset. Note, for instance, that since $\{a\}\subset \{a,b\}$ and $\{a,b\} \subset \{a,b,c\}$, we can say $\{a\}\subset \{a,b,c\}$.
-\end{example}
-
-
-
 
 \subsection{The category $\Pos$ of posets and monotone maps}
 In the previous section, we described a poset as a category, where the objects are elements of the poset and the morphisms are given by the poset order. In this section, we want to lift this concept and describe a category in which the objects are posets themselves, and the morphisms are monotone functions between them. This category is called $\Pos$.
@@ -109,117 +95,60 @@ In the previous section, we described a poset as a category, where the objects a
 
 Occasionally we will write $f \colon A \to_{\Pos} B$ to emphasize that a monotone map between posets is a morphism in the category of posets, called~$\Pos$. Note that morphisms in $\Pos$ are morphisms between posets, which we previously defined as categories. The notion of ``morphisms between categories'' is formally described through functors.
 
-\begin{shaded}
-\begin{definition}[Functor]
-\label{def:functor}
-Given the categories $\CatC$ and $\CatD$, to specify a \emph{functor} $F\colon \CatC\to \CatD$ from $\CatC$ to $\CatD$,
-\begin{compactenum}
-    \item for every object $c\in \ObC,$ one specifies and object $F(c)\in \ObD$;
-    \item for every morphism $f\colon c_1\to c_2$ in $\CatC$, one specifies a morphism $F(f)\colon F(c_1)\to F(c_2)$ in $\CatD$.
-\end{compactenum}
-The above constituents must satisfy the following two properties:
-\begin{compactenum}[(a)]
-    \item For every object $c\in \ObC$, one has $F(\id_c)=\id_{F(c)}$.
-    \item For every three objects $c_1,c_2,c_3 \in \ObC$ and two morphisms $f\in \CatC(c_1,c_2)$, $g\in \CatC(c_2,c_3)$, the equation $F(f\then g)=F(f)\then F(g)$ holds in $\CatD$.
-\end{compactenum}
-\end{definition}
 
-\begin{definition}[Full and faithful functors]
-\label{def:functorfullfaith}
-A functor $F\colon \CatC \to \CatD$ is \emph{full} (resp.\ \emph{faithful} if for each pair of objects $x,y\in \CatC$, the function
-\begin{equation}
-    F\colon \CatC(x,y)\to \CatD(F(x),F(y))
-\end{equation}
-is surjective (resp.\ injective).
-\end{definition}
-\end{shaded}
-
-\begin{lemma}
-A monotone function $F$ between posets $P,Q \in \Pos$ is a functor between the categories $P$ and $Q$.
-\end{lemma}
-\begin{proof}
-We start by specifying the functor $F$ by specifying its action on objects (elements of a poset) and on morphisms (order relation). A monotone function maps each element of a poset $p\in P$ to $F(p) \in Q$, and, given two posets $P$ and $Q$, it guarantees that for $p_1,p_2\in P$, $F(p_1),F(p_2)\in Q$,  $p_1\leq p_2$ implies $f(p_1)\leq f(p_2)$. We now need to check the two functor properties. First, consider the identity morphism for $p\in P$, namely $p\leq p$. The application of the functor results in the condition $f(p)\leq F(p)$, which is the identity morphism on $Q$. Finally, given three elements $p_1,p_2,p_3\in P$ and two morphisms $p_1\leq p_2$ and $p_2\leq p_3$, by applying the functor to the morphism composition $p_1\leq p_3$ one obtains $F(p_1)\leq F(p_3)$, which is the same as $F(p_1)\leq F(p_2)$ and $F(p_2)\leq F(p_3)$.
-\end{proof}
+\subsection{Why the category $\Cat{Pos}$ is not sufficient for design theory}
 
 
+The category $\Pos$ of posets and monotone maps that we have described
+can model many facts that are useful for design theory; however, there are also
+limitations which motivate us to describe a more general category.
+This section describes usefulness and limitations of $\Pos$.
 
-\subsection{Composing posets}
-
-\AC{ At this point you can re-do the constructions}
-\subsubsection{Product of posets}
-
-\begin{definition}[Product of posets]
-Given two posets $\tup{A, \leq_A}$
-and  $\tup{B, \leq_B}$, the product poset is $\tup{A \times B, \leq_{A\times B}}$, where $A \times B$ is the Cartesian product of two sets (\cref{def:cartesian-product}) and the order $\leq_{A\times B}$ is given by
-\begin{equation}
-        \langle a_1, b_1 \rangle
-        \leq_{A\times B}
-        \langle a_2, b_2 \rangle
-        \quad
-        \Leftrightarrow
-        \quad
-        ( a_1 \leq_A a_2) \wedge
-        (b_1 \leq_B b_2).
-    \end{equation}
-\end{definition}
-
-\begin{example}
-Consider now the two posets
-\begin{center}
-\includesag{40_exposet_1}
-\end{center}
-Their product is depicted as
-\begin{center}
-\includesag{40_exposet_2}
-\end{center}
+\begin{example}[Battery]
+    Consider the model of a battery where the capacity is the functionality
+    and the mass of the battery is the resource (\cref{fig:battery-example}). There is certainly
+    a monotone map from capacity to mass; this map answers the question: ``Given a value of the capacity, what is the minimum mass needed?''. Conversely,
+    in the other direction, the map that answers the question: ``Given a certain mass, what is the maximum capacity that can be provided?'' is also
+    a monotone map.
 \end{example}
-
-\subsubsection{Disjoint union of posets}
-
-\todo{intro}
-
-\begin{definition}[Disjoint union of posets]
-Given two posets $\tup{A, \leq_A} $ and $\tup{B, \leq_B} $,
-we can define their disjoint union $\tup{ A + B, \leq_{A + B}}$, where $A + B$
-is the disjoint union of two sets (\cref{def:disjoint-union}), and the
-order $\leq_{A + B}$ is given by:
-\begin{equation}
-    x \leq_{A + B} y \quad\equiv\quad
-    \begin{cases}
-        x \leq_A y, & \text{if } x,y \in A, \\
-        x \leq_B y, & \text{if } x,y \in B, \\
-        \false,  & \text{otherwise}.
-    \end{cases}
-\end{equation}
-\end{definition}
-
 
 \begin{figure}[h!]
     \centering
-    \includesag{40_disjoint_union}
-    %\includegraphics[scale=0.33]{dpcatfig_poset_disjoint_union}
-    \caption{\label{fig:poset-coproduct}}
+    \begin{tikzcd}
+    \bullet &\arrow[l] \bullet\\[-15pt]
+    \text{mass} & \text{capacity}
+    \end{tikzcd}
+    \caption{Example of the design of a battery. \label{fig:battery-example}}
 \end{figure}
 
+Therefore, at first sight it might seem that posets and monotone maps
+would be sufficient to describe a quantitative theory of design.
+However, there are more general relations to be modeled. It is easy enough
+to describe examples in which having a simple map from functionality
+to resources is not sufficient.
 
-\AC{Add example here.}
+\begin{example}
+Consider the design of a delivery drone, in which the functional
+requirement is that the drone should be able to make a delivery
+at a distance~$d$ and we need to reason about how powerful to make
+it. In particular, we need to choose at what (average) velocity $v$ the drone  should travel and what is the optimal \emph{endurance} (mission duration). The relation between distance $d$, velocity $v$ and endurance~$T$ is $d=vT$. We can choose
+to have either a fast drone and short missions, or a slow drone
+and long missions. This is an interesting trade-off. Flying fast takes more energy, both for propulsion as well as computation (more things to observe). Flying too slow will also consume excessive energy because of the long mission duration.
 
+If we consider $v$ and $T$ as given, then the map $v,T \mapsto vT$ is clearly a monotone function that gives the distance which the drone can cover. However, in the other direction, we do not have a simple map, but rather a 1-to-many relation. For each fixed value of the distance, there is an entire continuum of values of $v$ and $T$ which we can choose~(\cref{fig:drone-example-antichain}).
 
-\paragraph{A note on pre-orders}
+\begin{figure}[h!]
+    \centering
+    % \includegraphics[scale=0.33]{dpcatfig_e2}
+    \todo{Drone example and antichain}
+    \caption{\label{fig:drone-example}
+    \label{fig:drone-example-antichain}}
+\end{figure}
 
-    The theory of design problems can be easily generalized to preorders, i.e. posets without the antisymmetry property; this means that there could be two elements $a$ and $b$ such that $a\leq b$ and $a \geq b$ but $a \neq b$.
+\end{example}
 
-    \begin{equation}
-    \includesag{80_preorder}
-    \end{equation}
-
-    This is actually common in practice. For example, if the order relation comes from human judgement, such as customer preference, all bets are off regarding the consistency of the relation. We will only refer to posets for two reasons:
-    \begin{compactenum}
-        \item The exposition is smoother;
-        \item Given a preorder, computation will always involve passing to the poset representation.
-    \end{compactenum}
-    This means that, given a preorder, we can consider the poset of its equivalence classes, by means of the following equivalence relation:
-    \begin{equation}
-        a \simeq b \quad \equiv \quad (a \leq b) \wedge (b \leq a).
-    \end{equation}%
+In other words, using $\Cat{Pos}$ it is not possible to make a theory of \emph{trade-offs}. The
+next section introduces a more general category, called  the category $\Cat{DP}$ of
+\emph{design problems}, which will allow to describe such a theory.
+\todo{We need a way to go back}
     

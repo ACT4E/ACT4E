@@ -11,6 +11,7 @@ First, we need to specify various degrees of resources and functionality.
 For this, we will use the idea of partial orders.
 Second, we need to describe how these various degrees map to each other.
 For this, it is important to describe monotone maps.
+\todo{should we map this to next section or directly move it there?}
 
 \AC{ Why do we need the posets? make a concrete example. E.g. We can
 have two resources, "time" and "money" that we care about when we prepare the cakes.
@@ -28,24 +29,29 @@ Such ordering arise naturally in engineering as criteria for judging whether one
 }
 
 \begin{definition}[Partially ordered set]
-    A \emph{partially-ordered set} is a tuple $ \tup{P, \leq}$,
+    A \emph{partially-ordered set} (poset) is a tuple $ \tup{P, \leq}$,
 where $P$ is a set (also called the \emph{carrier set}), together with a
 relation $\leq$ on $P$ that is
-\begin{itemize}
+\begin{compactenum}
     \item Reflexive: For all $a\in P$, $a\leq a$.
     \item Antisymmetric: For all $a,b\in P$, if $a\leq b$ and $b\leq a$, then $a=b$.
     \item Transitive: For all $a,b,c\in P$, if $a\leq b$ and $b\leq c$, then $a\leq c$.
-\end{itemize}
+\end{compactenum}
 \end{definition}
 
 
-A \emph{Hasse diagram} is a way to visualize a poset by being economical about the arrows that we use. In a Hasse diagram elements are points, and if $a \leq b$ then $a$ is drawn lower than $b$ and with an edge connected to it~(\cref{fig:hasse}):
+A \emph{Hasse diagram} is a way to visualize a poset by being economical about the arrows that we use. In a Hasse diagram elements are points, and if $a \leq b$ then $a$ is drawn lower than $b$ and with an edge connected to it. 
+
+\begin{example}
+Consider a poset $P=\{a,b,c,d,e\}$ with $a\leq b$, $a\leq c$, $d\leq c$, and $d\leq e$. This can be represented with an Hasse diagram as in ~(\cref{fig:hasse}).
+\end{example}
 
 \begin{figure}[h!]
    \centering
    \includesag{40_dpcatfig_hasse}
-   \caption{\label{fig:hasse}}
+   \caption{Example of Hasse diagram of $P$. \label{fig:hasse}}
 \end{figure}
+\todo{The one above is not a hasse diagrams. There are no pointed arrows in a hasse diagram}
 
 \begin{example}[Singleton poset]\label{ex:singleton}
 If a set has only one element, say $\singleton$, then there is a unique order relation on it (\cref{fig:singleton}). We denote the resulting poset again by $\singleton$.
@@ -55,7 +61,9 @@ If a set has only one element, say $\singleton$, then there is a unique order re
    \includesag{40_dpcatfig_singleton}
    \caption{The singleton poset.\label{fig:singleton}}
 \end{figure}
+\todo{If we want to stick to poset notation (hasse diagram) then there is no loop.}
 
+\todo{Would be nice to show here as examples all the posets up to isomorphisms up to n = 4. (n = 4 has 9 classes of equivalence).}
 
 \begin{example}[Booleans]\label{ex:bool}
 The booleans $\Bool$ is a poset with carrier set $\{\true,\false\}$ and the order relation given by $b_1 \leq_\Bool b_2$ iff $b_1 \Imp b_2$, that is, $\false \leq_\Bool \true$ (\cref{fig:boolean}).
@@ -65,19 +73,20 @@ The booleans $\Bool$ is a poset with carrier set $\{\true,\false\}$ and the orde
    \includesag{40_dpcatfig_boolean}
    \caption{\label{fig:boolean}}
 \end{figure}
-\AC{The problem with the above figure is that it is not clear what direction is $\leq$. 
-Also what direction is $\Rightarrow$.}
 
-This relation should be familiar from the following table:
-\begin{equation}
-\begin{array}{cc|ccc}
-a & b & a \leq_\Bool b & a \wedge b & a \vee b \\ \hline
-\true&\true&\true&\true&\true\\
-\true&\false&\false&\false&\true\\
-\false&\true&\true&\false&\true\\
-\false&\false&\true&\false&\false
-\end{array}
-\end{equation}
+This relation should be familiar from~\cref{tab:boolposet}.
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{cc|ccc}
+$a$ & $b$ & $a \leq_\Bool b$ & $a \wedge b$ & $a \vee b$ \\ \hline
+$\true$&$\true$&$\true$&$\true$&$\true$\\
+$\true$&$\false$&$\false$&$\false$&$\true$\\
+$\false$&$\true$&$\true$&$\false$&$\true$\\
+$\false$&$\false$&$\true$&$\false$&$\false$
+\end{tabular}
+\end{center}
+\caption{Properties of the $\Bool$ poset. \label{tab:boolposet}}
+\end{table}
 In addition to the operation $\Imp\colon\Bool\times \Bool\to\Bool$, called \emph{implies}, there are also the familiar \emph{and} ($\wedge$) and \emph{or} ($\vee$) operations. Note that $\wedge$ and $\vee$ are commutative ($b\wedge c = c\wedge b$), whereas $\Imp$ is not.
 \end{example}
 
@@ -91,11 +100,100 @@ The real numbers $\mathbb{R}$ is a poset with carrier $a\in \mathbb{R}$ and orde
 
 \begin{example}[Discrete partially ordered sets]
 \label{ex:discreteposet}
-{Every set $X$ can be considered as a \emph{discrete poset} $(X,=)$. Discrete posets are represented as collection of points:}
-\begin{center}
-\includesag{40_discrete}
-\end{center}
+Every set $X$ can be considered as a \emph{discrete poset} $(X,=)$. Discrete posets are represented as collection of points (\cref{fig:discretepos}). \todo{It's confusing notation. Before we have established that categories objects are written with a point and a label. Then we established that for hasse diagrams we write labels with no points. Consequently here it should be just labels if it is a poset.}
+\todo{In any case, make a box around the points and label the box "P". }
+
+\begin{figure}[h!]
+   \centering
+   \includesag{40_discrete}
+   \caption{Example of discrete poset. \label{fig:discretepos}}
+\end{figure}
 \end{example}
+
+\paragraph{A note on pre-orders}
+The theory of design problems can be easily generalized to preorders, i.e. posets without the antisymmetry property; this means that there could be two elements $a$ and $b$ such that $a\leq b$ and $a \geq b$ but $a \neq b$ (\cref{fig:preorder}).
+
+\begin{figure}[h!]
+\begin{center}
+    \includesag{80_preorder}
+\end{center}
+\caption{Example of preorder. \label{fig:preorder}}
+\end{figure}
+
+This is actually common in practice. For example, if the order relation comes from human judgement, such as customer preference, all bets are off regarding the consistency of the relation. We will only refer to posets for two reasons:
+\begin{compactenum}
+        \item The exposition is smoother;
+        \item Given a preorder, computation will always involve passing to the poset representation.
+\end{compactenum}
+This means that, given a preorder, we can consider the poset of its equivalence classes, by means of the following equivalence relation:
+\begin{equation}
+        a \simeq b \quad \equiv \quad (a \leq b) \wedge (b \leq a).
+\end{equation}
+
+\subsection{Composing posets}
+
+\begin{definition}[Product of posets]
+Given two posets $\tup{A, \leq_A}$
+and  $\tup{B, \leq_B}$, the product poset is $\tup{A \times B, \leq_{A\times B}}$, where $A \times B$ is the Cartesian product of two sets (\cref{def:cartesian-product}) and the order $\leq_{A\times B}$ is given by
+\begin{equation}
+        \langle a_1, b_1 \rangle
+        \leq_{A\times B}
+        \langle a_2, b_2 \rangle
+        \quad
+        \Leftrightarrow
+        \quad
+        ( a_1 \leq_A a_2) \wedge
+        (b_1 \leq_B b_2).
+    \end{equation}
+\end{definition}
+
+\begin{example}
+Consider now the two posets given in~\cref{fig:composing_posets_1}.
+\begin{figure}[h!]
+\begin{center}
+\includesag{40_exposet_1}
+\end{center}
+\caption{Two posets. \label{fig:composing_posets_1}}
+\end{figure}
+Their product is depicted in~\cref{fig:composing_posets_2}.
+\begin{figure}[h!]
+\begin{center}
+\includesag{40_exposet_2}
+\end{center}
+\caption{Product of two posets. \label{fig:composing_posets_2}}
+\end{figure}
+\end{example}
+
+\subsubsection{Disjoint union of posets}
+
+\todo{intro}
+
+\begin{definition}[Disjoint union of posets]
+Given two posets $\tup{A, \leq_A} $ and $\tup{B, \leq_B} $,
+we can define their disjoint union $\tup{ A + B, \leq_{A + B}}$, where $A + B$
+is the disjoint union of two sets (\cref{def:disjoint-union}), and the
+order $\leq_{A + B}$ is given by:
+\begin{equation}
+    x \leq_{A + B} y \quad\equiv\quad
+    \begin{cases}
+        x \leq_A y, & \text{if } x,y \in A, \\
+        x \leq_B y, & \text{if } x,y \in B, \\
+        \false,  & \text{otherwise}.
+    \end{cases}
+\end{equation}
+\end{definition}
+
+
+\begin{example}
+Consider the posets $A=\tup{\dagger, \star}$ with $\dagger \leq_A \star$, and $B=\tup{\ast,\diamond,\star}$, with $\ast \leq_B \diamond$ and $\diamond \leq_B \star$. Their disjoint union can be represented as in \cref{fig:poset-coproduct}.
+
+\begin{figure}[h!]
+    \centering
+    \includesag{40_disjoint_union}
+    \caption{Disjoint union of posets. \label{fig:poset-coproduct}}
+\end{figure}
+\end{example}
+
 
 
 \subsection{Staring at Pareto fronts}
@@ -109,7 +207,7 @@ All these notions are very graphical.}
 
 \begin{definition}[Chain in a poset]
 \label{def:chain}
-Given a poset $S$, a \emph{chain} is a sequence of points ${s_i}$ in~$S$ where two successives points are comparable:
+Given a poset $S$, a \emph{chain} is a sequence of points ${s_i}$ in~$S$ where two successive points are comparable, i.e.:
 \begin{equation}
     i \leq j \Rightarrow s_i \leq s_j.
 \end{equation}
@@ -120,26 +218,20 @@ Given a poset $S$, a \emph{chain} is a sequence of points ${s_i}$ in~$S$ where t
 \label{def:antichain}
 An \emph{antichain} is a subset $S$ of a poset where no elements are comparable. If $a,b \in S$, then $a \leq b$ implies $a=b$.
 \end{definition}
+\begin{remark}
 We denote the set of antichains of a poset $P$ by $\antichains P$.
+\end{remark}
 
 \begin{example}
 \label{ex:graphicantichain}
-Consider the poset given by $\tup{\mathbb{R},\leq}\times \tup{\mathbb{R},\leq}$. In the following diagram, the blue points represent an antichain. If one considers the red point as well, this is not an antichain anymore. 
+Consider the poset given by $\tup{\mathbb{R}_+,\leq}\times \tup{\mathbb{R}_+,\leq}$. In the diagram reported in~\cref{fig:antichain}, the blue points represent an antichain. If one considers the red point as well, this is not an antichain anymore. 
+
+\begin{figure}[h!]
 \begin{center}
-\begin{tikzpicture}
-\pgfplotsset{ticks=none}
-\begin{axis}[width=0.3\textwidth,
-height=0.3\textwidth,
-yticklabels={},
-xticklabels={},
-only marks,
-axis lines=center]
-\end{axis}
-\filldraw[fill=blue,draw=blue] (0.75,2) circle(0.1);
-\filldraw[fill=blue,draw=blue] (1.75,1) circle(0.1);
-\filldraw[fill=red,draw=red] (2,1.75) circle(0.1);
-\end{tikzpicture}
+\includesag{70_antichain}
 \end{center}
+\caption{Example of antichain. \label{fig:antichain}}
+\end{figure}
 \end{example}
 
 \begin{example}
@@ -157,6 +249,11 @@ Examples of antichains are
 \end{equation}
 \end{example}
 
+\begin{example}
+\label{ex:battery}
+You have to choose a battery model based on its cost and its weight, both to be minimized. There are models which dominate others. For instance, a model $\tup{\unit[10]{USD},\unit[1]{kg}}$ is always better than a model $\tup{\unit[11]{USD},\unit[1.1]{kg}}$. Also, there are models which are incomparable, i.e. which form an antichain. For example, you cannot say whether $\tup{\unit[10]{USD},\unit[1]{kg}}$ is better than  $\tup{\unit[5]{USD},\unit[2]{kg}}$. The incomparable models form an antichain.
+\end{example}
+
 \subsubsection{Upper and lower sets}
 
 \begin{definition}[Upper set]
@@ -172,96 +269,83 @@ In formulas:
 %  \end{prooftree}
 \end{equation}
 \end{definition}
+\begin{remark}
+We call $\mathsf{U}P$ the set of upper sets of $P$.
+\end{remark}
 \begin{example}
-Consider the poset given in \cref{ex:graphicantichain}. The upper set of this poset can be represented as:
+Consider the poset given in \cref{ex:graphicantichain}. The upper set of this poset can be represented as in~\cref{fig:upperset}.
+
+\begin{figure}[h!]
 \begin{center}
-\begin{tikzpicture}
-\draw[->, thick] (0,0)--(3.1,0) {};
-\draw[->, thick] (0,0)--(0,3.1) {};
-\filldraw[fill=blue,draw=blue] (0.75,2) circle(0.1);
-\filldraw[fill=blue,draw=blue] (1.75,1) circle(0.1);
-\end{tikzpicture}\hspace{1cm} 
-\begin{tikzpicture}
-\draw[->, thick] (0,0)--(3.1,0) {};
-\draw[->, thick] (0,0)--(0,3.1) {};
-\draw[draw=blue, fill=blue] (1.75,1) rectangle ++(1.25,2);
-\draw[draw=blue, fill=blue] (0.75,2) rectangle ++(2.25,1);
-\end{tikzpicture}
+\includesag{70_upper_set}
 \end{center}
+\caption{Example of upper set of a poset. \label{fig:upperset}}
+\end{figure}
 \end{example}
 
 \begin{definition}[Lower set]
 \label{def:lowerset}
-A lower set is a subset $L$ of a poset $X$ if a point is inside, all points below it are inside as well. In formulas:
+A lower set is a subset $L$ of a poset $X$ if, if a point is inside, all points below it are inside as well. In formulas:
 \begin{equation}
 \text{$L$ is a lower set} \equiv \forall x\in L, \forall y\in X\colon y\leq x \Imp y\in L.
 \end{equation}
 \end{definition}
+\begin{remark}
+We call $\mathsf{L}P$ the set of lower sets of $P$.
+\end{remark}
 
-\todo[inline]{Examples}
-
-\subsubsection{From antichains to uppersets and viceversa}
-
-
-\begin{definition}[Upper closure]
-\label{def:upperclosure}
-Given a point $p$ in a poset $P$, its upper closure $\uparrow p$ is the subset of $P$ that is ``above'' $p$:
-    \begin{equation}
-        \uparrow p = \{ q\in P \colon p \leq q\}.
-    \end{equation}
-    The upper closure of a set is the union of the upper closures of its points:
-    \begin{equation}
-        \uparrow S = \bigcup_{p\in S}\uparrow p.
-    \end{equation}
-\end{definition}
-
-\begin{example}
-\todo{add context}
-\begin{center}
-\begin{tikzpicture}
-\draw[->, thick] (0,0)--(3.1,0) {};
-\draw[->, thick] (0,0)--(0,3.1) {};
-\node at (0.5,2) {$p_1$};
-\filldraw[fill=blue,draw=blue] (0.75,2) circle(0.1);
-\end{tikzpicture}\hspace{1cm} 
-\begin{tikzpicture}
-\draw[->, thick] (0,0)--(3.1,0) {};
-\draw[->, thick] (0,0)--(0,3.1) {};
-\draw[draw=blue, fill=blue!10!white, thick] (0.75,2) rectangle ++(2.25,0.75);
-\node at (1.75,2.25) {$\uparrow p_1$};
-\node at (0.5,2) {$p_1$};
-\filldraw[fill=blue,draw=blue] (0.75,2) circle(0.1);
-\end{tikzpicture}
-\end{center}
-
-\begin{center}
-\begin{tikzpicture}
-\draw[->, thick] (0,0)--(3.1,0) {};
-\draw[->, thick] (0,0)--(0,3.1) {};
-\node at (0.5,2) {$p_1$};
-\node at (1.5,1) {$p_2$};
-\filldraw[fill=blue,draw=blue] (0.75,2) circle(0.1);
-\filldraw[fill=blue,draw=blue] (1.75,1) circle(0.1);
-\end{tikzpicture}\hspace{1cm} 
-\begin{tikzpicture}
-\draw[->, thick] (0,0)--(3.1,0) {};
-\draw[->, thick] (0,0)--(0,3.1) {};
-\draw[draw=blue, fill= blue!10!white, thick] (0.75,2) -- (1.75,2) -|(1.75,1)|-(3,1)-|(3,2)|-(0.75,3)-|(0.75,2);
-\node at (1.75,2.25) {$\uparrow \{p_1,p_2\}$};
-\node at (0.5,2) {$p_1$};
-\node at (1.5,1) {$p_2$};
-\filldraw[fill=blue,draw=blue] (0.75,2) circle(0.1);
-\filldraw[fill=blue,draw=blue] (1.75,1) circle(0.1);
-\end{tikzpicture}
-\end{center}
+\begin{example}[Upper and lower sets in $\Bool$]
+The booleans $\{\false, \true \}$ form a preorder with $\false \leq \true:(\Bool,\leq)$ . The subset $\{\false\} \subseteq \Bool$ is not an upper set, since $\false \leq \true$ and $\true \notin \{\false \}$.	
 \end{example}
 
-\AC{And lower closure}
+\subsubsection{From antichains to uppersets and viceversa}
+\begin{definition}[Upper closure operator]
+\label{def:upperclosure}
+The upper closure operator $\uparrow$ maps a subset to the smallest upper set that includes it, i.e.:
+\begin{equation}
+    \begin{aligned}
+    \uparrow \colon \powerset(P)&\to \mathsf{U}P\\
+    p&\mapsto \{y\in P \mid \exists x\in p \colon x\leq y\}.
+    \end{aligned}
+\end{equation}
+\end{definition}
+\begin{remark}
+Note that, by definition, an upper set is closed to upper closure.
+\end{remark}
 
-\AC{Equivalently: upper set is closed to upper closure}
+\begin{example}
+Consider \cref{ex:graphicantichain}. First, consider the upper set of a single element of $\tup{\mathbb{R}_+,\leq}\times \tup{\mathbb{R}_+,\leq}$ (\cref{fig:upperclosure_1}).
+\begin{figure}[h!]
+\begin{center}
+\includesag{70_upper_closure_1}
+\end{center}
+\caption{Example of upper closure. \label{fig:upperclosure_1}}
+\end{figure}
+Furthermore, consider the case of two elements (\cref{fig:upperclosure_2}).
+\begin{figure}[h!]
+\begin{center}
+    \includesag{70_upper_closure_2}
+\end{center}
+\caption{Example of upper closure. \label{fig:upperclosure_2}}
+\end{figure}
+Note that the upper set of the subset formed by the two points is the union of the upper sets of the single points.
+\end{example}
+
+\begin{definition}[Lower closure operator]
+The lower closure operator $\downarrow$ maps a subset to the smallest lower set that includes it, i.e.
+\begin{equation}
+    \begin{aligned}
+    \downarrow\colon \powerset(P)&\to \mathsf{L}P\\
+    p&\mapsto \{ y\in P \mid \exists x\in p \colon y\leq x\}.
+    \end{aligned}
+\end{equation}
+\end{definition}
+
 
 \AC{Give the functions that convert one to another and explain the subtletlies.
 Example: take ${x\in R : x>0}$ as a poset that is not downward closed.}
+
+\todo{We have not defined monotone map yet.}
 
 \begin{definition}
 \label{def:Min}
@@ -293,11 +377,18 @@ An upper set $S$ is downward-closed in a poset $P$ if
 \begin{equation}
     S =\, \uparrow \Min S
 \end{equation}
-The set of downward-closed upper sets of $P$ is denoted $\dcuppersets P$.
+The set of downward-closed upper sets of $P$ is denoted $\underline{\mathsf{U}}P$.
 \end{definition}
 
-\begin{example}[Upper and lower sets in $\Bool$]
-The booleans $\{\false, \true \}$ form a preorder with $\false \leq \true:(\Bool,\leq)$ . The subset $\{\false\} \subseteq \Bool$ is not an upper set, since $\false \leq \true$ and $\true \notin \{\false \}$.	
+\begin{example}
+Consider the battery example of~\cref{ex:battery}, an the antichain given by the battery models $a=\tup{\unit[10]{USD},\unit[1]{kg}}$, $b=\tup{\unit[20]{USD},\unit[0.5]{kg}}$, and $c=\tup{\unit[30]{USD},\unit[0.25]{kg}}$ (\cref{fig:examplebatt}).
+The upper closure $\uparrow \{a,b,c\}$ represents all the existing battery models dominated by $\{a,b,c\}$. The lower closure uperator $\downarrow\{a,b,c\}$ represents all the battery models which, if existing, would dominate $\{a,b,c\}$.
+\begin{figure}[h!]
+\begin{center}
+    \includesag{70_battery_1}
+\end{center}
+\caption{Battery example. \label{fig:examplebatt}}
+\end{figure}
 \end{example}
 
 \todo{add here comments, examples and figures}

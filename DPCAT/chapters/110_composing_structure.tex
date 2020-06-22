@@ -3,12 +3,14 @@
 \subsection{An axiomatization of design problems}
 We can now give our first definition of design problems.
 
+
+
 \begin{definition}[Design Problems as Monotone Functions] \label{def:design-problem}
 Suppose that $\F{F}, \R{R}$ are posets. A \emph{design problem} is a monotone function of the form
 \begin{equation}
 	\adp \colon  \F{F}\op \times \R{R} \to \Bool.
 \end{equation}
-We represent it by an arrow $\adp \colon \F{F} \tickar \R{R}$.
+We represent it by an arrow $\adp \colon \F{F} \tickar \R{R}$. Note that a design problem is a boolean profunctor.
 \end{definition}
 
 \paragraph{Intended semantics}
@@ -45,17 +47,22 @@ definition as a monotone map will lend very easily to further generalization. Th
 
 \paragraph{Diagrammatic notation}
 
-We represent design problems using a diagrammatic notation. One design problem $\adp \colon \F{F} \tickar \R{R}$ is represented as a box with functionality $\F{F}$ on the \emph{left} and resources $\R{R}$ on the \emph{right}:
-\begin{equation*}
+We represent design problems using a diagrammatic notation. One design problem $\adp \colon \F{F} \tickar \R{R}$ is represented as a box with functionality $\F{F}$ on the \emph{left} and resources $\R{R}$ on the \emph{right} (\cref{fig:diagrammaticdp}).
+\begin{figure}[h!]
+\begin{center}
 \includesag{50_diagrammatic}
-\end{equation*}
-It is inevitable that we will connect these diagrams.
-\begin{example}An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100. The engine requires fuel and provides thrust, and so it can be modeled as a design problem where~$\text{Thrust}$ and~$\text{Fuel}$ are two totally-ordered sets representing their respective resources.
+\end{center}
+\caption{Diagrammatic representation of a design problem. \label{fig:diagrammaticdp}}
+\end{figure}
 
-The corresponding diagram is
-\begin{equation*}
+It is inevitable that we will connect these diagrams.
+\begin{example}An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100. The engine requires fuel and provides thrust, and so it can be modeled as a design problem where~$\text{Thrust}$ and~$\text{Fuel}$ are two totally-ordered sets representing their respective resources. The corresponding diagram is reported in~\cref{fig:enginedp}.
+\begin{figure}[h!]
+\begin{center}
 	\includesag{50_engine}
-\end{equation*}
+\end{center}
+\caption{Diagram of the engine design problem. \label{fig:enginedp}}
+\end{figure}
 
 Concretely, ``engine'' is represented as a monotone map
 \begin{equation}
@@ -78,14 +85,15 @@ Assuming that the posets \R{Fuel}, \F{Thrust}$\op$ are finite, we can think of t
 \end{blockarray}
 \end{equation}
 
-Suppose we have tested or are given the performance data of a few different engines, i.e., possible solutions to the ``engine'' design problem, each with a fixed optimal fuel-thrust value. To illustrate the monotonicity assumption, we can render the data of ``engine'' as a graph:
-%
-\begin{equation*}
-\centering
+Suppose we have tested or are given the performance data of a few different engines, i.e., possible solutions to the ``engine'' design problem, each with a fixed optimal fuel-thrust value. To illustrate the monotonicity assumption, we can render the data of ``engine'' as a graph, as reported in~\cref{fig:solenginedp}.
+\begin{figure}[h!]
+\begin{center}
 \includesag{50_engine_graph}
-\end{equation*}
-%
-where the shaded regions cover the feasible solution set. This feasible solution set is always an \emph{upper set} (\cref{def:upperset}) in Thrust$\op \times$ Fuel, which is another way of characterizing the monotonicity of the design problem. The optimal solutions, indicated by dots, form an \emph{antichain} of solutions. We will come back to antichains in \cref{sec:computation}, when discussing how to compute optimal solutions of design problems.
+\end{center}
+\caption{Graphical representation of the possible solutions of the engine design problem. \label{fig:solenginedp}}
+\end{figure}
+
+Note that the shaded regions cover the feasible solution set. This feasible solution set is always an \emph{upper set} (\cref{def:upperset}) in Thrust$\op \times$ Fuel, which is another way of characterizing the monotonicity of the design problem. The optimal solutions, indicated by dots, form an \emph{antichain} of solutions. We will come back to antichains in \cref{sec:computation}, when discussing how to compute optimal solutions of design problems.
 \end{example}
 
 
@@ -184,7 +192,7 @@ as
 \label{eq:composition2}
 \begin{aligned}
    (f \then g)  \colon \ \F{A}\op \times \R{C} & \toinPos  \Bool, \\
-  \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{b\in B} f(\F{a}^*,b) \wedge g(b^*,\R{c}).
+  \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{b\in B} f(\F{a}^*,\R{b}) \wedge g(\F{b}^*,\R{c}).
 \end{aligned}
 \end{equation}
 or
@@ -196,6 +204,13 @@ or
 \end{aligned}
 \end{equation}
 \end{definition}
+We represent series in the diagrammatic notation reported in~\cref{fig:compositiondiagram}.
+\begin{figure}[h!]
+\begin{center}
+\includesag{50_series_diag}
+\end{center}
+\caption{Diagrammatic representation of the composition of design problems. \label{fig:compositiondiagram}}
+\end{figure}
 
 \begin{lemma}
 \label{lemma:composition_equivalency}
@@ -203,7 +218,13 @@ or
 \end{lemma}
 
 \begin{proof}
-First consider the direction \cref{eq:composition} $\implies$ \cref{eq:composition2}. In order for $\bigvee_{\R{b_1}\leq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})$ to be true, there should exist some $\R{b_1}\leq \F{b_2}$ for which $f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})$ is true. However, due to the monotonicity of $f$, $f(\F{a}^*,\R{b_2}) \wedge g(\F{b_2}^*,\R{c})$ and \cref{eq:composition2} must be true as well. On the other hand, if $\bigvee_{\R{b_1}\leq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})$ is false, then due to the equality, it is false for any $\R{b_1}=\F{b_2}$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
+First consider the direction \cref{eq:composition} $\implies$ \cref{eq:composition2}. In order for 
+\begin{equation}
+    \bigvee_{\R{b_1}\leq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
+\end{equation} to be true, there should exist some $\R{b_1}\leq \F{b_2}$ for which $f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})$ is true. However, due to the monotonicity of $f$, $f(\F{a}^*,\R{b_2}) \wedge g(\F{b_2}^*,\R{c})$ and \cref{eq:composition2} must be true as well. On the other hand, if
+\begin{equation}
+    \bigvee_{\R{b_1}\leq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
+\end{equation} is false, then due to the equality, it is false for any $\R{b_1}=\F{b_2}$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
 
 The other direction, \cref{eq:composition2} $\implies$ \cref{eq:composition}, can be shown in a similar way. If \cref{eq:composition2} is true, then there must exist a $b'$ such that $f(\F{a}^*, \R{b'})=\true$ and $g(\F{b'}^*, \R{c})=\true$. Then, the inner term in \cref{eq:composition} is true for $\R{b_1}=\F{b_2}=b'$. If \cref{eq:composition2} is false, then there is no such $b'$ for which both $f(\F{a}^*, \R{b'})$ and $g(\F{b'}^*, \R{c})$ are true, but then due to the monotonicity of $f$ and $g$ they also cannot be true for any $\R{b_1} \leq \F{b_2} = b'$ or $b'=\R{b_1} \leq \F{b_2}$. Hence, \cref{eq:composition} must also be false.
 \end{proof}
@@ -248,10 +269,13 @@ with operations on matrices. Given a set $I$ and a map $s\colon I\to\Bool$, we c
 }
 
 \begin{example}
-After the Bucket of Boom X100 blew up on re-entry, Jeb's Spaceship Parts is building the X101. This time, they are making sure to take into account other aspects of the rocket design, such as the choice of propellant and nozzle.
-\[
+After the Bucket of Boom X100 blew up on re-entry, Jeb's Spaceship Parts is building the X101. This time, they are making sure to take into account other aspects of the rocket design, such as the choice of propellant and nozzle (\cref{fig:examplecomposition}).
+\begin{figure}[h!]
+\begin{center}
 \includesag{50_X101}
-\]
+\end{center}
+\caption{Example of composition. \label{fig:examplecomposition}}
+\end{figure}
 \end{example}
 
 \begin{remark}
@@ -263,16 +287,10 @@ Let us check that given design problems $f$ and $g$, $f\then g$ is in fact a des
     Composition as in~\cref{eq:composition2} is monotone in $a$ and $c$.
 \end{lemma}
 \begin{proof}
- We need to show that $[f\then g](a^*,c)$ is monotone in $a^*$ and $c$. This is true
- because it is a composition of monotone maps. Because~$f$ represents a design problem, $f(a^*,b)$ is monotone in~$a^*$,
- and similarly $g(b^*,c)$  is monotone in $c$. The conjunction ``$\wedge$'' is monotone in both variables, and likewise the $\vee$ operation.
+ We need to show that $[f\then g](\F{a}^*,\R{c})$ is monotone in $\F{a}^*$ and $\R{c}$. This is true
+ because it is a composition of monotone maps. Because~$f$ represents a design problem, $f(\F{a}^*,\R{b})$ is monotone in~$\F{a}^*$,
+ and similarly $g(\F{b}^*,\R{c})$  is monotone in $\R{c}$. The conjunction ``$\wedge$'' is monotone in both variables, and likewise the $\vee$ operation.
  \end{proof}
-
-We represent series in the diagrammatic notation.
-
-\begin{equation}
-\includesag{50_series_diag}
-\end{equation}
 
 We can show two important properties for the ``$\then$'' operation: Associativity and unitality.
 
@@ -297,12 +315,14 @@ To show that the operation is associative, we can use distributivity and commuta
 \end{proof}
 
 Because of associativity, we can write~$f\then g\then h$ without ambiguity.
-Associativity of composition is represented with the following diagram equation:
+Associativity of composition is represented as reported in~\cref{fig:compositionassociativity}.
 
-
-\begin{equation}
+\begin{figure}[h!]
+\begin{center}
     \includesag{50_assoc_1_2_3}
-\end{equation}
+\end{center}
+\caption{Composition is associative. \label{fig:compositionassociativity}}
+\end{figure}
 
 There exists an identity for the ``$\then$'' operation.
 We define the identity $\id_A\colon A \tickar A$ as follows.
@@ -318,45 +338,51 @@ For any poset $A$, the \emph{identity} $\id_A\colon \F{A} \tickar \R{A}$ is a ma
 \end{equation}
 \end{definition}
 
-In the diagrammatic notation, we represent $\id_A$ by
+In the diagrammatic notation, we represent $\id_A$ as in~\cref{fig:identitydp}.
 \todo{discuss with AC}
+\begin{figure}[h!]
     \begin{center}
     \begin{tikzpicture}[DP]
     \node[dp={1}{1}] (id) {$\id_A$};
     \draw[runconn, runame={}] (id_res1){};
     \draw[funconn, funame={}] (id_fun1){};
-    \draw (id_fun1) to[in=180,out=0] (id_res1){};
+    %\draw (id_fun1) to[in=180,out=0] (id_res1){};
 \end{tikzpicture}
-    \end{center}
-since a design problem composed with the identity is equivalent to the original design problem.
+\end{center}
+\caption{Diagrammatic representation of the identity design problem. \label{fig:identitydp}}
+\end{figure}
 
 \begin{lemma}
-    The composition operation satisfies the left and right unit laws, i.e.
-\begin{equation}
+    The composition operation satisfies the left and right unit laws (\cref{fig:compositionunital}).
+\begin{figure}[h!]
+\begin{center}
     \includesag{50_composition_unitality}
-\end{equation}
+\end{center}
+\caption{Composition satisfies left and right unit laws. \label{fig:compositionunital}}
+\end{figure}
 \end{lemma}
+
 \begin{proof}
-Given $f\colon A\tickar B$, we need to show:
+Given $f\colon \F{A}\tickar \R{B}$, we need to show:
 \begin{equation}
-    \id_A \then f = f = f\then \id_B.
+    \id_A \then f\equiv f \equiv f\then \id_B.
 \end{equation}
 In the following, we prove $\id_A \then f = f$. Proving $f\then \id_B=f$ is similar.
 Consider the poset $\Bool$. Since for $x,y\in \Bool$, $x\cong y \Rightarrow x=y$ (also known as skeletality), we just need to show that $f\leq \id_A\then f$ and $\id_A\then f\leq f$.
 We have
 \begin{equation}
 \begin{aligned}
-        f(a,b)&=\true \wedge f(a,b)\\
-        &\leq \id_A(a,a) \wedge f(a,b)\\
-        &\leq \bigvee_{a'\in A}\id_A(a,a')\wedge f(a',b)\\
-        &=(\id_A\then f)(a,b).
+        f(\F{a}^*,\R{b})&=\true \wedge f(\F{a}^*,\R{b})\\
+        &\leq \id_A(\F{a}^*,\R{a}) \wedge f(\F{a}^*,\R{b})\\
+        &\leq \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b})\\
+        &=(\id_A\then f)(\F{a}^*,\R{b}).
 \end{aligned}
 \end{equation}
 For the other direction, we need to show that $\id_A\then f\leq f$, i.e.
 \begin{equation}
-    \bigvee_{a'\in A}\id_A(a,a')\wedge f(a',b) \leq f(a,b).
+    \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \leq f(\F{a}^*,\R{b}).
 \end{equation}
-This holds iff $\id_A(a,a')\wedge f(a',b) \leq f(a,b)$ for some $a'\in A$. If there is no such $a'$, then the inequality holds ($\false \leq \false$ and $\false \leq \true$). If there is such an $a'$, it means than $\id_A(a,a')=\true$ and $f(a',b)=\true$. We know that $\id_A(a,a')=\true \Leftrightarrow a\leq a'$, and hence $f(a,b)=\true$.
+This holds iff $\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \leq f(\F{a}^*,\R{b})$ for some $a'\in A$. If there is no such $a'$, then the inequality holds ($\false \leq \false$ and $\false \leq \true$). If there is such an $a'$, it means than $\id_A(\F{a}^*,\R{a'})=\true$ and $f(\F{a'}^*,\R{b})=\true$. We know that $\id_A(\F{a}^*,\R{a'})=\true \Leftrightarrow \F{a}\leq \R{a'}$, and hence $f(\F{a}^*,\R{b})=\true$.
 \end{proof}
 
 \subsection{The category of design problems}

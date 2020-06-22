@@ -1,6 +1,7 @@
 % !TEX root = ../CategoricalCoDesign.tex
 \section{The duality of design}
 \subsection{Galois connections}
+
 \AC{ Define Galois connection. Introduce by saying that we want to represent the pair of maps (from and to) between
 functionality and resources.}
 
@@ -16,43 +17,8 @@ In ref to next section, reorganize the flow like this:
 
 3) What's missing and justifies DP.
 }
-\begin{definition}[Opposite of a poset]
 
-    The \emph{opposite} of a  poset $\langle A, \leq \rangle $ is the poset $\langle A\op, \leq\op\rangle $ that has the same elements as~$A$ and the reverse ordering.
-    For a given~$x \in A$, we use~$x^*$ to represent its corresponding copy in~$A\op$;
-    note that~$x$ and~$x^*$ are distinct.
-    Reversing the order means that, for all $x,y\in A$,
-    \begin{equation}
-        x \leq y \quad \Leftrightarrow \quad y^* \leq\op x^*.
-    \end{equation}
-
-\end{definition}
-
-\begin{figure}[h!]
-   \centering
-   \includesag{40_dpcatfig_opposite}
-   \caption{Opposite of a poset.\label{fig:opposite}}
-\end{figure}
-
-
-\begin{example}[Credit and debt]
-   Let us define the set $\text{USD}=\{\$0.00,\$0.01,\$0.02,\dots\}$
-   of all US dollars monetary quantities approximated to the cent.
-   From this set we can define two posets:
-       $\text{USD}^{+} = \tup{\text{USD}, \leq}$
-       and $\text{USD}^{-} = \tup{\text{USD}, \geq}$
-       that are opposite of each other.
-   If the context is that, given two quantities~$\$1$ and~$\$2$,
-   we prefer~$\$1$ to~$\$2$ (for example because it is a cost to pay to acquire a component), then we are working in~$\text{USD}^{+}$,
-   otherwise we are working in~$\text{USD}^{-}$ (for example
-   because it represents the price at which we are selling our product).
-
-   Traditionally, in double-entry ledger systems, the numbers were not
-   written with negative signs, but rather in color: red and black.
-   From this convention we get the idioms ``being in the black''
-   and ``being in the red''.
-
-\end{example}
+\todo{This definition is now superseded, we give two more specific definitions (antitone and monotone connections) later.}
 \begin{shaded}
 \begin{definition}[Galois connection]
 \label{def:galois}
@@ -77,81 +43,128 @@ The category $\mathbf{Gal}$ is specified by
 \subsection{Notebook AC/GZ}
 
 \begin{lemma}
-$LF$ is a lattice with the following choices: ...
+$\LF$ is a bounded lattice with 
+\begin{equation}
+    \{\LF,\leq_{\LF},\bot_{\LF},\top_{\LF},\vee_{\LF},\wedge_{\LF}\}=\{\LF,\subseteq,\emptyset,F,\cup,\cap\}.
+\end{equation}
 \end{lemma}
+\begin{proof}
+Consider the poset $\tup{\LF,\subseteq}$ and $p,q\in \LF$. The least upper bound of $p,q$ is $p\cup u$, and their greatest lower bound is $p\cap u$. This makes $\LF$ a lattice. Furthermore, $\LF$ is bounded because it has a bottom $\emptyset$ (included by all other elements of $\LF$) and a top $F$ (including all other elements of $\LF$).
+\todo{finish}
+\end{proof}
 \begin{lemma}
-$UR$ is a lattice with the following choices: ...
-
-Note that the order on $\mathrm{L}F$ is $\subseteq$, and the order on $\mathrm{U}R$ is $\supseteq$.
+$\UR$ is a bounded lattice with
+\begin{equation}
+    \{\UR,\leq_{\UR},\bot_{\UR},\top_{\UR},\vee_{\UR},\wedge_{\UR}\}=\{\UR,\supseteq,R,\emptyset,\cap,\cup\}.
+\end{equation}
+\begin{proof}
+Consider the poset $\tup{\UR,\supseteq}$ and $p,q\in \UR$. The least upper bound of $p,q$ is $p\cap u$, and their greatest lower bound is $p\cup u$. This makes $\UR$ a lattice. Furthermore, $\UR$ is bounded because it has a bottom $R$ (including all other elements of $\UR$) and a top $\emptyset$ (included in all other elements of $\UR$).
+\todo{finish}
+\end{proof}
 \end{lemma}
+Note that the order on $\LF$ is $\subseteq$, and the order on $\UR$ is $\supseteq$.
 
-
-\begin{align}
-    \leq_{LF} & \equiv \subseteq \\ 
-    \bot_{LF} & = \emptyset \\
-    \top_{LF} & = F \\
-    \vee_{LF} & \equiv \cup \\
-    \wedge_{LF} & \equiv \cap \\
-\end{align}
-\begin{align}
-    \leq_{UR} & \equiv \supseteq \\ 
-    \bot_{UR} & =  R\\
-    \top_{UR} & = \emptyset \\
-    \vee_{UR} &\equiv \cap\\
-    \wedge_{UR} & \equiv \cup \\
-\end{align}
-
-Consider the profunctor $d\colon F\tickar R$. 
-
-We can define the maps that work on single functionality 
-and resources:
+Consider the profunctor $d\colon F\tickar R$. We can define the maps that work on single functionality and resources:
 
 \begin{equation}
     \begin{aligned}
-    \theta\colon F&\to \mathrm{U}R\\
-    f&\mapsto \{r\in R : d(f, r) \},
+    \theta\colon F&\to \UR\\
+    f&\mapsto \{r\in R \colon d(f, r) \},
     \end{aligned}
 \end{equation}
 
 \begin{equation}
     \begin{aligned}
-    \psi\colon R&\to \mathrm{L}F\\
-    r&\mapsto \{f\in F : d(f, r) \},
+    \psi\colon R&\to \LF\\
+    r&\mapsto \{f\in F \colon d(f, r) \}.
     \end{aligned}
 \end{equation}
-
 We can define the maps that work on multiple functionality 
 and resources:
+\begin{equation}
+\label{eq:galoisalfa}
+    \begin{aligned}
+    \alpha\colon \LF&\to \UR\\
+    S&\mapsto \{r\in R \colon \exists f\in S\colon \ d(f,r)\},
+    \end{aligned}
+\end{equation}
+Alternatively, we can write 
+\begin{equation}
+\begin{aligned}
+\alpha \colon \LF &\to \UR \\
+S&\mapsto \bigcup_{f\in S} \theta(f).
+\end{aligned}
+\end{equation}
 
 \begin{equation}
+\label{eq:galoisbeta}
     \begin{aligned}
-    \alpha\colon \mathrm{L}F&\to \mathrm{U}R\\
-    S&\mapsto \{r\in R : \exists f\in S\colon \ d(f,r)\},
-    \end{aligned}
-\end{equation}
-\begin{equation}
-    \begin{aligned}
-    \beta\colon \mathrm{U}R&\to \mathrm{L}F\\
-    T&\mapsto \{f\in F : \exists r\in T\colon \ d(f,r)\},
-    \end{aligned}
-\end{equation}
-\begin{equation}
-    \begin{aligned}
-    \delta \colon \mathrm{L}F&\to \mathrm{U}R\\
-    S&\mapsto \{r\in R : \forall {f\in S}\colon \ d(f,r)\},
-    \end{aligned}
-\end{equation}
-\begin{equation}
-    \begin{aligned}
-    \gamma \colon \mathrm{U}R&\to \mathrm{L}F\\
-    T&\mapsto \{f\in F : \forall {r\in T}\colon \ d(f,r)\},
+    \beta\colon \UR&\to \LF\\
+    T&\mapsto \{f\in F  \colon \exists r\in T\colon d(f,r)\},
     \end{aligned}
 \end{equation}
 
-\todo[inline]{Can we define $\alpha,\delta$ ($\beta, \gamma$) in terms of $\theta$ ($\psi$)?}
+\noindent Alternatively, we can write
+\begin{equation}
+\begin{aligned}
+\beta \colon \UR &\to \LF \\
+T&\mapsto \bigcup_{r\in T} \psi(r).
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\label{eq:galoisdelta}
+    \begin{aligned}
+    \delta \colon \LF&\to \UR\\
+    S&\mapsto \{r\in R \colon \forall {f\in S}\colon d(f,r)\},
+    \end{aligned}
+\end{equation}
+Alternatively, we can write
+\begin{equation}
+    \begin{aligned}
+    \delta\colon \LF &\to \UR\\
+    S&\mapsto \bigcap_{f\in S}\theta(f).
+    \end{aligned}
+\end{equation}
+
+\begin{equation}
+\label{eq:galoisgamma}
+    \begin{aligned}
+    \gamma \colon \UR&\to \LF\\
+    T&\mapsto \{f\in F \colon \forall {r\in T}\colon d(f,r)\},
+    \end{aligned}
+\end{equation}
+Alternatively, we can write
+\begin{equation}
+    \begin{aligned}
+    \delta\colon \UR &\to \LF\\
+    T&\mapsto \bigcap_{r\in T}\psi(r).
+    \end{aligned}
+\end{equation}
+
+Properties of these maps are reported in \cref{tab:galoisproperties}.
 
 
+\begin{table}[h!]
+    \begin{center}
+    \begin{tabular}{c|l|l|c|c|c|c|c}
+         $\star$&X&Y&$\star(\bot)$&$\star(\top)$&$A\leq_X B$ &$\star(A\vee_X B)$&$\star(A\wedge_X B)$\\
+         \hline
+         $\alpha$&$\LF$&$\UR$&$\alpha(\emptyset)=\emptyset$&$\alpha(F)\geq_{\UR} \alpha(\cdot)$&$\alpha(A)\geq_{\UR} \alpha(B)$& $\alpha(A)\vee_{\LF}\alpha(B)$&$\alpha(A)\wedge_{\LF}\alpha(B)$\\
+         \hline 
+         $\beta$&$\UR$&$\LF$&$\beta(R)\geq_{\LF}\beta(\cdot)$&$\beta(\emptyset)=\emptyset$&$\beta(A)\geq_{\LF} \beta(B)$&$\beta(A)\vee_{\LF}\beta(B)$&$\beta(A)\wedge_{\LF}\beta(B)$\\
+         \hline
+         $\delta$&$\LF$&$\UR$&$\delta(\emptyset)=R$&$\delta(F)\geq_{\UR}\delta(\cdot)$&$\delta(A)\leq_{\UR} \delta(B)$&$\delta(A)\wedge_{\UR}\delta(B)$&$\delta(A)\vee_{\UR}\delta(B)$\\
+         \hline
+         $\gamma$&$\UR$&$\LF$&$\gamma(R)\leq_{\LF}\gamma(\cdot)$&$\gamma(\emptyset)=F$&$\gamma(A) \leq_{\LF} \gamma(B)$&$\gamma(A)\wedge_{\LF}\gamma(B)$&$\gamma(A)\vee_{\LF}\gamma(B)$
+    \end{tabular}
+    \caption{Properties of $\alpha,\beta,\delta,\gamma$}
+    \label{tab:galoisproperties}
+    \end{center}
+\end{table}
 
+
+\begin{comment}
 \begin{align}
     \alpha(\emptyset_{F}) &= \emptyset_{R} \\
     \alpha(\bot_{LF}) &= \top_{UR} \\
@@ -193,8 +206,10 @@ $\delta, \gamma$:
     \gamma(A \cup B) &= \gamma(A) ? \gamma(B) \\
     \gamma(A \cap B) &= \gamma(A) ? \gamma(B) \\
 \end{align}
+\end{comment}
 
 
+\todo{should we stick to one of monotone/order preserving as terms?}
 \begin{definition}[Monotone Galois Connection]
 A monotone Galois connection between $A$ and $B$ is a pair of \textbf{order-preserving} functions $f:A\to B$ and $g:B\to A$ such that for all $a\in A$, $b\in B$:
 \begin{equation}
@@ -209,7 +224,7 @@ This is equivalent to ask, for all $a\in A$, $b\in B$:
 
 
 \begin{definition}[Antitone Galois Connection]
-An antitone Galois connection between $A$ and $B$ is a pair of \textbf{order-reversing} functions $f:A\to B$ and $g:B\to A$ such that for all $a\in A$, $b\in B$:
+An antitone Galois connection between $A$ and $B$ is a pair of \textbf{order-reversing} functions $f\colon A\to B$ and $g \colon B\to A$ such that for all $a\in A$, $b\in B$:
 \begin{equation}
     b \leq_B f(a) \quad \Leftrightarrow \quad a \leq_A g(b) 
 \end{equation}
@@ -220,52 +235,72 @@ a \leq_A g(f(a))   \qquad \text{and} \qquad  b \leq_B f(g(b))
 \end{definition}
 
 
-\begin{lemma} $(\delta, \gamma)$~forms a \textbf{monotone} Galois connection between $LF$ and $UR$.
+\begin{lemma} $(\delta, \gamma)$~forms a \textbf{monotone} Galois connection between $\LF$ and $\UR$.
 \end{lemma}
 \begin{proof}
 
-Preliminarly note that $\delta$ and $\gamma$ are order-\textbf{preserving} and monotone. First of all, notice that $\delta \then \gamma$ is monotone as well (composition of monotone functions is monotone). We need to show that $\delta \then \gamma$ is increasing. 
+First of all, we need to prove that $\delta$ and $\gamma$ are order-\textbf{preserving}, i,e. that if $L\subseteq L'$ then $\delta(L)\supseteq\delta(L')$ and if $U\supseteq U'$ then $\gamma(U)\subseteq\gamma(U')$. 
+\todo{write proof}
 
+\noindent We need to show that for any lower set $L\subseteq F$ of functionalities and upper set $U\subseteq R$ of resources, we have
+\begin{equation}
+L\subseteq\gamma(U) \iff \delta(L)\supseteq U
+\end{equation}
+The left-hand side says that if $f\in L$, then $\forall r \in U$ we have $d(f,r)=\true$. The right-hand side says that if $r\in U$ then $\forall f \in L$, $d(f,r)=\true$. Both are equivalent to $\forall f\in L,r\in U$, $d(f,r)=\true$, and hence to each other. In formulas:
+\begin{equation}
+    \begin{aligned}
+    L \subseteq \gamma(U)&\equiv L\subseteq \{f \in F\colon \forall r\in U\colon d(f,r)\} \\
+    &\equiv \forall f\in L, r\in U \colon d(f,r)=\true \\
+    &\equiv \forall r\in U, f\in L \colon d(f,r)=\true\\
+    &\equiv U\subseteq \{r\in R\colon \forall f\in L\colon d(f,r)=\true \}\\
+    &\equiv U\subseteq \delta(L).
+    \end{aligned}
+\end{equation}
 \end{proof}
+% We need to prove that, for $a\in F$, $b\in R$:
+% \begin{equation}
+% \label{eq:gammadeltafirst}
+%     a\leq_{LF} \gamma(\delta(a)),
+% \end{equation}
+% and
+% \begin{equation}
+% \label{eq:gammadeltasec}
+% b\geq_{UR}\delta(\gamma(b))
+% \end{equation}
+% \begin{itemize}
+%     \item Let's start from \cref{eq:gammadeltafirst}. We know that $a\leq_{LF} \gamma(\delta(a))$ means $a\subseteq \gamma(\delta(a))$. Assume this is not true, i.e. $\exists x\in a \colon (x\in a)\wedge (x \not\in \gamma(\delta(a)))$. Following \cref{eq:galoisdelta}, we know that if $y\in \delta(a)$, $d(x',y)=\true \ \forall x'\in a$. Following \cref{eq:galoisgamma}, we know that if $w\in \gamma(\delta(a))$, $d(w,y)=\true \ \forall y\in \delta(a)$. But from before, we know that for each $y\in \delta(a)$, we have $d(x',y)=\true$, for all $x'\in a$, meaning that $\gamma(\delta(a))$ must include $x'$, $\forall x' \in a$. This contradicts the initial assumption. 
+%     \item Let's continue with \cref{eq:gammadeltasec}. We know that $b\geq_{UR} \delta(\gamma(b))$ means $b \subseteq \delta(\gamma(b))$. Assume this is not true, i.e. $\exists x\in b\colon (x\in b)\wedge (x \not\in \delta(\gamma(b)))$. From \cref{eq:galoisgamma}, we know that if $y \in \gamma(b)$, $d(y,x')=\true$, for all $x'\in b$. Following \cref{eq:galoisdelta}, we know that if $w\in \delta(\gamma(b))$, $d(y,w)=\true$, for all $y\in \gamma(b)$. But from before, we know that for each $y\in \gamma(b)$, we have $d(y,x')=\true$, for all $x'\in b$, meaning that $\delta(\gamma(b))$ must include $x'$, $\forall x' \in b$. This contradicts the initial assumption.
+% \end{itemize}
+
 
 \begin{lemma} $(\alpha, \beta)$ forms an  \textbf{antitone} Galois connection between $LF$ and $UR$.
 \end{lemma}
 \begin{proof}
-Preliminarly note that $\alpha$ and $\beta$ are order \textbf{reversing}. For $S\in LF$, $T\in UR$, we want to show
+Preliminarly note that $\alpha$ and $\beta$ are order \textbf{reversing}. For $a\in F$, $b\in R$, we want to show:
 \begin{equation}
-    S\leq_{LF} \beta(\alpha(S)) \text{ and } T\leq_{UR} \alpha(\beta(T)).
+\label{eq:alfabetafirst}
+    L\subseteq \beta(\alpha(L))
 \end{equation}
-Let's start from the left. One has:
+and
 \begin{equation}
-    \begin{aligned}
-    S&\leq_{LF} \beta(\alpha(S))\\
-    S&\subseteq \beta(\alpha(S))
-    \end{aligned}
+\label{eq:alfabetasec}
+     U\supseteq \alpha(\beta(U)).
 \end{equation}
-We know that $S\subseteq S$. Let's try out two cases (I know it's not the proof, but we may use these facts):
+\paragraph{Counterexample} Consider $d$ as the design problem which is always not feasible (the empty profunctor), i.e. $d(f,r)=\false$, $\forall f\in F,r\in R$. Take any $L\in F$. We know that $\alpha(L)=\emptyset$, and $\beta(\alpha(L))=\beta(\emptyset)=\emptyset$. But $L\subseteq \emptyset$ is not true.
+
+\begin{comment}
+Or ...
 \begin{itemize}
-    \item Assume $S=\emptyset_F$. We know that $\alpha(S)=\emptyset_R$, and we know that $\beta(\alpha(S))=\emptyset_F$. This means that $S\subseteq \beta(\alpha(S))$. 
-    \item Assume $S=F$. We know that $\alpha(S)$ includes any other $\alpha(F')$, $F' \in F$. Furthermore, $\beta(\alpha(F))$ will also include any other $\beta(R')$, $R'\in R$, but for sure $F\supseteq \beta(\alpha(F))$. If this is true, then $\beta(\alpha(F))=F$.
+    \item \cref{eq:alfabetafirst} means that $x\in L \Rightarrow x \in \beta(\alpha(L))$. Let's check this. Given $x\in L$, we know that $y\in \alpha(x)$ if $\exists f\in x$ such that $d(f,y)=\true$. Furthermore, we know that $z\in \beta(\alpha(x))$ if $\exists r\in \alpha(x)$ such that $d(z,r)=\true$. We know that for all $r\in \alpha(x)$, there exists a $f\in x$ such that $d(f,r)=\true$, so at least $f\in \beta(\alpha(x))$. 
+    \todo{how to generalize?}
+    \item \cref{eq:alfabetasec} means that $x\in \alpha(\beta(U))\Imp x\in U$. Let's check this. Given $x\in U$, we know that $y\in \beta(x)$ if $\exists r\in x$ such that $d(y,r)=\true$. Furthermore, we know that $z\in \alpha(\beta(x))$ if $\exists f\in \beta(x)$ such that $d(f,z)=\true$. We know that for all $f\in \beta(x)$, there exists a $r\in x$ such that $d(f,r)=\true$, so at least $r\in \beta(\alpha(x))$.
+    \todo{how to generalize}
 \end{itemize}
-Now, can we use the two extreme cases to conclude something on any $S\in F$?
-
-\begin{equation}
-    \begin{aligned}
-    \beta(\alpha(S))&=\{f\in F\colon \exists r\in \alpha(S)\colon d(f,r)\}
-    \end{aligned}
-\end{equation}
-
-
+\end{comment}
 
 \end{proof}
-% We want to show that $\delta$ and $\gamma$ form a galois connection, i.e. that for $c\in \mathrm{L}F, d\in \mathrm{U}R$:
-% \begin{equation}
-%     \delta(c)\supseteq d \Leftrightarrow c\subseteq \gamma(d).
-% \end{equation}
-% Let's show the two directions.
-% \begin{itemize}
-%     \item For the $\Rightarrow$ direction one starts from $\alpha(a)\supseteq b$. Assume $d=\varnothing$, for which the left-hand side is always true. However, $\gamma(\varnothing)=\varnothing$, and $c\subseteq \varnothing$ does not make sense.
-% \end{itemize}
+
+
 
 
 
