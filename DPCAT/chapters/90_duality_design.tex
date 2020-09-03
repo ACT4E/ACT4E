@@ -2,9 +2,6 @@
 \section{The duality of design}
 \subsection{Galois connections}
 
-\AC{ Define Galois connection. Introduce by saying that we want to represent the pair of maps (from and to) between
-functionality and resources.}
-
 \AC{Define the category with object Posets and morphisms Galois connections.}
 
 \AC{Explain what this category  can and cannot represent. (It is a subcategory of DP. (preliminary exercise).) 
@@ -18,51 +15,29 @@ In ref to next section, reorganize the flow like this:
 3) What's missing and justifies DP.
 }
 
-\todo{This definition is now superseded, we give two more specific definitions (antitone and monotone connections) later.}
-\begin{shaded}
-\begin{definition}[Galois connection]
-\label{def:galois}
-Given two preorders $P$ and $Q$, a \emph{Galois connection} between them is a pair of monotone maps $f\colon P\to Q$, $g\colon Q\to P$ such that
+\begin{definition}[Monotone Galois Connection]
+A \emph{monotone Galois connection} between $A$ and $B$ is a pair of monotone maps $f\colon A\to B$ and $g\colon B\to A$ such that for all $a\in A$, $b\in B$:
 \begin{equation}
-    f(p)\leq q \Leftrightarrow p\leq g(q).
+    f(a) \leq_B b \quad \Leftrightarrow \quad a \leq_A g(b).
 \end{equation}
-One says that $f$ is the \emph{left adjoint} and $g$ is the \emph{right adjoint} of the Galois connection.
-\end{definition}
-\end{shaded}
-
-\begin{definition}[Category $\mathbf{Gal}$]
-The category $\mathbf{Gal}$ is specified by
-\begin{compactenum}
-    \item \emph{Objects:} Objects are posets.
-    \item \emph{Morphisms:} Morphisms are Galois connections (\cref{def:galois}).
-    \item \emph{Identity morphism:} For each object $C\in \Ob_\mathbf{Gal}$, we define the identity morphism a pair of identity functions, such that $\text{Id}(C)=C\leq C$.
-\end{compactenum}
+This is equivalent to ask, for all $a\in A$, $b\in B$:
+\begin{equation}
+    a\leq_A g(f(a)) \qquad \text{and} \qquad b\geq_{B}f(g(b)).
+\end{equation}
 \end{definition}
 
-\newpage
-\subsection{Notebook AC/GZ}
 
-\begin{lemma}
-$\LF$ is a bounded lattice with 
+
+\begin{definition}[Antitone Galois Connection]
+An \emph{antitone Galois connection} between $A$ and $B$ is a pair of antitone maps $f\colon A\to B$ and $g \colon B\to A$ such that for all $a\in A$, $b\in B$:
 \begin{equation}
-    \{\LF,\leq_{\LF},\bot_{\LF},\top_{\LF},\vee_{\LF},\wedge_{\LF}\}=\{\LF,\subseteq,\emptyset,F,\cup,\cap\}.
+    b \leq_B f(a) \quad \Leftrightarrow \quad a \leq_A g(b).
 \end{equation}
-\end{lemma}
-\begin{proof}
-Consider the poset $\tup{\LF,\subseteq}$ and $p,q\in \LF$. The least upper bound of $p,q$ is $p\cup u$, and their greatest lower bound is $p\cap u$. This makes $\LF$ a lattice. Furthermore, $\LF$ is bounded because it has a bottom $\emptyset$ (included by all other elements of $\LF$) and a top $F$ (including all other elements of $\LF$).
-\todo{finish}
-\end{proof}
-\begin{lemma}
-$\UR$ is a bounded lattice with
+This is equivalent to ask for all $a\in A$, $b\in B$:
 \begin{equation}
-    \{\UR,\leq_{\UR},\bot_{\UR},\top_{\UR},\vee_{\UR},\wedge_{\UR}\}=\{\UR,\supseteq,R,\emptyset,\cap,\cup\}.
+a \leq_A g(f(a))   \qquad \text{and} \qquad  b \leq_B f(g(b)).
 \end{equation}
-\begin{proof}
-Consider the poset $\tup{\UR,\supseteq}$ and $p,q\in \UR$. The least upper bound of $p,q$ is $p\cap u$, and their greatest lower bound is $p\cup u$. This makes $\UR$ a lattice. Furthermore, $\UR$ is bounded because it has a bottom $R$ (including all other elements of $\UR$) and a top $\emptyset$ (included in all other elements of $\UR$).
-\todo{finish}
-\end{proof}
-\end{lemma}
-Note that the order on $\LF$ is $\subseteq$, and the order on $\UR$ is $\supseteq$.
+\end{definition}
 
 Consider the profunctor $d\colon F\tickar R$. We can define the maps that work on single functionality and resources:
 
@@ -142,7 +117,7 @@ Alternatively, we can write
     \end{aligned}
 \end{equation}
 
-Properties of these maps are reported in \cref{tab:galoisproperties}.
+\noindent Properties of these maps are reported in \cref{tab:galoisproperties}.
 
 
 \begin{table}[h!]
@@ -163,86 +138,61 @@ Properties of these maps are reported in \cref{tab:galoisproperties}.
     \end{center}
 \end{table}
 
-
-\begin{comment}
-\begin{align}
-    \alpha(\emptyset_{F}) &= \emptyset_{R} \\
-    \alpha(\bot_{LF}) &= \top_{UR} \\
-    \alpha(F) &\subseteq \text{ any other }\alpha(\cdot) 
-    \\
-    A \subseteq B \ &\Rightarrow\ \alpha(A) \subseteq \alpha(B)
-    \\
-    A \leq_{LF} B \ &\Rightarrow\ \alpha(A) \geq_{UR} \alpha(B) \label{eq:1}\\
-    \alpha(A \cup B) &= \alpha(A) ? \alpha(B) \\
-    \alpha(A \cap B) &= \alpha(A) ? \alpha(B) 
-\end{align}
-
-\begin{align}
-    \beta(\emptyset_{R}) &= \emptyset_{F} \\
-    \beta(\top_{UR}) &= \bot_{LF} \\
-    \beta(\bot_{UR}) &= ... \\
-    A \subseteq B \ &\Rightarrow\ \beta(A) \subseteq \beta(B)     \\
-    A \geq_{UR} B \ &\Rightarrow\ \beta(A) \leq_{LF} \beta(B) \label{eq:1} \\
-    \beta(A \cup B) &= \beta(A) ? \beta(B) \\
-    \beta(A \cap B) &= \beta(A) ? \beta(B)
-\end{align}
-$\delta, \gamma$:
-\begin{align}
-\delta(\emptyset_F) &= R  \\
-    \delta(\bot_{LF}) &= \bot_{UR}  \\
-    \delta(\top_{LF}) &= ... \\
-    A \subseteq B \ &\Rightarrow\ \delta(A) \supseteq \delta(B)\\
-    A \leq_{LF} B \ &\Rightarrow\ \delta(A) \leq_{UR} \delta(B)
-    \\
-    \delta(A \cup B) &= \delta(A) ? \delta(B) \\
-    \delta(A \cap B) &= \delta(A) ? \delta(B)
-\end{align}
-\begin{align}
-   \gamma(\emptyset_R) &= F \\
-    \gamma(\top_{UR}) &= \top_{LF} \\
-    \gamma(\bot_{UR}) &= ... \\
-    A \subseteq B \ & \Rightarrow\ \gamma(A) \supseteq \gamma(B) \\
-    A \leq_{UR} B \ & \Rightarrow\ \gamma(A) \leq_{LF} \gamma(B) \\
-    \gamma(A \cup B) &= \gamma(A) ? \gamma(B) \\
-    \gamma(A \cap B) &= \gamma(A) ? \gamma(B) \\
-\end{align}
-\end{comment}
-
-
-\todo{should we stick to one of monotone/order preserving as terms?}
-\begin{definition}[Monotone Galois Connection]
-A monotone Galois connection between $A$ and $B$ is a pair of \textbf{order-preserving} functions $f:A\to B$ and $g:B\to A$ such that for all $a\in A$, $b\in B$:
+\begin{lemma}
+\label{lemma:deltagammamonotone}
+$\delta$ and $\gamma$ are monotone maps. 
+\end{lemma}
+\begin{proof}
+We first prove that $\delta$ is a monotone map. Given $A,B\in \LF$ with $A\subseteq B$, one has 
 \begin{equation}
-    f(a) \leq_B b \quad \Leftrightarrow \quad a \leq_A g(b)
+    \begin{aligned}
+    \delta(A)&=\{r\in R\colon \forall f \in A\colon d(f,r)\}\\
+    &\supseteq \{r\in R\colon \forall f\in B \colon d(f,r)\}\\
+    &=\delta(B),
+    \end{aligned}
 \end{equation}
-This is equivalent to ask, for all $a\in A$, $b\in B$:
+meaning that $A\leq_{\LF} B \Imp \delta(A)\leq_{\UR} \delta(B)$.
+We now prove that $\gamma$ is a monotone map. Given $C,D\in \UR$, with $C\supseteq D$, one has
 \begin{equation}
-    a\leq_A g(f(a)) \qquad \text{and} \qquad b\geq_{B}f(g(b))
+    \begin{aligned}
+    \gamma(C)&=\{f\in F\colon \forall r \in C\colon d(f,r)\}\\
+    &\subseteq \{f\in F\colon \forall r \in D \colon d(f,r)\}\\
+    &=\gamma(D),
+    \end{aligned}
 \end{equation}
-\end{definition}
+meaning that $C\leq_{\UR} D \Imp \gamma(C)\leq_{\LF} \gamma(D)$.
+\end{proof}
 
-
-
-\begin{definition}[Antitone Galois Connection]
-An antitone Galois connection between $A$ and $B$ is a pair of \textbf{order-reversing} functions $f\colon A\to B$ and $g \colon B\to A$ such that for all $a\in A$, $b\in B$:
+\begin{lemma}
+\label{lemma:alfabetaantitone}
+$\alpha$ and $\beta$ are antitone maps.
+\end{lemma}
+\begin{proof}
+We first prove that $\alpha$ is an antitone map. Given $A,B\in \LF$, with $A\subseteq B$, one has
 \begin{equation}
-    b \leq_B f(a) \quad \Leftrightarrow \quad a \leq_A g(b) 
+    \begin{aligned}
+    \alpha(A)&=\{ r\in R\colon \exists f\in A\colon d(f,r)\}\\
+    &\subseteq \{r\in R\colon \exists f\in B\colon d(f,r)\}\\
+    &=\alpha(B),
+    \end{aligned}
 \end{equation}
-This is equivalent to ask for all $a\in A$, $b\in B$:
+meaning that $A\leq_{\LF} B\Imp \alpha(A) \geq_{\UR} \alpha(B)$.
+We now prove that $\beta$ is an antitone map. Given $C,D\in \UR$, with $C\supseteq D$, one has
 \begin{equation}
-a \leq_A g(f(a))   \qquad \text{and} \qquad  b \leq_B f(g(b))
+    \begin{aligned}
+    \beta(C)&=\{f\in F\colon \exists r\in C\colon d(f,r)\}\\
+    &\supseteq \{f\in F\colon \exists r\in D \colon d(f,r)\}\\
+    &=\beta(D),
+    \end{aligned}
 \end{equation}
-\end{definition}
+meaning that $C\leq_{\UR} D \Imp \beta(C)\geq_{\UR} \beta(D)$.
+\end{proof}
 
 
 \begin{lemma} $(\delta, \gamma)$~forms a \textbf{monotone} Galois connection between $\LF$ and $\UR$.
 \end{lemma}
 \begin{proof}
-
-First of all, we need to prove that $\delta$ and $\gamma$ are order-\textbf{preserving}, i,e. that if $L\subseteq L'$ then $\delta(L)\supseteq\delta(L')$ and if $U\supseteq U'$ then $\gamma(U)\subseteq\gamma(U')$. 
-\todo{write proof}
-
-\noindent We need to show that for any lower set $L\subseteq F$ of functionalities and upper set $U\subseteq R$ of resources, we have
+In~\cref{lemma:deltagammamonotone} we proved that $\delta$ and $\gamma$ are monotone maps. We now need to show that for any lower set $L\subseteq F$ of functionalities and upper set $U\subseteq R$ of resources, we have
 \begin{equation}
 L\subseteq\gamma(U) \iff \delta(L)\supseteq U
 \end{equation}
@@ -273,10 +223,10 @@ The left-hand side says that if $f\in L$, then $\forall r \in U$ we have $d(f,r)
 % \end{itemize}
 
 
-\begin{lemma} $(\alpha, \beta)$ forms an  \textbf{antitone} Galois connection between $LF$ and $UR$.
+\begin{lemma} $(\alpha, \beta)$ does not form an \textbf{antitone} Galois connection between $LF$ and $UR$.
 \end{lemma}
 \begin{proof}
-Preliminarly note that $\alpha$ and $\beta$ are order \textbf{reversing}. For $a\in F$, $b\in R$, we want to show:
+In~\cref{lemma:alfabetaantitone} we have proved that $\alpha$ and $\beta$ are antitone maps. For $L\in F$, $U\in R$, we want to show that the following does not hold:
 \begin{equation}
 \label{eq:alfabetafirst}
     L\subseteq \beta(\alpha(L))
@@ -286,17 +236,7 @@ and
 \label{eq:alfabetasec}
      U\supseteq \alpha(\beta(U)).
 \end{equation}
-\paragraph{Counterexample} Consider $d$ as the design problem which is always not feasible (the empty profunctor), i.e. $d(f,r)=\false$, $\forall f\in F,r\in R$. Take any $L\in F$. We know that $\alpha(L)=\emptyset$, and $\beta(\alpha(L))=\beta(\emptyset)=\emptyset$. But $L\subseteq \emptyset$ is not true.
-
-\begin{comment}
-Or ...
-\begin{itemize}
-    \item \cref{eq:alfabetafirst} means that $x\in L \Rightarrow x \in \beta(\alpha(L))$. Let's check this. Given $x\in L$, we know that $y\in \alpha(x)$ if $\exists f\in x$ such that $d(f,y)=\true$. Furthermore, we know that $z\in \beta(\alpha(x))$ if $\exists r\in \alpha(x)$ such that $d(z,r)=\true$. We know that for all $r\in \alpha(x)$, there exists a $f\in x$ such that $d(f,r)=\true$, so at least $f\in \beta(\alpha(x))$. 
-    \todo{how to generalize?}
-    \item \cref{eq:alfabetasec} means that $x\in \alpha(\beta(U))\Imp x\in U$. Let's check this. Given $x\in U$, we know that $y\in \beta(x)$ if $\exists r\in x$ such that $d(y,r)=\true$. Furthermore, we know that $z\in \alpha(\beta(x))$ if $\exists f\in \beta(x)$ such that $d(f,z)=\true$. We know that for all $f\in \beta(x)$, there exists a $r\in x$ such that $d(f,r)=\true$, so at least $r\in \beta(\alpha(x))$.
-    \todo{how to generalize}
-\end{itemize}
-\end{comment}
+\paragraph{Example} Consider $d$ as the design problem which is always not feasible (the empty profunctor), i.e. $d(f,r)=\false$, $\forall f\in F,r\in R$. Take any $L\in F$. We know that $\alpha(L)=\emptyset$, and $\beta(\alpha(L))=\beta(\emptyset)=\emptyset$. But $L\subseteq \emptyset$ is not true.
 
 \end{proof}
 

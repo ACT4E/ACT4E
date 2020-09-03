@@ -1,22 +1,22 @@
 % !TEX root = ../CategoricalCoDesign.tex
 \section{Enrichments}
 \label{sec:enriched}
-A design problem in ``enriched in $\Bool$'' answers the question, ``is it feasible to provide a given functionality $f$ with resources $r$?''.  A design problem ``enriched in $\Set$'' answers the question, ``which implementations provide $f$ with $r$?''. A design problem ``enriched in $\DP$'' answers the question, ``which design problems provide $f$ with $r$?'' If compact closure allows us to zoom out by studying design problems of design problems, then enrichment allows us to zoom in by studying the `subatomic' composition of design problems.
+A design problem ``enriched in $\Bool$'' answers the question, ``is it feasible to provide a given functionality $\F{f}$ with resources $\R{r}$?''.  A design problem ``enriched in $\Set$'' answers the question, ``which implementations provide $\F{f}$ with $\R{r}$?''. A design problem ``enriched in $\DP$'' answers the question, ``which design problems provide $\F{f}$ with $\R{r}$?'' If compact closure allows us to zoom out by studying design problems of design problems, then enrichment allows us to zoom in by studying the `subatomic' composition of design problems.
 
 \begin{example}\label{ex:dpi_example}
-Beau, the NASA engineer, stares hard at his screen. His boss, Elly May, only wants to know whether the rocket will fly, but he's the one that has to deal with all potential suppliers and technologies. Since NASA started letting any podunk junkyard company bid on rocket contracts, the number of potential parts had sky\emph{rocketed}. Intuitively, he wants to keep track of this extra parts information, so he defines, for every design problem $\adp : F \tickar R$, an extra set of implementations $I_\text{adp}$ and two functions prov $: I_\text{adp} \to F$ and req $: I_\text{adp} \to R$; we say that $i$ provides at most $f \in F$ and $i$ requires at least $r \in R$. Now the familiar $\text{engine} : \text{Thrust} \tickar \text{Fuel}$ design problem looks like this:
-\begin{align*}
-\text{engine} : \textF{Thrust}\op \times \textR{Fuel} &\toinPos \powerset(I_\text{engine}) \\
-\tup{\F{t}^*,\R{f}} &\mapsto \{ i \in I_\text{engine} : \text{exec}(i) \leq_\text{Thrust} t, \text{eval}(i) \geq_\text{Fuel} f \}
-\end{align*}
+Beau, the NASA engineer, stares hard at his screen. His boss, Elly May, only wants to know whether the rocket will fly, but he's the one that has to deal with all potential suppliers and technologies. Since NASA started letting any podunk junkyard company bid on rocket contracts, the number of potential parts had sky\emph{rocketed}. Intuitively, he wants to keep track of this extra parts information, so he defines, for every design problem $\adp \colon \F{F} \tickar \R{R}$, an extra set of implementations $I_\text{adp}$ and two functions $\prov\colon I_\text{adp} \to \F{F}$ and  $\req\colon I_\text{adp} \to \R{R}$; we say that $i$ provides at most $\F{f} \in \F{F}$ and $i$ requires at least $\R{r} \in \R{R}$. Now the familiar $\mathsf{engine} \colon \F{\text{Thrust}} \tickar \R{\text{Fuel}}$ design problem looks like this:
+\begin{equation}
+\begin{aligned}
+\mathsf{engine} \colon \textF{Thrust}\op \times \textR{Fuel} &\toinPos \powerset(I_\text{engine}) \\
+\tup{\F{t}^*,\R{f}} &\mapsto \{ i \in I_\text{engine} \mid \text{exec}(i) \leq_\F{\text{Thrust}} \F{t}, \text{eval}(i) \geq_\R{\text{Fuel}} \R{f} \}
+\end{aligned}
+\end{equation}
 Beau is feeling pretty proud of himself. Now any time NASA wants a design to be built, he can just press a button and the computer will spit out all the parts needed!
 \end{example}
 
 In order to sharpen the intuition of the above example (implementation spaces of the sort above were actually implemented in \cite{censi}), we will need to learn more about the theory of enriched categories.
 
-Some preliminaries.
-
-Given that $\DP$ is compact closed and the external hom is a poset, it is a short, visual step to seeing that $\DP$ is also what we call a \emph{2-category}: a category where the (external) hom-object between any two objects is itself a category (remember that a poset is a kind of category, from \cref{???}). In other words, a 2-category is a category endowed with the extra structure of ``morphisms between morphisms''.
+Given that $\DP$ is compact closed and the external hom is a poset, it is a short, visual step to seeing that $\DP$ is also what we call a \emph{2-category}: a category where the (external) hom-object between any two objects is itself a category (remember that a poset is a kind of category, from \cref{sec:posetsarecats}). In other words, a 2-category is a category endowed with the extra structure of ``morphisms between morphisms''.
 
 Another way of defining a 2-category is to say that it is ``enriched in $\Cat{Cat}$'', the category of categories, whose objects are (small) categories and morphisms are functors. More generally, to say that a category $\Cat{C}$ is \emph{enriched in $\Cat{D}$}, where $\Cat{D}$ is a monoidal category, is to say that $\Hom_\Cat{C}(A,B) \in \Cat{D}$ for all $A,B \in \Cat{C}$, and that composition of morphisms in $\Hom_\Cat{C}(A,B)$ respects the rules of composition in $\Cat{D}$.
 
@@ -27,18 +27,13 @@ Another way of defining a 2-category is to say that it is ``enriched in $\Cat{Ca
 We say that a category \CatC is enriched in \CatD if:
 \begin{compactenum}
     \item For all objects $x, y$ of \CatC, the set $\HomC(x,y)$ can be considered an object of \CatD;
-    \item \CatD is a monoidal category (\cref{def:monoidal}),
+    \item \CatD is a monoidal category (\cref{def:monoidal_cat}),
     with monoidal product~$\otimesD$;
     \item For all objects $x, y, z$ of \CatC, there exists
     a certain morphism $m_{x,y,z}$ in \CatD,
     which goes from the object $\HomC(x, y) \otimesD \HomC(y, z)$ to the object $\HomC(x, z)$:
     \begin{equation} \label{eq:enriched-condition}
-        m_{x,y,z} :
-            \HomC(x, y)
-            \otimesD
-            \HomC(y, z)
-            \to
-            \HomC(x, z) .
+        m_{x,y,z} \colon \HomC(x, y) \otimesD \HomC(y, z) \to \HomC(x, z) .
     \end{equation}
 \end{compactenum}
 \end{definition}
@@ -81,31 +76,22 @@ We say that a category \CatC is enriched in \CatD if:
 \begin{example}Every category is enriched in $\Set$.\end{example}
 
 
-
-\subsubsection{Examples of enriched categories}
 \begin{example}
     A poset~$\tup{P, \leq}$ can be consider a category enriched in the
-    category~$\Bool$.
-
-    First, recall the construction that makes each poset into a
-    category~(\cref{sec:poset-as-category}).
-
-    The poset~$P$ as a category is a category with the objects being the
-    elements of~$P$, and with a morphism~$f: x \to y$ existing if and only if~$x
-    \leq y$.
+    category~$\Bool$. First, recall the construction that makes each poset into a
+    category~(\cref{sec:posetsarecats}). The poset~$P$ as a category is a category with the objects being the
+    elements of~$P$, and with a morphism~$f\colon x \to y$ existing if and only if~$x\leq y$.
 
     $\Bool$ as a category contains two elements,~$\true$ and~$\false$, with
     the three morphism~$\false \to \true$, $\true \to \true$, and~$\false \to \false$. This is equivalent to say that there is a morphism between~$a, b \in \Bool$ if and only if~$a \Rightarrow b$. So we can set~$\Rightarrow\ \equiv\ \to_{\Bool}$.
 
     $\Bool$ can be also considered a monoidal category, by letting~$\otimes$ be
-    the \emph{and} operation, so that~$a \otimes b\ =\ a \wedge b$.
-
-    Looking at~$P$ again, we can show how it can be considered a category
-    enriched in~$\Bool$. For any two points~$a, b$ of~$P$, either~$a \leq b$, or
-    not; there are two choices. The hom-set~$\Hom(a, b)$ is either non-empty
-    (if~$a \leq b$) or empty (if~$a \not\leq b$). We can make the correspondence
-    that an empty hom-set corresponds to~$\false$ and a non-empty hom-set
-    corresponds to~$\true$.
+    the \emph{and} operation, so that
+    \begin{equation}
+        a \otimes b\ =\ a \wedge b.
+    \end{equation}
+    Looking at~$P$ again, we can show how it can be considered a category enriched in~$\Bool$. For any two points~$a, b$ of~$P$, either~$a \leq b$, or not: There are two choices. The hom-set~$\Hom(a, b)$ is either non-empty
+    (if~$a \leq b$) or empty (if~$a \not\leq b$). We can make the correspondence that an empty hom-set corresponds to~$\false$ and a non-empty hom-set corresponds to~$\true$.
 
     Now we can verify that the condition~\eqref{eq:enriched-condition} holds. We
     know that, in a poset,~$x \leq y$ and~$y \leq z$ implies~$x \leq z$.
@@ -133,8 +119,6 @@ We say that a category \CatC is enriched in \CatD if:
     This is the specialization of~\eqref{eq:enriched-condition}
     for~\CatC a poset and~\CatD equal to~\Bool.
 \end{example}
-
-\todo{describe somewhere that \Set is a monoidal category}
 
 \begin{example}
 A category ``enriched in \Set'' is just a regular category, as we have defined it.
@@ -168,21 +152,26 @@ This $\phi$ is a morphism in \Set, and it is the witness required by~\eqref{eq:e
 \end{example}
 
 
+\clearpage 
 
-\section{Set-enriched DPs (DPI)}
+\section{Set-enriched DPs (DPIs)}
 
 \begin{proposition}\label{prop:DP_loc_pos}
 $\DP$ is enriched in $\Pos$. Equivalently, it is a locally-posetal 2-category: a 2-category where the hom-categories are also posets.
 \end{proposition}
 \begin{proof}
-Suppose that $f,g\colon\cP \tickar\cQ $ and $j,k\colon\cQ \tickar\cR $ are design problems and that $f\Imp g$ and $j\Imp k$. We need to show that $(f\then j)\Imp(g\then k)$ in $\DP$.
+Suppose that $f,g\colon \F{\cP} \tickar \R{\cQ}$ and $j,k\colon \F{\cQ} \tickar \R{\cR}$ are design problems and that $f\Imp g$ and $j\Imp k$. We need to show that $(f\then j)\Imp(g\then k)$ in $\DP$.
 \begin{equation}
 \includesag{77_dploc}
 \end{equation}
-Assume $f\Imp g$ and $j\Imp k$, and choose $p\in\cP $ and $r\in\cR $ such that $(f\then j)(p^*,r)=\true$; we must show that $(g\then k)(p^*,r)=\true$. By assumption, there is some $q\in Q$ such that $f(p^*,q)\wedge j(q^*,r)=\true$. But then also $g(p^*,q)\wedge k(q^*,r)=\true$, and this implies the result.
+Assume $f\Imp g$ and $j\Imp k$, and choose $\F{p}\in\F{\cP} $ and $\R{r}\in\R{\cR}$ such that $(f\then j)(\F{p}^*,\R{r})=\true$; we must show that $(g \then k)(\F{p}^*,\R{r})=\true$. By assumption, there is some $q\in Q$ such that $f(\F{p}^*,\R{q})\wedge j(\F{q}^*,\R{r})=\true$. But then also $g(\F{p}^*,\R{q})\wedge k(\F{q}^*,\R{r})=\true$, and this implies the result.
 \end{proof}
 
-Since posets are also categories, monotone maps between posets can be defined as functors between posets (qua categories). Further, posets are enriched in $\Bool$ (\cref{ex:enrichbool}), i.e. $\Hom_A(a,b) \in \Bool$ for all $A \in \Pos$. So when we say that a design problem $f$ is ``enriched in $\Bool$'', we mean that is not only a functor $f : A \tickar B$ between posets $A\op \times B$ and $\Bool$, but that its action on hom-sets is always a morphism in $\Bool$. Explicitly, $f : \Hom_{A\op \times B}(\tup{a_1^*,b_1}, \tup{a_2^*,b_2}) \to \Hom_\Bool(f(\tup{a_1^*,b_1}), f(\tup{a_2^*,b_2}))$ is a morphism in $\Bool$---in other words, one among the set $1 \leq_\Bool 1, 0 \leq_\Bool 0$, and $0 \leq_\Bool 1$ familiar from \cref{ex:bool}.
+Since posets are also categories, monotone maps between posets can be defined as functors between poset categories (\cref{lemma:posetfunctor}). Furthermore, posets are enriched in $\Bool$ (\cref{ex:enrichbool}), i.e. $\Hom_A(a,b) \in \Bool$ for all $A \in \Pos$. So when we say that a design problem $f$ is ``enriched in $\Bool$'', we mean that is not only a profunctor $f \colon \F{A} \tickar \R{B}$ between posets $A\op \times B$ and $\Bool$, but that its action on hom-sets is always a morphism in $\Bool$. Explicitly, 
+\begin{equation}
+    f \colon \Hom_{\F{A}\op \times \R{B}}(\tup{\F{a_1}^*,\R{b_1}}, \tup{\F{a_2}^*,\R{b_2}}) \to \Hom_\Bool(f(\tup{\F{a_1}^*,\R{b_1}}), f(\tup{\F{a_2}^*,\R{b_2}}))
+\end{equation}
+is a morphism in $\Bool$---in other words, one among the set $1 \leq_\Bool 1, 0 \leq_\Bool 0$, and $0 \leq_\Bool 1$ familiar from \cref{ex:bool}.
 
 \begin{shaded}
 \begin{definition}[Enriched functor]
@@ -211,185 +200,257 @@ where $\otimes$ and $\One$ are the monoidal product and monoidal unit in \CatV.
 Design problems in $\DP$ are Boolean-enriched profunctors.
 \end{proposition}
 \begin{proof}
-In fact, we will show that any monotone map $f : A \toinPos B$ between posets is a Boolean-enriched functor. Then a design problem is simply a Boolean-enriched functor that happens to be a profunctor.
+We will show that any monotone map $f\colon A \toinPos B$ between posets is a Boolean-enriched functor. Then a design problem is simply a Boolean-enriched functor that happens to be a profunctor.
 
-Monotonicity of $f$ signifies that $a_1 \leq_A a_2$ implies $f(a_1) \leq_B F(a_2)$. Rewriting this condition considering $A, B$ as categories enriched in $\Bool$, we have that
+Monotonicity of $f$ means that $a_1 \leq_A a_2$ implies $f(a_1) \leq_B f(a_2)$. Rewriting this condition considering $A, B$ as categories enriched in $\Bool$, we have that
 \begin{equation}
-\Hom_A(a_1, a_2) \quad \Rightarrow \quad \Hom_B(f(a_1), f(a_2)).
+\Hom_A(a_1, a_2) \Rightarrow \Hom_B(f(a_1), f(a_2)),
 \end{equation}
 which can be re-stated as proclaiming the existence of a morphism $f_{a_1, a_2}$ in \Bool:
 \begin{equation}
-f_{a_1, a_2} \colon \Hom_A(a_1, a_2) \to_{\Bool} \Hom_B(f(a_1), f(a_2).
+f_{a_1, a_2} \colon \Hom_A(a_1, a_2) \to_{\Bool} \Hom_B\left(f(a_1), f(a_2)\right) .
 \end{equation}
-It remains to check the diagrams in \cref{defn:enrichedfunctor}. The first is trivial since $a \leq_A a$ is true by definition in all posets:
+It remains to be checked that the diagrams in \cref{defn:enrichedfunctor} commute. The first is trivial since $a \leq_A a$ is true by definition in all posets:
 \begin{equation}
 \id_{a} \then f_{a,a} (\ast) = \id_{f(a) = \true}.
 \end{equation}
 The second is also relatively trivial: the monoidal product is just the conjunction $\wedge$ in $\Bool$, so commuting with the composition in the poset can be thought of as a verification of the monotonicity of $f$ via the natural $\Imp$ inside $\Bool$:
 \begin{equation}
-\begin{aligned}
-(a \leq b) \wedge (b \leq c) & \quad \Rightarrow & (a \leq c) \\
-\Downarrow & & \Downarrow \\
-(f(a) \leq f(b)) \wedge (f(b) \leq f(c)) & \quad \Rightarrow & (f(a) \leq f(c))
-\end{aligned}
+    \begin{tabular}{ccc}
+    $(a \leq b) \wedge (b \leq c)$ & $\Rightarrow$ & $(a \leq c)$\\
+    $\Downarrow$ & &$\Downarrow$\\
+    $(f(a) \leq f(b)) \wedge (f(b) \leq f(c))$&$\Rightarrow$&$(f(a) \leq f(c))$
+    \end{tabular}
 \end{equation}
 \end{proof}
 
-Having defined morphisms in $\DP$ as Boolean-enriched design problems, we can directly generalize these Boolean-enriched design problems to $\Set$-enriched design problems in a new category, $\DPI$.
+Having defined morphisms in $\DP$ as Boolean-enriched design problems, we can directly generalize these Boolean-enriched design problems to $\Set$-enriched design problems, or esign problems with implementations.
 
-\begin{definition}[Category of $\Set$-enriched design problems]
-The category of $\Set$-enriched design problems, $\DPI$, consists of the following data:
-\begin{enumerate}
-\item The objects of $\DPI$ are posets.
-\item A morphism of $\DPI$ $\adp : F \tickar R$ can be represented as a tuple of the form $(I_\adp, \provides, \requires)$, where $I_\adp$ is a set, $\provides$ and $\requires$ are functions from $I_\adp$ to $F$ and $R$ respectively:
+\begin{definition}[Design problems with implementation as monotone functions]
+\label{def:dpwithimp}
+Suppose that $\F{F}$, $\R{R}$ are posets. A \emph{design problem with implementation} is a monotone map (a $\Set$-enriched profunctor) $\tup{I_d,\prov,\req}\colon \F{F}\tickar \R{R}$, where $I_d$ is a set, $\prov$ and $\req$ are functions from $I_d$ to $\F{F}$ and $\R{R}$, respectively 
 \begin{equation}
-    F \xleftarrow{\provides} I \xrightarrow{\requires} R.
+    \F{F} \xleftarrow{\prov} I \xrightarrow{\req} \R{R},
 \end{equation}
-from which we define $\adp : F \tickar R$ as a $\Set$-enriched profunctor as follows:
+and $\tup{I_d,\prov,\req}\colon \F{F}\tickar \R{R}$ is given by
 \begin{equation}
 \begin{aligned}
-\adp : F\op \times R &\toinPos \powerset(I_\adp) \\
-\tup{f^*, r} &\mapsto \{ i \in I_\adp : (\provides(i) \leq_F f) \wedge (\requires(i) \geq_R r) \}.
+\tup{I_d,\prov,\req}\colon \F{F}\tickar \R{R} \colon \F{F}\op \times \R{R} &\toinPos \powerset(I_\adp) \\
+\tup{\F{f}^*, \R{r}} &\mapsto \{ i \in I_\adp \colon (\prov(i) \geq_\F{F} \F{f}) \wedge (\req(i) \leq_\R{R} \R{r}) \},
 \end{aligned}
 \end{equation}
 where the partial order on $\powerset(I)$ is given by subset inclusion.
- The interpretation is that the result of $\adp(f^*, r)$ is the set of ways to provide $f$ using $r$.
- We call $I$ the set of implementations.
- %Note that when $I_\adp = \{\ast\}$, $\DPI = \DP$.
-%Where it is clear, we will also refer to these morphisms as design problems.% The monotonocity of a design problem $\adp$ in $\DPI$ describes a similar feasibility condition as in $\DP$: ...
+\end{definition}
+\paragraph{Intended semantics} When we consider a design problem with implementation $\tup{I_d,\prov,\req}\colon \F{F}\tickar \R{R}$, we imagine the poset $\F{F}$ to represent the functionality to be provided and the poset $\R{R}$ to represent the resources required. The object $\tup{I_d,\prov,\req}\colon \F{F}\tickar \R{R}$ is the set of ways to provide $\F{f}\in \F{F}$ using $\R{r}\in \R{R}$.
 
-\item The identity morphism $\id_A : A \tickar A$ is given by implementation set $I_{\id_A} = A$ and $\provides=\requires$ being
-the identity on $A$. The profunctor is defined as
-\begin{equation}
-\begin{aligned}
-\id_A : A\op \times A &\toinPos \powerset(A) \\
-\tup{a^*,a'} &\mapsto (\uparrow a) \cap (\downarrow a')
-\end{aligned}
-\end{equation}
+\noindent The monotonicity of $d$ represents the two assumptions:
+\begin{compactenum}
+\item If $\F{f}$ is feasible with $\R{r}$ in a set $i$ of ways, then any $\F{f'}\leq_\F{F} \F{f}$ is feasible with $\R{r}$ in a set $i'\supseteq i$ of ways.
+\item If $\F{f}$ is feasible with $\R{r}$ in a set $i$ of ways, then $\F{f}$ is feasible with any $r'\geq_\R{R} r$ in a set $i'\supseteq i$ of ways.
+\end{compactenum}
 
-\item Given two morphisms $f\colon A \tickarimp{I_1, \provides_1, \requires_1} B$
-and $g\colon B \tickarimp{I_2, \provides_2, \requires_2} C$, we can define their
-series interconnection $(f\then g)\colon A \tickarimp{I, \provides, \requires} C$ as follows.
+\begin{definition}[Series composition of design problems with implementation]
+\label{def:seriesdpi}
+Given two design problems with implementation $\tup{I_f,\prov_f,\req_f}\colon \F{A}\tickar \R{B}$
+and $\tup{I_g,\prov_g,\req_g}\colon \F{B}\tickar \R{C}$, we can define their
+series interconnection $\tup{I_{f\then g},\prov_{f\then g},\req_{f\then g}}\colon \F{A}\tickar \R{C}$ as follows.
 With reference to this diagram:
 \begin{equation}
-    A \xleftarrow{\provides_1} I_1 \xrightarrow{\requires_1} B
-      \xleftarrow{\provides_2} I_2 \xrightarrow{\requires_2} C
+    \F{A} \xleftarrow{\prov_f} I_f \xrightarrow{\req_f} B
+      \xleftarrow{\prov_g} I_g \xrightarrow{\req_g} \R{C}
 \end{equation}
 we let the implementation space be the \emph{pullback}
 \begin{equation}
 \begin{aligned}
-I &= I_1 \times_B I_2 \doteq \{
-        \tup{i_1,i_2} \in I_1 \times I_2 :
-        \requires_1(i_1) \leq_{B} \provides_2(i_2)
+I_{f\then g}&= I_f \times_B I_g \doteq \{
+        \tup{i_f,i_g} \in I_f \times I_g \colon
+        \req_f(i_f) \leq_{B} \prov_g(i_g)
     \},\\
 \end{aligned}
 \end{equation}
-and the two maps $\provides$, $\requires$ defined as:
+and the two maps $\prov$, $\req$ defined as:
 \begin{equation}
 \begin{aligned}
-        \requires  &:  \tup{i_1,i_2} \mapsto \requires_2(i_2) \\
-        \provides  &:  \tup{i_1,i_2} \mapsto \provides_1(i_1).
+        \req  &\colon \tup{i_f,i_g} \mapsto \req_2(i_g)\\
+        \prov  &\colon  \tup{i_f,i_g} \mapsto \prov_1(i_f).
 \end{aligned}
 \end{equation}
-In terms of the profunctors, given two morphisms $f \colon A \tickar B$ and $g \colon B \tickar C$, their composition $(f\then g) \colon A \tickar C$ is given by:
+In terms of the profunctors, one has
 \begin{equation}
+\label{eq:seriesdpi}
 \begin{aligned}
-(f\then g) \colon A\op \times C &\toinPos \powerset(I_1 \times_B I_2) \\
-\tup{a^*,c} &\mapsto \bigcup_{\substack{(b,b') \in B\op \times B\op \\ b \leq_B b'}} \Bigg[ f(a^*,b) \times g(b'^*,c) \Bigg].
+\tup{I_{f\then g},\prov_{f\then g},\req_{f\then g}}\colon \F{A}\times \R{C} &\toinPos \powerset(I_f \times_B I_g) \\
+\tup{\F{a}^*,\R{c}} &\mapsto \bigcup_{\substack{(b,b') \in B\op \times B\op \\ b \leq_B b'}} \Bigg[ \tup{I_f,\prov_f,\req_f}(\F{a}^*,\R{b}) \times \tup{I_g,\prov_g,\req_g}(\F{b'}^*,\R{c}) \Bigg].
 \end{aligned}
 \end{equation}
-\end{enumerate}
 \end{definition}
 
-We check the basic properties of associativity and unitality.
-
-\begin{lemma}[associativity]
-Given three design problems with implementation
-    $f\colon A \tickarimp{I_f, \provides_f, \requires_f} B$
-and $g\colon B \tickarimp{I_g, \provides_g, \requires_g} C$,
-and $h\colon C \tickarimp{I_h, \provides_h, \requires_h} C$,
-it holds that $(f\then g)\then h \simeq f\then (g\then h).$
+\begin{lemma}
+The series composition operation for design problems with implementation as in \cref{eq:seriesdpi} is monotone in $a$ and $c$.
 \end{lemma}
-
 \begin{proof}
-Here's the situation:
+Consider \cref{eq:seriesdpi}. By choosing $\F{a'}\geq_\F{A} \F{a}$, one has 
 \begin{equation}
-    A \xleftarrow{\provides_f} I_f \xrightarrow{\requires_f} B
-      \xleftarrow{\provides_g} I_g \xrightarrow{\requires_g} C
-      \xleftarrow{\provides_h} I_h \xrightarrow{\requires_h} D.
+    \tup{I_{f},\prov_{f},\req_{f}}(\F{a'}^*,\R{c})\subseteq \tup{I_{f},\prov_{f},\req_{f}}(\F{a}^*,\R{c}),
 \end{equation}
+and hence
+\begin{equation}
+    \tup{I_{f\then g},\prov_{f\then g},\req_{f\then g}}(\F{a'}^*,\R{c})\subseteq \tup{I_{f\then g},\prov_{f\then g},\req_{f\then g}}(\F{a}^*,\R{c}).
+\end{equation}
+Similarly, by choosing $\R{c'}\geq_{\R{C}} \R{c}$, one has
+\begin{equation}
+    \tup{I_{f},\prov_{f},\req_{f}}(\F{a}^*,\R{c'})\supseteq \tup{I_{f},\prov_{f},\req_{f}}(\F{a}^*,\R{c})
+\end{equation}
+and hence
+\begin{equation}
+    \tup{I_{f\then g},\prov_{f\then g},\req_{f\then g}}(\F{a}^*,\R{c'})\supseteq \tup{I_{f\then g},\prov_{f\then g},\req_{f\then g}}(\F{a}^*,\R{c}).
+\end{equation}
+This shows monotonicity, and hence shows that the series composition of two DPIs is a DPI.
+\end{proof}
 
-For $(f\then g)$ we compute
+\begin{lemma}
+The series composition operation for design problems with implementation as in \cref{eq:seriesdpi} is associative, i.e. given three design problems with implementation $f,g,h$:
+\begin{equation}
+    (f\then g)\then h = f\then (g\then h).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Consider three design problems with implementation:
+\begin{equation}
+    \begin{aligned}
+    f=\tup{{I_f, \prov_f, \req_f} }&\colon \F{A} \tickar\R{B,}\\
+    g=\tup{I_g, \prov_g, \req_g}&\colon \F{B} \tickar \R{C},\\
+    h=\tup{I_h, \prov_h, \req_h}&\colon \F{C} \tickar \R{D}.
+    \end{aligned}
+\end{equation}
+First of all, one has:
+\begin{equation}
+    A \xleftarrow{\prov_f} I_f \xrightarrow{\req_f} B
+      \xleftarrow{\prov_g} I_g \xrightarrow{\req_g} C
+      \xleftarrow{\prov_h} I_h \xrightarrow{\req_h} D.
+\end{equation}
+We first consider the composition $f\then g$. One has:
 \begin{equation}
 \begin{aligned}
 I_{f\then g} &= \{
                 \tup{i_f,i_g} \in I_f \times I_g \colon
-                \requires_f(i_f) \leq_{B} \provides_g(i_g)
+                \req_f(i_f) \leq_{B} \prov_g(i_g)
             \}\\
-        \requires_{f\then g}  &\colon  \tup{i_f,i_g} \mapsto \requires_g(i_g) \\
-        \provides_{f\then g}  &\colon  \tup{i_f,i_g} \mapsto \provides_f(i_f).
+        \req_{f\then g}  \colon  \tup{i_f,i_g} &\mapsto \req_g(i_g) \\
+        \prov_{f\then g}  \colon  \tup{i_f,i_g} &\mapsto \prov_f(i_f).
 \end{aligned}
 \end{equation}
-For $(f\then g)\then h$ we compute
+We can now look at $(f\then g)\then h$. One has:
 \begin{equation}
 \begin{aligned}
         I_{(f\then g)\then h} &= \{
                 \tup{i_{f\then g},i_h} \in I_{f\then g} \times I_{h}\colon
-                \requires_{f\then g}(i_{f\then g}) \leq_{C} \provides_h(i_h)
+                \req_{f\then g}(i_{f\then g}) \leq_{C} \prov_h(i_h)
             \}\\
-        \requires_{(f\then g)\then h}  &\colon  \tup{i_{f\then g},i_h} \mapsto \requires_h(i_h) \\
-        \provides_{(f\then g)\then h}  &\colon  \tup{i_{f\then g},i_h} \mapsto \provides_{f\then g}(i_{f\then g}).
-\end{aligned}
-\end{equation}
-By substituting from the previous equations, we have:
-\begin{equation}
-\begin{aligned}
-        I_{(f\then g)\then h} &= \{
+        &=\{
                 \tup{\tup{i_f, i_g},i_h} \in (I_f \times I_g) \times I_{h}\colon
-                (\requires_f(i_f) \leq_{B} \provides_g(i_g))
+                (\req_f(i_f) \leq_{B} \prov_g(i_g))
                 \wedge
-                (\requires_g(i_g) \leq_{C} \provides_h(i_h))
-            \}\\
-        \requires_{(f\then g)\then h}  &\colon  \tup{\tup{i_f, i_g},i_h} \mapsto \requires_h(i_h) \\
-        \provides_{(f\then g)\then h}  &\colon  \tup{\tup{i_f, i_g},i_h} \mapsto \provides_f(i_f).
+                (\req_g(i_g) \leq_{C} \prov_h(i_h))
+            \},
 \end{aligned}
 \end{equation}
-Up to isomorphism
+~
 \begin{equation}
-    (I_f \times I_g) \times I_{h} \ \simeq\  I_f \times (I_g \times I_{h}),
+    \begin{aligned}
+    \req_{(f\then g)\then h}  &\colon  \tup{i_{f\then g},i_h} \mapsto \req_h(i_h) \\
+    \req_{(f\then g)\then h}  &\colon  \tup{\tup{i_f, i_g},i_h} \mapsto \req_h(i_h),
+    \end{aligned}
+\end{equation}
+and
+\begin{equation}
+    \begin{aligned}
+    \prov_{(f\then g)\then h}  &\colon  \tup{i_{f\then g},i_h} \mapsto \prov_{f\then g}(i_{f\then g})\\
+    \prov_{(f\then g)\then h}  &\colon  \tup{\tup{i_f, i_g},i_h} \mapsto \prov_f(i_f).
+    \end{aligned}
+\end{equation}
+Since 
+\begin{equation}
+    (I_f \times I_g) \times I_{h} \cong  I_f \times (I_g \times I_{h}),
 \end{equation}
 the above is exactly what we would obtain for $f\then (g\then h)$, so we can say
-that  $f\then(g\then h)\ \simeq\ (f\then g)\then h$.
+that  $f\then(g\then h)\cong (f\then g)\then h$, meaning that this composition is associative up to isomorphism.
+\end{proof}
+
+\begin{definition}[Identity design problem with implementation]
+\label{def:identitydpi}
+The \emph{identity design problem with implementation} $\tup{I_{\id_A},\prov,\req} \colon \F{A} \tickar \R{A}$ is given by implementation set $I_{\id_A} = A$ and $\prov=\req$ being
+the identity on $A$. The profunctor is defined as
+\begin{equation}
+\begin{aligned}
+\tup{I_{\id_A},\prov,\req} \colon \F{A}\op \times \R{A} &\toinPos \powerset(A) \\
+\tup{\F{a}^*,\R{a'}} &\mapsto (\uparrow \F{a}) \cap (\downarrow \R{a'})
+\end{aligned}
+\end{equation}
+\end{definition}
+\begin{remark}
+Alternatively, one can define the identity profunctor as
+\begin{equation}
+    \begin{aligned}
+    \tup{I_{\id_A},\prov,\req}\colon \F{A}\op \times \R{R} &\toinPos \powerset{A}\\
+    \tup{\F{a}^*,\R{a'}}&\mapsto 
+    \begin{cases}
+    \{a\},&\F{a}\leq_A \R{a'}\\
+    \emptyset, &\text{otherwise}.
+    \end{cases}
+    \end{aligned}
+\end{equation}
+\end{remark}
+
+\begin{lemma}
+The series composition operation for design problems with implementation as in \cref{eq:seriesdpi} satisfies the left and right unit laws (unitality).
+\end{lemma}
+
+\begin{proof}
+\todo{Do the proof and see if we need to change some definitions to make it work}
 \end{proof}
 
 
-\begin{lemma}[unitality]
-\AC{todo, non trivial}
+\begin{definition}[Category of $\Set$-enriched design problems]
+The category of $\Set$-enriched design problems, $\DPI$, consists of the following data:
+\begin{compactenum}
+\item \emph{Objects:}  Objects of $\DPI$ are posets.
+\item \emph{Morphisms:} The morphisms of $\DPI$ are design problems with implementation (\cref{def:dpwithimp}).
+\item \emph{Identity morphism}: The identity morphism is given by \cref{def:identitydpi}.
+\item \emph{Composition operation}: Given two morphisms $f$ and $g$, their composition $f\then g$ is given by \cref{def:seriesdpi}
+\end{compactenum}
+\end{definition}
+
+\begin{lemma}
+$\DPI$ is a category.
 \end{lemma}
 
+\begin{proof}
+We have already shown that the composition operator in $\DPI$ is associative and unital, and that the composition of two design problems with implementation is a design problem with implementation (closure). Therefore, $\DPI$ is a valid category.
+\end{proof}
 
 Like $\DP$, $\DPI$ is also a traced symmetric monoidal category with monoidal product $\times$ and biproduct given by $+$; we will skip the proofs for $\DPI$ since most are directly analogous to those for $\DP$. We already saw an example of $\DPI$ in \cref{ex:dpi_example} above. It remains to verify that morphisms in $\DPI$ are indeed enriched in $\Set$:
 
 \begin{proposition}
-Design problems in $\DPI$ are $\Set$-enriched profunctors.
+Design problems with implementation are $\Set$-enriched profunctors.
 \end{proposition}
 \begin{proof}
-Fix a design problem $f \colon A\op \times B \toinPos \powerset(I)$. \AC{to finish}
-
+Fix a design problem $f \colon A\op \times B \toinPos \powerset(I)$. 
+\todo{Finish the proof}
 \end{proof}
 
-We introduce $\DPI$ mainly as a point of comparison; enriching in $\Set$ is the most obvious, if not the most elegant, way of representing and reasoning about implementations of design problems. Indeed, the way we defined morphisms is rather clunky (note how $I_\adp$ is a set rather than a poset, and the extra provisions for prov and req in the identity morphism), and it also essentially restricts implementations $I_\adp$ to being subsets of $F\op \times R$; i.e. an implementation rigidly provides a fixed functionality $f$ with a fixed $r$.
+We introduce $\DPI$ mainly as a point of comparison; enriching in $\Set$ is the most obvious, if not the most elegant, way of representing and reasoning about implementations of design problems. Indeed, the way we defined morphisms is rather clunky (note how $I_\adp$ is a set rather than a poset, and the extra provisions for $\prov$ and $\req$ in the identity morphism), and it also essentially restricts implementations $I_\adp$ to being subsets of $\F{F}\op \times \R{R}$, i.e. an implementation \emph{rigidly} provides a fixed functionality $\F{f}$ with a fixed $\R{r}$.
 
 The far more natural option, from the perspective of enriched category theory, is to enrich design problems in $\DP$ itself.
 
 \begin{example}
 \begin{equation}
 \begin{aligned}
-\text{engine} \colon \text{Thrust}\op \times \text{Fuel} &\toinPos \powerset(\text{Engines}) \\
-\tup{t^*,f} &\mapsto \{ e \in \text{Engines} \colon e(t^*, f) = \true \}
+\text{engine} \colon \F{\text{Thrust}}\op \times \R{\text{Fuel}} &\toinPos \powerset(\text{Engines}) \\
+\tup{\F{t}^*,\R{f}} &\mapsto \{ e \in \text{Engines} \colon e(\F{t}^*, \R{f}) = \true \}
 \end{aligned}
 \end{equation}
-where $\powerset$ indicates the powerset operation and Engines is the hom-poset $\Hom_\DP(\text{Thrust}, \text{Fuel})$ from \cref{ex:r&dproblem}.
+where Engines is the hom-poset $\Hom_\DP(\text{Thrust}, \text{Fuel})$ from \cref{ex:r&dproblem}.
 \end{example}
 
 
@@ -488,3 +549,6 @@ We can now extend the ways we can compose to DPs to the case of DPIs.
 %\end{description}
 %We often denote $\Ob_F$ simply by $F$, e.g.\ writing $F(c)$ rather than $\Ob_F(c)$; it overloads the notation $F$, but is often easier to read.
 %\end{definition}
+
+\clearpage
+The paper ends here

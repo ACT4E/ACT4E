@@ -1,0 +1,94 @@
+\section{Examples of Trace}
+\subsection{Trace of a linear transformation}
+Consider the category $\Cat{FinVect}$ of finite dimensional vector spaces, which has as objects finite dimensional vector spaces and as morphisms linear maps between them. Using the tensor product $\otimes$ of vector spaces as monoidal product, one can show $\Cat{FinVect}$ is a monoidal category. Consider a linear transformation $f\colon B\otimes D\to C\otimes D$, with $B,C,D$ vector spaces with bases $\{b_i\},\{c_j\}$, and $\{d_k\}$ respectively. Here, the trace (also called ``partial trace'') is a linear function $\Tr_{B,C}
+^D(f)\colon B\to C$, given by
+    \begin{equation}
+    \left(\Tr_{B,C}
+^D(f) \right)_{i,j}=\sum_{k}f_{i\otimes k,j\otimes k}
+    \end{equation}
+\todo{explain notation and show the simple case of sum of diagonals}
+\subsection{Continuous LTI}
+\todo{rough here, to be polished and add trace thing with Gr}
+In the following, we present the category of continuous linear time-invariant dynamical systems. Let $T=\mathbb{R}_{\geq 0}$ represent time.
+
+\paragraph{Objects} The objects of the category are natural numbers $n\in \mathbb{N}_0$. These represent sequences $s\colon T\to \mathbb{R}^n$, defining tuples in $\mathbb{R}^n\times T$.
+
+\paragraph{Morphisms} A morphism in \Cat{LTI} is an arrow $l\to m$, for $l,m\in \mathbb{N}_0$. The arrow describes the transformation of an input sequence $u\colon T\to \mathbb{R}^l$ into an output sequence $y\colon T\to \mathbb{R}^m$. Such an arrow is given by a continuous time LTI system of the form
+\begin{equation}
+\begin{aligned}
+    \dot{x}(t)&=Ax(t)+Bu(t)\\
+    y(t)&=Cx(t)+Du(t),
+\end{aligned}
+\end{equation}
+where $A\in \mathbb{R}^{n\times n}$, $B\in \mathbb{R}^{n\times l}$, $C\in \mathbb{R}^{m\times n}$, $D\in \mathbb{R}^{m\times l}$, $x(t)\in \mathbb{R}^n$, $u(t)\in \mathbb{R}^l$, and $y(t)\in \mathbb{R}^m$. For brevity, we refer to the LTI as the tuple $\tup{A,B,C,D}$, leaving the dimensions of the input/output implicit.
+
+\paragraph{Identity morphism}
+The identity morphism for $l\in \Ob(\Cat{LTI})$ is an arrow $l\to l$, parametrized by the system $\tup{0,0^{1\times l},0^{l\times 1},\mathbb{I}^{l\times l}}$.
+\paragraph{Composition of morphisms}
+Given two arrows $a\to b$ and $b\to c$, parametrized by the two LTI systems $\tup{A_1,B_1,C_1,D_1}$ and $\tup{A_2,B_2,C_2,D_2}$, their composition is an arrow $a\to c$, parametrized by the LTI system $\tup{A,B,C,D}$, where
+\begin{equation}
+    A=\begin{bmatrix}
+    A_1&0\\
+    B_2C_1&A_2
+    \end{bmatrix},\quad
+    B=\begin{bmatrix}
+    B_1\\
+    B_2D_1
+    \end{bmatrix},\quad 
+    C=\begin{bmatrix}
+    D_2C_1&C_2
+    \end{bmatrix}, \quad
+    D=D_2D_1.
+\end{equation}
+\section{Feedback in category theory}
+\label{sec:feedbackindesign}
+
+
+\begin{shaded}
+\begin{definition}[Traced monoidal category]
+A symmetric monoidal category $\tup{\CatC, \otimes, \singleton, \sigma}$ is said to be \emph{traced} if equipped with a family of functions
+\begin{equation}
+    \Tr_{A,B}^X\colon \CatC(A\otimes X, B\otimes X)\to \CatC(A,B),
+\end{equation}
+satisfying the following axioms:
+\begin{compactenum}
+    \item \emph{Vanishing:} For all morphisms $f\colon A\to B$ in $\CatC$,
+    \begin{equation}
+    \label{eq:vanishing_1}
+    \Tr_{A,B}^1(f)=f.
+    \end{equation}
+    Furthermore, for all morphisms $f\colon A\otimes X \otimes Y \to B\otimes X \otimes Y$ in $\CatC$:
+    \begin{equation}
+    \label{eq:vanishing_2}
+        \Tr_{A,B}^{X\otimes Y}(f)=\Tr_{A,B}^X\left(
+        \Tr_{A\otimes X,B\otimes X}^Y(f)\right).
+    \end{equation}
+    \item \emph{Superposing:} For all morphisms $f\colon A\otimes X\to B\otimes X$ in $\CatC$:
+    \begin{equation}
+    \label{eq:superposing}
+        \Tr_{C\otimes A,C\otimes B}^{X}(\id_C\otimes f)=\id_C\otimes \Tr_{A,B}^X(f).
+    \end{equation}
+    \item \emph{Yanking:} 
+    \begin{equation}
+    \label{eq:yanking}
+    \Tr_{X,X}^X\left(\sigma_{X,X}\right)=\id_X.
+    \end{equation}
+\end{compactenum}
+\end{definition}
+\end{shaded}
+
+\section{Feedback in design problems}
+\label{sec:feedbackindesign}
+\todo{Motivation}
+\subsection{The scalar case: Toilets in a ship}
+Consider the case in which you are designing the toilets of a cruise ship. You know that you need a toilet every 10 passengers (i.e., if you have 11 passengers, you need 2 toilets). Furthermore, you know that each toilet needs an employee for its service, i.e. an extra passenger. Now, the problem of maximizing the number of people you can put on the ship, by minimizing the number of toilets you need to install, is a design problem. The resource poset is the one describing the number of toilets needed $\R{n_\mathsf{toilets}}$, and the functionality poset is the one describing the number of people you can accomodate on the ship $\F{n_\mathsf{passengers}}$. 
+This can also be written diagramatically, as
+\begin{center}
+\begin{tikzpicture}[DP]
+    \node[dp={2}{1}] (f) {Ship Design};
+    \draw[rconn,rcname={$ \R{n_\mathsf{toilets}}\cdot \frac{\mathsf{cleaners}}{\mathsf{toilets}}$},fcname={$\F{n_\mathsf{cleaners}}$},feedback=1,loos=3] (f_res1) -- ($(f)+(0,9)$) |- (f_fun1);
+     \draw[funconn, funame={$n_\mathsf{passengers}$}] (f_fun2);
+\end{tikzpicture}
+\end{center}
+\todo{Don't want to introduce sum and multiplication}
+

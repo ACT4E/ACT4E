@@ -1,6 +1,6 @@
 % !TEX root = ../CategoricalCoDesign.tex
-\section{Defining design problems}
-\subsection{Defining design problems from catalogues}
+\section{Creating design problems}
+\subsection{Creating design problems from catalogues}
 \begin{shaded}
 \begin{definition}[Span]
 Given a category $\Cat{C}$, a \emph{span} from an object $x$ to an object $y$ is a diagram of the form
@@ -16,27 +16,80 @@ Consider the category $\mathbf{trek}$, introduced in \cref{sec:trekking}. An exa
 \begin{center}
 \includesag{130_mountains}
 \end{center}
-\caption{Example of span in $\mathbf{trek}$. \label{fig:exmountains}}
+\caption{Swiss peaks can be thought of as a span in $\mathbf{trek}$. \label{fig:exmountains}}
 \end{figure}
-Recall that $\mathsf{Matterhorn}$, $\mathsf{Jungfrau}$, and $\mathsf{Pilatus}$ are objects of $\mathbf{trek}$, and the arrows are morphisms in $\mathbf{trek}$.
+Recall that $\mathsf{Matterhorn \ Peak}$, $\mathsf{Jungfrau \ Peak}$, and $\mathsf{Pilatus \ Peak}$ are objects of $\mathbf{trek}$, and the arrows are morphisms in $\mathbf{trek}$ (paths from one location to the other).
 \end{example}
 
 \begin{definition}[Catalogue] \label{def:catalogue}
-A \emph{catalogue} is a span in $Pos$.
+A \emph{catalogue} is a span in $\Pos$.
 It thus consists of 3 posets $I$,$\F{F}$, $\R{R}$.
-We call them implementation space, functionality space, requirements spaces. We need to define two maps $\text{provides} \colon I \to \F{F}$
-and $\text{requires} \colon I \to \R{R}$ (mnemonics for \emph{evaluation}).
+We call them implementation space, functionality space, requirements spaces. We need to define two maps $\prov \colon I \to \F{F}$
+and $\req\colon I \to \R{R}$.
 \begin{equation}
 \includesag{130_catalogue}
 \end{equation}
 \end{definition}
-\todo{Let's use "provides" and "requires" rather than exec/eval}
 
 \begin{definition}[Design problem induced by a catalogue]
-Every \emph{catalogue} $\tup{I,\exec,\eval}$ induces a design problem of the form $d\colon \exec(I)\tickar \eval(I)$.
+Every catalogue $\tup{I,\prov,\req}$ \emph{induces} a design problem of the form $d\colon \F{F}\tickar \R{R}$, with
+\begin{equation}
+    \begin{aligned}
+    d\colon \F{F}\op \times \R{R}&\to \Bool\\
+    \tup{\F{f}^*,\R{r}}&\mapsto \bigvee_{i\in I}\left(\prov(i)\leq_{\F{F}}\F{f} \right)\wedge \left( \req(i)\geq_{\R{R}}\R{r}\right)
+    \end{aligned}
+\end{equation}
 \end{definition}
-\todo{F to R}
+
 \begin{example}
-\todo{Add example once we decide the leading one}
+The choice of a battery can be modeled as a design problem with the provided capacity $\F{C_\mathrm{prov}}$ (in \unit[]{J}) and the number of missions $\F{M_\mathrm{b}}$ (unitless) as functionalities, and its cost $\R{c_\mathrm{b}}$ (in \unit[]{\$}), its mass $\R{m_\mathrm{b}}$ (in \unit[]{kg}), and the number of its replacements of the lifetime of a robot $\R{R_\mathrm{b}}$ (unitless) as resources. The design problem is reported in
+~\cref{fig:battery}. 
+
+\begin{figure}[tbh]
+\begin{center}
+    \begin{tikzpicture}[DP]
+    \node[dp={2}{3}] (bat) {Battery};
+    \draw[runconn, runame={$c_\mathrm{b}$}] (bat_res1){};
+    \draw[runconn, runame={$m_\mathrm{b}$}] (bat_res2){};
+    \draw[runconn, runame={$R_\mathrm{b}$}] (bat_res3){};
+    \draw[funconn, funame={$C_\mathsf{prov}$}] (bat_fun1){};
+    \draw[funconn, funame={$M_\mathsf{b}$}] (bat_fun2){};
+\end{tikzpicture}
+\end{center}
+\caption{The battery design problem.\label{fig:battery}}
+\end{figure}
+
+The relation between functionalities and resources is described as follows. First, mass and provided capacity are related as
+\begin{equation}
+    \R{m_\mathrm{b}}\succeq \frac{\F{C_\mathrm{prov}}}{\rho_\mathrm{b}},
+\end{equation}
+where $\rho_\mathrm{b}$ represents the specific energy of the battery, expressed in $\unitfrac[]{J}{kg}$. Second, battery replacements and missions are related as
+\begin{equation}
+    \R{R_\mathrm{b}}\succeq \ceil{\frac{\F{M_\mathrm{b}}}{\ell}},
+\end{equation}
+where $\ell$ represents the battery lifetime, expressed in number of cycles. Finally, cost, missions, and provided capacity are related as
+\begin{equation}
+    \R{c_\mathrm{b}}\succeq  \ceil{\frac{\F{M_\mathrm{b}}}{\ell}} \frac{\F{C_\mathrm{prov}}}{\alpha},
+\end{equation}
+where $\alpha$ represents the battery's specific cost, expressed in \unitfrac[]{J}{\$}. An example of the specifications of battery technologies is given in~\cite{censi2015}, and is reported in~\cref{tab:battery}.
+
+\begin{table}[tbh]
+\begin{center}
+\begin{tabular}{cccc}
+Technology&Specific energy [\unitfrac[]{J}{kg}]&Specific cost [\unitfrac[]{J}{\$}]&Life [\# cycles]\\
+\hline
+$\mathsf{NiMH}$&100&3.41&500\\
+$\mathsf{NiH2}$&45&10.5&20,000\\
+$\mathsf{LCO}$&195&2.84&750\\
+$\mathsf{LMO}$&150&2.84&500\\
+$\mathsf{NiCad}$&30&7.50&500\\
+$\mathsf{SLA}$&30&7.00&500\\
+$\mathsf{LiPo}$&250&2.50&600\\
+$\mathsf{LFP}$&90&1.50&1500
+\end{tabular}
+\end{center}
+\caption{Specifications of common battery technologies~\cite{censi2015}. \label{tab:battery}}
+\end{table}
+\todo{finish with design problem description}
 \end{example}
 

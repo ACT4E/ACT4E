@@ -1,28 +1,34 @@
 % !TEX root = ../CategoricalCoDesign.tex
 \section{Thinking about uncertainty with intervals}
 \todo{Add introduction on uncertainty}
-\todo{Define intervals}
 
-\begin{definition}[Bounded interval]
-Given a poset $ \tup{P, \leq}$ and elements $x,y$ of $P$, we define the bounded interval $[x,y]_P$, $x$ to be the subset
-\begin{equation}
-    [x,y]_P\coloneqq \{z\colon P \mid x\leq z \leq y\}.
-\end{equation}
 
-\end{definition}
 
 \todo{Give two different forms of interval
 orders}
 
 \todo{Give interpretation as categorical constructs}
 
-Thinking of $P$ as a category, $[x,y]_P$ represents the bislice (under-over) category of $P$.
 
-
-\begin{definition}[Interval category]
-The \emph{interval category} (also denoted \Cat{2}) is the category with two objects and one nontrivial morphism connecting them.
+\begin{shaded}
+\begin{definition}[Twisted arrow category]
+Given a category $\CatC$, we denote its \emph{twisted arrow category} by $\twisted{\CatC}$. This is a category which is composed of:
+\begin{compactenum}
+    \item \emph{Objects:} Arrows (morphisms) in $\CatC$.
+    \item \emph{Morphisms:} A morphism between two arrows $f\colon A\to B$, $g\colon C\to D$ is given by the pair of arrows $\tup{p,q}$ such that the following diagram commutes:
+    \begin{equation}
+    \includesag{180_twistedarrow}
+    \end{equation}
+\end{compactenum} 
 \end{definition}
+\end{shaded}
 
+\begin{example}[Intervals]
+Consider a poset $P$. The twisted arrow category $\twisted{P}$ is isomorphic to the set of nonempty \emph{intervals} $[a,b]=\{p \in P\mid a\leq_P p \leq_P b\}$. Note that $\twisted{P}$ is a poset as well, ordered by inclusion.
+\end{example}
+\begin{remark}
+Recall \cref{sec:posetsarecats} and note that the map which sends a poset (a category) to its twisted arrow category is a functor, which sends objects of the poset
+\end{remark}
 
 \section{Monads}
 
@@ -71,4 +77,49 @@ A natural transformation $\alpha\colon F\to G$ is called a \emph{natural isomorp
 \end{shaded}
 
 
-\section{Using monads to understand uncertainty }
+\section{Using monads to understand uncertainty}
+
+Take the $\mathsf{Unc}$ functor $\mathsf{Unc}\colon \DP\to \DP$ which 
+\begin{compactenum}
+    \item Maps an object $P$ in $\DP$ (poset) to its twisted arrow category $\twisted{P}$, representing a poset interval.
+    \item Maps a morphism in $\DP$ $d\colon \F{F}\tickar \R{R}$ to $\tup{\low d,\upp d}$, where
+    \begin{equation}
+    \begin{aligned}
+        \low d\colon \F{F_{\low}}&\tickar \R{R_{\low}},\\
+        \upp d\colon \F{F_{\upp}}&\tickar \R{R_{\upp}},
+    \end{aligned}
+    \end{equation}
+    and $\tup{\low d,\upp d}$ is a boolean profunctor (i.e., a morphism in $\DP$) of the form
+    \begin{equation}
+    \begin{aligned}
+        \tup{\low d,\upp d}\colon \left(\F{F_{\low}}\times \F{F_{\upp}} \right)\op \times \left(\R{R_{\low}}\times \R{R_{\upp}} \right)&\toinPos \Bool\\
+        \tup{\tup{\F{f_{\low}},\F{f_{\upp}}}^*,\tup{\R{r_{\low}},\R{r_{\upp}}}}&\mapsto \low d(\F{f_{\low}}^*,\R{r_{\low}})\wedge \upp d(\F{f_{\upp}}^*,\R{r_{\upp}})
+    \end{aligned}
+    \end{equation}
+\end{compactenum}
+
+\todo{write down better}
+Is this a functor?
+
+\begin{proof}
+Consider two design problems $f\colon \F{A}\tickar \R{B}$ and $g\colon \F{B}\tickar \R{C}$. 
+
+We know that
+\begin{equation}
+    \begin{aligned}
+    \unc(f)&\colon \left( A_{\low}\times A_{\upp}\right)\op \times \left( B_{\low}\times B_{\upp}\right)\toinPos \Bool\\
+    \unc(g)&\colon \left( B_{\low}\times B_{\upp}\right)\op \times \left( C_{\low}\times C_{\upp}\right)\toinPos \Bool.
+    \end{aligned}
+\end{equation}
+
+We have
+\begin{equation}
+    \begin{aligned}
+    \left(\unc(f)\then \unc(g)\right) (\tup{\ubar{a},\bar{a}}^*,\tup{\ubar{c},\bar{c}})&=\bigvee_{\tup{\ubar{b},\bar{b}}\in B_{\low}\times B_{\upp}} \unc(f)(\tup{\ubar{a},\bar{a}}^*,\tup{\ubar{b},\bar{b}})\wedge \unc(g)(\tup{\ubar{b},\bar{b}}^*,\tup{\ubar{c},\bar{c}})\\
+    &= \bigvee_{\tup{\ubar{b},\bar{b}}\in B_{\low}\times B_{\upp}} \low f(\ubar{a}^*,\ubar{b})\wedge \upp f(\bar{a}^*,\bar{b})\wedge \low g(\ubar{b}^*,\ubar{c})\wedge \upp g(\bar{b}^*,\bar{c})\\
+    &=(\low f\then \low g)(\ubar{a}^*,\ubar{c})\wedge (\upp f\then \upp g)(\bar{a}^*,\bar{c})\\
+    &=\low f\then g (\ubar{a}^*,\ubar{c})\wedge \upp f\then g(\bar{a}^*,\bar{c})\\
+    &=\unc(f\then g)(\tup{\ubar{a},\bar{a}}^*,\tup{\ubar{c},\bar{c}}).
+    \end{aligned}
+\end{equation}
+\end{proof}
