@@ -179,24 +179,66 @@ not invertible.
     \caption{An example of a process which is not invertible. \label{fig:e10}}
 \end{figure}
 
-\subsection{The currency category}
-In this section, we start by introducing an example. We define a category of currency exchangers $\mathbf{Curr}$. To introduce what currencies are, we first present the notion of units. Define $\mathbb{R}_\mathsf{g}$ to be the set of real numbers $\mathbb{R}$ with unit $\mathsf{g}$ ($\mathbb{R}\times \{\mathsf{g}\}$). With $\unit[p]{\mathsf{a}}\in \mathbb{R}_\mathsf{a}$ we denote a real $p\in \mathbb{R}$ with unit $\mathsf{a}$. Given $\unit[p]{\mathsf{a}} \in \mathbb{R}_\mathsf{a}$ and $\unit[q]{\mathsf{b}}\in \mathbb{R}_\mathsf{b}$, define
-    \begin{equation}
-    \begin{aligned}
-    \cdot \colon \mathbb{R}_\mathsf{a} \times \mathbb{R}_\mathsf{b} &\to \mathbb{R}_\mathsf{ab}\\
-    \tup{\unit[p]{\mathsf{a}},\unit[q]{\mathsf{b}}}&\mapsto r\coloneqq \unit[p\cdot q]{\mathsf{ab}}.
-    \end{aligned}
-    \end{equation}
-Furthermore, two objects can be summed if and only if they share the same units. Note that from now on we will say $p\in \mathbb{R}_\mathsf{g}$ to mean $\unit[p]{\mathsf{g}}$, $p\in \mathbb{R}$.
+\subsection{Currency categories}
+In this section, we introduce an example: we define a category of currency exchangers $\mathbf{Curr}$. Our idea is to model currencies as objects of this category, and morphisms will describe ways of exchanging between currencies, \text{e.g.} as offered by a currency exchange service. 
 
-\noindent Consider two currencies, $\mathsf{C,D}$. A currency exchanger from $\mathsf{C}$ to $\mathsf{D}$ can be expressed as a pair $\tup{a,b}$, $a\in {\mathbb{R}_{+}}_ {\frac{\mathsf{D}}{\mathsf{C}}}$ and $b\in {\mathbb{R}_{+}}_ {\mathsf{D}}$. The pair specifies an affine function of the form
+We start with a set $\mathsf{C}$ of labels for all the currencies we wish to consider, \text{i.e.} 
+$$\mathsf{C} = \{ \text{EUR}, \text{USD}, \text{CHF}, \text{SGD}, ... \}.$$
+For each currency $\mathsf{c} \in \mathsf{C}$ we define an object $\mathbb{R} \times \{c\}$ which represents possible amounts of the given currency $\mathsf{c}$ (we will ignore the issue of rounding currencies to an accuracy of two decimals places, and we allow negative amounts). The currency label keeps track of which ``units'' we are using.
+
+Now consider two such objects, say $\mathbb{R} \times \{\text{USD}\}$ and $\mathbb{R} \times \{\text{EUR}\}$. How can we describe the process of changing an amount of USD to an amount of EUR? We model this using two numbers: an exchange rate $a_{\text{USD}, \text{EUR}}$ and a commission $b_{\text{USD}, \text{EUR}}$ for the transaction. Given an amount $x \in \mathbb{R}$ of USD, we define a morphism (a currency exchanger)
+$$
+E_{a,b} : \mathbb{R} \times \{\text{USD}\} \rightarrow \mathbb{R} \times \{\text{EUR}\}
+$$
+by the formula
+$$
+(x, \text{USD}) \longmapsto (ax - b, \text{EUR}). 
+$$
+(Note that that the commission is given in the units of the target currency.) Of course, for changing USD to EUR, there may be various different banks or agencies which each offer different exchange rates and/or different commissions. Each of these corresponds to a different morphism from $\mathbb{R} \times \{\text{USD}\}$ to $\mathbb{R} \times \{\text{EUR}\}$.
+
+To build our category $\mathbf{Curr}$ we also need to specify how currency exchangers compose. Given currencies $\mathsf{c_1}, \mathsf{c_2}, \mathsf{c_3}$, and given currency exchangers
+$$
+E_{a,b} : \mathbb{R} \times \{\mathsf{c_1} \} \rightarrow \mathbb{R} \times \{ \mathsf{c_2}\}
+\qquad \text{and} \qquad
+E_{a',b'} : \mathbb{R} \times \{\mathsf{c_2}\} \rightarrow \mathbb{R} \times \{\mathsf{c_3}\}
+$$
+we define the composition $E_{a,b} \then E_{a',b'}$ to be the currency exchanger
+\begin{equation}\label{comp law curr}
+E_{aa',a'b + b'} : \mathbb{R} \times \{\mathsf{c_1}\} \rightarrow \mathbb{R} \times \{\mathsf{c_3}\}.
+\end{equation}
+In other words, we compose currency exchangers as one would expect: we multiply the first and the second exchange rates together, and we add the commissions (paying attention to first transform the first commission into the units of the final target currency).
+
+Finally, we also need to specify unit morphisms for our category $\mathbf{Curr}$. These are currency exchangers which ``do nothing''. For any object $\mathbb{R} \times \{ \mathsf{c}\}$, its identity morphism is 
+$$
+E_{1,0} : \mathbb{R} \times \{\mathsf{c}\} \rightarrow \mathbb{R} \times \{\mathsf{c}\},
+$$
+the currency exchanger with exchange rate ``1''  and commission ``0''. 
+
+It is a straightforward to check that the composition of currency exchangers as defined above obeys the associative law, and that the identity morphisms act neutrally for composition. Thus $\mathbf{Curr}$ is indeed a category!
+
+\begin{remark}
+In the above specification of the category $\mathbf{Curr}$, we can actually just work with the set of currency labels $\mathsf{C}$ as our objects, instead of using ``amounts'' of the form $\mathbb{R} \times \{\mathsf{c}\}$ as our objects. Indeed, on a mathematical level, the definition of currency exchangers and their composition law (\ref{comp law curr}) do not depend on using amounts! Namely, a currency exchanger $E_{a,b}$ is specified by the pair of number $\langle a, b \rangle$, and the composition law (\ref{comp law curr}) may then, in this notation, be written as 
 \begin{equation}
-        \begin{aligned}
-        \mathsf{CE}\colon \mathbb{R}_\mathsf{C}&\to \mathbb{R}_\mathsf{D}\\
-        p&\mapsto q \coloneqq a\cdot p -b,
-        \end{aligned}
-    \end{equation}
-   where $a$ represents the exchange rate from $\mathsf{C}$ to $\mathsf{D}$, and $b$ represents the fixed commission of the currency exchanger. Note that one can define the identity currency exchanger, $\tup{1,0}$, which is equivalent to not exchange the money. As an example, consider three currency exchange companies $\mathsf{ExchATM}$, $\mathsf{MoneyLah}$, and $\mathsf{Frankurrencies}$, which operate on several currencies (\cref{tab:currencycompanies}).
+\begin{aligned}
+\label{eq:currencycomp}
+    \tup{a,b}\then \tup{a',b'}&=\tup{a' a, a' b + b'}.
+\end{aligned}
+\end{equation}
+The interpretation is still that currency exchangers change amounts of one currency to amounts in an another currency, but for this we don't need to carry around copies of $\mathbb{R}$ in our notation.
+\end{remark}
+
+Following the above remark: 
+
+\begin{definition}[Category of currencies]
+    A \emph{category of currencies} $\mathbf{Curr}$ is specified by:
+    \begin{compactenum}
+        \item \emph{Objects:} $\Ob_\mathbf{Curr}$ is a collection of currencies.
+        \item \emph{Morphisms:} given two currencies $\mathsf{c_1},\mathsf{c_2}\in \Ob_{\mathbf{Curr}}$, morphisms between them are currency exchangers $\tup{a,b}$ from $\mathsf{c_1}$ to $\mathsf{c_2}$.
+        \item \emph{Identity morphism:} given an object $\mathsf{c} \in \Ob_\mathbf{Curr}$, its identity morphism is the currency exchanger $\tup{1,0}$. We also call such morphisms ``trivial currency exchangers''. 
+        \item \emph{Composition of morphisms:} the composition of morphisms is given by the formula (\ref{eq:currencycomp}).    \end{compactenum}
+\end{definition}
+
+As an illustration, consider three currency exchange companies $\mathsf{ExchATM}$, $\mathsf{MoneyLah}$, and $\mathsf{Frankurrencies}$, which operate on several currencies (\cref{tab:currencycompanies}).
 
 \begin{table}[h]
     \centering
@@ -215,8 +257,7 @@ Furthermore, two objects can be summed if and only if they share the same units.
     }
     \label{tab:currencycompanies}
 \end{table}
-
-We can represent this information as a graph, where the nodes are the currencies and the edges are particular exchange operations (\cref{fig:currencygraph}).
+We can represent this information as a graph, where the nodes are the currencies and the edges are particular exchange operations (\cref{fig:currencygraph}). 
 
 \begin{figure}[h]
 \begin{center}
@@ -234,40 +275,49 @@ We can represent this information as a graph, where the nodes are the currencies
 \caption{Three currency exchange companies operating different currencies as a graph. \label{fig:currencygraph}}
 \end{figure}
 
-The graph representation seems enough to describe this as a category, where the objects are the currencies (USD,CHF,EUR, and SGD), the morphisms are the different exchange operations, and the identity morphisms are identity currency exchangers. However, to properly define this category, we need to define composition and prove that the category is closed with respect to it, i.e. that the composition of two currency exchangers is a currency exchanger in the category. Given three currencies $\mathsf{X,Y,Z}$, a currency exchanger $\tup{a,b}$ from $\mathsf{X}$ to $\mathsf{Y}$, and a currency exchanger $\tup{c,d}$ from $\mathsf{Y}$ to $\mathsf{Z}$, one can define their composition as
-\begin{equation}
-\begin{aligned}
-\label{eq:currencycomp}
-    \tup{a,b}\then \tup{c,d}&=\tup{c\cdot a,c\cdot b+d}
-\end{aligned}
-\end{equation}
-Note that the result of the composition of currency exchangers is a currency exchanger: Thus, currency exchangers are closed under the composition operation we have defined. Finally, we need to check \emph{unitality} and \emph{associativity} for composition. Given a currency exchanger $\tup{a,b}$ from $\mathsf{X}$ to $\mathsf{Y}$ one has
-\begin{equation}
-    \begin{aligned}
-    \tup{1,0}\then \tup{a,b}&=\tup{a,b}\then \tup{1,0}\\
-    &=\tup{a,b},
-    \end{aligned}
-\end{equation}
-which is unitality. Furthermore, given a currency exchanger $\tup{c,d}$ from $\mathsf{Y}$ to $\mathsf{Z}$ and a currency exchanger $\tup{e,f}$ from $\mathsf{Z}$ to $\mathsf{W}$, one has
-\begin{equation}
-    \begin{aligned}
-    (\tup{a,b}\then \tup{c,d})\then \tup{e,f}&=\tup{a,b}\then( \tup{c,d}\then \tup{e,f})\\
-    &=\tup{eca, ecb+ed+f},
-    \end{aligned}
-\end{equation}
-which is associativity.
-We are now ready to properly define the category of currency exchangers $\mathbf{Curr}$.
+There is a currency category which corresponds to \cref{tab:currencycompanies} and the graph in \cref{fig:currencygraph}. Its collection of objects is the set $\{  \text{EUR}, \text{USD}, \text{CHF}, \text{SGD} \}$, and it morphisms are, in total, 
+\begin{itemize}
+\item the trivial currency exchanger (identity morphism) $\tup{1.0}$ for each of the four currencies (which are the objects),
+\item the currency exchangers corresponding to each item in \cref{tab:currencycompanies},
+\item all further possible compositions of the currency exchangers listed in \cref{tab:currencycompanies}.
+\end{itemize}
 
-\begin{definition}[Category of currencies]
-    The \emph{category of currencies} $\mathbf{Curr}$ is specified by:
-    \begin{compactenum}
-        \item \emph{Objects:} $\Ob_\mathbf{Curr}$ is a collection of currencies.
-        \item \emph{Morphisms:} Given two currencies $\mathsf{C},\mathsf{D}\in \Ob_{\mathbf{Curr}}$, morphisms between them are currency exchangers $\tup{a,b}$ from $\mathsf{C}$ to $\mathsf{D}$.
-        \item \emph{Identity morphism:} Given an object $C\in \Ob_\mathbf{Curr}$, the identity morphism is given by the currency exchanger $\tup{1,0}$.
-        \item \emph{Composition of morphisms:} The composition of morphisms is given by composition of currency exchangers.
-    \end{compactenum}
-\end{definition}
+%The graph representation seems enough to describe this as a category, where the objects are the currencies (USD,CHF,EUR, and SGD), the morphisms are the different exchange operations, and the identity morphisms are identity currency exchangers. However, to properly define this category, we need to define composition and prove that the category is closed with respect to it, i.e. that the composition of two currency exchangers is a currency exchanger in the category. Given three currencies $\mathsf{X,Y,Z}$, a currency exchanger $\tup{a,b}$ from $\mathsf{X}$ to $\mathsf{Y}$, and a currency exchanger $\tup{c,d}$ from $\mathsf{Y}$ to $\mathsf{Z}$, one can define their composition as
+%\begin{equation}
+%\begin{aligned}
+%\label{eq:currencycomp}
+%    \tup{a,b}\then \tup{c,d}&=\tup{c\cdot a,c\cdot b+d}
+%\end{aligned}
+%\end{equation}
+%Note that the result of the composition of currency exchangers is a currency exchanger: Thus, currency exchangers are closed under the composition operation we have defined. Finally, we need to check \emph{unitality} and \emph{associativity} for composition. Given a currency exchanger $\tup{a,b}$ from $\mathsf{X}$ to $\mathsf{Y}$ one has
+%\begin{equation}
+%    \begin{aligned}
+%    \tup{1,0}\then \tup{a,b}&=\tup{a,b}\then \tup{1,0}\\
+%    &=\tup{a,b},
+%    \end{aligned}
+%\end{equation}
+%which is unitality. Furthermore, given a currency exchanger $\tup{c,d}$ from $\mathsf{Y}$ to $\mathsf{Z}$ and a currency exchanger $\tup{e,f}$ from $\mathsf{Z}$ to $\mathsf{W}$, one has
+%\begin{equation}
+%    \begin{aligned}
+%    (\tup{a,b}\then \tup{c,d})\then \tup{e,f}&=\tup{a,b}\then( \tup{c,d}\then \tup{e,f})\\
+%    &=\tup{eca, ecb+ed+f},
+%    \end{aligned}
+%\end{equation}
+%which is associativity.
+%We are now ready to properly define the category of currency exchangers $\mathbf{Curr}$.
+%
+%\begin{definition}[Category of currencies]
+%    The \emph{category of currencies} $\mathbf{Curr}$ is specified by:
+%    \begin{compactenum}
+%        \item \emph{Objects:} $\Ob_\mathbf{Curr}$ is a collection of currencies.
+%        \item \emph{Morphisms:} Given two currencies $\mathsf{C},\mathsf{D}\in \Ob_{\mathbf{Curr}}$, morphisms between them are currency exchangers $\tup{a,b}$ from $\mathsf{C}$ to $\mathsf{D}$.
+%        \item \emph{Identity morphism:} Given an object $C\in \Ob_\mathbf{Curr}$, the identity morphism is given by the currency exchanger $\tup{1,0}$.
+%        \item \emph{Composition of morphisms:} The composition of morphisms is given by composition of currency exchangers.
+%    \end{compactenum}
+%\end{definition}
 
+
+\JL{The following paragraph(s) might be best moved to a later part in the text, once pareto fronts and optimization have been discussed a little bit.}
 The category $\Cat{Curr}$ represents the set of all possible currency exchangers that could
 ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that given 1 USD, will give you back 2 USD, or even will not give you back any money. This highlights a recurring topic: often mathematicians will be happy to define a broader category of objects, while, in practice, the engineer will find herself thinking about a more constrained set of objects. In particular, one would like to find the best conversions. These can be expressed as \emph{pareto fronts}. To do so, one only needs to iterate a finite number of times, since the optimal path (conversion morphism), if such a morphism exists, will never pass through the same currency more than once. \JL{the previous sentence needs explaining} This is valid if we assume the action of converting back and forth the same currency to have a cost (through the commission) higher than 0. To see this, consider three currencies $\mathsf{A,B,C}$, a currency exchanger $\tup{a,b}$ from $\mathsf{A}$ to $\mathsf{B}$ , a currency exchanger $\tup{c,d}$ from $\mathsf{B}$ to $\mathsf{C}$ , and a currency exchanger $\tup{e,f}$ from $\mathsf{C}$ to $\mathsf{A}$. \JL{more pedagogical} The composition of the currency exchangers reads:
 \begin{equation}
