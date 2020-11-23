@@ -4,7 +4,7 @@
 \JL{Maybe we could make this its own chapter about ``attributes and constraints'' and cook up some set-based examples, and then use those as motivation to talk about the category of sets and the notion of subcategory... perhaps some examples related to David Spivak's database framework could be useful here.... below is a first attempt/draft of this. }
 
 
-Suppose we want to buy an electric motor for a robot that we are building, and for this we consult a catalogue of electric motors. The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model name), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the moter, the size dimensions, the weight, the maximum power, the price, etc.
+Suppose we want to buy an electric motor for a robot that we are building, and for this we consult a catalogue of electric motors. The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model name), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, etc.
 
 As a simplified illustration:
 \begin{table}[h]
@@ -34,31 +34,31 @@ of models of motors, as well as t he set $C := \{ \A, \B, \C, \D \}$ of manufact
 Note that in ``real life'', the catalogue of motors might not have seven entries, as in our simple table above, but has in fact hundreds of entries, and is implemented digitally as a database, \text{i.e.} a collection of interrelated tables. In this case, we will want to be able to search and filter the data based on various criteria. Many natural operations on tables and databases may be described simply in terms of operations with functions. We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases. 
 
 Sticking with our simple example table above, suppose, for instance, that we want to consider only motors from Company $\mathsf{B}$. In terms of the function
-$$
-\mathsf{Company}: M \longrightarrow C
-$$
+\begin{equation*}
+\mathsf{Company}\colon M \longrightarrow C
+\end{equation*}
 this corresponds to considering the preimage $\mathsf{Company}^{-1}(\{ B \}) = \{ \mathsf{Model1}, \mathsf{Model3}, \mathsf{Model7} \}$, which is a subset of the set $M$. Or, we may want to consider only motors which cost between 100 and 200 dollars. In terms of the obvious function
-$$
-\mathsf{Price}: M \longrightarrow P,
-$$
+\begin{equation*}
+\mathsf{Price}\colon M \longrightarrow P,
+\end{equation*}
 this means we wish to restrict ourselves to the preimage 
-$$
+\begin{equation*}
 \mathsf{Price}^{-1}(\{ 109, 124, 130\}) = \{ \mathsf{Model2}, \mathsf{Model3}, \mathsf{Model7} \} \subseteq M.
-$$
+\end{equation*}
 
 Now suppose we wish to add a column to our table for ``volume'', because we may want to only consider motors that have, at most, a certain volume. For this we define a set $V$ of possible volumes (let's take $V = \mathbb{R}_{\geq 0}$, the non-negative real numbers), and define a function 
-$$
-\mathsf{Multiply}: S \longrightarrow V, \ (l, w, h) \longmapsto l \cdot w \cdot h,
-$$
+\begin{equation*}
+\mathsf{Multiply}\colon S \longrightarrow V, \ \tup{l, w, h} \longmapsto l \cdot w \cdot h,
+\end{equation*}
 which maps any size of motor to its corresponding volume by multiplying together the given numbers for length, width, and heigth.  Now we can compose this function with the function
-$$
-\mathsf{Size}: M \longrightarrow S
-$$
+\begin{equation*}
+\mathsf{Size}\colon M \longrightarrow S
+\end{equation*}
 to obtain a function 
-$$
-\mathsf{Volume}: M \longrightarrow V,
-$$
-which defines a new column in our table. The composition of functions is usually written as $\mathsf{Volume} = \mathsf{Multiply} \circ \mathsf{Size}$, however we stick to our convention of writing $\mathsf{Volume} = \mathsf{Size} \then \mathsf{Multiply}$. Schematically, we can represent what we did as a diagram, as in Figure [LABEL].
+\begin{equation*}
+\mathsf{Volume}\colon M \longrightarrow V,
+\end{equation*}
+which defines a new column in our table. The composition of functions is usually written as $\mathsf{Volume} = \mathsf{Multiply} \circ \mathsf{Size}$, however we stick to our convention of writing $\mathsf{Volume} = \mathsf{Size} \then \mathsf{Multiply}$. Schematically, we can represent what we did as a diagram, as in Figure \cref{fig:diagram_functions}.
 
 %We call such a diagram \textbf{commutative}, because the composition $\mathsf{Size} \then \mathsf{Multiply}$ is equal to the function $\mathsf{Volume}$ (in fact, we defined $\textsf{Volume}$ this way). 
 
@@ -67,10 +67,10 @@ which defines a new column in our table. The composition of functions is usually
 \begin{center}
 \includesag{40_dpcatfig_data_comm_diag}
 \end{center}
-\caption{A diagram of functions \label{fig:intermodal}}
+\caption{A diagram of functions \label{fig:diagram_functions}}
 \end{figure}
 
-We can interpret the arrows in this diagrams as being part of a category, one where $M$, $S$, and $V$ are among the objects, and where the functions $\mathsf{Size}$, $\mathsf{Multiply}$ and $\mathsf{Volume}$ are morphisms. But we probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category (maybe call it $\mathsf{Database}$?) in a way that is similar to how one can build a category from a graph (Section [REF]). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we hadn't considered before. And we might not want to re-think each time precisely which category we are working with. A helpful concept here is to think of our specific sets and functions as living in a very large category which contains all possible sets as its objects and all possible functions as its morphisms. This category is know as the category of sets, and it is a key protagonist in category theory. We'll denote it by $\mathsf{Set}$. 
+We can interpret the arrows in this diagrams as being part of a category, one where $M$, $S$, and $V$ are among the objects, and where the functions $\mathsf{Size}$, $\mathsf{Multiply}$ and $\mathsf{Volume}$ are morphisms. But we probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we have defined so far, as well as all possible compositions of those functions, and obtain a category (maybe call it $\mathsf{Database}$?) in a way that is similar to how one can build a category from a graph (Section [REF]). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we hadn't considered before. And we might not want to re-think each time precisely which category we are working with. A helpful concept here is to think of our specific sets and functions as living in a very large category which contains all possible sets as its objects and all possible functions as its morphisms. This category is know as the category of sets, and it is a key protagonist in category theory. We will denote it by $\mathsf{Set}$. 
 
 \begin{shaded}
 \begin{definition}[Category of sets]
@@ -111,18 +111,5 @@ Check that $\Set$, as specified above, does in fact define a category.
 \end{definition}
 \end{shaded}
 
-\JL{I would say the lemma below is obsolete (because of the changes in the currency example), and can be deleted}
-\begin{lemma}
-    $\mathbf{Curr}$ is a subcategory of $\Set$.
-\end{lemma}
-
-\begin{proof}
-    We need to check the conditions presented in \cref{def:subcategory}.
-    \begin{enumerate}[(i)]
-        \item If a morphism of $\Set$ $f\colon X\to Y$ is in $\mathbf{Curr}$, it means automatically that both $X$ and $Y$ are singletons, containing currencies, and that $f$ can be represented as a currency exchanger.
-        \item If morphisms of $\Set$ $f\colon X\to Y$ and $g\colon Y \to Z$ are in $\mathbf{Curr}$, then from (i) we know that $X,Y,Z$ are as well, that $f,g$ are currency exchangers, and that we can write their composition.
-        \item If $X$ is in $\mathbf{Curr}$, then the identity morphism $\text{Id}_X$ in $\Set$ can be written as an identity currency exchanger.
-    \end{enumerate}
-\end{proof}
     
 
