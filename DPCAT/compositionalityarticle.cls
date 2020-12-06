@@ -41,6 +41,13 @@ class for Compositionality - the open journal for the mathematics of composition
 	\setlength\paperwidth{210mm}
 	\toggletrue{@papersizespecified}
 }
+
+\DeclareOptionX{tradepaper}
+{
+	\setlength\paperheight{9in}%
+	\setlength\paperwidth{6in}
+	\toggletrue{@papersizespecified}
+}
 \DeclareOptionX{a5paper}
 {
 	\setlength\paperheight {210mm}%
@@ -243,7 +250,7 @@ class for Compositionality - the open journal for the mathematics of composition
 	\setlength\paperheight {297mm}%
 	\setlength\paperwidth  {210mm}%
         \iftoggle{@noarxiv}{}{%
-          \ClassError{compositionalityarticle}{Please explicitly specify a paper size. Available options: a4paper, a5paper, b5paper, letterpaper, legalpaper, executivepaper. Not specifying a paper size can lead to inconsistent behavior when the manuscript is typeset by the arXiv. This error can be turned off by giving the noarxiv class option}{}
+          \ClassError{compositionalityarticle}{Please explicitly specify a paper size. Available options: a4paper, a5paper, b5paper, letterpaper, legalpaper, executivepaper, tradepaper. Not specifying a paper size can lead to inconsistent behavior when the manuscript is typeset by the arXiv. This error can be turned off by giving the noarxiv class option}{}
         }%
 }
 
