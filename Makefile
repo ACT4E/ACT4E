@@ -11,7 +11,7 @@ tmpdir=tmp
 
 %.pdf: %.tex 
 	rm -f $*.aux $(tmpdir)/$*.aux
-	latexmk -xelatex -outdir=$(tmpdir)  $<
+	latexmk -xelatex -outdir=$(tmpdir) -f $<
 	cp $(tmpdir)/$*.pdf $@
 
 
