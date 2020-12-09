@@ -1,28 +1,26 @@
 % !TEX root = ../CategoricalCoDesign.tex
 %\section{Thinking about attributes and sameness}
-
-\JL{Maybe we could make this its own chapter about ``attributes and constraints'' and cook up some set-based examples, and then use those as motivation to talk about the category of sets and the notion of subcategory... perhaps some examples related to David Spivak's database framework could be useful here.... below is a first attempt/draft of this. }
-
+\label{sec:attributes_sameness}
 \subsection{Sets, functions, databases}
 
-Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.}. The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model name), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, etc. A simple illustration is provided in \cref{tab:currencycompanies}.
+Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.}. The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model name), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, etc. A simple illustration is provided in \cref{tab:electric_motors}.
 \begin{table}[h]
     \centering
     \adjustbox{max width=\textwidth}{%
     \begin{tabular}{c|c|c|c|c|c}
          Motor ID & Company& $\unit[\text{Size}]{[mm^3]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]} & \unit[Cost]{[USD]} \\
          \hline
-         $\mathsf{NEMA1204}$&$\mathsf{SOYO}$ & 20 x 20 x 30& 60.0 &2.34 &19.95\\
-         $\mathsf{NEMA1206}$&$\mathsf{SOYO}$ &28 x 28 x 45& 140.0 &3.00 &19.95\\
-         $\mathsf{NEMA1207}$&$\mathsf{SOYO}$ &35 x 35 x 26& 130.0 &2.07 &12.95\\
-         $\mathsf{NEMA2267}$&$\mathsf{SOYO}$ &42 x 42 x 38& 285.0 &4.76 &16.95\\
-         $\mathsf{NEMA2279}$&$\mathsf{Sanyo \ Denki}$ &42 x 42 x 31.5& 165.0  &5.40 & 164.95\\
-        $\mathsf{NEMA1478}$&$\mathsf{SOYO}$ & 56.4 x 56.4 x 76& 1,000 & 8.96&49.95\\
-        $\mathsf{NEMA2299}$&$\mathsf{Sanyo\ Denki}$ & 50 x 50 x 16& 150.0 &5.90&59.95
+         \textsf{1204}&\textsf{SOYO} & 20 x 20 x 30& 60.0 &2.34 &19.95\\
+         \textsf{1206}&\textsf{SOYO} &28 x 28 x 45& 140.0 &3.00 &19.95\\
+         \textsf{1207}&\textsf{SOYO} &35 x 35 x 26& 130.0 &2.07 &12.95\\
+         \textsf{2267}&\textsf{SOYO} &42 x 42 x 38& 285.0 &4.76 &16.95\\
+         \textsf{2279}&\textsf{Sanyo Denki} &42 x 42 x 31.5& 165.0  &5.40 & 164.95\\
+        \textsf{1478}&\textsf{SOYO} & 56.4 x 56.4 x 76& 1,000 & 8.96&49.95\\
+        \textsf{2299}&\textsf{Sanyo Denki} & 50 x 50 x 16& 150.0 &5.90&59.95
     \end{tabular}%
     }
     \caption{A simplified catalogue of motors.}
-    \label{tab:currencycompanies}
+    \label{tab:electric_motors}
 \end{table}
 
 \begin{comment}
@@ -31,55 +29,55 @@ Suppose we want to buy an electric stepper motor for a robot that we are buildin
     \begin{tabular}{c|c|c|c|c|c}
          Motor ID & Company& Size & \unit[Weight]{[g]} & \unit[Max Power]{[W]} & \unit[price]{[USD]} \\
          \hline
-         $\mathsf{Model1}$&Company $\mathsf{B}$ & 2 x 3 x 4& 10 & &259\\
-         $\mathsf{Model2}$&Company $\mathsf{A}$ &2 x 3 x 4& 20 & &109\\
-         $\mathsf{Model3}$&Company $\mathsf{B}$ &2 x 3 x 4& 5 & &124\\
-         $\mathsf{Model4}$&Company $\mathsf{C}$ &2 x 3 x 4& 30 & &399\\
-         $\mathsf{Model5}$&Company $\mathsf{A}$ &2 x 3 x 4& 45 & &245  \\
-        $\mathsf{Model6}$&Company $\mathsf{D}$ & 2 x 3 x 4& 20 & &89\\
-        $\mathsf{Model7}$&Company $\mathsf{B}$ & 2 x 3 x 4& 15 &&130
+         $\textsf{Model1}$&Company $\textsf{B}$ & 2 x 3 x 4& 10 & &259\\
+         $\textsf{Model2}$&Company $\textsf{A}$ &2 x 3 x 4& 20 & &109\\
+         $\textsf{Model3}$&Company $\textsf{B}$ &2 x 3 x 4& 5 & &124\\
+         $\textsf{Model4}$&Company $\textsf{C}$ &2 x 3 x 4& 30 & &399\\
+         $\textsf{Model5}$&Company $\textsf{A}$ &2 x 3 x 4& 45 & &245  \\
+        $\textsf{Model6}$&Company $\textsf{D}$ & 2 x 3 x 4& 20 & &89\\
+        $\textsf{Model7}$&Company $\textsf{B}$ & 2 x 3 x 4& 15 &&130
     \end{tabular}
     \caption{A simplified catalogue of motors.}
-    \label{tab:currencycompanies}
+    \label{tab:electric_motors}
 \end{table}
 \end{comment}
 One useful way to think of tables of data is in terms of sets and functions. In this example, we can consider the set
 \begin{equation*}
-M \coloneqq \{ \mathsf{NEMA1204}, \mathsf{NEMA1206}, \mathsf{NEMA1207}, \mathsf{NEMA2267}, \mathsf{NEMA2279}, \mathsf{NEMA1478}, \mathsf{NEMA2299} \},
+M \coloneqq \{ \textsf{1204}, \textsf{1206}, \textsf{1207}, \textsf{2267}, \textsf{2279}, \textsf{1478}, \textsf{2299} \},
 \end{equation*}
-of models of motors, as well as the set~$C \coloneqq \{ \mathsf{SOYO}, \mathsf{Sanyo \ Denki}\}$ of manufacturing companies, the set $S$ of possible motor sizes, the set~$W$ of possible weights, the set $J$ of possible maximal powers, and the set~$P$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$M$ to set of possible values for the given attribute. For example, there is a function~$\mathsf{Company}\colon M \to C$ which maps each model to the corresponding company that manufactures it. So, according to Table \ref{tab:currencycompanies}, we have \text{e.g.}~$\mathsf{Company}(\mathsf{NEMA1204}) = \mathsf{SOYO}$, and~$\mathsf{Company}(\mathsf{NEMA2279}) = \mathsf{Sanyo \ Denki}$, etc.
+of models of motors, as well as the set~$C \coloneqq \{ \textsf{SOYO}, \textsf{Sanyo Denki}\}$ of manufacturing companies, the set $S$ of possible motor sizes, the set~$W$ of possible weights, the set $J$ of possible maximal powers, and the set~$P$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$M$ to set of possible values for the given attribute. For example, there is a function~$\textsf{Company}\colon M \to C$ which maps each model to the corresponding company that manufactures it. So, according to Table \ref{tab:electric_motors}, we have \text{e.g.}~$\textsf{Company}(\textsf{1204}) = \textsf{SOYO}$, and~$\textsf{Company}(\textsf{2279}) = \textsf{Sanyo Denki}$, etc.
 
-Note that in ``real life'', the catalogue of motors might not have seven entries, as in \cref{tab:currencycompanies}, but has in fact hundreds of entries, and is implemented digitally as a database, \text{i.e.} a collection of interrelated tables. In this case, we will want to be able to search and filter the data based on various criteria. Many natural operations on tables and databases may be described simply in terms of operations with functions. We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases.
+Note that in ``real life'', the catalogue of motors might not have seven entries, as in \cref{tab:electric_motors}, but has in fact hundreds of entries, and is implemented digitally as a database, \text{i.e.} a collection of interrelated tables. In this case, we will want to be able to search and filter the data based on various criteria. Many natural operations on tables and databases may be described simply in terms of operations with functions. We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases.
 
-Sticking with \cref{tab:currencycompanies}, suppose, for instance, that we want to consider only motors from Company~$\mathsf{Sanyo \ Denki}$. In terms of the function
+Sticking with \cref{tab:electric_motors}, suppose, for instance, that we want to consider only motors from Company~$\textsf{Sanyo Denki}$. In terms of the function
 \begin{equation*}
-\mathsf{Company}\colon M \to C
+\textsf{Company}\colon M \to C
 \end{equation*}
-this corresponds to the preimage~$\mathsf{Company}^{-1}(\{ \mathsf{Sanyo \ Denki} \}) = \{ \mathsf{NEMA2279}, \mathsf{NEMA2299}\}$, which is a subset of the set~$M$. Or, we may want to consider only motors which cost between 40 and 200 USD. In terms of the obvious function
+this corresponds to the preimage~$\textsf{Company}^{-1}(\{ \textsf{Sanyo Denki} \}) = \{ \textsf{2279}, \textsf{2299}\}$, which is a subset of the set~$M$. Or, we may want to consider only motors which cost between 40 and 200 USD. In terms of the obvious function
 \begin{equation*}
-\mathsf{Price}\colon M \to P,
+\textsf{Price}\colon M \to P,
 \end{equation*}
 this means we wish to restrict ourselves to the preimage
 \begin{equation*}
-\mathsf{Price}^{-1}(\{ 49.95, 59.95, 164.95\}) = \{ \mathsf{NEMA1478}, \mathsf{NEMA2299}, \mathsf{NEMA2279} \} \subseteq M.
+\textsf{Price}^{-1}(\{ 49.95, 59.95, 164.95\}) = \{ \textsf{1478}, \textsf{2299}, \textsf{2279} \} \subseteq M.
 \end{equation*}
 
 Now suppose we wish to add a column to our table for ``volume'', because we may want to only consider motors that have, at most, a certain volume. For this we define a set~$V$ of possible volumes (let's take~$V = \mathbb{R}_{\geq 0}$, the non-negative real numbers), and define a function
 \begin{equation*}
 \begin{aligned}
-\mathsf{Multiply}\colon S &\to V\\
+\textsf{Multiply}\colon S &\to V\\
 \tup{l, w, h} &\mapsto l \cdot w \cdot h,
 \end{aligned}
 \end{equation*}
 which maps any size of motor to its corresponding volume by multiplying together the given numbers for length, width, and heigth.  Now we can compose this function with the function
 \begin{equation*}
-\mathsf{Size}\colon M \to S
+\textsf{Size}\colon M \to S
 \end{equation*}
 to obtain a function
 \begin{equation*}
-\mathsf{Volume}\colon M \to V,
+\textsf{Volume}\colon M \to V,
 \end{equation*}
-which defines a new column in our table. The composition of functions is usually written as~$\mathsf{Volume} = \mathsf{Multiply} \ \circ \ \mathsf{Size}$, however we stick to our convention of writing~$\mathsf{Volume} = \mathsf{Size} \ \then \ \mathsf{Multiply}$. Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
+which defines a new column in our table. The composition of functions is usually written as~$\textsf{Volume} = \textsf{Multiply} \ \circ \ \textsf{Size}$, however we stick to our convention of writing~$\textsf{Volume} = \textsf{Size} \then \textsf{Multiply}$. Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
 
 %We call such a diagram \textbf{commutative}, because the composition $\mathsf{Size} \then \mathsf{Multiply}$ is equal to the function $\mathsf{Volume}$ (in fact, we defined $\textsf{Volume}$ this way).
 
@@ -91,11 +89,11 @@ which defines a new column in our table. The composition of functions is usually
 \caption{A diagram of functions. \label{fig:diagram_functions}}
 \end{figure}
 
-We can interpret the arrows in this diagram as being part of a category, one where $M$,~$S$, and~$V$ are among the objects, and where the functions~$\mathsf{Size}$, $\mathsf{Multiply}$ and~$\mathsf{Volume}$ are morphisms. We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category (maybe call it $\mathsf{Database}$?) in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before. And we might not want to re-think each time precisely which category we are working with.
+We can interpret the arrows in this diagram as being part of a category, one where $M$,~$S$, and~$V$ are among the objects, and where the functions~$\textsf{Size}$, $\textsf{Multiply}$ and~$\textsf{Volume}$ are morphisms. We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category (maybe call it $\textsf{Database}$?) in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before. And we might not want to re-think each time precisely which category we are working with.
 
-A helpful concept here is to think of our specific sets and functions as living in a very (very) large category which contains all possible sets as its objects and all possible functions as its morphisms. This category is know as the category of sets, and it is an important protagonist in category theory. We will denote it by $\mathsf{Set}$. It is a short exercise to check that the following does indeed define a category.
+A helpful concept here is to think of our specific sets and functions as living in a very (very) large category which contains all possible sets as its objects and all possible functions as its morphisms. This category is know as the category of sets, and it is an important protagonist in category theory. We will denote it by $\textsf{Set}$. It is a short exercise to check that the following does indeed define a category.
 
-\begin{shaded}
+\begin{shaded*}
 \begin{definition}[Category of sets]
 The category of sets~$\Set$ is defined by:
     \begin{compactenum}
@@ -106,11 +104,11 @@ The category of sets~$\Set$ is defined by:
     \item \emph{Composition operation}: the composition operation is the usual composition of functions.
     \end{compactenum}
 \end{definition}
-\end{shaded}
+\end{shaded*}
 
-We did say above, however, that we could build a category (let's call it $\mathsf{Database}$) that only involves the sets that we are using for our database, and the functions between them that we are working with. What we would need for $\mathsf{Database}$ to be a category is that if any function is in $\mathsf{Database}$, then also its sources and target sets are, and we would need that any composition of functions in $\mathsf{Database}$ is again in $\mathsf{Database}$. (Also, we define the identity morphism for any set in $\mathsf{Database}$ to be the identity function on that set.) If these conditions are met, $\mathsf{Database}$ is what is called a \emph{subcategory} of the category of Sets. Here is the general definition. 
+We did say above, however, that we could build a category (let's call it \textsf{Database}) that only involves the sets that we are using for our database, and the functions between them that we are working with. What we would need for \textsf{Database} to be a category is that if any function is in \textsf{Database}, then also its sources and target sets are, and we would need that any composition of functions in \textsf{Database} is again in \textsf{Database}. (Also, we define the identity morphism for any set in \textsf{Database} to be the identity function on that set.) If these conditions are met, \textsf{Database} is what is called a \emph{subcategory} of the category of Sets. Here is the general definition. 
 
-\begin{shaded}
+\begin{shaded*}
 \begin{definition}[Subcategory]
 \label{def:subcategory}
 	Given a category~$\Cat{C}$, a \emph{subcategory}~$\Cat{B}$ consists of a subcollection of the collection of objects and morphisms of~$\Cat{C}$ such that:
@@ -120,17 +118,18 @@ We did say above, however, that we could build a category (let's call it $\maths
 	\item If~$x$ is in~$\Cat{B}$, then so is the identity morphism~$\text{id}_x$.
 	\end{enumerate}
 \end{definition}
-\end{shaded}
+\end{shaded*}
 
 %\begin{exercise}
 %Check that $\Set$, as specified above, does in fact define a category.
 %\end{exercise}
 
 \subsection{Sameness in category theory}
+\GZ{Consistency in identities notation!}
 One nice thing about the category of sets is that we are all used to working with sets and functions. And many concepts that are familiar in the setting of sets and functions can actually be reformulated in a way which makes sense for lots of other categories, if not for all categories. It can be fun, and insightful, to see known definitions transformed into ``category theory language''. For example: the notion of a bijective function is a familiar concept. There are least two ways of saying what it means for a function~$f \colon X \to Y$ of sets to be bijective:
 \begin{itemize}
-\item[Definition 1:] ``$f\colon X \to Y$ is bijective if, for every~$y \in Y$ there exists precisely one~$x \in X$ such that~$f(x) = y$;
-\item[Definition 2:] ``$f\colon X \to Y$ is bijective if there exists a function~$g\colon Y \rightarrow X$ such that~$f \then g = id_X$ and~$g \then f = id_Y$''.
+\item[] Definition 1: ``$f\colon X \to Y$ is bijective if, for every~$y \in Y$ there exists precisely one~$x \in X$ such that~$f(x) = y$;
+\item[] Definition 2: ``$f\colon X \to Y$ is bijective if there exists a function~$g\colon Y \rightarrow X$ such that~$f \then g = id_X$ and~$g \then f = id_Y$''.
 %\item[Definition 1:] ``$f:X \rightarrow Y$ is bijective if it is both injective and surjective''\footnote{Recall: a function $f:X \rightarrow Y$ is injective if... and surjective if... }
 \end{itemize}
 
@@ -139,7 +138,7 @@ It is a short proof to show that the above two definitions are equivalent. The f
 
 %It turns out that both versions have useful generalizations in category theory, and it also turns out that these generalizations do not always imply each other! So, two equivalent ways of saying that a function is bijective give rise to non-equivalent concepts in category theory. Definition 2 above is the more fundamental variant for category theory; it corresponds to the basic notion of an ``isomorphism''.
 
-\begin{shaded}
+\begin{shaded*}
 \begin{definition}[Isomorphism]
 Let~$\CatC$ be a category, let~$X \in \CatC$ and~$Y \in \CatC$ be objects, and let~$f\colon X \to Y$ be a morphism. We say that~$f$ is an \textbf{isomorphism} if there exists a morphism~$g\colon Y \to X$ such that~$f \then g = \text{id}_X$ and~$g \then f = \text{id}_Y$.
 \end{definition}
@@ -147,18 +146,18 @@ Let~$\CatC$ be a category, let~$X \in \CatC$ and~$Y \in \CatC$ be objects, and l
 \begin{remark}\label{inverse}
 The morphism $g$ in the above definition is called the \textbf{inverse} of $f$. Because of the symmetry in how the definition is formulated, it is easy to see that $g$ is necessarily also an isomorphism, and its inverse is $f$.
 \end{remark}
-\end{shaded}
+\end{shaded*}
 
 \begin{exercise}
 In Remark \ref{inverse} we wrote \emph{the} inverse. We do this because inverses are in fact unique. Can you prove this?
 That is, show that if~$f\colon X \to Y$ is an isomorphism, and if~$g_1\colon Y \to X$ and $g_2\colon Y \to X$ are morphisms such that~$f \then g_1 = \text{id}_X$ and~$g_1 \then f = \text{id}_Y$, and~$f \then g_2 = \text{id}_X$ and~$g_2 \then f = \text{id}_Y$, then necessarily~$g_1 = g_2$.
 \end{exercise}
 
-\begin{shaded}
+\begin{shaded*}
 \begin{definition}[Isomorphic]
 Let~$\CatC$ be a category, and let~$X \in \CatC$ and~$Y \in \CatC$ be objects. We say that~$X$ and~$Y$ are \textbf{isomorphic} if there exists an isomorphism~$X \to Y$ or~$Y \to X$.
 \end{definition}
-\end{shaded}
+\end{shaded*}
 
 For the formulation of the definition of ``isomorphic'', mathematicians might often only require the existence of an isomorphism~$X \to Y$, say, since by \cref{inverse} we know there is then necessarily also an isomorphism in the opposing direction, namely the inverse. We choose here the longer, perhaps more cumbersome formulation just to emphasis the symmetry of the term ``isomorphic''. Also note that the definition leaves unspecified whether there might be just one or perhaps many isomorphisms $X \to Y$.
 
@@ -173,15 +172,15 @@ Suppose we are a manufacturer and we are counting how many wheels are in a certa
 %\end{remark}
 
 \begin{example}[Relabelling]
-Consider the little catalogue in \cref{tab:currencycompanies}. Suppose that your old way of listing models of motors has become outdated and you need to change to a new system, where each model is identified, say, by a unique numerical 10-digit code. Relabelling each of the models with its numerical code corresponds to an isomorphism, say~$\mathsf{relabel}$, from the new set~$N$ of numerical codes to the old set~$M$ of model names. In contrast to the previous example, however, it is of course absolutely necessary to keep track of the isomorphism~$\mathsf{relabel}$ that defines the relabelling. This is what holds the information of which code denotes which model.
+Consider the little catalogue in \cref{tab:electric_motors}. Suppose that your old way of listing models of motors has become outdated and you need to change to a new system, where each model is identified, say, by a unique numerical 10-digit code. Relabelling each of the models with its numerical code corresponds to an isomorphism, say \textsf{relabel}, from the new set~$N$ of numerical codes to the old set~$M$ of model names. In contrast to the previous example, however, it is of course absolutely necessary to keep track of the isomorphism \textsf{relabel} that defines the relabelling. This is what holds the information of which code denotes which model.
 
-Note also that all the other labelling functionalities in our example database may be updated by precomposing with~$\mathsf{relabel}$. For example, the old ``Company'' label was described by a function
+Note also that all the other labelling functionalities in our example database may be updated by precomposing with \textsf{relabel}. For example, the old ``Company'' label was described by a function
 \begin{equation*}
-\mathsf{Company}\colon M \to C.
+\textsf{Company}\colon M \to C.
 \end{equation*}
 The updated version of the ``Company'' label, using the new set $N$ of model IDs, is obtained by the composition
 \begin{equation*}
-N \overset{\mathsf{relabel}}{\longrightarrow} M \overset{\mathsf{Company}}{\longrightarrow} C.
+N \overset{\textsf{relabel}}{\longrightarrow} M \overset{\textsf{Company}}{\longrightarrow} C.
 \end{equation*}
 \end{example}
 
