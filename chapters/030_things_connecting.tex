@@ -51,7 +51,7 @@ A very basic mathematical notion which underlies the diagram [REF] is the notion
 
 Supposed we are tasked with managing a scientific mission for a Mars rover. In particular, we need need to plan the route that the rover will take in order to travel from its landing position ``$a$'' to a target destination ``$b$''. We have a map of the relevant region on Mars, complete with elevation data, but, of course, only has a certain degree of accuracy. 
 
-To model the landscape, we divide it into a grid of $1 \times 1$ meter squares, and the center of each is labeled with an $\tup{x,y}$ coordinate. In total, our model has $1000 \times 1000$ squares, and we let $L$ denote the set of coordinates of the centers of the squares. We think of these coordinate labels as the objects of a category $\mathsf{C}$ which are the possible (approximate) locations that the rover might be. If the rover is at a given location $l = \tup{x,y}$, then in our model there are eight possible directions that the rover can move:
+To model the landscape, we divide it into a grid of~$1 \times 1$ meter squares, and the center of each is labeled with an~$\tup{x,y}$ coordinate. In total, our model has~$1000 \times 1000$ squares, and we let~$L$ denote the set of coordinates of the centers of the squares. We think of these coordinate labels as the objects of a category~$\cat{C}$ which are the possible (approximate) locations that the rover might be. If the rover is at a given location~$l = \tup{x,y}$, then in our model there are eight possible directions that the rover can move:
 
 \
 
@@ -68,9 +68,9 @@ If we draw such arrows for each location label $c \in \cat{C}$, then we obtain a
 
 \
 
-To model the possible paths the rover might potential travel, we take the free category on this graph. That is, we let the morphisms in our category $\cat{C}$ be all possible paths obtained by concatenating directed arrows from the above graph [REF]. In particular, given the locations $a$ and $b$, we have 
+To model the possible paths the rover might potential travel, we take the free category on this graph. That is, we let the morphisms in our category $\Cat{C}$ be all possible paths obtained by concatenating directed arrows from the above graph [REF]. In particular, given the locations~$a$ and~$b$, we have 
 \begin{equation}
-\cat{C}(a, b) = \{ \text{paths from } a \text{ to } b \}.
+\Cat{C}(a, b) = \{ \text{paths from } a \text{ to } b \}.
 \end{equation}
 
 \
@@ -79,15 +79,15 @@ To model the possible paths the rover might potential travel, we take the free c
 
 \
 
-In [REF Figure], some possible paths are drawn in green. Note that by allowing \emph{all} possible paths we are also allowing ones of infinite length (\text{e.g.} where the rover moves around indefinitely long). Since we want our rover to reach its destination in a finite amount of time, we will subsequently take $\cat{C}$ to be the category where the morphisms are only the paths of \emph{finite length}. 
+In [REF Figure], some possible paths are drawn in green. Note that by allowing \emph{all} possible paths we are also allowing ones of infinite length (\text{e.g.} where the rover moves around indefinitely long). Since we want our rover to reach its destination in a finite amount of time, we will subsequently take $\Cat{C}$ to be the category where the morphisms are only the paths of \emph{finite length}. 
 
-Next, we include the elevation information in our model, in order to start to optimize the planning of which path we wish the rover to take. We encode elevation data as a function $h : L \rightarrow \mathbb{R}$ which assigns a real number to each location label. If $l$ and $l'$ are two locations, the absolute elevation difference between $l$ and $l'$ is $\vert h(l') - h(l) \vert$. For our rover, we only want to consider paths such that the absolute elevation difference between any two adjacent locations along that path is less than a given threshold (if the path is too steep, the rover might tip over!). This is one kind of constraint which determines certain paths in our category $\cat{C}$ to be infeasible. 
+Next, we include the elevation information in our model, in order to start to optimize the planning of which path we wish the rover to take. We encode elevation data as a function~$h \colon L \to \mathbb{R}$ which assigns a real number to each location label. If~$l$ and~$l'$ are two locations, the absolute elevation difference between~$l$ and $~l'$ is~$\vert h(l') - h(l) \vert$. For our rover, we only want to consider paths such that the absolute elevation difference between any two adjacent locations along that path is less than a given threshold (if the path is too steep, the rover might tip over!). This is one kind of constraint which determines certain paths in our category~$\Cat{C}$ to be infeasible. 
 
-Among the feasible paths, we wish to optimize the path taken by the rover so that it uses the least amount of energy, say.  For any path $p$ of finite length, we model what the energy cost $E(p)$ of that path for the rover would be. (We skip the precise details of how we might model this; surely the energy cost of a path will be related to the length of the path, for example.) This defines a function on each of the homsets of our category $\cat{C}$, 
+Among the feasible paths, we wish to optimize the path taken by the rover so that it uses the least amount of energy, say.  For any path~$p$ of finite length, we model what the energy cost~$E(p)$ of that path for the rover would be. (We skip the precise details of how we might model this; surely the energy cost of a path will be related to the length of the path, for example.) This defines a function on each of the homsets of our category $\Cat{C}$, 
 \begin{equation}
-E : \cat{C}(l, l') \longrightarrow \mathbb{R}, 
+E \colon \Cat{C}(l, l') \longrightarrow \mathbb{R}, 
 \end{equation}
-which, to each path from $l$ to $l'$, assigns the corresponding energy cost of that path. Thus our specific optimization problem is to find those feasible paths which minimize the function $E: \cat{C}(a,b) \rightarrow \mathbb{R}$ defined on paths from the starting position $a$ to the target position $b$. 
+which, to each path from~$l$ to~$l'$, assigns the corresponding energy cost of that path. Thus our specific optimization problem is to find those feasible paths which minimize the function~$E\colon \Cat{C}(a,b) \to \mathbb{R}$ defined on paths from the starting position~$a$ to the target position~$b$. 
 
 
 
@@ -166,6 +166,47 @@ The intermodal network category $\Cat{intermodal}$ is the free category on the g
 
 \GZ{Maybe not needed? If so, rewrite}
 \JL{I think this is nice to include! But then maybe for clarity we would want to actually remove the dashed arrow in Figure 18, since that is not part of the graph we are thinking to take the free category of. Technically we could also leave it in, but that seems to confuse the situation, no?}
+
+\subsection{The category $\Rel$}
+
+\begin{remark}[Opposite relations]
+\label{remark:oppositerel}
+Any relation~$R\colon A\to B$ induces an opposite relation (or transpose relation, reverse relation) \begin{equation}
+    R^\intercal =\{\tup{b,a}\in B\times A\colon \tup{a,b}\in R\} \subseteq B\times A.
+\end{equation}
+Note tha~ $\left( R^\intercal\right)^\intercal = R$
+\end{remark}
+
+\begin{definition}[Category~$\Rel$]
+    The category~$\Rel$ is defined by:
+    \begin{enumerate}
+    \item \emph{Objects}: The objects of this category are all sets.
+    \item \emph{Morphisms}: The morphisms between any pair of sets~$X, Y$
+    are relations~$R\subseteq X\times Y$.
+    \item \emph{Identity morphism}: The identity morphism for the set~$X$
+    is the diagonal morphism~$\delta_X \colon X\to X\times X$.
+    \item \emph{Composition of morphisms}: The composition of two relations~$R \colon X\to Y$,~$S\colon Y\to Z$ is given by
+    \begin{equation}
+    R \then S \coloneqq \{\tup{x,z} \equiv  \exists y \in Y, \ \left(\tup{x,y} \in R\right) \wedge \left(\tup{y,z} \in S\right)\}.
+    \end{equation}
+    \end{enumerate}
+\end{definition}
+\begin{remark}
+The opposite category (\cref{def:oppositecat}) of~$\Rel$ has the same objects of~$\Rel$ and as morphisms its opposite relations (\cref{remark:oppositerel}).
+\end{remark}
+
+\begin{lemma}
+    The category~$\Cat{Set}$ is a subcategory (\cref{def:subcategory}) of~$\Cat{Rel}$.
+\end{lemma}
+\begin{proof}
+	We need to prove the conditions presented in \cref{def:subcategory}.
+	\begin{enumerate}[(i)]
+	\item If a morphism of~$\Rel$ $f \colon X\to Y$ is in~$\Set$, then so are the objects~$X$ and~$Y$. Both~$\Rel$ and~$\Set$ have sets as objects. If a morphism~$f\colon X\to Y$ of~$\Rel$ is in~$\Set$, then a relation~$F\subseteq X\times Y$ between set~$X$ and set~$Y$ exists. This relation can be expressed in~$\Set$ as~$f\colon X\to Y$ and hence the objects~$X$ and~$Y$ exist.
+	\item Two morphisms~$f\colon X\to Y$ and~$g\colon Y\to Z$ in~$\Rel$ are relations~$F\subseteq X\times Y$,~$G\subseteq Y\times Z$. If they are in~$\Set$, they can be written as functions~$f\colon X\to Y$ and~$g\colon Y\to Z$ and their composition is in~$\Set$ as well. 
+	\item If an object of~$\Rel$ $X$ is in~$\Set$, then so is the identity morphism~$\text{Id}_X$. This is true: for every object~$X$ of~$\Set$ there exists the identity morphism~$\text{Id}_X\colon X\to X$. The diagonal morphism can be expressed as~$\text{Id}_X\colon X\to X$.
+	\end{enumerate}
+\end{proof}
+
 \begin{comment}
 \begin{shaded*}
 \begin{definition}[Union of categories]
