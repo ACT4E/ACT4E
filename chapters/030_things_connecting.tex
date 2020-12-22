@@ -151,7 +151,7 @@ To illustrate the composition rule \ref{RelCompRule} for relations, let's consid
 \node at (0,0) {
     \begin{tikzcd}[column sep=2cm,row sep=0.01]
     &y_1&\\
-    x_1\arrow{dr}&&\\
+    x_1\arrow{ur}&&\\
     &y_2\arrow{r}&z_1\\
     x_2\arrow{dr}\arrow{dddr}&&\\
     &y_3\arrow{r}\arrow{uur}&z_2\\
@@ -160,7 +160,6 @@ To illustrate the composition rule \ref{RelCompRule} for relations, let's consid
     \end{tikzcd}};
 \end{tikzpicture}
 \end{center}
-\JL{there is a mistake in the typed version of the diagram}
 
 Now, according to the rule \ref{RelCompRule}, the composition $R \then S \subseteq X \times Z$ will be such that  $\tup{x,z} \in R \then S$ if and only if there exists some $y \in Y$ such that $\tup{x,y} \in R$ and $\tup{y,z} \in S$, which, graphically, means that for $\tup{x,z}$ to be an element of the relation $R \then S$, $x$ and $y$ need to be connected by at least one sequence of two arrows such that the target of the first arrow is the source of the second. For example, in Figure \ref{fig:example_rel_composable}, there is an arrow from $x_2$ to $y_3$, and from there on to $z_1$, and therefore, in the composition $R \then S$ depicted in Figure \ref{fig:example_rel_composed}, there is an arrow from $x_2$ to $z_1$. 
 \begin{figure}[h!]
@@ -203,6 +202,13 @@ The opposite category (\cref{def:oppositecat}) of~$\Rel$ has the same objects of
 \subsection{Path planning}
 \label{sec:trekking}
 
+Suppose we are tasked with managing a scientific mission for a Mars rover. In particular, we need need to plan the routes that the rover will take in order to travel from its landing position to various other positions. We have a map of the relevant region on Mars which uses coordinates $\tup{x, y, z}$. We assume the $z$-th coordinate is given by an ``elevation function'', $z = h(x,y)$, and that $h$ is $C^1$, \text{i.e.} continuously differentiable. 
+
+
+
+
+\gray{
+-------------------------------------------------------------------------
 
 Supposed we are tasked with managing a scientific mission for a Mars rover. In particular, we need need to plan the route that the rover will take in order to travel from its landing position ``$a$'' to a target destination ``$b$''. We have a map of the relevant region on Mars, complete with elevation data, but, of course, only to a certain degree of accuracy. 
 
@@ -247,15 +253,13 @@ E \colon \Cat{C}(l, l') \longrightarrow \mathbb{R},
 \end{equation}
 which, to each path from~$l$ to~$l'$, assigns the corresponding energy cost of that path. Thus our specific optimization problem is to find those feasible paths which minimize the function~$E\colon \Cat{C}(a,b) \to \mathbb{R}$ defined on paths from the starting position~$a$ to the target position~$b$. 
 
-
-
-
+--------------------------------
 
 
 
 \
 
-\gray{
+
 Consider a geographical region whose locations are expressed through coordinates~$(x,y)\in \mathbb{R}^2$, \text{e.g.} as given by a map of that region. Furthermore, consider a function~$\mathsf{alt}: \mathbb{R}^2 \to \mathbb{R}_{\geq 0}$ which, for a known location, returns its altitude.
 
 We can think about this situation using a category, call it~$\mathbf{trek}$, where objects are geographical locations~$\tup{x,y}\in \mathbb{R}^2$ and morphisms are continuous paths between them. The identity morphism for each location consists of the trivial path (i.e., not moving), and composition is given by concatenation of paths.
