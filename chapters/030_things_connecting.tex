@@ -202,9 +202,60 @@ The opposite category (\cref{def:oppositecat}) of~$\Rel$ has the same objects of
 \subsection{Path planning}
 \label{sec:trekking}
 
-Suppose we are tasked with managing a scientific mission for a Mars rover. In particular, we need need to plan the routes that the rover will take in order to travel from its landing position to various other positions. We have a map of the relevant region on Mars which uses coordinates $\tup{x, y, z}$. We assume the $z$-th coordinate is given by an ``elevation function'', $z = h(x,y)$, and that $h$ is $C^1$, \text{i.e.} continuously differentiable. 
+Suppose we are tasked with managing a scientific mission for a Mars rover. In particular, we need need to plan the routes that the rover will take in order to travel from its landing position to various other positions. We have a map of the relevant region on Mars which uses coordinates $\tup{x, y, z}$. We assume the $z$-th coordinate is given by an ``elevation function'', $z = h(x,y)$, and that $h$ is $C^1$, \text{i.e.} continuously differentiable. This means that our map of the landscape forms a $C^1$-manifold; let's call it $L$. 
 
 
+We will now define a category where the morphisms are built from $C^1$ paths through the martian landscape, and such that these paths can be composed, essentially, by concatenation. We take paths which are $C^1$ so that we can speak of the slope (steapness) of a path in any given point, as given by its derivative. 
+
+\
+
+[INSERT FIGURE]
+
+\
+
+
+To set things up, we need to have a way to compose $C^1$ paths such that their composition is again $C^1$. For this, the derivative (velocity) at the end of one path must match the starting velocity of the subsequent path.
+
+\begin{definition}
+Let $\Cat{Rover}$ be the category defined as follows:
+
+\begin{itemize}
+
+\item Objects are tuples $\tup{p, v}$, where
+\begin{itemize}
+\item $p \in L$,
+\item $v \in \mathbb{R}^3$ (we think of this as a tangent vector to $L$ at $p$).  
+\end{itemize}
+
+\item A morphism $\tup{p_1, v_1} \rightarrow \tup{p_2, v_2}$ is $\tup{\gamma, T}$,
+where
+\begin{itemize}
+\item $T \in \mathbb{R}_{\geq 0}$,
+\item $\gamma : [0, T] \rightarrow L$ is a $C^1$ function with $\dot \gamma(0) = v_1$ and $\dot \gamma(T) = v_2$  (we take one-sided derivatives at the boundaries). 
+\end{itemize}
+
+\item For any object $\tup{p, v}$, we define its identity morphism $1_{\tup{p,v}} = \tup{\gamma, 0}$ formally: it's path $\gamma$ is defined on the closed interval $[0,0]$, \text{i.e.} $T= 0$ and $\gamma(0) = p$. We declare this path to be $C^1$ by convention, and declare its derivative at $0$ to be $v$.  
+
+\item Given morphisms $\tup{\gamma_1, T_1}: \tup{p_1, v_1} \rightarrow \tup{p_2, v_2}$ and $\tup{\gamma_2, T_2}: \tup{p_2, v_2} \rightarrow \tup{p_3, v_3}$, their composition is $\tup{\gamma, T}$ with $T = T_1 + T_2$ and
+\begin{equation}
+ \gamma(t) = \left \{ 
+ \begin{array}{ccc}
+ \gamma_1(t)  & &0 \leq t \leq T_1 \\
+\gamma_2(t - T_1) & & T_1 \leq t \leq T_1 + T_2. 
+ \end{array}
+ \right.
+\end{equation} 
+
+
+
+\end{itemize}
+
+\end{definition}
+
+
+
+
+\
 
 
 \gray{
