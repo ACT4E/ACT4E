@@ -194,6 +194,19 @@ Consider the posets~$\tup{\powerset(P),\subseteq}$ and~$\tup{\mathsf{U}P,\supset
 Therefore,~$\uparrow S_1\supseteq \ \uparrow S_2$, satisfing the monotonicity property for~$\uparrow$.
 \end{proof}
 
+\begin{lemma}\label{up-cl-inj-antichains}
+Let $A$ and $B$ be subsets of $P$ that are antichains. Then
+\begin{equation}
+\uparrow A = \ \uparrow B \quad \Rightarrow \quad A = B
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+First, let's fix an $a \in A$. From $\uparrow A = \ \uparrow B$ we know that in particular $A \subseteq \ \uparrow B$. This means that for our fixed $a \in A$ there exists $b \in B$ such that $b \leq a$. From $\uparrow A = \ \uparrow B$ it also follows that $B \subseteq \ \uparrow A$, so to the  $b \in B$ given above, there exists $a' \in A$ such that $a' \leq b$. In total, we have $a' \leq b \leq a$, and since $A$ is an antichain, we must have $a' = a$. This implies that $a' = b = a$. In particular, we have $a \in B$. 
+
+The above shows that $A \subseteq B$. To show $B \subseteq A$, we can fix any $b \in B$ and repeat the above argumentation, now with the roles of $A$ and $B$ exchanged.  
+\end{proof}
+
 In the example of the pizza recipes, first, consider the upper set of a single element of the poset, e.g.~$p_1=\tup{\unit[1]{USD},\unit[2]{h}}$  (\cref{fig:upperclosure_1}).
 \begin{figure}[h!]
 \begin{center}
@@ -224,6 +237,8 @@ The \emph{lower closure operator} $\downarrow$ maps a subset to the smallest low
 \begin{lemma}
 The lower closure operator $\downarrow$ is a monotone map.
 \end{lemma}
+
+\JL{The following proof is a bit redundant... we can say ``analogous to the case of the upper closure operation'' and/or invoke the principle of duality for posets.}
 \begin{proof}
 Consider the posets~$\tup{\powerset(P),\subseteq}$ and~$\tup{\mathsf{L}P,\subseteq}$, and let~$S_1,S_2\in \powerset(P)$. It is clear that given~$S_1\subseteq S_2$, one has
 \begin{equation}
@@ -231,6 +246,20 @@ Consider the posets~$\tup{\powerset(P),\subseteq}$ and~$\tup{\mathsf{L}P,\subset
 \end{equation}
 Therefore,~$\uparrow S_1\subseteq \ \uparrow S_2$, satisfing the monotonicity property for~$\downarrow$.
 \end{proof}
+
+
+
+\begin{example}
+Consider the battery example of~\cref{ex:battery}, and the antichain given by the battery models~$a=\tup{\unit[10]{USD},\unit[1]{kg}}$,~$b=\tup{\unit[20]{USD},\unit[0.5]{kg}}$, and~$c=\tup{\unit[30]{USD},\unit[0.25]{kg}}$ (\cref{fig:examplebatt}).
+The upper closure~$\uparrow \{a,b,c\}$ represents all the existing battery models dominated by elements in~$\{a,b,c\}$. The lower closure uperator~$\downarrow\{a,b,c\}$ represents all the battery models which, if existing, would dominate~$\{a,b,c\}$.
+\begin{figure}[h!]
+\begin{center}
+    \includesag{70_battery_1}
+\end{center}
+\caption{Battery example. From the left: antichain, upper closure, and lower closure. \label{fig:examplebatt}}
+\end{figure}
+\end{example}
+
 
 \begin{definition}[Min]
 \label{def:Min}
@@ -257,27 +286,6 @@ Note that~$\Max(S)$ could be empty.
 \end{definition}
 
 
-\begin{definition}[Downward closed set]
-\label{def:downward-closed-upperset}
-An upper set~$S$ is \emph{downward-closed} in a poset~$P$ if
-\begin{equation}
-    S =\, \uparrow \Min S.
-\end{equation}
-\end{definition}
-\begin{remark}
-The set of downward-closed upper sets of~$P$ is denoted~$\underline{\mathsf{U}}P$.
-\end{remark}
-
-\begin{example}
-Consider the battery example of~\cref{ex:battery}, and the antichain given by the battery models~$a=\tup{\unit[10]{USD},\unit[1]{kg}}$,~$b=\tup{\unit[20]{USD},\unit[0.5]{kg}}$, and~$c=\tup{\unit[30]{USD},\unit[0.25]{kg}}$ (\cref{fig:examplebatt}).
-The upper closure~$\uparrow \{a,b,c\}$ represents all the existing battery models dominated by elements in~$\{a,b,c\}$. The lower closure uperator~$\downarrow\{a,b,c\}$ represents all the battery models which, if existing, would dominate~$\{a,b,c\}$.
-\begin{figure}[h!]
-\begin{center}
-    \includesag{70_battery_1}
-\end{center}
-\caption{Battery example. From the left: antichain, upper closure, and lower closure. \label{fig:examplebatt}}
-\end{figure}
-\end{example}
 
 \begin{lemma}
 Given a poset~$\tup{P,\ordleq}$,~$\tup{\antichains P,\ordleq_{\antichains P}}$ is a poset with
@@ -291,6 +299,9 @@ Furthermore, it is bounded by the top~$\top_{\antichains P}=\emptyset$ and the b
 \begin{proof}
 We need to show the poset properties (\cref{def:poset}).
 We can prove the following:
+
+\
+
 \begin{compactitem}
 \item \emph{Reflexivity}: From~$\tup{P,\ordleq}$ being a poset we know that 
 \begin{equation}
@@ -300,15 +311,19 @@ We can prove the following:
 \end{aligned}
 \end{equation}
 and hence~$A\ordleq_{\antichains P}A$.
+
+\
+
 \item \emph{Antisymmetry}: One has
 \begin{equation}
     \begin{aligned}
     \left(A\ordleq_{\antichains P} B\right) \wedge \left(B\ordleq_{\antichains P} A\right)
     &\Leftrightarrow \left(\uparrow A \supseteq \ \uparrow \ B\right) \wedge \left( \uparrow  B\supseteq \ \uparrow \ A\right)\\
-    &\Leftrightarrow A=_{\antichains P} B.
+    &\Leftrightarrow \ \uparrow A= \ \uparrow B \\
+    & \Rightarrow A = B.
     \end{aligned}
 \end{equation}
-\JL{This part is not quite correct... in a poset the equality is the one from the underlying set... and there is some argumentation missing.}
+The last implication is by Lemma \ref{up-cl-inj-antichains}. 
 
 \
 
@@ -321,6 +336,21 @@ and hence~$A\ordleq_{\antichains P}A$.
     &\Imp A\ordleq_{\antichains P}C.
     \end{aligned}
 \end{equation}
-In order to find the top, we need to find the smallest set~$\top_{\antichains P}$ such that~$A\ordleq_{\antichains P} \top_{\antichains P}$ for all~$A\in \antichains P$. In other words, such that~$\uparrow A\supseteq \ \uparrow \top_{\antichains P}$ for all~$A\in \antichains P$. This is clearly~$\emptyset$, since~$\uparrow \emptyset = \emptyset$. Similarly, in order to find the bottom, we need to find the set~$\bot_{\antichains P}$ such that~$\bot_{\antichains P} \ordleq_{\antichains P} A$ for all~$A\in \antichains P$. In other words, such that~$\uparrow \bot_{\antichains P} \supseteq \ \uparrow A$ for all~$A\in \antichains P$, which is by definition~$\bot_P$.
+In order to find the top, we need to find the smallest set~$\top_{\antichains P}$ such that~$A\ordleq_{\antichains P} \top_{\antichains P}$ for all~$A\in \antichains P$. In other words, such that~$\uparrow A\supseteq \ \uparrow \top_{\antichains P}$ for all~$A\in \antichains P$. This is clearly~$\emptyset$, since~$\uparrow \emptyset = \emptyset$. Similarly, in order to find the bottom, we need to find the set~$\bot_{\antichains P}$ such that~$\bot_{\antichains P} \ordleq_{\antichains P} A$ for all~$A\in \antichains P$. In other words, such that~$\uparrow \bot_{\antichains P} \supseteq \ \uparrow A$ for all~$A\in \antichains P$. We obtain a bottom if we set $\bot_{\antichains P} := \top_P$, since $\top_P \supseteq A$ for all $A \subseteq P$, and hence, by monotonicty of $\uparrow$, we have in particular $\uparrow \top_P \supseteq \ \uparrow A$ for all antichains $A$. 
 \end{compactitem}
 \end{proof}
+
+
+
+\begin{definition}[Downward closed set]
+\label{def:downward-closed-upperset}
+An upper set~$S$ is \emph{downward-closed} in a poset~$P$ if
+\begin{equation}
+    S =\, \uparrow \Min S.
+\end{equation}
+\end{definition}
+
+\begin{remark}
+The set of downward-closed upper sets of~$P$ is denoted~$\underline{\mathsf{U}}P$.
+\end{remark}
+
