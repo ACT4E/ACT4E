@@ -311,13 +311,20 @@
 \newcommand{\xmark}{\ding{55}}
 
 % Environments
-\renewenvironment{problem}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Problem (#1)]\em}{\end{tcolorbox}}
-\renewenvironment{theorem}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Theorem (#1),fontupper=\small]\em}{\end{tcolorbox}}
-\renewenvironment{definition}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Definition (#1),fontupper=\small]}{\end{tcolorbox}}
-\renewenvironment{lemma}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Lemma (#1)]\em}{\end{tcolorbox}}
-\newenvironment{proposition}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Proposition (#1)]\em}{\end{tcolorbox}}
-\renewenvironment{corollary}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Corollary (#1),fontupper= \small]}{\end{tcolorbox}}
-\newenvironment{remark}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordGrey,title=Remark (#1)]\em}{\end{tcolorbox}}
+%\renewenvironment{problem}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Problem (#1)]\em}{\end{tcolorbox}}
+%\renewenvironment{theorem}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Theorem (#1),fontupper=\small]\em}{\end{tcolorbox}}
+%\renewenvironment{definition}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Definition (#1),fontupper=\small]}{\end{tcolorbox}}
+%\renewenvironment{lemma}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Lemma (#1)]\em}{\end{tcolorbox}}
+%\newenvironment{proposition}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Proposition (#1)]\em}{\end{tcolorbox}}
+%\renewenvironment{corollary}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Corollary (#1),fontupper= \small]}{\end{tcolorbox}}
+%\newenvironment{remark}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordGrey,title=Remark (#1)]\em}{\end{tcolorbox}}
+\renewenvironment{problem}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Problem ]\em}{\end{tcolorbox}}
+\renewenvironment{theorem}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Theorem,fontupper=\small]\em}{\end{tcolorbox}}
+\renewenvironment{definition}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Definition,fontupper=\small]}{\end{tcolorbox}}
+\renewenvironment{lemma}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Lemma]\em}{\end{tcolorbox}}
+\newenvironment{proposition}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Proposition]\em}{\end{tcolorbox}}
+\renewenvironment{corollary}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordRed,title=Corollary,fontupper= \small]}{\end{tcolorbox}}
+\newenvironment{remark}[1][]{\begin{tcolorbox}[boxsep=1pt,left=2pt,right=2pt,colback=white,colframe=stanfordGrey,title=Remark]\em}{\end{tcolorbox}}
 
 
 \tikzset{
