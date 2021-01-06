@@ -1,0 +1,268 @@
+%!TEX root = ../main.tex
+\section{Motivation}
+
+\begin{frame}{Transmutation: How things connect to each other}
+    Outline of today's lecture:
+    \begin{itemize}
+        \item Four things that are the same;
+        \item Definition of Category;
+        \item Detailed example of a category;
+        \item Teasers for next lectures
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{We can reason about design problems in a structured way}
+    \begin{center}
+        In an electric car, \textcolor{red}{electric power} is turned into \textcolor{red}{rotational motion} of the axle by the \textcolor{blue}{engine}, and then into \textcolor{red}{translational motion} by the \textcolor{blue}{wheels}.
+    \end{center}
+\begin{columns}
+\begin{column}{0.25\textwidth}
+    \visible<2->{
+Resources:
+    \begin{itemize}
+        \item electric power;
+        \item rotational motion;
+        \item translational motion.
+    \end{itemize}}
+    \visible<3->{Subsystems:
+    \begin{itemize}
+    \item electric car;
+    \item engine;
+    \item wheels.
+    \end{itemize}}
+\end{column}
+\begin{column}{0.75\textwidth}
+\begin{itemize}
+    \item \visible<3->{We draw an arrow $X\to Y$ if \emph{having $Y$ is enough to obtain $X$};}
+    \item \visible<4->{We draw self-loops $X\to X$, called \emph{identities};}
+    \item \visible<5->{If $X\to Y$ and $Y\to Z$, there exists $X\to Z$, called \emph{arrow composition}.}
+\end{itemize}
+\begin{center}
+    \begin{tikzcd}[column sep=0.5cm]
+    | [visible on=<2->]|\bullet
+    \arrow[out=120,in=60,loop,looseness=5,dashed, visible on=<4->] &
+    | [visible on=<2->]|\bullet \arrow[l,"\textsf{engine}",swap, visible on =<3->]
+    \arrow[out=120,dashed,in=60,loop,looseness=5,visible on=<4->]
+    &  | [visible on=<2->]|\bullet
+    \arrow[bend right = 30, dashed, ll, "\textsf{engine}\text{ then }\textsf{wheel}",swap,visible on=<5->]
+    \arrow[l,"\textsf{wheel}",swap,visible on=<3->] \arrow[out=120,in=60,dashed,loop,looseness=5,visible on=<4->]\\[-15pt]
+    | [visible on=<2->]|\textsf{electric}\ \textsf{power}&| [visible on=<2->]|\textsf{rotational}\ \textsf{motion}&| [visible on=<2->]|\textsf{translational}\ \textsf{motion}
+    \end{tikzcd}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{This is enough to define a category}
+\begin{definition}[Category]
+A \emph{category}~$\CatC$ is specified by four components:
+\begin{enumerate}
+\item \emph{Objects}: a collection~$\ObC$, whose elements are called \emph{objects}.
+\visible<2->{\item \emph{Morphisms}: for every pair of objects~$X,Y\in \ObC$, there is a set~$\CatC(X,Y)$, the elements of which are called
+\emph{morphisms} from~$X$ to~$Y$.}
+\visible<3->{\item \emph{Identity morphisms}: for each object~$X$, there is
+an element~$\id_X \in \CatC(X,X) $ which is called \emph{the identity
+morphism of~$X$}.}
+\visible<4->{\item \emph{Composition operations}: given any morphism~$f \in  \CatC(X,Y)$ and any morphism~$g \in \CatC(Y, Z)$, there exists a morphism~$f\then g$ in $\CatC(X,Z)$ which is the \emph{composition of~$f$ and~$g$}.}
+\end{enumerate}
+
+\visible<5->{Furthermore, constituents are required to satisfy the following conditions:}
+\begin{enumerate}
+    \visible<5->{\item \emph{Unitality}: for any morphism~$f\in\CatC(X,Y)$: $\id_X \then f= f = f \then \id_Y$.}
+    \visible<6->{\item \emph{Associativity}: for~$f\in \CatC(X,Y)$,~$g\in \CatC(Y,Z)$, and~$h\in \CatC(Z,W)$: $(f\then g)\then h= f \then (g \then h)$.}
+\end{enumerate}
+\end{definition}
+\end{frame}
+
+\begin{frame}[fragile]{The proposed electric car example forms a category}
+\begin{itemize}
+    \item Objects: resources, i.e. $\ObC=\{\textsf{electric power, rotational motion, translational motion}\}$;
+    \item Morphisms: system components.
+\end{itemize}
+\begin{center}
+    \begin{tikzcd}
+    \bullet \arrow[out=120,in=60,loop,looseness=5,dashed] &
+    \bullet \arrow[l,"\textsf{engine}",swap]\arrow[out=120,dashed,in=60,loop,looseness=5]
+    & \bullet \arrow[bend right = 30, dashed, ll, "\textsf{engine}\text{ then }\textsf{wheel}",swap] \arrow[l,"\textsf{wheel}",swap] \arrow[out=120,in=60,dashed,loop,looseness=5]\\[-15pt]
+    \textsf{electric}\ \textsf{power}&\textsf{rotational}\ \textsf{motion}&\textsf{translational}\ \textsf{motion}
+    \end{tikzcd}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{We can expand this by considering inverse transformations}
+\begin{center}
+In an electric car, \textcolor{red}{electric power} is turned into \textcolor{red}{rotational motion} of the axle by the \textcolor{blue}{engine}, and then into \textcolor{red}{translational motion} by the \textcolor{blue}{wheels}.\\
+We can obtain \textcolor{red}{rotational motion} of the \textcolor{blue}{wheels} from \textcolor{red}{translational motion}, and we can convert \textcolor{red}{rotational motion} into \textcolor{red}{electric power} via a \textcolor{blue}{dynamo}.
+\end{center}
+\pause
+\begin{minipage}{0.7\linewidth}
+\begin{center}
+\begin{tikzcd}
+    \bullet \arrow[out=120,in=60,loop,looseness=5,dashed,gray]\arrow[bend right=10,r,"\textsf{dynamo}",swap]
+    \arrow[bend right = 30, rr,dashed,gray, " \textsf{dynamo}\then \textsf{move}",swap]&
+    \bullet \arrow[bend right=10,l,"\textsf{engine}",swap]\arrow[bend right=10,r,"\textsf{move}",swap] \arrow[dashed,gray,out=120,in=60,loop,looseness=5]&
+     \bullet \arrow[bend right = 10,l,"\textsf{wheel}",swap] \arrow[dashed,gray,out=120,in=60,loop,looseness=5]\arrow[bend right = 30, ll,dashed,gray, "\textsf{wheel} \then \textsf{engine}",swap]
+   \\[+20pt]
+    \textsf{electric}\ \textsf{power}&\textsf{rotational}\ \textsf{motion}&\textsf{translational}\ \textsf{motion}
+\end{tikzcd}
+\end{center}
+\end{minipage}
+\pause
+\begin{minipage}{0.24\linewidth}
+\begin{center}
+    \begin{tikzcd}[column sep=0.1cm]
+    \bullet \arrow[out=120,in=60,loop,looseness=5, "\text{Identity}"] \arrow[out=240,in=300,loop,swap,looseness=5, " \text{dynamo}\then \text{move}\then \text{wheel}\then \text{engine}"]&\mathsf{electric \ power}
+    \end{tikzcd}
+\end{center}
+\end{minipage}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Thinking formally about currency exchangers}
+\begin{center}
+    \begin{tikzpicture}
+    \node[block,rounded corners=0.1cm,ultra thick] (cur) at (0,0) {\textbf{\begin{tabular}{c}Currency\\[-3pt] Exchanger\end{tabular}}};
+    
+    \visible<3->{\draw[->] ($(cur.west)+(-1,0)$) -- (cur.west);
+    \node at (-4.25,0) {$\tup{50,\text{USD}}\in \mathbb{R}\times \{\text{USD}\}$};}
+    \visible<4->{
+    \node at (4.25,0) {$\tup{?,\text{CHF}}\in \mathbb{R}\times \{\text{CHF}\}$};
+     \draw[->] (cur.east) --++ (1,0);}
+    \visible<2->{\node at (0,1.5) {$\{ \text{EUR},\text{USD},\text{CHF},\text{SGD},\hdots\}$};}
+    %\draw[-] (cur.north) --++ (0,0.5);}
+    \end{tikzpicture}
+\end{center}
+\visible<5->{
+A currency exchanger from USD to CHF can be written as:
+    \begin{equation*}
+        \begin{aligned}
+            E_{a,b}\colon \mathbb{R}\times \{\text{USD}\} &\to \mathbb{R}\times \{\text{CHF}\}\\
+            \tup{x,\text{USD}}&\mapsto \tup{ax-b,\text{CHF}},
+        \end{aligned}
+    \end{equation*}
+where $a$ is the \emph{exchange rate} and $b$ is the \emph{commission}.}\\
+\vspace{0.5cm}
+ \visible<6->{Assume you get 0.95 CHF for 1 USD and the commission is 2.0 CHF, i.e. $a=0.95$, $b=2.0$.}
+\end{frame}
+
+\begin{frame}[fragile]{Thinking formally about currency exchangers}
+\begin{center}
+    \begin{tikzpicture}
+    \node[block,rounded corners=0.1cm,ultra thick] (cur) at (0,0) {\textbf{\begin{tabular}{c}Currency\\[-3pt] Exchanger\end{tabular}}};
+   \draw[->] ($(cur.west)+(-1,0)$) -- (cur.west);
+    \node at (-4.25,0) {$\tup{50,\text{USD}}\in \mathbb{R}\times \{\text{USD}\}$};
+    
+    \node at (4.25,0) {$\tup{\textcolor{red}{45.5},\text{CHF}}\in \mathbb{R}\times \{\text{CHF}\}$};
+     \draw[->] (cur.east) --++ (1,0);
+    \node at (0,1.5) {$\{ \text{EUR},\text{USD},\text{CHF},\text{SGD},\hdots\}$};
+    %\draw[-] (cur.north) --++ (0,0.5);
+    \end{tikzpicture}
+\end{center}
+A currency exchanger from USD to CHF can be written as:
+    \begin{equation*}
+        \begin{aligned}
+            E_{a,b}\colon \mathbb{R}\times \{\text{USD}\} &\to \mathbb{R}\times \{\text{CHF}\}\\
+            \tup{x,\text{USD}}&\mapsto \tup{ax-b,\text{CHF}},
+        \end{aligned}
+    \end{equation*}
+where $a$ is the \emph{exchange rate} and $b$ is the \emph{commission}.\\
+\vspace{0.5cm}
+Assume you get 0.95 CHF for 1 USD and the commission is 2.0 CHF, i.e. $a=0.95$, $b=2.0$.
+\end{frame}
+
+\begin{frame}[fragile]{Composing currency exchangers}
+\begin{center}
+\begin{tikzpicture}
+    \node[block,rounded corners=0.1cm,ultra thick] (first) at (0,0) {\textbf{ExchATM}};
+    \node[block,rounded corners=0.1cm,ultra thick, right=3.5cm of first] (sec) {\textbf{Frankurrencies}};
+    \draw[->] ($(first.west)+(-1,0)$) -- (first.west);
+    \draw[->] (first.east) --++ (1,0);
+    \draw[->] ($(sec.west)+(-1,0)$) -- (sec.west);
+    \node at (-2.75,0) {$\tup{50,\text{USD}}$};
+    \node at (2.75,0) {$\tup{?,\text{CHF}}$};
+    \node at (8.75,0) {$\tup{?,\text{EUR}}$};
+     \draw[->] (sec.east) --++ (1,0);
+\end{tikzpicture}
+\end{center}
+\vspace{0.5cm}
+\visible<2->{Given $E_{a,b}\colon \mathbb{R}\times \{ \text{USD}\}\to \mathbb{R}\times \{\text{CHF}\}$, and $E_{a',b'}\colon \mathbb{R}\times \{ \text{CHF}\}\to \mathbb{R}\times \{\text{EUR}\}$, we have:
+\begin{equation*}
+    \begin{aligned}
+    E_{a,b}\then E_{a',b'}\colon \mathbb{R}\times \{\text{USD}\}&\to \mathbb{R}\times \{\text{EUR}\}\\
+    \tup{x,\text{USD}}&\mapsto \tup{aa'x-a'b-b',\text{EUR}}
+    \end{aligned}
+\end{equation*}}
+\end{frame}
+
+\begin{frame}{Currency exchangers form a category}
+    A currency category has:
+    \begin{itemize}
+        \item \emph{Objects}: A collection of currencies.
+        \item \emph{Morphisms}: Currency exchangers.
+        \item \emph{Identity morphism}: Identity currency exchanger (exchange rate 1 and 0 commission).
+        \item \emph{Composition of morphisms}: Composition of currency exchangers.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{We can represent categories with graphs}
+    \begin{center}
+    \begin{adjustbox}{max width=0.65\textwidth, max height=0.2\textwidth}
+    \begin{tabular}{c|c|c|c|c}
+         Company name& Exchanger & Direction &exchange rate&fixed commission  \\
+         \hline
+         \textsf{ExchATM}&$A$&USD to CHF&\unitfrac[0.95]{CHF}{USD}&\unit[2.0]{CHF}\\
+         \textsf{ExchATM}&$B$&CHF to USD&\unitfrac[1.05]{USD}{CHF}&\unit[1.5]{USD}\\
+         \textsf{ExchATM}&$C$&USD to SGD&\unitfrac[1.40]{SGD}{USD}&\unit[1.0]{SGD}\\
+         \textsf{MoneyLah}&$D$&USD to CHF&$\unitfrac[1.00]{CHF}{USD}$&\unit[1.0]{CHF}\\
+         \textsf{MoneyLah}&$E$&SGD to USD&\unitfrac[0.72]{USD}{SGD}&\unit[3.0]{USD}  \\
+        \textsf{Frankurrencies}&$F$& EUR to CHF&\unitfrac[1.20]{CHF}{EUR}&\unit[0.0]{CHF}\\
+        \textsf{Frankurrencies}&$G$& CHF to EUR&\unitfrac[1.00]{EUR}{CHF}&\unit[1.0]{EUR}
+    \end{tabular}
+    \end{adjustbox}\\
+    \pause
+    \vspace{0.5cm}
+    \begin{tikzcd}[column sep = 4cm, row sep = 1.5cm]
+    \text{USD}\arrow[bend left=20, r,"A" description]\arrow[bend right=20, r,"D" description,swap]
+    \arrow[d,bend left=20,"C" description]
+    &\text{CHF}
+    \arrow[d,bend left=20,"G" description]
+    \arrow[l,"B" description]\\
+    \text{SGD}\arrow[u,bend left=20,"E" description]&
+    \text{EUR}
+    \arrow[u,bend left=20,"F" description]
+    \end{tikzcd}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{We can represent categories with graphs}
+    \begin{center}
+    \begin{adjustbox}{max width=0.65\textwidth, max height=0.2\textwidth}
+    \begin{tabular}{c|c|c|c|c}
+         Company name& Exchanger & Direction &exchange rate&fixed commission  \\
+         \hline
+         \textsf{ExchATM}&$A$&USD to CHF&\unitfrac[0.95]{CHF}{USD}&\unit[2.0]{CHF}\\
+         \textsf{ExchATM}&$B$&CHF to USD&\unitfrac[1.05]{USD}{CHF}&\unit[1.5]{USD}\\
+         \textsf{ExchATM}&$C$&USD to SGD&\unitfrac[1.40]{SGD}{USD}&\unit[1.0]{SGD}\\
+         \textsf{MoneyLah}&$D$&USD to CHF&$\unitfrac[1.00]{CHF}{USD}$&\unit[1.0]{CHF}\\
+         \textsf{MoneyLah}&$E$&SGD to USD&\unitfrac[0.72]{USD}{SGD}&\unit[3.0]{USD}  \\
+        \textsf{Frankurrencies}&$F$& EUR to CHF&\unitfrac[1.20]{CHF}{EUR}&\unit[0.0]{CHF}\\
+        \textsf{Frankurrencies}&$G$& CHF to EUR&\unitfrac[1.00]{EUR}{CHF}&\unit[1.0]{EUR}
+    \end{tabular}
+    \end{adjustbox}\\
+    \vspace{0.5cm}
+    \begin{tikzcd}[column sep = 4cm, row sep = 1.5cm]
+    \text{USD}\arrow[bend left=20, r,"A" description]\arrow[bend right=20, r,"D" description,swap]
+    \arrow[bend right=20, dr, "A\then G" description, dotted,red]
+    \arrow[d,bend left=20,"C" description]
+    &\text{CHF}
+    \arrow[d,bend left=20,"G" description]
+    \arrow[l,"B" description]\\
+    \text{SGD}\arrow[u,bend left=20,"E" description]&
+    \text{EUR}
+    \arrow[u,bend left=20,"F" description]
+    \end{tikzcd}
+\end{center}
+\end{frame}
