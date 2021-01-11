@@ -1,31 +1,92 @@
 % !TEX root = ../CategoricalCoDesign.tex
 \subsection{Category theory helps reasoning about interfaces and transformations}
 
-We argue that all the concepts of formal engineering design discussed in the
-previous section can be naturally described in the language of category theory. We will start with a simple example. In an electric car, electric power is turned by the engine into rotational
-motion of the axle, and then the rotational motion is converted into translational motion by the wheels and their friction with the road. In this simple setting, we can identify the key systems and subsystems: car, engine, axle, wheels, and road.
+In engineering design, one creates \emph{systems} out of \emph{components}. Each component
+has a reason to be in there. We will show how category theory can help in formalizing the chains of causality 
+that underlie a certain design. 
 
-We can identify the functionality/resources of interest as:~\textsf{electric} \textsf{power}, \textsf{rotational} \textsf{motion}, and~\textsf{translational} \textsf{motion}. Note that each of these quantities plays a dual role. For example, the \textsf{rotational motion} is something which is produced by the motor, so it is a functionality for the motor, while it is a resource for axle/wheels, because they need it to provide~$\mathsf{translational}\ \mathsf{motion}$.
+We will need to reason at the level of abstraction
+where we consider the ``function'', or ``functionality'', which each component provides,
+and the ``requirements'' that are needed to provide the function.
 
-For a first qualitative description of the scenario, we might choose to just keep track of what functionality/resource is converted into what. For this qualitative description, we can draw a diagram in which each resource is a point (\cref{fig:e1}).
+We will start with a simple example of the functioning principle of an electric car. 
+
+In an electric car, there is a battery, a store of the electric energy resource. 
+We can see the production of motion as the chain of two transformations:
+
+\begin{itemize}
+    \item The \motor transmutes the \electricpower into \rotationalmotion.
+    \item The \rotationalmotion is converted into \translationalmotion by the \wheels and their friction with the road. 
+\end{itemize}
+
+We see that there are two types of things in this example:
+\begin{enumerate}
+    \item The ``transmuters'': the \motor and \wheels.
+    \item The ``transmuted'': the \electricpower, the \rotationalmotion, the \translationalmotion.
+\end{enumerate}
+
+For a first qualitative description of the scenario, we might choose to just keep track of what is transmuted into what. We can draw a diagram in which each resource is a point (\cref{fig:e1}).
 
 \begin{figure}[h!]
     \centering
     \includesag{30_dpcatfig_e1}
-    \caption{Resources and functionalities in the electric car example. \label{fig:e1}}
+    \caption{Resources in the electric car example. \label{fig:e1} }
 \end{figure}
 
-Furthermore, we can draw an arrow between two resources if we can obtain one from the other. In the example, we have described how \textsf{electric power} becomes \textsf{rotational motion}, described by the \textsf{engine} arrow, and how \textsf{rotational motion} becomes \textsf{translational motion}, described by the \textsf{wheel} arrow (\cref{fig:e2}).
+
+
+Now, we can draw arrows between two points if there is a transmuter between them.
+
+We choose the direction of the arrow such that
+\begin{equation}
+\label{eq:arrow1}
+    X \stackrel{\textsf{transmuter}}{\longrightarrow} Y 
+\end{equation}
+means that ``using \textsf{transmuter}, having $Y$ is sufficient to produce $X$''. 
+
+\begin{remark}[Are we going the wrong direction?]
+The chosen direction
+for the arrows is completely the opposite of what you would expect if you thought about
+``input and outputs''. There is a good reason to use this convention, though it will
+be apparent only a few chapters later. In the meantime, it is a good exercise
+to liberate your mind about the preconception of what an arrow means; in category theory
+there will be categories where the arrows represent much more abstract concepts than input/output.
+\end{remark}
+
+Another way to write \ref{eq:arrow1} would be as follows:
+\begin{equation}
+    \textsf{transmuter}\colon X \to Y.
+\end{equation}
+This is now to you something syntactically familiar; when we study the categories of sets and functions between sets we will see that in that context the familiar meaning is also the correct meaning.
+
+With these conventions, we can describe the two transmuters as these arrows:
+% 
+\begin{align}
+    \motor&:  \rotationalmotion \rightarrow \electricpower, \\
+    \wheels&: \translationalmotion \rightarrow \rotationalmotion.
+\end{align}
+% 
+We can put these arrows in the diagrams, and obtain 
+the following (\cref{fig:e2}).
+% In this simple setting, we can identify the key systems and subsystems: car, engine, axle, wheels, and road.
+
+% \AC{we don't refer to these subsystems later}
+
+
+% We can identify the functionality/resources of interest as:~\textsf{electric} \textsf{power}, \textsf{rotational} \textsf{motion}, and~\textsf{translational} \textsf{motion}. Note that each of these quantities plays a dual role. For example, the \textsf{rotational motion} is something which is produced by the motor, so it is a functionality for the motor, while it is a resource for axle/wheels, because they need it to provide~$\mathsf{translational}\ \mathsf{motion}$.
+
+
+% Furthermore, we can draw an arrow between two resources if we can obtain one from the other. In the example, we have described how \textsf{electric power} becomes \textsf{rotational motion}, described by the \textsf{engine} arrow, and how \textsf{rotational motion} becomes \textsf{translational motion}, described by the \textsf{wheel} arrow (\cref{fig:e2}).
 
 \begin{figure}[h!]
     \centering
     \includesag{30_dpcatfig_e2}
-    \caption{System components connect resources and functionalities. \label{fig:e2}}
+    \caption{Transmuters are arrows between resources. \label{fig:e2}}
 \end{figure}
 
 In this representation, the arrows are the components of the system.
 We will learn how to compose these arrows according to the rules of category theory.
-
+The basic rule will be \emph{composition}.
 If we use the semantics that an arrow from resource~$X$ to resource~$Y$ means ``having~$Y$ is
 enough to obtain~$X$'', then, since~$Y$ is enough for~$Y$ per definition, we can add a self-loop for each
 resource. We will call the self-loops \emph{identities} (\cref{fig:e3}).
@@ -36,16 +97,67 @@ resource. We will call the self-loops \emph{identities} (\cref{fig:e3}).
     \caption{System components and identities. \label{fig:e3}}
 \end{figure}
 
-Furthermore, we might consider the idea of composition of arrows. If from~$Y$ we can get~$X$ and from~$Z$ we can get~$Y$, then from~$Z$ we can get~$X$. In our example, if the arrows \textsf{wheel} and \textsf{engine} exist, then also the arrow ``\textsf{wheel then engine}'' exists~(\cref{fig:e4}).
+Furthermore, we might consider the idea of composition of arrows. 
+Suppose that we know that 
+$$
+    X \stackrel{a}{\longrightarrow} Y\qquad \text{and} \qquad Y \stackrel{b}{\longrightarrow} Z,
+$$
+that is, using a $b$ we can get a $Y$ from a $Z$, and using an $a$ we can get a $X$ from a $Y$,
+then we conclude that using and $a$ and a $b$ we can get an $X$ from a $Z$. 
+
+In our example, if the arrows \wheels  and \motor exist, then also the arrow ``\wheels then \motor'' exists~(\cref{fig:e4}).
 
 \begin{figure}[h!]
     \centering
     \input{sag/30_dpcatfig_e4.tikz}
-    \caption{Composition of system components \label{fig:e4}.}
+    \caption{Composition of system components. \label{fig:e4}}
 \end{figure}
 
-A ``category'' is an abstract mathematical
-structure which captures the intuitive notions of objects and arrows between them.
+So far, we have drawn only one arrow between two points, but we can draw as many as we want. 
+If we want to distinguish between different brands of motors, we would just draw 
+one arrow for each model. For example,~\cref{fig:e4bis} shows two models of
+motors (\transmuter{motor A}, and \transmuter{motor B}) and two models of wheels 
+(\transmuter{wheels U} and \transmuter{wheels V}).
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzcd}
+    \bullet \arrow[bend left=10,r,"\transmuter{wheels U}"]
+    \arrow[bend right=10,r,"\transmuter{wheels V}",swap]&
+    \bullet
+    \arrow[bend left=10,r,"\transmuter{motor A}"]
+    \arrow[bend right=10,r,"\transmuter{motor B}",swap]& \bullet \\[-10pt]
+    \translationalmotion&\rotationalmotion&\electricpower
+\end{tikzcd}
+    % \input{sag/30_dpcatfig_e4.tikz}
+    \caption{Multiple models for wheels and motors. \label{fig:e4bis}}
+\end{figure}
+
+The figure implies now the existence of \emph{four} composed 
+arrows: ``\transmuter{wheels U} then \transmuter{motor A}'',
+``\transmuter{wheels U} then \transmuter{motor B}'',
+``\transmuter{wheels V} then \transmuter{motor A}'', and
+``\transmuter{wheels V} then \transmuter{motor B}'', all going from \translationalmotion to \electricpower;
+
+
+
+A ``category`` is  an abstract mathematical structure that captures the properties
+of these systems of points and arrows and the logic of composition.
+
+The basic terminology is that the points are called \textbf{objects},
+and the arrows are called \textbf{morphisms}.
+
+In our example, the \motor and the \wheels are the morphisms, and \electricpower, \rotationalmotion,
+\translationalmotion are the objects.
+
+Many things can be defined as categories and we will see many examples in this book.
+
+We are now just biding our time before introducing the formal definition of category.
+At first sight it will be intimidating: there are four parts to the definition, two axioms to define.
+Moreover, it is quite a bit technical and it takes half a page to write. 
+
+\subsection{Formal definition of category}
+
 The following is the formal definition.
 
 \begin{shaded*}
@@ -56,22 +168,22 @@ A \emph{category}~$\CatC$ is specified by four components:
 %the \emph{identities} and the \emph{composition operations}. More precisely,
 %a category consists of:
 \begin{compactenum}
-\item \emph{Objects}: a collection\footnotemark~$\ObC$, whose elements are called \emph{objects}.
-\item \emph{Morphisms}: for every pair of objects~$X,Y\in \ObC$, there is a set~$\CatC(X,Y)$, elements of which are called
-\emph{morphisms} from~$X$ to~$Y$.
-\item \emph{Identity morphisms}: for each object~$X$, there is
-an element~$\id_X \in \CatC(X,X) $ which is called \emph{the identity
+\item \textbf{Objects}: a collection\footnotemark~$\ObC$, whose elements are called \emph{objects}.
+\item \textbf{Morphisms}: for every pair of objects~$X,Y\in \ObC$, there is a set~$\HomC(X,Y)$, elements of which are called
+\emph{morphisms} from~$X$ to~$Y$. The set is called the ``hom-set from $X$ to $Y$''.
+\item \textbf{Identity morphisms}: for each object~$X$, there is
+an element~$\id_X \in \HomC(X,X) $ which is called \emph{the identity
 morphism of~$X$}.
-\item \emph{Composition operations}: given any morphism~$f \in  \CatC(X,Y)$ and any morphism~$g \in \CatC(Y, Z)$, there exists a morphism~$f\then g$ in $\CatC(X,Z)$ which is the \emph{composition of~$f$ and~$g$}.
+\item \textbf{Composition rules}: given any morphism~$f \in  \HomC(X,Y)$ and any morphism~$g \in \HomC(Y, Z)$, there exists a morphism~$f\then g$ in $\HomC(X,Z)$ which is the \emph{composition of~$f$ and~$g$}.
 \end{compactenum}
 
-Furthermore, constituents are required to satisfy the following conditions:
+Furthermore, the constituents are required to satisfy the following conditions:
 \begin{compactenum}
-    \item \emph{Unitality}: for any morphism~$f\in\CatC(X,Y)$,
+    \item \emph{Unitality}: for any morphism~$f\in\HomC(X,Y)$,
     \begin{equation}
         \id_X \then f= f = f \then \id_Y.
     \end{equation}
-    \item \emph{Associativity}: for~$f\in \CatC(X,Y)$,~$g\in \CatC(Y,Z)$, and~$h\in \CatC(Z,W)$,
+    \item \emph{Associativity}: for~$f\in \HomC(X,Y)$,~$g\in \HomC(Y,Z)$, and~$h\in \HomC(Z,W)$,
     \begin{equation}
         (f\then g)\then h= f \then (g \then h).
     \end{equation}
@@ -80,12 +192,17 @@ Furthermore, constituents are required to satisfy the following conditions:
 \end{shaded*}
 \footnotetext{A ``collection'' is something which may be thought of as a set, but may be ``too large" to technically be a set in the formal sense. This distinction is necessary in order to avoid such issues as Russel's paradox.}
 
-\begin{remark}
-The set of morphisms~$\CatC(X,Y)$ is sometimes denoted $\HomC(X,Y)$ and called the ``hom-set from $X$ to $Y$''. The ``Hom'' comes from the word ``homomorphism''.
-\end{remark}
+% \begin{remark}
+% The set of morphisms~$\CatC(X,Y)$ is sometimes denoted $\HomC(X,Y)$ and called the ``hom-set from $X$ to $Y$''. The ``Hom'' comes from the word ``homomorphism''.
+% \end{remark}
 
-\begin{remark}[Composition notation]
-We denote composition of morphisms in a somewhat unusual way--sometimes preferred by category-theorists and computer scientists--namely in \emph{diagrammatic order}. That is, given~$f\colon A\to B$ and~$g\colon B\to C$, we denote their composite by~$(f\then g)\colon A\to C$, pronounced ``$f$ then~$g$''. This is in contrast to the more typical notation for composition, namely~$g\circ f$, or simply~$gf$, which reads as ``$g$ after~$f$''. The notation~$f\then g$ is sometimes called \emph{infix notation}.
+\begin{remark}[Are we sure we are not going in the wrong direction?]
+We denote composition of morphisms in a somewhat unusual way--sometimes preferred by category-theorists and computer scientists--namely in \emph{diagrammatic order}.
+
+That is, given~$f\colon A\to B$ and~$g\colon B\to C$, we denote their composite by~$(f\then g)\colon A\to C$, pronounced ``$f$ then~$g$''. This is in contrast to the more typical notation for composition, namely~$g\after f$, or simply~$gf$, which reads as ``$g$ after~$f$''. The notation~$f\then g$ is sometimes called \emph{infix notation}.
+
+We promise, at some point it will be clear what are the advantages of seemingly doing everything 
+in the wrong direction.
 \end{remark}
 
 Note that we may save some ink when drawing diagrams of morphisms:
@@ -95,24 +212,24 @@ Note that we may save some ink when drawing diagrams of morphisms:
 \item  Given arrows~$A\to B$ and~$B \to C$, we do not need to draw their composition because, by \cref{def:categorymain}, this composition is guaranteed to exist.
 \end{compactitem}
 
-With these conventions, we can just draw the arrows \textsf{engine} and \textsf{wheel} in the diagram, and the rest of the diagram is implied (\cref{fig:e5}).
+With these conventions, we can just draw the arrows \motor and \wheels in the diagram, and the rest of the diagram is implied (\cref{fig:e5}).
 
 \begin{figure}[h!]
     \centering
     \includesag{30_dpcatfig_e5}
     \caption{Electric car example. The grey arrows are implied by the properties
-    of a category.\label{fig:e5} }
+    of a category.\label{fig:e5}}
 \end{figure}
 
 In particular, the electric car example corresponds to the category~$\CatC$ specified by
 \begin{compactitem}
-    \item \emph{Objects:} $\Ob_\CatC=\{\textsf{electric}\ \textsf{power},\textsf{rotational motion},\textsf{translational motion}\}$.
-    \item \emph{Morphisms}: The system components are the morphisms. For instance, we have \textsf{engine}, \textsf{wheel}, and the morphism $\textsf{wheel} \then \textsf{engine}$, implied by the properties of the category.
+    \item \emph{Objects:} $\ObC=\{\electricpower,\rotationalmotion,\translationalmotion\}$.
+    \item \emph{Morphisms}: The system components are the morphisms. For instance, we have \motor, \wheels, and the morphism $\wheels \then \motor$, implied by the properties of the category.
 \end{compactitem}
 
-We can slightly expand this example by noting the inverse transformations. In an electric car
-it is possible to regenerate power; that is, we can obtain \textsf{rotational motion} of the wheels from
-\textsf{translational motion} (via the morphism \textsf{move}), and then convert the \textsf{rotational motion} into \textsf{electric power} (via the morphism \textsf{dynamo})~(\cref{fig:e6},~\cref{fig:e6-together}).
+We can slightly expand this example by noting the reverse transformations. In an electric car
+it is possible to regenerate power; that is, we can obtain \rotationalmotion of the \wheels from
+\translationalmotion (via the morphism \move), and then convert the \rotationalmotion into \electricpower (via the morphism \dynamo)~(\cref{fig:e6},~\cref{fig:e6-together}).
 
 \begin{figure}[h!]
     \centering
@@ -120,30 +237,20 @@ it is possible to regenerate power; that is, we can obtain \textsf{rotational mo
     \caption{Electric power can be produced from motion. \label{fig:e6}}
 \end{figure}
 
-
-\GZ{Conflict in composition order in figures, discuss on how to fix}
 \begin{figure}[h!]
     \centering
     \includesag{30_dpcatfig_e7}
-    \caption{\label{fig:e6-together}}
+    \caption{Electric car example: forward and backward transformations.\label{fig:e6-together}}
 \end{figure}
 Given the semantics of the arrows in a category, all compositions of arrows exist, even if they are not drawn
-explicitly. For example, we can consider the composition~$f\then g \then k \then h$, which
-converts \textsf{electric power} into \textsf{rotational motion}, into \textsf{translational motion}, then back to
-\textsf{rotational motion} and \textsf{electric power}. Note that this is an arrow that has the same head and tail as the identity arrow on \textsf{electric power}~(\cref{fig:e8}). However, these two arrows are not necessarily the same. In this example we are representing physical systems, so we would in fact not expect them to be the same, since there will be some losses during the many conversions.
+explicitly. For example, we can consider the composition~$\wheels \then \motor \then \dynamo \then \move$, which
+converts \translationalmotion into \rotationalmotion, into \electricpower, then back to
+\rotationalmotion and \translationalmotion. Note that this is an arrow that has the same head and tail as the identity arrow on \translationalmotion~(\cref{fig:e8}). However, these two arrows are not necessarily the same. In this example we are representing physical systems, so we would in fact not expect them to be the same, since there will be some losses during the many conversions.
 
 \begin{figure}[h!]
     \centering
     \includesag{30_dpcatfig_e8}
     \caption{There can be multiple morphisms from an object to itself.\label{fig:e8}}
-\end{figure}
-
-It is important to recognize that there might also be two or more distinct arrows between two distinct resources~(\cref{fig:e9}). Each arrow between $X$ and $Y$ represents a different way  to obtain~$X$ from~$Y$. This is one of the aspects which will make category theory powerful enough to reason about design.
-
-\begin{figure}[h!]
-    \centering
-    \includesag{30_dpcatfig_e9}
-    \caption{\label{fig:e9}}
 \end{figure}
 
 The directionality of the arrows is also important. While the convention of
@@ -160,23 +267,23 @@ not invertible.
 
 \subsection{Currency categories}
 \label{sec:currency_cat}
-In this section, we introduce a kind of category for describing currency exchangers. Our idea is to model currencies as objects of a category, and morphisms will describe ways of exchanging between those currencies, \text{e.g.} as offered by a currency exchange service. 
+In this section, we introduce a kind of category for describing currency exchangers. Our idea is to model currencies as objects of a category, and morphisms will describe ways of exchanging between those currencies, \text{e.g.}, as offered by a currency exchange service. 
 
-We start with a set~$\Cat{C}$ of labels for all the currencies we wish to consider, \text{i.e.} 
+We start with a set~$\Cat{C}$ of labels for all the currencies we wish to consider, \text{i.e.}:
 \begin{equation*}
     \Cat{C} = \{ \text{EUR}, \text{USD}, \text{CHF}, \text{SGD}, ... \}.
 \end{equation*}
 For each currency~$\cat{c} \in \Cat{C}$ we define an object~$\mathbb{R} \times \{c\}$ which represents possible amounts of the given currency~$\cat{c}$ (we will ignore the issue of rounding currencies to an accuracy of two decimals places, and we allow negative amounts). The currency label keeps track of which ``units'' we are using.
 
-Now consider two such objects, say~$\mathbb{R} \times \{\text{USD}\}$ and~$\mathbb{R} \times \{\text{EUR}\}$. How can we describe the process of changing an amount of USD to an amount of EUR? We model this using two numbers: an exchange rate~$a_{\text{USD}, \text{EUR}}$ and a commission~$b_{\text{USD}, \text{EUR}}$ for the transaction. Given an amount~$x \in \mathbb{R}$ of USD, we define a morphism (a currency exchanger)
+Now consider two such objects, say~$\mathbb{R} \times \{\text{USD}\}$ and~$\mathbb{R} \times \{\text{EUR}\}$. How can we describe the process of changing an amount of USD to an amount of EUR? We model this using two numbers: an exchange rate~$a$ and a commission~$b$ for the transaction. Given an amount~$x \in \mathbb{R}$ of USD, we define a morphism (a currency exchanger) as:
 \begin{equation*}
-E_{a,b} \colon \mathbb{R} \times \{\text{USD}\} \rightarrow \mathbb{R} \times \{\text{EUR}\}
+E_{a,b} \colon \mathbb{R} \times \{\text{USD}\} \rightarrow \mathbb{R} \times \{\text{EUR}\},
 \end{equation*}
 by the formula
 \begin{equation*}
 \tup{x, \text{USD}} \longmapsto \tup{ax - b, \text{EUR}}. 
 \end{equation*}
-(Note that that the commission is given in the units of the target currency.) Of course, for changing USD to EUR, there may be various different banks or agencies which each offer different exchange rates and/or different commissions. Each of these corresponds to a different morphism from~$\mathbb{R} \times \{\text{USD}\}$ to~$\mathbb{R} \times \{\text{EUR}\}$.
+Note that that the commission is given in the units of the target currency. Of course, for changing USD to EUR, there may be various different banks or agencies which each offer different exchange rates and/or different commissions. Each of these corresponds to a different morphism from~$\mathbb{R} \times \{\text{USD}\}$ to~$\mathbb{R} \times \{\text{EUR}\}$.
 
 To build our category, we also need to specify how currency exchangers compose. Given currencies~$\mathsf{c_1}, \mathsf{c_2}, \mathsf{c_3}$, and given currency exchangers
 \begin{equation*}
@@ -204,10 +311,10 @@ In the above specification of our category of currency exchangers, we can actual
 \begin{equation}
 \begin{aligned}
 \label{eq:currencycomp}
-    \tup{a,b}\then \tup{a',b'}&=\tup{a' a, a' b + b'}.
+    \tup{a,b}\then \tupp{a',b'}&=\tupp{a' a, a' b + b'}.
 \end{aligned}
 \end{equation}
-The interpretation is still that currency exchangers change amounts of one currency to amounts in an another currency, but for this we don't need to carry around copies of~$\mathbb{R}$ in our notation.
+The interpretation is still that currency exchangers change amounts of one currency to amounts in an another currency, but for this we do not need to carry around copies of~$\mathbb{R}$ in our notation.
 \end{remark}
 
 Following the above remark: 
@@ -260,7 +367,7 @@ We can represent this information as a graph, where the nodes are the currencies
 \caption{Three currency exchange companies operating different currencies as a graph. \label{fig:currencygraph}}
 \end{figure}
 
-There is a currency category built from the information in \cref{tab:currencycompanies} and the graph in \cref{fig:currencygraph}. Its collection of objects is the set $\{  \text{EUR}, \text{USD}, \text{CHF}, \text{SGD} \}$, and it morphisms are, in total, 
+There is a currency category built from the information in \cref{tab:currencycompanies} and the graph in \cref{fig:currencygraph}. Its collection of objects is the set $\{  \text{EUR}, \text{USD}, \text{CHF}, \text{SGD} \}$, and it morphisms are, in total: 
 \begin{itemize}
 \item the trivial currency exchanger (identity morphism)~$\tup{1,0}$ for each of the four currencies (which are the objects),
 \item the currency exchangers corresponding to each item in \cref{tab:currencycompanies},
@@ -270,9 +377,15 @@ There is a currency category built from the information in \cref{tab:currencycom
 The phrase ``all possible compositions'' is a bit vague. What we mean here can be made more precise. It corresponds to a general recipe for starting with a graph~$G$, such as in \cref{fig:currencygraph}, and obtaining from it an associated category, called the \emph{free category on}~$G$. We introduce this concept in the next section. 
 
 
-\
+\begin{exercise}[Temperatures]
+Define a category of temperature converters, where the objects are 
+\transmuted{Celsius}, \transmuted{Kelvin}, \transmuted{Fahrenheit}, and the 
+morphisms are the rules to transform a measurement from one unit to another.
 
-\
+What relation is there with the currency category?
+
+\end{exercise}
+
 
 %The graph representation seems enough to describe this as a category, where the objects are the currencies (USD,CHF,EUR, and SGD), the morphisms are the different exchange operations, and the identity morphisms are identity currency exchangers. However, to properly define this category, we need to define composition and prove that the category is closed with respect to it, i.e. that the composition of two currency exchangers is a currency exchanger in the category. Given three currencies $\mathsf{X,Y,Z}$, a currency exchanger $\tup{a,b}$ from $\mathsf{X}$ to $\mathsf{Y}$, and a currency exchanger $\tup{c,d}$ from $\mathsf{Y}$ to $\mathsf{Z}$, one can define their composition as
 %\begin{equation}
@@ -309,76 +422,161 @@ The phrase ``all possible compositions'' is a bit vague. What we mean here can b
 %\end{definition}
 
 
-\JL{The following paragraph(s) might be best moved to a later part in the text, once pareto fronts and optimization have been discussed a little bit.}
-\gray{The category $\Cat{Curr}$ represents the set of all possible currency exchangers that could
-ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that given 1 USD, will give you back 2 USD, or even will not give you back any money. This highlights a recurring topic: often mathematicians will be happy to define a broader category of objects, while, in practice, the engineer will find herself thinking about a more constrained set of objects. In particular, one would like to find the best conversions. These can be expressed as \emph{Pareto fronts}. To do so, one only needs to iterate a finite number of times, since the optimal path (conversion morphism), if such a morphism exists, will never pass through the same currency more than once. \JL{the previous sentence needs explaining} This is valid if we assume the action of converting back and forth the same currency to have a cost (through the commission) higher than 0. To see this, consider three currencies~$\mathsf{A,B,C}$, a currency exchanger~$\tup{a,b}$ from~$\mathsf{A}$ to~$\mathsf{B}$ , a currency exchanger~$\tup{c,d}$ from~$\mathsf{B}$ to~$\mathsf{C}$ , and a currency exchanger~$\tup{e,f}$ from~$\mathsf{C}$ to~$\mathsf{A}$. \JL{more pedagogical} The composition of the currency exchangers reads:
+% \JL{The following paragraph(s) might be best moved to a later part in the text, once pareto fronts and optimization have been discussed a little bit.}
+
+\subsection{Definitional impetus   vs. computational goals  }
+
+The category $\Cat{Curr}$ represents the set of all possible currency exchangers that could
+ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that, given 1 USD, will give you back 2 USD; there is one currency exchanger that 
+corresponds to converting USD to CHF back and forth 21 times before getting you the money. There is even one that will not give you back any money. 
+
+Moreover, using the composition operations we could produce many more morphisms. In fact, if there are loops, we could traverse the loops multiple times, and, depending on the numbers, finding new morphisms, possibly infinitely many more.
+
+This highlights a recurring topic: often mathematicians will be happy to define a broader category of objects, while, in practice, the engineer will find herself thinking about a more constrained set of objects. 
+In particular, while the mathematician is more concerned with defining categories as hypothetical universes of things, the engineer is typically interested in representing concrete things, and solve some computational problem on the represented structure. 
+
+For example, in the case of the currency exchangers, the problem might be that of finding the 
+sequence of the best conversions between a source and a target currency. 
+
+First, the engineer would add more constraints to the definition to work
+with more well-behaved objects. For example, it is reasonable to limit the 
+universe of morphisms in such a way that the action of converting back and forth the same currency to have a cost (through the commission) higher than 0. 
+
+% one would like to find the best conversions. These can be expressed as \emph{Pareto fronts}. To do so, one only needs to iterate a finite number of times, since the optimal path (conversion morphism), if such a morphism exists, will never pass through the same currency more than once. \JL{the previous sentence needs explaining} 
+In that case, we will find that the optimal paths of currencies never pass through a currency more than once. To see this, consider three currencies~$\mathsf{A,B,C}$, a currency exchanger~$\tup{a,b}$ from~$\mathsf{A}$ to~$\mathsf{B}$ , a currency exchanger~$\tup{c,d}$ from~$\mathsf{B}$ to~$\mathsf{C}$ , and a currency exchanger~$\tup{e,f}$ from~$\mathsf{C}$ to~$\mathsf{A}$. The composition of the currency exchangers reads:
 \begin{equation*}
-\tup{\underbrace{eca}_{g}, \underbrace{ecb+ed+f}_{h}}.
+\tupp{\underbrace{eca}_{g}, \underbrace{ecb+ed+f}_{h}}.
 \end{equation*}
-Assuming~$e=a^{-1}$ (i.e., an exchange rate direction is not more profitable than the other), and $h\neq 0$, because of the commissions one can show that there are multiple morphisms from~$\mathsf{A}$ to $\mathsf{A}$, and that the identity morphism is the most ``convenient'' one.}
+Assuming~$e=a^{-1}$ (i.e., an exchange rate direction is not more profitable than the other), and $h\neq 0$, because of the commissions one can show that there are multiple morphisms from~$\mathsf{A}$ to~$\mathsf{A}$, and that the identity morphism is the most ``convenient'' one.
+If we only pass through each currency at most once, there are only a finite amount of paths to check, and this might simplify the computational problem.
 
-\subsection{Generating categories from graphs}
-\label{sec:catsfromgraphs}
-To begin, we recall some formal definitions related to (directed) graphs. 
+Second, the engineer might be interested in keeping track only of the ``dominant'' currency exchangers.
+For example, if we have two exchangers with the same rate but different commission, we might want 
+to keep track only of the one with the lowest commission. 
 
-\begin{definition}[Graph]
-A (directed) \emph{graph}~$G=\tup{V,A,s,t}$ consists of a set of vertices~$V$, a set of arrows~$A$, and two functions~$s,t\colon A\to V$, called the \emph{source} and \emph{target} functions, respectively. Given~$a\in A$ with~$s(a)=v$ and~$t(a)=w$, we say that~$a$ is an \emph{arrow} from~$v$ to~$w$. 
-\end{definition}
+In the next chapters we will see that there are concepts that will be useful to model these situations:
+\begin{itemize}
+    \item There is a concept of \emph{subcategory} that allows to define more specific 
+    categories of a parent one, in a way that still satifies the axioms.
+    \item There is a concept called \emph{locally posetal} categories, in which the 
+    set of morphisms between two objects is assumed to be a \emph{poset} rather than a \emph{set},
+    that is, we assume that there is an order, and that this order will be compatible with the operation of composition. 
+\end{itemize}
 
-\begin{remark}
-Both directed graphs and undirected graphs play a prominent role in many kinds of mathematics. In this text, we work primarily with directed graphs and so, from now on, we will drop the ``directed'': unless indicated otherwise, the word ``graph'' will mean ``directed graph''. 
-\end{remark}
+\subsection{Things that don't matter}
 
-\begin{definition}[Paths]
-Let~$G$ be a graph. A \emph{path} in~$G$ is a sequence of arrows such that the target of one arrow is the source of the next. The \emph{length} of a path is the number of arrows in the sequence. We also formally allow for sequences made up of ``zero-many'' arrows (such paths therefore have length zero). We call such paths \emph{trivial} or \emph{empty}. If paths describe a journey, then trivial paths correspond to ``not going anywhere''.  The notions of source and target for arrows extend, in an obvious manner, to paths. For trivial paths, the source and target always coincide. 
-\end{definition}
+In engineering we know that \textbf{using the right conventions is essential}.
 
-The following definition provides a way of turning any graph into a category. 
+There are many famous examples of unit mismatches causing disasters or near-disasters:
+\begin{itemize}
+\item The loss of the Mars Climate Orbiter in 1999 was due to the fact that NASA used the metric system,
+while contractor Lockheed Martin used (by mistake) imperial units.
+\item In 1983, an  Air Canada’s Boeing 767 jet ran out of fuel in mid-flight because
+there was a miscalculation of the fuel needed for the trip. In the end, the pilot managed to succesfully land the  ``Gimli Glider''.
+\item  
+Going back in history, Columbus wound up in the Bahamas because he miscalculated 
+the Earth's circumference, due to several mistakes, and one of them was assuming
+that his sources were using the \emph{Roman mile} rather than the \emph{Arabic mile}.\footnote{
+\href{https://spectrum.ieee.org/tech-talk/at-work/test-and-measurement/columbuss-geographical-miscalculations}{IEEE Spectrum}
+}
+Columbus' mathematical mistakes led to a happy incident for him, but not so great outcomes for many others.
+\end{itemize}
 
-\begin{shaded*}
-\begin{definition}[Free category on a graph]
-Let~$G=(V,A,s,t)$ be a graph. The \emph{free category on~$G$}, denoted~$\mathbf{Free}(G)$, has as objects the vertices~$V$ of~$G$, and given vertices~$x\in V$ and~$y\in V$, the morphisms~$\mathbf{Free}(G)(x,y)$ are the paths from~$x$ to~$y$. 
-%A path is a sequence of ``consecutive'' edges, \text{i.e.} the source of a subsequent edge is equal to the target of its predecessor. We also formally allow for ``empty paths'', \text{i.e.} a sequence of "zero"-many edges which starts and ends at the same vertex. 
-The composition of morphisms is given by concatenation of paths, and for any object~$x \in V$, the associated identity morphism~$\id_x$ is the trivial path which starts and ends at $x$.-–≠≠––≠\end{definition}
-\end{shaded*}
+However, in category theory, we look at the ``essence'' of things, and we consider \textbf{what is true regardless of conventions}. 
 
-We leave it to the reader to check that the above definition does indeed define a category. 
-%\text{i.e.} to check that the composition of paths is again a path, and that the associative law and the law for identity morphisms hold.
+Just like this book is written in rather plain English, and could be translated 
+to another language while preserving the meaning, in category theory we look at 
+what is not changed by a 1:1 translation that can be reversed. 
 
-\begin{exercise}
-Consider the following five graphs. For each graph $G$, how many morphisms in total are there in the associated category~$\mathbf{Free}(G)$?
+This will be covered later in a section on ``isomorphisms''; but for now we can look at this in an intuitive way.
 
-%\begin{figure}[h!]
-    \begin{center}
-    \includesag{20_dpcatfig_example_graphs}
-    \end{center}
-%\end{figure}
-\end{exercise}
+\subsubsection{Typographical conventions don't matter}
 
+Some of you might have objected to the conventions that we used in this chapter for the notation for composition of morphisms. We have used the notation $f\then g$ (``f then g'') while usually in the rest of mathematics we would have used  $g \after f$ (``g after f''). However, any concept we will use is ``invariant'' to the choice of notation. We can decide to rewrite the book using the other convention and still all the theorems would remain true, and all the falsities will remain false. More technically, we can take any formula written in one convention and rewrite it with the other convention, and viceversa. For example, the formula
+% 
+\begin{equation*}
+    (f \then g) \then h = f \then (g \then h)
+\end{equation*}
+would be transformed in
+\begin{equation*}
+    h \after (g \after f) = (h \after g) \after f.
+\end{equation*}
+(A bit more advanced category theory can describe this transformation more precisely.)
 
-\subsection{Dynamical systems and monoids}
+The same considerations apply for the convention regarding the arrow directions.
+If we have a category with morphisms such as 
+\begin{equation*}
+    \motor \colon \rotationalmotion \to \electricpower
+\end{equation*}
+with the semantics of ``a motor requires \electricpower to produce \rotationalmotion'',
+we could define a \emph{different} category, where the conventions are inverted.
+In this other category, for which we use arrows of different color, we would write 
+\begin{equation*}
+    {\color{blue}\motor} \colon \electricpower {\color{blue} \to}\  \rotationalmotion
+\end{equation*}
+and the semantics would be ``a motor can transmute \electricpower to \rotationalmotion'' (\cref{fig:inverted}).
 
-\JL{inserting this here as an un-baked idea for a subsection. maybe it could be the first subsection of this chapter; that way idendity laws and associative laws can be introduced before talking about categories}
-
-What are the simplest kinds of mathematical models of a dynamical system that we can think of? 
-
-One possible answer is something like this: we can describe a dynamical system as a set $S$ of possible states, together with a description of how states change over time. For the latter, consider time to be labeled by distinct ``points in time''. Then, we can just think in terms of time-steps, e.g. seconds, or we can think of points in time where e.g. an action is triggered and the system passes to a new state. 
-
-One thing we want to describe is how the state of our system changes over time, and in particular from one moment in time to the next. For any time step, we will not assume that we know what specific state the system is in, but rather we will describe, at once, all possible evolutions during that time step, i.e. we consider all possible initial conditions at once. Given two consecutive moments in time, we might describe the possible changes in the system by a function $T : S \rightarrow S$, which maps each state $s \in S$ to a next state $T(s) \in S$. This is a deterministic change of state: given $s$, the function $T$ determines the next state $T(s)$. The function $T$ is like a rule. Let's call $T$ an ``evolution operator'', because it describes how the system states might evolve over a time step. 
-
-We might want to consider various possible evolution operators. We could consider functions $T_a$, $T_b$, $T_c$, etc. We can also compose these functions: given $T_a$ and $T_b$, we might have, over the course of two time steps, the change described by $T_a \circ T_b$. For simplicity, let's suppose we work with three evolution operations $T_a$, $T_b$, and $T_c$.
-
-\
-
--> introduce semigroups (implicitly or explicitly)
-
-\
+\definecolor{custompurple}{rgb}{0.18,0.46,0.74}
+\definecolor{custompink}{rgb}{0.73,0.83,0.91}
 
 
--> introduce monoids 
+\begin{figure}[h!]
+    \centering
+    \begin{tikzcd}
+    \bullet \arrow[r,"\motor"]& \bullet\\[-15pt]
+    \textcolor{custompurple}{\rotationalmotion}&\textcolor{custompink}{\electricpower}
+    \end{tikzcd}\\[+15pt]
+    \begin{tikzcd}
+    \bullet\arrow[r,"\motor",blue] & \bullet\\[-15pt]
+    \textcolor{custompink}{\electricpower}&\textcolor{custompurple}{\rotationalmotion}
+    \end{tikzcd}
+    \caption{Opposite convention for arrows direction. \label{fig:inverted} }
+\end{figure}
 
 
 
+These two categories would have the same objects, and the same number of arrows; it's just 
+that the arrows change direction when moving from one category to the other. 
+Intuitively, we would not expect anything substantial to change, because we are 
+just changing a convention. We will see that there is a concept called \emph{opposite category}
+that formalizes this idea, and that the map that translates one category to the next is what is called a \emph{functor}.
 
+\subsubsection{Diagrams  conventions don't matter}
+
+Now that we are flexed our isomorphism muscles, we can also talk about the isomorphisms 
+of the visual language. 
+
+In engineering, ``boxes and wires'' diagrams are commonly used to talk about 
+materials transformations and signal flows. In those diagrams one would use 
+boxes to describe the processes and the wires to describe the materials or information
+that is being transformed. Boxes have ``inputs'' and ``outputs'', and arrows have 
+directions representing the causality. From left to right, what is to the left causes what is to the right.
+The left-to-right directionality seems an utterly obvious choice for most of you 
+who learned languages that are written left-to-right, top-to-bottom as in this book\footnote{
+Note that this paragraph cannot be translated literally to Japanese. It breaks the assumption
+that we made before, about the fact that we can have a 1:1 literal translation of this book
+without changing the meaning. You might think that our future hypothetical Japanese
+translator can make an outstanding job and translate also our figures to go right-to-left,
+then saying that right-to-left is natural to people that write right-to-left. However,
+that does not work, because in fact Japanese engineers also use left-to-right diagrams.}.
+
+\cref{fig:isodiagrams} shows how we would have visually described
+the first example using the boxes-and-wires conventions. 
+Again, we say that this is just a different convention, because
+we have a procedure to transform one diagram into the other. 
+This is not as simple as changing the direction of the arrows as in the case of an 
+opposite category. Rather, to go from points-and-arrows to boxes-and-wires:
+\begin{itemize}
+    \item Arrows that describe transmuters become boxes that describe processes;
+    \item The points that describe the resources become wires between the boxes.
+\end{itemize}
+
+
+\begin{figure}[h!]
+    \centering
+    %\includegraphics[height=5cm]{chapters/sketch.jpg}\\
+    \input{sag/20_iso_diags.tikz}
+    \caption{Isomorphisms of resource diagrams. \label{fig:isodiagrams} }
+\end{figure}
 
 
