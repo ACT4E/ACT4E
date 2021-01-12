@@ -1,41 +1,32 @@
 % !TEX root = ../CategoricalCoDesign.tex
 \label{sec:specialization}
 
+\subsubsection{Databases, sets, functions}
 
-\subsection{Relational Databases}
+We continue the discussion of \cref{def:relational-databases}.
 
-A \emph{relational database} like PostgreSQL, MySQL, etc. presents 
-the data to the user as relations. This does not necessarily mean
-that the data is stored as tuples, as in the mathematical model, but 
-rather that what the user can do is query and manipulate relations.
-This conceptual model is now 50 years old.
+In the particular case of tables with primary keys,
+things are easier. In relational databases, 
+a table column is a primary key if the values of that column are guaranteed to be unique.
 
-\todo{add citation to paper \url{https://dl.acm.org/doi/10.1145/362384.362685}}.
+If the values in the column are unique, the column serves as the name of the row. In the table 
+above the motor ID serves as the primary key.
 
-Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.}. 
+Consider a table with columns $P \times X_1 \times X_2 \times \cdots X_n$,
+where $P$ is the primary key column. Then, given a key $p \in P$,
+we can obtain the value in the other columns. We first find the unique
+row with the key $p$, and then we read out the values. 
 
-The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model name), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, etc. A simple illustration is provided in \cref{tab:electric_motors}.
+Therefore, a table with columns $P \times X_1 \times X_2 \times \cdots X_n$
+can be seen as a tuple $\tup{S, \{f_i\}_i}$:
+\begin{itemize}
+    \item A subset $S \subseteq P$ that gives us the available keys.
+    \item $n$ read-out functions $f_i: P \to X_i$, each giving the 
+    corresponding value of the $i$-th attribute.
+\end{itemize}
 
-\begin{table}[h]
-    \centering
-    \adjustbox{max width=\textwidth}{%
-    \begin{tabular}{c|c|c|c|c|c}
-         Motor ID & Company& $\unit[\text{Size}]{[mm^3]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]} & \unit[Cost]{[USD]} \\
-         \hline
-         \textsf{1204}&\textsf{SOYO} & 20 x 20 x 30& 60.0 &2.34 &19.95\\
-         \textsf{1206}&\textsf{SOYO} &28 x 28 x 45& 140.0 &3.00 &19.95\\
-         \textsf{1207}&\textsf{SOYO} &35 x 35 x 26& 130.0 &2.07 &12.95\\
-         \textsf{2267}&\textsf{SOYO} &42 x 42 x 38& 285.0 &4.76 &16.95\\
-         \textsf{2279}&\textsf{Sanyo Denki} &42 x 42 x 31.5& 165.0  &5.40 & 164.95\\
-        \textsf{1478}&\textsf{SOYO} & 56.4 x 56.4 x 76& 1,000 & 8.96&49.95\\
-        \textsf{2299}&\textsf{Sanyo Denki} & 50 x 50 x 16& 150.0 &5.90&59.95
-    \end{tabular}%
-    }
-    \caption{A simplified catalogue of motors.}
-    \label{tab:electric_motors}
-\end{table}
 
-This is a relation 
+
 
 \begin{comment}
 \begin{table}[h]
@@ -55,7 +46,9 @@ This is a relation
     \label{tab:electric_motors}
 \end{table}
 \end{comment}
-One useful way to think of tables of data is in terms of sets and functions. In this example, we can consider the set
+
+
+In this example, we can consider the primary key to be the set
 \begin{equation*}
 M \coloneqq \{ \textsf{1204}, \textsf{1206}, \textsf{1207}, \textsf{2267}, \textsf{2279}, \textsf{1478}, \textsf{2299} \},
 \end{equation*}
@@ -115,7 +108,7 @@ A helpful concept here is to think of our specific sets and functions as living 
 The category of sets~$\Set$ is defined by:
     \begin{compactenum}
     \item \emph{Objects}: all sets.
-    \item \emph{Morphisms}: given sets~$X$ and~$Y$, the homset~$\Set(X,Y)$ is the set of all functions from~$X$ to~$Y$.
+    \item \emph{Morphisms}: given sets~$X$ and~$Y$, the homset~$\Hom_\Set(X,Y)$ is the set of all functions from~$X$ to~$Y$.
     \item \emph{Identity morphism}: given a set~$X$, its identity morphism~$\text{id}_X$ is
     is the identity function~$X \to X, \ \text{id}_X(x) = x$.
     \item \emph{Composition operation}: the composition operation is the usual composition of functions.
@@ -123,14 +116,24 @@ The category of sets~$\Set$ is defined by:
 \end{definition}
 \end{shaded*}
 
-\todo{HOM NOTATION EVERYWHERE}
-\todo{Put another definition, from category theory for the sciences (channel)}
+
 
 We did say above, however, that we could build a category (let's call it \textsf{Database}) that only involves the sets that we are using for our database, and the functions between them that we are working with. What we would need for \textsf{Database} to be a category is that if any function is in \textsf{Database}, then also its sources and target sets are, and we would need that any composition of functions in \textsf{Database} is again in \textsf{Database}. (Also, we define the identity morphism for any set in \textsf{Database} to be the identity function on that set.) If these conditions are met, \textsf{Database} is what is called a \emph{subcategory} of the category of Sets. Here is the general definition. 
 
 
 \subsection{Notion of subcategory}
 
+\begin{shaded*}
+\begin{definition}[Alternative definition of subcategory (adapted from 2.6.1 in ...)]
+A subcategory $\CatD$ of a category $\CatC$ is a category for which:
+\begin{compactenum}
+    \item All the objects in $\Ob_\CatD$ are in $\Ob_\CatC$ and all the morphisms in $\Hom_\CatD$ are morphisms in $\Hom_\CatC$;
+    \item The source and target of a morphism in $\CatD$ are the same as its source and target in $\CatC$. For any objects $A,B\in \Ob_\CatD$, $\Hom_\CatD(A,B)\subseteq \Hom_\CatC(A,B)$;
+    \item If $A\in \Ob_\CatD$, then $\id_A\in \Hom_\CatC(A,A)$ is in $\Hom_\CatD(A,A)$;
+    \item If $f\colon A\to B$ and $g\colon B\to C$ in $\CatD$, then the composite $f\then g$ in $\CatC$ is in $\CatD$ and represents the composite in $\CatD$.
+\end{compactenum}
+\end{definition}
+\end{shaded*}
 \begin{shaded*}
 \begin{definition}[Subcategory]
 \label{def:subcategory}
@@ -159,7 +162,9 @@ We did say above, however, that we could build a category (let's call it \textsf
 	\end{enumerate}
 \end{proof}
 
-\todo{FinSet is a subcategory of Set}
+\begin{example}
+$\Cat{FinSet}$ is the category of finite sets and all functions between them. While an object $X\in \Ob_\Set$ is a set with arbitrary cardinality, $\Ob_{\Cat{FinSet}}$ only includes sets $X'$ with finitely many elements, i.e., with cardinality $n\in \mathbb{N}$. Objects of $\Cat{FinSet}$ are in $\Set$, but the converse is not true. Furthermore, given $X,Y\in \Ob(\Cat{FinSet})$, we know that $X,Y\in \Ob(\Set)$ and $\Hom_{\Cat{FinSet}}(X,Y)=\Hom_{\Set}(X,Y)$.
+\end{example}
 
 \subsection{Drawings}
 
@@ -195,14 +200,60 @@ And in most cases the properties are preserved by function composition.
 Thus, they form a category}
 
 
+
+
 % R^n \to R^m
 
+\todo{in the following let's use $\mathbb{R}$}
+\subsubsection{InjSet forms a subcategory of $\Set$}
+\begin{definition}[Injective, surjective, and bijective functions]
+Let $f\colon X\to Y$ be a function. The function $f$ is
+\begin{compactenum}
+    \item \emph{injective} if $f(x)=f(x')\implies x=x'$, $x,x'\in X$,
+    \item \emph{surjective} if for each $y\in Y$, there exists a $x\in X$ such that $f(x)=y$,
+    \item and \emph{bijective} if it is both injective and surjective.
+\end{compactenum}
+\end{definition}
 
-\todo{injective functions}
+\todo{write better/ask JL to proofread}
+\begin{example}
+We can define a category $\Cat{InjSet}$ which has the same objects as $\Set$ but restricts the morphisms to be \emph{injective functions}.
+We want to show that $\Cat{InjSet}$ is a subcategory of $\Set$. Composition and identity morphisms are defined as in $\Set$.
+
+Since $\Ob_{\Cat{InjSet}}=\Ob_{\Set}$, condition (i) of \cref{def:subcategory} is satisfied. To check (ii), consider two $f\in \Hom_\Set(A,B)$, $g\in \Hom_\Set(B,C)$ such that $f\in \Hom_\Cat{InjSet}(A,B)$ and $g\in \Hom_\Cat{InjSet}(B,C)$. We know that given $a,a'\in A$, $f(a)=f(a') \Leftrightarrow a=a'$ and $b,b'\in A$, $g(b)=g(b') \Leftrightarrow b=b'$ from the injectivity of $f,g$. Furthermore, we have:
+\begin{equation*}
+    \begin{aligned}
+    (f\then g)(a)=(f\then g)(a')&\implies f(a)=f(a')\\
+    &\implies a=b,
+    \end{aligned}
+\end{equation*}
+which proves condition (ii) of \cref{def:subcategory}, i.e. that the composition of injective functions is injective.
+\end{example}
+
+
+\begin{definition}[Continuous functions]
+Let $f\colon \mathbb{R}\to \mathbb{R}$ be a function. We call $f$ \emph{continuous} at $c\in \mathbb{R}$ if $\lim_{x\to c}f(x)=f(c)$; $f$ is continuous over $\mathbb{R}$ if the condition is satisfied for all $c\in \mathbb{R}$.
+\end{definition}
 \todo{Continuous functions (topologies)}
 \todo{Differentiable functions: Set to Manifolds}
 
+\begin{definition}[Differentiable functions]
+A function $f\colon U\subset \mathbb{R}\to \mathbb{R}$, defined on an open set $U$, is \emph{differentiable} at $a\in U$ if the derivative
+\begin{equation}
+    f'(a)=\lim_{h\to 0} \frac{f(a+h)-f(a)}{h}
+\end{equation}
+exists; $f$ is differentiable on $U$ if it is differentiable at every point of $U$.
+\end{definition}
+
+
 \todo{Lipschitz bounded}
+
+\begin{definition}[Lipschitz continuous function]
+A real valued function $f\colon \mathbb{R}\to \mathbb{R}$ is called \emph{Lipschitz} continuous if there exists a positive real constant $\kappa$ such that, for all $x_1,x_2\in \mathbb{R}$:
+\begin{equation}
+    \vert f(x_1)-f(x_2)\vert \leq \kappa \vert x_1-x_2\vert.
+\end{equation}
+\end{definition}
 \todo{smooth}
 \todo{cont diff, composition is compdiff}
 %\begin{exercise}
@@ -234,7 +285,7 @@ the objects to be the same. However we will see later that you can generalize th
 
 C: Endomorphisms of the plane
 
-f: R^2 -> R^2 
+% f: R^2 -> R^2 
 
 
 
@@ -243,16 +294,16 @@ D: Funzioni modulo quadrato
 
 la composizione di due funzioni e' definita come
 
-  f;g =  f( g(x) ) modulo Square 
+%   f;g =  f( g(x) ) modulo Square 
   
   
-  f; (g;h) =  f(g;h(x)) mod S) mod S
-           =  f(g(h(x mod S) mod S)) mod S) mod S
-           =  f(g(h(x mod S)))
+%   f; (g;h) =  f(g;h(x)) mod S) mod S
+%           =  f(g(h(x mod S) mod S)) mod S) mod S
+%           =  f(g(h(x mod S)))
 
-  (f;g); h =   (f;g)( h(x) mod S) mod S
-           =    f( g( h(x) mod S) mod S) mod S
-           =    f( g( h(x) mod S)
+%   (f;g); h =   (f;g)( h(x) mod S) mod S
+%           =    f( g( h(x) mod S) mod S) mod S
+%           =    f( g( h(x) mod S)
            
            
- Z 
+%  Z 

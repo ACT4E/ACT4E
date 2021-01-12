@@ -153,7 +153,9 @@ Now, according to the rule in \cref{RelCompRule}, the composition~$R \then S \su
 \end{figure}
 
 
-What is the relationship between relations and functions? One point of view is that functions are special kinds of relations. 
+\
+
+A question on your mind at this point might be: what is the relationship between relations and functions? One point of view is that functions are special kinds of relations. 
 
 \begin{definition}\label{functions as relations}
 Let $X$ and $Y$ be sets. A relation $R \subseteq X \times Y$ is a \textbf{function} if it satisfies the following two conditions: 
@@ -163,7 +165,7 @@ Let $X$ and $Y$ be sets. A relation $R \subseteq X \times Y$ is a \textbf{functi
 \end{enumerate}
 \end{definition}
 
-And what does this definition have to do with the ``usual'' way that we think about functions? 
+What does this definition have to do with the ``usual'' way that we think about functions? 
 
 Let start with a relation $R \subseteq X \times Y$ satisfying the conditions of Definition \ref{functions as relations}.  We'll build from it a function $f_R : X \rightarrow Y$. Choose an arbitrary $x \in X$. According to point $1.$ in Definition \ref{functions as relations}, there exists a $y \in Y$ such that $\tup{x,y} \in R$. So let's choose such a $y$, and call it $f_R(x)$. This gives us recipe to get from any $x$ to a $y$. But maybe you are worried: given a specific $x \in X$, what if we choose $y$ differently each time we apply the recipe? Point $2.$ guarantees that this can't happen: it says that the element $f_R(x)$ that we associate to a given $x \in X$ is in fact uniquely determined by that $x$. Put another way, the condition 2. says: if $f_R(x_1) \neq f_R(x_2)$, then $x_1 \neq x_2$. 
 
@@ -171,9 +173,9 @@ Given a function $f : X \rightarrow Y$, we can turn it into a relation in a simp
 $$
 R_f := \text{graph}(f) = \{ \tup{x,y} \in X \times Y \mid y = f(x) \}. 
 $$
-The passage from the function $f: X \rightarrow Y$ to the associated relation $R_f \subseteq X \times Y$ does not lose  The relation $R_f$ encodes the same information that is encoded in $f$ -- simply in a different form. 
+The relation $R_f$ encodes the same information that is encoded in $f$ -- simply in a different form. 
 
-In this course, we take Definition \ref{functions as relations} as our rigorous definition of a what a function is. Nevertheless, we'll often use functions ``in the usual way'', \text{e.g.} we'll write things like $y = f(x)$. 
+In this text, we take Definition \ref{functions as relations} as our rigorous definition of a what a function is. Nevertheless, we'll often use functions ``in the usual way'', \text{e.g.} we'll write things like $y = f(x)$. 
 
 %\
 %
@@ -387,7 +389,9 @@ The combination of the three, which we call the \emph{intermodal graph}, can be 
 \begin{center}
 \includesag{30_intermodal}
 \end{center}
-\caption{Intermodal graph. The dashed arrows represent intermodal morphisms, and we depict just one of them for simplicity. \label{fig:intermodal}}
+\caption{Intermodal graph. The dashed arrows represent intermodal morphisms, and we depict just one of them for simplicity. \label{fig:intermodal}
+\AC{use darkgreen instead of green}
+}
 \end{figure}
 \end{example}
 
@@ -428,3 +432,90 @@ Given two categories $\CatC,\CatD$, one can create the \emph{union} $\Cat{E}$ of
 %
 %
 %With these two new definitions, we can see that $\mathbf{trek}$ is the free category on a graph with vertices given by geographical locations $\tup{x,y}\in \mathbb{R}^2$ and arrows given by paths between them. In particular, a valid path $p\colon \tup{x,y}\mapsto \tup{v,w}$ for the human to be able to reach a destination, has not to exceed the maximum inclination $\alpha$ when going up and the maximum inclination $\beta$ when going down.
+
+
+\subsection{Relational Databases}
+\label{def:relational-databases}
+
+A \emph{relational database} like PostgreSQL, MySQL, etc. presents 
+the data to the user as relations. This does not necessarily mean
+that the data is stored as tuples, as in the mathematical model, but 
+rather that what the user can do is query and manipulate relations.
+This conceptual model is now 50 years old.
+
+Can we use the category $\Cat{Rel}$ to represents databases? 
+
+\todo{add citation to paper \url{https://dl.acm.org/doi/10.1145/362384.362685}}.
+
+Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.}. 
+
+The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model name), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, etc. A simple illustration is provided in \cref{tab:electric_motors}.
+
+\begin{table}[h]
+    \centering
+    \adjustbox{max width=\textwidth}{%
+    \begin{tabular}{c|c|c|c|c|c}
+         Motor ID & Company& $\unit[\text{Size}]{[mm^3]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]} & \unit[Cost]{[USD]} \\
+         \hline
+         \textsf{1204}&\textsf{SOYO} & 20 x 20 x 30& 60.0 &2.34 &19.95\\
+         \textsf{1206}&\textsf{SOYO} &28 x 28 x 45& 140.0 &3.00 &19.95\\
+         \textsf{1207}&\textsf{SOYO} &35 x 35 x 26& 130.0 &2.07 &12.95\\
+         \textsf{2267}&\textsf{SOYO} &42 x 42 x 38& 285.0 &4.76 &16.95\\
+         \textsf{2279}&\textsf{Sanyo Denki} &42 x 42 x 31.5& 165.0  &5.40 & 164.95\\
+        \textsf{1478}&\textsf{SOYO} & 56.4 x 56.4 x 76& 1,000 & 8.96&49.95\\
+        \textsf{2299}&\textsf{Sanyo Denki} & 50 x 50 x 16& 150.0 &5.90&59.95
+    \end{tabular}%
+    }
+    \caption{A simplified catalogue of motors.}
+    \label{tab:electric_motors}
+\end{table}
+
+
+\subsubsection{Can we use $\Cat{Rel}$ for relational databases?}
+
+A database table can be seen as representing an $n$-ary relation with $n = 7$, as we are expressing a relation
+over the sets 
+$$
+    \text{MotorIDs} \times \text{Company} 
+    \times \text{Sizes} \times \text{Weight} \times \text{Power} \times \text{Cost}.
+$$
+An $n$-ary relation is a relation over $n$ sets, just like a binary relation is a
+relation over $2$ sets.
+\begin{definition}[$n$-ary relation]
+An $n$-ary relation on $n$ sets $\tup{X_1, X_2, \dots, X_n}$ is a
+subset of the product set 
+\begin{equation}
+X_1 \times X_2 \times \cdots \time X_n
+\end{equation}
+\end{definition}
+
+$\Cat{Rel}$ only allows binary relations. Morphisms as defined have 1 head and 1 tail:
+there are only two points to attach to. There is no immediate and natural way to represent $n$-ary relations using $\Cat{\Rel}$.
+
+To represent relational databases categorically, there are at least 3 options.
+
+\paragraph{Option 1: Hack it}
+ We will introduce the notion of \emph{products} and \emph{isomorphisms}.
+    This will allows to say that because 
+    $$
+    X_1 \times X_2 \times X_3 \times \cdots \times X_n
+    $$
+    is isomorphic to 
+     $$
+    X_1 \times ( X_2 \times X_3 \cdots \times X_n)
+    $$    
+    we can talk about $n$-ary relations in terms of binary relations.
+    This is not really a natural way to do it.
+
+\paragraph{Option 2: Mutant Morphisms}
+    What if morphisms could have more than 2 legs? There
+    are indeed theories that work with more complicated arrows.
+    For example: multicategories, polycategories, operads. \todo{add links. To nlab?}
+    
+\paragraph{Option 3: Categorical databases}
+
+A different perspective is that of \emph{categorical databases}\footnote{\url{catinf.com}}. In this modeling framework
+one does not model the data tables as relations directly. 
+Rather the data is described as a functor~(\cref{functor})
+from a category representing the schema 
+to $\Set$. 
