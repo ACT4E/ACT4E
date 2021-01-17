@@ -20,7 +20,7 @@ row with the key $p$, and then we read out the values.
 Therefore, a table with columns $P \times X_1 \times X_2 \times \cdots X_n$
 can be seen as a tuple $\tup{S, \{f_i\}_i}$:
 \begin{itemize}
-    \item A subset $S \subseteq P$ that gives us the available keys.
+    \item A subset $A \subseteq P$ that gives us the available keys.
     \item $n$ read-out functions $f_i: P \to X_i$, each giving the 
     corresponding value of the $i$-th attribute.
 \end{itemize}
@@ -52,7 +52,7 @@ In this example, we can consider the primary key to be the set
 \begin{equation*}
 M \coloneqq \{ \textsf{1204}, \textsf{1206}, \textsf{1207}, \textsf{2267}, \textsf{2279}, \textsf{1478}, \textsf{2299} \},
 \end{equation*}
-of models of motors. The other colums are given the set~$C \coloneqq \{ \textsf{SOYO}, \textsf{Sanyo Denki}\}$ of manufacturing companies, the set $S$ of possible motor sizes, the set~$W$ of possible weights, the set $J$ of possible maximal powers, and the set~$P$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$M$ to set of possible values for the given attribute. For example, there is a function~$\textsf{Company}\colon M \to C$ which maps each model to the corresponding company that manufactures it. So, according to Table \ref{tab:electric_motors}, we have \text{e.g.}~$\textsf{Company}(\textsf{1204}) = \textsf{SOYO}$, and~$\textsf{Company}(\textsf{2279}) = \textsf{Sanyo Denki}$, etc.
+of models of motors. The other colums are given by the set~$C \coloneqq \{ \textsf{SOYO}, \textsf{Sanyo Denki}\}$ of manufacturing companies, the set $S$ of possible motor sizes, the set~$W$ of possible weights, the set $J$ of possible maximal powers, and the set~$P$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$M$ to set of possible values for the given attribute. For example, there is a function~$\textsf{Company}\colon M \to C$ which maps each model to the corresponding company that manufactures it. So, according to Table \ref{tab:electric_motors}, we have \text{e.g.}~$\textsf{Company}(\textsf{1204}) = \textsf{SOYO}$, and~$\textsf{Company}(\textsf{2279}) = \textsf{Sanyo Denki}$, etc.
 
 Note that in ``real life'', the catalogue of motors might not have seven entries, as in \cref{tab:electric_motors}, but has in fact hundreds of entries, and is implemented digitally as a database, \text{i.e.} a collection of interrelated tables. In this case, we will want to be able to search and filter the data based on various criteria. Many natural operations on tables and databases may be described simply in terms of operations with functions. We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases.
 
@@ -108,15 +108,14 @@ The category of sets~$\Set$ is defined by:
     \begin{compactenum}
     \item \emph{Objects}: all sets.
     \item \emph{Morphisms}: given sets~$X$ and~$Y$, the homset~$\Hom_\Set(X,Y)$ is the set of all functions from~$X$ to~$Y$.
-    \item \emph{Identity morphism}: given a set~$X$, its identity morphism~$\text{id}_X$ is
-    is the identity function~$X \to X, \ \text{id}_X(x) = x$.
+    \item \emph{Identity morphism}: given a set~$X$, its identity morphism~$\text{id}_X$ is the identity function~$X \to X, \ \text{id}_X(x) = x$.
     \item \emph{Composition operation}: the composition operation is the usual composition of functions.
     \end{compactenum}
 \end{ctdefinition} 
 
 
 
-We did say above, however, that we could build a category~$\Cat{Database}$ which only involves the sets that we are using for our database, and the functions between them that we are working with. What we would need for~$\Cat{Database}$ to be a category is that if any function is in~$\Cat{Database}$, then also its sources and target sets are, and we would need that any composition of functions in~$\Cat{Database}$ is again in~$\Cat{Database}$. (Also, we define the identity morphism for any set in~$\Cat{Database}$ to be the identity function on that set.) If these conditions are met,~$\Cat{Database}$ is what is called a \emph{subcategory} of~$\Set$. Here is the general definition. 
+We did say above, however, that we could build a category~$\Cat{Database}$ which only involves the sets that we are using for our database, and the functions between them that we are working with. What we would need for~$\Cat{Database}$ to be a category is that if any function is in~$\Cat{Database}$, then also its sources and target sets are, and we would need that any composition of functions in~$\Cat{Database}$ is again in~$\Cat{Database}$. (Also, we define the identity morphism for any set in~$\Cat{Database}$ to be the identity function on that set.) If these conditions are met,~$\Cat{Database}$ is what is called a \emph{subcategory} of~$\Set$. 
 
 
 \subsection{Notion of subcategory}
@@ -127,7 +126,7 @@ A subcategory $\CatD$ of a category $\CatC$ is a category for which:
 \begin{compactenum}
     \item All the objects in $\Ob_\CatD$ are in $\Ob_\CatC$;
     \item For any objects $A,B\in \Ob_\CatD$, $\Hom_\CatD(A,B)\subseteq \Hom_\CatC(A,B)$;
-    \item If $A\in \Ob_\CatD$, then $\id_A\in \Hom_\CatC(A,A)$ is in $\Hom_\CatD(A,A)$;
+    \item If $A\in \Ob_\CatD$, then $\id_A\in \Hom_\CatC(A,A)$ is in $\Hom_\CatD(A,A)$ and acts its identity morphism;
     \item If $f\colon A\to B$ and $g\colon B\to C$ in $\CatD$, then the composite $f\then g$ in $\CatC$ is in $\CatD$ and represents the composite in $\CatD$.
 \end{compactenum}
 \end{ctdefinition}
@@ -145,20 +144,20 @@ A subcategory $\CatD$ of a category $\CatC$ is a category for which:
 \end{comment}
 
 
-We will now look at two classical examples of subcategories: \FinSet is a subcategory of \Set, and \Set if a subcateogry of \Rel.
+Two important examples of subcategory are the following. 
 
 \begin{example}
-$\FinSet$ is the category of finite sets and all functions between them. While an object $X\in \Ob_\Set$ is a set with arbitrary cardinality, $\Ob_{\FinSet}$ only includes sets $X'$ with finitely many elements, i.e., with cardinality $n\in \mathbb{N}$. Objects of $\FinSet$ are in $\Set$, but the converse is not true. Furthermore, given $X,Y\in \Ob_\FinSet$, we know that $X,Y\in \Ob_\Set$ and $\Hom_{\FinSet}(X,Y)=\Hom_{\Set}(X,Y)$.
+$\FinSet$ is the category of finite sets and all functions between them. It is a subcategory of the category $\Set$ of sets and functions. While an object $X\in \Ob_\Set$ is a set with arbitrary cardinality, $\Ob_{\FinSet}$ only includes sets which have finitely many elements. Objects of $\FinSet$ are in $\Set$, but the converse is not true. Furthermore, given $X,Y\in \Ob_\FinSet$, we take $\Hom_{\FinSet}(X,Y)=\Hom_{\Set}(X,Y)$.
 \end{example}
 
 
 \begin{example}
-    The category \Set is a subcategory of \Rel. To show this, We need to prove the conditions presented in \cref{def:subcategory}.
+    The category \Set is a subcategory of \Rel. To show this, we need to prove the conditions presented in \cref{def:subcategory}.
 	\begin{enumerate}
-	\item In both \Rel and \Set objects are all sets.
+	\item In both \Rel and \Set, the collection of objects is all sets.
 	\item Given $A,B\in \Ob_{\Set}$, we know that $\Hom_{\Set}(A,B)\subseteq \Hom_{\Rel}(A,B)$, i.e., that all functions between sets $A,B$ are a particular subset of all relations between $A,B$.
 	\item For each $A\in \Ob_{\Set}$, the identity relation $\id_A=\{\tup{a,a'}\in A\times A\mid a=a'\}$ corresponds to the identity function $\id_A\colon A\to A$ in $\Set$.
-	\item Let $R\subseteq X\times Y$ and $S\subseteq Y\times Z$ be relations which are functions. We need to probe that their composition in $\Rel$, expressed as $R\then S\subseteq X\times Z$, is again a function. This was proven in \cref{lemma:comprelfun}.
+	\item Let $R\subseteq X\times Y$ and $S\subseteq Y\times Z$ be relations which are functions. We need to show that their composition in $\Rel$, expressed as $R\then S\subseteq X\times Z$, is again a function. This was proven in \cref{lemma:comprelfun}.
 	\end{enumerate}
 
 \end{example}
@@ -228,7 +227,7 @@ We can now think about the different types of transformations.
 
 \subsection{Other examples of subcategories in engineering}
 
-In engineering it is very commond to look at specific types of functions; in most cases, the function properties are preserved by function compositions, making them form a category.
+In engineering it is very common to look at specific types of functions; in many cases, the properties of a certain type of function are preserved by function composition, and so they form a category.
 
 
 
@@ -326,9 +325,9 @@ Recall the category \Berg presented in \cref{sec:trekking}. In the following, we
 
 We first start our discussion by introducing an \emph{amateur} version of \Berg, called \Bergama, which only considers paths (morphisms) in \Berg, whose steepness does not exceed a critical value, say 1/2. Is \Bergama a subcategory of \Berg? Let's check the different conditions:
 \begin{enumerate}
-    \item The constraint on the maximum steepness restricts the objects which are acceptable in \Bergama via the identity morphisms of \Berg. Indeed, recall that given an object~$\tup{p,v}\in \Ob_{\Berg}$, the identity morphism is defined as~$1_{\tup{p,v}}=\tup{\gamma,0}$, with~$\gamma(0)=p$ and~$\dot{\gamma}(0)=v$. Therefore, \Bergama will only contain objects whose identity morphisms do not exceed the steepness constraint, i.e.~$\Ob_\Bergama \subseteq \Ob_\Berg$.
+    \item The constraint on the maximum steepness restricts the objects which are acceptable in \Bergama via the identity morphisms of \Berg. Indeed, recall that given an object~$\tup{p,v}\in \Ob_{\Berg}$, the identity morphism is defined as~$1_{\tup{p,v}}=\tup{\gamma,0}$, with~$\gamma(0)=p$ and~$\dot{\gamma}(0)=v$. The steepness is computed via $v$. In particular, \Bergama will only contain objects whose identity morphisms do not exceed the steepness constraint, i.e.~$\Ob_\Bergama \subseteq \Ob_\Berg$.
     \item For~$A,B\in \Ob_{\Bergama}$, we know that paths satisfying the steepness constraint are specific paths in \Berg, i.e.~$\Hom_{\Bergama}\subseteq \Hom_{\Berg}$.
-    \item Given the restriction on objects in \Bergama, the identity morphisms in \Berg for objects in \Bergama are equivalent, and do not violate the steepness constraint.
+    \item The identity morphisms in \Berg which satisfy the steepness constraint are, by definition, in \Bergama and they act as identities there.
     \item Given two morphisms~$f,g$ which can be composed in~$\Bergama$, the maximum steepness of their composition~$f\then g$ is given by:
     \begin{equation*}
         \text{MaxSteepness}(f\then g)=\max \ \{\text{MaxSteepness}(f),\text{MaxSteepness}(g)\}<1/2.
