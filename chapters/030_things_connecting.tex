@@ -78,6 +78,10 @@ A \emph{binary relation} from a set~$X$ to a set~$Y$ is a subset of the Cartesia
 We will often drop the word ``binary'' and simply use the name ``relation''.
 \end{remark}
 
+%\begin{remark}
+%There is also the notion of an $n$-ary relation, where $n$ can be any natural number. An $n$-nary relations is a subset of a cartesian product of the form $X_1 \times \dots \times X_n$.
+%\end{remark}
+
 If~$X$ and~$Y$ are finite sets, we can depict a relation~$R \subseteq X \times Y$ graphically as in \cref{fig:example_rel}. For each element~$\tup{x,y} \in X \times Y$, we draw an arrow from~$x$ to~$y$ if and only if~$\tup{x,y} \in R \subseteq X \times Y$.
 
 \begin{figure}[h!]
@@ -177,6 +181,32 @@ The relation $R_f$ encodes the same information that $f$ encodes -- simply in a 
 
 In this text, we take Definition \ref{functions as relations} as our rigorous definition of a what a function is. Nevertheless, we'll often use functions ``in the usual way'', \text{e.g.} we'll write things like $y = f(x)$.
 
+Another question you may be wondering about is this: if we define functions as special kinds of relations, how then do we define the composition of functions? The answer is that we compose functions simply by the rule for composing relations.
+
+\begin{lemma}
+\label{lemma:comprelfun}
+Let $R \subseteq X \times Y$ and $S \subseteq Y \times Z$ be relations which are functions. Then their composition
+$R \then S \subseteq X \times Z$ is again a function.
+\end{lemma}
+
+\begin{proof}
+We check that $R \then S$ satisfies the two conditions stated in Defintion \ref{functions as relations}.
+
+\begin{enumerate}
+\item Choose an arbitrary $x \in X$. We need to show that there exists $z \in Z$ such that $\tup{x,z} \in R \then S$.  Since $R$ is a function, there exists $y \in Y$ such that $\tup{x,y} \in R$. Choose such a $y \in Y$. Then, because $S$ is a function, there exists $z \in Z$ such that $\tup{y,z} \in S$. By the definition of composition of relations, we see that $z$ is such that $\tup{x,z} \in R \then S$.
+\item Let $\tup{x_1, z_1}$, $\tup{x_2,z_2} \in R \then S$. We need to show that if $x_1 = x_2$, then $z_1 = z_2$. So suppose $x_1 = x_2$. Since $\tup{x_1, z_1}$, $\tup{x_2,z_2} \in R \then S$, there exist $y_1, y_2 \in Y$ such that, respectively,
+$$
+\tup{x_1, y_1} \in R \ \text{ and } \ \tup{y_1, z_1} \in S,
+$$
+and
+$$
+\tup{x_2, y_2} \in R \ \text{ and } \ \tup{y_2, z_2} \in S.
+$$
+Since $x_1 = x_2$ and $R$ is a function, we conclude that $y_1 = y_2$ must hold. Now, since $S$ is also a function, this implies that $z_1 = z_2$, which is what was to be shown.
+\end{enumerate}
+\end{proof}
+
+
 %\
 %
 %\
@@ -239,7 +269,7 @@ Let~$\Cat{Berg}$ be the category defined as follows:
 where
 \begin{itemize}
 \item $T \in \mathbb{R}_{\geq 0}$,
-\item $\gamma \colon [0, T] \to L$ is a~$C^1$ function with~$\dot \gamma(0) = v_1$ and~$\dot \gamma(T) = v_2$  (we take one-sided derivatives at the boundaries).
+\item $\gamma \colon [0, T] \to L$ is a~$C^1$ function with $\gamma(0)=p_1$ and $\gamma(p_2)$, as well as ~$\dot \gamma(0) = v_1$ and~$\dot \gamma(T) = v_2$  (we take one-sided derivatives at the boundaries).
 \end{itemize}
 
 \item For any object~$\tup{p, v}$, we define its identity morphism~$1_{\tup{p,v}} = \tup{\gamma, 0}$ formally: it's path~$\gamma$ is defined on the closed interval~$[0,0]$, \text{i.e.}~$T= 0$ and $\gamma(0) = p$. We declare this path to be~$C^1$ by convention, and declare its derivative at~$0$ to be~$v$.
@@ -256,11 +286,11 @@ where
 \end{definition}
 
 
-Since we are only amateurs, we don't feel comfortable with hiking on paths that are too steep in some places. We want to only consider paths that have a certain maximum inclination. Mathematically speaking, for any path -- as described by a morphism $\tup{\gamma, T}$ in the category $\Cat{Berg}$ -- we can compute its vertical inclination (vertical slope) and renormalize it to give a number in the interval $(-1, 1)$, say. (Here $-1$ represents vertical descent, and $1$ represents vertical ascent.) Taking absolute values of inclinations -- call the resulting quantity ``steapness'' -- we can compute the maximum steepness that a path $\gamma$ obtains over its domain $[0,T]$. This gives, for every homset $\Hom(\tup{p_1, v_1}, \tup{p_2, v_2})$, a function
+Since we are only amateurs, we don't feel comfortable with hiking on paths that are too steep in some places. We want to only consider paths that have a certain maximum inclination. Mathematically speaking, for any path -- as described by a morphism $\tup{\gamma, T}$ in the category $\Cat{Berg}$ -- we can compute its vertical inclination (vertical slope) and renormalize it to give a number in the interval $(-1, 1)$, say. (Here $-1$ represents vertical descent, and $1$ represents vertical ascent.) Taking absolute values of inclinations -- call the resulting quantity ``steepness'' -- we can compute the maximum steepness that a path $\gamma$ obtains over its domain $[0,T]$. This gives, for every homset $\Hom(\tup{p_1, v_1}, \tup{p_2, v_2})$, a function
 $$
-\mathsf{MaxSteapness}: \Hom(\tup{p_1, v_1}, \tup{p_2, v_2}) \longrightarrow [0, 1).
+\mathsf{MaxSteepness}: \Hom(\tup{p_1, v_1}, \tup{p_2, v_2}) \longrightarrow [0, 1).
 $$
-Now, suppose we decide that we don't want to traverse paths which have a maximal steapness greater than $1/2$. Paths which satisfy this condition we call \emph{feasible}. Let's consider only the feasible paths in $\Cat{Berg}$. If we keep the same objects as $\Cat{Berg}$, but only consider feasible path, will the resulting structure still form a category? We'll let you ponder here; this type of question leads to the notion of a \emph{subcategory}, which we'll introduce soon in a subsequent chapter.
+Now, suppose we decide that we don't want to traverse paths which have a maximal steepness greater than $1/2$. Paths which satisfy this condition we call \emph{feasible}. Let's consider only the feasible paths in $\Cat{Berg}$. If we keep the same objects as $\Cat{Berg}$, but only consider feasible path, will the resulting structure still form a category? We'll let you ponder here; this type of question leads to the notion of a \emph{subcategory}, which we'll introduce soon in a subsequent chapter.
 
 
 %\
@@ -353,7 +383,7 @@ Consider the $\Cat{car}$ category, describing your road trip in California, with
 \begin{equation*}
     V_\mathrm{c}=\{\textsf{SFO}_\mathrm{c},\textsf{S. Mateo},\textsf{Half Moon Bay},\textsf{SBP}_\mathrm{c},\textsf{Lake Balboa},\textsf{LAX}_\mathrm{c}\},
 \end{equation*}
-and arrows as in~\cref{fig:carcat}. The nodes represent typical touristic road trip checkpoints in California and the arrows famous highways connecting them.
+and arrows as in~\cref{fig:carcat}. The nodes represent typical touristic road-trip checkpoints in California and the arrows represent famous highways connecting them.
 
 \begin{figure}[h!]
 \begin{center}
@@ -384,14 +414,13 @@ and arrows as in~\cref{fig:boarding}. Nodes represent airports and airport parki
 \caption{The $\Cat{board}$ category. \label{fig:boarding}}
 \end{figure}
 
-The combination of the three, which we call the \emph{intermodal graph}, can be represented as a graph, with \textcolor{red}{red} arrows for the car network, \textcolor{blue}{blue} arrows for the flight network, \textcolor{green}{green} arrows for the boarding network, and black dashed arrows for intermodal morphisms, arising from composition of morphisms involving multiple modes (\cref{fig:intermodal}). Imagine that you are in the parking lot of \textsf{LAX} airport and you want to reach \textsf{S. Mateo}. From there, you will e.g. onboard to a \textsf{United} flight to \textsf{SFO}$_\mathrm{f}$, will then offboard reaching the parking lot \textsf{SFO}$_\mathrm{c}$, and drive on highway \textsf{US-101} reaching \textsf{S. Mateo}. This is intermodality.
+The combination of the three, which we call the \emph{intermodal graph}, can be represented as a graph, with \textcolor{red}{red} arrows for the car network, \textcolor{blue}{blue} arrows for the flight network, \textcolor{darkgreen}{green} arrows for the boarding network, and black dashed arrows for intermodal morphisms, arising from composition of morphisms involving multiple modes (\cref{fig:intermodal}). Imagine that you are in the parking lot of \textsf{LAX} airport and you want to reach \textsf{S. Mateo}. From there, you will e.g. onboard to a \textsf{United} flight to \textsf{SFO}$_\mathrm{f}$, will then offboard reaching the parking lot \textsf{SFO}$_\mathrm{c}$, and drive on highway \textsf{US-101} reaching \textsf{S. Mateo}. This is intermodality.
 
 \begin{figure}[h!]
 \begin{center}
 \includesag{30_intermodal}
 \end{center}
 \caption{Intermodal graph. The dashed arrows represent intermodal morphisms, and we depict just one of them for simplicity. \label{fig:intermodal}
-\AC{use darkgreen instead of green}
 }
 \end{figure}
 \end{example}
@@ -406,29 +435,17 @@ The intermodal network category $\Cat{intermodal}$ is the free category on the g
 
 
 
-% \begin{comment}
-% \begin{definition}[Union of categories]
-% Given two categories $\CatC,\CatD$, one can create the \emph{union} $\Cat{E}$ of the two, which is composed of:
-% \begin{compactenum}
-% \item \emph{Objects:} $\Ob_\Cat{E}=\Ob_\CatC \cup \Ob_\CatD$.
-% \item \emph{Morphisms:} A morphism $f$ is given by considering the followng. If $f\in \Hom_\CatC(X,Y)$, then $f\in \Hom_\Cat{E}(X,Y)$. If $f\in \Hom_\CatD(X,Y)$, then $f\in \Hom_\Cat{E}(X,Y)$.
-% \item \emph{Identity morphism:} For any morphism in $\Cat{E}$, the identity morphism remais the same as in the original category.
-% \item \emph{Composition operation}: The composition of morphisms remains the same.
-% \end{compactenum}
-% \end{definition}
-% \end{comment}
 
-%\subsection{Generating categories from graphs}
-%What we sketched is the previous sections has deeper roots. In the following, we will introduce the concept of \emph{free categories on graphs}.
+\subsection{Generating categories from graphs}
+\label{sec:catsfromgraphs}
+What we sketched is the previous sections has deeper roots. In the following, we will introduce the concept of the \emph{free categories on a graph}.
 %
-%\begin{ctdefinition}[Free category on a graph]
-%Consider any graph $G=(V,A,s,t)$. We can define a category $\mathbf{Free}(G)$, called the \emph{free category on $G$}. Its objects are the vertices $V$, and given vertices $a\in V$ and $b\in V$, the morphisms $\mathbf{Free}(G)(a,b)$ are the paths from $a$ to $b$.
-%%A path is a sequence of ``consecutive'' edges, \text{i.e.} the source of a subsequent edge is equal to the target of its predecessor. We also formally allow for ``empty paths'', \text{i.e.} a sequence of "zero"-many edges which starts and ends at the same vertex.
-%The identity morphism $id_a$ is defined to be the empty path starting and ending at a vertex $a \in V$, and composition of morphisms is given by concatenation of paths.
-%\end{ctdefinition}
-%
-%
-%With these two new definitions, we can see that $\mathbf{trek}$ is the free category on a graph with vertices given by geographical locations $\tup{x,y}\in \mathbb{R}^2$ and arrows given by paths between them. In particular, a valid path $p\colon \tup{x,y}\mapsto \tup{v,w}$ for the human to be able to reach a destination, has not to exceed the maximum inclination $\alpha$ when going up and the maximum inclination $\beta$ when going down.
+\begin{ctdefinition}[Free category on a graph]
+Consider any graph $G=\tup{V,A,s,t}$. We can define a category $\Free(G)$, called the \emph{free category on $G$}. Its objects are the vertices $V$, and given vertices $a\in V$ and $b\in V$, the morphisms $\Free(G)(a,b)$ are the paths from $a$ to $b$.
+A path is a sequence of ``consecutive'' edges, \text{i.e.} the source of a subsequent edge is equal to the target of its predecessor. We also formally allow for ``empty paths'', \text{i.e.} a sequence of "zero"-many edges which starts and ends at the same vertex.
+The identity morphism $\id_a$ is defined to be the empty path starting and ending at a vertex $a \in V$, and composition of morphisms is given by concatenation of paths.
+\end{ctdefinition}
+
 
 
 \subsection{Relational Databases}
@@ -440,17 +457,15 @@ that the data is stored as tuples, as in the mathematical model, but
 rather that what the user can do is query and manipulate relations.
 This conceptual model is now 50 years old.
 
-Can we use the category $\Rel$ to represents databases?
-
-\todo{add citation to paper \url{https://dl.acm.org/doi/10.1145/362384.362685}}.
+Can we use the category $\Rel$ to represent databases~\cite{codd2002relational}?
 
 Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.}.
 
-The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model name), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, etc. A simple illustration is provided in \cref{tab:electric_motors}.
+The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model ID), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, etc. A simple illustration is provided in \cref{tab:electric_motors}.
 
 \begin{table}[h]
     \centering
-    \adjustbox{max width=\textwidth}{%
+    \adjustbox{max width=\textwidth}{
     \begin{tabular}{c|c|c|c|c|c}
          Motor ID & Company& $\unit[\text{Size}]{[mm^3]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]} & \unit[Cost]{[USD]} \\
          \hline
@@ -461,7 +476,7 @@ The catalogue might be organized as a large table, where on the left-hand side t
          \textsf{2279}&\textsf{Sanyo Denki} &42 x 42 x 31.5& 165.0  &5.40 & 164.95\\
         \textsf{1478}&\textsf{SOYO} & 56.4 x 56.4 x 76& 1,000 & 8.96&49.95\\
         \textsf{2299}&\textsf{Sanyo Denki} & 50 x 50 x 16& 150.0 &5.90&59.95
-    \end{tabular}%
+    \end{tabular}
     }
     \caption{A simplified catalogue of motors.}
     \label{tab:electric_motors}
@@ -472,55 +487,53 @@ The catalogue might be organized as a large table, where on the left-hand side t
 
 A database table can be seen as representing an $n$-ary relation with $n = 7$, as we are expressing a relation
 over the sets
-$$
-    \text{MotorIDs} \times \text{Company}
-    \times \text{Sizes} \times \text{Weight} \times \text{Power} \times \text{Cost}.
-$$
-An $n$-ary relation is a relation over $n$ sets, just like a binary relation is a
+\begin{equation*}
+    M\times C\times S\times W\times J\times P,
+\end{equation*}
+where~$M$ represents the set of motor IDs,~$C$ the set of companies producing motors,~$S$ the set of motor sizes,~$W$ the set of motor weights,~$J$ the set of possible maximal powers, and~$P$ the set of possible prices.  An $n$-ary relation is a relation over $n$ sets, just like a binary relation is a
 relation over $2$ sets.
 \begin{definition}[$n$-ary relation]
 An $n$-ary relation on $n$ sets $\tup{X_1, X_2, \dots, X_n}$ is a
 subset of the product set
 \begin{equation}
-X_1 \times X_2 \times \cdots \times X_n
+X_1 \times X_2 \times \cdots \times X_n.
 \end{equation}
 \end{definition}
 
-$\Cat{Rel}$ only allows binary relations. Morphisms as defined have 1 head and 1 tail:
-there are only two points to attach to. There is no immediate and natural way to represent $n$-ary relations using $\Cat{\Rel}$.
+$\Cat{Rel}$ only allows binary relations. Morphisms in $\Cat{Rel}$ have 1 source and 1 target. There is no immediate and natural way to represent $n$-ary relations using $\Cat{\Rel}$.
 
 To represent relational databases categorically, there are at least 3 options.
 
 \paragraph{Option 1: Hack it}
  We will introduce the notion of \emph{products} and \emph{isomorphisms}.
-    This will allows to say that because
-    $$
-    X_1 \times X_2 \times X_3 \times \cdots \times X_n
-    $$
+    This will allow us to say that because
+    \begin{equation*}
+    X_1 \times X_2 \times X_3 \times \cdots \times X_n,
+    \end{equation*}
     is isomorphic to
-     $$
+    \begin{equation*}
     X_1 \times ( X_2 \times X_3 \cdots \times X_n)
-    $$
+    \end{equation*}
     we can talk about $n$-ary relations in terms of binary relations.
     This is not really a natural way to do it.
 
 \paragraph{Option 2: Mutant Morphisms}
-    What if morphisms could have more than 2 legs? There
+    What if morphisms could have more than ``two legs''? There
     are indeed theories that work with more complicated arrows.
-    For example: multicategories, polycategories, operads. \todo{add links. To nlab?}
+    For example: \href{https://ncatlab.org/nlab/show/multicategory}{multicategories}, \href{https://ncatlab.org/nlab/show/polycategory}{polycategories}, \href{https://ncatlab.org/nlab/show/operad}{operads}.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=7cm]{chapters/mutants.jpg}
 \caption{Can you imagine how to define
 composition with mutant morphisms
-with more than 2 legs?}
+with more than two legs?}
 \end{figure}
 
 \paragraph{Option 3: Categorical databases}
 
-A different perspective is that of \emph{categorical databases} \todo[inline]{add ref}. In this modeling framework
+A different perspective is that of \emph{categorical databases}~\cite{spivak2019categorical}. In this modeling framework
 one does not model the data tables as relations directly.
-Rather the data is described as a functor~(\cref{functor})
+Rather the data is described as a functor
 from a category representing the schema
-to $\Set$.
+to \Set.
