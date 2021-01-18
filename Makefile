@@ -5,7 +5,7 @@ all: CategoricalCoDesign.pdf
 # all: dp_category.pdf
 
 # all:  CategoricalCoDesign_ch3_quantitative.pdf
-CategoricalCoDesign.pdf:: chapters/*.tex
+CategoricalCoDesign.pdf:: chapters/*.tex utils/*.tex
 
 tmpdir=tmp
 
