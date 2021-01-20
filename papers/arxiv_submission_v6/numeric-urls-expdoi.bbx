@@ -1,0 +1,55 @@
+\ProvidesFile{numeric-urls-expdoi.bbx}
+[]
+
+\newcommand{\weburl}[1]{\href{#1}{#1}}
+\providecommand{\biburl}[1]{\href{#1}{#1}}
+\providecommand{\slidesurl}[1]{\href{#1}{#1}}
+\newcommand{\doiurl}[1]{%
+    % \StrSubstitute{#1}{/}{/\,}[\fooo]%
+    \StrSubstitute{#1}{/}{/}[\fooo]%
+     \href{http://dx.doi.org/#1}{\footnotesize\textsc{doi}:{\doifont\fooo}}%
+     %\href{http://dx.doi.org/\thefield{doi}}{\small\textsc{doi}: \thefield{doi}}%
+}
+
+\definecolor{urlcolor}{rgb}{0,0,0.4}
+\newcommand{\doifont}{\color{urlcolor}}
+\renewcommand\UrlFont{\color{urlcolor}\footnotesize}
+\renewcommand{\bibfont}{\color{urlcolor}\sffamily}
+
+
+
+\usepackage{xstring}
+\RequireBibliographyStyle{numeric}
+
+\newtoggle{bbx:file}
+
+\DeclareBibliographyOption{file}[true]{%
+  \settoggle{bbx:file}{#1}}
+\ExecuteBibliographyOptions{file}
+
+
+%   doi = doi
+%   eprint = slides
+%   file =  http link to  pdf
+%   url  =  link to additional material
+\renewbibmacro*{doi+eprint+url}{%
+  \iftoggle{bbx:doi}{\iffieldundef{doi}{\notpresent{doi}}{
+      \hspace{1pt}%
+     % \def\mysp{\hspace{0pt}|\hspace{0pt}}%
+     \doiurl{\thefield{doi}}
+  }}{}%
+  \iftoggle{bbx:file}{\iffieldundef{file}{\notpresent{file}}{%
+      \hspace{1pt}%
+      \biburl{\thefield{file}}%
+  }}{}%
+  \iftoggle{bbx:eprint}{\iffieldundef{eprint}{\notpresent{eprint}}{%
+      ~%\hspace{1pt}%
+      \slidesurl{\thefield{eprint}}%
+  }}{}%
+  \iftoggle{bbx:url}{\iffieldundef{url}{\notpresent{url}}{%
+      ~%\hspace{1pt}%
+      \weburl{\thefield{url}}%
+  }}{}%
+}
+
+\endinput
