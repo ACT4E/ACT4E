@@ -1,9 +1,10 @@
 % !TEX root = ../CategoricalCoDesign.tex
-% \section{Thinking about resource composition}
 \label{sec:productset}
 \subsection{Products}
 
 \book{
+
+
 Is ``$X \times Y$'' the same as ``$Y \times X$''?
 It depends on the context. Intuitively, for the categories of resources treated in this work, we would not make a distinction between ``having~$X$ and~$Y$'' and ``having~$Y$ and~$X$''.
 However, there are contexts in which this is not valid. For example, if we are
@@ -21,32 +22,32 @@ The word ``symmetric'' is well-suited, because to say that the two objects are e
     \caption{Objects equivalence in the symmetric case. \label{fig:e17}}
 \end{figure}
 
-\JL{This opening paragraph seems confusing/misleading to me. I can edit/correct later.}
+
+\JL{This opening bit seems confusing/misleading to me. I can edit/correct later; also I would move it to the section on monoidal products.}
 }
 
-Consider the following example. To generate \transmuted{motion}, one needs \emph{both} an \transmuted{engine} \emph{and} some \transmuted{fuel}.
-
-We can consider \textsf{motion}, \textsf{engine}, and \textsf{fuel} as resources and draw them as points (\cref{fig:e11}).
-
-\begin{figure}[h!]
-    \centering
-    \includesag{30_dpcatfig_e11}
-    \caption{Resources for motion generation. \label{fig:e11}}
-\end{figure}
-
-However, it is not clear how to represent the arrow corresponding to~$\mathsf{fuel} + \mathsf{engine} = \mathsf{motion}$, because arrows only have one head and one tail.
-
-One clean way to formalize this is to expand the objects in the category, by postulating that, if two resources~$X$ and~$Y$ exist, then there exists also the resource ``$X$ \emph{and}~$Y$''.
-
-In our example, we can postulate the existence of an object \textsf{engine} \textbf{ and }\textsf{fuel} and then draw the arrow from it to motion (\cref{fig:e13}).
+Suppose that we are considering a hybrid car that contains two engines: an
+electric engine and an internal combustion engine. Both can produce \transmuted{motion}, but each from a different source of energy. The electric engine uses \transmuted{electric energy}; the internal combustion engine uses \transmuted{gasoline}. The situation is as in \cref{fig:e16a}.
 
 \begin{figure}[h!]
     \centering
-    \includesag{30_dpcatfig_e13}
-    \caption{Engine \textbf{and} fuel can generate motion. \label{fig:e13}}
+    \includesag{30_dpcatfig_e14}
+    \caption{Alternative ways to generate \transmuted{motion}. \label{fig:e16a}}
 \end{figure}
+
+From this we would like to conclude that we can obtain \transmuted{motion} from \textbf{either} \transmuted{gasoline} \textbf{or} \transmuted{electric energy} (\cref{fig:e16b}).
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_dpcatfig_e15}
+    \caption{We can generate \transmuted{motion} from either \transmuted{gasoline} or \transmuted{electric} \transmuted{energy}. \label{fig:e16b}}
+\end{figure}
+
 
 We call this construction ``product'', because it is equivalent to the Cartesian product of sets.
+
+\GZ{still not convincing as a start}
+
 
 \begin{definition}[Cartesian product of sets]
 \label{def:cartesian-product}
@@ -89,7 +90,12 @@ theory.
  
 
 \begin{ctdefinition}[Categorical Product]
-Let~$\CatC$ be a category and let~$A,B\in \Ob_{\CatC}$ be objects. The \emph{product} of~$A$ and~$B$ is an object~$A \times B \in \Ob_{\CatC}$ together with \emph{projection morphisms}~$\pi_A \colon A \times B \to A$ and~$\pi_B \colon A \times B \to B$, such that, given any~$X \in \Ob_{\CatC}$ and morphisms~$f \colon X \to A, g \colon X \to B$, there exists a \emph{unique} morphism~$(\prodMap{f}{g}) \colon X \to A \times B$ such that~$f = (\prodMap{f}{g})\then \pi_A$ and~$g=(\prodMap{f}{g})\then \pi_B$. Diagrammatically:
+Let~$\CatC$ be a category and let~$A,B\in \Ob_{\CatC}$ be objects. The \emph{product} of~$A$ and~$B$ is:
+\begin{compactenum}
+    \item an object~$A \times B \in \Ob_{\CatC}$, together with
+    \item two \emph{projection morphisms}~$\pi_A \colon A \times B \to A$ and~$\pi_B \colon A \times B \to B$,
+\end{compactenum} 
+such that, given any~$X \in \Ob_{\CatC}$ and morphisms~$f \colon X \to A, g \colon X \to B$, there exists a \emph{unique} morphism~$(\prodMap{f}{g}) \colon X \to A \times B$ such that~$f = (\prodMap{f}{g})\then \pi_A$ and~$g=(\prodMap{f}{g})\then \pi_B$. Diagrammatically:
 \begin{equation}
 \includesag{50_defproduct}
 \end{equation}
@@ -97,12 +103,105 @@ Let~$\CatC$ be a category and let~$A,B\in \Ob_{\CatC}$ be objects. The \emph{pro
 
 The formulation, slightly technical, hints at uniqueness properties or ``universality''. The definition implies that if a product exists, then it is unique, in the sense that all the admissible products can be derived from each other. Therefore, when presented with a new category, one can guess what construction might be the product, and check the definition to make sure that it is indeed \emph{the} product.
 
-\book{
-\todo{Exercise: What are conditions for existence of products in Berg? (only go down, product is top)}
-\GZ{JL: need to reformulate this last part}}
+\begin{example}
+Suppose you are at an engineering conference in Switzerland, and there will be a hike as a group outing. The organizers have prepared snacks to go. Each participant can choose a food from~$X=\{a,b,c\}$ (think: apple, banana, carrot) and a drink from~$Y=\{w,t\}$ (think: water, tea). Let~$P$ denote the set of participants. The choice of snacks could be organized as depicted in \cref{fig:snacks_1}, i.e., each participant chooses a food, and chooses a drink. This can be described via maps~$f\colon P\to X$ and~$g\colon P\to Y$.
+
+\begin{figure}[h!]
+\begin{center}
+\includesag{50_snacks_1}
+\end{center}
+\caption{Each participant chooses a food and a drink. \label{fig:snacks_1}}
+\end{figure}
+
+\JL{In figure \cref{fig:snacks_1} I would not depict $P$ as having 6 elements; this could lead to confusion with $X \times Y$ which has 6 elements.}
+
+Alternatively, snacks could be prepackaged in all possible combinations of food and drink choices, represented as~$X\times Y$ (\cref{fig:snacks_2}).
+
+\begin{figure}[h!]
+\begin{center}
+\includesag{50_snacks_2}
+\end{center}
+\caption{Each participant chooses a combination of food and a drink. \label{fig:snacks_2}}
+\end{figure}
+
+This can be described via the map~$\phi\colon P\to X\times Y$. Thanks to the definition of product, we can notice that the two approaches are essentially the same. The situation is reported in \cref{fig:snacks_3}.
+
+\begin{figure}[h!]
+\begin{center}
+\includesag{50_snacks_3}
+\end{center}
+\caption{Choosing food and drink separately is essentially the same as choosing a combination of the two. \label{fig:snacks_3}}
+\end{figure}
+
+Indeed, given the maps~$f$ and~$g$, we can build a map~$\phi_{f,g}$:
+\begin{equation*}
+    \begin{aligned}
+    \phi_{f,g}\colon P&\to X\times Y\\
+    p&\mapsto \tup{f(p),g(p)}.
+    \end{aligned}
+\end{equation*}
+Furthermore, given~$\phi_{f,g}$, one can recover~$f$ and~$g$:
+\begin{equation*}
+    f=\phi_{f,g}\then \pi_1 \text{ and }g=\phi_{f,g}\then \pi_2.
+\end{equation*}
+In other words, this means that the diagram in \cref{fig:snacks_3} is commutative.
+\end{example}
+
+\begin{example}
+Let $m,n\in \mathbb{N}$, and draw an arrow $m\to n$ if $m$ divides $n$. For instance, 6 divides 12 and hence there is an arrow $6\to 12$. The product between any two $m,n\in \mathbb{N}$ in this category is given by the greatest common divisor. 
+\end{example}
+
+\begin{example}
+Let's consider the ordered set~$\tup{\mathbb{R},\leq}$, where given $x_1,x_2\in \mathbb{R}$ we can draw an arrow~$x_1\to x_2$ if~$x_1\leq x_2$. By following the products's commutative diagram, we know that the product of~$x_1$ and~$x_2$ is a $z\in \mathbb{R}$ such that
+\begin{compactitem}
+\item $z\leq x_1$;
+\item $z\leq x_2$;
+\item For all~$x\in \mathbb{R}$ with~$x\leq x_1$ and~$x\leq x_2$, we have~$x\leq z$.
+\end{compactitem}
+In other words, the product of $x_1,x_2\in \mathbb{R}$ is given by~$\min\{x_1,x_2\}$, and is also called \emph{meet}.
+\end{example}
+
+\begin{example}
+Let $S$ be a set, and $X,Y\subseteq S$ subsets. We can draw an arrow $X\to Y$ if $X\subseteq Y$. By following the product's commutative diagram, it is easy to see that the product of~$X$ and~$Y$ is given by~$X\cap Y$.
+\end{example}
+
+\begin{example}
+Suppose that as a manufacturer, you want to label your products with
+\begin{compactitem}
+\item A production date (8-digit code), and
+\item a model number (4-digit code).
+\end{compactitem}
+Instead of two separate labels, you can make one:
+\begin{equation*}
+    \underbrace{20210115}_{\text{date}}\underbrace{5900}_{\text{model number}}
+\end{equation*}
+We call this single label the \emph{product code}. We can see this diagrammatically, by considering the set~$Z$ of all product codes:
+\begin{center}
+    \begin{tikzcd}[column sep=large]
+    &P\arrow{dr}\arrow{dl}\arrow[d,dashed]&\\
+    X&Z\arrow{l}{\text{first 8}}[swap]{\pi_1}\arrow{r}{\pi_2}[swap]{\text{ last 4}}&Y
+    \end{tikzcd}
+\end{center}
+The set~$Z$, together with the maps~$\pi_1\colon Z\to X$, and~$\pi_2\colon Z\to Y$, will satisfy the definition of ``product of~$X$ and~$Y$''. However,~$Z$ is not precisely the cartesian product~
+$X\times Y$: elements of~$Z$ are 12-digit codes, while elements of~$X\times Y$ are pairs~$\tup{x,y}$ where~$x$ is a 8-digit code and~$y$ is a 4-digit code. Since both~$Z$ and~$X\times Y$ satisfy the definition of product, they are isomorphic. In fact, there is a unique way such that the following diagram commutes:
+\begin{center}
+    \begin{tikzcd}[column sep=large, row sep=large]
+    &Z\arrow{dl}[swap]{\text{first 8}}\arrow{dr}{\text{last 4}}\arrow[d,"\phi_{\text{first 8},\text{last 4}}" description]&\\
+    X&X\times Y\arrow{r}\arrow{l}&Y
+    \end{tikzcd}
+\end{center}
+where~$\phi_{\text{first 8},\text{last 4}}$ is given by:
+\begin{equation*}
+\begin{aligned}
+    \phi_{\text{first 8},\text{last 4}}\colon Z&\to X\times Y\\
+    202101155900&\mapsto \tup{20210115,5900}.
+\end{aligned}
+\end{equation*}
+\end{example}
+
 
 \book{
-\subsection{Products of categories}
+
 \begin{ctdefinition}[Product category]
 Given two categories~$\CatC$ and~$\CatD$, one defines the \emph{product category}~$\CatC \times \CatD$ to be the category specified as follows:
 \begin{compactenum}
@@ -111,6 +210,8 @@ Given two categories~$\CatC$ and~$\CatD$, one defines the \emph{product category
     \item \emph{Composition of morphisms}: The composition of morphisms is given by composing each component of the pair separately, i.e.~$\tup{f,g}\then \tup{f',g'}=\tup{f\then f',g\then g'}$. 
 \end{compactenum}
 \end{ctdefinition}
+
+
 \begin{example}
 Consider two posets~$P,Q$ as categories. The product poset~$P\times Q$ (\cref{def:productposet}) is the product category of the two posetal categories.
 \end{example}}

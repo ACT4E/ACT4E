@@ -3,7 +3,24 @@
 \label{sec:coproductset}
 \subsection{Coproduct}
 
-There exists a dual notion to ``product'' that is called ``coproduct''. Suppose that we are considering a hybrid car that contains two engines: an
+There exists a dual notion to ``product'' that is called ``coproduct''. We'll start by illustrating the idea behind coproducts using an example. Suppose that we are considering two vending machines: from the first one can buy food and from the second one a drink. We can think of this situation in terms of resources, by saying that having \transmuted{money} is enough to get \transmuted{food} via the first machine, or to get a \transmuted{drink} via the second machine (\cref{fig:vending_1}).
+
+\begin{figure}[h!]
+    \centering
+    \includesag{60_vending_1}
+    \caption{Alternative ways to use \transmuted{money}. \label{fig:vending_1}}
+\end{figure}
+
+From this we would like to conclude that we can use \transmuted{money} to buy \textbf{either} \transmuted{food} \textbf{or} a \transmuted{drink} (\cref{fig:vending_2}).
+
+\begin{figure}[h!]
+    \centering
+    \includesag{60_vending_2}
+    \caption{We can use \transmuted{money} to buy either \transmuted{food} or a \transmuted{drink}.\label{fig:vending_2}}
+\end{figure}
+
+\begin{comment}
+Suppose that we are considering a hybrid car that contains two engines: an
 electric engine and an internal combustion engine. Both can produce \textsf{motion}, but each from a different source of energy. The electric engine uses \textsf{electric energy}; the internal combustion engine uses \textsf{gasoline}. The situation is as in \cref{fig:e16a}.
 
 \begin{figure}[h!]
@@ -19,8 +36,10 @@ From this we would like to conclude that we can obtain \textsf{motion} from \tex
     \includesag{30_dpcatfig_e15}
     \caption{We can generate $\mathsf{motion}$ from either $\mathsf{gasoline}$ or $\mathsf{electric} \ \mathsf{energy}$. \label{fig:e16b}}
 \end{figure}
+\end{comment}
 
-To define the idea of ``\textbf{either} \textsf{gasoline} \textbf{or} \textsf{electric energy}'' we can refer to the idea of disjoint union of sets (\cref{def:disjoint-union}). The disjoint union of two sets is a set that contains two distinct copies of each of the two sets. If an element is contained in both sets, there will be two distinct copies of it in the disjoint union.
+
+To define the idea of ``\textbf{either} \transmuted{food} \textbf{or} \transmuted{drink}'' we can refer to the idea of disjoint union of sets (\cref{def:disjoint-union}). The disjoint union of sets $A$ and $B$ is a set, called $A + B$, that contains a distinct copy of $A$ and $B$ each. If an element is contained in both $A$ and $B$, then there will be two distinct copies of it in the disjoint union $A + B$.
 
 \begin{definition}[Disjoint union of sets]
 \label{def:disjoint-union}
@@ -55,43 +74,220 @@ The following definition is the general definition of coproducts for an arbitrar
  
 \begin{ctdefinition}[Coproduct]
 \label{def:catcoproduct}
-Let~$\CatC$ be a category and let~$A, B \in \CatC$ be objects. The \emph{coproduct} of~$A$ and~$B$ is an object~$A \sqcup B \in \CatC$ together with two \emph{inclusion morphisms}~$\iota_A \colon A \to A \sqcup B $ and~$\iota_B \colon B \to A  \sqcup B $, such that, given any~$X \in \CatC$ and morphisms $f\colon  A \to X, g \colon B \to X$, there exists a \emph{unique} morphism~$(\coprodMap{f}{g}) \colon A \sqcup B \to X$ such that~$f = \iota_A\then (\coprodMap{f}{g})$ and~$g = \iota_B \then (\coprodMap{f}{g})$. Diagrammatically:
+Let~$\CatC$ be a category and let~$A, B \in \Ob_{\CatC}$ be objects. The \emph{coproduct} of~$A$ and~$B$ is:
+\begin{compactenum}
+\item an object~$\coprodMap{A}{B} \in \Ob_{\CatC}$, together with
+\item two \emph{inclusion/injection morphisms}~$\iota_A \colon A \to \coprodMap{A}{B} $ and~$\iota_B \colon B \to \coprodMap{A}{B}$,
+\end{compactenum}
+such that, given any~$X \in \Ob_{\CatC}$ and morphisms $f\colon  A \to X, g \colon B \to X$, there exists a \emph{unique} morphism~$(\coprodMap{f}{g}) \colon \coprodMap{A}{B} \to X$ such that~$f = \iota_A\then (\coprodMap{f}{g})$ and~$g = \iota_B \then (\coprodMap{f}{g})$. Diagrammatically:
 \begin{equation}
 \includesag{60_defcoproduct}
 \end{equation}
 \end{ctdefinition} 
 
-\begin{example}
-The two inclusion maps for the disjoint union of sets are~$\iota_1\colon A \to A + B$ and~$\iota_2\colon B \to A + B$, defined as:
-\begin{equation}
-\begin{aligned}
-    \iota_1(a) &= \tup{1, a},\\
-    \iota_2(b) &= \tup{2, b}.
-\end{aligned}
-\end{equation}
-Given maps~$f\colon A\to X$ and~$g\colon B\to X$ as in \cref{def:catcoproduct}, then the map~$\coprodMap{f}{g}$ for the disjoint union of sets is
-\begin{equation}
-\begin{aligned}
-    \coprodMap{f}{g} \colon  A + B &\to X \\
-    y &   \mapsto
-    \begin{cases}
-        f(y), & \text{if } y \in A, \\
-        g(y), & \text{if } y \in B.
-    \end{cases}
-\end{aligned}
-\end{equation}
-\end{example}
-Note that~$X \sqcup Y$ is different from~$Y \sqcup X$, but the two are isomorphic~(\cref{fig:e16}).
+Note that~$\coprodMap{X}{Y}$ is different from~$\coprodMap{Y}{X}$, but the two are isomorphic~(\cref{fig:e16}).
 
 \begin{figure}[h!]
     \centering
     \includesag{30_dpcatfig_e16}
-    \caption{$X \sqcup Y$ and~$Y \sqcup X$ are isomorphic. \label{fig:e16}}
+    \caption{$\coprodMap{X}{Y}$ and~$\coprodMap{Y}{X}$ are isomorphic. \label{fig:e16}}
 \end{figure}
-For the case of $\mathsf{motion}$ generation, the inclusion maps are as in \cref{fig:inclusiongas}.
+For the case of vending machines, the inclusion maps are as in \cref{fig:inclusionvending}.
 
 \begin{figure}[h!]
     \centering
-    \includesag{30_dpcatfig_inclusiongas}
-    \caption{Inclusion maps for the motion generation problem. \label{fig:inclusiongas}}
+    \includesag{60_inclusion_vending}
+    \caption{Inclusion maps for the vending machine example. \label{fig:inclusionvending}}
 \end{figure}
+
+\begin{example}
+Let's consider two battery producers, each producing specific battery technologies. The first producer is able to produce a set~$A=\{\transmuted{LiPo}, \transmuted{LCO},\transmuted{NiH2}\}$ of technologies, and the second one a set~$B=\{\transmuted{LFP},\transmuted{LMO},\transmuted{LiPo}\}$. Each technology has a specific price, belonging to a set of prices~$P=\{\unit[50]{USD},\unit[60]{USD},\unit[70]{USD},\unit[80]{USD}\}$. We specify the price mappings for different technologies via the functions~$f\colon A\to P$ and~$g\colon B\to P$. A battery vendor wants to sell batteries from both producers and wants to create a battery catalogue, which needs to take into account which technology comes from which producer, to be able to distribute the earnings from the sales fairly. To this end, the disjoint union of the sets of technology is considered:
+\begin{equation*}
+    A+B=\{\tup{1,\transmuted{LiPo}},\tup{1,\transmuted{LCO}},\tup{1,\transmuted{NiH2}},\tup{2,\transmuted{LFP}},\tup{2,\transmuted{LMO}},\tup{2,\transmuted{LiPo}}\}.
+\end{equation*}
+It is possible to map each technology in~$A,B$ to its own representative in~$A+B$ via the so-called injection maps:
+\begin{equation*}
+    \begin{aligned}
+        \iota_A\colon A&\to A+B\\
+        a&\mapsto \tup{1,a},\\
+        \iota_B\colon B&\to A+B\\
+        b&\mapsto \tup{2,a}.
+    \end{aligned}
+\end{equation*}
+This situation is graphically represented in \cref{fig:coprod_batteries_1}, and mimics the coproduct diagram presented in \cref{def:catcoproduct}.
+
+\begin{figure}[h!]
+    \centering
+    \scalebox{0.75}{
+    \includesag{60_coprod_batt_1}}
+    \caption{Battery technologies, companies, prices, and a catalogue.}
+    \label{fig:coprod_batteries_1}
+\end{figure}
+
+
+Here, the universal property says that there is a \textbf{unique} function~$\coprodMap{f}{g}\colon A+B\to P$ such that 
+\begin{equation*}
+    \iota_A\then (f+ g)=f \text{ and }\iota_B\then (f+ g)=g.
+\end{equation*}
+If we take a~$x\in A+B$ is either ``from~$A$ or from~$B$'':
+\begin{equation*}
+    \text{either } \exists a\in A:x=\iota_A(a) \text{ or }\exists b\in B:x=\iota_B(b).
+\end{equation*}
+From this, we can deduce that the desired map~$f+g$ is:
+\begin{equation*}
+\begin{aligned}
+    \coprodMap{f}{g} \colon  A + B &\to P \\
+    x &   \mapsto
+    \begin{cases}
+        f(x),& \text{if } x=\iota_A(a),\quad a \in A, \\
+        g(x),& \text{if } x=\iota_B(b),\quad b \in B.
+    \end{cases}
+\end{aligned}
+\end{equation*}
+This is a specific example of \Set/\FinSet, in which the coproduct is a generalization of the concept of disjoint union. Now, we could spontaneously ask ourselves: why does the union not ``suffice'' for the coproduct definition in \Set? To see this, let's consider the same situation as before, but now having the catalogue of technologies given by~$A\cup B$ (\cref{fig:coprod_batteries_2}). The interpretation of maps $f,g$ does not change, and injections work as depicted. Note, however, that when asked for a map from the technology~$\transmuted{LiPo}\in A\cup B$, we have no notion of the company which produces it, and we are therefore unsure whether to assign it to~$f(\transmuted{LiPo})=\unit[50]{USD}$ or~$g(\transmuted{LiPo})=\unit[80]{USD}$. Indeed, the unique map~$f+g$ required by the universal property of the coproduct cannot exist, since in case $A\cap B\neq \emptyset$, any element~$x\in A\cap B$ should be simultaneously sent to $f(x)$ and $g(x)$.
+
+\begin{figure}[h!]
+    \centering
+    \scalebox{0.75}{
+    \includesag{60_coprod_batt_2}}
+    \caption{Example of why the union is not the coproduct in \Set.}
+    \label{fig:coprod_batteries_2}
+\end{figure}
+\end{example}
+
+
+\begin{example}
+Given~$X,Y\in \Ob_\Rel$, their coproduct is the disjoint union~$X+Y$, equipped with injections~$\iota_X\colon X\to X+Y$ and~$\iota_Y\colon Y\to X+Y$, inducing relations
+\begin{equation*}
+\begin{aligned}
+    R_{\iota_X}&\subseteq X\times (X+Y)\\
+    R_{\iota_Y}&\subseteq Y\times (X+Y).
+\end{aligned}
+\end{equation*}
+Note that in \Rel products and coproducts are closely related: both involve the disjoint union of sets.
+\end{example}
+
+\begin{example}
+Let $m,n\in \mathbb{N}$, and draw an arrow $m\to n$ if $m$ divides $n$. For instance, 6 divides 12 and hence there is an arrow $6\to 12$. The coproduct between any two $m,n\in \mathbb{N}$ in this category is given by the least common multiple. 
+\end{example}
+
+\begin{example}
+Let's consider the ordered set~$\tup{\mathbb{R},\leq}$, where given $x_1,x_2\in \mathbb{R}$ we can draw an arrow~$x_1\to x_2$ if~$x_1\leq x_2$. By following the coproduct's commutative diagram, we know that the coproduct of~$x_1$ and~$x_2$ is a $z\in \mathbb{R}$ such that
+\begin{compactitem}
+\item $x_1\leq z$;
+\item $x_2\leq z$;
+\item For all~$x\in \mathbb{R}$ with~$x_1\leq x$ and~$x_2\leq x$, we have~$z\leq x$.
+\end{compactitem}
+In other words, the coproduct of $x_1,x_2\in \mathbb{R}$ is given by~$\max\{x_1,x_2\}$, and is also called \emph{join}.
+\end{example}
+
+\begin{example}
+Let $S$ be a set, and $X,Y\subseteq S$ subsets. We can draw an arrow $X\to Y$ if $X\subseteq Y$. By following the coproduct's commutative diagram, it is easy to see that the coproduct of~$X$ and~$Y$ is given by~$X\cup Y$, i.e., the ``smallest'' set containing both~$X$ and~$Y$.
+\end{example}
+
+\begin{example}
+We can define a category \Vect in, composed of: 
+\begin{compactitem}
+\item \emph{Objects}: vector spaces;
+\item \emph{Morphisms}: linear maps;
+\item \emph{Identity morphisms}: identity maps;
+\item \emph{Composition}: composition of linear maps.
+\end{compactitem}
+It is a good exercise to prove that \Vect really forms a category. In the following, we want to look at the coproduct in \Vect, which generalizes the notion of \emph{direct sum} of vector spaces. Given vector spaces~$V$ and~$W$, their direct sum is given by:
+\begin{equation*}
+    V\oplus W\coloneqq \{\tup{v,w}\mid v\in V,w\in W\}.
+\end{equation*}
+Furthermore, given~$\tup{v_1,w_1},\tup{v_2,w_2}\in V\oplus W$, the sum of vectors is defined componentwise, i.e.:
+\begin{equation*}
+    \tup{v_1,w_1}+\tup{v_2,w_2}\coloneqq \tup{v_1+v_2,w_1+w_2}.
+\end{equation*}
+The injections are given by:
+\begin{equation*}
+    \begin{aligned}
+    \iota_V\colon V&\to V\oplus W\\
+    v&\mapsto \tup{v,0_W},\\
+    \iota_W\colon W&\to V\oplus W\\
+    w&\mapsto \tup{0_V,w},
+    \end{aligned}
+\end{equation*}
+where~$0_V$ and~$0_W$ represent the zero vectors in~$V$ and~$W$. Let's now look at the universal property in this case, by considering any vector space $U\in \Ob_\Vect$, and linear maps~$S\colon V\to U$,~$T\colon W\to U$. The universal property says that we need a unique linear map~$S+T\colon V\oplus W \to U$ such that~$S=\iota_V\then h$ and~$T=\iota_W\then g$. By taking any $\tup{v,w}\in V\oplus W$, we can write:
+\begin{equation*}
+    \begin{aligned}
+    h(\tup{v,w})&=h(\tup{v,0_W}+\tup{0_V,w})\\
+    &=h(\iota_V(v)+\iota_W(w)) \\
+    &=h(\iota_V(v))+h(\iota_W(v)) \qquad \qquad (h \text{ is linear})\\
+    &=(\iota_V\then h)(v)+(\iota_W\then h)(w)\\
+    &\overset{!}{=}Sv+Tw.
+    \end{aligned}
+\end{equation*}
+We can hence write the map $S+T$ as
+\begin{equation*}
+    \begin{aligned}
+    S+T\colon V\oplus W&\to U\\
+    \tup{v,w}&\mapsto Sv+Tw.
+    \end{aligned}
+\end{equation*}
+\end{example}
+
+\begin{example}[Adapted from~\cite{spivak2014category}]
+We can define a category of graphs \Graph. Objects of this category are graphs~$G=\tup{V,A,s,t}$, composed of:
+\begin{compactitem}
+\item A set of \emph{vertices} $V$;
+\item A set of \emph{arrows} $A$;
+\item A \emph{source} function $s\colon A\to V$, mapping each arrow to its source vertex;
+\item A \emph{target} function $t\colon A\to V$, mapping each arrow to its target vertex.
+\end{compactitem}
+Morphisms are \emph{graph homomorphisms}. Given graphs~$G=\tup{V,A,s,t}$ and~$G'=\tup{V',A',s',t'}$, a graph homomorphism~$f\colon G\to G'$ is given by maps~$f_0\colon V\to V'$ and~$f_1\colon A\to A'$, such that the following diagrams commute:
+\begin{equation*}
+\includesag{60_graph_homomorphism}
+\end{equation*}
+Intuitively, all this is saying is that ``arrows are bound to their vertices'', meaning that if a vertex~$v_1$ is connected to~$v_2$ via an arrow~$a$, the vertices~$f_0(v_1)$ and~$f_0(v_2)$ have to be connected via an arrow~$f_1(a)$. We are now ready to define the coproduct in \Graph. Given two graphs~$G=\tup{V,A,s,t}$ and~$G'=\tup{V',A',s',t'}$, their coproduct is a graph
+        \begin{equation*}
+            G+G'=\tup{V+V',A+A',s+s',t+t'}.
+        \end{equation*}
+In~$G+G'$, an arrow connects $v_1$ to $v_2$ if:
+\begin{compactitem}
+\item $v_1,v_2\in V$ or $v_1,v_2\in V'$, i.e., if both vertices belong to the same graph, and
+\item an arrow between from~$v_1$ to~$v_2$ exists in~$G$ or~$G'$.
+\end{compactitem}
+Given~$s\colon A\to V$ and~$s'\colon A'\to V'$, we have:
+\begin{equation*}
+        \begin{aligned}
+            s+ s'\colon A+ A'&\to V+ V'\\
+            x&\mapsto
+                \begin{cases}
+                   s(x)& \text{if } x\in A\\
+                    s'(x)&\text{if } x\in A'.
+                    \end{cases}
+        \end{aligned}
+        \end{equation*}
+and
+\begin{equation*}
+        \begin{aligned}
+            t+t'\colon A+ A'&\to V+ V'\\
+            x&\mapsto
+                \begin{cases}
+                   t(x)& \text{if } x\in A\\
+                    t'(x)&\text{if } x\in A'.
+                    \end{cases}
+        \end{aligned}
+\end{equation*}
+This is nicely graphically representable. Consider two graphs as in \cref{fig:graphs_1}.
+
+\begin{figure}[h!]
+    \centering
+    \includesag{60_graph_1}
+    \caption{Example of graphs for which we want to consider the coproduct. \label{fig:graphs_1}}
+\end{figure}
+
+Their coproduct is a graph including the ``disjoint union'' of both original graphs, without connecting them (\cref{fig:graphs_2}).
+
+
+
+\begin{figure}[h!]
+    \centering
+    \includesag{60_graph_2}
+    \caption{Example of coproduct of graphs. \label{fig:graphs_2}}
+\end{figure}
+
+\end{example}
