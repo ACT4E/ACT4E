@@ -26,8 +26,6 @@ can be seen as a tuple $\tup{S, \{f_i\}_i}$:
 \end{itemize}
 
 
-
-
 \begin{comment}
 \begin{table}[h]
     \centering
@@ -50,41 +48,45 @@ can be seen as a tuple $\tup{S, \{f_i\}_i}$:
 
 In this example, we can consider the primary key to be the set
 \begin{equation*}
-M \coloneqq \{ \textsf{1204}, \textsf{1206}, \textsf{1207}, \textsf{2267}, \textsf{2279}, \textsf{1478}, \textsf{2299} \},
+M \coloneqq \{ \transmuted{1204}, \transmuted{1206}, \transmuted{1207}, \transmuted{2267}, \transmuted{2279}, \transmuted{1478}, \transmuted{2299} \},
 \end{equation*}
-of models of motors. The other colums are given by the set~$C \coloneqq \{ \textsf{SOYO}, \textsf{Sanyo Denki}\}$ of manufacturing companies, the set $S$ of possible motor sizes, the set~$W$ of possible weights, the set $J$ of possible maximal powers, and the set~$P$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$M$ to set of possible values for the given attribute. For example, there is a function~$\textsf{Company}\colon M \to C$ which maps each model to the corresponding company that manufactures it. So, according to Table \ref{tab:electric_motors}, we have \text{e.g.}~$\textsf{Company}(\textsf{1204}) = \textsf{SOYO}$, and~$\textsf{Company}(\textsf{2279}) = \textsf{Sanyo Denki}$, etc.
+of models of motors. The other colums are given by the set
+\begin{equation*}
+    C \coloneqq \{ \transmuted{SOYO}, \transmuted{Sanyo Denki}\}
+\end{equation*}
+of manufacturing companies, the set~$S$ of possible motor sizes, the set~$W$ of possible weights, the set~$J$ of possible maximal powers, and the set~$P$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$M$ to set of possible values for the given attribute. For example, there is a function~$\transmuted{Company}\colon M \to C$ which maps each model to the corresponding company that manufactures it. So, according to \cref{tab:electric_motors}, we have \text{e.g.}~$\transmuted{Company}(\transmuted{1204}) = \transmuted{SOYO}$, and~$\transmuted{Company}(\transmuted{2279}) = \transmuted{Sanyo Denki}$, etc.
 
 Note that in ``real life'', the catalogue of motors might not have seven entries, as in \cref{tab:electric_motors}, but has in fact hundreds of entries, and is implemented digitally as a database, \text{i.e.} a collection of interrelated tables. In this case, we will want to be able to search and filter the data based on various criteria. Many natural operations on tables and databases may be described simply in terms of operations with functions. We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases.
 
-Sticking with \cref{tab:electric_motors}, suppose, for instance, that we want to consider only motors from Company~$\textsf{Sanyo Denki}$. In terms of the function
+Sticking with \cref{tab:electric_motors}, suppose, for instance, that we want to consider only motors from Company~$\transmuted{Sanyo Denki}$. In terms of the function
 \begin{equation*}
-\textsf{Company}\colon M \to C
+\transmuted{Company}\colon M \to C
 \end{equation*}
-this corresponds to the preimage~$\textsf{Company}^{-1}(\{ \textsf{Sanyo Denki} \}) = \{ \textsf{2279}, \textsf{2299}\}$, which is a subset of the set~$M$. Or, we may want to consider only motors which cost between 40 and 200 USD. In terms of the obvious function
+this corresponds to the preimage~$\transmuted{Company}^{-1}(\{ \transmuted{Sanyo Denki} \}) = \{ \transmuted{2279}, \transmuted{2299}\}$, which is a subset of the set~$M$. Or, we may want to consider only motors which cost between 40 and 200 USD. In terms of the obvious function
 \begin{equation*}
-\textsf{Price}\colon M \to P,
+\transmuted{Price}\colon M \to P,
 \end{equation*}
 this means we wish to restrict ourselves to the preimage
 \begin{equation*}
-\textsf{Price}^{-1}(\{ 49.95, 59.95, 164.95\}) = \{ \textsf{1478}, \textsf{2299}, \textsf{2279} \} \subseteq M.
+\transmuted{Price}^{-1}(\{ 49.95, 59.95, 164.95\}) = \{ \transmuted{1478}, \transmuted{2299}, \transmuted{2279} \} \subseteq M.
 \end{equation*}
 
 Now suppose we wish to add a column to our table for ``volume'', because we may want to only consider motors that have, at most, a certain volume. For this we define a set~$V$ of possible volumes (let's take~$V = \mathbb{R}_{\geq 0}$, the non-negative real numbers), and define a function
 \begin{equation*}
 \begin{aligned}
-\textsf{Multiply}\colon S &\to V\\
+\transmuted{Multiply}\colon S &\to V\\
 \tup{l, w, h} &\mapsto l \cdot w \cdot h,
 \end{aligned}
 \end{equation*}
 which maps any size of motor to its corresponding volume by multiplying together the given numbers for length, width, and heigth.  Now we can compose this function with the function
 \begin{equation*}
-\textsf{Size}\colon M \to S
+\transmuted{Size}\colon M \to S
 \end{equation*}
 to obtain a function
 \begin{equation*}
-\textsf{Volume}\colon M \to V,
+\transmuted{Volume}\colon M \to V,
 \end{equation*}
-which defines a new column in our table. The composition of functions is usually written as~$\textsf{Volume} = \textsf{Multiply} \ \circ \ \textsf{Size}$, however we stick to our convention of writing~$\textsf{Volume} = \textsf{Size} \then \textsf{Multiply}$. Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
+which defines a new column in our table. The composition of functions is usually written as~$\transmuted{Volume} = \transmuted{Multiply} \circ \transmuted{Size}$, however we stick to our convention of writing~$\transmuted{Volume} = \transmuted{Size} \then \transmuted{Multiply}$. Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
 
 %We call such a diagram \textbf{commutative}, because the composition $\mathsf{Size} \then \mathsf{Multiply}$ is equal to the function $\mathsf{Volume}$ (in fact, we defined $\textsf{Volume}$ this way).
 
@@ -96,58 +98,42 @@ which defines a new column in our table. The composition of functions is usually
 \caption{A diagram of functions. \label{fig:diagram_functions}}
 \end{figure}
 
-We can interpret the arrows in this diagram as being part of a category, one where $M$,~$S$, and~$V$ are among the objects, and where the functions~$\textsf{Size}$, $\textsf{Multiply}$ and~$\textsf{Volume}$ are morphisms. We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category, which we call $\Cat{Database}$, in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before. And we might not want to re-think each time precisely which category we are working with.
+We can interpret the arrows in this diagram as being part of a category, one where~$M$,~$S$, and~$V$ are among the objects, and where the functions~$\transmuted{Size}$, $\transmuted{Multiply}$ and~$\transmuted{Volume}$ are morphisms. We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category, which we call $\Cat{Database}$, in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before. And we might not want to re-think each time precisely which category we are working with.
 
-
-\subsection{The Category Set}
+\subsection{The Category \Set}
 
 A helpful concept here is to think of our specific sets and functions as living in a very (very) large category which contains all possible sets as its objects and all possible functions as its morphisms. This category is known as the category of sets, and it is an important protagonist in category theory. We will denote it by $\Set$. It is a short exercise to check that the following does indeed define a category.
 
 \begin{ctdefinition}[Category of sets]
-The category of sets~$\Set$ is defined by:
+The category of sets \Set is defined by:
     \begin{compactenum}
     \item \emph{Objects}: all sets.
-    \item \emph{Morphisms}: given sets~$X$ and~$Y$, the homset~$\Hom_\Set(X,Y)$ is the set of all functions from~$X$ to~$Y$.
-    \item \emph{Identity morphism}: given a set~$X$, its identity morphism~$\text{id}_X$ is the identity function~$X \to X, \ \text{id}_X(x) = x$.
+    \item \emph{Morphisms}: given sets~$\obja$ and~$\objb$, the homset~$\Hom_\Set(\obja,\objb)$ is the set of all functions from~$\obja$ to~$\objb$.
+    \item \emph{Identity morphism}: given a set~$\obja$, its identity morphism~$\text{id}_\obja$ is the identity function~$\obja \to \obja, \ \text{id}_\obja(x) = x$.
     \item \emph{Composition operation}: the composition operation is the usual composition of functions.
     \end{compactenum}
 \end{ctdefinition} 
 
-
-
-We did say above, however, that we could build a category~$\Cat{Database}$ which only involves the sets that we are using for our database, and the functions between them that we are working with. What we would need for~$\Cat{Database}$ to be a category is that if any function is in~$\Cat{Database}$, then also its sources and target sets are, and we would need that any composition of functions in~$\Cat{Database}$ is again in~$\Cat{Database}$. (Also, we define the identity morphism for any set in~$\Cat{Database}$ to be the identity function on that set.) If these conditions are met,~$\Cat{Database}$ is what is called a \emph{subcategory} of~$\Set$. 
+We did say above, however, that we could build a category~$\Cat{Database}$ which only involves the sets that we are using for our database, and the functions between them that we are working with. What we would need for~$\Cat{Database}$ to be a category is that if any function is in~$\Cat{Database}$, then also its sources and target sets are, and we would need that any composition of functions in~$\Cat{Database}$ is again in~$\Cat{Database}$. (Also, we define the identity morphism for any set in~$\Cat{Database}$ to be the identity function on that set.) If these conditions are met,~$\Cat{Database}$ is what is called a \emph{subcategory} of~\Set. 
 
 
 \subsection{Notion of subcategory}
  
 \begin{ctdefinition}[Subcategory]
 \label{def:subcategory}
-A subcategory $\CatD$ of a category $\CatC$ is a category for which:
+A subcategory~$\CatD$ of a category~$\CatC$ is a category for which:
 \begin{compactenum}
     \item All the objects in $\Ob_\CatD$ are in $\Ob_\CatC$;
-    \item For any objects $A,B\in \Ob_\CatD$, $\Hom_\CatD(A,B)\subseteq \Hom_\CatC(A,B)$;
-    \item If $A\in \Ob_\CatD$, then $\id_A\in \Hom_\CatC(A,A)$ is in $\Hom_\CatD(A,A)$ and acts its identity morphism;
-    \item If $f\colon A\to B$ and $g\colon B\to C$ in $\CatD$, then the composite $f\then g$ in $\CatC$ is in $\CatD$ and represents the composite in $\CatD$.
+    \item For any objects $\obja,\objb\in \Ob_\CatD$, $\Hom_\CatD(\obja,\objb)\subseteq \Hom_\CatC(\obja,\objb)$;
+    \item If $\obja\in \Ob_\CatD$, then $\id_\obja \in \Hom_\CatC(\obja,\obja)$ is in $\Hom_\CatD(\obja,\obja)$ and acts as its identity morphism;
+    \item If~$\mora \colon \obja \to \objb$ and~$\morb\colon \objb\to \objc$ in $\CatD$, then the composite~$\mora \then \morb$ in $\CatC$ is in~$\CatD$ and represents the composite in~$\CatD$.
 \end{compactenum}
 \end{ctdefinition}
-
-\begin{comment}
-\begin{ctdefinition}[Subcategory]
-\label{def:subcategory}
-	Given a category~$\Cat{C}$, a \emph{subcategory}~$\Cat{B}$ consists of a subcollection of the collection of objects and morphisms of~$\Cat{C}$ such that:
-	\begin{enumerate}[(i)]
-	\item If a morphism~$f \colon x\to y$ is in $\Cat{B}$, then so are the objects~$x$ and~$y$.
-	\item If the morphisms~$f\colon x\to y$ and~$g\colon y\to z$ are in~$\Cat{B}$, then so is their composite~$f\then g\colon x\to z$.
-	\item If~$x$ is in~$\Cat{B}$, then so is the identity morphism~$\text{id}_x$.
-	\end{enumerate}
-\end{ctdefinition} 
-\end{comment}
-
 
 Two important examples of subcategory are the following. 
 
 \begin{example}
-$\FinSet$ is the category of finite sets and all functions between them. It is a subcategory of the category $\Set$ of sets and functions. While an object $X\in \Ob_\Set$ is a set with arbitrary cardinality, $\Ob_{\FinSet}$ only includes sets which have finitely many elements. Objects of $\FinSet$ are in $\Set$, but the converse is not true. Furthermore, given $X,Y\in \Ob_\FinSet$, we take $\Hom_{\FinSet}(X,Y)=\Hom_{\Set}(X,Y)$.
+\FinSet is the category of finite sets and all functions between them. It is a subcategory of the category \Set of sets and functions. While an object $\obja \in \Ob_\Set$ is a set with arbitrary cardinality, $\Ob_{\FinSet}$ only includes sets which have finitely many elements. Objects of \FinSet are in \Set, but the converse is not true. Furthermore, given $\obja,\objb\in \Ob_\FinSet$, we take $\Hom_{\FinSet}(\obja,\objb)=\Hom_{\Set}(\obja,\objb)$.
 \end{example}
 
 
@@ -155,9 +141,9 @@ $\FinSet$ is the category of finite sets and all functions between them. It is a
     The category \Set is a subcategory of \Rel. To show this, we need to prove the conditions presented in \cref{def:subcategory}.
 	\begin{enumerate}
 	\item In both \Rel and \Set, the collection of objects is all sets.
-	\item Given $A,B\in \Ob_{\Set}$, we know that $\Hom_{\Set}(A,B)\subseteq \Hom_{\Rel}(A,B)$, i.e., that all functions between sets $A,B$ are a particular subset of all relations between $A,B$.
-	\item For each $A\in \Ob_{\Set}$, the identity relation $\id_A=\{\tup{a,a'}\in A\times A\mid a=a'\}$ corresponds to the identity function $\id_A\colon A\to A$ in $\Set$.
-	\item Let $R\subseteq X\times Y$ and $S\subseteq Y\times Z$ be relations which are functions. We need to show that their composition in $\Rel$, expressed as $R\then S\subseteq X\times Z$, is again a function. This was proven in \cref{lemma:comprelfun}.
+	\item Given~$\obja,\objb\in \Ob_{\Set}$, we know that~$\Hom_{\Set}(\obja,\objb)\subseteq \Hom_{\Rel}(\obja,\objb)$, i.e., that all functions between sets~$\obja,\objb$ are a particular subset of all relations between~$\obja,\objb$.
+	\item For each~$\obja \in \Ob_{\Set}$, the identity relation~$\id_\obja=\{\tup{x,x'}\in \obja\times \obja \mid x=x'\}$ corresponds to the identity function~$\id_\obja \colon \obja \to \obja$ in \Set.
+	\item Let~$R\subseteq \obja\times \objb$ and $S\subseteq \objb \times \objc$ be relations which are functions. We need to show that their composition in \Rel, expressed as~$R\then S\subseteq \obja\times \objc$, is again a function. This was proven in \cref{lemma:comprelfun}.
 	\end{enumerate}
 
 \end{example}
