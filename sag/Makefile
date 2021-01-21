@@ -19,16 +19,21 @@ PDFGraphics = $(patsubst %.tikz,%.pdf,$(TikFiles))
 all: $(PDFGraphics)
 
 
-%.pdf : %.tex  
+%.pdf : %.tex  ../utils/*.tex
 	$(PDFLATEX) $< 
-	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.out $**.toc $**.tdo $*_region.*
+	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.*
 
 
 %.pdf : %-page.pdf
 	$(PDFCROP) $< $@
 
+
+clean-aux: 
+	$(RM) -f -- *.aux *.bak *.bbl *.blg *.log *.run.xml *blx.bib *-page* *.out *.toc *.tdo _region.* *.auxlock
+
+
 clean : .PHONY
-	$(RM) -f -- *.aux *.bak *.bbl *.blg *.log *.out *.toc *.tdo _region.* *.auxlock
+	$(MAKE) clean-aux 
 	$(RM) -f -- $(PDFGraphics)
 	$(RM) -f -- *-page*tex
 	# $(RM) -f -- $(StandAloneGraphicsTeXFiles)
