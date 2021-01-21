@@ -1,11 +1,9 @@
-all: CategoricalCoDesign.pdf
+all:  
+	@echo
+	@echo Compile using \"make ready\" or \"make full\".
+	@echo 
+	@echo Create the chached tikz using \"make tikz\".
 
-# all:  CategoricalCoDesign_ch2_basic.pdf
-
-# all: dp_category.pdf
-
-# all:  CategoricalCoDesign_ch3_quantitative.pdf
-CategoricalCoDesign.pdf:: chapters/*.tex utils/*.tex
 
 tmpdir=tmp
 
@@ -17,3 +15,15 @@ tmpdir=tmp
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log CategoricalCoDesign.pdf *.aux *.dvi *.out
+
+
+ready: ACT4E-ready.pdf
+full: ACT4E-full.pdf
+
+ACT4E-ready.pdf::  chapters/*.tex utils/*.tex
+
+ACT4E-full.pdf::  chapters/*.tex utils/*.tex
+
+
+tikz:
+	make -C sag -j

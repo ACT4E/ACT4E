@@ -19,7 +19,7 @@ PDFGraphics = $(patsubst %.tikz,%.pdf,$(TikFiles))
 all: $(PDFGraphics)
 
 
-%.pdf : %.tex  
+%.pdf : %.tex  ../utils/*.tex
 	$(PDFLATEX) $< 
 	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.*
 
