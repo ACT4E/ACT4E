@@ -19,10 +19,13 @@ clean:
 
 ready: ACT4E-ready.pdf
 full: ACT4E-full.pdf
+full-fast: ACT4E-full-fast.pdf
 
 ACT4E-ready.pdf::  chapters/*.tex utils/*.tex
 
 ACT4E-full.pdf::  chapters/*.tex utils/*.tex
+
+ACT4E-full-fast.pdf::  chapters/*.tex utils/*.tex
 
 
 tikz:
