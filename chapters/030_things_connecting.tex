@@ -262,7 +262,7 @@ Now, suppose we decide that we don't want to traverse paths which have a maximal
 %
 %Supposed we are tasked with managing a scientific mission for a Mars rover. In particular, we need need to plan the route that the rover will take in order to travel from its landing position ``$a$'' to a target destination ``$b$''. We have a map of the relevant region on Mars, complete with elevation data, but, of course, only to a certain degree of accuracy.
 %
-%To model the landscape, we divide it into a grid of~$1 \times 1$ meter squares, and the center of each is labeled with an~$\tup{x,y}$ coordinate. In total, our model has~$1000 \times 1000$ squares, and we let~$L$ denote the set of coordinates of the centers of the squares. We think of these coordinate labels as the objects of a category~$\cat{C}$ which are the possible (approximate) locations that the rover might be. If the rover is at a given location~$l = \tup{x,y}$, then in our model there are eight possible directions that the rover can move:
+%To model the landscape, we divide it into a grid of~$1 \times 1$ meter squares, and the center of each is labeled with an~$\tup{x,y}$ coordinate. In total, our model has~$1000 \times 1000$ squares, and we let~$L$ denote the set of coordinates of the centers of the squares. We think of these coordinate labels as the objects of a category~$\CatC$ which are the possible (approximate) locations that the rover might be. If the rover is at a given location~$l = \tup{x,y}$, then in our model there are eight possible directions that the rover can move:
 %
 %\begin{figure}[h!]
 %\centering
@@ -272,7 +272,7 @@ Now, suppose we decide that we don't want to traverse paths which have a maximal
 %\end{figure}
 %
 %
-%If we draw such arrows for each location label $c \in \cat{C}$, then we obtain a (rather full-looking) directed graph such as indicated in Figure \ref{fig:move_graph}.
+%If we draw such arrows for each location label $c \in \CatC$, then we obtain a (rather full-looking) directed graph such as indicated in Figure \ref{fig:move_graph}.
 %
 %\begin{figure}[h!]
 %\centering
@@ -281,9 +281,9 @@ Now, suppose we decide that we don't want to traverse paths which have a maximal
 %\label{fig:move_graph}
 %\end{figure}
 %
-%To model the possible paths the rover might potential travel, we take the free category on this graph. That is, we let the morphisms in our category $\Cat{C}$ be all possible paths obtained by concatenating directed arrows from the above graph Figure \ref{fig:move_graph}. In particular, given the locations~$a$ and~$b$, we have
+%To model the possible paths the rover might potential travel, we take the free category on this graph. That is, we let the morphisms in our category $\CatC$ be all possible paths obtained by concatenating directed arrows from the above graph Figure \ref{fig:move_graph}. In particular, given the locations~$a$ and~$b$, we have
 %\begin{equation}
-%\Cat{C}(a, b) = \{ \text{paths from } a \text{ to } b \}.
+%\CatC(a, b) = \{ \text{paths from } a \text{ to } b \}.
 %\end{equation}
 %
 %\begin{figure}[h!]
@@ -293,15 +293,15 @@ Now, suppose we decide that we don't want to traverse paths which have a maximal
 %\label{fig:rover_paths}
 %\end{figure}
 %
-%In Figure \ref{fig:rover_paths}, two possible paths are drawn in green. Note that by allowing \emph{all} possible paths we are also allowing ones of infinite length (\text{e.g.} where the rover moves around indefinitely long). Since we want our rover to reach its destination in a finite amount of time, we will subsequently take $\Cat{C}$ to be the category where the morphisms are only the paths of \emph{finite length}.
+%In Figure \ref{fig:rover_paths}, two possible paths are drawn in green. Note that by allowing \emph{all} possible paths we are also allowing ones of infinite length (\text{e.g.} where the rover moves around indefinitely long). Since we want our rover to reach its destination in a finite amount of time, we will subsequently take $\CatC$ to be the category where the morphisms are only the paths of \emph{finite length}.
 %
-%Next, we include the elevation information in our model, in order to start to optimize the planning of which path we wish the rover to take. We encode elevation data as a function~$h \colon L \to \mathbb{R}$ which assigns a real number to each location label. If~$l$ and~$l'$ are two locations, the absolute elevation difference between~$l$ and $~l'$ is~$\vert h(l') - h(l) \vert$. For our rover, we only want to consider paths such that the absolute elevation difference between any two adjacent locations along that path is less than a given threshold (if the path is too steep, the rover might tip over!). This is one kind of constraint which determines certain paths in our category~$\Cat{C}$ to be infeasible.
+%Next, we include the elevation information in our model, in order to start to optimize the planning of which path we wish the rover to take. We encode elevation data as a function~$h \colon L \to \mathbb{R}$ which assigns a real number to each location label. If~$l$ and~$l'$ are two locations, the absolute elevation difference between~$l$ and $~l'$ is~$\vert h(l') - h(l) \vert$. For our rover, we only want to consider paths such that the absolute elevation difference between any two adjacent locations along that path is less than a given threshold (if the path is too steep, the rover might tip over!). This is one kind of constraint which determines certain paths in our category~$\CatC$ to be infeasible.
 %
-%Among the feasible paths, we wish to optimize the path taken by the rover so that it uses the least amount of energy, say.  For any path~$p$ of finite length, we model what the energy cost~$E(p)$ of that path for the rover would be. (We skip the precise details of how we might model this; surely the energy cost of a path will be related to the length of the path, for example.) This defines a function on each of the homsets of our category $\Cat{C}$,
+%Among the feasible paths, we wish to optimize the path taken by the rover so that it uses the least amount of energy, say.  For any path~$p$ of finite length, we model what the energy cost~$E(p)$ of that path for the rover would be. (We skip the precise details of how we might model this; surely the energy cost of a path will be related to the length of the path, for example.) This defines a function on each of the homsets of our category $\CatC$,
 %\begin{equation}
-%E \colon \Cat{C}(l, l') \longrightarrow \mathbb{R},
+%E \colon \CatC(l, l') \longrightarrow \mathbb{R},
 %\end{equation}
-%which, to each path from~$l$ to~$l'$, assigns the corresponding energy cost of that path. Thus our specific optimization problem is to find those feasible paths which minimize the function~$E\colon \Cat{C}(a,b) \to \mathbb{R}$ defined on paths from the starting position~$a$ to the target position~$b$.
+%which, to each path from~$l$ to~$l'$, assigns the corresponding energy cost of that path. Thus our specific optimization problem is to find those feasible paths which minimize the function~$E\colon \CatC(a,b) \to \mathbb{R}$ defined on paths from the starting position~$a$ to the target position~$b$.
 %
 %--------------------------------
 %
