@@ -25,6 +25,26 @@ maps an implementation to the resources it requires.
 \captionsideleft{\label{fig:setup}}{\includegraphics[scale=0.33]{gmcdp_setup}}
 \end{definition}
 
+
+A graphical notation will help reasoning about composition. A DPI
+is represented as a box with~$\dpinumf$ green edges and~$\dpinumr$
+red edges~(\cref{fig:dp_graphical}).
+
+\captionsideleft{\label{fig:dp_graphical}}{\includegraphics[scale=0.33]{gmcdp_dp_graphical.pdf}}
+
+\noindent This means that the functionality and resources spaces
+can be factorized in~$\dpinumf$ and~$\dpinumr$ components: $\funsp=\prod_{i=1}^{\dpinumf}\pi_{i}\funsp_{i},$
+$\ressp=\prod_{j=1}^{\dpinumr}\pi_{j}\ressp$, where ``$\pi_{i}$''
+represents the projection to the $i$-th component. If there are no
+green (respectively, red) edges, then $\dpinumf$ (respectively, $\dpinumr$)
+is zero, and $\funsp$ (respectively, $\ressp$) is equal to~$\One=\{\left\langle \right\rangle \}$,
+the set containing one element, the empty tuple~$\left\langle \right\rangle $.
+
+These \emph{co-design diagrams} are not to be confused with signal
+flow diagrams, in which the boxes represent oriented systems and the
+edges represent signals.
+
+
 \begin{example}[Motor design]
 \label{exa:motor}Suppose we need to choose a motor for a robot from
 a given set. The \emph{functionality} of a motor could be parametrized
@@ -248,9 +268,7 @@ of an agent or the number of agents~(\figref{multirobot2}).
 
 }\caption{}
 \end{figure}
-
-\clearpage
-
+ 
 
 \subsubsection{LQG Control}
 
@@ -340,3 +358,224 @@ resource.
 
 \caption{}
 \end{figure}
+
+
+
+\begin{example}
+Svorenova\,\,\etal~\cite{svorenova16resource} consider a joint
+sensor scheduling and control synthesis problem, in which a robot
+can decide to not perform sensing to save power, given performance
+objectives on the probability of reaching the target and the probability
+of collision. The method outputs a Pareto frontier of all possible
+operating points. This can be cast as a design problem with functionality
+equal to the \F{probability of reaching the target} and (the inverse
+of) \F{the collision probability}, and with resources equal to the
+\R{actuation power}, \R{sensing power}, and \R{sensor accuracy}.
+    
+\end{example}
+\captionsideleft{\label{fig:progressive-1-1}}{\includegraphics[scale=0.33]{batteries_svorenova.pdf}}
+
+
+\begin{example}
+Nardi\,\,\etal~\cite{zia16comparative} describe a benchmarking
+system for visual SLAM that provides the empirical characterization
+of the monotone relation between \F{the accuracy} of the visual
+SLAM solution, the \F{throughput {[}frames/s{]}} and \R{the energy
+for computation {[}J/frame{]}}. The implementation space is the product
+of algorithmic parameters, compiler flags, and architecture choices,
+such as the number of GPU cores active. This is an example of a design
+problem whose functionality-resources map needs to be experimentally
+evaluated.
+\end{example}
+\captionsideleft{}{\includegraphics[scale=0.33]{batteries_zia.pdf}}
+
+\subsubsection{Other examples in minimal robotics}
+
+Many works have sought to find ``minimal'' designs for robots, and
+can be understood as characterizing the relation between the poset
+of \F{tasks} and the poset of physical resources, which is the product
+of \R{sensing}, \R{actuation}, and \R{computation} resources,
+plus other non-physical resources, such as \R{prior knowledge}~(\cref{fig:robot-generic}).
+Given a task, there is a minimal antichain in the resources poset
+that describes the possible trade-offs (e.g., compensating lousier
+sensors with more computation). 
+
+\captionsideleft{\label{fig:robot-generic}}{\includegraphics[scale=0.33]{batteries_okane.pdf}}
+
+The poset structure arises naturally: for example, in the \emph{sensor
+lattice}~\cite{lavalle12sensing}\emph{,} a sensor dominates another
+if it induces a finer partition of the state space. Similar dominance
+relations can be defined for actuation and computation. O'Kane and
+Lavalle~\cite{okane08comparing} define a robot as a union of ``robotic
+primitives'', where each primitive is an abstraction for a set of
+sensors, actuators, and control strategies that can be used together
+(e.g., a compass plus a contact sensor allow to ``drive North until
+a wall is hit''). The effect of each primitive is modeled as an operator
+on the robot's information space. It is possible to work out what
+are the minimal combinations of robotic primitives (minimal antichain)
+that are sufficient to perform a task (e.g., global localization),
+and describe a dominance relation (partial order) of primitives. Other
+works have focused on minimizing the complexity of the controller.
+Egerstedt~\cite{egerstedt03motion} studies the relation between
+the \F{complexity of the environment} and a notion of \R{minimum
+description length of control strategies}, which can be taken as
+a proxy for the computation necessary to perform the task. Soatto~\cite{soatto11steps}
+studies the relation between the \F{performance of a visual task},
+and the \R{ minimal representation} that is needed to perform that
+task. 
+
+
+
+
+
+\subsection{Co-design problems\label{sec:Co-design-problems}}
+
+A ``co-design problem'' will be defined as a multigraph of design
+problems. Graphically, one is allowed to connect only edges of different
+color. This interconnection is indicated with the symbol~``$\posleq$''
+in a rounded box~(\cref{fig:connection}). 
+
+\captionsideleft{\label{fig:connection}}{\includegraphics[scale=0.33]{papers/uncertainty/unc_connection.pdf}}
+
+\noindent The semantics of the interconnection is that the resources
+required by the first DPI are provided by the second DPI. This is
+a partial order inequality constraint of the type~$\res_{1}\posleq\funn_{2}$.
+
+\begin{definition}
+\label{def:cdpi}A \emph{Co-Design Problem with Implementation} (CDPI)
+is a tuple $\left\langle \funsp,\ressp,\left\langle \cdpiN,\mathcal{E}\right\rangle \right\rangle ,$
+where~$\funsp$ and~$\ressp$ are two posets, and~$\left\langle \cdpiN,\mathcal{E}\right\rangle $
+is a\emph{ }multigraph of DPIs. Each node~$\cdpin\in\cdpiN$ is a
+DPI $\cdpin=\left\langle \funsp_{\cdpin},\ressp_{\cdpin},\impsp_{\cdpin},\exc_{\cdpin},\eval_{\cdpin}\right\rangle .$
+An edge~$e\in\mathcal{E}$ is a tuple $e=\left\langle \left\langle \cdpinA,\cdpiresindA\right\rangle ,\left\langle \cdpinB,\cdpifunindB\right\rangle \right\rangle $,
+where~$\cdpinA,\cdpinB\in\cdpiN$ are two nodes and~$\cdpiresindA$
+and~$\cdpifunindB$ are the indices of the components of the functionality
+and resources to be connected, and it holds that~$\pi_{\cdpiresindA}\ressp_{\cdpinA}=\pi_{\cdpifunindB}\funsp_{\cdpinB}$~(\cref{fig:mcdps}). 
+
+\captionsideleft{\label{fig:mcdps}}{\includegraphics[scale=0.33]{gmcdptro_cdpi.pdf}}
+\end{definition}
+
+A CDPI is equivalent to a DPI with an implementation space~$\impsp$
+that is a subset of the product $\prod_{\cdpin\in\cdpiN}\impsp_{\cdpin}$,
+and contains only the tuples that satisfy the co-design constraints.
+An implementation tuple~$\imp\in\prod_{\cdpin\in\cdpiN}\impsp_{\cdpin}$
+belongs to~$\impsp$ iff it respects all functionality\textendash resources
+constraints on the edges, in the sense that, for all edges~$\left\langle \left\langle \cdpinA,\cdpiresindA\right\rangle ,\left\langle \cdpinB,\cdpifunindB\right\rangle \right\rangle $
+in~$\mathcal{E}$, it holds that 
+\[
+\pi_{\cdpiresindA}\eval_{\cdpinA}(\pi_{\cdpinA}\imp)\posleq\pi_{\cdpifunindB}\exc_{\cdpinB}(\pi_{\cdpinB}\imp).
+\]
+The posets~$\funsp,\ressp$ for the entire CDPI are the products
+of the functionality and resources of the nodes that remain unconnected.
+For a node~$\cdpin$, let~$\unconnectedfun_{\cdpin}$ and~$\unconnectedres_{\cdpin}$
+be the set of unconnected functionalities and resources. Then~$\funsp$
+and~$\ressp$ for the CDPI are defined as the product of the unconnected
+functionality and resources of all DPIs: $\funsp=\prod_{\cdpin\in\cdpiN}\prod_{\cdpifunind\in\unconnectedfun_{\cdpin}}\pi_{\cdpifunind}\funsp_{\cdpin}$
+and $\ressp=\prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}}\pi_{\cdpiresind}\ressp_{\cdpin}.$
+The maps $\exc,\eval$ return the values of the unconnected functionality
+and resources:
+\begin{align*}
+\exc:\imp & \mapsto{\scriptstyle {\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpifunind\in\unconnectedfun_{\cdpin}}}}\pi_{\cdpifunind}\exc_{\cdpin}(\pi_{\cdpin}\imp),\\
+\eval:\imp & \mapsto{\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}}}\pi_{\cdpiresind}\eval_{\cdpin}(\pi_{\cdpin}\imp).
+\end{align*}
+
+\begin{example}
+\label{exa:chassis_plus_motor}Consider the co-design of chassis (\cref{exa:chassis})
+plus motor (\cref{exa:motor}). The design problem for a motor has \F{speed}
+and \F{torque} as the provided functionality (what the motor must
+provide), and \R{cost}, \R{mass}, \R{voltage}, and \R{current}
+as the required resources~(\cref{fig:motor}).
+
+\captionsideleft{\label{fig:motor}}{\includegraphics[scale=0.33]{gmcdp_motor.pdf}}
+
+\noindent For the chassis (\cref{fig:gmcdp_chassis}), the provided
+functionality is parameterized by the \F{mass} of the payload and
+the platform \F{velocity}. The required resources include the \R{cost},
+\R{total mass}, and what the chassis needs from its motor(s), such
+as \R{speed} and \R{torque}.
+
+\captionsideleft{\label{fig:gmcdp_chassis}}{\includegraphics[scale=0.33]{gmcdp_chassis.pdf}}
+
+\noindent The two design problem can be connected at the edges for
+torque and speed~(\cref{fig:gmcdp_chassis_plus_motor_series}). The
+semantics is that the motor needs to have\emph{ at least }the given
+torque and speed. 
+
+\captionsideleft{\label{fig:gmcdp_chassis_plus_motor_series}}{\includegraphics[scale=0.33]{gmcdp_chassis_plus_motor_series.pdf}}
+
+\noindent Resources can be summed together using a trivial DP corresponding
+to the map $\ftor:\left\langle \funn_{1},\funn_{2}\right\rangle \mapsto\{\funn_{1}+\funn_{2}\}$
+(\cref{fig:total_cost}).
+
+\captionsideleft{\label{fig:total_cost}}{\includegraphics[scale=0.33]{gmcdp_weightsum.pdf}}
+
+\noindent A co-design problem might contain recursive co-design constraints.
+For example, if we set the payload to be transported to be the sum
+of the motor mass plus some extra payload, a cycle appears in the
+graph~(\cref{fig:gmcdp_chassis_plus_motor}). 
+
+\noindent 
+\begin{figure}[h]
+\centering{}\includegraphics[scale=0.33]{gmcdp_chassis_plus_motor.pdf}\caption{\label{fig:gmcdp_chassis_plus_motor}}
+\end{figure}
+
+\noindent This formalism makes it easy to abstract away the details
+in which we are not interested. Once a diagram like~\cref{fig:gmcdp_chassis_plus_motor}
+is obtained, we can draw a box around it and consider the abstracted
+problem~(\cref{fig:gmcdp_chassis_plus_motor-1}). 
+
+\captionsideleft{\label{fig:gmcdp_chassis_plus_motor-1}}{\includegraphics[scale=0.33]{gmcdp_chassis_plus_motor2.pdf}}
+
+\label{exa:finish}Let us finish assembling our robot. A motor needs
+a motor control board. The functional requirements are the (peak)
+\F{output current} and the \F{output voltage range}~(\cref{fig:mcb}).
+
+\captionsideleft{\label{fig:mcb}}{\includegraphics[scale=0.33]{gmcdp_mcb.pdf}}
+
+\noindent The functionality for a power supply could be parameterized
+by the \F{output current}, the \F{output voltages}, and the \F{capacity}.
+The resources could include \R{cost} and \R{mass} (\cref{fig:example-ba}).
+
+\captionsideleft{\label{fig:example-ba}}{\includegraphics[scale=0.33]{gmcdp_battery.pdf}} 
+
+\noindent 
+
+\noindent Relations such as ${\colF\mbox{current}}\times{\colF\mbox{voltage}}\leq{\colR\mbox{power required}}$
+and ${\colF\mbox{power}}\times{\colF\mbox{endurance}}\leq{\colR\mbox{energy required}}$
+can be modeled by a trivial ``multiplication'' DPI (\cref{fig:current_times_voltage}).
+
+\captionsideleft{\label{fig:current_times_voltage}}{\includegraphics[scale=0.33]{gmcdp_voltage_current.pdf}}
+
+\noindent We can connect these DPs to obtain a co-design problem with
+functionality \F{voltage}, \F{current}, \F{endurance} and resources
+\R{mass} and \R{cost}~(\cref{fig:connect}).
+
+\captionsideleft{\label{fig:connect}}{\includegraphics[scale=0.29]{gmcdp_MCB_PSU_2.pdf}}
+
+\noindent Draw a box around the diagram, and call it ``MCB+PSU'';
+then interconnect it with the ``chassis+motor'' diagram in~\cref{fig:another}.
+
+\noindent 
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[scale=0.33]{gmcdp_mobility_power.pdf}
+\par\end{centering}
+\caption{\label{fig:another}}
+\end{figure}
+
+We can further abstract away the diagram in~\cref{fig:another} as
+a ``mobility+power'' CDPI, as in \cref{fig:shipping}. The formalism
+allows to consider \R{mass} and \R{cost} as independent resources,
+meaning that we wish to obtain the Pareto frontier for the minimal
+resources. Of course, one can always reduce everything to a scalar
+objective. For example, a conversion from mass to cost exists and
+it is called ``shipping''. Depending on the destination, the conversion
+factor is between~$\$0.5/\mbox{lbs}$, using USPS, to~$\$10\mbox{k}/\mbox{lbs}$
+for sending your robot to low Earth orbit. 
+
+\noindent 
+\begin{figure}[h]
+\centering{}\includegraphics[scale=0.33]{gmcdp_shipping.pdf}\caption{\label{fig:shipping}}
+\end{figure}
+
+\end{example}
