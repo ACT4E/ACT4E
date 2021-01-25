@@ -1,26 +1,25 @@
 \subsection{Co-Design Problems\label{sec:Design-Problems}}
 
-The basic objects considered in this paper are ``design problems'',
-of which several classes will be investigated. We start by defining
-a ``design problem with implementation'', which is a tuple of ``\F{functionality}
-space'', ``\Icol{implementation} space'', and ``\R{resources}
+  We start by defining
+a ``design problem with implementation'', which is a tuple of ``\Fcol{functionality}
+space'', ``\Icol{implementation} space'', and ``\Rcol{resources}
 space'', together with two maps that describe the feasibility relations
 between these three spaces~(\cref{fig:setup}).
 \begin{definition}
 \label{def:design_problem}A \emph{design problem with implementation}
 (DPI) is a tuple
-\begin{equation*}
+\begin{equation}
   \tup{\F{F},\R{R},\Icol{I},\exc,\eval}  
-\end{equation*}
+\end{equation}
 where:
 
 \begin{itemize}
-\item $\funsp$ is a poset, called \emph{\F{functionality} space};
-\item $\ressp$ is a poset, called \emph{\R{resources} space};
+\item $\funsp$ is a poset, called \emph{\Fcol{functionality} space};
+\item $\ressp$ is a poset, called \emph{\Rcol{requirements} space};
 \item $\impsp$ is a set, called \emph{\Icol{implementation} space};
-\item the map~$\exc\colon\impsp\rightarrow\funsp$, mnemonics for ``execution'',
+\item the map~$\exc\colon\impsp\rightarrow\funsp$ 
 maps an implementation to the functionality it provides;
-\item the map~$\eval\colon\impsp\rightarrow\ressp$, mnemonics for ``evaluation'',
+\item the map~$\eval\colon\impsp\rightarrow\ressp$
 maps an implementation to the resources it requires.
 \end{itemize}
 
@@ -30,7 +29,8 @@ maps an implementation to the resources it requires.
 \end{center}
 \caption{\label{fig:setup}}
 \end{figure}
-\todo{Redo figure with consistent style}
+\todo{Redo figure with consistent style, change resources to requirements,
+eval/exec to requires/provides.}
 \end{definition}
 
 
@@ -119,21 +119,22 @@ are \R{current} and \R{voltage}.
 \end{figure}
 
 
+\begin{example}
+A gearbox (\figref{gearbox}) provides a certain \F{output
+torque $\tau_o$} and \F{speed $\tau_o$}, given a certain
+\R{input torque $\tau_i$} and \R{speed $\omega_i$}. For
+an ideal gearbox with a reduction ratio $r \in \mathbb{Q}_+$ and
+efficiency ratio $\gamma$, $0<\gamma<1$, the constraints among
+those quantities are ${\colR \omega_i}\geq r\,{\colF \omega_o}$
+and ${\colR \tau_i\omega_i}\geq\gamma\,{\colF \tau_o\omega_o}.$
+\end{example}
+
+
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.33]{reits2_gearbox}
     \caption{ \label{fig:gearbox}}
 \end{figure}
-
-\begin{example}
-A gearbox (\figref{gearbox}) provides a certain \F{output
-torque $\tau_o$} and \F{speed $\tau_o$}, given a certain
-\R{input torque $\tau_i$} and \R{speed $\omega_i$}. For
-an ideal gearbox with a reduction ratio $r \in \mathbb{ℚ}_+$ and
-efficiency ratio $\gamma$, $0<\gamma<1$, the constraints among
-those quantities are ${\colR \omega_i}\geq r\,{\colF \omega_o}$
-and ${\colR \tau_i\omega_i}\geq\gamma\,{\colF \tau_o\omega_o}.$
-\end{example}
 
 
 \begin{example}
@@ -223,11 +224,15 @@ such as robot motion planning.
     \caption{\label{fig:progressive}}
 \end{figure}
 
+\todo{Add picture of progressive stereo (see keynote)}
+
 \begin{example}
 The empirical characterization of the monotone relation between \F{the
 accuracy of a visual SLAM solution} and \R{the power consumption}
 is the goal of recent work by Davison and colleagues~\cite{nardi15introducing,zia16comparative}.
 \end{example}
+
+\todo{Reproduce plot from paper.}
 
 
 \subsubsection{Communication}
@@ -246,9 +251,6 @@ that the infrastructure provides the \R{"Ethernet access"} resource.
 
 \end{figure}
 
-
-\newcommand{\Rcpu}[1]{\mathbb{R}^{\!\!\!\!\!\textrm{[#1]}}}
-
 \begin{example}[Wireless link]
 The basic functionality of a wireless link is to provide
 a certain \F{bandwidth}. Further refinements could include bounds
@@ -260,7 +262,7 @@ and "\F{\emph{minus} the packet drop probability}" for them
 to count as functionality. As for the resources, apart from the \R{transmission
 power [W]}, one should consider at least \R{the spectrum occupation},
 which could be described as an interval $[f_0,f_1]$ of the frequency
-axis $\Rcpu{Hz}$. Thus the resources space is $ℛ=\colR\Rcpu{W}×\vmath{intervals}(\Rcpu{Hz})$.
+axis $\Runit{Hz}$. Thus the resources space is $ℛ=\colR\Runit{W}×\vmath{intervals}(\Runit{Hz})$.
 \end{example}
 
 \begin{figure}[h]
@@ -303,15 +305,16 @@ of an agent or the number of agents~(\figref{multirobot2}).
 \subsubsection{Computation}
 
 % keep wrapped
-\begin{wrapfigure}{r}{0\columnwidth}
-\includegraphics[scale=0.33]{reits2_cpu_simple}\caption{}
-\end{wrapfigure}
-\leavevmode
 
-The trivial model of a CPU is as a device that provides \F{computation,
-measured in flops}, and requires \R{power [W]}. Clearly there
+The trivial model of a CPU is as a device that provides \Fcol{computation,
+measured in flops}, and requires \Rcol{power [W]}. Clearly there
 is a monotone relation between the two.
 
+\begin{figure}[h]
+    \includegraphics[scale=0.33]{reits2_cpu_simple}\caption{}
+    \end{figure} 
+
+    
 A similar monotone relation between application requirements and computation
 resources holds in a much more general setting, where both application
 and computation resources are represented by graphs. This will be
@@ -321,6 +324,7 @@ In the Static Data Flow (SDF) model of computation~\cite[Chapter 3]{sriram00,lee
 the application is represented as a graph of procedures that need
 to be allocated on a network of processors.
 
+\todo{Make the three small wrapped figures as 3 subfigures in the same figures}
 % keep wrapped
 \begin{wrapfigure}{r}{0\columnwidth}
 \includegraphics[scale=0.33]{reits2_small_app_graph}
@@ -450,13 +454,83 @@ task.
 
 
 
+\begin{example}[Hoare logic]
+    \todo{to write}
+\end{example}
+
+
+
+\subsection{Querying a DPI}
+
+A DP is a model that induces a family of optimization problems.
+
+\todo{Connect with discussion at beginning of the part.}
+
+One query is
+``Given a lower bound on the functionality~$\funn$, what
+are the implementations that have minimal resources usage?''~(\cref{fig:setup-1}).
+
+\begin{problem}[FixFunMinReq]
+\label{prob:problem1}Given~$\funn\in\funsp$, find the implementations
+in~$\impsp$ that realize the functionality~$\funn$ (or higher)
+with minimal resources, or provide a proof that there are none:
+\begin{equation}
+\begin{cases}
+\with & \imp\in\impsp,\\
+\Min_{\resleq} & \res,\\
+\subto & \res=\eval(\imp),\\
+ & \funn\funleq\exc(\imp).
+\end{cases}\label{eq:objective}
+\end{equation}
+\end{problem}
+\captionsideleft{\label{fig:setup-1}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_setup_query_f.pdf}}
+
+
+\begin{remark}[Minimal \emph{vs} least solutions]
+Note the use of~``$\Min_{\resleq}$'' in~(\ref{eq:objective}),
+which indicates the set of minimal (non-dominated) elements according
+to~$\resleq$, rather than~``$\min_{\resleq}$'', which would
+presume the existence of a least element. In all problems in this
+paper, the goal is to find the optimal trade-off of resources (``Pareto
+front''). So, for each~$\funn$, we expect to find an antichain~${\colR R}\in\Aressp$.
+We will see that this formalization allows an elegant way to treat
+multi-objective optimization. The algorithm to be developed will directly
+solve for the set~${\colR R}$, without resorting to techniques such
+as \emph{scalarization}, and therefore is able to work with arbitrary
+posets, possibly discrete.
+\end{remark}
+
+
+In an entirely symmetric fashion, we could fix an upper bound on
+the resources usage, and then maximize the functionality provided~(\cref{fig:setup_max_f}).
+The formulation is entirely dual, in the sense that it is obtained
+from \eqref{objective} by swapping~$\Min$ with~$\Max$, $\funsp$~with~$\ressp$,
+and $\exc$~with~$\eval$.
+
+\begin{problem}[FixResMinFun]
+    Given~$\res\in\ressp$, find the implementations
+in~$\impsp$ that requires~$\ress$ (or lower)
+and provide the maximal functionality,  or provide a proof that there are none:
+\begin{equation}
+\begin{cases}
+\with & \imp\in\impsp,\\
+\Max_{\funleq} & \funn,\\
+\subto & \funn=\exc(\imp),\\
+ & \res\posgeq_{\ressp}\eval(\imp).
+\end{cases}\label{eq:objective-1}
+\end{equation}
+\end{problem}
+
+\captionsideleft{\label{fig:setup_max_f}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_setup_query_r.pdf}}
+
+
 
 
 \subsection{Co-design problems\label{sec:Co-design-problems}}
 
 A ``co-design problem'' will be defined as a multigraph of design
 problems. Graphically, one is allowed to connect only edges of different
-color. This interconnection is indicated with the symbol~``$\posleq$''
+color, and of the same type. This interconnection is indicated with the symbol~``$\posleq$''
 in a rounded box~(\cref{fig:connection}). 
 
 \captionsideleft{\label{fig:connection}}{\includegraphics[scale=0.33]{papers/uncertainty/unc_connection.pdf}}
@@ -603,3 +677,159 @@ for sending your robot to low Earth orbit.
 \end{figure}
 
 \end{example}
+
+
+
+\subsubsection{Expressivity of MCDPs}
+
+The results are significant because MCDPs induce a rich family of
+optimization problems. 
+
+We are not assuming, let alone strong properties like convexity, even
+weaker properties like differentiability or continuity of the constraints.
+In fact, we are not even assuming that functionality and resources
+are continuous spaces; they could be arbitrary discrete posets. (In
+that case, completeness and \scottcontinuity are trivially satisfied.)
+
+Moreover, even assuming topological continuity of all spaces and maps
+considered, MCDPs are strongly not convex. What makes them nonconvex
+is the possibility of introducing feedback interconnections. To show
+this, I will give an example of a 1-dimensional problem with a continuous~$\ftor$
+for which the feasible set is disconnected.
+
+\begin{figure}[h]
+\hfill{}\subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdptro_nonconvex1b.pdf}}\hfill{}\subfloat[\label{fig:nonconvex3}]{\centering{}\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdptro_nonconvex3.pdf}}\hfill{}
+
+\caption{\label{fig:ceil-1}One feedback connection and a topologically continuous~$\ftor$
+are sufficient to induce a disconnected feasible set.}
+\end{figure}
+
+\medskip{}
+
+\begin{example}
+\label{exa:one}Consider the CDPI in \cref{fig:Simple-DP}. The \uline{m}inimal
+resources~$M\subseteq\Aressp$ are the objectives of this optimization
+problem:
+\[
+M\doteq\begin{cases}
+\with & \funn,\res\in\funsp=\ressp,\\
+\Min_{\posleq} & \res,\\
+ & \res\in\ftor(\funn),\\
+ & \res\posleq\funn.
+\end{cases}
+\]
+The \uline{fea}sible set~$\Phi\subseteq\funsp\times\ressp$ is
+the set of functionality and resources that satisfy the constraints~$\res\in\ftor(\funn)$
+and~$\res\posleq\funn$:
+\begin{equation}
+\Phi=\left\{ \langle\funn,\res\rangle\in\funsp\times\ressp:(\res\in\ftor(\funn))\wedge(\res\posleq\funn)\right\} .\label{eq:feasible}
+\end{equation}
+The \uline{p}rojection~$P$ of~$\Phi$ to the functionality space
+is:
+\[
+P=\left\{ \funn\mid\left\langle \funn,\res\right\rangle \in\Phi\right\} .
+\]
+
+In the scalar case ($\funsp=\ressp=\langle\nonNegRealsComp,\leq\rangle$),
+the map~$\ftor\colon\funsp\rightarrow\Aressp$ is simply a map~$\ftor\colon\F{\nonNegRealsComp}\rightarrow\R{\nonNegRealsComp}$.
+The set~$P$ of feasible functionality is described by
+\begin{equation}
+P=\{\funn\in\nonNegRealsComp:\ftor(\funn)\leq\funn\}.\label{eq:Pfeasible}
+\end{equation}
+\cref{fig:nonconvex3} shows an example of a continuous map~$\ftor$
+that gives a disconnected feasible set~$P$. Moreover, $P$ is disconnected
+under any order-preserving nonlinear re-parametrization.
+
+\end{example}
+
+
+
+
+\subsection{Discussion of related work\label{sec:Discussion-of-related}}
+
+\subsubsection{Theory of design}
+
+Modern engineering has long since recognized the two ideas of modularity
+and hierarchical decomposition, yet there exists no general quantitative
+theory of design that is applicable to different domains. Most of
+the works in the theory of design literature study abstractions that
+are meant to be useful for a human designer, rather than an automated
+system. For example, a \emph{function structure }diagram~\cite[p. 32]{pahl07}
+decomposes the function of a system in subsystems that exchange energy,
+materials, and signals, but it is not a formal representation. From
+the point of view of the theory of design, the contribution of this
+work is that the \emph{design problem }abstraction developed, where
+one takes functionality and resources as the interfaces for the subsystems,
+is at the same time (1) mathematically precise; (2)~intuitive to
+understand; and (3)~leads to tractable optimization problems.
+
+This work also provides a clear answer to one long-standing issue
+in the theory of design: the inter-dependence between subsystems,
+(i.e., cycles in the co-design graph). Consider, as an example, Suh's
+theory of \emph{axiomatic design~}\cite{suh01}, in which the first
+``axiom'' is to keep the design requirements orthogonal (i.e., do
+not introduce cycles). This work shows that it is possible to deal
+elegantly with recursive constraints.
+
+
+\subsubsection{Partial Order Programming}
+
+In ``Partial Order Programming''~\cite{parkerjr89partial} Parker
+studies a hierarchy of optimization problems that can be represented
+as a set of partial order constraints. The main interest is to study
+partial order constraints as the means to define the semantics of
+programming languages and for declarative approaches to knowledge
+representation.
+
+In Parker's hierarchy, MCDPs are most related to the class of problems
+called \emph{continuous monotone partial order program} (CMPOP). CMPOPs
+are the least specific class of problems studied by Parker for which
+it is possible to obtain existence results and a systematic solution
+procedure. MCDPs subsume CMPOPs. A CMPOP is an MCDP where: 1)~All
+functionality and resources belong to the same poset~$\posA$ ($\funsp_{v}=\ressp_{v}=\posA$);
+2)~Each functionality/resource relation is a simple map, rather than
+a multi-valued relation; 3)~There are no dangling functionality edges
+in the co-design diagram ($\funsp=\One$).
+
+In a MCDP, each DP is described by a \scottcontinuous map~$\ftor:\funsp\rightarrow\Aressp$
+which maps one functionality to a minimal set of resources. By contrast,
+in a CMPOP an operator corresponds to a \scottcontinuous map~$\ftor:\funsp\rightarrow\ressp$.
+The consequence is that a CMPOP has a unique solution~\cite[Theorem 8]{parkerjr89partial},
+while an MCDP can have multiple minimal solutions (or none at all).
+
+
+\subsubsection{Abstract interpretation}
+
+The methods used from order theory are the same used in the field
+of \emph{abstract interpretation}~\cite{cousot14abstract}. In
+that field, the least fixed point semantics arises from problems such
+as computing the sets of reachable states. Given a starting state,
+one is interested to find a subset of states that is closed under
+the dynamics (i.e. a fixed point), and that is the smallest that contains
+the given initial state (i.e. a \emph{least} fixed point). Reachability
+and other properties lead to considering systems of equation of the
+form
+\begin{align}
+x_{i} & =\varphi_{i}(x_{1},\,\dots\,,x_{i},\,\dots\,,x_{n}),\quad i=1,\dots,n,\label{eq:ai}
+\end{align}
+where each value of the index $i$ is for a control point of the program,
+and~$\varphi_{i}$ are \scottcontinuous functions on the abstract
+lattice that represents the properties of the program. In the simplest
+case, each~$x_{i}$ could represent intervals that a variable could
+assume at step~$i$. By applying the iterations, one finds which
+properties can be inferred to be valid at each step.
+
+We can repeat the same considerations we did for Parker's CMPOPs vs
+MCDPs. In particular, in MCDP we deal with multi-valued maps, and
+there is more than one solution.
+
+In the field of abstract interpretation much work has been done towards
+optimizing the rate of convergence. The order of evaluation in~\eqref{ai}
+does not matter. Asynchronous and ``chaotic'' iterations were proposed
+early~\cite{cousot77asynchronous} and are still object of investigation~\cite{bourdoncleefficient}.
+To speed up convergence, the so called ``widening'' and ``narrowing''
+operators are used~\cite{cortesi11widening}. The ideas of chaotic
+iteration, widening, narrowing, are not immediately applicable to
+MCDPs, but it is a promising research direction.
+
+
