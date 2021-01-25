@@ -63,7 +63,31 @@ An \emph{antitone map} between two posets~$\tup{A, \ordleq_A}$ and~$\tup{B, \ord
 \end{equation}
 \end{definition}
 
-\todo{Put engineering example here}
+\begin{example}
+We now look at an example of \textbf{set-based filtering}, where filtering refers to online inference. Suppose that we want to track the value of a quantity~$x\in [0,100]$, without having a priory information about~$x$. We are equipped with sensors, which periodically measure the quantity~$x$ with some variable precision, i.e., at time~$t\in \mathbb{R}_{\geq 0}$ they produce an \emph{observation} $y_t\colon x_t\in [l_t,u_t]$. Also, note that the quantity fluctuates randomly, and we bound its ``velocity'' to be $\dot{x}_t\in [-1,1]$ (except at boundaries). At the beginning, our information state $\bar{i}_0$ could be that~$x\in [0,100]$. At time 0, we get an observation $y_0$, that says $x\in [21,24]$. The new information state can be obtained by ``fusing'' the two inputs we have received about~$x$. This corresponds to the intersection
+\begin{equation*}
+    x\in \left( [0,100] \cap [21,24]\right)\equiv x\in [21,24]
+\end{equation*}
+Let's now say we get an observation $y_1$ which says $x\in [19,22]$. We now need to take into account the evolution/dynamics of the quantity we are tracking. From the interval $[21,24]$ we know that the variable could have evolved in $[20,25]$ (dynamics are bounded with a unit increase/decrease). Therefore, the new information state is given by:
+\begin{equation*}
+    x\in \left( [20,25] \cap [21,24]\right)\equiv x\in [21,24]
+\end{equation*}
+One of the structures which could sustain this kind of inference, is the of \emph{posets of intervals}.
+An interval is an ordered pair of elements~$\tup{l,u}$ of $P$, such that $l\ordleq_P u$. Given a poset~$P$, one can define a poset of intervals on~$P$. Intervals can be ordered by inclusion, e.g.:
+\begin{equation*}
+    \tup{l_1,u_1}\ordleq_{\mathrm{Int} P}\tup{l_2,u_2} \Leftrightarrow (l_1\ordleq_P l_2)\wedge (u_2\ordleq_P u_1).
+\end{equation*}
+The Hasse diagram representing a situation related to this diagram could be:
+\begin{center}
+    \begin{tikzcd}[column sep=tiny]
+    x=1&&x=3&x=100\\
+    &x\in[1,3]\arrow[dash,ul]\arrow[dash,ur]&&\\
+    x\in[0,2]\arrow[dash,uu]&x\in [1,4]\arrow[dash,u] &&\\
+    &x\in [0,4]\arrow[dash,u]\arrow[dash,ul]&&\\
+    &&&x\in[0,100]\arrow[dash,ull]\arrow[dash,uuuu]
+    \end{tikzcd}
+\end{center}
+\end{example}
 
 \subsection{Compositionality of monotonicity}
 Note that monotonicity is a compositional property.
@@ -86,25 +110,25 @@ By substituting the above in the map composition formula, one has
 which is the monotonicity condition for~$(f\then g)$.
 \end{proof}
 
-\subsection{The category~$\Pos$ of posets and monotone maps}
+\subsection{The category~\Pos of posets and monotone maps}
 In this section, we want to abstract the concept of poset and describe a category in which the objects are posets themselves, and the morphisms are monotone functions between them. This category is called~$\Pos$.
 
-\begin{definition}[Category~$\Pos$]
+\begin{definition}[Category \Pos]
     The category~$\Pos$ is defined by:
     \begin{compactenum}
     \item \emph{Objects}: The objects of this category are all posets.
-    \item \emph{Morphisms}: The morphisms from a poset~$X$ to a poset~$Y$ are the monotone maps from~$X$ to~$Y$.
-    \item \emph{Identity morphism}:  The identity morphism for the poset~$X$
-    is the identity map~$\id_X$.
+    \item \emph{Morphisms}: The morphisms from a poset~$\Obja$ to a poset~$\Objb$ are the monotone maps from~$\Obja$ to~$\Objb$.
+    \item \emph{Identity morphism}:  The identity morphism for the poset~$\Obja$
+    is the identity map~$\id_\Obja$.
     \item \emph{Composition operation}: The composition operation is composition of maps.
     \end{compactenum}
 \end{definition}
 
-Occasionally we will write$f \colon A \to_{\Pos} B$ to emphasize that a monotone map between posets is a morphism in $\Pos$. Note that morphisms in $\Pos$ are morphisms between posets, and posets are examples of categories. The notion of ``morphisms between categories'' is formally described by the notion of functor, which will be introduced later (\cref{def:functor}).
+Occasionally we will write$f \colon \Obja \to_{\Pos} \Objb$ to emphasize that a monotone map between posets is a morphism in \Pos. Note that morphisms in \Pos are morphisms between posets, and posets are examples of categories. The notion of ``morphisms between categories'' is formally described by the notion of functor, which will be introduced later (\cref{def:functor}).
 
-\subsection{Why~$\Cat{Pos}$ is not sufficient for design theory}
+\subsection{Why~$\Pos$ is not sufficient for design theory}
 
-The category~$\Pos$ of posets and monotone maps that we have described can model many facts that are useful for design theory. However, there are also limitations which motivate us to describe a more general category. This section describes the usefulness and the limitations of~$\Pos$.
+The category \Pos of posets and monotone maps that we have described can model many facts that are useful for design theory. However, there are also limitations which motivate us to describe a more general category. This section describes the usefulness and the limitations of~$\Pos$.
 
 \begin{example}[Battery]
 Consider a model of a battery where the capacity is the functionality and the mass of the battery is the resource.
@@ -187,7 +211,7 @@ Therefore,~$\uparrow S_1\supseteq \ \uparrow S_2$, satisfing the monotonicity pr
 \begin{lemma}\label{up-cl-inj-antichains}
 Let $A$ and $B$ be subsets of $P$ that are antichains. Then
 \begin{equation}
-\uparrow A = \ \uparrow B \quad \Rightarrow \quad A = B
+\uparrow A = \ \uparrow B \quad \Rightarrow \quad A = B.
 \end{equation}
 \end{lemma}
 
