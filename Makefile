@@ -9,7 +9,7 @@ tmpdir=tmp
 
 %.pdf: %.tex 
 	rm -f $*.aux $(tmpdir)/$*.aux
-	latexmk -xelatex -outdir=$(tmpdir) -f $<
+	latexmk -pdflatex -outdir=$(tmpdir) -f $<
 	cp $(tmpdir)/$*.pdf $@
 
 
@@ -29,4 +29,5 @@ ACT4E-full-fast.pdf::  chapters/*.tex utils/*.tex
 
 
 tikz:
+	touch sag/*pdf 
 	make -C sag -j
