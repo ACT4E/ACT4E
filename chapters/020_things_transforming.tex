@@ -336,18 +336,18 @@ It is a straightforward to check that the composition of currency exchangers as 
 Following the above remark:
 
 \begin{definition}[Category \Curr]
-  A \emph{category of currencies} \Curr is specified by:
-  \begin{compactenum}
+  The \emph{category of currencies} \Curr is specified by:
+  \begin{enumerate}
     \item \emph{Objects:} a collection of currencies \transmuted{C}.
     \item \emph{Morphisms:} given two currencies~$\transmuted{c}_1, \transmuted{c}_2\in \transmuted{C}$, morphisms between them are currency exchangers~$\tup{a,b}$ from~$\transmuted{c}_1$ to~$\transmuted{c}_2$.
     \item \emph{Identity morphism:} given an object~$\transmuted{c} \in \transmuted{C}$, its identity morphism is the currency exchanger~$\tup{1,0}$. We also call such morphisms ``trivial currency exchangers''.
     \item \emph{Composition of morphisms:} the composition of morphisms is given by the formula (\cref{eq:currencycomp}).
-  \end{compactenum}
+  \end{enumerate}
 \end{definition}
 
 
 
-As an illustration, consider three currency exchange companies \transmuted{ExchATM}, \transmuted{MoneyLah}, and \transmuted{Frankurrencies}, which operate on several currencies (\cref{tab:currencycompanies}).
+As an illustration, consider three currency exchange companies \transmuter{ExchATM}, \transmuter{MoneyLah}, and \transmuter{Frankurrencies}, which operate on several currencies (\cref{tab:currencycompanies}).
 
 \begin{table}[h]
   \centering
@@ -355,13 +355,13 @@ As an illustration, consider three currency exchange companies \transmuted{ExchA
     \begin{tabular}{c|c|c|c|c}
       Company name                & Exchanger label & Direction    & $a$ (exchange rate)       & $b$   (fixed commission) \\
       \hline
-      \transmuted{ExchATM}        & $A$             & \USD to \CHF & \unitfrac[0.95]{CHF}{USD} & \unit[2.0]{CHF}       \\
-      \transmuted{ExchATM}        & $B$             & \CHF to \USD & \unitfrac[1.05]{USD}{CHF} & \unit[1.5]{USD}       \\
-      \transmuted{ExchATM}        & $C$             & \USD to \SGD & \unitfrac[1.40]{SGD}{USD} & \unit[1.0]{SGD}       \\
-      \transmuted{MoneyLah}       & $D$             & \USD to \CHF & \unitfrac[1.00]{CHF}{USD} & \unit[1.0]{CHF}       \\
-      \transmuted{MoneyLah}       & $E$             & \SGD to \USD & \unitfrac[0.72]{USD}{SGD} & \unit[3.0]{USD}       \\
-      \transmuted{Frankurrencies} & $F$             & \EUR to \CHF & \unitfrac[1.20]{CHF}{EUR} & \unit[0.0]{CHF}       \\
-      \transmuted{Frankurrencies} & $G$             & \CHF to \EUR & \unitfrac[1.00]{EUR}{CHF} & \unit[1.0]{EUR}
+      \transmuter{ExchATM}        & $A$             & \USD to \CHF & \unitfrac[0.95]{CHF}{USD} & \unit[2.0]{CHF}       \\
+      \transmuter{ExchATM}        & $B$             & \CHF to \USD & \unitfrac[1.05]{USD}{CHF} & \unit[1.5]{USD}       \\
+      \transmuter{ExchATM}        & $C$             & \USD to \SGD & \unitfrac[1.40]{SGD}{USD} & \unit[1.0]{SGD}       \\
+      \transmuter{MoneyLah}       & $D$             & \USD to \CHF & \unitfrac[1.00]{CHF}{USD} & \unit[1.0]{CHF}       \\
+      \transmuter{MoneyLah}       & $E$             & \SGD to \USD & \unitfrac[0.72]{USD}{SGD} & \unit[3.0]{USD}       \\
+      \transmuter{Frankurrencies} & $F$             & \EUR to \CHF & \unitfrac[1.20]{CHF}{EUR} & \unit[0.0]{CHF}       \\
+      \transmuter{Frankurrencies} & $G$             & \CHF to \EUR & \unitfrac[1.00]{EUR}{CHF} & \unit[1.0]{EUR}
     \end{tabular}
   \end{adjustbox}
   \caption{Three currency exchange companies operating different currencies.
@@ -436,24 +436,21 @@ The phrase ``all possible compositions'' is a bit vague. What we mean here can b
 
 \section{Definitional impetus vs. computational goals  }
 
-The category \Curr represents the set of all possible currency exchangers that could
-ever exist. However, in this set there would be very irrational agents. For example, there is a currency exchanger that, given 1 USD, will give you back 2 USD; there is one currency exchanger that
-corresponds to converting USD to CHF back and forth 21 times before getting you the money. There is even one that will not give you back any money.
+The category \Curr represents the set of all possible currency exchangers that could ever exist. However, in this set there would be very irrational agents.
+For example, there is a currency exchanger that, given 1 USD, will give you back 2 USD; there is one currency exchanger that corresponds to converting USD to CHF back and forth 21 times before getting you the money. There is even one that will not give you back any money.
 
 Moreover, using the composition operations we could produce many more morphisms. In fact, if there are loops, we could traverse the loops multiple times, and, depending on the numbers, finding new morphisms, possibly infinitely many more.
 
 This highlights a recurring topic: often mathematicians will be happy to define a broader category of objects, while, in practice, the engineer will find herself thinking about a more constrained set of objects.
 In particular, while the mathematician is more concerned with defining categories as hypothetical universes of things, the engineer is typically interested in representing concrete things, and solve some computational problem on the represented structure.
 
-For example, in the case of the currency exchangers, the problem might be that of finding the
-sequence of the best conversions between a source and a target currency.
+For example, in the case of the currency exchangers, the problem might be that of finding the sequence of the best conversions between a source and a target currency.
 
-First, the engineer would add more constraints to the definition to work
-with more well-behaved objects. For example, it is reasonable to limit the
-universe of morphisms in such a way that the action of converting back and forth the same currency to have a cost (through the commission) higher than 0.
+First, the engineer would add more constraints to the definition to work with more well-behaved objects. For example, it is reasonable to limit the universe of morphisms in such a way that the action of converting back and forth the same currency to have a cost (through the commission) higher than 0.
 
 % one would like to find the best conversions. These can be expressed as \emph{Pareto fronts}. To do so, one only needs to iterate a finite number of times, since the optimal path (conversion morphism), if such a morphism exists, will never pass through the same currency more than once. \JL{the previous sentence needs explaining}
-In that case, we will find that the optimal paths of currencies never pass through a currency more than once. To see this, consider three currencies~$\mathsf{A,B,C}$, a currency exchanger~$\tup{a,b}$ from~$\mathsf{A}$ to~$\mathsf{B}$ , a currency exchanger~$\tup{c,d}$ from~$\mathsf{B}$ to~$\mathsf{C}$ , and a currency exchanger~$\tup{e,f}$ from~$\mathsf{C}$ to~$\mathsf{A}$. The composition of the currency exchangers reads:
+In that case, we will find that the optimal paths of currencies never pass through a currency more than once. To see this, consider three currencies~$\mathsf{A,B,C}$, a currency exchanger~$\tup{a,b}$ from~$\mathsf{A}$ to~$\mathsf{B}$ , a currency exchanger~$\tup{c,d}$ from~$\mathsf{B}$ to~$\mathsf{C}$ , and a currency exchanger~$\tup{e,f}$ from~$\mathsf{C}$ to~$\mathsf{A}$.
+The composition of the currency exchangers reads:
 \begin{equation*}
   \tupp{\underbrace{eca}_{g}, \underbrace{ecb+ed+f}_{h}}.
 \end{equation*}
@@ -461,8 +458,7 @@ Assuming~$e=a^{-1}$ (i.e., an exchange rate direction is not more profitable tha
 If we only pass through each currency at most once, there are only a finite amount of paths to check, and this might simplify the computational problem.
 
 Second, the engineer might be interested in keeping track only of the ``dominant'' currency exchangers.
-For example, if we have two exchangers with the same rate but different commission, we might want
-to keep track only of the one with the lowest commission.
+For example, if we have two exchangers with the same rate but different commission, we might want to keep track only of the one with the lowest commission.
 
 In the next chapters we will see that there are concepts that will be useful to model these situations:
 \begin{itemize}
@@ -494,9 +490,7 @@ There are many famous examples of unit mismatches causing disasters or near-disa
 
 However, in category theory, we look at the ``essence'' of things, and we consider \textbf{what is true regardless of conventions}.
 
-Just like this book is written in rather plain English, and could be translated
-to another language while preserving the meaning, in category theory we look at
-what is not changed by a 1:1 translation that can be reversed.
+Just like this book is written in rather plain English, and could be translated to another language while preserving the meaning, in category theory we look at what is not changed by a 1:1 translation that can be reversed.
 
 This will be covered later in a section on ``isomorphisms''; but for now we can look at this in an intuitive way.
 
@@ -507,10 +501,13 @@ Some of you might have objected to the conventions that we used in this chapter 
 \begin{equation*}
   (\mora \then \morb) \then \morc = \mora \then (\morb \then \morc)
 \end{equation*}
+%
 would be transformed in
+%
 \begin{equation*}
   \morc \after (\morb \after \mora) = (\morc \after \morb) \after \mora.
 \end{equation*}
+%
 (A bit more advanced category theory can describe this transformation more precisely.)
 
 The same considerations apply for the convention regarding the arrow directions.
@@ -518,8 +515,7 @@ If we have a category with morphisms such as
 \begin{equation*}
   \motor \colon \rotationalmotion \to \electricpower
 \end{equation*}
-with the semantics of ``a motor requires \electricpower to produce \rotationalmotion'',
-we could define a \emph{different} category, where the conventions are inverted.
+with the semantics of ``a motor requires \electricpower to produce \rotationalmotion'', we could define a \emph{different} category, where the conventions are inverted.
 In this other category, for which we use arrows of different color, we would write
 \begin{equation*}
 {\color{blue}\motor}
@@ -589,3 +585,12 @@ opposite category. Rather, to go from points-and-arrows to boxes-and-wires:
 \let\mora\oldmora
 \let\morb\oldmorb
 \let\morc\oldmorc
+
+\let\Obja\oldObja
+\let\Objb\oldObjb
+\let\Objc\oldObjc
+\let\Objd\oldObjd
+
+\let\Ob\oldOb
+
+\let\Hom\oldHom
