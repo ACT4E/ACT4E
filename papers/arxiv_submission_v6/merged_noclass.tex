@@ -3241,16 +3241,16 @@ of the Kleene ascent chain
 % between these three spaces~(\cref{fig:setup}).
 % \begin{definition}
 % \label{def:design_problem}A \emph{design problem with implementation}
-% (DPI) is a tuple $\left\langle \funsp,\ressp,\impsp,\exc,\eval\right\rangle $
+% (DPI) is a tuple $\left\langle \funsp,\ressp,\impsp,\prov,\req\right\rangle $
 % where:
 
 % \begin{itemize}
 % \item $\funsp$ is a poset, called \emph{\F{functionality} space};
 % \item $\ressp$ is a poset, called \emph{\R{resources} space};
 % \item $\impsp$ is a set, called \emph{\I{implementation} space};
-% \item the map~$\exc\colon\impsp\rightarrow\funsp$, mnemonics for ``execution'',
+% \item the map~$\prov\colon\impsp\rightarrow\funsp$, mnemonics for ``execution'',
 % maps an implementation to the functionality it provides;
-% \item the map~$\eval\colon\impsp\rightarrow\ressp$, mnemonics for ``evaluation'',
+% \item the map~$\req\colon\impsp\rightarrow\ressp$, mnemonics for ``evaluation'',
 % maps an implementation to the resources it requires.
 % \end{itemize}
 % \captionsideleft{\label{fig:setup}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_setup}}
@@ -3262,8 +3262,8 @@ of the Kleene ascent chain
 % by \F{torque} and \F{speed}. The \emph{resources} to consider
 % could include the \R{cost {[}\${]}}, the \R{mass {[}g{]}}, the
 % input \R{voltage {[}V{]}}, and the input \R{current {[}A{]}}.
-% The map~$\exc:\impsp\rightarrow\funsp$ assigns to each motor its
-% functionality, and the map~$\eval:\impsp\rightarrow\ressp$ assigns
+% The map~$\prov:\impsp\rightarrow\funsp$ assigns to each motor its
+% functionality, and the map~$\req:\impsp\rightarrow\ressp$ assigns
 % to each motor the resources it needs~(\cref{fig:motor}).
 % \end{example}
 % \captionsideleft{\label{fig:motor_evalexec}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_motor_evalexec}}
@@ -3292,7 +3292,7 @@ the \emph{co-design} problem optimally.
 \begin{problem}
 \label{prob:MCDP}Suppose that we are given a CDPI~$\left\langle \funsp,\ressp,\left\langle \cdpiN,\mathcal{E}\right\rangle \right\rangle ,$
 and that we can evaluate the map~$\ftor_{\cdpin}$ for all~$\cdpin\in\cdpiN$.
-Given a required functionality~$\funn\in\funsp$, we wish to find
+Given a required functionality~$\fun\in\funsp$, we wish to find
 the \emph{minimal} resources in~$\ressp$ for which there exists
 a feasible implementation vector that makes all sub-problems feasible
 at the same time and all co-design constraints satisfied; or, if
@@ -3308,7 +3308,7 @@ The rest of the paper will provide a solution to~\cref{prob:MCDP},
 under the assumption that all the DPIs inside the CDPI are ``monotone'',
 in the sense of~\defref{DPI-monotone}.
 \begin{definition}
-\label{def:DPI-monotone}A DPI $\left\langle \funsp,\ressp,\impsp,\exc,\eval\right\rangle $
+\label{def:DPI-monotone}A DPI $\left\langle \funsp,\ressp,\impsp,\prov,\req\right\rangle $
 is ``monotone\emph{''} if
 \begin{enumerate}
 \item The posets $\funsp,\ressp$ are complete partial orders (\defref{cpo}).
@@ -3357,31 +3357,31 @@ problem can be described in terms of a subset of these operators.
 \label{sec:threeoperators}
 \begin{definition}[$\dpseries$]
 \label{def:series-composition}The series composition of two DPIs
-$\dprob_{1}=\langle\funsp_{1},\ressp_{1},\impsp_{1},\exc_{1},\eval_{1}\rangle$
-and $\dprob_{2}=\langle\funsp_{2},\ressp_{2},\impsp_{2},\exc_{2},$
-$\eval_{2}\rangle$, for which~$\funsp_{2}=\ressp_{1}$, is
+$\dprob_{1}=\langle\funsp_{1},\ressp_{1},\impsp_{1},\prov_{1},\req_{1}\rangle$
+and $\dprob_{2}=\langle\funsp_{2},\ressp_{2},\impsp_{2},\prov_{2},$
+$\req_{2}\rangle$, for which~$\funsp_{2}=\ressp_{1}$, is
 \[
-\dpseries(\dprob_{1},\dprob_{2})\doteq\left\langle \funsp_{1},\ressp_{2},\impsp,\exc,\eval\right\rangle ,
+\dpseries(\dprob_{1},\dprob_{2})\doteq\left\langle \funsp_{1},\ressp_{2},\impsp,\prov,\req\right\rangle ,
 \]
 where:
 \begin{eqnarray*}
-\impsp & = & \{\left\langle \imp_{1},\imp_{2}\right\rangle \in\impsp_{1}\times\impsp_{2}\mid\eval_{1}(\imp_{1})\posleq_{\ressp_{1}}\exc_{2}(\imp_{2})\},\\
-\exc & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\exc_{1}(\imp_{1}),\\
-\eval & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\eval_{2}(\imp_{2}).
+\impsp & = & \{\left\langle \imp_{1},\imp_{2}\right\rangle \in\impsp_{1}\times\impsp_{2}\mid\req_{1}(\imp_{1})\posleq_{\ressp_{1}}\prov_{2}(\imp_{2})\},\\
+\prov & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\prov_{1}(\imp_{1}),\\
+\req & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\req_{2}(\imp_{2}).
 \end{eqnarray*}
 \end{definition}
 \captionsideleft{\label{fig:composition-2}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_series3.pdf}}
 \begin{definition}[$\dppar$]
-\label{def:parallel}The parallel composition of two DPIs $\dprob_{1}=\left\langle \funsp_{1},\ressp_{1},\impsp_{1},\exc_{1},\eval_{1}\right\rangle $
-and $\dprob_{2}=\langle\funsp_{2},\ressp_{2},\impsp_{2},\exc_{2},$
-$\eval_{2}\rangle$ is
+\label{def:parallel}The parallel composition of two DPIs $\dprob_{1}=\left\langle \funsp_{1},\ressp_{1},\impsp_{1},\prov_{1},\req_{1}\right\rangle $
+and $\dprob_{2}=\langle\funsp_{2},\ressp_{2},\impsp_{2},\prov_{2},$
+$\req_{2}\rangle$ is
 \[
-\dppar(\dprob_{1},\dprob_{2})\doteq\left\langle \funsp_{1}\times\funsp_{2},\ressp_{1}\times\ressp_{2},\impsp_{1}\times\impsp_{2},\exc,\eval\right\rangle ,
+\dppar(\dprob_{1},\dprob_{2})\doteq\left\langle \funsp_{1}\times\funsp_{2},\ressp_{1}\times\ressp_{2},\impsp_{1}\times\impsp_{2},\prov,\req\right\rangle ,
 \]
 where:
 \begin{eqnarray}
-\exc & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\left\langle \exc_{1}(\imp_{1}),\exc_{2}(\imp_{2})\right\rangle ,\label{eq:dppar-exec}\\
-\eval & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\left\langle \eval_{1}(\imp_{1}),\eval_{2}(\imp_{2})\right\rangle .\nonumber
+\prov & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\left\langle \prov_{1}(\imp_{1}),\prov_{2}(\imp_{2})\right\rangle ,\label{eq:dppar-exec}\\
+\req & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\left\langle \req_{1}(\imp_{1}),\req_{2}(\imp_{2})\right\rangle .\nonumber
 \end{eqnarray}
 
 \captionsideleft{\label{fig:dppar}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_parallel2.pdf}}
@@ -3391,19 +3391,19 @@ where:
 \label{def:dp_loop}Suppose~$\dprob$ is a DPI with factored functionality
 space~$\funsp_{1}\times\ressp$:
 \[
-\dprob=\left\langle \funsp_{1}\times\ressp,\ressp,\impsp,\left\langle \exc_{1},\exc_{2}\right\rangle ,\eval\right\rangle .
+\dprob=\left\langle \funsp_{1}\times\ressp,\ressp,\impsp,\left\langle \prov_{1},\prov_{2}\right\rangle ,\req\right\rangle .
 \]
 Then we can define the DPI~$\dploop(\dprob)$ as
 \[
-\dploop(\dprob)\doteq\left\langle \funsp_{1},\ressp,\impsp',\exc_{1},\eval\right\rangle ,
+\dploop(\dprob)\doteq\left\langle \funsp_{1},\ressp,\impsp',\prov_{1},\req\right\rangle ,
 \]
 where~$\impsp'\subseteq\impsp$ limits the implementations to those
-that respect the additional constraint~$\eval(\imp)\posleq\exc_{2}(\imp)$:
+that respect the additional constraint~$\req(\imp)\posleq\prov_{2}(\imp)$:
 \[
-\impsp'=\{\imp\in\impsp:\eval(\imp)\posleq\exc_{2}(\imp)\}.
+\impsp'=\{\imp\in\impsp:\req(\imp)\posleq\prov_{2}(\imp)\}.
 \]
 This is equivalent to ``closing a loop'' around~$\dprob$ with
-the constraint~$\funn_{2}\posgeq\res$~(\cref{fig:sloop}).
+the constraint~$\fun_{2}\posgeq\res$~(\cref{fig:sloop}).
 \end{definition}
 
 \captionsideleft{\label{fig:sloop}\label{fig:sloop2}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_sloop2.pdf}}
@@ -3425,21 +3425,21 @@ space~$\impsp=\impsp_{1}\sqcup\impsp_{2}$, and it represents the
 exclusive choice between two possible alternative families of designs.
 \begin{definition}[Co-product]
 \label{def:parallel-1}Given two DPIs with same functionality and
-resources $\dprob_{1}=\left\langle \funsp,\ressp,\impsp_{1},\exc_{1},\eval_{1}\right\rangle $
-and $\dprob_{2}=\left\langle \funsp,\ressp,,\impsp_{2},\exc_{2},\eval_{2}\right\rangle ,$
+resources $\dprob_{1}=\left\langle \funsp,\ressp,\impsp_{1},\prov_{1},\req_{1}\right\rangle $
+and $\dprob_{2}=\left\langle \funsp,\ressp,,\impsp_{2},\prov_{2},\req_{2}\right\rangle ,$
 define their co-product as
 \[
-\dprob_{1}\sqcup\dprob_{2}\doteq\left\langle \funsp,\ressp,\impsp_{1}\sqcup\impsp_{2},\exc,\eval\right\rangle ,
+\dprob_{1}\sqcup\dprob_{2}\doteq\left\langle \funsp,\ressp,\impsp_{1}\sqcup\impsp_{2},\prov,\req\right\rangle ,
 \]
 where
 \begin{eqnarray}
-\exc & : & \imp\mapsto\begin{cases}
-\exc_{1}(\imp), & \text{if }\imp\in\impsp_{1},\\
-\exc_{2}(\imp), & \text{if }\imp\in\impsp_{2},
+\prov & : & \imp\mapsto\begin{cases}
+\prov_{1}(\imp), & \text{if }\imp\in\impsp_{1},\\
+\prov_{2}(\imp), & \text{if }\imp\in\impsp_{2},
 \end{cases}\label{eq:dppar-exec-1}\\
-\eval & : & \imp\mapsto\begin{cases}
-\eval_{1}(\imp), & \text{if }\imp\in\impsp_{1},\\
-\eval_{2}(\imp), & \text{if }\imp\in\impsp_{2}.
+\req & : & \imp\mapsto\begin{cases}
+\req_{1}(\imp), & \text{if }\imp\in\impsp_{1},\\
+\req_{2}(\imp), & \text{if }\imp\in\impsp_{2}.
 \end{cases}\nonumber
 \end{eqnarray}
 
@@ -3461,10 +3461,10 @@ The definition of equivalence below ensures that two equivalent DPIs
 have the same map from functionality to resources, while one of the
 DPIs can have a slightly larger implementation space.
 \begin{definition}
-Two DPIs $\left\langle \funsp,\ressp,\impsp_{1},\exc_{1},\eval_{1}\right\rangle $
-and $\langle\funsp,\ressp,$ $\impsp_{2},\exc_{2},\eval_{2}\rangle$
+Two DPIs $\left\langle \funsp,\ressp,\impsp_{1},\prov_{1},\req_{1}\right\rangle $
+and $\langle\funsp,\ressp,$ $\impsp_{2},\prov_{2},\req_{2}\rangle$
 are \emph{equivalent} if there exists a map~$\varphi:\impsp_{2}\rightarrow\impsp_{1}$
-such that~$\exc_{2}=\exc_{1}\circ\varphi$ and~$\eval_{2}=$ $\eval_{1}\circ\varphi$.
+such that~$\prov_{2}=\prov_{1}\circ\varphi$ and~$\req_{2}=$ $\req_{1}\circ\varphi$.
 \end{definition}
 
 \subsection{Plumbing}
@@ -3607,18 +3607,18 @@ From \defref{ftor} and (\ref{eq:dppar-exec}) we know $\ftor$ can
 be written as
 \begin{align*}
 \ftor:\funsp_{1}\times\funsp_{2} & \rightarrow\antichains(\ressp_{1}\times\ressp_{2})\\
-\left\langle \funn_{1},\funn_{2}\right\rangle  & \mapsto\resMin\{\left\langle \eval_{1}(\imp_{1}),\eval_{2}(\imp_{2})\right\rangle \mid\\
+\left\langle \fun_{1},\fun_{2}\right\rangle  & \mapsto\resMin\{\left\langle \req_{1}(\imp_{1}),\req_{2}(\imp_{2})\right\rangle \mid\\
  & \qquad\left(\left\langle \imp_{1},\imp_{2}\right\rangle \in\impsp_{1}\times\impsp_{2}\right)\\
- & \qquad\,\wedge\,\left(\left\langle \funn_{1},\funn_{2}\right\rangle \posleq\left\langle \exc_{1}(\imp_{1}),\exc_{2}(\imp_{2})\right\rangle \right)\}.
+ & \qquad\,\wedge\,\left(\left\langle \fun_{1},\fun_{2}\right\rangle \posleq\left\langle \prov_{1}(\imp_{1}),\prov_{2}(\imp_{2})\right\rangle \right)\}.
 \end{align*}
 All terms factorize in the two components, giving:{\small{}
 \begin{align*}
-\ftor\!:\!\left\langle \funn_{1},\funn_{2}\right\rangle \mapsto & \!\!\!\quad\Min_{\ressp_{1}}\{\left\langle \eval_{1}(\imp_{1})\right\rangle \mid\left(\imp\in\impsp_{1}\right)\,\wedge\,\left(\funn_{1}\posleq\exc_{1}(\imp_{1})\right)\}\\
- & \!\!\!\times\Min_{\ressp_{2}}\{\left\langle \eval_{2}(\imp_{2})\right\rangle \mid\left(\imp\in\impsp_{2}\right)\,\wedge\,\left(\funn_{2}\posleq\exc_{2}(\imp_{2})\right)\},
+\ftor\!:\!\left\langle \fun_{1},\fun_{2}\right\rangle \mapsto & \!\!\!\quad\Min_{\ressp_{1}}\{\left\langle \req_{1}(\imp_{1})\right\rangle \mid\left(\imp\in\impsp_{1}\right)\,\wedge\,\left(\fun_{1}\posleq\prov_{1}(\imp_{1})\right)\}\\
+ & \!\!\!\times\Min_{\ressp_{2}}\{\left\langle \req_{2}(\imp_{2})\right\rangle \mid\left(\imp\in\impsp_{2}\right)\,\wedge\,\left(\fun_{2}\posleq\prov_{2}(\imp_{2})\right)\},
 \end{align*}
 }which reduces to
 \begin{eqnarray}
-\ftor\colon\left\langle \funn_{1},\funn_{2}\right\rangle  & \mapsto & \ftor_{1}(\funn_{1})\acprod\ftor_{2}(\funn_{2}).\label{eq:isproduct}
+\ftor\colon\left\langle \fun_{1},\fun_{2}\right\rangle  & \mapsto & \ftor_{1}(\fun_{1})\acprod\ftor_{2}(\fun_{2}).\label{eq:isproduct}
 \end{eqnarray}
 The map $\ftor$ is \scottcontinuous iff $\ftor_{1}$ and $\ftor_{2}$
 are~\cite[Lemma II.2.8]{gierz03continuous}.
@@ -3633,50 +3633,50 @@ is monotone.
 From the definition of $\dpseries$ (\defref{series-composition}),
 the semantics of the interconnection is captured by this problem:
 \begin{equation}
-\ftor:\funn_{1}\mapsto\begin{cases}
-\with & \res_{1},\funn_{2}\in\ressp_{1},\quad\res_{2}\in\ressp_{2},\\
+\ftor:\fun_{1}\mapsto\begin{cases}
+\with & \res_{1},\fun_{2}\in\ressp_{1},\quad\res_{2}\in\ressp_{2},\\
 \Min_{\posleq_{\ressp_{2}}} & \res_{2},\\
-\subto & \res_{1}\in\ftor_{1}(\funn_{1}),\\
- & \res_{1}\posleq_{\ressp_{1}}\funn_{2},\\
- & \res_{2}\in\ftor_{2}(\funn_{2}).
+\subto & \res_{1}\in\ftor_{1}(\fun_{1}),\\
+ & \res_{1}\posleq_{\ressp_{1}}\fun_{2},\\
+ & \res_{2}\in\ftor_{2}(\fun_{2}).
 \end{cases}\label{eq:dede}
 \end{equation}
-The situation is described by \cref{fig:series_mono1-2}. The point~$\funn_{1}$
-is fixed, and thus~$\ftor(\funn_{1})$ is a fixed antichain in~$\ressp_{1}$.
-For each point $\res_{1}\in\ftor(\funn_{1})$, we can choose a $\funn_{2}\posgeq\res_{1}$.
-For each~$\funn_{2}$, the antichain~$\ftor_{2}(\funn_{2})$ traces
+The situation is described by \cref{fig:series_mono1-2}. The point~$\fun_{1}$
+is fixed, and thus~$\ftor(\fun_{1})$ is a fixed antichain in~$\ressp_{1}$.
+For each point $\res_{1}\in\ftor(\fun_{1})$, we can choose a $\fun_{2}\posgeq\res_{1}$.
+For each~$\fun_{2}$, the antichain~$\ftor_{2}(\fun_{2})$ traces
 the solution in $\ressp_{2}$, from which we can choose~$\res_{2}$.
 
 \captionsideleft{\label{fig:series_mono1-2}}{\includegraphics[scale=0.45]{papers/arxiv_submission_v6/gmcdp_monotone_proof_mono1.pdf}}
 
-\noindent Because~$\ftor_{2}$ is monotone, $\ftor_{2}(\funn_{2})$
-is minimized when~$\funn_{2}$ is minimized, hence we know that the
-constraint~$\res_{1}\posleq\funn_{2}$ will be tight. We can then
-conclude that the objective does not change introducing the constraint~$\res_{1}=\funn_{2}$.
+\noindent Because~$\ftor_{2}$ is monotone, $\ftor_{2}(\fun_{2})$
+is minimized when~$\fun_{2}$ is minimized, hence we know that the
+constraint~$\res_{1}\posleq\fun_{2}$ will be tight. We can then
+conclude that the objective does not change introducing the constraint~$\res_{1}=\fun_{2}$.
 The problem is reduced to:
 
 \begin{equation}
-\ftor:\funn_{1}\mapsto\begin{cases}
-\with & \funn_{2}\in\ressp_{1},\quad\res_{2}\in\ressp_{2},\\
+\ftor:\fun_{1}\mapsto\begin{cases}
+\with & \fun_{2}\in\ressp_{1},\quad\res_{2}\in\ressp_{2},\\
 \Min_{\posleq_{\ressp_{2}}} & \res_{2},\\
-\subto & \funn_{2}\in\ftor_{1}(\funn_{1}),\\
- & \res_{2}\in\ftor_{2}(\funn_{2}).
+\subto & \fun_{2}\in\ftor_{1}(\fun_{1}),\\
+ & \res_{2}\in\ftor_{2}(\fun_{2}).
 \end{cases}\label{eq:dede-2}
 \end{equation}
-Minimizing $\res_{2}$ with the only constraint being~$\res_{2}\in\ftor_{2}(\funn_{2})$,
-and with~$\ftor_{2}(\funn_{2})$ being an antichain, the solutions
-are all and only~$\ftor_{2}(\funn_{2})$. Hence the problem is reduced
+Minimizing $\res_{2}$ with the only constraint being~$\res_{2}\in\ftor_{2}(\fun_{2})$,
+and with~$\ftor_{2}(\fun_{2})$ being an antichain, the solutions
+are all and only~$\ftor_{2}(\fun_{2})$. Hence the problem is reduced
 to
 \begin{equation}
-\ftor:\funn_{1}\mapsto\begin{cases}
-\with & \funn_{2}\in\ressp_{1},\\
-\Min_{\posleq_{\ressp_{2}}} & \ftor_{2}(\funn_{2}),\\
-\subto & \funn_{2}\in\ftor_{1}(\funn_{1}).
+\ftor:\fun_{1}\mapsto\begin{cases}
+\with & \fun_{2}\in\ressp_{1},\\
+\Min_{\posleq_{\ressp_{2}}} & \ftor_{2}(\fun_{2}),\\
+\subto & \fun_{2}\in\ftor_{1}(\fun_{1}).
 \end{cases}\label{eq:dede-2-1}
 \end{equation}
 The solution is simply
 \begin{equation}
-\ftor:\funn_{1}\mapsto\Min_{\posleq_{\ressp_{2}}}\bigcup_{\funn_{2}\in\ftor_{1}(\funn_{1})}\ftor_{2}(\funn_{2}).\label{eq:ora}
+\ftor:\fun_{1}\mapsto\Min_{\posleq_{\ressp_{2}}}\bigcup_{\fun_{2}\in\ftor_{1}(\fun_{1})}\ftor_{2}(\fun_{2}).\label{eq:ora}
 \end{equation}
 This map is \scottcontinuous because it is the composition of \scottcontinuous
 maps.
@@ -3691,34 +3691,34 @@ The diagram in \cref{fig:sloop} implies that the map~$\ftor_{\dploop(\dprob)}$
 can be described as:
 \begin{align}
 \ftor_{\dploop(\dprob)}\colon\funsp_{1} & \rightarrow\Aressp,\label{eq:loopproblem}\\
-\funn_{1} & \mapsto\begin{cases}
-\with & \res,\funn_{2}\in\ressp,\\
+\fun_{1} & \mapsto\begin{cases}
+\with & \res,\fun_{2}\in\ressp,\\
 \Min_{\resleq} & \res,\\
-\subto & \res\in\ftor_{\dprob}(\funn_{1},\funn_{2}),\\
- & \res\resleq\funn_{2}.
+\subto & \res\in\ftor_{\dprob}(\fun_{1},\fun_{2}),\\
+ & \res\resleq\fun_{2}.
 \end{cases}
 \end{align}
-Denote by~$\ftor_{\funn_{1}}$ the map~$\ftor_{\dprob}$ with the
+Denote by~$\ftor_{\fun_{1}}$ the map~$\ftor_{\dprob}$ with the
 first element fixed:
 \[
-\ftor_{\funn_{1}}\colon\funn_{2}\mapsto\ftor_{\dprob}(\funn_{1},\funn_{2}).
+\ftor_{\fun_{1}}\colon\fun_{2}\mapsto\ftor_{\dprob}(\fun_{1},\fun_{2}).
 \]
-Rewrite $\res\in\ftor_{\dprob}(\funn_{1},\funn_{2})$ in \eqref{loopproblem}
+Rewrite $\res\in\ftor_{\dprob}(\fun_{1},\fun_{2})$ in \eqref{loopproblem}
 as
 \begin{equation}
-\res\in\ftor_{\funn_{1}}(\funn_{2}).\label{eq:h2}
+\res\in\ftor_{\fun_{1}}(\fun_{2}).\label{eq:h2}
 \end{equation}
 Let~$\res$ be a feasible solution, but not necessarily minimal.
 Because of \cref{lem:antichain-write}, the constraint \eqref{h2} can
 be rewritten as
 \begin{equation}
-\{\res\}=\ftor_{\funn_{1}}(\funn_{2})\cap\upit\res.\label{eq:h3}
+\{\res\}=\ftor_{\fun_{1}}(\fun_{2})\cap\upit\res.\label{eq:h3}
 \end{equation}
-Because $\funn_{2}\posgeq\res$, and $\ftor_{\funn_{1}}$ is \scottcontinuous,
-it follows that~$\ftor_{\funn_{1}}(\funn_{2})\posgeq_{\Aressp}\ftor_{\funn_{1}}(\res)$.
+Because $\fun_{2}\posgeq\res$, and $\ftor_{\fun_{1}}$ is \scottcontinuous,
+it follows that~$\ftor_{\fun_{1}}(\fun_{2})\posgeq_{\Aressp}\ftor_{\fun_{1}}(\res)$.
 Therefore, by \cref{lem:antichain_inter}, we have
 \begin{equation}
-\{\res\}\posgeq_{\Aressp}\ftor_{\funn_{1}}(\res)\cap\upit\res.\label{eq:fea}
+\{\res\}\posgeq_{\Aressp}\ftor_{\fun_{1}}(\res)\cap\upit\res.\label{eq:fea}
 \end{equation}
 This is a recursive condition that all feasible~$\res$ must satisfy.
 
@@ -3732,7 +3732,7 @@ its elements:
 Substituting (\ref{eq:fea}) in (\ref{eq:condition3}) we obtain (cf
 \cref{lem:antichain_union})
 \begin{equation}
-\R{R}\posgeq_{\Aressp}\Min_{\resleq}\bigcup_{\res\in\R{R}}\ftor_{\funn_{1}}(\res)\ \cap\ \upit\res.\label{eq:recursive}
+\R{R}\posgeq_{\Aressp}\Min_{\resleq}\bigcup_{\res\in\R{R}}\ftor_{\fun_{1}}(\res)\ \cap\ \upit\res.\label{eq:recursive}
 \end{equation}
 
 {[}Converse: It is also true that if an antichain~$\R{R}$ satisfies~\eqref{recursive}
@@ -3741,14 +3741,14 @@ means that for any~$\res_{0}\in\R{R}$ on the left side, we can find
 a~$\res_{1}$ in the right side so that~$\res_{0}\posgeq_{\ressp}\res_{1}$.
 The point~$\res_{1}$ needs to belong to one of the sets of which
 we take the union; say that it comes from $\res_{2}\in\R{R}$, so
-that $\res_{1}\in\ftor_{\funn_{1}}(\res_{2})\ \cap\ \upit\res_{2}$.
+that $\res_{1}\in\ftor_{\fun_{1}}(\res_{2})\ \cap\ \upit\res_{2}$.
 Summarizing:
 
 {\footnotesize{}
 \begin{equation}
-\forall\res_{0}\in\R{R}:\ \exists\res_{1}\colon\ (\res_{0}\posgeq_{\ressp}\res_{1})\ \wedge\ (\exists\res_{2}\in\R{R}\colon\ \res_{1}\in\ftor_{\funn_{1}}(\res_{2})\ \cap\ \upit\res_{2}).\label{eq:conc}
+\forall\res_{0}\in\R{R}:\ \exists\res_{1}\colon\ (\res_{0}\posgeq_{\ressp}\res_{1})\ \wedge\ (\exists\res_{2}\in\R{R}\colon\ \res_{1}\in\ftor_{\fun_{1}}(\res_{2})\ \cap\ \upit\res_{2}).\label{eq:conc}
 \end{equation}
-}Because~$\res_{1}\in\ftor_{\funn_{1}}(\res_{2})\,\cap\,\upit\res_{2}$,
+}Because~$\res_{1}\in\ftor_{\fun_{1}}(\res_{2})\,\cap\,\upit\res_{2}$,
 we can conclude that~$\res_{1}\in\upit\res_{2}$, and therefore~$\res_{1}\posgeq_{\ressp}\res_{2}$,
 which together with~$\res_{0}\posgeq_{\ressp}\res_{1}$, implies~$\res_{0}\posgeq_{\ressp}\res_{2}$.
 We have concluded that there exist two points~$\res_{0},\res_{2}$
@@ -3756,7 +3756,7 @@ in the antichain~$\R{R}$ such that~$\res_{0}\posgeq_{\ressp}\res_{2}$;
 therefore, they are the same point:~$\res_{0}=\res_{2}$. Because~$\res_{0}\posgeq_{\ressp}\res_{1}\posgeq_{\ressp}\res_{2}$,
 we also conclude that~$\res_{1}$ is the same point as well. We can
 rewrite~\eqref{conc} by using~$\res_{0}$ in place of~$\res_{1}$
-and~$\res_{2}$ to obtain~$\forall\res_{0}\in\R{R}:\res_{0}\in\ftor_{\funn_{1}}(\res_{0})$,
+and~$\res_{2}$ to obtain~$\forall\res_{0}\in\R{R}:\res_{0}\in\ftor_{\fun_{1}}(\res_{0})$,
 which means that~$\res_{0}$ is a feasible resource.{]}
 
 We have concluded that all antichains of feasible resources~$\R{R}$
@@ -3767,25 +3767,25 @@ resources.
 Equation \eqref{recursive} is a recursive constraint for~$\R{R}$,
 of the kind
 \[
-\Phi_{\funn_{1}}(\R{R})\posleq_{\Aressp}\R{R},
+\Phi_{\fun_{1}}(\R{R})\posleq_{\Aressp}\R{R},
 \]
-with the map~$\Phi_{\funn_{1}}$ defined by
+with the map~$\Phi_{\fun_{1}}$ defined by
 \begin{eqnarray}
-\Phi_{\funn_{1}}:\Aressp & \rightarrow & \Aressp,\label{eq:bigphi}\\
-\R{R} & \mapsto & \Min_{\resleq}\bigcup_{\res\in\R{R}}\ftor_{\funn_{1}}(\res)\ \cap\ \upit\res.\nonumber
+\Phi_{\fun_{1}}:\Aressp & \rightarrow & \Aressp,\label{eq:bigphi}\\
+\R{R} & \mapsto & \Min_{\resleq}\bigcup_{\res\in\R{R}}\ftor_{\fun_{1}}(\res)\ \cap\ \upit\res.\nonumber
 \end{eqnarray}
 If we want the \emph{minimal} resources, we are looking for the \emph{least}
 antichain:
 \[
-\min_{\posleq_{\Aressp}}\{\,\R{R}\in\Aressp\colon\ \Phi_{\funn_{1}}(\R{R})\posleq_{\Aressp}\R{R}\,\},
+\min_{\posleq_{\Aressp}}\{\,\R{R}\in\Aressp\colon\ \Phi_{\fun_{1}}(\R{R})\posleq_{\Aressp}\R{R}\,\},
 \]
-which is equal to the \emph{least fixed point }of~$\Phi_{\funn_{1}}$.
+which is equal to the \emph{least fixed point }of~$\Phi_{\fun_{1}}$.
 Therefore, the map $\ftor_{\dploop(\dprob)}$ can be written as
 \begin{equation}
-\ftor_{\dploop(\dprob)}\colon\funn_{1}\mapsto\lfp(\Phi_{\funn_{1}}).\label{eq:loop_fixpoint}
+\ftor_{\dploop(\dprob)}\colon\fun_{1}\mapsto\lfp(\Phi_{\fun_{1}}).\label{eq:loop_fixpoint}
 \end{equation}
-\cref{lem:dagger} shows that $\lfp(\Phi_{\funn_{1}})$ is \scottcontinuous
-in~$\funn_{1}$.
+\cref{lem:dagger} shows that $\lfp(\Phi_{\fun_{1}})$ is \scottcontinuous
+in~$\fun_{1}$.
 \end{proof}
 
 \begin{lemma}
@@ -3856,7 +3856,7 @@ and~$\ftor_{2}\colon\funsp_{2}\rightarrow\Aressp_{2}$, if~$\ressp_{1}=\funsp_{2}
 , define
 \begin{align*}
 {\displaystyle \ftor_{1}\opseries\ftor_{2}\colon\funsp_{1}} & \rightarrow\Aressp_{2},\\
-\funn_{1} & \mapsto\Min_{\posleq_{\ressp_{2}}}\bigcup_{s\in\ftor_{1}(\funn)}\ftor_{2}(s).
+\fun_{1} & \mapsto\Min_{\posleq_{\ressp_{2}}}\bigcup_{s\in\ftor_{1}(\fun)}\ftor_{2}(s).
 \end{align*}
 \end{definition}
 
@@ -3865,7 +3865,7 @@ and~$\ftor_{2}\colon\funsp_{2}\rightarrow\Aressp_{2}$, if~$\ressp_{1}=\funsp_{2}
 and $\ftor_{2}\colon\funsp_{2}\rightarrow\Aressp_{2}$, define
 \begin{align}
 \ftor_{1}\oppar\ftor_{2}:(\funsp_{1}\times\funsp_{2}) & \rightarrow\antichains(\ressp_{1}\times\ressp_{2}),\label{eq:oppar}\\
-\left\langle \funn_{1},\funn_{2}\right\rangle  & \mapsto\ftor_{1}(\funn_{1})\acprod\ftor_{2}(\funn_{2}),\nonumber
+\left\langle \fun_{1},\fun_{2}\right\rangle  & \mapsto\ftor_{1}(\fun_{1})\acprod\ftor_{2}(\fun_{2}),\nonumber
 \end{align}
 where $\acprod$ is the product of two antichains.
 \end{definition}
@@ -3875,12 +3875,12 @@ where $\acprod$ is the product of two antichains.
 define
 \begin{align}
 \ftor^{\oploop}:\funsp_{1} & \rightarrow\Aressp,\nonumber \\
-\funn_{1} & \mapsto\lfp\left(\Psi_{\funn_{1}}^{\ftor}\right),\label{eq:lfp}
+\fun_{1} & \mapsto\lfp\left(\Psi_{\fun_{1}}^{\ftor}\right),\label{eq:lfp}
 \end{align}
-where~$\Psi_{\funn_{1}}^{\ftor}$ is defined as
+where~$\Psi_{\fun_{1}}^{\ftor}$ is defined as
 \begin{align}
-\Psi_{\funn_{1}}^{\ftor}:\Aressp & \rightarrow\Aressp,\nonumber \\
-{\colR R} & \mapsto\Min_{\posleq_{\ressp}}\bigcup_{\res\in{\colR R}}\ftor(\funn_{1},\res)\ \cap\upit\res.\label{eq:phi}
+\Psi_{\fun_{1}}^{\ftor}:\Aressp & \rightarrow\Aressp,\nonumber \\
+{\colR R} & \mapsto\Min_{\posleq_{\ressp}}\bigcup_{\res\in{\colR R}}\ftor(\fun_{1},\res)\ \cap\upit\res.\label{eq:phi}
 \end{align}
 \end{definition}
 
@@ -3889,7 +3889,7 @@ where~$\Psi_{\funn_{1}}^{\ftor}$ is defined as
 define
 \begin{align*}
 \ftor_{1}\opcoprod\ftor_{2}:\funsp & \rightarrow\Aressp,\\
-\funn& \mapsto\Min_{\posleq_{\ressp}}\left(\ftor_{1}(\funn)\cup\ftor_{2}(\funn)\right).
+\fun& \mapsto\Min_{\posleq_{\ressp}}\left(\ftor_{1}(\fun)\cup\ftor_{2}(\fun)\right).
 \end{align*}
 \end{definition}
 
@@ -3931,11 +3931,11 @@ $\dprob_{2}$ (used twice), and $\dprob_{3}$. Their $\ftor$ maps
 are:
 \begin{eqnarray*}
 \ftor_{1}:{\colF\overline{\mathbb{N}}\times\overline{\mathbb{N}}\times\overline{\mathbb{N}}} & \rightarrow & {\colR\antichains\overline{\mathbb{N}}},\\
-\left\langle \funn_{1},\funn_{2},\funn_{3}\right\rangle  & \mapsto & \{\funn_{1}+\funn_{2}+\funn_{3}\},\\
+\left\langle \fun_{1},\fun_{2},\fun_{3}\right\rangle  & \mapsto & \{\fun_{1}+\fun_{2}+\fun_{3}\},\\
 \ftor_{2}:{\colF\overline{\mathbb{N}}} & \rightarrow & {\colR\antichains\overline{\mathbb{N}}},\\
-\funn& \mapsto & \{\lceil\sqrt{\funn}\,\rceil\},\\
+\fun& \mapsto & \{\lceil\sqrt{\fun}\,\rceil\},\\
 \ftor_{3}:{\colF\overline{\mathbb{N}}} & \rightarrow & {\colR\antichains(\overline{\mathbb{N}}\times\overline{\mathbb{N}})},\\
-\funn& \mapsto & \{\left\langle a,b\right\rangle \in\overline{\mathbb{N}}\times\overline{\mathbb{N}}:a+b=\funn\}.
+\fun& \mapsto & \{\left\langle a,b\right\rangle \in\overline{\mathbb{N}}\times\overline{\mathbb{N}}:a+b=\fun\}.
 \end{eqnarray*}
 The tree decomposition (\cref{fig:toydiagram_tree}) corresponds to
 the expression
@@ -4316,9 +4316,9 @@ The DP is described by the map
 \begin{minipage}[c]{5cm}
 \begin{align*}
 \ftor:\F{\mathbb{\overline{R}}_{+}^{\text{kg}}} & \rightarrow\R{\antichains\One},\\
-\funn& \mapsto\begin{cases}
-\R{\{\left\langle \right\rangle \}}, & \text{if }\funn\leq\text{3 kg},\\
-\R{\emptyset}, & \text{if }\funn>\text{3 kg}.
+\fun& \mapsto\begin{cases}
+\R{\{\left\langle \right\rangle \}}, & \text{if }\fun\leq\text{3 kg},\\
+\R{\emptyset}, & \text{if }\fun>\text{3 kg}.
 \end{cases}
 \end{align*}
 
