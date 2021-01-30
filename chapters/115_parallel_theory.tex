@@ -29,7 +29,7 @@ for $a,b,c,d\in \Ob(\CatC)$.
 Let's digest the definition of monoidal category with an explanatory example. We consider the structure~$\tup{\Set,\times,\singleton}$ and show that it indeed forms a monoidal category. First of all, we specify how the monoidal product (cartesian product here) acts on objects and morphisms in \Set (it is a functor). Given~$A,B\in \Ob_{\Set}$,~$A\times B$ is the usual cartesian product of sets, and given~$f\colon A\to A'$, $g\colon B\to B'$, we have:
 \begin{equation*}
     \begin{aligned}
-    (f\times g)\colon A\times B&\to A'\times B'\\
+    (f\times g)\colon A\times B&\toiso A'\times B'\\
     \tup{a,b}&\mapsto \tup{f(a),g(b)}.
     \end{aligned}
 \end{equation*}
@@ -42,18 +42,35 @@ Furthermore, given any~$A,B,C\in \Ob_{\Set}$, we specify the unitor~$\alpha_{A,B
 \end{equation*}
 This defines an isomorphism (I can ``back and forth'', by switching the tuple separation). We now need to check whether~$\alpha$ is natural. We check this graphically, using the commutative diagram in \cref{fig:monoidal_set_ass_nat}.
 
+\begin{figure}[h!]
+\begin{center}
+\includesag{115_set_mon_ass}
+\end{center}
+\caption{\label{fig:monoidal_set_ass_nat}}
+\end{figure}
+
+Given an object~$A\in \Ob_\Set$, the unitor~$\lambda_A$ is given by:
+\begin{equation*}
+    \begin{aligned}
+    \lambda_A\colon \singleton \times A &\toiso A\\
+    \tup{\ast,a}&\mapsto a.
+    \end{aligned}
+\end{equation*}
+
+Again, this defines an isomorphism. Consider a morphism~$f\colon A\to A'$. We now prove naturality graphically (\cref{fig:monoidal_set_unit_nat}).
+
+\begin{figure}[h!]
 \begin{center}
     \begin{tikzcd}
-    \blue{\tup{\tup{a,b},c}}\arrow[r,mapsto,blue]
-    \arrow[ddd,mapsto,blue, bend right=75]& \blue{\tup{a,\tup{b,c}}}\arrow[ddd,mapsto, bend left=70,blue]\\[-10pt]
-    (A\times B)\times C \arrow{r}{\alpha_{A,B,C}} \arrow{d}[swap]{(f\times g)\times h}& A \times (B\times C)\arrow{d}{f\times(g\times h)}\\
-    (A'\times B')\times C' \arrow{r}[swap]{\alpha_{A',B',C'}}& A'\times (B'\times C')\\[-10pt]
-    \blue{\tup{\tup{f(a),g(b)},h(c)}}&\blue{\tup{f(a),\tup{g(b),h(c)}}}\arrow[l,mapsto,blue]
+    \singleton \times A \arrow{r}{\lambda_A}&A\arrow{d}{f}\\
+    \singleton \times A'\arrow{r}[swap]{\lambda_{A'}}
+    \arrow{d}[swap]{\id_{\singleton}\times f}&A'
     \end{tikzcd}
 \end{center}
+\end{figure}
 \end{example}
 
-\GZ{Positive example first}
+
 \begin{example}
 \label{ex:robot}
 Consider $\mathbb{R}^2$, discretized as a two-dimensional grid, representing locations (cells) which a robot can reach. The configuration space of the robot is $\mathbb{R}^2\times \Theta$, where $\Theta=[0,2\pi)$. A specific configuration $\tup{x,y,\theta}$ is characterized at each time by the position of the robot $x,y\in \mathbb{R}$ and its orientation $\theta \in \Theta$. The action space of the robot is $\mathcal{A}=\{\mathsf{stay},\leftarrow, \rightarrow, \uparrow, \downarrow\}$. This is a category, where each configuration of the robot is an object, and morphisms are robot actions which change configurations. Each configuration has the identity morphism which does not change it ($\mathsf{stay}$). Composition of morphisms is given by concatenation of actions (\cref{fig:robotcategory}). Assuming the existence of multiple robots $r_i=\tup{x_i,y_i,\theta_i}$, it is possible to define a product $r_i\otimes r_j$, which is to be intended as ``we have a robot at configuration $r_i$ and another one at configuration $r_j$''. However, this cannot be a proper monoidal product, because two robots cannot have the same configuration (physically, they cannot lie on each other), and hence $r_i\otimes r_i$ does not exist. By assuming that two robots could share the same configuration, this would be a valid monoidal product.
