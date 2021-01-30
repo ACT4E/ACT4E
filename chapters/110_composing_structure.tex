@@ -10,93 +10,94 @@ We can now give our first definition of design problems.
 
 
 
-\begin{definition}[Design Problems as monotone functions] \label{def:design-problem}
-Suppose that $\F{F}, \R{R}$ are posets. A \emph{design problem} is a monotone map of the form
-\begin{equation}
-	\adp \colon  \F{F}\op \times \R{R} \to \Bool.
-\end{equation}
-We represent it by an arrow $\adp \colon \F{F} \profto \R{R}$. Note that a design problem is a profunctor (\cref{def:profunctor}). In particular, it is a \emph{boolean profunctor}.
+\begin{definition}[Design Problems as monotone functions]
+    \label{def:design-problem}
+    Suppose that $\funsp, \ressp$ are posets. A \emph{design problem} is a monotone map of the form
+    \begin{equation}
+        \adp \colon  \funsp\op \times \ressp \to \Bool.
+    \end{equation}
+    We represent it by an arrow $\adp \colon \funsp \profto \ressp$. Note that a design problem is a profunctor (\cref{def:profunctor}). In particular, it is a \emph{boolean profunctor}.
 \end{definition}
 
 \paragraph{Intended semantics}
-When we consider a design problem $\adp\colon \F{F} \profto \R{R}$, we imagine the poset~$\F{F}$ to represent the \textbf{f}unctionality to be provided, while the poset~$R$ represents the \textbf{r}esources required. The object~$\adp \colon \F{F} \profto \R{R}$ is a relation that describes which combinations of functionality and resources are feasible: for each~$\F{f}^* \in \F{F}\op$ and~$\R{r} \in \R{R}$,~$\adp(\F{f}^*,\R{r})$ is a truth value,~$\true$ or~$\false$, which we call the \emph{feasibility of~$\F{f}$ given~$\R{r}$}. The value~$\adp(\F{f}^*,\R{r})$ is the answer to the question ``is the functionality~$\F{f}$ feasible with resources~$\R{r}$?''.
+When we consider a design problem $\adp\colon \funsp \profto \ressp$, we imagine the poset~$\funsp$ to represent the \textbf{f}unctionality to be provided, while the poset~$R$ represents the \textbf{r}esources required. The object~$\adp \colon \funsp \profto \ressp$ is a relation that describes which combinations of functionality and resources are feasible: for each~$\F{f}^* \in \funsp\op$ and~$\R{r} \in \ressp$,~$\adp(\F{f}^*,\R{r})$ is a truth value,~$\true$ or~$\false$, which we call the \emph{feasibility of~$\F{f}$ given~$\R{r}$}. The value~$\adp(\F{f}^*,\R{r})$ is the answer to the question ``is the functionality~$\F{f}$ feasible with resources~$\R{r}$?''.
 
 This is the basic fact of life in engineering: there is a price to pay for everything, and there are trade-offs to be made.
 
 The monotonicity of~$\adp$ represents the two following assumptions:
 
 \begin{compactenum}
-\item If~$\F{f}$ is feasible with~$\R{r}$, then any~$\F{f'} \ordleq_\F{F} \F{f}$ is feasible with~$\R{r}$.
-\item If~$\F{f}$ is feasible with~$\R{r}$, then~$\F{f}$ is feasible with any~$\R{r'} \ordgeq_\R{R} \R{r}$.
+    \item If~$\F{f}$ is feasible with~$\R{r}$, then any~$\F{f'} \ordleq_\funsp \F{f}$ is feasible with~$\R{r}$.
+    \item If~$\F{f}$ is feasible with~$\R{r}$, then~$\F{f}$ is feasible with any~$\R{r'} \ordgeq_\ressp \R{r}$.
 \end{compactenum}
 
 \begin{example}
-Imagine a truck to be driving at constant speed on a straight street. If it can cover \unit[100]{miles} with \unit[5]{gallons} of gasoline, it can also cover \unit[80]{miles} with it. Furthermore, it will be able to cover the \unit[100]{miles} also with \unit[10]{gallons} of gasoline.
+    Imagine a truck to be driving at constant speed on a straight street. If it can cover \unit[100]{miles} with \unit[5]{gallons} of gasoline, it can also cover \unit[80]{miles} with it. Furthermore, it will be able to cover the \unit[100]{miles} also with \unit[10]{gallons} of gasoline.
 \end{example}
 
 A design problem~$\adp$ will satisfy these conditions if and only if it is represented by a monotone function.
 \begin{definition}[Feasible set of a design problem]
-We define the \emph{feasible set}~$K_\adp$ of a design problem~$\adp\colon \F{F}\op \times \R{R}\to \Bool$ as the subset of~$\F{F} \op\times \R{R}$ for which~$\adp$ is the \emph{indicator function}, that is
-\begin{equation}
-    K_\adp = \{ \tup{\F{f^*},\R{r}} \in \F{F} \op\times \R{R}  \mid
-            \adp(\F{f}^*, \R{r}) = \true
-                \}.
-\end{equation}
+    We define the \emph{feasible set}~$K_\adp$ of a design problem~$\adp\colon \funsp\op \times \ressp\to \Bool$ as the subset of~$\funsp \op\times \ressp$ for which~$\adp$ is the \emph{indicator function}, that is
+    \begin{equation}
+        K_\adp = \{ \tup{\F{f^*},\R{r}} \in \funsp \op\times \ressp  \mid
+        \adp(\F{f}^*, \R{r}) = \true
+        \}.
+    \end{equation}
 \end{definition}
 \begin{remark}
-The set~$K_\adp$ is always an upper set (\cref{def:upperset}). In fact, another way to define a design problem is to declare it as ``an upper
-set in~$\F{F}\op \times \R{R}$''. This is simpler than declaring it as ``a monotone map to~$\Bool$''. However, the definition as a monotone map will lend very easily to further generalization.
+    The set~$K_\adp$ is always an upper set (\cref{def:upperset}). In fact, another way to define a design problem is to declare it as ``an upper
+    set in~$\funsp\op \times \ressp$''. This is simpler than declaring it as ``a monotone map to~$\Bool$''. However, the definition as a monotone map will lend very easily to further generalization.
 \end{remark}
 The Boolean-valued design problems we are considering here do not distinguish between particular implementations: they only tell us if \emph{any} implementation or solution exists for given functionality and resources. We will define~$\Set$-enriched design problems in \cref{sec:enriched}, which directly generalize Boolean-valued design problems and do distinguish between particular implementations.
 
-\paragraph{Diagrammatic notation} We represent design problems using a diagrammatic notation. One design problem~$\adp \colon \F{F} \profto \R{R}$ is represented as a box with functionality~$\F{F}$ on the \emph{left} and resources~$\R{R}$ on the \emph{right} (\cref{fig:diagrammaticdp}).
+\paragraph{Diagrammatic notation} We represent design problems using a diagrammatic notation. One design problem~$\adp \colon \funsp \profto \ressp$ is represented as a box with functionality~$\funsp$ on the \emph{left} and resources~$\ressp$ on the \emph{right} (\cref{fig:diagrammaticdp}).
 \begin{figure}[h!]
-\begin{center}
-\includesag{50_diagrammatic}
-\end{center}
-\caption{Diagrammatic representation of a design problem. \label{fig:diagrammaticdp}}
+    \begin{center}
+        \includesag{50_diagrammatic}
+    \end{center}
+    \caption{Diagrammatic representation of a design problem. \label{fig:diagrammaticdp}}
 \end{figure}
 We will connect these diagrams.
-\begin{example}An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100. The engine requires fuel and provides thrust, and so it can be modeled as a design problem where~$\R{\mathsf{fuel}}$ and~$\F{\mathsf{thrust}}$ are two totally-ordered sets representing their respective resources. The corresponding diagram is reported in~\cref{fig:enginedp}.
-\begin{figure}[h!]
-\begin{center}
-	\includesag{50_engine}
-\end{center}
-\caption{Diagram of the engine design problem. \label{fig:enginedp}}
-\end{figure}
+\begin{example}
+    An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100. The engine requires fuel and provides thrust, and so it can be modeled as a design problem where~$\R{\mathsf{fuel}}$ and~$\F{\mathsf{thrust}}$ are two totally-ordered sets representing their respective resources. The corresponding diagram is reported in~\cref{fig:enginedp}.
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{50_engine}
+        \end{center}
+        \caption{Diagram of the engine design problem. \label{fig:enginedp}}
+    \end{figure}
 
-Concretely, ``engine'' is represented as a monotone map
-\begin{equation}
-    \text{engine} \colon \F{\mathsf{thrust}}\op \times \R{\mathsf{fuel}} \toinPos \Bool.
-\end{equation}
+    Concretely, ``engine'' is represented as a monotone map
+    \begin{equation}
+        \text{engine} \colon \F{\mathsf{thrust}}\op \times \R{\mathsf{fuel}} \toinPos \Bool.
+    \end{equation}
 
-Assuming that the posets \R{$\mathsf{fuel}$}, \F{$\mathsf{thrust}$}$\op$ are finite, we can think of the ``engine'' design problem as a matrix, where each~$(i,j)$-th entry is the answer to the question, ``is the amount of thrust~$\F{f_i}$ feasible with the amount of fuel~$\R{r_j}$?'':
+    Assuming that the posets \R{$\mathsf{fuel}$}, \F{$\mathsf{thrust}$}$\op$ are finite, we can think of the ``engine'' design problem as a matrix, where each~$(i,j)$-th entry is the answer to the question, ``is the amount of thrust~$\F{f_i}$ feasible with the amount of fuel~$\R{r_j}$?'':
 
-\begin{equation}
-\begin{blockarray}{ccccccc}
-&&&& \mathsf{Fuel} \\
- && \R{r_1} = 0  & \R{r_2} & \R{r_3} & \hdots & \R{r_m} \\
-\begin{block}{cc(ccccc)}
-  & \F{f_n}^* = 0 & 0 & 0 & 0 & & 0 \\
-  & \F{f_{n-1}}^* & 0 & 0 & 0 & & 1 \\
-  \mathsf{Thrust}\op & \F{f_{n-2}}^* & 0 & 1 & 1 & & 1 \\
-  & \vdots &  &  &  & \ddots & \\
-  & \F{f_1}^* & 1 & 1 & 1 & & 1 \\
-\end{block}
-\end{blockarray}
-\end{equation}
+    \begin{equation}
+        \begin{blockarray}{ccccccc}
+            &&&& \mathsf{Fuel} \\
+            && \R{r_1} = 0  & \R{r_2} & \R{r_3} & \hdots & \R{r_m} \\
+            \begin{block}{cc(ccccc)}
+                & \F{f_n}^* = 0 & 0 & 0 & 0 & & 0 \\
+                & \F{f_{n-1}}^* & 0 & 0 & 0 & & 1 \\
+                \mathsf{Thrust}\op & \F{f_{n-2}}^* & 0 & 1 & 1 & & 1 \\
+                & \vdots &  &  &  & \ddots & \\
+                & \F{f_1}^* & 1 & 1 & 1 & & 1 \\
+            \end{block}
+        \end{blockarray}
+    \end{equation}
 
-Suppose we have tested or are given the performance data of a few different engines, i.e., possible solutions to the ``engine'' design problem, each with a fixed optimal fuel-thrust value. To illustrate the monotonicity assumption, we can render the data of ``engine'' as a graph, as depicted in~\cref{fig:solenginedp}.
-\begin{figure}[h!]
-\begin{center}
-\includesag{50_engine_graph}
-\end{center}
-\caption{Graphical representation of the possible solutions of the engine design problem. \label{fig:solenginedp}}
-\end{figure}
+    Suppose we have tested or are given the performance data of a few different engines, i.e., possible solutions to the ``engine'' design problem, each with a fixed optimal fuel-thrust value. To illustrate the monotonicity assumption, we can render the data of ``engine'' as a graph, as depicted in~\cref{fig:solenginedp}.
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{50_engine_graph}
+        \end{center}
+        \caption{Graphical representation of the possible solutions of the engine design problem. \label{fig:solenginedp}}
+    \end{figure}
 
-Note that the shaded regions cover the feasible solution set. This feasible solution set is always an \emph{upper set} (\cref{def:upperset}) in~$\F{\mathsf{thrust}}\op \times \R{\mathsf{fuel}}$, which is another way of characterizing the monotonicity of the design problem. The optimal solutions, indicated by dots, form an \emph{antichain} of solutions. We will come back to antichains in \cref{sec:computation}, when discussing how to compute optimal solutions of design problems.
+    Note that the shaded regions cover the feasible solution set. This feasible solution set is always an \emph{upper set} (\cref{def:upperset}) in~$\F{\mathsf{thrust}}\op \times \R{\mathsf{fuel}}$, which is another way of characterizing the monotonicity of the design problem. The optimal solutions, indicated by dots, form an \emph{antichain} of solutions. We will come back to antichains in \cref{sec:computation}, when discussing how to compute optimal solutions of design problems.
 \end{example}
-
 
 
 %\JT{Do we need 2 large examples, or can we move the battery example to the notes?}
@@ -185,100 +186,100 @@ Note that the shaded regions cover the feasible solution set. This feasible solu
 We will define several ways to connect and compose design problems. The first and most basic way is series composition, or just `composition'.
 
 \begin{definition}[Series composition]
-\label{def:dp-series}
-Given design problems~$f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$, we define their \emph{series composition}~$(f\then g)\ \colon  \F{A} \profto \R{C}$
-as:
-\begin{equation}
-\label{eq:composition2}
-\begin{aligned}
-   (f \then g)  \colon \ \F{A}\op \times \R{C} & \toinPos  \Bool, \\
-  \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{b\in B} f(\F{a}^*,\R{b}) \wedge g(\F{b}^*,\R{c}).
-\end{aligned}
-\end{equation}
-or, alternatively
-\begin{equation}
-\begin{aligned}
-\label{eq:composition}
-   (f \then g)\  \colon \ \F{A}\op \times \R{C} & \toinPos  \Bool,  \\
-  \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{\R{b_1}\leq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c}).
-\end{aligned}
-\end{equation}
+    \label{def:dp-series}
+    Given design problems~$f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$, we define their \emph{series composition}~$(f\then g)\ \colon  \F{A} \profto \R{C}$
+    as:
+    \begin{equation}
+        \label{eq:composition2}
+        \begin{aligned}
+            (f \then g)  \colon \ \F{A}\op \times \R{C} & \toinPos  \Bool, \\
+            \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{b\in B} f(\F{a}^*,\R{b}) \wedge g(\F{b}^*,\R{c}).
+        \end{aligned}
+    \end{equation}
+    or, alternatively
+    \begin{equation}
+        \begin{aligned}
+            \label{eq:composition}
+            (f \then g)\  \colon \ \F{A}\op \times \R{C} & \toinPos  \Bool,  \\
+            \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{\R{b_1}\leq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c}).
+        \end{aligned}
+    \end{equation}
 \end{definition}
 \noindent We represent series in the diagrammatic notation reported in~\cref{fig:compositiondiagram}.
 \begin{figure}[h!]
-\begin{center}
-\includesag{50_series_diag}
-\end{center}
-\caption{Diagrammatic representation of the series composition of design problems. \label{fig:compositiondiagram}}
+    \begin{center}
+        \includesag{50_series_diag}
+    \end{center}
+    \caption{Diagrammatic representation of the series composition of design problems. \label{fig:compositiondiagram}}
 \end{figure}
 
 One can notice the ``co-design constraint'' $\ordleq$, which can be interpreted as follows. The \R{resource} required by a component is limited by the \F{functionality} produced by another component.
 
 \begin{lemma}
-\label{lemma:composition_equivalency}
-The series composition operations given in \cref{eq:composition2} and \cref{eq:composition} are equivalent.
+    \label{lemma:composition_equivalency}
+    The series composition operations given in \cref{eq:composition2} and \cref{eq:composition} are equivalent.
 \end{lemma}
 
 \begin{proof}
-First consider the direction \cref{eq:composition}~$\implies$ \cref{eq:composition2}. In order for
-\begin{equation}
-    \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
-\end{equation}
-to be true, there should exist some~$\R{b_1}\ordleq \F{b_2}$ for which~$f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})$ is true. However, due to the monotonicity of~$f$,~$f(\F{a}^*,\R{b_2}) \wedge g(\F{b_2}^*,\R{c})$ and \cref{eq:composition2} must be true as well. On the other hand, if
-\begin{equation}
-    \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
-\end{equation}
-is false, then due to the equality, it is false for any~$\R{b_1}=\F{b_2}$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
+    First consider the direction \cref{eq:composition}~$\implies$ \cref{eq:composition2}. In order for
+    \begin{equation}
+        \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
+    \end{equation}
+    to be true, there should exist some~$\R{b_1}\ordleq \F{b_2}$ for which~$f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})$ is true. However, due to the monotonicity of~$f$,~$f(\F{a}^*,\R{b_2}) \wedge g(\F{b_2}^*,\R{c})$ and \cref{eq:composition2} must be true as well. On the other hand, if
+    \begin{equation}
+        \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
+    \end{equation}
+    is false, then due to the equality, it is false for any~$\R{b_1}=\F{b_2}$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
 
-The other direction, \cref{eq:composition2} $\implies$ \cref{eq:composition}, can be shown in a similar way. If \cref{eq:composition2} is true, then there must exist a~$b'$ such that~$f(\F{a}^*, \R{b'})=\true$ and~$g(\F{b'}^*, \R{c})=\true$. Then, the inner term in \cref{eq:composition} is true for~$\R{b_1}=\F{b_2}=b'$. If \cref{eq:composition2} is false, then there is no such~$b'$ for which both~$f(\F{a}^*, \R{b'})$ and~$g(\F{b'}^*, \R{c})$ are true, but then due to the monotonicity of~$f$ and~$g$ they also cannot be true for any~$\R{b_1} \ordleq \F{b_2} = b'$ or~$b'=\R{b_1} \ordleq \F{b_2}$. Hence, \cref{eq:composition} must also be false.
+    The other direction, \cref{eq:composition2} $\implies$ \cref{eq:composition}, can be shown in a similar way. If \cref{eq:composition2} is true, then there must exist a~$b'$ such that~$f(\F{a}^*, \R{b'})=\true$ and~$g(\F{b'}^*, \R{c})=\true$. Then, the inner term in \cref{eq:composition} is true for~$\R{b_1}=\F{b_2}=b'$. If \cref{eq:composition2} is false, then there is no such~$b'$ for which both~$f(\F{a}^*, \R{b'})$ and~$g(\F{b'}^*, \R{c})$ are true, but then due to the monotonicity of~$f$ and~$g$ they also cannot be true for any~$\R{b_1} \ordleq \F{b_2} = b'$ or~$b'=\R{b_1} \ordleq \F{b_2}$. Hence, \cref{eq:composition} must also be false.
 \end{proof}
 \begin{remark}
-At first sight, \cref{eq:composition} might seem like a more verbose version of \cref{eq:composition2}. However, assume that we have the means to obtain the minimal antichain of the feasible set of resources that provide~$\F{a}$ for the first term:
-\begin{equation}
-    \R{B_f} = \Min \{b_1\in B \mid f(\F{a}^*,\R{b_1})=\true\} \in \antichains B.
-\end{equation}
-This represents the minimal resources with which~$f$ can provide~$\F{a}$. Assume further that we similarly have the means to obtain the maximal antichain of the feasible set of functionalities that~$\R{c}$ provides for the second term
-\begin{equation}
-    \F{B_g} = \Max \{b_2\in B \mid g(\F{b_2}^*,\R{c})=\true\} \in \antichains B,
-\end{equation}
-which represents the maximal functionality that~$g$ can provide given~$\R{c}$. Then, \cref{eq:composition} implies that it suffices to only evaluate
-\begin{equation}
-    \bigvee_{\substack{\R{b_1}\ordleq\F{b_2} \\ \R{b_1}\in \R{B_f},~ \F{b_2}\in\F{B_g} }} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c}),
-\end{equation}
-which can be much more efficient than iterating over all~$b\in B$.
+    At first sight, \cref{eq:composition} might seem like a more verbose version of \cref{eq:composition2}. However, assume that we have the means to obtain the minimal antichain of the feasible set of resources that provide~$\F{a}$ for the first term:
+    \begin{equation}
+        \R{B_f} = \Min \{b_1\in B \mid f(\F{a}^*,\R{b_1})=\true\} \in \antichains B.
+    \end{equation}
+    This represents the minimal resources with which~$f$ can provide~$\F{a}$. Assume further that we similarly have the means to obtain the maximal antichain of the feasible set of functionalities that~$\R{c}$ provides for the second term
+    \begin{equation}
+        \F{B_g} = \Max \{b_2\in B \mid g(\F{b_2}^*,\R{c})=\true\} \in \antichains B,
+    \end{equation}
+    which represents the maximal functionality that~$g$ can provide given~$\R{c}$. Then, \cref{eq:composition} implies that it suffices to only evaluate
+    \begin{equation}
+        \bigvee_{\substack{\R{b_1}\ordleq\F{b_2} \\ \R{b_1}\in \R{B_f},~ \F{b_2}\in\F{B_g} }} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c}),
+    \end{equation}
+    which can be much more efficient than iterating over all~$b\in B$.
 \end{remark}
 
 \paragraph{Intended semantics}
 The series composition~$f\then g$ judges a pair~$\tup{\F{a}^*,\R{c}}$ as feasible if and only if there exists a~$b \in B$ such that~$f(\F{a}^*,\R{b})$ and~$g(\F{b}^*,\R{c})$ are feasible.\footnote{In \eqref{composition2} we could have written ``$\exists_{b\in B}$''
 instead of ``$\bigvee_{b\in B}$''; the latter form highlights the connection
 with operations on matrices. Given a set~$I$ and a map~$s\colon I\to\Bool$, we can define the boolean~$\bigvee_{i\in I}s(i)$ by
-\begin{equation*}
- \bigvee_{i\in I}s(i)\coloneqq
- \begin{cases}
- 	\true&\text{ if there exists }i\in I\text{ for which }s(i)=\true,\\
- 	\false&\text{ if there exists \emph{no} }i\in I\text{ for which }s(i)=\true.
- \end{cases}
- \end{equation*}
- For any~$I$, if we have~$i_0\in I$ then~$s(i)\leq\bigvee_{i\in I}s(i)$. One can also check that for any~$b\in\Bool$ or, more generally, any set of booleans~$t\colon J\to\Bool$, we have
- \begin{equation*}
-     \bigvee_{i\in I}(b\wedge s(i))=b\wedge\left(\bigvee_{i\in I}s(i)\right)
- \quad\text{and}\quad
- \bigvee_{(i,j)\in I\times  J}\big(s(i)\wedge t(j)\big)=\left(\bigvee_{i\in I}s(i)\right)\wedge\left(\bigvee_{j\in J} t(j)\right).
- \end{equation*}
+    \begin{equation*}
+        \bigvee_{i\in I}s(i)\coloneqq
+        \begin{cases}
+            \true&\text{ if there exists }i\in I\text{ for which }s(i)=\true,\\
+            \false&\text{ if there exists \emph{no} }i\in I\text{ for which }s(i)=\true.
+        \end{cases}
+    \end{equation*}
+    For any~$I$, if we have~$i_0\in I$ then~$s(i)\leq\bigvee_{i\in I}s(i)$. One can also check that for any~$b\in\Bool$ or, more generally, any set of booleans~$t\colon J\to\Bool$, we have
+    \begin{equation*}
+        \bigvee_{i\in I}(b\wedge s(i))=b\wedge\left(\bigvee_{i\in I}s(i)\right)
+        \quad\text{and}\quad
+        \bigvee_{(i,j)\in I\times  J}\big(s(i)\wedge t(j)\big)=\left(\bigvee_{i\in I}s(i)\right)\wedge\left(\bigvee_{j\in J} t(j)\right).
+    \end{equation*}
 }
 
 \begin{example}
-After the Bucket of Boom X100 blew upon re-entry, Jeb's Spaceship Parts is building the X101. This time, they are making sure to take into account other aspects of the rocket design, such as the choice of propellant and nozzle (\cref{fig:examplecomposition}).
-\begin{figure}[h!]
-\begin{center}
-\includesag{50_X101}
-\end{center}
-\caption{Example of composition. \label{fig:examplecomposition}}
-\end{figure}
+    After the Bucket of Boom X100 blew upon re-entry, Jeb's Spaceship Parts is building the X101. This time, they are making sure to take into account other aspects of the rocket design, such as the choice of propellant and nozzle (\cref{fig:examplecomposition}).
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{50_X101}
+        \end{center}
+        \caption{Example of composition. \label{fig:examplecomposition}}
+    \end{figure}
 \end{example}
 
 \begin{remark}
-When viewing compositions (and larger diagrams) formed from these boxes, it is tempting to interpret the boxes as input-output processes. However, that would be misleading. The arrows do not represent information flow, materials flow, or energy flow. Design problems do not represent input-output processes but rather a static calculus of requirements--a requirements flow.
+    When viewing compositions (and larger diagrams) formed from these boxes, it is tempting to interpret the boxes as input-output processes. However, that would be misleading. The arrows do not represent information flow, materials flow, or energy flow. Design problems do not represent input-output processes but rather a static calculus of requirements--a requirements flow.
 \end{remark}
 
 Let us check that, given design problems~$f$ and~$g$, their series composition~$f\then g$ is in fact a design problem.
@@ -286,8 +287,8 @@ Let us check that, given design problems~$f$ and~$g$, their series composition~$
     Series composition as in~\cref{eq:composition2} is monotone in~$a$ and~$c$.
 \end{lemma}
 \begin{proof}
- We need to show that~$[f\then g](\F{a}^*,\R{c})$ is monotone in~$\F{a}^*$ and~$\R{c}$. Because~$f$ represents a design problem,~$f(\F{a}^*,\R{b})$ is monotone in~$\F{a}^*$, and similarly~$g(\F{b}^*,\R{c})$ is monotone in~$\R{c}$. The conjunction ``$\wedge$'' is monotone in both variables, and likewise the ``$\vee$'' operation.
- \end{proof}
+    We need to show that~$[f\then g](\F{a}^*,\R{c})$ is monotone in~$\F{a}^*$ and~$\R{c}$. Because~$f$ represents a design problem,~$f(\F{a}^*,\R{b})$ is monotone in~$\F{a}^*$, and similarly~$g(\F{b}^*,\R{c})$ is monotone in~$\R{c}$. The conjunction ``$\wedge$'' is monotone in both variables, and likewise the ``$\vee$'' operation.
+\end{proof}
 
 We can show two important properties for the ``$\then$'' operation: associativity and unitality.
 \begin{lemma}
@@ -298,19 +299,19 @@ We can show two important properties for the ``$\then$'' operation: associativit
 \end{lemma}
 
 \begin{proof}
-To show that the operation is associative, we can use distributivity and commutativity in~$\Bool$:
+    To show that the operation is associative, we can use distributivity and commutativity in~$\Bool$:
 %
-\begin{equation}
-\begin{aligned}
-\left((f\then g) \then h\right) (\F{a}^*,\R{d})
-&= \bigvee_{c \in C} \left (\ \bigvee_{b\in B } f(\F{a}^*,\R{b}) \wedge g(\F{b}^*,\R{c}) \right )  \wedge  h (\F{c}^*, \R{d}) \\
-&= \bigvee_{c \in C} \left (\ \bigvee_{b\in B } f(\F{a}^*,\R{b})
-\wedge g(\F{b}^*,\R{c}) \wedge h (\F{c}^*, \R{d})
-    \right ) \\
-&= \bigvee_{b \in B } f(\F{a}^*,\R{b}) \wedge \left ( \bigvee_{c\in C} g(\F{b}^*,\R{c}) \wedge h (\F{c}^*, \F{d}) \right ) \\
-&= \left(f \then (g \then h )\right) (\F{a}^*, \R{d}).
-\end{aligned}
-\end{equation}
+    \begin{equation}
+        \begin{aligned}
+            \left((f\then g) \then h\right) (\F{a}^*,\R{d})
+            &= \bigvee_{c \in C} \left (\ \bigvee_{b\in B } f(\F{a}^*,\R{b}) \wedge g(\F{b}^*,\R{c}) \right )  \wedge  h (\F{c}^*, \R{d}) \\
+            &= \bigvee_{c \in C} \left (\ \bigvee_{b\in B } f(\F{a}^*,\R{b})
+            \wedge g(\F{b}^*,\R{c}) \wedge h (\F{c}^*, \R{d})
+            \right ) \\
+            &= \bigvee_{b \in B } f(\F{a}^*,\R{b}) \wedge \left ( \bigvee_{c\in C} g(\F{b}^*,\R{c}) \wedge h (\F{c}^*, \F{d}) \right ) \\
+            &= \left(f \then (g \then h )\right) (\F{a}^*, \R{d}).
+        \end{aligned}
+    \end{equation}
 %
 \end{proof}
 
@@ -318,88 +319,89 @@ Because of associativity, we can write~$f\then g\then h$ without ambiguity.
 Associativity of composition is represented as in~\cref{fig:compositionassociativity}.
 
 \begin{figure}[h!]
-\begin{center}
-    \includesag{50_assoc_1_2_3}
-\end{center}
-\caption{Series composition is associative. \label{fig:compositionassociativity}}
+    \begin{center}
+        \includesag{50_assoc_1_2_3}
+    \end{center}
+    \caption{Series composition is associative. \label{fig:compositionassociativity}}
 \end{figure}
 
 There exists an identity for the ``$\then$'' operation.
 We define the identity~$\id_A\colon A \profto A$ as follows.
 
 \begin{definition}[Identity design problem]
-\label{def:dp-identity}
-For any poset~$A$, the \emph{identity design problem}~$\id_A\colon \F{A} \profto \R{A}$ is a monotone map
-\begin{equation}
-\begin{aligned}
-  \id_A \colon \F{A}\op \times \R{A} & \toinPos   \Bool, \label{eq:identity}\\
-  \tup{\F{a_1}^*, \R{a_2}} & \mapsto \F{a_1} \ordleq_{A} \R{a_2}.
-\end{aligned}
-\end{equation}
+    \label{def:dp-identity}
+    For any poset~$A$, the \emph{identity design problem}~$\id_A\colon \F{A} \profto \R{A}$ is a monotone map
+    \begin{equation}
+        \begin{aligned}
+            \id_A \colon \F{A}\op \times \R{A} & \toinPos   \Bool, \label{eq:identity}\\
+            \tup{\F{a_1}^*, \R{a_2}} & \mapsto \F{a_1} \ordleq_{A} \R{a_2}.
+        \end{aligned}
+    \end{equation}
 \end{definition}
 In the diagrammatic notation, we represent~$\id_A$ as in~\cref{fig:identitydp}.
 
 \begin{figure}[h!]
     \begin{center}
-    \begin{tikzpicture}[DP]
-    \node[dp={1}{1}] (id) {$\id_A$};
-    \draw[runconn, runame={A}] (id_res1){};
-    \draw[funconn, funame={A}] (id_fun1){};
-    %\draw (id_fun1) to[in=180,out=0] (id_res1){};
-\end{tikzpicture}
-\end{center}
-\caption{Diagrammatic representation of the identity design problem. \label{fig:identitydp}}
+        \begin{tikzpicture}[DP]
+            \node[dp={1}{1}] (id) {$\id_A$};
+            \draw[runconn, runame={A}] (id_res1){};
+            \draw[funconn, funame={A}] (id_fun1){};
+            %\draw (id_fun1) to[in=180,out=0] (id_res1){};
+        \end{tikzpicture}
+    \end{center}
+    \caption{Diagrammatic representation of the identity design problem. \label{fig:identitydp}}
 \end{figure}
 
 \begin{lemma}
     The series composition operation as in~\cref{eq:composition2} satisfies the left and right unit laws (\cref{fig:compositionunital}).
-\begin{figure}[h!]
-\begin{center}
-    \includesag{50_composition_unitality}
-\end{center}
-\caption{WRONG PIC TO CHANGE. Composition satisfies left and right unit laws. \label{fig:compositionunital}}
-\end{figure}
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{50_composition_unitality}
+        \end{center}
+        \caption{WRONG PIC TO CHANGE. Composition satisfies left and right unit laws. \label{fig:compositionunital}}
+    \end{figure}
 \end{lemma}
 
 \begin{proof}
-Given~$f\colon \F{A}\profto \R{B}$, we need to show:
-\begin{equation}
-    \id_A \then f= f = f\then \id_B.
-\end{equation}
-In the following, we prove~$\id_A \then f = f$. Proving~$f\then \id_B=f$ is similar.
-Consider the poset~$\Bool$. Since for~$x,y\in \Bool$,~$x\cong y \Rightarrow x=y$ (also referred to as skeletality~\cite{fong2019}), we just need to show that~$f\leq \id_A\then f$ and~$\id_A\then f\leq f$.
-We have
-\begin{equation}
-\begin{aligned}
-        f(\F{a}^*,\R{b})&=\true \wedge f(\F{a}^*,\R{b})\\
-        &\ordleq \id_A(\F{a}^*,\R{a}) \wedge f(\F{a}^*,\R{b})\\
-        &\ordleq \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b})\\
-        &=(\id_A\then f)(\F{a}^*,\R{b}).
-\end{aligned}
-\end{equation}
-For the other direction, we need to show that~$\id_A\then f\ordleq f$, i.e.
-\begin{equation}
-    \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b}).
-\end{equation}
-This holds if and only if~$\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b})$ for some~$a'\in A$. If there is no such~$a'$, then the inequality holds ($\false \ordleq \false$ and $\false \ordleq \true$). If there is such an~$a'$, it means that~$\id_A(\F{a}^*,\R{a'})=\true$ and~$f(\F{a'}^*,\R{b})=\true$. We know that~$\id_A(\F{a}^*,\R{a'})=\true \Leftrightarrow \F{a}\ordleq \R{a'}$, and hence~$f(\F{a}^*,\R{b})=\true$.
+    Given~$f\colon \F{A}\profto \R{B}$, we need to show:
+    \begin{equation}
+        \id_A \then f= f = f\then \id_B.
+    \end{equation}
+    In the following, we prove~$\id_A \then f = f$. Proving~$f\then \id_B=f$ is similar.
+    Consider the poset~$\Bool$. Since for~$x,y\in \Bool$,~$x\cong y \Rightarrow x=y$ (also referred to as skeletality~\cite{fong2019}), we just need to show that~$f\leq \id_A\then f$ and~$\id_A\then f\leq f$.
+    We have
+    \begin{equation}
+        \begin{aligned}
+            f(\F{a}^*,\R{b})&=\true \wedge f(\F{a}^*,\R{b})\\
+            &\ordleq \id_A(\F{a}^*,\R{a}) \wedge f(\F{a}^*,\R{b})\\
+            &\ordleq \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b})\\
+            &=(\id_A\then f)(\F{a}^*,\R{b}).
+        \end{aligned}
+    \end{equation}
+    For the other direction, we need to show that~$\id_A\then f\ordleq f$, i.e.
+    \begin{equation}
+        \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b}).
+    \end{equation}
+    This holds if and only if~$\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b})$ for some~$a'\in A$. If there is no such~$a'$, then the inequality holds ($\false \ordleq \false$ and $\false \ordleq \true$). If there is such an~$a'$, it means that~$\id_A(\F{a}^*,\R{a'})=\true$ and~$f(\F{a'}^*,\R{b})=\true$. We know that~$\id_A(\F{a}^*,\R{a'})=\true \Leftrightarrow \F{a}\ordleq \R{a'}$, and hence~$f(\F{a}^*,\R{b})=\true$.
 \end{proof}
+
 
 \section{The category of design problems}
 
 We will show that the class of all design problems forms a category, which we call~$\DP$.
 
 \begin{definition}[Category $\DP$]
-\label{define:DP}
-The \emph{category of design problems,~$\DP$}, consists of the following constituents:
+    \label{define:DP}
+    The \emph{category of design problems,~$\DP$}, consists of the following constituents:
 %
-\begin{compactenum}
-\item \emph{Objects}: The objects of~$\DP$ are posets.
-\item \emph{Morphisms}: The morphisms of~$\DP$ are design problems (\cref{def:design-problem}).
-\item \emph{Identity morphism}: The identity morphism~$\id_A \colon \F{A} \profto \R{A}$ is given by \cref{def:dp-identity}.
-\item \emph{Composition operation}: Given two morphisms~$f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$, their
-composition~$f\then g\colon  \F{A} \profto \R{C}$ is
-given by \cref{def:dp-series}.
-\end{compactenum}
+    \begin{compactenum}
+        \item \emph{Objects}: The objects of~$\DP$ are posets.
+        \item \emph{Morphisms}: The morphisms of~$\DP$ are design problems (\cref{def:design-problem}).
+        \item \emph{Identity morphism}: The identity morphism~$\id_A \colon \F{A} \profto \R{A}$ is given by \cref{def:dp-identity}.
+        \item \emph{Composition operation}: Given two morphisms~$f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$, their
+        composition~$f\then g\colon  \F{A} \profto \R{C}$ is
+        given by \cref{def:dp-series}.
+    \end{compactenum}
 \end{definition}
 
 We have already shown that the composition operator ``$\then$'' is associative and unital, and that the composition of two design problems is a design problem (closure). Therefore, $\DP$ is a category.
