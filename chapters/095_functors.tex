@@ -1,86 +1,27 @@
 % !TEX root = ../ACT4E-full.tex
+
 \section{Functors}
 \begin{ctdefinition}[Functor]
-\label{def:functor}
-Given categories~$\CatC$ and~$\CatD$, to specify a \emph{functor}~$F\colon \CatC\to \CatD$ from~$\CatC$ to ~$\CatD$, one specifies:
-\begin{compactenum}
+  \label{def:functor}
+  Given categories~\CatC and~\CatD, to specify a \emph{functor}~$F\colon \CatC\to \CatD$ from~\CatC to ~\CatD, one specifies:
+  \begin{compactenum}
     \item for every object~$\obja \in \ObC$, an object~$F(\obja)\in \ObD$;
-    \item for every morphism~$\mora \colon \obja \to \objb$ in~$\CatC$, a morphism~$F(\mora)\colon F(\obja)\to F(\objb)$ in~$\CatD$.
-\end{compactenum}
-The above constituents must satisfy the following two properties:
-\begin{compactenum}[(a)]
+    \item for every morphism~$\mora \colon \obja \to \objb$ in~\CatC, a morphism~$F(\mora)\colon F(\obja)\to F(\objb)$ in~\CatD.
+  \end{compactenum}
+  The above constituents must satisfy the following two properties:
+  \begin{compactenum}[(a)]
     \item For every object~$\obja\in \ObC$, one has~$F(\id_\obja)=\id_{F(\obja)}$.
     \item For every three objects~$\obja,\objb,\objc \in \ObC$ and two morphisms~$\mora \in \CatC(\obja,\objb)$,~$\morb\in \CatC(\objb,\objc)$, the equation
     \begin{equation}
-        F(\mora \then \morb)=F(\mora)\then F(\morb)
+      F(\mora \then \morb)=F(\mora)\then F(\morb)
     \end{equation}
-holds in~$\CatD$.
-\end{compactenum}
+    holds in~\CatD.
+  \end{compactenum}
 \end{ctdefinition}
 
 \begin{remark}
-A functor from a category to itself it is called an \emph{endofunctor}.
+  A functor from a category to itself it is called an \emph{endofunctor}.
 \end{remark}
-
-
-\begin{example}
-Recall the category \Berg introduced in \cref{sec:trekking} and define a category \Plans where objects are specific areas of the mountain and morphisms describing visiting order constraints, illustrated in \cref{fig:visiting_order_constraints}.
-
-\todo{Add more details, e.g. what is exactly a morphism? how to define composition?}
-
-\begin{figure}[h]
-\begin{center}
-\includesag{095_plans}
-\end{center}
-\caption{Example of visiting order constraints on a mountain}
-\label{fig:visiting_order_constraints}
-\end{figure}
-A plan is a morphism in \Plans. When we talk about \textbf{planning} in this context, we refer to the action of finding a functor from \Plans to \Berg. Let's look at this in more detail. The objects of \Berg are tuples~$\tup{p,v}$, where~$p$ represent coordinates of a specific location and $v\in \mathbb{R}^3$ represents velocities. Morphisms in \Berg are paths that connect locations. For the sake of our planning, we can identify areas of the mountain as sets of locations. Such areas are, for instance, the \transmuted{lodge}, \transmuted{panoramic lake}, and the \transmuted{peak} (note that the \transmuted{peak} is a single object). Given some plans as in \cref{fig:visiting_order_constraints}, we want to find a map~$P$ which maps each object in \Plans (area of the mountain) to an object of \Berg (specific location and velocity). Similarly, it must map each morphism in \Plans (visiting order constraints) to a morphism in \Berg (specific paths). This is illustrated in \cref{fig:plans_functor}.
-\todo{add illustration}
-\end{example}
-
-\begin{exercise}
-There is a category, called \Category, which is constituted of
-\begin{compactitem}
-\item Objects: categories;
-\item Morphisms: functors;
-\item Identity morphisms: identity functors;
-\item Composition: composition of functors.
-\end{compactitem}
-Show that \Category is indeed a category.
-\end{exercise}
-
-\todo{Move this later. Let's not climb too high the abstraction ladder. Also write it out,
-too important to make an exercise.}
-
-\section{Monotone maps are functors}
-\begin{lemma}
-\label{lemma:posetfunctor}
-A monotone function~$F$ between posets~$P,Q \in \Pos$ is a functor between the ``posetal categories''~$P$ and~$Q$.
-\end{lemma}
-\begin{proof}
-We start by specifying the functor~$F$ and two posets~$P$ and~$Q$. We first specify the action of~$F$ on objects (elements of a poset) and on morphisms (order relation). A monotone function maps each element of a poset~$p\in P$ to~$F(p) \in Q$, and it guarantees that for~$p_1,p_2\in P$,~$F(p_1),F(p_2)\in Q$,~$p_1\ordleq p_2$ implies~$F(p_1)\ordleq F(p_2)$. We now need to check the two functor properties. First, consider the identity morphism for~$p\in P$, namely~$p\ordleq p$. The application of the functor results in the condition~$F(p)\ordleq F(p)$, which is the identity morphism on~$Q$. Finally, given three elements~$p_1,p_2,p_3\in P$ and two morphisms~$p_1\ordleq p_2$ and $p_2\ordleq p_3$, by applying the functor to the morphism composition~$p_1\ordleq p_3$ one obtains~$F(p_1)\ordleq F(p_3)$, which is implied by the composition of~$F(p_1)\ordleq F(p_2)$ and~$F(p_2)\ordleq F(p_3)$.
-\end{proof}
-
-\section{Full and faithful functors}
-\begin{ctdefinition}[Full and faithful functors]
-\label{def:functorfullfaith}
-A functor~$F\colon \CatC \to \CatD$ is \emph{full} (respectively \emph{faithful}) if for each pair of objects~$\obja,\objb\in \CatC$, the function
-\begin{equation}
-    F\colon \CatC(\obja,\objb)\to \CatD(F(\obja),F(\objb))
-\end{equation}
-is surjective (respectively injective).
-\end{ctdefinition}
-
-\section{Forgetful functor}
-\begin{lemma}
-The functor~$\Pos \to \Set$ is a forgetful functor.
-\end{lemma}
-\begin{proof}
-This functor maps every poset to the set which has the same elements, but no notion of order. Furthermore, it maps each monotone map between posets to the corresponding function between sets. This is a forgetful functor in the sense that it forgets the notion of order and monotone maps.
-\end{proof}
-
-
 
 %\begin{comment}
 %%%%%%%%%

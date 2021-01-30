@@ -246,13 +246,13 @@ Let \Berg be the category defined as follows:
 \item Objects are tuples~$\tup{p,v}$, where
 \begin{itemize}
 \item $p \in L$,
-\item $v \in \mathbb{R}^3$ (we think of this as a tangent vector to~$L$ at~$p$).
+\item $v \in \reals^3$ (we think of this as a tangent vector to~$L$ at~$p$).
 \end{itemize}
 
 \item A morphism~$\tup{p_1, v_1} \rightarrow \tup{p_2, v_2}$ is~$\tup{\gamma, T}$,
 where
 \begin{itemize}
-\item $T \in \mathbb{R}_{\geq 0}$,
+\item $T \in \reals_{\geq 0}$,
 \item $\gamma \colon [0, T] \to L$ is a~$C^1$ function with $\gamma(0)=p_1$ and $\gamma(p_2)$, as well as ~$\dot \gamma(0) = v_1$ and~$\dot \gamma(T) = v_2$  (we take one-sided derivatives at the boundaries).
 \end{itemize}
 
@@ -316,13 +316,13 @@ Now, suppose we decide that we don't want to traverse paths which have a maximal
 %
 %In Figure \ref{fig:rover_paths}, two possible paths are drawn in green. Note that by allowing \emph{all} possible paths we are also allowing ones of infinite length (\text{e.g.} where the rover moves around indefinitely long). Since we want our rover to reach its destination in a finite amount of time, we will subsequently take $\CatC$ to be the category where the morphisms are only the paths of \emph{finite length}.
 %
-%Next, we include the elevation information in our model, in order to start to optimize the planning of which path we wish the rover to take. We encode elevation data as a function~$h \colon L \to \mathbb{R}$ which assigns a real number to each location label. If~$l$ and~$l'$ are two locations, the absolute elevation difference between~$l$ and $~l'$ is~$\vert h(l') - h(l) \vert$. For our rover, we only want to consider paths such that the absolute elevation difference between any two adjacent locations along that path is less than a given threshold (if the path is too steep, the rover might tip over!). This is one kind of constraint which determines certain paths in our category~$\CatC$ to be infeasible.
+%Next, we include the elevation information in our model, in order to start to optimize the planning of which path we wish the rover to take. We encode elevation data as a function~$h \colon L \to \reals$ which assigns a real number to each location label. If~$l$ and~$l'$ are two locations, the absolute elevation difference between~$l$ and $~l'$ is~$\vert h(l') - h(l) \vert$. For our rover, we only want to consider paths such that the absolute elevation difference between any two adjacent locations along that path is less than a given threshold (if the path is too steep, the rover might tip over!). This is one kind of constraint which determines certain paths in our category~$\CatC$ to be infeasible.
 %
 %Among the feasible paths, we wish to optimize the path taken by the rover so that it uses the least amount of energy, say.  For any path~$p$ of finite length, we model what the energy cost~$E(p)$ of that path for the rover would be. (We skip the precise details of how we might model this; surely the energy cost of a path will be related to the length of the path, for example.) This defines a function on each of the homsets of our category $\CatC$,
 %\begin{equation}
-%E \colon \CatC(l, l') \longrightarrow \mathbb{R},
+%E \colon \CatC(l, l') \longrightarrow \reals,
 %\end{equation}
-%which, to each path from~$l$ to~$l'$, assigns the corresponding energy cost of that path. Thus our specific optimization problem is to find those feasible paths which minimize the function~$E\colon \CatC(a,b) \to \mathbb{R}$ defined on paths from the starting position~$a$ to the target position~$b$.
+%which, to each path from~$l$ to~$l'$, assigns the corresponding energy cost of that path. Thus our specific optimization problem is to find those feasible paths which minimize the function~$E\colon \CatC(a,b) \to \reals$ defined on paths from the starting position~$a$ to the target position~$b$.
 %
 %--------------------------------
 %
@@ -331,9 +331,9 @@ Now, suppose we decide that we don't want to traverse paths which have a maximal
 %\
 %
 %
-%Consider a geographical region whose locations are expressed through coordinates~$(x,y)\in \mathbb{R}^2$, \text{e.g.} as given by a map of that region. Furthermore, consider a function~$\mathsf{alt}: \mathbb{R}^2 \to \mathbb{R}_{\geq 0}$ which, for a known location, returns its altitude.
+%Consider a geographical region whose locations are expressed through coordinates~$(x,y)\in \reals^2$, \text{e.g.} as given by a map of that region. Furthermore, consider a function~$\mathsf{alt}: \reals^2 \to \reals_{\geq 0}$ which, for a known location, returns its altitude.
 %
-%We can think about this situation using a category, call it~$\mathbf{trek}$, where objects are geographical locations~$\tup{x,y}\in \mathbb{R}^2$ and morphisms are continuous paths between them. The identity morphism for each location consists of the trivial path (i.e., not moving), and composition is given by concatenation of paths.
+%We can think about this situation using a category, call it~$\mathbf{trek}$, where objects are geographical locations~$\tup{x,y}\in \reals^2$ and morphisms are continuous paths between them. The identity morphism for each location consists of the trivial path (i.e., not moving), and composition is given by concatenation of paths.
 %\JL{We need to be more precise about what ``continuous path'' means here! The typical mathematical definition of paths from topology is as a function of a (``time'') parameter, and leads to a well-known situation where concatenation is not an associative operation on the nose... and/or there is also issue that there are crazy kinds of continuous paths, such as space-filling curves... perhaps this example can be modified a bit to capture the basic idea, but avoid the math issues...}
 %\GZ{Agree, here we just want the connectivity and the filtering of paths which have too large inclinations}
 %
@@ -341,7 +341,7 @@ Now, suppose we decide that we don't want to traverse paths which have a maximal
 %We can now think of the aforementioned human, wanting to go from a location~$\tup{x,y}$ to a location~$\tup{v,w}$. Finding a path consists of finding at least a morphism in~$\Hom_\mathbf{trek}(\tup{x,y},\tup{v,w})$ satisfying the condition on the maximum inclinations~$\alpha$ and~$\beta$.
 %
 %
-%Using the terminology from \cref{sec:catsfromgraphs}, we can see that~$\mathbf{trek}$ is the free category on a graph with vertices given by geographical locations~$\tup{x,y}\in \mathbb{R}^2$ and arrows given by paths between them. In particular, a valid path~$p\colon \tup{x,y}\mapsto \tup{v,w}$ for the human to be able to reach a destination, has not to exceed the maximum inclination~$\alpha$ when climbin and the maximum inclination~$\beta$ when descending.
+%Using the terminology from \cref{sec:catsfromgraphs}, we can see that~$\mathbf{trek}$ is the free category on a graph with vertices given by geographical locations~$\tup{x,y}\in \reals^2$ and arrows given by paths between them. In particular, a valid path~$p\colon \tup{x,y}\mapsto \tup{v,w}$ for the human to be able to reach a destination, has not to exceed the maximum inclination~$\alpha$ when climbin and the maximum inclination~$\beta$ when descending.
 %}
 %-------------------------------
 
