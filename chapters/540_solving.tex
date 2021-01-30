@@ -1,1 +1,57 @@
 % !TEX root = ../ACT4E-full.tex
+
+
+\section{The functionality-to-minimal-requirements map $\ftor$}
+
+It is useful to also describe a design problem as a map from functionality
+to resources or viceversa that abstracts over implementations.
+
+A useful analogy is the state space representation \emph{vs} the
+transfer function representation of a linear time-invariant system:
+the state space representation is richer, but we only need the transfer
+function to characterize the input-output response.
+
+\todo{define the map from functionality to upper sets }
+
+\begin{definition}
+    \label{def:ftor}Given a DPI $\tup{ \funsp,\ressp,\impsp,\exc,\eval} $,
+    define the map~$\ftor:\funsp\rightarrow\Aressp$ that associates
+    to each functionality~$\funn$ the objective function of~\cref{prob:problem1},
+    which is the set of minimal resources necessary to realize~$\funn$:
+    \begin{eqnarray*}
+        \ftor:\funsp & \rightarrow & \Aressp,\\
+        \funn& \mapsto & \resMin\{\eval(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\funn\posleq\exc(\imp)\right)\}.
+    \end{eqnarray*}
+    If a certain functionality~$\funn$ is infeasible, then $\ftor(\funn)=\emptyset$.
+\end{definition}
+\captionsideleft{\label{fig:setup_h-1}}{\includegraphics[scale=0.33]{gmcdp_setup_h}}
+
+\todo{add remark of when this might fail (antichains do not capture the uppersets)}
+
+
+\begin{example}
+    In the case of the motor design problem, the map~$\ftor$ assigns
+    to each pair of $\left\langle \F{\text{speed}},\F{\text{torque}}\right\rangle $
+    the achievable trade-off of \R{cost}, \R{mass}, and other resources~(\cref{fig:motor-trade-offs}).
+    The antichains are depicted as continuous curves, but they could also
+    be composed by a finite set of points.
+
+    \captionsideleft{\label{fig:motor-trade-offs}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_motor_tradeoffs.pdf}}
+\end{example}
+
+By construction, $\ftor$ is monotone (\defref{monotone}), which
+means that
+\[
+    \funn_{1}\funleq\funn_{2}\quad\Rightarrow\quad\ftor(\funn_{1})\posleq_{\Aressp}\ftor(\funn_{2}),
+\]
+where~$\posleq_{\Aressp}$ is the order on antichains defined in
+\cref{lem:antichains-are-poset}. Monotonicity of~$\ftor$ means that
+if the functionality~$\funn$ is increased the antichain of resources
+will go ``up'' in the poset of antichains~$\Aressp$, and at some
+point it might reach the top of~$\Aressp$, which is the empty set,
+meaning that the problem is not feasible.
+
+
+
+\todo{describe equally the map $\rtof$}
+

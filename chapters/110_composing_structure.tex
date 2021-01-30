@@ -1,67 +1,11 @@
-% !TEX root = ../ACR4E-full.tex
+% !TEX root = ../ACT4E-full.tex
 % \section{Composing recognizing structure}
-
-
-\subsection{The functionality-to-minimal-requirements map $\ftor$}
-
-It is useful to also describe a design problem as a map from functionality
-to  resources or viceversa that abstracts over implementations.
-
-A useful analogy is the state space representation \emph{vs} the
-transfer function representation of a linear time-invariant system:
-the state space representation is richer, but we only need the transfer
-function to characterize the input-output response.
-
-\todo{define the map from functionality to upper sets }
-
-\begin{definition}
-\label{def:ftor}Given a DPI $\tup{ \funsp,\ressp,\impsp,\exc,\eval} $,
-define the map~$\ftor:\funsp\rightarrow\Aressp$ that associates
-to each functionality~$\funn$ the objective function of~\cref{prob:problem1},
-which is the set of minimal resources necessary to realize~$\funn$:
-\begin{eqnarray*}
-\ftor:\funsp & \rightarrow & \Aressp,\\
-\funn& \mapsto & \resMin\{\eval(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\funn\posleq\exc(\imp)\right)\}.
-\end{eqnarray*}
-If a certain functionality~$\funn$ is infeasible, then $\ftor(\funn)=\emptyset$.
-\end{definition}
-\captionsideleft{\label{fig:setup_h-1}}{\includegraphics[scale=0.33]{gmcdp_setup_h}}
-
-\todo{add remark of when this might fail (antichains do not capture the uppersets)}
-
-
-\begin{example}
-In the case of the motor design problem, the map~$\ftor$ assigns
-to each pair of $\left\langle \F{\text{speed}},\F{\text{torque}}\right\rangle $
-the achievable trade-off of \R{cost}, \R{mass}, and other resources~(\cref{fig:motor-trade-offs}).
-The antichains are depicted as continuous curves, but they could also
-be composed by a finite set of points.
-
-\captionsideleft{\label{fig:motor-trade-offs}}{\includegraphics[scale=0.33]{papers/arxiv_submission_v6/gmcdp_motor_tradeoffs.pdf}}
-\end{example}
-
-By construction, $\ftor$ is monotone (\defref{monotone}), which
-means that
-\[
-\funn_{1}\funleq\funn_{2}\quad\Rightarrow\quad\ftor(\funn_{1})\posleq_{\Aressp}\ftor(\funn_{2}),
-\]
-where~$\posleq_{\Aressp}$ is the order on antichains defined in
-\cref{lem:antichains-are-poset}. Monotonicity of~$\ftor$ means that
-if the functionality~$\funn$ is increased the antichain of resources
-will go ``up'' in the poset of antichains~$\Aressp$, and at some
-point it might reach the top of~$\Aressp$, which is the empty set,
-meaning that the problem is not feasible.
-
-
-
-\todo{describe equally the   map $\rtof$}
-
 
 
 \label{sec:dpdefinition}
 
 
-\subsection{An axiomatization of design problems as boolean profunctors}
+\section{Design problems as boolean profunctors}
 We can now give our first definition of design problems.
 
 
@@ -71,11 +15,11 @@ Suppose that $\F{F}, \R{R}$ are posets. A \emph{design problem} is a monotone ma
 \begin{equation}
 	\adp \colon  \F{F}\op \times \R{R} \to \Bool.
 \end{equation}
-We represent it by an arrow $\adp \colon \F{F} \tickar \R{R}$. Note that a design problem is a profunctor (\cref{def:profunctor}). In particular, it is a \emph{boolean profunctor}.
+We represent it by an arrow $\adp \colon \F{F} \profto \R{R}$. Note that a design problem is a profunctor (\cref{def:profunctor}). In particular, it is a \emph{boolean profunctor}.
 \end{definition}
 
 \paragraph{Intended semantics}
-When we consider a design problem $\adp\colon \F{F} \tickar \R{R}$, we imagine the poset~$\F{F}$ to represent the \textbf{f}unctionality to be provided, while the poset~$R$ represents the \textbf{r}esources required. The object~$\adp \colon \F{F} \tickar \R{R}$ is a relation that describes which combinations of functionality and resources are feasible: for each~$\F{f}^* \in \F{F}\op$ and~$\R{r} \in \R{R}$,~$\adp(\F{f}^*,\R{r})$ is a truth value,~$\true$ or~$\false$, which we call the \emph{feasibility of~$\F{f}$ given~$\R{r}$}. The value~$\adp(\F{f}^*,\R{r})$ is the answer to the question ``is the functionality~$\F{f}$ feasible with resources~$\R{r}$?''.
+When we consider a design problem $\adp\colon \F{F} \profto \R{R}$, we imagine the poset~$\F{F}$ to represent the \textbf{f}unctionality to be provided, while the poset~$R$ represents the \textbf{r}esources required. The object~$\adp \colon \F{F} \profto \R{R}$ is a relation that describes which combinations of functionality and resources are feasible: for each~$\F{f}^* \in \F{F}\op$ and~$\R{r} \in \R{R}$,~$\adp(\F{f}^*,\R{r})$ is a truth value,~$\true$ or~$\false$, which we call the \emph{feasibility of~$\F{f}$ given~$\R{r}$}. The value~$\adp(\F{f}^*,\R{r})$ is the answer to the question ``is the functionality~$\F{f}$ feasible with resources~$\R{r}$?''.
 
 This is the basic fact of life in engineering: there is a price to pay for everything, and there are trade-offs to be made.
 
@@ -105,7 +49,7 @@ set in~$\F{F}\op \times \R{R}$''. This is simpler than declaring it as ``a monot
 \end{remark}
 The Boolean-valued design problems we are considering here do not distinguish between particular implementations: they only tell us if \emph{any} implementation or solution exists for given functionality and resources. We will define~$\Set$-enriched design problems in \cref{sec:enriched}, which directly generalize Boolean-valued design problems and do distinguish between particular implementations.
 
-\paragraph{Diagrammatic notation} We represent design problems using a diagrammatic notation. One design problem~$\adp \colon \F{F} \tickar \R{R}$ is represented as a box with functionality~$\F{F}$ on the \emph{left} and resources~$\R{R}$ on the \emph{right} (\cref{fig:diagrammaticdp}).
+\paragraph{Diagrammatic notation} We represent design problems using a diagrammatic notation. One design problem~$\adp \colon \F{F} \profto \R{R}$ is represented as a box with functionality~$\F{F}$ on the \emph{left} and resources~$\R{R}$ on the \emph{right} (\cref{fig:diagrammaticdp}).
 \begin{figure}[h!]
 \begin{center}
 \includesag{50_diagrammatic}
@@ -166,7 +110,7 @@ Note that the shaded regions cover the feasible solution set. This feasible solu
 %   in joules, and the mass of the battery, measured in grams.
 %   We will model the battery as a design problem
 %   \[
-%       \text{battery} : \cCapacity \tickar \cMass,
+%       \text{battery} : \cCapacity \profto \cMass,
 %   \]
 %   with the two posets $\cCapacity$ and $\cMass$ defined as
 %   $\cCapacity \doteq \langle\mathbb{R}_+^{\text{J}}, \leq\rangle$
@@ -236,13 +180,13 @@ Note that the shaded regions cover the feasible solution set. This feasible solu
 %\end{figure}
 
 
-\subsection{Series composition of design problems}
+\section{Series composition of design problems}
 
 We will define several ways to connect and compose design problems. The first and most basic way is series composition, or just `composition'.
 
 \begin{definition}[Series composition]
 \label{def:dp-series}
-Given design problems~$f \colon  \F{A} \tickar \R{B}$ and~$g \colon \F{B} \tickar \R{C}$, we define their \emph{series composition}~$(f\then g)\ \colon  \F{A} \tickar \R{C}$
+Given design problems~$f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$, we define their \emph{series composition}~$(f\then g)\ \colon  \F{A} \profto \R{C}$
 as:
 \begin{equation}
 \label{eq:composition2}
@@ -381,11 +325,11 @@ Associativity of composition is represented as in~\cref{fig:compositionassociati
 \end{figure}
 
 There exists an identity for the ``$\then$'' operation.
-We define the identity~$\id_A\colon A \tickar A$ as follows.
+We define the identity~$\id_A\colon A \profto A$ as follows.
 
 \begin{definition}[Identity design problem]
 \label{def:dp-identity}
-For any poset~$A$, the \emph{identity design problem}~$\id_A\colon \F{A} \tickar \R{A}$ is a monotone map
+For any poset~$A$, the \emph{identity design problem}~$\id_A\colon \F{A} \profto \R{A}$ is a monotone map
 \begin{equation}
 \begin{aligned}
   \id_A \colon \F{A}\op \times \R{A} & \toinPos   \Bool, \label{eq:identity}\\
@@ -418,7 +362,7 @@ In the diagrammatic notation, we represent~$\id_A$ as in~\cref{fig:identitydp}.
 \end{lemma}
 
 \begin{proof}
-Given~$f\colon \F{A}\tickar \R{B}$, we need to show:
+Given~$f\colon \F{A}\profto \R{B}$, we need to show:
 \begin{equation}
     \id_A \then f= f = f\then \id_B.
 \end{equation}
@@ -440,7 +384,7 @@ For the other direction, we need to show that~$\id_A\then f\ordleq f$, i.e.
 This holds if and only if~$\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b})$ for some~$a'\in A$. If there is no such~$a'$, then the inequality holds ($\false \ordleq \false$ and $\false \ordleq \true$). If there is such an~$a'$, it means that~$\id_A(\F{a}^*,\R{a'})=\true$ and~$f(\F{a'}^*,\R{b})=\true$. We know that~$\id_A(\F{a}^*,\R{a'})=\true \Leftrightarrow \F{a}\ordleq \R{a'}$, and hence~$f(\F{a}^*,\R{b})=\true$.
 \end{proof}
 
-\subsection{The category of design problems}
+\section{The category of design problems}
 
 We will show that the class of all design problems forms a category, which we call~$\DP$.
 
@@ -451,9 +395,9 @@ The \emph{category of design problems,~$\DP$}, consists of the following constit
 \begin{compactenum}
 \item \emph{Objects}: The objects of~$\DP$ are posets.
 \item \emph{Morphisms}: The morphisms of~$\DP$ are design problems (\cref{def:design-problem}).
-\item \emph{Identity morphism}: The identity morphism~$\id_A \colon \F{A} \tickar \R{A}$ is given by \cref{def:dp-identity}.
-\item \emph{Composition operation}: Given two morphisms~$f \colon  \F{A} \tickar \R{B}$ and~$g \colon \F{B} \tickar \R{C}$, their
-composition~$f\then g\colon  \F{A} \tickar \R{C}$ is
+\item \emph{Identity morphism}: The identity morphism~$\id_A \colon \F{A} \profto \R{A}$ is given by \cref{def:dp-identity}.
+\item \emph{Composition operation}: Given two morphisms~$f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$, their
+composition~$f\then g\colon  \F{A} \profto \R{C}$ is
 given by \cref{def:dp-series}.
 \end{compactenum}
 \end{definition}
