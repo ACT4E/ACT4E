@@ -8,10 +8,10 @@ If we are not interested in the implementations, but just in the relation betwee
 
 \begin{definition}[Design Problem]
   \label{def:design-problem}
-  A \iindex{design problem} (DP) is a tuple~$\tup{\funsp, \ressp, \adp}$
+  A \iindex{design problem} (DP) is a tuple~$\tup{\funsp, \ressp, \adp}$,
   where~$\funsp, \ressp$ are posets and~$\adp$ is a monotone map of the form
   \begin{equation}
-    \adp \colon  \funsp\op \times \ressp \to \Bool.
+    \adp \colon  \funsp\op \times \ressp \toinPos \Bool.
   \end{equation}
   We represent it by an arrow~$\adp \colon \funsp \profto \ressp$.
 \end{definition}
@@ -34,7 +34,7 @@ The monotonicity of~$\adp$ represents the two following assumptions:
 
 A design problem~$\adp$ will satisfy these conditions if and only if it is represented by a monotone function.
 \begin{definition}[Feasible set of a design problem]
-  We define the \emph{feasible set}~$K_\adp$ of a design problem~$\adp\colon \funsp\op \times \ressp\to \Bool$ as the subset of~$\funsp \op\times \ressp$ for which~$\adp$ is the \emph{indicator function}, that is
+  We define the \emph{feasible set}~$K_\adp$ of a design problem~$\adp\colon \funsp\op \times \ressp\toinPos \Bool$ as the subset of~$\funsp \op\times \ressp$ for which~$\adp$ is the \emph{indicator function}, that is
   \begin{equation}
     K_\adp = \{ \tup{\F{f^*},\res} \in \funsp \op\times \ressp  \mid
     \adp(\fun^*, \res) = \true
@@ -181,10 +181,9 @@ We will connect these diagrams.
 
 We will define several ways to connect and compose design problems. The first and most basic way is series composition, or just `composition'.
 
-\begin{definition}[Series composition]
+\begin{definition}[Series composition of design problems]
   \label{def:dp-series}
-  Given design problems~$f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$, we define their \emph{series composition}~$(f\then g)\ \colon  \F{A} \profto \R{C}$
-  as:
+  Let $f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$ be design problems. We define their \emph{series composition}~$(f\then g)\ \colon  \F{A} \profto \R{C}$ as:
   \begin{equation}
     \label{eq:composition2}
     \begin{aligned}
@@ -192,7 +191,7 @@ We will define several ways to connect and compose design problems. The first an
       \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{b\in B} f(\F{a}^*,\R{b}) \wedge g(\F{b}^*,\R{c}).
     \end{aligned}
   \end{equation}
-  or, alternatively
+  Alternatively:
   \begin{equation}
     \begin{aligned}
       \label{eq:composition}
@@ -211,12 +210,11 @@ We will define several ways to connect and compose design problems. The first an
 
 One can notice the ``co-design constraint'' $\ordleq$, which can be interpreted as follows. The \R{resource} required by a component is limited by the \F{functionality} produced by another component.
 
-\begin{lemma}
+\begin{remark}
   \label{lemma:composition_equivalency}
-  The series composition operations given in \cref{eq:composition2} and \cref{eq:composition} are equivalent.
-\end{lemma}
+  The series composition operations given in \cref{eq:composition2,eq:composition} are equivalent.
 
-\begin{proof}
+
   First consider the direction \cref{eq:composition}~$\implies$ \cref{eq:composition2}. In order for
   \begin{equation}
     \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
@@ -228,7 +226,7 @@ One can notice the ``co-design constraint'' $\ordleq$, which can be interpreted 
   is false, then due to the equality, it is false for any~$\R{b_1}=\F{b_2}$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
 
   The other direction, \cref{eq:composition2}~$\implies$ \cref{eq:composition}, can be shown in a similar way. If \cref{eq:composition2} is true, then there must exist a~$b'$ such that~$f(\F{a}^*, \R{b'})=\true$ and~$g(\F{b'}^*, \R{c})=\true$. Then, the inner term in \cref{eq:composition} is true for~$\R{b_1}=\F{b_2}=b'$. If \cref{eq:composition2} is false, then there is no such~$b'$ for which both~$f(\F{a}^*, \R{b'})$ and~$g(\F{b'}^*, \R{c})$ are true, but then due to the monotonicity of~$f$ and~$g$ they also cannot be true for any~$\R{b_1} \ordleq \F{b_2} = b'$ or~$b'=\R{b_1} \ordleq \F{b_2}$. Hence, \cref{eq:composition} must also be false.
-\end{proof}
+\end{remark}
 \begin{remark}
   At first sight, \cref{eq:composition} might seem like a more verbose version of \cref{eq:composition2}. However, assume that we have the means to obtain the minimal antichain of the feasible set of resources that provide~$\F{a}$ for the first term:
   \begin{equation}
