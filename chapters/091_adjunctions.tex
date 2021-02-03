@@ -8,7 +8,7 @@
 
 
 
-\section{Adjunctions: hom-set description}
+\section{Adjunctions: hom-set definition}
 
 In this section we give a definition of adjunction which can be viewed as an analogy with the following situation in linear algebra. Suppose $V$ and $W$ are finite-dimensional real vector spaces, equipped with inner products $(-, -)_V$ and $(-, -)_W$, respectively. The adjoint of a linear map $F: V \rightarrow W$ is a linear map $F^*: W \rightarrow V$ such that 
 $$
@@ -20,14 +20,13 @@ $$
 
 \begin{ctdefinition}[Adjunction, Version 1]\label{def-adj-iso}
   \label{def:cat-adjunction}
-  Let \CatC and \CatD be categories. An \emph{\iindex{adjunction}} from \CatC to \CatD is given by the following data, satisfying the following conditions.
-
-  \underline{Data:}
+  Let \CatC and \CatD be categories. An \emph{\iindex{adjunction}} from \CatC to \CatD is given by the following data:
   \begin{compactenum}
     \item A functor~$F\colon \CatC \to \CatD$ (the \emph{left adjoint});
     \item A functor~$G\colon \CatD \to \CatC$ (the \emph{right adjoint});
     \item A natural isomorphism~$\tau : \Hom_{\CatD}(F - , - ) \Longrightarrow \Hom_{\CatC}(- , G - )$
   \end{compactenum}
+  We use the notation $F \dashv G$ to indicate that $F$ and $G$ form an adjunction, with $F$ the left adjoint and $G$ the right adjoint. 
 \end{ctdefinition}
 
 \begin{remark}
@@ -39,15 +38,16 @@ $$
 
 
 
-\section{Adjunctions: (co)unit description}
+\section{Adjunctions: (co)unit definition}
 
-Recall: in a category \CatC, a morphism~$\mora \colon \obja \to \objb$ is an isomorphism if there exists a~$\morb \colon \obja \rightarrow \objb$ such that
+Recall: in a category \CatC, a morphism~$\mora \colon \obja \to \objb$ is an isomorphism if there exists a morphism~$\morb \colon \obja \rightarrow \objb$ such that
 \begin{equation*}
-  f \then g = \id_\obja \text{ and } g \then f = \id{id}_y
-\end{equation*}
+  f \then g = \id_\obja \text{ and } g \then f = \id_\objb
+ \end{equation*}
 
-In this chapter we will look at the category \Category of categories, and at two weakenings of the notion of isomorphism in this setting.
-Given functors
+Now let's think about this definition in the case where \CatC is the category \Category of categories. We will consider weakenings of the notion of isomorphism in this setting, and this will lead to a second (but equivalent) definition of adjunction. The precisely relationship between the two definitions will be spelled out \cref{relate-adj-defs}. 
+
+The idea of ``weakening'' the notion of isomorphism of categories is as follows. Given functors
 \begin{center}
 \includesag{091_functors_adjunctions}
 \end{center}
@@ -55,7 +55,7 @@ instead of requiring the equations
 \begin{equation*}
   F \then G = \id_\CatC  \text{ and } G \then F = \id_\CatD
 \end{equation*}
-we will replace the equality symbols with 2-morphisms:
+we can replace the equality symbols with 2-morphisms! We'll do it like this: 
 
 \begin{equation*}
   F \then G \overset{\eta}{\Longleftarrow} \id_\CatC, \quad  G \then F \overset{\epsilon}{\Longrightarrow} \id_\CatD
@@ -101,7 +101,7 @@ The last two relationships can also be depicted in the following more geometric 
 \includesag{091_adjunction_def}
 \end{center}
   \end{compactenum}
-  We use the notation $F \dashv G$ to indicate that $F$ and $G$ form an adjunction, with $F$ the left adjoint and $G$ the right adjoint. 
+  
   The 2-morphisms~$\eta$ and~$\epsilon$ are called the \emph{unit} and \emph{counit} of the adjunction.
   An adjunction is called an \emph{adjoint equivalence} if the unit and counit are natural isomorphisms.
 \end{ctdefinition}
@@ -181,13 +181,68 @@ What does the unit look like? It's component at $\CatC$ is a functor
 $$
 \epsilon_{\CatC} : F(G(\CatC)) \longrightarrow \CatC. 
 $$
-The category $F(G(\CatC))$ is larger than $\CatC$: starting with \CatC, the graph $G(\CatC)$ will contain edges for all the morphisms in $\CatC$, but it will forget their compositional interlinking. In particular, for example, it will forget which loops denote identity morphisms (\text{i.e. which morphisms act neutrally}) and it will forget when different compositions of morphism give the same result. In $F(G(\CatC))$, then, morphism compositions that might have given the same result in $\CatC$ will now be distinct. 
+The category $F(G(\CatC))$ is larger than $\CatC$: starting with \CatC, the graph $G(\CatC)$ will contain edges for all the morphisms in $\CatC$, but it will forget their compositional interlinking. In particular, for example, it will forget which loops denote identity morphisms (\text{i.e. which morphisms act neutrally}) and, more generally, it will forget when different compositions of morphism give the same result. In $F(G(\CatC))$, then, morphism compositions that might have given the same result in $\CatC$ will now be distinct. 
 The functor $\epsilon_{\CatC}$ in a sense ``remembers'' those relations that were true in \CatC and it ``implements'' them by ``projecting'' $F(G(\CatC))$ back to  $\CatC$. 
  
 
 
 
 \section{Relating the two definitions}\label{relate-adj-defs}
+
+Let's start first with the ``hom-set definition'' of adjunction, and show how to obtain the ``(co)unit definition''. 
+Given an adjunction $F \dashv G$ from a category \CatC to a category \CatD, we have, by \cref{def-adj-iso} a natural isomorphism $\tau$ with components
+$$\tau_{X,Y} : \Hom_{\CatD}(F(X) ,Y ) \longrightarrow \Hom_{\CatC}(X , G(Y) ).$$
+From this data we can construct the unit and counit of the adjunction as follows. 
+
+Given an object $A$ of $\CatC$, we define 
+$$
+\eta_C : A \rightarrow G(F(A)) 
+$$
+to be the image under $\tau_{A, F(A)}$ of $\id_{F(A)} \in \Hom_{\CatD}(F (A) , F(A) )$. 
+
+And given an object $B$ of $\CatD$, we define 
+$$
+\epsilon_B : F(G(B)) \rightarrow B
+$$
+to the the image under $\tau_{G(B), B}^{-1}$ of $\id_{G(B)} \in \Hom_{\CatD}(G(B), G(B))$. 
+
+\begin{exercise}
+Show that if we define $\eta$ and $\epsilon$ in terms of their components as above, then they do indeed define natural transformations 
+$$
+\eta: \id_{\CatC} \Rightarrow G\then F
+$$
+and
+$$
+\epsilon: G \then F \Rightarrow \id_{\CatD}
+$$
+respectively. In other words, check the naturality conditions for $\eta$ and $\epsilon$. 
+\end{exercise}
+
+\begin{exercise}
+Show that $\eta$ and $\epsilon$, as defined above, satisfy the triangle identites stated in \cref{def-adj-counit}.
+ \end{exercise}
+
+
+Now let's start with the ``(co)unit definition'' of adjunction and see how to obtain the ``hom-set definition''. 
+
+Given the unit $\eta$ and counit $\epsilon$, we can construct the components $\tau_{X,Y}$ of the natural transformation $\tau$ as follows. Given $f \in \Hom_{\CatD}(F(X),Y)$, we define
+$$
+\tau_{X,Y}(f) = \eta_X \then G(f).
+$$
+Similarly, given $g \in \Hom_{\CatC}(X,G(Y))$, the inverse component is given by 
+$$
+\tau_{X,Y}^{-1}(g) = F(g) \then \epsilon_Y. 
+$$
+
+\begin{exercise}
+Show that $\tau_{X,Y}$ and $\tau_{X,Y}^{-1}$ are indeed functions which are inverses of each other. 
+\end{exercise}
+
+\begin{exercise}
+Show that the functions $\tau_{X,Y}$ do assemble to a natural transformation 
+$$\tau  : \Hom_{\CatD}(F(-) ,- ) \Longrightarrow \Hom_{\CatC}(-  , G(- ) )$$
+between functors $\CatC^{op} \times D \rightarrow \Cat{Set}$. 
+\end{exercise}
 
 
 
