@@ -1,24 +1,24 @@
-% !TEX root = ../ACT4E-full.tex
+% !TEX root = ../../ACT4E-full.tex
 
 
 \section{Design problems as monotone maps}
 \label{sec:dpdefinition}
 
 A DPI (\cref{def:DPI}) describes a relation between three sets:~\funsp, \ressp, \impsp.
-If we are not interested in the implementations, but just in the relation between \funsp and \ressp, then we can describe a DPI more compactly.
+If we are not interested in the implementations, but just in the relation between \funsp and \ressp, then we can describe a DPI more compactly as a DP\@.
 
-\begin{definition}[Design Problem]
-    \label{def:design-problem}
+\begin{definition}[Design Problem] \label{def:design-problem}
     A \iindex{design problem} (DP) is a tuple~$\tup{\funsp, \ressp, \adp}$,
     where~$\funsp, \ressp$ are posets and~$\adp$ is a monotone map of the form
-    \begin{equation}
+    \begin{equation*}
         \adp \colon  \funsp\op \times \ressp \toinPos \Bool.
-    \end{equation}
+    \end{equation*}
     We represent it by an arrow~$\adp \colon \funsp \profto \ressp$.
 \end{definition}
 
 \paragraph{Intended semantics}
-When we consider a design problem~$\adp\colon \funsp \profto \ressp$, we imagine the poset~$\funsp$ to represent the \textbf{f}unctionality to be provided, while the poset~$R$ represents the \textbf{r}esources required. The object~$\adp \colon \funsp \profto \ressp$ is a relation that describes which combinations of functionality and resources are feasible: for each~$\fun^* \in \funsp\op$ and~$\res \in \ressp$,~$\adp(\fun^*,\res)$ is a truth value,~$\true$ or~$\false$, which we call the \emph{feasibility of~\fun given~\res}. The value~$\adp(\fun^*,\res)$ is the answer to the question ``is the functionality~\fun feasible with resources~\res?''.
+When we consider a design problem~$\adp\colon \funsp \profto \ressp$, we imagine the poset~$\funsp$ to represent the \textbf{f}unctionality to be provided, while the poset~$R$ represents the \textbf{r}esources required.
+The object~$\adp \colon \funsp \profto \ressp$ is a relation that describes which combinations of functionality and resources are feasible: for each~$\fun^* \in \funsp\op$ and~$\res \in \ressp$,~$\adp(\fun^*,\res)$ is a truth value,~$\true$ or~$\false$, which we call the \emph{feasibility of~\fun given~\res}. The value~$\adp(\fun^*,\res)$ is the answer to the question ``is the functionality~\fun feasible with resources~\res?''.
 
 This is the basic fact of life in engineering: there is a price to pay for everything, and there are trade-offs to be made.
 
@@ -30,21 +30,24 @@ The monotonicity of~$\adp$ represents the two following assumptions:
 \end{compactenum}
 
 \begin{example}
-    Imagine a truck to be driving at constant speed on a straight street. If it can cover \unit[100]{miles} with \unit[5]{gallons} of gasoline, it can also cover \unit[80]{miles} with it. Furthermore, it will be able to cover the \unit[100]{miles} also with \unit[10]{gallons} of gasoline.
+    Imagine a truck to be driving at constant speed on a straight street.
+    If it can cover \unit[100]{miles} with \unit[5]{gallons} of gasoline, it can also cover \unit[80]{miles} with it.
+    Furthermore, it will be able to cover the \unit[100]{miles} also with \unit[10]{gallons} of gasoline.
 \end{example}
 
 A design problem~$\adp$ will satisfy these conditions if and only if it is represented by a monotone function.
-\begin{definition}[Feasible set of a design problem]
+\begin{definition}[Feasible set of a design problem] \label{def:dp-feasible-set}
     We define the \emph{feasible set}~$K_\adp$ of a design problem~$\adp\colon \funsp\op \times \ressp\toinPos \Bool$ as the subset of~$\funsp \op\times \ressp$ for which~$\adp$ is the \emph{indicator function}, that is
-    \begin{equation}
+    \begin{equation*}
         K_\adp = \{ \tup{\F{f^*},\res} \in \funsp \op\times \ressp  \mid
         \adp(\fun^*, \res) = \true
         \}.
-    \end{equation}
+    \end{equation*}
 \end{definition}
 \begin{remark}
-    The set~$K_\adp$ is always an upper set (\cref{def:upperset}). In fact, another way to define a design problem is to declare it as ``an upper
-    set in~$\funsp\op \times \ressp$''. This is simpler than declaring it as ``a monotone map to~\Bool''. However, the definition as a monotone map will lend very easily to further generalization.
+    The set~$K_\adp$ is always an upper set (\cref{def:upperset}).
+    In fact, another way to define a design problem is to declare it as ``an upper set in~$\funsp\op \times \ressp$''. This is simpler than declaring it as ``a monotone map to~\Bool''.
+    However, the definition as a monotone map will lend very easily to further generalization.
 \end{remark}
 The Boolean-valued design problems we are considering here do not distinguish between particular implementations: they only tell us if \emph{any} implementation or solution exists for given functionality and resources. We will define~\Set-enriched design problems in \cref{sec:enriched}, which directly generalize Boolean-valued design problems and do distinguish between particular implementations.
 
@@ -183,8 +186,7 @@ We will connect these diagrams.
 
 We will define several ways to connect and compose design problems. The first and most basic way is series composition, or just `composition'.
 
-\begin{definition}[Series composition]
-    \label{def:dp-series}
+\begin{definition}[Series composition] \label{def:dp-series}
     Let $f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$ be design problems. We define their \emph{series composition}~$(f\then g)\ \colon  \F{A} \profto \R{C}$ as:
     \begin{equation}
         \label{eq:composition2}
@@ -203,7 +205,9 @@ We will define several ways to connect and compose design problems. The first an
         \end{aligned}
     \end{equation}
 \end{definition}
-\noindent We represent series in the diagrammatic notation reported in~\cref{fig:compositiondiagram}.
+We represent series in the diagrammatic notation reported in~\cref{fig:compositiondiagram}.
+
+
 \begin{figure}[h!]
     \begin{center}
         \includesag{50_series_diag}
@@ -219,30 +223,30 @@ One can notice the ``co-design constraint'' $\ordleq$, which can be interpreted 
 
 
     First consider the direction \cref{eq:composition}~$\implies$ \cref{eq:composition2}. In order for
-    \begin{equation}
+    \begin{equation*}
         \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
-    \end{equation}
+    \end{equation*}
     to be true, there should exist some~$\R{b_1}\ordleq \F{b_2}$ for which~$f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})$ is true. However, due to the monotonicity of~$f$,~$f(\F{a}^*,\R{b_2}) \wedge g(\F{b_2}^*,\R{c})$ and \cref{eq:composition2} must be true as well. On the other hand, if
-    \begin{equation}
+    \begin{equation*}
         \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})
-    \end{equation}
+    \end{equation*}
     is false, then due to the equality, it is false for any~$\R{b_1}=\F{b_2}$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
 
     The other direction, \cref{eq:composition2}~$\implies$ \cref{eq:composition}, can be shown in a similar way. If \cref{eq:composition2} is true, then there must exist a~$b'$ such that~$f(\F{a}^*, \R{b'})=\true$ and~$g(\F{b'}^*, \R{c})=\true$. Then, the inner term in \cref{eq:composition} is true for~$\R{b_1}=\F{b_2}=b'$. If \cref{eq:composition2} is false, then there is no such~$b'$ for which both~$f(\F{a}^*, \R{b'})$ and~$g(\F{b'}^*, \R{c})$ are true, but then due to the monotonicity of~$f$ and~$g$ they also cannot be true for any~$\R{b_1} \ordleq \F{b_2} = b'$ or~$b'=\R{b_1} \ordleq \F{b_2}$. Hence, \cref{eq:composition} must also be false.
 \end{remark}
 \begin{remark}
     At first sight, \cref{eq:composition} might seem like a more verbose version of \cref{eq:composition2}. However, assume that we have the means to obtain the minimal antichain of the feasible set of resources that provide~$\F{a}$ for the first term:
-    \begin{equation}
+    \begin{equation*}
         \R{B_f} = \Min \{b_1\in B \mid f(\F{a}^*,\R{b_1})=\true\} \in \antichains B.
-    \end{equation}
+    \end{equation*}
     This represents the minimal resources with which~$f$ can provide~$\F{a}$. Assume further that we similarly have the means to obtain the maximal antichain of the feasible set of functionalities that~$\R{c}$ provides for the second term
-    \begin{equation}
+    \begin{equation*}
         \F{B_g} = \Max \{b_2\in B \mid g(\F{b_2}^*,\R{c})=\true\} \in \antichains B,
-    \end{equation}
+    \end{equation*}
     which represents the maximal functionality that~$g$ can provide given~$\R{c}$. Then, \cref{eq:composition} implies that it suffices to only evaluate
-    \begin{equation}
+    \begin{equation*}
         \bigvee_{\substack{\R{b_1}\ordleq\F{b_2} \\ \R{b_1}\in \R{B_f},~ \F{b_2}\in\F{B_g} }} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c}),
-    \end{equation}
+    \end{equation*}
     which can be much more efficient than iterating over all~$b\in B$.
 \end{remark}
 
@@ -326,8 +330,7 @@ Associativity of composition is represented as in~\cref{fig:compositionassociati
 There exists an identity for the ``$\then$'' operation.
 We define the identity~$\id_A\colon \F{A} \profto \R{A}$ as follows.
 
-\begin{definition}[Identity design problem]
-    \label{def:dp-identity}
+\begin{definition}[Identity design problem] \label{def:dp-identity}
     For any poset~$A$, the \emph{\iindex{identity design problem}}~$\id_A\colon \F{A} \profto \R{A}$ is a monotone map
     \begin{equation}
         \begin{aligned}
@@ -362,24 +365,24 @@ In the diagrammatic notation, we represent~$\id_A$ as in~\cref{fig:identitydp}.
 
 \begin{proof}
     Given~$f\colon \F{A}\profto \R{B}$, we need to show:
-    \begin{equation}
+    \begin{equation*}
         \id_A \then f= f = f\then \id_B.
-    \end{equation}
+    \end{equation*}
     In the following, we prove~$\id_A \then f = f$. Proving~$f\then \id_B=f$ is similar.
     Consider the poset~\Bool. Since for~$x,y\in \Bool$,~$x\cong y \Rightarrow x=y$ (also referred to as skeletality~\cite{fong2019}), we just need to show that~$f\ordleq \id_A\then f$ and~$\id_A\then f\ordleq f$.
     We have
-    \begin{equation}
+    \begin{equation*}
         \begin{aligned}
             f(\F{a}^*,\R{b})&=\true \wedge f(\F{a}^*,\R{b})\\
             &\ordleq \id_A(\F{a}^*,\R{a}) \wedge f(\F{a}^*,\R{b})\\
             &\ordleq \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b})\\
             &=(\id_A\then f)(\F{a}^*,\R{b}).
         \end{aligned}
-    \end{equation}
+    \end{equation*}
     For the other direction, we need to show that~$\id_A\then f\ordleq f$, i.e.
-    \begin{equation}
+    \begin{equation*}
         \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b}).
-    \end{equation}
+    \end{equation*}
     This holds if and only if~$\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b})$ for some~$a'\in A$. If there is no such~$a'$, then the inequality holds ($\false \ordleq \false$ and $\false \ordleq \true$). If there is such an~$a'$, it means that~$\id_A(\F{a}^*,\R{a'})=\true$ and~$f(\F{a'}^*,\R{b})=\true$. We know that~$\id_A(\F{a}^*,\R{a'})=\true \Leftrightarrow \F{a}\ordleq \R{a'}$, and hence~$f(\F{a}^*,\R{b})=\true$.
 \end{proof}
 
@@ -388,8 +391,7 @@ In the diagrammatic notation, we represent~$\id_A$ as in~\cref{fig:identitydp}.
 
 We will show that the class of all design problems forms a category, which we call~\iindex{\DP}.
 
-\begin{definition}[Category of design problems]
-    \label{def:DP}
+\begin{definition}[Category of design problems]\label{def:DP}
     The \emph{\iindex{category of design problems},~\DP}, consists of the following constituents:
     \begin{compactenum}
         \item \emph{Objects}: The objects of~\DP are posets.
@@ -408,3 +410,6 @@ We have already shown that the composition operator ``$\then$'' is associative a
 \end{remark}
 
 
+\section{DP Isomorphisms}
+
+\todo{Show here the various isomorphisms, also graphically.}
