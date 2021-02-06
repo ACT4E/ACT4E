@@ -8,19 +8,19 @@ Design problems are relations between different posets, and they answer the ques
 In engineering design, we are interested not only in whether a certain functionality can be provided with a given resource, but also in the \emph{minimal} amount of resources with which we can provide that functionality. That is, given a required functionality, what are the \emph{minimal} sets of resources which provide it?
 
 Let us define this query more precisely.
-For any design problem $\adp$, we can define a monotone function $h_\adp$ that sends a functionality $f \in F$ to the \emph{minimum} antichain of resources which provide~$f$:
+For any design problem $\adp$, we can define a monotone function $\ftor_\adp$ that sends a functionality $f \in F$ to the \emph{minimum} antichain of resources which provide~$f$:
 \begin{equation}
     \begin{aligned}
-        h_\adp \colon F &\to \antichains R, \\
+        \ftor_\adp \colon F &\to \antichains R, \\
         f &\mapsto \Min \{ r \in R \colon \adp(f^*, r) = \true \}.
     \end{aligned}
 \end{equation}
 
 \begin{definition}
-    A design problem is \emph{computable} if an exact solution to $h_\adp$ can be computed in time polynomial in the computation time of its component design problems. If a design problem has no component design problems, then we say that it is \emph{primitive}.
+    A design problem is \emph{computable} if an exact solution to $\ftor_\adp$ can be computed in time polynomial in the computation time of its component design problems. If a design problem has no component design problems, then we say that it is \emph{primitive}.
 \end{definition}
 
-In this section, we assume that all primitive design problems are computable, that is, $h_\adp$ terminates in finite time.
+In this section, we assume that all primitive design problems are computable, that is, $\ftor_\adp$ terminates in finite time.
 
 % \AC{polynomial in what?} \JT{I wasn't sure, to be honest. I was hoping you could answer this. It seems like the most reasonable thing is to define it recursively it as ``time polynomial in the computation time of primitive design problems'', and ``A primitive design problem $\adp$ is computable if $h_\adp$ is a computable function.'' which roughly follows the logic in your original paper. [Is this a problem? Kleene converges in enormous time! You can't put any bound on it. It doesn't necessarily converges in polynomial time??? Need to think of this more.]}
 
@@ -32,11 +32,10 @@ We now use the antichains machinery developed in~\cref{sec:chains-antichains}. F
 
 % We denote the smallest upper set in $P$ containing $p$ by $\uparrow(p) = \{ x \in P : p \leq x \} \in \uppersets P$.
 
-We will see $\antichains P$ itself as a poset, with the order given
-by
-\begin{equation}
+We will see $\antichains P$ itself as a poset, with the order given by
+\begin{equation*}
     S \leq_{\antichains P} T  \quad \equiv \quad \uparrow S\, \supset\, \uparrow T,
-\end{equation}
+\end{equation*}
 where $\uparrow$ is the upper closure of the set (\cref{def:upperset}).
 
 The top element of the poset $\antichains P$ is the empty set $\emptyset$.
@@ -110,10 +109,10 @@ We say that a design problem $\adp : F \profto R$ is \emph{downward-closed} if $
 
 Why does this bijection matter?
 
-Looking at the definition of $h_\adp$:
+Looking at the definition of $\ftor_\adp$:
 \begin{equation}
     \begin{aligned}
-        h_\adp \colon F &\to \antichains R \\
+        \ftor_\adp \colon F &\to \antichains R \\
         f &\mapsto \Min \then \{ r \in R \colon \adp(f^*, r) = \true \}
     \end{aligned}
 \end{equation}
@@ -122,7 +121,8 @@ Assuming $K_d \neq \emptyset$, one immediately observes that an exact solution e
 
 \subsubsection{Computability of design problems}
 
-A \emph{primitive} design problem is any design problem which is not constructed using any of the operators we have already defined. A primitive design problem $\adp$ is computable when $\ftor_\adp$ is computable in polynomial time. % Almost any primitive design problem $\adp$ is computable in polynomial time, since computing $h_\adp$ amounts to querying a lookup table.
+A \emph{primitive} design problem is any design problem which is not constructed using any of the operators we have already defined. A primitive design problem $\adp$ is computable when $\ftor_\adp$ is computable in polynomial time.
+% Almost any primitive design problem $\adp$ is computable in polynomial time, since computing $h_\adp$ amounts to querying a lookup table.
 
 \AC{for the above: what is a "primitive" design problem?} \JT{See above.}
 
@@ -173,7 +173,7 @@ Every combination of computable design problems we have so far looked at---excep
 
 Loops are significantly harder. To see that we can compute them in finite time, we will need the following fact:
 \begin{lemma}
-    If a design problem $\adp : F \profto R$ is downward-closed, then $h_\adp$ is Scott-continuous.
+    If a design problem $\adp : F \profto R$ is downward-closed, then $\ftor_\adp$ is Scott-continuous.
 % Weaker version: If a design problem $\adp : F \tickar R$ is downward-closed, and $(f^*,r)$ is a minimal element of $K_\adp$, then $h_\adp$ is Scott-continuous at $f$, i.e. if $f = D^\uparrow$ is the supremum of some directed subset $D \subset F$, then $h_\adp(f) = h_\adp(D)^\uparrow$.
 \end{lemma}
 
@@ -183,14 +183,14 @@ Loops are significantly harder. To see that we can compute them in finite time, 
     \AC{I am confused. In "$\adp$ Scott-continuous just means...", what does it
     mean for a DP to be Scott-continuous? Scott-continuous is a property of a map. } \JT{Recall that $\adp$ is defined to be a monotone map from a given poset $F\op \times R$ to \Bool. The sentence above is a direct translation of what it means for $\adp(D^\uparrow) = \adp(D)^\uparrow$, where $D \subset F\op \times R$.}
 
-    If $\adp$ is Scott-continuous, then $h_\adp$ is Scott-continuous, since $h_\adp$ only observes the lower boundary of the feasible set, which is controlled by the downward-closed condition.
+    If $\adp$ is Scott-continuous, then $\ftor_\adp$ is Scott-continuous, since $\ftor_\adp$ only observes the lower boundary of the feasible set, which is controlled by the downward-closed condition.
 \end{proof}
 
-For a design problem of the form $\adp : (B \times A) \profto (B \times C)$, $h_\adp : B \times A \to \antichains (B \times C)$ is defined as normal. For any input $a$ we define a recursion operator $\psi_{a,\adp}$ for $h_\adp$ by
+For a design problem of the form $\adp : (B \times A) \profto (B \times C)$, $\ftor_\adp : B \times A \to \antichains (B \times C)$ is defined as normal. For any input $a$ we define a recursion operator $\psi_{a,\adp}$ for $\ftor_\adp$ by
 \begin{equation}
     \begin{aligned}
         \psi_{a,\adp} \colon \antichains (B \times C) &\to \antichains (B \times C) \\
-        S &\mapsto \Min \bigcup_{\tup{b,c} \in S} \{ \tup{b',c'} \in h_\adp(b,a) \colon b' \leq b \}.
+        S &\mapsto \Min \bigcup_{\tup{b,c} \in S} \{ \tup{b',c'} \in \ftor_\adp(b,a) \colon b' \leq b \}.
     \end{aligned}
 \end{equation}
 %\begin{align*}
@@ -222,8 +222,8 @@ To say that $\Tr \adp$ is computable is to say that the least fixed point $\text
 What's going on here?
 
 \begin{enumerate}
-    \item First, calculate $h_\adp$ for some fixed, initial $\langle b_{\text{in}},a \rangle$. The goal is to compute the antichain of minimal elements $c \in C$ which provide $a$, across \emph{all} possible choices of $b_{\text{in}}$.
-    \item Throw away all those minimal elements in $h_\adp(b_{\text{in}},a)$ that do not satisfy the trace constraint, $b_{\text{in}} \leq b_{\text{out}}$,\footnote{If the loop is composed with an addition behind the input, which is often the case, then this condition would change to reflect the addition.} where $b_{\text{out}} \in \pi_B(h_\adp(b_{\text{in}},a))$.
+    \item First, calculate $\ftor_\adp$ for some fixed, initial $\langle b_{\text{in}},a \rangle$. The goal is to compute the antichain of minimal elements $c \in C$ which provide $a$, across \emph{all} possible choices of $b_{\text{in}}$.
+    \item Throw away all those minimal elements in $\ftor_\adp(b_{\text{in}},a)$ that do not satisfy the trace constraint, $b_{\text{in}} \leq b_{\text{out}}$,\footnote{If the loop is composed with an addition behind the input, which is often the case, then this condition would change to reflect the addition.} where $b_{\text{out}} \in \pi_B(\ftor_\adp(b_{\text{in}},a))$.
     \item At this point, we are left with an antichain $S \subset \antichains (B \times C)$ of minimal elements $\langle b_{\text{out}},c \rangle$ that satisfy the trace constraint, but the resources $c \in S|_C$ (which do not necessarily form an antichain) are not necessarily minimal with respect to the functionality $a$, since we might have chosen some other initial $b_{\text{in}}$ and gotten better results. Alternately, if we had started with the wrong $b_{\text{in}}$, the entire computation might have terminated with $\emptyset$.
 % [Andrea's example in the original paper seems to imply that the antichains are not necessarily feasible, rather than minimal.]
     \item Take the list of $b_{\text{out}}$ from Step 2 as the new $b_{\text{in}}$, and run through steps 1--2 in parallel for each new $b_{\text{in}}$. Take the union of the results, and take the $\Min$ of the union to obtain a new list of $b_{\text{out}}$. Each result will be a smaller antichain in $C$, i.e. a ``better'' result.
@@ -281,7 +281,7 @@ To ensure that the least fixed point exists, we require that the posets $B, C$ (
 % We also require that $h_\adp$ be Scott-continuous, i.e. that it preserve these suprema.
 
 \begin{lemma}
-    If $h_\adp$ is Scott-continuous, then so is $\psi_{a,\adp}$.
+    If $\ftor_\adp$ is Scott-continuous, then so is $\psi_{a,\adp}$.
 \end{lemma}
 
 \begin{proof}
@@ -338,17 +338,17 @@ We can also define the dual problem; suppose we fix a given resource $r \in R$ a
         r &\mapsto \Min \; \{ f^* \in F\op : \adp(f^*, r) = \true \}
     \end{aligned}
 \end{equation}
-with analogous properties to $h_\adp$.
+with analogous properties to $\ftor_\adp$.
 
-\AC{Do we know if $h_\adp$ computable implies $g_\adp$ computable?} \JT{I have not checked and am fine with removing this comment in the interests of time.}
+\AC{Do we know if $\ftor_\adp$ computable implies $g_\adp$ computable?} \JT{I have not checked and am fine with removing this comment in the interests of time.}
 
 \subsubsection{To put back somewhere}
-Note that $h_\adp$ is a monotone function but is \emph{not} a design problem. Given that it is a monotone function, what happens if we try to turn it into a design problem? The conjoint of $h_\adp$ is given by
-\begin{equation}
+Note that $\ftor_\adp$ is a monotone function but is \emph{not} a design problem. Given that it is a monotone function, what happens if we try to turn it into a design problem? The conjoint of $\ftor_\adp$ is given by
+\begin{equation*}
     \begin{aligned}
-        \hat h_\adp : F &\profto \antichains R \simeq \Hom_\DP(\ast, R) \\
-        \langle f^*, S \rangle &\mapsto \antichains R(h_\adp(f), S) \leftrightarrow \bigwedge_{s\in S} \adp(f^*, s)
+        \hat \ftor_\adp : F &\profto \antichains R \simeq \Hom_\DP(\ast, R) \\
+        \langle f^*, S \rangle &\mapsto \antichains R(\ftor_\adp(f), S) \leftrightarrow \bigwedge_{s\in S} \adp(f^*, s)
     \end{aligned}
-\end{equation}
+\end{equation*}
 
-In other words, the conjoint of $h_\adp$ is an indicator function for subsets of feasible resources.
+In other words, the conjoint of $\ftor_\adp$ is an indicator function for subsets of feasible resources.
