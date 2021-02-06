@@ -1,136 +1,138 @@
 % !TEX root = ../ACT4E-full.tex
 
+
 \section{Creating design problems from catalogues}
-\begin{ctdefinition}[Span]\label{def:span}
-  Given a category~\CatC, a \emph{\iindex{span}} from an object~$x$ to an object~$y$ is a diagram of the form
-  \begin{equation}
-    \includesag{51_span}
-  \end{equation}
-  where~$z$ is some other object of~\CatC.
+\begin{ctdefinition}[Span]
+    \label{def:span}
+    Given a category~\CatC, a \emph{\iindex{span}} from an object~$x$ to an object~$y$ is a diagram of the form
+    \begin{equation}
+        \includesag{51_span}
+    \end{equation}
+    where~$z$ is some other object of~\CatC.
 \end{ctdefinition}
 
 \begin{example}
-Consider the category~\Berg, introduced in \cref{sec:trekking}. An example of span in this category is reported in~\cref{fig:exmountains}.
-  \begin{figure}[h!]
-    \begin{center}
-      \includesag{130_mountains}
-    \end{center}
-    \caption{Swiss peaks can be thought of as a span in~\Trek. \label{fig:exmountains}}
-  \end{figure}
-  Recall that \textsf{Matterhorn Peak}, \textsf{Jungfrau Peak}, and \textsf{Pilatus Peak} are objects of~\Trek, and the arrows are morphisms in~\Trek (paths from one location to the other).
+    Consider the category~\Berg, introduced in \cref{sec:trekking}. An example of span in this category is reported in~\cref{fig:exmountains}.
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{130_mountains}
+        \end{center}
+        \caption{Swiss peaks can be thought of as a span in~\Trek. \label{fig:exmountains}}
+    \end{figure}
+    Recall that \textsf{Matterhorn Peak}, \textsf{Jungfrau Peak}, and \textsf{Pilatus Peak} are objects of~\Trek, and the arrows are morphisms in~\Trek (paths from one location to the other).
 \end{example}
 
 \todo{We have already defined a DPI like this.}
 \begin{definition}[Catalogue]
-  \label{def:catalogue}
-  A \emph{catalogue} is a span in~\Pos.
-  It thus consists of 3 posets~$\impsp$,~$\F{F}$,~$\R{R}$.
-  We call them implementation space, functionality space, and requirements space, respectively. We need to define two maps~$\prov \colon I \to \F{F}$ (an implementation \textbf{prov}ides a functionality) and~$\req\colon I \to \R{R}$ (an implementation \textbf{req}uires resources):
-  \begin{equation}
-    \includesag{130_catalogue}
-  \end{equation}
+    \label{def:catalogue}
+    A \emph{catalogue} is a span in~\Pos.
+    It thus consists of 3 posets~$\impsp$,~$\F{F}$,~$\R{R}$.
+    We call them implementation space, functionality space, and requirements space, respectively. We need to define two maps~$\prov \colon I \to \F{F}$ (an implementation \textbf{prov}ides a functionality) and~$\req\colon I \to \R{R}$ (an implementation \textbf{req}uires resources):
+    \begin{equation}
+        \includesag{130_catalogue}
+    \end{equation}
 \end{definition}
 
 \begin{definition}[Design problem induced by a catalogue]
-  Every catalogue~$\tup{\impsp,\prov,\req}$ \emph{induces} a design problem of the form~$d\colon \F{F}\profto \R{R}$, with
-  \begin{equation}
-    \begin{aligned}
-      d\colon \F{F}\op \times \R{R}&\to \Bool\\
-      \tup{\F{f}^*,\R{r}}&\mapsto \bigvee_{\imp\in \impsp}\left(\prov(\imp)\ordgeq_{\F{F}}\F{f} \right)\wedge \left( \req(i)\ordleq_{\R{R}}\R{r}\right)
-    \end{aligned}
-  \end{equation}
+    Every catalogue~$\tup{\impsp,\prov,\req}$ \emph{induces} a design problem of the form~$d\colon \F{F}\profto \R{R}$, with
+    \begin{equation}
+        \begin{aligned}
+            d\colon \F{F}\op \times \R{R}&\to \Bool\\
+            \tup{\F{f}^*,\R{r}}&\mapsto \bigvee_{\imp\in \impsp}\left(\prov(\imp)\ordgeq_{\F{F}}\F{f} \right)\wedge \left( \req(i)\ordleq_{\R{R}}\R{r}\right)
+        \end{aligned}
+    \end{equation}
 \end{definition}
 
 \begin{example}
-  We now want to revisit the leading example of \cref{sec:attributes_sameness} with the newly introduced co-design perspective. Let's consider a list of electrical motors as in~\cref{tab:electric_motors_2}.
-  \begin{table}[h]
-    \centering
-    \adjustbox{max width=\textwidth}{%
-      \begin{tabular}{c|c|c|c|c|c}
-        Motor ID & Company & $\unit[\text{Torque}]{[kg\cdot cm]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
-        & \unit[Cost]{[USD]}
-        \\
-        \hline
-        \textsf{1204} & \textsf{SOYO}        & 0.18 & 60.0  & 2.34 & 19.95  \\
-        \textsf{1206} & \textsf{SOYO}        & 0.95 & 140.0 & 3.00 & 19.95  \\
-        \textsf{1207} & \textsf{SOYO}        & 0.65 & 130.0 & 2.07 & 12.95  \\
-        \textsf{2267} & \textsf{SOYO}        & 3.7  & 285.0 & 4.76 & 16.95  \\
-        \textsf{2279} & \textsf{Sanyo Denki} & 1.9  & 165.0 & 5.40 & 164.95 \\
-        \textsf{1478} & \textsf{SOYO}        & 19.0 & 1,000 & 8.96 & 49.95  \\
-        \textsf{2299} & \textsf{Sanyo Denki} & 2.2  & 150.0 & 5.90 & 59.95
-      \end{tabular}%
-    }
-    \caption{A simplified catalogue of motors.}
-    \label{tab:electric_motors_2}
-  \end{table}
+    We now want to revisit the leading example of \cref{sec:attributes_sameness} with the newly introduced co-design perspective. Let's consider a list of electrical motors as in~\cref{tab:electric_motors_2}.
+    \begin{table}[h]
+        \centering
+        \adjustbox{max width=\textwidth}{%
+            \begin{tabular}{c|c|c|c|c|c}
+                Motor ID & Company & $\unit[\text{Torque}]{[kg\cdot cm]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
+                & \unit[Cost]{[USD]}
+                \\
+                \hline
+                \textsf{1204} & \textsf{SOYO}        & 0.18 & 60.0  & 2.34 & 19.95  \\
+                \textsf{1206} & \textsf{SOYO}        & 0.95 & 140.0 & 3.00 & 19.95  \\
+                \textsf{1207} & \textsf{SOYO}        & 0.65 & 130.0 & 2.07 & 12.95  \\
+                \textsf{2267} & \textsf{SOYO}        & 3.7  & 285.0 & 4.76 & 16.95  \\
+                \textsf{2279} & \textsf{Sanyo Denki} & 1.9  & 165.0 & 5.40 & 164.95 \\
+                \textsf{1478} & \textsf{SOYO}        & 19.0 & 1,000 & 8.96 & 49.95  \\
+                \textsf{2299} & \textsf{Sanyo Denki} & 2.2  & 150.0 & 5.90 & 59.95
+            \end{tabular}%
+        }
+        \caption{A simplified catalogue of motors.}
+        \label{tab:electric_motors_2}
+    \end{table}
 
-  We can think of this as a catalogue of electric motors~$\tup{\impsp_\mathrm{EM},\prov_\mathrm{EM},\req_\mathrm{EM}}$. In particular, the set of implementations collects all the motor models, which we can specify using the motor IDs:
-  \begin{equation}
-    \impsp_\mathrm{EM}=\{1204,1206,1207,2267,2279,1478,2299 \}.
-  \end{equation}
-  We now have to think about \R{resources} and \F{functionalities}. Each motor \R{requires} some \R{weight} (in \unit[]{g}), \R{power} (in \unit[]{W}), and has some \R{cost} (in USD), and \F{provides} some \F{torque} (in~$\unit[]{kg\cdot cm}$). Thus, we can identify
-  \begin{equation*}
-    \F{F}=\reals\times \{\unit[]{kg\cdot cm}\},\quad \R{R}=(\reals\times \{\unit[]{g}\})\times (\reals\times \{\unit[]{W}\})\times (\reals\times \{\unit[]{USD}\}),
-  \end{equation*}
-  by considering the units as discussed in \cref{sec:currency_cat}. The correspondences are given by the details in \cref{tab:electric_motors_2}. For instance, we have
-  \begin{equation}
-    \prov_\mathrm{EM}(1204)=0.18, \quad \req_\mathrm{EM}(1204)=\tup{\unit[60]{g},\unit[2.34]{W},\unit[19.95]{USD}}.
-  \end{equation}
-  The catalogue induces a design problem $d_\mathrm{EM}$ with diagrammatic form as in \cref{fig:dp_em}. In particular, we can query the design problem for combinations of \F{functionalities} and \R{resources}. For instance:
-  \begin{equation}
-    d\left(\unit[0.2]{kg\cdot cm}, \tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}} \right)=\false,
-  \end{equation}
-  since no listed model can provide~$\unit[0.2]{kg\cdot cm}$ \F{torque} by requiring the set of \R{resources} $\tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}}$ or less.
+    We can think of this as a catalogue of electric motors~$\tup{\impsp_\mathrm{EM},\prov_\mathrm{EM},\req_\mathrm{EM}}$. In particular, the set of implementations collects all the motor models, which we can specify using the motor IDs:
+    \begin{equation}
+        \impsp_\mathrm{EM}=\{1204,1206,1207,2267,2279,1478,2299 \}.
+    \end{equation}
+    We now have to think about \R{resources} and \F{functionalities}. Each motor \R{requires} some \R{weight} (in \unit[]{g}), \R{power} (in \unit[]{W}), and has some \R{cost} (in USD), and \F{provides} some \F{torque} (in~$\unit[]{kg\cdot cm}$). Thus, we can identify
+    \begin{equation*}
+        \F{F}=\reals\times \{\unit[]{kg\cdot cm}\},\quad \R{R}=(\reals\times \{\unit[]{g}\})\times (\reals\times \{\unit[]{W}\})\times (\reals\times \{\unit[]{USD}\}),
+    \end{equation*}
+    by considering the units as discussed in \cref{sec:currency_cat}. The correspondences are given by the details in \cref{tab:electric_motors_2}. For instance, we have
+    \begin{equation}
+        \prov_\mathrm{EM}(1204)=0.18, \quad \req_\mathrm{EM}(1204)=\tup{\unit[60]{g},\unit[2.34]{W},\unit[19.95]{USD}}.
+    \end{equation}
+    The catalogue induces a design problem $d_\mathrm{EM}$ with diagrammatic form as in \cref{fig:dp_em}. In particular, we can query the design problem for combinations of \F{functionalities} and \R{resources}. For instance:
+    \begin{equation}
+        d\left(\unit[0.2]{kg\cdot cm}, \tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}} \right)=\false,
+    \end{equation}
+    since no listed model can provide~$\unit[0.2]{kg\cdot cm}$ \F{torque} by requiring the set of \R{resources} $\tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}}$ or less.
 
-  \begin{figure}[tbh]
-    \begin{center}
-      \begin{tikzpicture}[DP]
-        \node[dp={1}{3}] (mot) {Electric motor};
-        \draw[runconn, runame={\R{weight}}] (mot_res1){};
-        \draw[runconn, runame={\R{max power}}] (mot_res2){};
-        \draw[runconn, runame={\R{cost}}] (mot_res3){};
-        \draw[funconn, funame={\F{torque}}] (mot_fun1){};
-      \end{tikzpicture}
-    \end{center}
-    \caption{Electric motor design problem.}\label{fig:dp_em}
-  \end{figure}
+    \begin{figure}[tbh]
+        \begin{center}
+            \begin{tikzpicture}[DP]
+                \node[dp={1}{3}] (mot) {Electric motor};
+                \draw[runconn, runame={\R{weight}}] (mot_res1){};
+                \draw[runconn, runame={\R{max power}}] (mot_res2){};
+                \draw[runconn, runame={\R{cost}}] (mot_res3){};
+                \draw[funconn, funame={\F{torque}}] (mot_fun1){};
+            \end{tikzpicture}
+        \end{center}
+        \caption{Electric motor design problem.}\label{fig:dp_em}
+    \end{figure}
 
-  \begin{figure}[tbh]
-    \begin{center}
-      \begin{tikzpicture}[DP]
-        \node[dp={2}{3}] (bat) {Battery};
-        \draw[runconn, runame={$c_\mathrm{b}$}] (bat_res1){};
-        \draw[runconn, runame={$m_\mathrm{b}$}] (bat_res2){};
-        \draw[runconn, runame={$R_\mathrm{b}$}] (bat_res3){};
-        \draw[funconn, funame={$C_\mathsf{prov}$}] (bat_fun1){};
-        \draw[funconn, funame={$M_\mathsf{b}$}] (bat_fun2){};
-      \end{tikzpicture}
-    \end{center}
-    \caption{The battery design problem.}
-    \label{fig:dp_battery}
-  \end{figure}
+    \begin{figure}[tbh]
+        \begin{center}
+            \begin{tikzpicture}[DP]
+                \node[dp={2}{3}] (bat) {Battery};
+                \draw[runconn, runame={$c_\mathrm{b}$}] (bat_res1){};
+                \draw[runconn, runame={$m_\mathrm{b}$}] (bat_res2){};
+                \draw[runconn, runame={$R_\mathrm{b}$}] (bat_res3){};
+                \draw[funconn, funame={$C_\mathsf{prov}$}] (bat_fun1){};
+                \draw[funconn, funame={$M_\mathsf{b}$}] (bat_fun2){};
+            \end{tikzpicture}
+        \end{center}
+        \caption{The battery design problem.}
+        \label{fig:dp_battery}
+    \end{figure}
 
-  \begin{table}[tbh]
-    \begin{center}
-      \begin{tabular}{cccc}
-        Technology & Specific energy [\unitfrac[]{J}{kg}] & Specific cost [\unitfrac[]{J}{\$}]
-        & Life [\# cycles]
-        \\
-        \hline
-        $\mathsf{NiMH}$  & 100.0 & 3.41 & 500    \\
-        $\mathsf{NiH2}$  & 45.0  & 10.5 & 20,000 \\
-        $\mathsf{LCO}$   & 195.0 & 2.84 & 750    \\
-        $\mathsf{LMO}$   & 150.0 & 2.84 & 500    \\
-        $\mathsf{NiCad}$ & 30.0  & 7.50 & 500    \\
-        $\mathsf{SLA}$   & 30.0  & 7.00 & 500    \\
-        $\mathsf{LiPo}$  & 250.0 & 2.50 & 600    \\
-        $\mathsf{LFP}$   & 90.0  & 1.50 & 1,500
-      \end{tabular}
-    \end{center}
-    \caption{Specifications of common battery technologies~\cite{censi2015}. }
-    \label{tab:battery}
-  \end{table}
-  \todo{finish with design problem description}
+    \begin{table}[tbh]
+        \begin{center}
+            \begin{tabular}{cccc}
+                Technology & Specific energy [\unitfrac[]{J}{kg}] & Specific cost [\unitfrac[]{J}{\$}]
+                & Life [\# cycles]
+                \\
+                \hline
+                $\mathsf{NiMH}$  & 100.0 & 3.41 & 500    \\
+                $\mathsf{NiH2}$  & 45.0  & 10.5 & 20,000 \\
+                $\mathsf{LCO}$   & 195.0 & 2.84 & 750    \\
+                $\mathsf{LMO}$   & 150.0 & 2.84 & 500    \\
+                $\mathsf{NiCad}$ & 30.0  & 7.50 & 500    \\
+                $\mathsf{SLA}$   & 30.0  & 7.00 & 500    \\
+                $\mathsf{LiPo}$  & 250.0 & 2.50 & 600    \\
+                $\mathsf{LFP}$   & 90.0  & 1.50 & 1,500
+            \end{tabular}
+        \end{center}
+        \caption{Specifications of common battery technologies~\cite{censi2015}. }
+        \label{tab:battery}
+    \end{table}
+    \todo{finish with design problem description}
 
 \end{example}
 
