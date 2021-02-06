@@ -1,0 +1,297 @@
+
+\section{Relations}\label{sec:connection-relations}
+
+A basic mathematical notion which underlies the above discussion is that of a \textbf{binary relation}.
+
+
+\begin{definition}[Binary relation]
+    \label{def:binary-relation}
+    A \emph{\iindex{binary relation}} from a set~$X$ to a set~$Y$ is a subset of the Cartesian product $X\times Y$.
+\end{definition}
+
+\begin{remark}
+    We will often drop the word ``binary'' and simply use the name ``relation''.
+\end{remark}
+
+%\begin{remark}
+%There is also the notion of an $n$-ary relation, where $n$ can be any natural number. An $n$-nary relations is a subset of a cartesian product of the form $X_1 \times \dots \times X_n$.
+%\end{remark}
+
+If~$X$ and~$Y$ are finite sets, we can depict a relation~$R \subseteq X \times Y$ graphically as in \cref{fig:example_rel}. For each element~$\tup{x,y} \in X \times Y$, we draw an arrow from~$x$ to~$y$ if and only if~$\tup{x,y} \in R \subseteq X \times Y$.
+
+\begin{figure}[h!]
+    \centering
+    \includesag{30_rel_1}
+%\includegraphics[width=0.5\linewidth]{pics/dist_net_7.png}
+    \caption{\label{fig:example_rel}}
+\end{figure}
+
+We can also depict this relation graphically as a subset of~$X \times Y$ in a ``coordinate system way'', as in \cref{fig:example_rel_coord}. The shaded grey area is the subset~$R$ defining the relation.
+
+\begin{comment}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.5\linewidth]{dist_net_8}
+        \caption{}
+    \end{figure}
+\end{comment}
+
+\begin{figure}[h!]
+    \begin{center}
+        \includesag{30_rel_graph}
+    \end{center}
+    \caption{Relations visualized in ``coordinate systems''.}
+    \label{fig:example_rel_coord}
+\end{figure}
+
+\begin{exercise}
+    Let~$X = Y = \{1, 2, 3, 4 \}$ and consider the relation~$R \subseteq X \times Y$ defined by
+    \begin{equation}
+        R = \{ \tup{x,y} \in X \times Y \mid x \leq y \}.
+    \end{equation}
+
+    Visualize the relation~$R$ via the method in \cref{fig:example_rel} and \cref{fig:example_rel_coord} each.
+\end{exercise}
+
+The visualization in \cref{fig:example_rel} hints at the fact that we can think of a relation~$R \subseteq X \times Y$ as a \emph{morphism} from~$X$ to~$Y$.
+
+\begin{ctdefinition}[Category \Rel]
+    The category \iindex{\Rel} of relations \Rel is given by:
+    \begin{compactenum}
+        \item \emph{Objects}: The objects of this category are all sets.
+        \item \emph{Morphisms}: Given sets~$\Obja, \Objb$, the homset~$\Hom_{\Rel}(\Obja,\Objb)$ consists of all
+        relations~$R\subseteq \Obja\times \Objb$.
+        \item \emph{Identity morphisms}: Given a set~$\Obja$, its identity morphism is
+        \begin{equation}
+            1_\Obja \coloneqq \{ \tup{\obja,\objb} \mid  \obja = \objb \}.
+        \end{equation}
+        \item \emph{Composition}: Given relations~$R \colon \Obja\to \Objb$,~$S\colon \Objb\to \Objc$, their composition is given by
+        \begin{equation}
+            \label{RelCompRule}
+            R \then S \coloneqq \{\tup{\obja,\objc} \mid  \exists \objb \in \Objb \colon \ \left(\tup{\obja,\objb} \in R\right) \wedge \left(\tup{\objb,\objc} \in S\right)\}.
+        \end{equation}
+    \end{compactenum}
+\end{ctdefinition}
+
+To illustrate the composition rule in \cref{RelCompRule} for relations, let's consider a simple example, involving sets~$\Obja$,~$\Objb$, and~$\Objc$, and relations~$R \colon \Obja \to \Objb$ and $S \colon \Objb \to \Objc$, as depicted graphically below in \cref{fig:example_rel_composable}.
+\begin{figure}[h!]
+    \centering
+    \includesag{30_rel_2}
+    \caption{Relations compatible for composition.}
+    \label{fig:example_rel_composable}
+\end{figure}
+Now, according to the rule in \cref{RelCompRule}, the composition~$R \then S \subseteq \Obja \times \Objc$ will be such that~$\tup{\obja,\objc} \in R \then S$ if and only if there exists some~$\objb \in \Objb$ such that~$\tup{\obja,\objb} \in R$ and~$\tup{\objb,\objc} \in S$, which, graphically, means that for~$\tup{\obja,\objc}$ to be an element of the relation~$R \then S$,~$\obja$ and~$\objb$ need to be connected by at least one sequence of two arrows such that the target of the first arrow is the source of the second. For example, in \cref{fig:example_rel_composable}, there is an arrow from~$\obja_2$ to~$\objb_3$, and from there on to~$\objc_1$, and therefore, in the composition~$R \then S$ depicted in \cref{fig:example_rel_composed}, there is an arrow from~$\obja_2$ to~$\objc_1$.
+\begin{figure}[h!]
+    \centering
+    \includesag{30_rel_3}
+%\includegraphics[width=0.5\linewidth]{pics/dist_net_10.png}
+    \caption{Composition of relations.}
+    \label{fig:example_rel_composed}
+\end{figure}
+
+\begin{remark}
+    Relations with the same source and target can be \emph{compared} via inclusion. Given~$R\subseteq X\times Y$ and~$R'\subseteq X\times Y$, we can ask whether~$R\subseteq R'$ or~$R'\subseteq R$.
+\end{remark}
+A question on your mind at this point might be: what is the relationship between relations and functions? One point of view is that functions are special kinds of relations.
+
+\begin{definition}[Functions as relations]
+    \label{def:functions_as_relations}
+    Let~$\Obja$ and~$\Objb$ be sets. A \iindex{relation}~$R \subseteq \Obja \times \Objb$ is a \textbf{\iindex{function}} if it satisfies the following two conditions:
+    \begin{enumerate}
+        \item $\forall \obja \in \Obja \quad \exists \ \objb \in \Objb\colon  \ \tup{\obja,\objb} \in R$
+        \item $\forall \tup{\obja_1, \objb_1}, \tup{\obja_2, \objb_2} \in R  \text{ holds}\colon \quad \obja_1 = \obja_2 \Rightarrow \objb_1 = \objb_2$.
+    \end{enumerate}
+\end{definition}
+
+What does this definition have to do with the ``usual'' way that we think about functions?
+
+Let start with a relation~$R \subseteq \Obja \times \Objb$ satisfying the conditions of \cref{def:functions_as_relations}. We'll build from it a function~$f_R \colon \Obja \to \Objb$. Choose an arbitrary $\obja \in \Obja$. According to point $1.$ in \cref{def:functions_as_relations}, there exists a~$\objb \in \Objb$ such that~$\tup{\obja,\objb} \in R$. So let's choose such a~$\objb$, and call it~$f_R(\obja)$. This gives us recipe to get from any~$\obja$ to a~$\objb$. But maybe you are worried: given a specific~$\obja \in \Obja$, what if we choose~$\objb$ differently each time we apply the recipe? Point~$2.$ guarantees that this can't happen: it says that the element~$f_R(\obja)$ that we associate to a given~$\obja \in \Obja$ is in fact uniquely determined by that~$\obja$. Put another way, the condition~$2.$ says: if~$f_R(\obja_1) \neq f_R(\obja_2)$, then~$\obja_1 \neq _2$.
+
+Given a function~$f \colon \Obja \rightarrow \Objb$, we can turn it into a relation in a simple way: we consider its graph
+\begin{equation*}
+    R_f \coloneqq \text{graph}(f) = \{ \tup{\obja,\objb} \in \Obja \times \Objb \mid \objb= f(\obja) \}.
+\end{equation*}
+The relation~$R_f$ encodes the same information that~$f$ encodes -- simply in a different form.
+
+In this text, we take \cref{def:functions_as_relations} as our rigorous definition of a what a function is. Nevertheless, we'll often use functions ``in the usual way'', \text{e.g.} we'll write things like~$\objb = f(\obja)$.
+
+Another question you may be wondering about is this: if we define functions as special kinds of relations, how then do we define the composition of functions? The answer is that we compose functions simply by the rule for composing relations.
+
+\begin{lemma}
+    \label{lem:comprelfun}
+    Let $R \subseteq \Obja \times \Objb$ and~$S \subseteq \Objb \times \Objc$ be relations which are functions. Then their composition~$R \then S \subseteq \Obja \times \Objc$ is again a function.
+\end{lemma}
+
+\begin{proof}
+    We check that~$R \then S$ satisfies the two conditions stated in \cref{def:functions_as_relations}.
+
+    \begin{enumerate}
+        \item Choose an arbitrary $\obja \in \Obja$. We need to show that there exists~$\objc \in \Objc$ such that~$\tup{\obja,\objc} \in R \then S$. Since~$R$ is a function, there exists~$\objb \in \Objb$ such that~$\tup{\obja,\objb} \in R$. Choose such a~$\objb \in \Objb$. Then, because~$S$ is a function, there exists~$\objc \in \Objc$ such that~$\tup{\objb,\objc} \in S$. By the definition of composition of relations, we see that~$\objc$ is such that~$\tup{\obja,\objc} \in R \then S$.
+        \item Let~$\tup{\obja_1, \objc_1}$,~$\tup{\obja_2,\objc_2} \in R \then S$. We need to show that if~$\obja_1 = \obja_2$, then~$\objc_1 = \objc_2$. So suppose~$\obja_1 = \obja_2$. Since~$\tup{\obja_1, \objc_1}$,~$\tup{\obja_2,\objc_2} \in R \then S$, there exist~$\objb_1, \objb_2 \in \Objb$ such that, respectively,
+        \begin{equation*}
+            \tup{\obja_1, \objb_1} \in R \text{ and } \tup{\objb_1, \objc_1} \in S,
+        \end{equation*}
+        \begin{equation*}
+            \tup{\obja_2, \objb_2} \in R \text{ and } \tup{\objb_2, \objc_2} \in S.
+        \end{equation*}
+        Since~$\obja_1 = \obja_2$ and~$R$ is a function, we conclude that~$\objb_1 = \objb_2$ must hold. Now, since~$S$ is also a function, this implies that~$\objc_1 = \objc_2$, which is what was to be shown.
+    \end{enumerate}
+\end{proof}
+
+\begin{example}
+    Can we have a function (or relation) whose source is the empty set~$\emptyset$? Given any set~$\Objb$, such a relation would be of the form~$R\subseteq \emptyset \times \Objb \coloneqq \emptyset$. This implies that~$R=\emptyset$. We now need to check whether~$R=\emptyset$ corresponds to a function~$\emptyset\to \Objb$:
+    \begin{compactitem}
+        \item For all~$\obja\in \Obja=\emptyset$, $\exists \objb \in \Objb$ such that $\tup{\obja,\objb}\in R$ (trivially satisfied).
+        \item Clearly, given~$\tup{\obja,\objb}, \tup{\obja',\objb'}\in R=\emptyset$, having~$\obja=\obja'$ implies~$\objb=\objb'$.
+    \end{compactitem}
+    Therefore, the answer to the original question is yes.
+\end{example}
+
+\begin{example}
+    Can we have a function (or relation) whose target is the empty set~$\emptyset$? Again, given any set~$\Obja$, such a relation would be of the form~$R\subseteq \Obja\times \emptyset\coloneqq \emptyset$. This, again, implies~$R\emptyset$. We now need to check whether~$R=\emptyset$ corresponds to a function~$\Obja \to \emptyset$:
+    \begin{itemize}
+        \item For all~$\obja\in \Obja$, $\exists \objb\in \Objb=\emptyset$ such that~$\tup{x,y}\in R$? Unless~$X=\emptyset$, this is not satisfied.
+    \end{itemize}
+    Therefore, given~$X\neq \emptyset$, there is no function (or relation)~$X\to \emptyset$.
+\end{example}
+
+\begin{definition}[Properties of a relation]
+    \label{def:rel_properties}
+    Let~$R\subseteq \Obja \times \Objb$ be a relation.~$R$ is:
+    \begin{compactenum}
+        \item \emph{Surjective} if~$\forall \objb\in \Objb \ \exists \obja\in \Obja\colon \tup{x,y}\in R$;
+        \item \emph{Injective} if~$\forall \tup{\obja_1,\objb_1},\tup{\obja_2,\objb_2}\in R$ it holds:~$\objb_2=\objb_2 \Rightarrow \obja_1=\obja_2$;
+        \item \emph{Defined-everywhere} if~$\forall \obja\in \Obja \ \exists \objb \in \Objb\colon \tup{x,y}\in R$;
+        \item \emph{Single-valued} if~$\forall \tup{\obja_1,\objb_1},\tup{\obja_2,\objb_2}\in R$ it holds:~$\obja_1=\obja_2\Rightarrow \objb_1=\objb_2$.
+    \end{compactenum}
+\end{definition}
+
+\begin{example}
+    The relation depicted in \cref{fig:example_rel} is injective but not surjective, i.e. if~$\tup{x,y},\tup{x',y'}\in R$ and~$y=y'$, then~$x=x'$.
+\end{example}
+
+One can notice a certain duality in the properties listed in \cref{def:rel_properties}. This is made more precise through the following definition.
+
+\begin{definition}[Transpose of a relation]
+    \label{def:relation-transpose}
+    Let~$R\subseteq \Obja\times \Objb$ be a relation. The \emph{transpose} (or \emph{opposite}, \emph{reverse}) of~$R$ is the relation given by:
+    \begin{equation*}
+        R^\intercal \coloneqq \{\tup{\objb,\obja}\in \Objb\times \Obja \mid \tup{\obja,\objb}\in R \}.
+    \end{equation*}
+    note that~$R^\intercal\colon \Objb\to \Obja$, while~$R\colon \Obja\to \Objb$.
+\end{definition}
+\begin{remark}
+    In the following, we list some properties which refer to relations and their opposites. It is a good exercise to prove them:
+    \begin{compactitem}
+        \item $\left( R^\intercal\right)^\intercal =R$;
+        \item If~$R$ is everywhere-defined, then~$R^\intercal$ is surjective;
+        \item If~$R$ is single-valued, then~$R^\intercal$ is injective.
+        \item If~$R$ is everywhere defined, then~$\id_\Obja\subseteq R\then R^\intercal$;
+        \item If~$R$ is single-valued, then~$R^\intercal\then R\subseteq \id_\Objb$.
+    \end{compactitem}
+\end{remark}
+
+\begin{remark}
+    The aforementioned duality can be seen by ``reading the relations (arrows) backwards'' (\cref{fig:rel_transpose}).
+\end{remark}
+
+\begin{figure}[h!]
+    \centering
+    \includesag{030_rel_transpose}
+    \caption{\label{fig:rel_transpose}}
+\end{figure}
+
+\begin{definition}[Endorelation]
+    \label{def:endorelation}
+    An \emph{\iindex{endorelation}} on a set~$\Obja$ is a relation~$R\subseteq \Obja\times \Obja$.
+\end{definition}
+
+\begin{example}
+    ``Equality'' is an endoleation of the form
+    \begin{equation*}
+        \{\tup{x_1,x_2}\in X\times X\mid x_1=x_2\}.
+    \end{equation*}
+\end{example}
+
+\begin{example}
+    Take~$X=\natnumbers$. The relation ``less than or equal'' is an endorelation of the form
+    \begin{equation*}
+        \{\tup{m,n}\in \natnumbers\times \natnumbers\mid m\leq n\}.
+    \end{equation*}
+\end{example}
+
+\begin{example}
+    The relation depicted in \cref{fig:power_internodal} is an endorelation between the set of high voltage nodes.
+\end{example}
+
+\begin{definition}[Properties of endorelations]
+    \label{def:properties-endorelations}
+    Let~$R\subseteq \Obja\times \Obja$ be an endorelation.~$R$ is:
+    \begin{compactitem}
+        \item \emph{Symmetric} if~$\forall \obja, \obja'\in X\colon \tup{\obja,\obja'}\in R \Leftrightarrow \tup{\obja',\obja}\in R$;
+        \item \emph{Reflexive} if~$\forall \obja\in \Obja\colon \tup{\obja,\obja}\in R$;
+        \item \emph{Transitive} if~$\forall \tup{\obja,\obja'}\in R$ and~$\tup{\obja',\obja''}\in R$, we have~$\tup{\obja, \obja''}\in R$.
+    \end{compactitem}
+\end{definition}
+
+\begin{example}
+    The relation ``less than or equal'' on~$\natnumbers$ is not symmetric. It is reflexive since~$n\leq n \ \forall n\in \natnumbers$, and it is transitive since~$l\leq m$ and~$m\leq n$ implies~$l\leq m$.
+\end{example}
+
+\begin{example}
+    The relation depicted in \cref{fig:power_internodal} is reflexive (each node is connected with itself).
+\end{example}
+
+\begin{example}
+    The endorelation reported in \cref{fig:ex_sym_rel} is a symmetric relation on~$X=\{x_1,x_2\}$.
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{030_ex_sym_rel}
+        \end{center}
+        \caption{Example of symmetric endorelation.}
+        \label{fig:ex_sym_rel}
+    \end{figure}
+\end{example}
+\begin{definition}[Equivalence relation]
+    \label{def:equivalence-relation}
+    An endorelation~$R\subseteq \Obja\times \Obja$ is an \emph{\iindex{equivalence relation}} if it is symmetric, reflexive, and transitive. We write~$\obja\sim \obja'$ if~$\tup{\obja,\obja'}\in R$.
+\end{definition}
+
+\begin{example}
+    The relation ``equals'' on~$\natnumbers$ is an equivalence relation. The relation ``less than or equal'' on~$\natnumbers$ is not.
+\end{example}
+
+\begin{example}
+    The relation ``has the same birthday as'' on the set of all people is an equivalence relation. It is symmetric, because if Anna has the same birthday as Bob, then Bob has the same birthday as Anna. It is reflexive because everyone has the same birthday as itself. It is transitive because if Anna has the same birthday as Bob, and Bob has the same birthday as Clara, then Anna has the same birthday as Clara.
+\end{example}
+
+\begin{example}
+    Let~$f\colon X\to Y$ be a function between sets. The following defines an equivalence relation:
+    \begin{equation*}
+        x\sim x'\Leftrightarrow f(x)=f(x').
+    \end{equation*}
+\end{example}
+
+\begin{definition}[Partition]
+    \label{def:partition}
+    A \emph{\iindex{partition}} of a set~$X$ is a collection~$\{X_i\}_{i\in I}$ of subsets~$X_i\subseteq X$ such that
+    \begin{compactenum}
+        \item $X_i\cap X_j=\emptyset \quad \forall i\neq j$;
+        \item $\bigcup_{i\in I}X_i=X$.
+    \end{compactenum}
+\end{definition}
+
+\begin{remark}
+    Equivalence relations are a way to group together elements of a set which we think of as ``the same'' in some respect. There is a one-to-one correspondence between equivalence relations on a set~$X$ and partitions on~$X$.
+\end{remark}
+
+\begin{example}
+    An example of partitions can be shown through information networks. An exemplary network is reported in \cref{fig:info_network}. Here, nodes represent data centers, and the arrows represent information flows. We say that data centers~$x$ and~$y$ are equivalent (i.e.,~$x\sim y$) if and only if there is a path from~$x$ to~$y$ and a path from~$y$ to~$x$. In this case, we have~$a\sim b$,~$e\sim d$, and all centers equivalent with themselves.
+\end{example}
+
+\begin{figure}[h!]
+    \begin{center}
+        \includesag{030_information_networks}
+    \end{center}
+    \caption{\label{fig:info_network}}
+\end{figure}
