@@ -10,34 +10,34 @@ In engineering design, we are interested not only in whether a certain functiona
 Let us define this query more precisely.
 For any design problem $\adp$, we can define a monotone function $h_\adp$ that sends a functionality $f \in F$ to the \emph{minimum} antichain of resources which provide~$f$:
 \begin{equation}
-\begin{aligned}
-h_\adp \colon F &\to \antichains R, \\
-f &\mapsto \Min \{ r \in R \colon \adp(f^*, r) = \true \}.
-\end{aligned}
+    \begin{aligned}
+        h_\adp \colon F &\to \antichains R, \\
+        f &\mapsto \Min \{ r \in R \colon \adp(f^*, r) = \true \}.
+    \end{aligned}
 \end{equation}
 
 \begin{definition}
-A design problem is \emph{computable} if an exact solution to $h_\adp$ can be computed in time polynomial in the computation time of its component design problems. If a design problem has no component design problems, then we say that it is \emph{primitive}.
+    A design problem is \emph{computable} if an exact solution to $h_\adp$ can be computed in time polynomial in the computation time of its component design problems. If a design problem has no component design problems, then we say that it is \emph{primitive}.
 \end{definition}
 
 In this section, we assume that all primitive design problems are computable, that is, $h_\adp$ terminates in finite time.
 
 % \AC{polynomial in what?} \JT{I wasn't sure, to be honest. I was hoping you could answer this. It seems like the most reasonable thing is to define it recursively it as ``time polynomial in the computation time of primitive design problems'', and ``A primitive design problem $\adp$ is computable if $h_\adp$ is a computable function.'' which roughly follows the logic in your original paper. [Is this a problem? Kleene converges in enormous time! You can't put any bound on it. It doesn't necessarily converges in polynomial time??? Need to think of this more.]}
 
-Is this map computable? In this section we will show that the answer is "no" in general, and we will find sufficient conditions for the answer to be "yes". The fact that \DP is compact closed, which we proved in Section~\ref{sec:compact_closed}, will help us describe and solve these optimization problems.
+Is this map computable? In this section we will show that the answer is "no" in general, and we will find sufficient conditions for the answer to be "yes". The fact that \DP is compact closed, which we proved in~\cref{sec:compact_closed}, will help us describe and solve these optimization problems.
 
 \subsection{Preliminaries on antichains}
 
 We now use the antichains machinery developed in~\cref{sec:chains-antichains}. For $P$ a poset, $\uppersets P$ denotes the set of upper sets, and $\antichains P$ the set of antichains.
 
- % We denote the smallest upper set in $P$ containing $p$ by $\uparrow(p) = \{ x \in P : p \leq x \} \in \uppersets P$.
+% We denote the smallest upper set in $P$ containing $p$ by $\uparrow(p) = \{ x \in P : p \leq x \} \in \uppersets P$.
 
 We will see $\antichains P$ itself as a poset, with the order given
- by
+by
 \begin{equation}
-  S \leq_{\antichains P} T  \quad \equiv \quad \uparrow S\, \supset\, \uparrow T,
+    S \leq_{\antichains P} T  \quad \equiv \quad \uparrow S\, \supset\, \uparrow T,
 \end{equation}
- where $\uparrow$ is the upper closure of the set (\cref{def:upperset}).
+where $\uparrow$ is the upper closure of the set (\cref{def:upperset}).
 
 The top element of the poset $\antichains P$ is the empty set $\emptyset$.
 
@@ -49,10 +49,10 @@ We \emph{almost} have a bijection between design problems and antichains.
 
 The natural bijection would be
 \begin{equation}
-\begin{aligned}
-\Hom_\DP(F,R) &\overset{?}{\leftrightarrow} \antichains (F\op \times R), \\
-\adp &\mapsto \Min K_\adp,
-\end{aligned}
+    \begin{aligned}
+        \Hom_\DP(F,R) &\overset{?}{\leftrightarrow} \antichains (F\op \times R), \\
+        \adp &\mapsto \Min K_\adp,
+    \end{aligned}
 \end{equation}
 where $K_d$ is the feasible set of $\adp$,
 and the map $\Min$ returns the minimal elements of the subset~(\cref{def:Min}).
@@ -63,16 +63,16 @@ Suppose we restrict to only subsets which are \emph{downward-closed}, i.e. $\Min
 
 \AC{
 
-I am not sure the above is what we want. This is more explicit:
+    I am not sure the above is what we want. This is more explicit:
 
-Suppose that we restrict to the upper sets that are downward-closed, in the sense
-that
-\begin{equation}
-    S = \ \uparrow \Min S.
-\end{equation}
+    Suppose that we restrict to the upper sets that are downward-closed, in the sense
+    that
+    \begin{equation}
+        S = \ \uparrow \Min S.
+    \end{equation}
 
-Are these equivalent?
-In any case I put that definition now as \cref{def:downward-closed-upperset}.
+    Are these equivalent?
+    In any case I put that definition now as \cref{def:downward-closed-upperset}.
 
 } \JT{They're not equivalent but on upper sets they're very close. Assume my definition, and let $\Min S = \O$, then $S = \O$, which does \emph{not} satisfy $S = \uparrow \Min S$. On the other hand, suppose $\Min S = K \neq \O$ for some set $K$. Then $S \neq \O$ trivially, and it remains to determine $\uparrow K$. But since $S$ is an upper set, every $s \in S$ satisfies $s \geq k$ for some $k \in K$, so $s \in \uparrow K$; on the other hand this is the same definition of a typical element $k \in \uparrow K$.
 
@@ -83,21 +83,23 @@ We say that a design problem $\adp : F \profto R$ is \emph{downward-closed} if $
 % In effect, this means that the set of feasible functionalities (a lower set in $F$) is closed under taking maximal elements and that the set of feasible resources (an upper set in $R$) is closed under taking minimal elements.
 
 \begin{lemma}
-There exists a bijection between the set $\Hom_{\underline{\DP}}(F,R)$ of downward-closed design problems $\adp : F \profto R$ and the set $\antichains (F\op \times R)$ of antichains of $F\op \times R$, %\AC{For the sets for which $\Min$, $\uppersets $ is a bijection, it is also an order isomorphism. I suspect this will be needed later.}
-\begin{equation}
-\begin{aligned}
-\Hom_{\underline{\DP}}(F,R) &\leftrightarrow \antichains (F\op \times R) \\
-\adp &\mapsto \Min K_\adp.
-\end{aligned}
-\end{equation}
+    There exists a bijection between the set $\Hom_{\underline{\DP}}(F,R)$ of downward-closed design problems $\adp : F \profto R$ and the set $\antichains (F\op \times R)$ of antichains of $F\op \times R$, %\AC{For the sets for which $\Min$, $\uppersets $ is a bijection, it is also an order isomorphism. I suspect this will be needed later.}
+    \begin{equation}
+        \begin{aligned}
+            \Hom_{\underline{\DP}}(F,R) &\leftrightarrow \antichains (F\op \times R) \\
+            \adp &\mapsto \Min K_\adp.
+        \end{aligned}
+    \end{equation}
 \end{lemma}
 \begin{proof}
-Every $\adp$ can be represented by its feasible set $K_\adp$, so $\Hom_\DP(F,R) \simeq \uppersets (F\op \times R)$. In effect, the proof comes down to the fact that antichains are compact representations of upper sets which are downward-closed. We will show that, for any poset $P$, there is a bijection between the antichains of $P$ and the set of upper sets of $P$ which are downward-closed.
+    Every $\adp$ can be represented by its feasible set $K_\adp$, so $\Hom_\DP(F,R) \simeq \uppersets (F\op \times R)$. In effect, the proof comes down to the fact that antichains are compact representations of upper sets which are downward-closed. We will show that, for any poset $P$, there is a bijection between the antichains of $P$ and the set of upper sets of $P$ which are downward-closed.
 
-Pick $A \in \antichains P$. Then $A$ generates an upper set $\uparrow A = \{ x \in P : a \leq x \text{ for some $a \in A$} \}$, and $\Min \uparrow A = A$. From the other direction, consider $\dcuppersets  P$, the set of upper sets of $P$ which are downward-closed. Pick a non-empty $U \in \dcuppersets  P$. Since $U$ is downward-closed, $\Min U$ is a non-empty antichain given by $\{ a \in \underline{U} : a \leq x \text{ for all $x \in \underline{U}$} \}$, and $\uparrow \Min \underline{U} = \underline{U}$.
+    Pick $A \in \antichains P$. Then $A$ generates an upper set $\uparrow A = \{ x \in P : a \leq x \text{ for some $a \in A$} \}$, and $\Min \uparrow A = A$. From the other direction, consider $\dcuppersets  P$, the set of upper sets of $P$ which are downward-closed. Pick a non-empty $U \in \dcuppersets  P$. Since $U$ is downward-closed, $\Min U$ is a non-empty antichain given by $\{ a \in \underline{U} : a \leq x \text{ for all $x \in \underline{U}$} \}$, and $\uparrow \Min \underline{U} = \underline{U}$.
 \end{proof}
 
-\begin{remark}Another way of looking at the bijection: a poset $P$ considered with respect to only those upper sets which are downward-closed is an approximation of a well-founded poset, a.k.a. a poset which satisfies the descending chain condition. In such posets, there is a well-known bijection between upper sets and antichains (assuming the axiom of dependent choice).\end{remark}
+\begin{remark}
+    Another way of looking at the bijection: a poset $P$ considered with respect to only those upper sets which are downward-closed is an approximation of a well-founded poset, a.k.a. a poset which satisfies the descending chain condition. In such posets, there is a well-known bijection between upper sets and antichains (assuming the axiom of dependent choice).
+\end{remark}
 
 \AC{I don't understand what "approximation" means here.} \JT{I wrote approximation because restricting attention to just those downward-closed upper sets was less strong than just assuming DCC on the whole poset (I think of it as focusing attention on parts of the poset while leaving the funky other parts blurred out), but allowed you to prove a similar bijection. But I'm not familiar with the arguments in terms of trees that Hamkin brought up, I'll think about this later.}
 
@@ -110,18 +112,17 @@ Why does this bijection matter?
 
 Looking at the definition of $h_\adp$:
 \begin{equation}
-\begin{aligned}
-h_\adp \colon F &\to \antichains R \\
-f &\mapsto \Min \then \{ r \in R \colon \adp(f^*, r) = \true \}
-\end{aligned}
+    \begin{aligned}
+        h_\adp \colon F &\to \antichains R \\
+        f &\mapsto \Min \then \{ r \in R \colon \adp(f^*, r) = \true \}
+    \end{aligned}
 \end{equation}
 
 Assuming $K_d \neq \emptyset$, one immediately observes that an exact solution exists if and only if $\adp$ is downward-closed. So the bijection tells us how to restrict to design problems which have exact solutions.  % Unfortunately, this bijection still has problems. Imagine if we take a subset with two minimal elements and then remove one of them. There may still be a set of feasible solutions in a neighborhood of the removed element that are not dominated by the leftover minimal solution, but $\Min$ would miss these solutions. It feels like we should also discount these kinds of situations?
 
-
 \subsubsection{Computability of design problems}
 
-A \emph{primitive} design problem is any design problem which is not constructed using any of the operators we have already defined. A primitive design problem $\adp$ is computable when $h_\adp$ is computable in polynomial time. % Almost any primitive design problem $\adp$ is computable in polynomial time, since computing $h_\adp$ amounts to querying a lookup table.
+A \emph{primitive} design problem is any design problem which is not constructed using any of the operators we have already defined. A primitive design problem $\adp$ is computable when $\ftor_\adp$ is computable in polynomial time. % Almost any primitive design problem $\adp$ is computable in polynomial time, since computing $h_\adp$ amounts to querying a lookup table.
 
 \AC{for the above: what is a "primitive" design problem?} \JT{See above.}
 
@@ -132,65 +133,65 @@ A \emph{primitive} design problem is any design problem which is not constructed
 Every combination of computable design problems we have so far looked at---excepting loop---can be easily seen to be computable:
 
 \begin{proposition}
-The composition, monoidal product, and coproduct of computable design problems are also computable.
+    The composition, monoidal product, and coproduct of computable design problems are also computable.
 \end{proposition}
 
 \begin{proof}
-These are direct properties of \DP.
+    These are direct properties of \DP.
 
-\AC{This is not really a proof, it is just a statement of facts without proofs.} \JT{Hmm I thought I was copying a proposition in your original paper but now that I go back I can't find it. In that case I will need to think about this a bit more. The issues are the $\Min$ in the composition and the coproduct in the cases with an infinite antichain.}
+    \AC{This is not really a proof, it is just a statement of facts without proofs.} \JT{Hmm I thought I was copying a proposition in your original paper but now that I go back I can't find it. In that case I will need to think about this a bit more. The issues are the $\Min$ in the composition and the coproduct in the cases with an infinite antichain.}
 
-\textbf{Composition}. Suppose $\adp_1 : A \profto B$ and $\adp_2 \colon B \profto C$. Then $h_{\adp_1\then \adp_2} $ is defined by
-\begin{equation}
-\begin{aligned}
-h_{\adp_1 \then \adp_2} \colon A &\to \antichains C \\
-a &\mapsto \Min \bigcup_{b \in h_{\adp_1}(a)} h_{\adp_2}(b).
-\end{aligned}
-\end{equation}
-Clearly this is computable if $h_{\adp_1}, h_{\adp_2}$ are computable.
+    \textbf{Composition}. Suppose $\adp_1 : A \profto B$ and $\adp_2 \colon B \profto C$. Then $h_{\adp_1\then \adp_2} $ is defined by
+    \begin{equation}
+        \begin{aligned}
+            h_{\adp_1 \then \adp_2} \colon A &\to \antichains C \\
+            a &\mapsto \Min \bigcup_{b \in h_{\adp_1}(a)} h_{\adp_2}(b).
+        \end{aligned}
+    \end{equation}
+    Clearly this is computable if $h_{\adp_1}, h_{\adp_2}$ are computable.
 
-\AC{Is it obvious that $\Min$ itself is computable?} \JT{See above.}
+    \AC{Is it obvious that $\Min$ itself is computable?} \JT{See above.}
 
-\textbf{Monoidal product}. Similarly with the monoidal product: if $\adp_1 \colon A \profto C$ and $\adp_2 \colon B \profto D$, then $h_{\adp_1 \otimes \adp_2}$ is defined by
-\begin{equation}
-\begin{aligned}
-h_{\adp_1 \otimes \adp_2} \colon (A \times B) &\to \antichains (C \times D) \\
-\langle a, b \rangle &\mapsto h_{\adp_1}(a) \times h_{\adp_2}(b)
-\end{aligned}
-\end{equation}
+    \textbf{Monoidal product}. Similarly with the monoidal product: if $\adp_1 \colon A \profto C$ and $\adp_2 \colon B \profto D$, then $h_{\adp_1 \otimes \adp_2}$ is defined by
+    \begin{equation}
+        \begin{aligned}
+            h_{\adp_1 \otimes \adp_2} \colon (A \times B) &\to \antichains (C \times D) \\
+            \langle a, b \rangle &\mapsto h_{\adp_1}(a) \times h_{\adp_2}(b)
+        \end{aligned}
+    \end{equation}
 
-\textbf{Coproduct}. Similarly with the coproduct, for $\adp_1, \adp_2 : A \profto B$ below:
-\begin{equation}
-\begin{aligned}
-h_{\adp_1 + \adp_2} \colon  A &\to \antichains B \\
-\tup{a,b} &\mapsto \Min (h_{\adp_1}(a) \cup h_{\adp_2}(b)).
-\end{aligned}
-\end{equation}
+    \textbf{Coproduct}. Similarly with the coproduct, for $\adp_1, \adp_2 : A \profto B$ below:
+    \begin{equation}
+        \begin{aligned}
+            h_{\adp_1 + \adp_2} \colon  A &\to \antichains B \\
+            \tup{a,b} &\mapsto \Min (h_{\adp_1}(a) \cup h_{\adp_2}(b)).
+        \end{aligned}
+    \end{equation}
 
-\AC{This last one should be $\adp_1 + \adp_2$, not $\adp_1 \sqcup \adp_2$, right? } \JT{I think so; I'm not sure what the most recent notation is.}
+    \AC{This last one should be $\adp_1 + \adp_2$, not $\adp_1 \sqcup \adp_2$, right? } \JT{I think so; I'm not sure what the most recent notation is.}
 \end{proof}
 
 Loops are significantly harder. To see that we can compute them in finite time, we will need the following fact:
 \begin{lemma}
-If a design problem $\adp : F \profto R$ is downward-closed, then $h_\adp$ is Scott-continuous.
+    If a design problem $\adp : F \profto R$ is downward-closed, then $h_\adp$ is Scott-continuous.
 % Weaker version: If a design problem $\adp : F \tickar R$ is downward-closed, and $(f^*,r)$ is a minimal element of $K_\adp$, then $h_\adp$ is Scott-continuous at $f$, i.e. if $f = D^\uparrow$ is the supremum of some directed subset $D \subset F$, then $h_\adp(f) = h_\adp(D)^\uparrow$.
 \end{lemma}
 
 \begin{proof}
-Recall that a monotone function is \emph{Scott-continuous} if it preserves all directed suprema, i.e. if $D$ is a directed subset and $D^\uparrow$ is its supremum, then $f(D^\uparrow) = f(D)^\uparrow$. $\adp$ Scott-continuous just means that the supremum of any feasible, directed subset must also be feasible. If $\adp$ is downward-closed, then $\adp$ is Scott-continuous.
+    Recall that a monotone function is \emph{Scott-continuous} if it preserves all directed suprema, i.e. if $D$ is a directed subset and $D^\uparrow$ is its supremum, then $f(D^\uparrow) = f(D)^\uparrow$. $\adp$ Scott-continuous just means that the supremum of any feasible, directed subset must also be feasible. If $\adp$ is downward-closed, then $\adp$ is Scott-continuous.
 
-\AC{I am confused. In "$\adp$ Scott-continuous just means...", what does it
-mean for a DP to be Scott-continuous? Scott-continuous is a property of a map. } \JT{Recall that $\adp$ is defined to be a monotone map from a given poset $F\op \times R$ to \Bool. The sentence above is a direct translation of what it means for $\adp(D^\uparrow) = \adp(D)^\uparrow$, where $D \subset F\op \times R$.}
+    \AC{I am confused. In "$\adp$ Scott-continuous just means...", what does it
+    mean for a DP to be Scott-continuous? Scott-continuous is a property of a map. } \JT{Recall that $\adp$ is defined to be a monotone map from a given poset $F\op \times R$ to \Bool. The sentence above is a direct translation of what it means for $\adp(D^\uparrow) = \adp(D)^\uparrow$, where $D \subset F\op \times R$.}
 
- If $\adp$ is Scott-continuous, then $h_\adp$ is Scott-continuous, since $h_\adp$ only observes the lower boundary of the feasible set, which is controlled by the downward-closed condition.
+    If $\adp$ is Scott-continuous, then $h_\adp$ is Scott-continuous, since $h_\adp$ only observes the lower boundary of the feasible set, which is controlled by the downward-closed condition.
 \end{proof}
 
 For a design problem of the form $\adp : (B \times A) \profto (B \times C)$, $h_\adp : B \times A \to \antichains (B \times C)$ is defined as normal. For any input $a$ we define a recursion operator $\psi_{a,\adp}$ for $h_\adp$ by
 \begin{equation}
-\begin{aligned}
-\psi_{a,\adp} \colon \antichains (B \times C) &\to \antichains (B \times C) \\
-S &\mapsto \Min \bigcup_{\tup{b,c} \in S} \{ \tup{b',c'} \in h_\adp(b,a) \colon b' \leq b \}.
-\end{aligned}
+    \begin{aligned}
+        \psi_{a,\adp} \colon \antichains (B \times C) &\to \antichains (B \times C) \\
+        S &\mapsto \Min \bigcup_{\tup{b,c} \in S} \{ \tup{b',c'} \in h_\adp(b,a) \colon b' \leq b \}.
+    \end{aligned}
 \end{equation}
 %\begin{align*}
 %\psi_{a,\adp} : \antichains (B) &\to \antichains (B) \\
@@ -199,10 +200,10 @@ S &\mapsto \Min \bigcup_{\tup{b,c} \in S} \{ \tup{b',c'} \in h_\adp(b,a) \colon 
 
 In that case, $h_{\Tr \adp}$ is defined by
 \begin{equation}
-\begin{aligned}
-h_{\Tr \adp} \colon A &\to \antichains C \\
-a &\mapsto \Min \pi_C(\text{lfp}(\psi_{a,\adp})). \label{eq:magic}
-\end{aligned}
+    \begin{aligned}
+        h_{\Tr \adp} \colon A &\to \antichains C \\
+        a &\mapsto \Min \pi_C(\text{lfp}(\psi_{a,\adp})). \label{eq:magic}
+    \end{aligned}
 \end{equation}
 where $\pi_C \colon B \times C \to C$ is the projection on $C$.
 
@@ -221,14 +222,14 @@ To say that $\Tr \adp$ is computable is to say that the least fixed point $\text
 What's going on here?
 
 \begin{enumerate}
-\item First, calculate $h_\adp$ for some fixed, initial $\langle b_{\text{in}},a \rangle$. The goal is to compute the antichain of minimal elements $c \in C$ which provide $a$, across \emph{all} possible choices of $b_{\text{in}}$.
-\item Throw away all those minimal elements in $h_\adp(b_{\text{in}},a)$ that do not satisfy the trace constraint, $b_{\text{in}} \leq b_{\text{out}}$,\footnote{If the loop is composed with an addition behind the input, which is often the case, then this condition would change to reflect the addition.} where $b_{\text{out}} \in \pi_B(h_\adp(b_{\text{in}},a))$.
-\item At this point, we are left with an antichain $S \subset \antichains (B \times C)$ of minimal elements $\langle b_{\text{out}},c \rangle$ that satisfy the trace constraint, but the resources $c \in S|_C$ (which do not necessarily form an antichain) are not necessarily minimal with respect to the functionality $a$, since we might have chosen some other initial $b_{\text{in}}$ and gotten better results. Alternately, if we had started with the wrong $b_{\text{in}}$, the entire computation might have terminated with $\emptyset$.
+    \item First, calculate $h_\adp$ for some fixed, initial $\langle b_{\text{in}},a \rangle$. The goal is to compute the antichain of minimal elements $c \in C$ which provide $a$, across \emph{all} possible choices of $b_{\text{in}}$.
+    \item Throw away all those minimal elements in $h_\adp(b_{\text{in}},a)$ that do not satisfy the trace constraint, $b_{\text{in}} \leq b_{\text{out}}$,\footnote{If the loop is composed with an addition behind the input, which is often the case, then this condition would change to reflect the addition.} where $b_{\text{out}} \in \pi_B(h_\adp(b_{\text{in}},a))$.
+    \item At this point, we are left with an antichain $S \subset \antichains (B \times C)$ of minimal elements $\langle b_{\text{out}},c \rangle$ that satisfy the trace constraint, but the resources $c \in S|_C$ (which do not necessarily form an antichain) are not necessarily minimal with respect to the functionality $a$, since we might have chosen some other initial $b_{\text{in}}$ and gotten better results. Alternately, if we had started with the wrong $b_{\text{in}}$, the entire computation might have terminated with $\emptyset$.
 % [Andrea's example in the original paper seems to imply that the antichains are not necessarily feasible, rather than minimal.]
-\item Take the list of $b_{\text{out}}$ from Step 2 as the new $b_{\text{in}}$, and run through steps 1--2 in parallel for each new $b_{\text{in}}$. Take the union of the results, and take the $\Min$ of the union to obtain a new list of $b_{\text{out}}$. Each result will be a smaller antichain in $C$, i.e. a ``better'' result.
+    \item Take the list of $b_{\text{out}}$ from Step 2 as the new $b_{\text{in}}$, and run through steps 1--2 in parallel for each new $b_{\text{in}}$. Take the union of the results, and take the $\Min$ of the union to obtain a new list of $b_{\text{out}}$. Each result will be a smaller antichain in $C$, i.e. a ``better'' result.
 % Note that this requires that the minimal elements exist for arbitrary subsets, not just $K_\adp$. Motivates dcpo.
-\item Keep iterating Step 4 until the result converges to a least fixed point: the antichain of minimal elements $\langle b, c \rangle \in B \times C$ which provide $\langle b, a \rangle$, across \emph{all} possible choices of $b_{\text{in}}$.
-\item Lastly, given an antichain in $\antichains (B\times C)$, we need to convert it into an antichain $\antichains C$. The obvious way to do this is to project the antichain to $C$ and take the minimal elements of the projection.
+    \item Keep iterating Step 4 until the result converges to a least fixed point: the antichain of minimal elements $\langle b, c \rangle \in B \times C$ which provide $\langle b, a \rangle$, across \emph{all} possible choices of $b_{\text{in}}$.
+    \item Lastly, given an antichain in $\antichains (B\times C)$, we need to convert it into an antichain $\antichains C$. The obvious way to do this is to project the antichain to $C$ and take the minimal elements of the projection.
 
 
 % Typically, these results will look something like, assuming the biggest allowable b, find the smallest resources c.
@@ -280,11 +281,11 @@ To ensure that the least fixed point exists, we require that the posets $B, C$ (
 % We also require that $h_\adp$ be Scott-continuous, i.e. that it preserve these suprema.
 
 \begin{lemma}
-If $h_\adp$ is Scott-continuous, then so is $\psi_{a,\adp}$.
+    If $h_\adp$ is Scott-continuous, then so is $\psi_{a,\adp}$.
 \end{lemma}
 
 \begin{proof}
-The statement is Exercise 8.26 in Davey and Priestly \citeXXX.
+    The statement is Exercise 8.26 in Davey and Priestly \citeXXX.
 \end{proof}
 
 % Since \DP is compact closed, and in fact, by the lemma above, $\Hom_\underline{\DP}(A,B) \simeq \antichains (A\op \times B)$, we know that this is possible if we restrict to $\underline{\DP}$.
@@ -297,22 +298,20 @@ The statement is Exercise 8.26 in Davey and Priestly \citeXXX.
 % $\antichains B$ with a bottom element means that $B$ has to have all suprema, i.e. be upward-closed.
 
 \begin{proposition}
-If $\adp$ is downward-closed and $\antichains (B \times C)$ is a pointed dcpo, then $\Tr \adp$ is computable.
+    If $\adp$ is downward-closed and $\antichains (B \times C)$ is a pointed dcpo, then $\Tr \adp$ is computable.
 \end{proposition}
 
 \begin{proof}
-The proposition is a direct application of Ad\'amek's theorem for algebras over an endofunctor.
+    The proposition is a direct application of Ad\'amek's theorem for algebras over an endofunctor.
 
-Recall the statement of Ad\'amek's theorem for algebras over an endofunctor: let $\mathcal{C}$ be a category with an initial object $0$ and transfinite composition of length $\omega$, hence colimits of sequences $\omega \to \mathcal{C}$ (where $\omega$ is the first infinite ordinal), and suppose $F: \mathcal{C} \to \mathcal{C}$ preserves colimits of $\omega$-chains. Then the colimit $\gamma$ of the chain \[0 \overset{i}{\to} F(0) \overset{F(i)}{\to} \ldots \to F^{(n)}(0) \overset{F^{(n)}(i)}{\to} F^{(n+1)}(0) \to \ldots\] carries the structure of an initial $F$-algebra.
+    Recall the statement of Ad\'amek's theorem for algebras over an endofunctor: let $\mathcal{C}$ be a category with an initial object $0$ and transfinite composition of length $\omega$, hence colimits of sequences $\omega \to \mathcal{C}$ (where $\omega$ is the first infinite ordinal), and suppose $F: \mathcal{C} \to \mathcal{C}$ preserves colimits of $\omega$-chains. Then the colimit $\gamma$ of the chain \[0 \overset{i}{\to} F(0) \overset{F(i)}{\to} \ldots \to F^{(n)}(0) \overset{F^{(n)}(i)}{\to} F^{(n+1)}(0) \to \ldots\] carries the structure of an initial $F$-algebra.
 
-The category $\mathcal{C}$ is the poset $\antichains (B \times C)$, whose initial object is just the bottom element $\bot$. The colimit of a (possibly infinite) sequence or chain of elements in $\antichains (B\times C)$ is simply the supremum of that chain. The endofunctor $F$ is given by the recursion operator $\psi_{a,\adp} : \antichains (B\times C) \to \antichains (B\times C)$, and by the previous lemmas, $\psi_{a,\adp}$ is Scott-continuous, thus preserves suprema. Finally, under repeated applications of $\psi_{a,\adp}$, the colimit $\gamma$ (now defined in \Pos as opposed to $\antichains B$) of that sequence of monotone maps is the fixed point of $\psi_{a,\adp}$; the fact that it is an initial $F$-algebra---i.e. an element $S$ in the poset $\antichains (B\times C)$ that is ``initial'', i.e. $S \leq T$ for all $T \in \antichains B$---means that $\gamma$ is the least fixed point.
+    The category $\mathcal{C}$ is the poset $\antichains (B \times C)$, whose initial object is just the bottom element $\bot$. The colimit of a (possibly infinite) sequence or chain of elements in $\antichains (B\times C)$ is simply the supremum of that chain. The endofunctor $F$ is given by the recursion operator $\psi_{a,\adp} : \antichains (B\times C) \to \antichains (B\times C)$, and by the previous lemmas, $\psi_{a,\adp}$ is Scott-continuous, thus preserves suprema. Finally, under repeated applications of $\psi_{a,\adp}$, the colimit $\gamma$ (now defined in \Pos as opposed to $\antichains B$) of that sequence of monotone maps is the fixed point of $\psi_{a,\adp}$; the fact that it is an initial $F$-algebra---i.e. an element $S$ in the poset $\antichains (B\times C)$ that is ``initial'', i.e. $S \leq T$ for all $T \in \antichains B$---means that $\gamma$ is the least fixed point.
 \end{proof}
 
 \AC{I'm trusting you on the above.}
 
 Directed complete partial orders and Scott-continuous functions define their own category of design problems, $\DP_S$. We can think of $\DP_S$ as the subcategory of \DP whose morphisms preserve all sequential colimits.
-
-
 
 
 %\JT{Downward-closed $\adp$ means that $h_\adp$ has an exact solution. Can it say anything more? I would like to prove $\adp$ downward-closed implies $h_\adp$ Scott-continuous, but I'm not sure that result is true. Downward-closed is a local property about a particular subset of $F\op \times R$, namely $K_\adp$. $h_\adp$ being Scott-continuous is a global property about $F \times \antichains R$ that says something about \emph{all} directed subsets of $F \times \antichains R$ (so really about $\mathcal{P}(F) \times \mathcal{P}(\antichains R)$).
@@ -329,29 +328,27 @@ Directed complete partial orders and Scott-continuous functions define their own
 
 % It is also common to expect to find several solutions that do not nominate each other. Therefore, rather than looking for the ``best'' solution, what one can expect to find is a trade-off curve, or ``Pareto frontier'' of solutions.
 
-
 \subsubsection{Duality}
 
 
 We can also define the dual problem; suppose we fix a given resource $r \in R$ and ask for the \emph{maximal antichain} of functionalities that can be provided with $r$. Then we can define a function
 \begin{equation}
-\begin{aligned}
-g_\adp : R &\to \antichains F\op \\
-r &\mapsto \Min \; \{ f^* \in F\op : \adp(f^*, r) = \true \}
-\end{aligned}
+    \begin{aligned}
+        g_\adp : R &\to \antichains F\op \\
+        r &\mapsto \Min \; \{ f^* \in F\op : \adp(f^*, r) = \true \}
+    \end{aligned}
 \end{equation}
 with analogous properties to $h_\adp$.
 
 \AC{Do we know if $h_\adp$ computable implies $g_\adp$ computable?} \JT{I have not checked and am fine with removing this comment in the interests of time.}
 
-
 \subsubsection{To put back somewhere}
 Note that $h_\adp$ is a monotone function but is \emph{not} a design problem. Given that it is a monotone function, what happens if we try to turn it into a design problem? The conjoint of $h_\adp$ is given by
 \begin{equation}
-\begin{aligned}
-\hat h_\adp : F &\profto \antichains R \simeq \Hom_\DP(\ast, R) \\
-\langle f^*, S \rangle &\mapsto \antichains R(h_\adp(f), S) \leftrightarrow \bigwedge_{s\in S} \adp(f^*, s)
-\end{aligned}
+    \begin{aligned}
+        \hat h_\adp : F &\profto \antichains R \simeq \Hom_\DP(\ast, R) \\
+        \langle f^*, S \rangle &\mapsto \antichains R(h_\adp(f), S) \leftrightarrow \bigwedge_{s\in S} \adp(f^*, s)
+    \end{aligned}
 \end{equation}
 
 In other words, the conjoint of $h_\adp$ is an indicator function for subsets of feasible resources.

@@ -1,18 +1,21 @@
 % !TEX root = ../ACT4E-full.tex
-\begin{example}Consider a vehicle motor that weighs a certain amount but can also carry some weight (\cref{fig:examplefeedback}).
-\begin{figure}[h!]
-\begin{center}
-\includesag{50_motor1}
-\end{center}
-\caption{Example of feedback in design problems. \label{fig:examplefeedback}}
-\end{figure}
-In the diagram, we haven't added anything to the weight of the motor, so currently the only thing the motor is carrying is itself. Also, note that we are considering~$\text{CO}_2\op$ since we want to optimize toward \emph{less} CO$_2$. Fix a given amount of CO$_2$ and fuel. In that case, closing the loop corresponds to drawing a line~$(c^\ast = c)$ in the graph of~$\text{weight}\op \times \text{weight}$ and taking only solutions under the line in \cref{fig:weightcarrier}.
+\begin{example}
+    Consider a vehicle motor that weighs a certain amount but can also carry some weight (\cref{fig:examplefeedback}).
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{50_motor1}
+        \end{center}
+        \caption{Example of feedback in design problems. \todo{close the loop beloew} }
+        \label{fig:examplefeedback}
+    \end{figure}
+    In the diagram, we haven't added anything to the weight of the motor, so currently the only thing the motor is carrying is itself. Also, note that we are considering~$\text{CO}_2\op$ since we want to optimize toward \emph{less} CO$_2$. Fix a given amount of CO$_2$ and fuel. In that case, closing the loop corresponds to drawing a line~$(c^\ast = c)$ in the graph of~$\text{weight}\op \times \text{weight}$ and taking only solutions under the line in \cref{fig:weightcarrier}.
 \end{example}
 \begin{figure}[h!]
-\centering
-\includesag{50_carrier}
-\caption{The shaded area marks a portion of the feasibility set of a traced design problem, `motor'. Note that it is not an upper set in the subspace ``weight $\times$ weight'' of `motor'.}
-\label{fig:weightcarrier}
+    \centering
+    \includesag{50_carrier}
+    \caption{The shaded area marks a portion of the feasibility set of a traced design problem, `motor'. Note that it is not an upper set in the subspace ``weight $\times$ weight'' of `motor'. \todo{close the loop beloew}}
+    \label{fig:weightcarrier}
+
 \end{figure}
 
 Note that the shaded area is \emph{not} an upper set. This is admissible, since the actual feasible set of `motor' is a subset of CO$_2 \times$ fuel, and there, it is an upper set.
@@ -20,18 +23,24 @@ Note that the shaded area is \emph{not} an upper set. This is admissible, since 
 Suppose that we are given a design problem with a resource and a functionality of the same type $C$ (\cref{fig:extrace_1}).
 
 \begin{figure}[h!]
-\begin{center}
-\includesag{50_trace}
-\end{center}
-\caption{Design problem with a resource and a functionality of the same type. \label{fig:extrace_1}}
+    \begin{center}
+        \includesag{50_trace}
+    \end{center}
+    \caption{Design problem with a resource and a functionality of the same type.
+    \todo{have C be below so that we can close the looop below}
+    }
+    \label{fig:extrace_1}
 \end{figure}
 
 Can we ``close the loop'', as in the diagram reported in~\cref{fig:extrace_2}?
 \begin{figure}[h!]
-\begin{center}
-\includesag{50_trace2}
-\end{center}
-\caption{Closing the loop in the design problem. \label{fig:extrace_2}}
+    \begin{center}
+        \includesag{50_trace2}
+    \end{center}
+    \caption{Closing the loop in the design problem.
+    \todo{have C be below so that we can close the looop below}
+    }
+    \label{fig:extrace_2}
 \end{figure}
 
 It turns out that we can give a well-defined semantics to this loop-closing operation, which coincides with the notion of a \emph{trace} in category theory.
@@ -39,83 +48,84 @@ It turns out that we can give a well-defined semantics to this loop-closing oper
 The following is the formal definition of the trace operation for design problems.
 
 \begin{definition}[Trace of a design problem]
-\label{def:dp-trace}
-Given a design problem~$f\colon \F{C} \times \F{A} \profto \R{C} \times \R{B}$, we can define
-its \emph{trace}~$\Tr_{\F{A},\R{B}}^C(f) \colon \F{A} \profto \R{B}$ as follows:
+    \label{def:dp-trace}
+    Given a design problem~$f\colon \F{C} \times \F{A} \profto \R{C} \times \R{B}$, we can define
+    its \emph{trace}~$\Tr_{\F{A},\R{B}}^C(f) \colon \F{A} \profto \R{B}$ as follows:
 %
-\begin{equation}
-\label{eq:tracedef}
-\begin{aligned}
-	\Tr_{\F{A},\R{B}}^C(f) \colon  \F{A}\op \times \R{B} &\toinPos \Bool \\
-	\tup{\F{a}^*, \R{b}} &\mapsto \bigvee_{c\in C}
-		f(\tup{\F{a}^*, \R{c}},
-			\tup{\F{b}^*, \R{c}}).
-\end{aligned}
-\end{equation}
+    \begin{equation}
+        \label{eq:tracedef}
+        \begin{aligned}
+            \Tr_{\F{A},\R{B}}^C(f) \colon  \F{A}\op \times \R{B} &\toinPos \Bool \\
+            \tup{\F{a}^*, \R{b}} &\mapsto \bigvee_{c\in C}
+            f(\tup{\F{a}^*, \R{c}},
+            \tup{\F{b}^*, \R{c}}).
+        \end{aligned}
+    \end{equation}
 \end{definition}
 
 
 Think of drawing a loop as a way of writing down the following requirement: Something that produces~$C$ should not use up more of~$C$ than it produces.
 
-
 \paragraph{Trace axioms}
-We will show that the loop operation~$\Tr_{A,B}^C$ corresponds to the \emph{trace} in~\DP. Intuitively, forming a loop models the idea of feedback in a control-theoretic setting--the output of a process influences the choice of input--while the idea of ``trace'' of a monoidal category comes from the trace of a square matrix~$(\Tr A = \sum_i a_{ii})$, which defines the categorical trace in the (monoidal) category of vector spaces. The connection between the two is more apparent if one decomposes the trace of a square matrix as a set of properties that any linear map from a space to itself should satisfy. One can find the trace axioms in any standard text on category theory, e.g. \cite{maclane}; these are equivalent to certain diagrammatic conditions \cite{joyal96}, as in Table~\ref{fig:traceaxioms}.
+We will show that the loop operation~$\Tr_{A,B}^C$ corresponds to the \emph{trace} in~\DP.
+Intuitively, forming a loop models the idea of feedback in a control-theoretic setting--the output of a process influences the choice of input--while the idea of ``trace'' of a monoidal category comes from the trace of a square matrix~$(\Tr A = \sum_i a_{ii})$, which defines the categorical trace in the (monoidal) category of vector spaces.
+The connection between the two is more apparent if one decomposes the trace of a square matrix as a set of properties that any linear map from a space to itself should satisfy. One can find the trace axioms in any standard text on category theory, e.g. \cite{maclane}; these are equivalent to certain diagrammatic conditions \cite{joyal96}, as in \cref{tab:traceaxioms}.
 
 \begin{table}[h!]
-\begin{center}
-\adjustbox{max width=\textwidth}{
-\begin{tabular}{cc}
-Vanishing I&Vanishing II\\
-\includesag{50_vanishing_1a_1b}&\includesag{50_vanishing_2a_2b}\\
-Superposing&Yanking\\
-\includesag{50_superposing_1_2}&\includesag{50_yanking}
-\end{tabular}
-}
-\end{center}
+    \begin{center}
+        \adjustbox{max width=\textwidth}{
+            \begin{tabular}{cc}
+                Vanishing I                     & Vanishing II                    \\
+                \includesag{50_vanishing_1a_1b} & \includesag{50_vanishing_2a_2b} \\
+                Superposing                     & Yanking                         \\
+                \includesag{50_superposing_1_2} & \includesag{50_yanking}
+            \end{tabular}
+        }
+    \end{center}
     \caption{The trace axioms in diagrammatic form \cite{joyal96}.
-    \label{fig:traceaxioms}}
+    \label{tab:traceaxioms}}
 \end{table}
 
 
 
 
 \begin{lemma}
-Trace as in~\cref{def:dp-trace} satisfies the trace axioms. In other words,~$\tup{\DP, \otimes, \singleton, \sigma}$ is a traced monoidal category, with trace as in~\cref{eq:tracedef}.
+    Trace as in~\cref{def:dp-trace} satisfies the trace axioms. In other words,~$\tup{\DP, \otimes, \singleton, \sigma}$ is a traced monoidal category, with trace as in~\cref{eq:tracedef}.
 \end{lemma}
 \begin{proof}
-We have already shown that~$\tup{\DP,\otimes,\singleton,\sigma}$ is a symmetric monoidal category (\cref{lemma:symmetricmonoidaldp}).
-We prove the trace axioms one by one, starting from vanishing (\cref{eq:vanishing_1}, \cref{eq:vanishing_2}). Given any~$A,B\in \Ob_\DP$ and~$f\colon \F{A}\times \F{\singleton}\profto \R{B}\times \R{\singleton}$ in~\DP, we have
-\begin{equation}
-    \begin{aligned}
-        \Tr_{\F{A},\R{B}}^{\singleton}(f)(\F{a^*},\R{b})&=\bigvee_{c\in \singleton}f(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{c}})\\
-        &=f(\tup{\F{a},\F{1}}^*,\tup{\R{b},\R{1}})\\
-        &=f(\F{a}^*,\R{b}).
-    \end{aligned}
-\end{equation}
-Furthermore, for any morphism~$f\colon \F{A}\times \F{X}\times \F{Y} \profto \R{B}\times \R{X} \times \R{Y}$ in \DP, one has
-\begin{equation}
-    \begin{aligned}
-        \Tr_{\F{A},\R{B}}^{X\times Y}(f)(\F{a}^*,\R{b})&=\bigvee_{\tup{x,y} \in X\times Y} f(\tup{\F{a},\F{x},\F{y}}^*,\tup{\R{b},\R{x},\R{y}})\\
-        &=\bigvee_{x \in X}\left(\bigvee_{y \in Y} f(\tup{\F{a},\F{x},\F{y}}^*,\tup{\R{b},\R{x},\R{y}})\right)\\
-        &=\Tr_{\F{A},\R{B}}^X\left(
-        \Tr_{\F{A}\times \F{X},\R{B}\times \R{X}}^Y(f)(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\right).
-    \end{aligned}
-\end{equation}
-For the superposing axiom (\cref{eq:superposing}), consider~$f\colon \F{A}\times \F{X}\profto \R{B}\times \R{X}$ in \DP. One has
-\begin{equation}
-    \begin{aligned}
-        \Tr_{C\times \F{A},C\times \R{B}}^{X}(\id_C\otimes f)(\tup{\F{c_1},\F{a}}^*,\tup{\R{c_2},\R{b}})&=\bigvee_{x\in X} \id_C(\F{c_1}^*,\R{c_2})\wedge f(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\\
-        &=\id_C(\F{c_1}^*,\R{c_2}) \wedge \bigvee_{x\in X} f(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\\
-        &=(\id_C \otimes \Tr_{\F{A},\R{B}}^X(f))(\tup{\F{c_1},\F{a}}^*,\tup{\R{c_2},\R{b}}).
-    \end{aligned}
-\end{equation}
-Finally, for yanking (\cref{eq:yanking}) consider~$\sigma_{X,X}$. One has
-\begin{equation}
-    \begin{aligned}
-        \Tr_{X,X}^{X}(\sigma_{X,X})(\F{x_1}^*,\R{x_2})&=\bigvee_{x\in X} \sigma_{X,X}(\tup{\F{x_1},\F{x}}^*,\tup{\R{x},\R{x_2}}) \\
-        &=\bigvee_{x\in X} \F{x_1} \ordleq \R{x_2} \wedge \F{x}\ordleq \R{x}\\
-        &=\bigvee_{x\in X} \F{x_1} \ordleq \R{x_2}\\
-        &=\id_X(\F{x_1}^*,\R{x_2}).
-    \end{aligned}
-\end{equation}
+    We have already shown that~$\tup{\DP,\otimes,\singleton,\sigma}$ is a symmetric monoidal category (\cref{lemma:symmetricmonoidaldp}).
+    We prove the trace axioms one by one, starting from vanishing (\cref{eq:vanishing_1}, \cref{eq:vanishing_2}). Given any~$A,B\in \Ob_\DP$ and~$f\colon \F{A}\times \F{\singleton}\profto \R{B}\times \R{\singleton}$ in~\DP, we have
+    \begin{equation}
+        \begin{aligned}
+            \Tr_{\F{A},\R{B}}^{\singleton}(f)(\F{a^*},\R{b})&=\bigvee_{c\in \singleton}f(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{c}})\\
+            &=f(\tup{\F{a},\F{1}}^*,\tup{\R{b},\R{1}})\\
+            &=f(\F{a}^*,\R{b}).
+        \end{aligned}
+    \end{equation}
+    Furthermore, for any morphism~$f\colon \F{A}\times \F{X}\times \F{Y} \profto \R{B}\times \R{X} \times \R{Y}$ in \DP, one has
+    \begin{equation}
+        \begin{aligned}
+            \Tr_{\F{A},\R{B}}^{X\times Y}(f)(\F{a}^*,\R{b})&=\bigvee_{\tup{x,y} \in X\times Y} f(\tup{\F{a},\F{x},\F{y}}^*,\tup{\R{b},\R{x},\R{y}})\\
+            &=\bigvee_{x \in X}\left(\bigvee_{y \in Y} f(\tup{\F{a},\F{x},\F{y}}^*,\tup{\R{b},\R{x},\R{y}})\right)\\
+            &=\Tr_{\F{A},\R{B}}^X\left(
+            \Tr_{\F{A}\times \F{X},\R{B}\times \R{X}}^Y(f)(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\right).
+        \end{aligned}
+    \end{equation}
+    For the superposing axiom (\cref{eq:superposing}), consider~$f\colon \F{A}\times \F{X}\profto \R{B}\times \R{X}$ in \DP. One has
+    \begin{equation}
+        \begin{aligned}
+            \Tr_{C\times \F{A},C\times \R{B}}^{X}(\id_C\otimes f)(\tup{\F{c_1},\F{a}}^*,\tup{\R{c_2},\R{b}})&=\bigvee_{x\in X} \id_C(\F{c_1}^*,\R{c_2})\wedge f(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\\
+            &=\id_C(\F{c_1}^*,\R{c_2}) \wedge \bigvee_{x\in X} f(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\\
+            &=(\id_C \otimes \Tr_{\F{A},\R{B}}^X(f))(\tup{\F{c_1},\F{a}}^*,\tup{\R{c_2},\R{b}}).
+        \end{aligned}
+    \end{equation}
+    Finally, for yanking (\cref{eq:yanking}) consider~$\sigma_{X,X}$. One has
+    \begin{equation}
+        \begin{aligned}
+            \Tr_{X,X}^{X}(\sigma_{X,X})(\F{x_1}^*,\R{x_2})&=\bigvee_{x\in X} \sigma_{X,X}(\tup{\F{x_1},\F{x}}^*,\tup{\R{x},\R{x_2}}) \\
+            &=\bigvee_{x\in X} \F{x_1} \ordleq \R{x_2} \wedge \F{x}\ordleq \R{x}\\
+            &=\bigvee_{x\in X} \F{x_1} \ordleq \R{x_2}\\
+            &=\id_X(\F{x_1}^*,\R{x_2}).
+        \end{aligned}
+    \end{equation}
 \end{proof}
