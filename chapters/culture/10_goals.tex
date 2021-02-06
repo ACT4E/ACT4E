@@ -1,0 +1,35 @@
+
+\section{Definitional impetus vs. computational goals  }
+
+The category \Curr represents the set of all possible currency exchangers that could ever exist. However, in this set there would be very irrational agents.
+For example, there is a currency exchanger that, given 1 \USD, will give you back 2 \USD; there is one currency exchanger that corresponds to converting \USD to \CHF back and forth 21 times before getting you the money. There is even one that will not give you back any money.
+
+Moreover, using the composition operations we could produce many more morphisms. In fact, if there are loops, we could traverse the loops multiple times, and, depending on the numbers, finding new morphisms, possibly infinitely many more.
+
+This highlights a recurring topic: often mathematicians will be happy to define a broader category of objects, while, in practice, the engineer will find herself thinking about a more constrained set of objects.
+In particular, while the mathematician is more concerned with defining categories as hypothetical universes of things, the engineer is typically interested in representing concrete things, and solve some computational problem on the represented structure.
+
+For example, in the case of the currency exchangers, the problem might be that of finding the sequence of the best conversions between a source and a target currency.
+
+First, the engineer would add more constraints to the definition to work with more well-behaved objects. For example, it is reasonable to limit the universe of morphisms in such a way that the action of converting back and forth the same currency to have a cost (through the commission) higher than 0.
+
+% one would like to find the best conversions. These can be expressed as \emph{Pareto fronts}. To do so, one only needs to iterate a finite number of times, since the optimal path (conversion morphism), if such a morphism exists, will never pass through the same currency more than once. \JL{the previous sentence needs explaining}
+In that case, we will find that the optimal paths of currencies never pass through a currency more than once. To see this, consider three currencies~$\transmuted{A},\transmuted{B},\transmuted{C}$, a currency exchanger~$\tup{a,b}$ from~$\transmuted{A}$ to~$\transmuted{B}$ , a currency exchanger~$\tup{c,d}$ from~$\transmuted{B}$ to~$\transmuted{C}$ , and a currency exchanger~$\tup{e,f}$ from~$\transmuted{C}$ to~$\transmuted{A}$.
+The composition of the currency exchangers reads:
+\begin{equation*}
+    \tupp{\underbrace{eca}_{g}, \underbrace{ecb+ed+f}_{h}}.
+\end{equation*}
+Assuming~$e=a^{-1}$ (i.e., an exchange rate direction is not more profitable than the other), and~$h\neq 0$, because of the commissions one can show that there are multiple morphisms from~$\transmuted{A}$ to~$\transmuted{A}$, and that the identity morphism is the most ``convenient'' one.
+If we only pass through each currency at most once, there are only a finite amount of paths to check, and this might simplify the computational problem.
+
+Second, the engineer might be interested in keeping track only of the ``dominant'' currency exchangers.
+For example, if we have two exchangers with the same rate but different commission, we might want to keep track only of the one with the lowest commission.
+
+In the next chapters we will see that there are concepts that will be useful to model these situations:
+\begin{itemize}
+    \item There is a concept of \emph{subcategory} that allows to define more specific
+    categories of a parent one, in a way that still satifies the axioms.
+    \item There is a concept called \emph{locally posetal} categories, in which the
+    set of morphisms between two objects is assumed to be a \emph{poset} rather than a \emph{set},
+    that is, we assume that there is an order, and that this order will be compatible with the operation of composition.
+\end{itemize}
