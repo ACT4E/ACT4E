@@ -1,6 +1,7 @@
 
 \section{Databases, sets, functions}
 
+
 \todo{In this section, transmuted and transmuter are switched}
 
 \AC{I'm not sure about this example. I feel that if one is happy
@@ -32,6 +33,8 @@ Consider a table with columns $P \times X_1 \times X_2 \times \cdots X_n$,
 where $P$ is the primary key column. Then, given a key $p \in P$,
 we can obtain the value in the other columns. We first find the unique
 row with the key $p$, and then we read out the values.
+
+
 
 Therefore, a table with columns $P \times X_1 \times X_2 \times \cdots X_n$
 can be seen as a tuple $\tup{S, \{f_i\}_i}$:
@@ -68,41 +71,42 @@ In this example, we can consider the primary key to be the set
 \end{equation*}
 of models of motors. The other colums are given by the set
 \begin{equation*}
-    C \coloneqq \{ \transmuted{SOYO}, \transmuted{Sanyo Denki}\}
+    C \coloneqq \{ \transmuted{SOYO},\SanyoDenki\}
 \end{equation*}
-of manufacturing companies, the set~$S$ of possible motor sizes, the set~$W$ of possible weights, the set~$J$ of possible maximal powers, and the set~$P$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$M$ to set of possible values for the given attribute. For example, there is a function~$\transmuted{Company}\colon M \to C$ which maps each model to the corresponding company that manufactures it. So, according to \cref{tab:electric_motors}, we have \text{e.g.}~$\transmuted{Company}(\transmuted{1204}) = \transmuted{SOYO}$, and~$\transmuted{Company}(\transmuted{2279}) = \transmuted{Sanyo Denki}$, etc.
+of manufacturing companies, the set~$S$ of possible motor sizes, the set~$W$ of possible weights, the set~$J$ of possible maximal powers, and the set~$P$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$M$ to set of possible values for the given attribute. For example, there is a function~$\Company\colon M \to C$ which maps each model to the corresponding company that manufactures it. So, according to \cref{tab:electric_motors}, we have \text{e.g.}~$\Company(\transmuted{1204}) = \transmuted{SOYO}$, and~$\Company(\transmuted{2279}) =\SanyoDenki$, etc.
 
 Note that in ``real life'', the catalogue of motors might not have seven entries, as in \cref{tab:electric_motors}, but has in fact hundreds of entries, and is implemented digitally as a database, \text{i.e.} a collection of interrelated tables. In this case, we will want to be able to search and filter the data based on various criteria. Many natural operations on tables and databases may be described simply in terms of operations with functions. We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases.
 
-Sticking with \cref{tab:electric_motors}, suppose, for instance, that we want to consider only motors from Company~$\transmuted{Sanyo Denki}$. In terms of the function
+Sticking with \cref{tab:electric_motors}, suppose, for instance, that we want to consider only motors from Company~$\SanyoDenki$. In terms of the function
 \begin{equation*}
-    \transmuted{Company}\colon M \to C
+    \Company\colon M \to C
 \end{equation*}
-this corresponds to the preimage~$\transmuted{Company}^{-1}(\{ \transmuted{Sanyo Denki} \}) = \{ \transmuted{2279}, \transmuted{2299}\}$, which is a subset of the set~$M$. Or, we may want to consider only motors which cost between 40 and 200 USD. In terms of the obvious function
+this corresponds to the preimage~$\Company^{-1}(\{\SanyoDenki \}) = \{ \transmuted{2279}, \transmuted{2299}\}$, which is a subset of the set~$M$. Or, we may want to consider only motors which cost between 40 and 200 USD. In terms of the obvious function
 \begin{equation*}
-    \transmuted{Price}\colon M \to P,
+   \Price\colon M \to P,
 \end{equation*}
 this means we wish to restrict ourselves to the preimage
 \begin{equation*}
-    \transmuted{Price}^{-1}(\{ 49.95, 59.95, 164.95\}) = \{ \transmuted{1478}, \transmuted{2299}, \transmuted{2279} \} \subseteq M.
+   \Price^{-1}(\{ 49.95, 59.95, 164.95\}) = \{ \transmuted{1478}, \transmuted{2299}, \transmuted{2279} \} \subseteq M.
 \end{equation*}
 
-Now suppose we wish to add a column to our table for ``volume'', because we may want to only consider motors that have, at most, a certain volume. For this we define a set~$V$ of possible volumes (let's take~$V = \reals_{\geq 0}$, the non-negative real numbers), and define a function
+Now suppose we wish to add a column to our table for ``volume'', because we may want to only consider motors that have, at most, a certain volume.
+For this we define a set~$V$ of possible volumes (let's take~$V = \nonNegReals$, the non-negative real numbers), and define a function
 \begin{equation*}
     \begin{aligned}
-        \transmuted{Multiply}\colon S &\to V\\
+        \Multiply \colon S &\to V\\
         \tup{l, w, h} &\mapsto l \cdot w \cdot h,
     \end{aligned}
 \end{equation*}
 which maps any size of motor to its corresponding volume by multiplying together the given numbers for length, width, and heigth. Now we can compose this function with the function
 \begin{equation*}
-    \transmuted{Size}\colon M \to S
+    \Size \colon M \to S
 \end{equation*}
 to obtain a function
 \begin{equation*}
-    \transmuted{Volume}\colon M \to V,
+    \Volume\colon M \to V,
 \end{equation*}
-which defines a new column in our table. The composition of functions is usually written as~$\transmuted{Volume} = \transmuted{Multiply} \circ \transmuted{Size}$, however we stick to our convention of writing~$\transmuted{Volume} = \transmuted{Size} \then \transmuted{Multiply}$. Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
+which defines a new column in our table. The composition of functions is usually written as~$\Volume = \Multiply  \circ \Size $, however we stick to our convention of writing~$\Volume = \Size  \then \Multiply $. Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
 
 %We call such a diagram \textbf{commutative}, because the composition $\mathsf{Size} \then \mathsf{Multiply}$ is equal to the function $\mathsf{Volume}$ (in fact, we defined $\textsf{Volume}$ this way).
 
@@ -114,4 +118,4 @@ which defines a new column in our table. The composition of functions is usually
     \caption{A diagram of functions. \label{fig:diagram_functions}}
 \end{figure}
 
-We can interpret arrows in this diagram as being part of a category, where~$M$,~$S$, and~$V$ are among the objects, and where the functions~$\transmuted{Size}$, $\transmuted{Multiply}$ and~$\transmuted{Volume}$ are morphisms. We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category, which we call $\Cat{Database}$, in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before. And we might not want to re-think each time precisely which category we are working with.
+We can interpret arrows in this diagram as being part of a category, where~$M$,~$S$, and~$V$ are among the objects, and where the functions~$\Size$, $\Multiply$ and~$\Volume$ are morphisms. We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category, which we call $\Cat{Database}$, in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before. And we might not want to re-think each time precisely which category we are working with.
