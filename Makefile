@@ -7,11 +7,14 @@ all:
 
 tmpdir=tmp
 
-%.pdf: %.tex
-	rm -f $*.aux $(tmpdir)/$*.aux
-	latexmk -pdflatex -outdir=$(tmpdir) -f $<
-	cp $(tmpdir)/$*.pdf $@
+#%.pdf: %.tex
+#	rm -f $*.aux $(tmpdir)/$*.aux
+#	latexmk -pdflatex -outdir=$(tmpdir) -f $<
+#	cp $(tmpdir)/$*.pdf $@
 
+%.pdf: %.tex
+	#rm -f $*.aux
+	latexmk -pdflatex   -f $<
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log CategoricalCoDesign.pdf *.aux *.dvi *.out *.maf *.mtc* *.ptc*
@@ -76,3 +79,11 @@ standalone:\
 
 %/standalone.tex:
 	cp template-standalone.tex $@
+
+
+twovolumes:
+	make -B ACT4E-vol1.pdf
+	make -B ACT4E-vol2.pdf
+	make -B ACT4E-vol1.pdf
+	make -B ACT4E-vol2.pdf
+
