@@ -14,7 +14,7 @@ tmpdir=tmp
 
 
 clean:
-	rm -f *.fdb_latexmk *.fls *.log CategoricalCoDesign.pdf *.aux *.dvi *.out
+	rm -f *.fdb_latexmk *.fls *.log CategoricalCoDesign.pdf *.aux *.dvi *.out *.maf *.mtc* *.ptc*
 
 
 ready: ACT4E-ready.pdf
