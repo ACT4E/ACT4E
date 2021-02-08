@@ -1,0 +1,108 @@
+% !TEX root = standalone.tex
+
+
+\section{Problem statement and summary of results}
+\label{sec:Optimization}
+
+Given an arbitrary graph of design problems, and assuming we know
+how to solve each problem separately, we ask whether we can solve
+the \emph{co-design} problem optimally.
+\begin{problem}
+    \label{prob:MCDP}Suppose that we are given a CDPI~$\tup{ \funsp,\ressp,\tup{ \cdpiN,\mathcal{E}} } ,$
+    and that we can evaluate the map~$\ftor_{\cdpin}$ for all~$\cdpin\in\cdpiN$.
+    Given a required functionality~$\fun\in\funsp$, we wish to find
+    the \emph{minimal} resources in~$\ressp$ for which there exists
+    a feasible implementation vector that makes all sub-problems feasible
+    at the same time and all co-design constraints satisfied; or, if
+    none exist, provide a certificate of infeasibility.
+\end{problem}
+In other words, given the maps~$\{\ftor_{\cdpin},\,\cdpin\in\cdpiN\}$
+for the subproblems, one needs to evaluate the map~$\ftor:\funsp\rightarrow\Aressp$
+for the entire CDPI (\cref{fig:question}).
+
+\captionsideleft{\label{fig:question}}{
+    \includegraphics[width=7cm]{gmcdptro_question}
+}
+
+The rest of the paper will provide a solution to~\cref{prob:MCDP},
+under the following assumptions:
+
+\begin{enumerate}
+    \item The posets $\funsp,\ressp$ are complete partial orders (\cref{def:cpo}).
+    \item The maps~$\ftor$ is \scottcontinuous (\cref{def:scott}).
+\end{enumerate}
+
+\subsection{Expressivity of MCDPs}
+
+The results are significant because MCDPs induce a rich family of
+optimization problems.
+
+We are not assuming, let alone strong properties like convexity, even
+weaker properties like differentiability or continuity of the constraints.
+In fact, we are not even assuming that functionality and resources
+are continuous spaces; they could be arbitrary discrete posets. (In
+that case, completeness and \scottcontinuity are trivially satisfied.)
+
+Moreover, even assuming topological continuity of all spaces and maps
+considered, MCDPs are strongly not convex. What makes them nonconvex
+is the possibility of introducing feedback interconnections. To show
+this, I will give an example of a 1-dimensional problem with a continuous~$\ftor$
+for which the feasible set is disconnected.
+
+\begin{figure}[h]
+    \hfill
+    \subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.33]{gmcdptro_nonconvex1b}}
+    \hfill
+    \subfloat[\label{fig:nonconvex3}]{\centering{}\includegraphics[scale=0.33]{gmcdptro_nonconvex3}}
+    \hfill
+    \caption{One feedback connection and a topologically continuous~$\ftor$
+        are sufficient to induce a disconnected feasible set.}
+    \label{fig:ceil-1}
+\end{figure}
+
+\medskip{}
+
+\begin{example}
+    \label{exa:one}
+    Consider the CDPI in \cref{fig:Simple-DP}. The \uline{m}inimal resources~$M\subseteq\Aressp$ are the objectives of this optimization problem:
+    \[
+        M\doteq\begin{cases}
+                   \with & \fun,\res\in\funsp=\ressp,\\
+                   \Min_{\posleq} & \res,\\
+                   & \res\in\ftor(\fun),\\
+                   & \res\posleq\fun.
+        \end{cases}
+    \]
+    The \uline{fea}sible set~$\Phi\subseteq\funsp\times\ressp$ is
+    the set of functionality and resources that satisfy the constraints~$\res\in\ftor(\fun)$
+    and~$\res\posleq\fun$:
+    \begin{equation}
+        \Phi=\left\{ \langle\fun,\res\rangle\in\funsp\times\ressp:(\res\in\ftor(\fun))\wedge(\res\posleq\fun)\right\} .\label{eq:feasible}
+    \end{equation}
+    The \uline{p}rojection~$P$ of~$\Phi$ to the functionality space
+    is:
+    \[
+        P=\left\{ \fun\mid\left\langle \fun,\res\right\rangle \in\Phi\right\}.
+    \]
+    In the scalar case ($\funsp=\ressp=\langle\nonNegRealsComp,\leq\rangle$),
+    the map~$\ftor\colon\funsp\rightarrow\Aressp$ is simply a map~$\ftor\colon\F{\nonNegRealsComp}\rightarrow\R{\nonNegRealsComp}$.
+    The set~$P$ of feasible functionality is described by
+    \begin{equation}
+        P=\{\fun\in\nonNegRealsComp:\ftor(\fun)\leq\fun\}.\label{eq:Pfeasible}
+    \end{equation}
+    \cref{fig:nonconvex3} shows an example of a continuous map~$\ftor$
+    that gives a disconnected feasible set~$P$. Moreover, $P$ is disconnected
+    under any order-preserving nonlinear re-parametrization.
+
+\end{example}
+
+\subsection{Approach}
+
+The strategy to obtain these results consists in reducing an arbitrary
+interconnection of design problems to considering only a finite
+number of composition operators (series, parallel, and feedback).
+\cref{sec:threeoperators} defines these composition operators. \cref{sec:Decomposition}~shows
+how to turn a graph into a tree, where each junction is one of the
+three operators. Given the tree representation of an MCDPs, we will
+be able to give inductive arguments to prove the results.
+

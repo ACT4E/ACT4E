@@ -1,7 +1,8 @@
-\section{Querying a DPI}
+% !TEX root = standalone.tex
+\section{Queries}
 \label{sec:design-problems-querying}
 
-A DP is a model that induces a family of optimization problems.
+A DPI is a model to which we can associate a family of optimization problems.
 
 \todo{Connect with discussion at beginning of the part.}
 
@@ -9,7 +10,7 @@ One query is
 ``Given a lower bound on the functionality~\fun, what
 are the implementations that have minimal resources usage?''~(\cref{fig:setup-1}).
 
-\begin{problem}[FixFunMinReq]
+\begin{problem}[\FixFunMinReq]
     \label{prob:problem1}Given~$\fun\in\funsp$, find the implementations
     in~$\impsp$ that realize the functionality~\fun (or higher)
     with minimal resources, or provide a proof that there are none:
@@ -22,6 +23,7 @@ are the implementations that have minimal resources usage?''~(\cref{fig:setup-1}
         \end{cases}\label{eq:objective}
     \end{equation}
 \end{problem}
+\todo{re-do figure}
 \captionsideleft{\label{fig:setup-1}}{\includegraphics[scale=0.33]{gmcdp_setup_query_f}}
 
 
@@ -46,7 +48,7 @@ The formulation is entirely dual, in the sense that it is obtained
 from \cref{eq:objective} by swapping~$\Min$ with~$\Max$, $\funsp$~with~$\ressp$,
 and $\prov$~with~$\req$.
 
-\begin{problem}[FixResMinFun]
+\begin{problem}[\FixResMinFun]
     Given~$\res\in\ressp$, find the implementations
     in~$\impsp$ that requires~\res (or lower)
     and provide the maximal functionality, or provide a proof that there are none:
@@ -62,3 +64,27 @@ and $\prov$~with~$\req$.
 
 \captionsideleft{\label{fig:setup_max_f}}{\includegraphics[scale=0.4]{gmcdp_setup_query_r}}
 
+
+Another type of query is
+``Given a lower bound on the functionality~\fun
+and an upper bound on the costs~\fun, what are the feasible implementations?
+
+
+\begin{problem}[\FeasibleImp]\label{prob:FeasibleImp}
+    Given~$\fun\in\funsp$ and $\res\in\ressp$, find the implementations
+    in~$\impsp$ that requires~\res (or lower)
+    and provide~\fun (or higher)
+    \begin{equation}
+        \begin{cases}
+            \with & \imp\in\impsp,\\
+            \subto & \fun \funleq \prov(\imp),\\
+            \subto &  \prov(\imp) \resleq \req(\imp) ,\\
+        \end{cases}
+    \end{equation}
+\end{problem}
+
+Another variation is to find only whether there are feasible solutions or not.
+
+\begin{problem}[\Feasibility]\label{prob:Feasibility}
+    Given~$\fun\in\funsp$ and $\res\in\ressp$, find if \cref{prob:FeasibleImp} is feasible.
+\end{problem}

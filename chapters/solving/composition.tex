@@ -1,0 +1,118 @@
+% !TEX root = standalone.tex
+\section{Composition operators for design problems}
+
+This section defines a handful of composition operators for design
+problems. Later, \cref{sec:Decomposing2} will prove that any co-design
+problem can be described in terms of a subset of these operators.
+
+\label{sec:threeoperators}
+\begin{definition}[$\dpseries$]
+    \label{def:series-composition}The series composition of two DPIs
+    $\dprob_{1}=\langle\funsp_{1},\ressp_{1},\impsp_{1},\prov_{1},\req_{1}\rangle$
+    and $\dprob_{2}=\langle\funsp_{2},\ressp_{2},\impsp_{2},\prov_{2},$
+    $\req_{2}\rangle$, for which~$\funsp_{2}=\ressp_{1}$, is
+    \[
+        \dpseries(\dprob_{1},\dprob_{2})\doteq\left\langle \funsp_{1},\ressp_{2},\impsp,\prov,\req\right\rangle ,
+    \]
+    where:
+    \begin{eqnarray*}
+        \impsp & = & \{\left\langle \imp_{1},\imp_{2}\right\rangle \in\impsp_{1}\times\impsp_{2}\mid\req_{1}(\imp_{1})\posleq_{\ressp_{1}}\prov_{2}(\imp_{2})\},\\
+        \prov & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\prov_{1}(\imp_{1}),\\
+        \req & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\req_{2}(\imp_{2}).
+    \end{eqnarray*}
+\end{definition}
+\captionsideleft{\label{fig:composition-2}}{
+    \includegraphics[scale=0.33]{gmcdp_series3}
+}
+\begin{definition}[$\dppar$]
+    \label{def:parallel}
+    The parallel composition of two DPIs $\dprob_{1}=\left\langle \funsp_{1},\ressp_{1},\impsp_{1},\prov_{1},\req_{1}\right\rangle $
+    and $\dprob_{2}=\langle\funsp_{2},\ressp_{2},\impsp_{2},\prov_{2},$
+    $\req_{2}\rangle$ is
+    \[
+        \dppar(\dprob_{1},\dprob_{2})\doteq\left\langle \funsp_{1}\times\funsp_{2},\ressp_{1}\times\ressp_{2},\impsp_{1}\times\impsp_{2},\prov,\req\right\rangle ,
+    \]
+    where:
+    \begin{eqnarray}
+        \prov & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\left\langle \prov_{1}(\imp_{1}),\prov_{2}(\imp_{2})\right\rangle ,\label{eq:dppar-exec}\\
+        \req & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\left\langle \req_{1}(\imp_{1}),\req_{2}(\imp_{2})\right\rangle .\nonumber
+    \end{eqnarray}
+
+\end{definition}
+\captionsideleft{\label{fig:dppar}}{
+    \includegraphics[scale=0.33]{gmcdp_parallel2}
+}
+
+
+\begin{definition}[$\dploop$]
+    \label{def:dp_loop}Suppose~$\dprob$ is a DPI with factored functionality
+    space~$\funsp_{1}\times\ressp$:
+    \[
+        \dprob=\left\langle \funsp_{1}\times\ressp,\ressp,\impsp,\left\langle \prov_{1},\prov_{2}\right\rangle ,\req\right\rangle.
+    \]
+    Then we can define the DPI~$\dploop(\dprob)$ as
+    \[
+        \dploop(\dprob)\doteq\left\langle \funsp_{1},\ressp,\impsp',\prov_{1},\req\right\rangle ,
+    \]
+    where~$\impsp'\subseteq\impsp$ limits the implementations to those
+    that respect the additional constraint~$\req(\imp)\posleq\prov_{2}(\imp)$:
+    \[
+        \impsp'=\{\imp\in\impsp:\req(\imp)\posleq\prov_{2}(\imp)\}.
+    \]
+    This is equivalent to ``closing a loop'' around~$\dprob$ with
+    the constraint~$\fun_{2}\posgeq\res$~(\cref{fig:sloop}).
+\end{definition}
+
+\captionsideleft{\label{fig:sloop}\label{fig:sloop2}}{
+    \includegraphics[scale=0.33]{gmcdp_sloop2}
+}
+
+The operator~$\dploop$ is asymmetric because it acts on a design
+problem with 2 functionalities and 1 resources. We can define a symmetric
+feedback operator $\dploopb$ as in \cref{fig:loop_general}, which
+can be rewritten in terms of $\dploop$, using the construction in~\cref{fig:loop_general2}\emph{.}
+
+\begin{figure}[h]
+    \hspace*{\fill}
+    \subfloat[\label{fig:loop_general}]{
+        \includegraphics[scale=0.33]{gmcdp_loop_general}
+
+    }
+    \hspace*{\fill}
+    \subfloat[\label{fig:loop_general2}]{
+        \includegraphics[scale=0.33]{gmcdp_loop_general2}
+    }
+    \hspace*{\fill}
+    \caption{A symmetric operator $\dploopb$ can be defined in terms of $\dploop$.}
+\end{figure}
+
+A ``co-product'' (see,~\eg\,\cite[Section 2.4]{spivak14category})
+of two design problems is a design problem with the implementation
+space~$\impsp=\impsp_{1}\sqcup\impsp_{2}$, and it represents the
+exclusive choice between two possible alternative families of designs.
+\begin{definition}[Co-product]
+    \label{def:parallel-1}Given two DPIs with same functionality and
+    resources $\dprob_{1}=\left\langle \funsp,\ressp,\impsp_{1},\prov_{1},\req_{1}\right\rangle $
+    and $\dprob_{2}=\left\langle \funsp,\ressp,,\impsp_{2},\prov_{2},\req_{2}\right\rangle ,$
+    define their co-product as
+    \[
+        \dprob_{1}\sqcup\dprob_{2}\doteq\left\langle \funsp,\ressp,\impsp_{1}\sqcup\impsp_{2},\prov,\req\right\rangle ,
+    \]
+    where
+    \begin{eqnarray}
+        \prov & : & \imp\mapsto\begin{cases}
+                                   \prov_{1}(\imp), & \text{if }\imp\in\impsp_{1},\\
+                                   \prov_{2}(\imp), & \text{if }\imp\in\impsp_{2},
+        \end{cases}\label{eq:dppar-exec-1}\\
+        \req & : & \imp\mapsto\begin{cases}
+                                  \req_{1}(\imp), & \text{if }\imp\in\impsp_{1},\\
+                                  \req_{2}(\imp), & \text{if }\imp\in\impsp_{2}.
+        \end{cases}\nonumber
+    \end{eqnarray}
+
+\end{definition}
+
+
+\captionsideleft{\label{fig:dpcoproduct}}{
+    \includegraphics[scale=0.33]{gmcdp_coproduct}
+}

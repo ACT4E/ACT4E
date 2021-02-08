@@ -1,0 +1,137 @@
+% !TEX root = standalone.tex
+\section{Decomposition of MCDPs\label{sec:Decomposition}}
+
+\label{sec:Decomposing2}This section shows how to describe an arbitrary
+interconnection of design problems using only three composition operators.
+More precisely, for each CDPI with a set of atoms~$\cdpiN$, there
+is an equivalent one that is built from $\dpseries$/$\dppar$/$\dploop$
+applied to the set of atoms~$\cdpiN$ plus some extra ``plumbling''
+(identities, multiplexers).
+
+\subsection{Equivalence}
+
+The definition of equivalence below ensures that two equivalent DPIs
+have the same map from functionality to resources, while one of the
+DPIs can have a slightly larger implementation space.
+\begin{definition}
+    Two DPIs $\left\langle \funsp,\ressp,\impsp_{1},\prov_{1},\req_{1}\right\rangle $
+    and $\langle\funsp,\ressp,$ $\impsp_{2},\prov_{2},\req_{2}\rangle$
+    are \emph{equivalent} if there exists a map~$\varphi:\impsp_{2}\rightarrow\impsp_{1}$
+    such that~$\prov_{2}=\prov_{1}\circ\varphi$ and~$\req_{2}=$ $\req_{1}\circ\varphi$.
+\end{definition}
+
+\subsection{Plumbing}
+
+We also need to define ``trivial DPIs'', which serve as ``plumbing''.
+These can be built by taking a map $f:\funsp\rightarrow\ressp$ and
+lifting it to the definition of a DPI. The implementation space of
+a trivial DPI is a copy of the functionality space and there is a
+1-to-1 correspondence between functionality and implementation.
+\begin{definition}[Trivial DPIs]
+    Given a map~$f:\funsp\rightarrow\ressp$, we can lift it to define
+    a trivial DPI $\triv(f)=\left\langle \funsp,\ressp,\funsp,\idFunc_{\funsp},f\right\rangle $,
+    where~$\idFunc_{\funsp}$ is the identity on~$\funsp$.
+\end{definition}
+\begin{proposition}
+    \label{prop:reduction}Given a CDPI $\left\langle \funsp,\ressp,\left\langle \cdpiN,\mathcal{E}\right\rangle \right\rangle $,
+    we can find an equivalent CDPI obtained by applying the operators
+    $\dppar/\dpseries/\dploop$ to a set of atoms~$\cdpiN'$ that contains~$\cdpiN$
+    plus a set of trivial DPIs. Furthermore, one instance of~$\dploop$
+    is sufficient.
+\end{proposition}
+\begin{proof}
+    We show this constructively. We will temporarily remove all cycles
+    from the graph, to be reattached later. To do this, find an \emph{arc
+    feedback set} (AFS) $F\subseteq\mathcal{E}$. An AFS is a set of edges
+    that, when removed, remove all cycles from the graph (see~\cite{golovach15incremental}).
+    For example, the CDPI represented in~\cref{fig:cdpi_comp1} has a minimal
+    AFS that contains the edge~$\text{c}\rightarrow\text{a}$~(\cref{fig:cdpi_comp2}).
+
+
+    Remove the~AFS~$F$ from~$\mathcal{E}$ to obtain the reduced edge
+    set~$\mathcal{E}'=\mathcal{E}\backslash F$. The resulting graph~$\left\langle \cdpiN,\mathcal{E}'\right\rangle $
+    does not have cycles, and can be written as a series-parallel graph,
+    by applying the operators~$\dppar$ and~$\dpseries$ from a set
+    of nodes~$\cdpiN'$. The nodes~$\cdpiN'$ will contain~$\cdpiN$,
+    plus some extra ``connectors'' that are trivial DPIs. Find a weak
+    topological ordering of~$\cdpiN$. Then the graph~$\left\langle \cdpiN,\mathcal{E}'\right\rangle $
+    can be written as the series of~$|\cdpiN|$ subgraphs, each containing
+    one node of~$\cdpiN$. In the example, the weak topological ordering
+    is~$\left\langle \text{a},\text{b},\text{c}\right\rangle $ and there
+    are three subgraphs (\cref{fig:cdpi_comp3}).
+
+    \captionsideleft{\label{fig:cdpi_comp3}}{\includegraphics[scale=0.33]{gmcdptro_cdpi_comp3}}
+
+    \noindent Each subgraph can be described as the parallel interconnection
+    of a node~$\cdpin\in\cdpiN$ and some extra connectors. For example,
+    the second subgraph in the graph can be written as the parallel interconnection
+    of node~$\text{b}$ and the identity $\triv(\idFunc)$ (\cref{fig:cdpi_comp4}).
+
+    \captionsideleft{\label{fig:cdpi_comp4}}{\includegraphics[scale=0.33]{gmcdptro_cdpi_comp4}}
+
+    After this is done, we just need to ``close the loop'' around the
+    edges in the AFS~$F$ to obtain a CDPI that is equivalent to the
+    original one. Suppose the AFS~$F$ contains only one edge. Then one
+    instance of the~$\dploopb$ operator is sufficient~(\cref{fig:cdpi_comp5}).
+    In this example, the tree representation (\cref{fig:cdpi_comp6}) is
+    \[
+        \dploopb(\dpseries(\dpseries(\text{a},\dppar(\idFunc,\text{b})),\text{c}).
+    \]
+    If the AFS contains multiple edges, then, instead of closing one loop
+    at a time, one can can always rewrite multiple nested loops as only
+    one loop by taking the product of the edges. For example, a diagram
+    like the one in~\cref{fig:nested1} can be rewritten as~\cref{fig:nested2}.
+    This construction is analogous to the construction used for the analysis
+    of process networks~\cite{lee10} (and any other construct involving
+    a traced monoidal category). Therefore, it is possible to describe
+    an arbitrary graph of design problems using only one instance of the
+    $\dploop$ operator.
+\end{proof}
+
+\begin{figure}[tbh]
+    \subfloat[\label{fig:cdpi_comp1}]{
+        \centering{}\includegraphics[scale=0.33]{gmcdptro_cdpi_comp1}
+    }
+    \hfill{}
+    \subfloat[\label{fig:cdpi_comp2}]{
+        \centering{}\includegraphics[scale=0.33]{gmcdptro_cdpi_comp2}
+    }
+    \hfill{}
+    \subfloat[\label{fig:cdpi_comp2b}]{
+        \centering{}
+        \includegraphics[scale=0.33]{gmcdptro_cdpi_comp2b}
+    }
+
+    \caption{An example co-design diagram with three nodes~$\cdpiN=\{\text{a},\text{b},\text{c}\}$,
+        in which a minimal arc feedback set is $\{\text{c}\rightarrow\text{a}$\}.}
+\end{figure}
+
+\begin{figure}
+    \hfill{}
+    \subfloat[\label{fig:cdpi_comp5}]{
+        \centering{}
+        \includegraphics[scale=0.33]{gmcdptro_cdpi_comp5}}
+    \hfill{}
+    \subfloat[\label{fig:cdpi_comp6}]{
+        \centering{}
+        \includegraphics[scale=0.33]{gmcdptro_cdpi_comp6}}
+    \hfill{}
+
+    \caption{Tree representation for the co-design diagram in~\cref{fig:cdpi_comp1}.}
+\end{figure}
+
+\begin{figure}[h]
+    \subfloat[\label{fig:nested1}]{
+        \begin{centering}
+            \includegraphics[scale=0.33]{gmcdptro_nested1}
+        \end{centering}
+    }\subfloat[\label{fig:nested2}]{
+        \begin{centering}
+            \includegraphics[scale=0.33]{gmcdptro_nested2}
+        \end{centering}
+    }
+
+    \caption{\label{fig:If-there-are}If there are nested loops in a co-design
+    diagram, they can be rewritten as one loop, by taking the product
+    of the edges.}
+\end{figure}

@@ -1,0 +1,210 @@
+% !TEX root = standalone.tex
+
+\section{Solution of MCDPs}
+\label{sec:Solution-of-Monotone}
+
+The second main result is that the map $\ftor$ of a MCDP has an explicit
+expression in terms of the maps~$\ftor$ of the subproblems.
+
+
+\begin{theorem}
+    \label{thm:CDP-solvig}The map~$\ftor$ for an MCDP has an explicit
+    expression in terms of the maps $\ftor$ of its subproblems, defined
+    recursively using the rules in \cref{tab:Correspondence}.
+\end{theorem}
+
+\begin{table}[h]
+    \begin{centering}
+        \caption{Recursive expressions for $\ftor$\label{tab:Correspondence}}
+    \end{centering}
+    \centering{}\setlength\extrarowheight{5pt}\normalsize
+    \begin{tabular}{ccc}
+        series & $\dprob=\dpseries(\dprob_{1},\dprob_{2})$ & $\ftor=\ftor_{1}\opseries\ftor_{2}$\tabularnewline
+        parallel & $\dprob=\dppar(\dprob_{1},\dprob_{2})$ & $\ftor=\ftor_{1}\oppar\ftor_{2}$\tabularnewline
+        feedback & $\dprob=\dploop(\dprob_{1})$ & $\ftor=\ftor_{1}^{\oploop}$\tabularnewline
+        co-product & $\dprob=\dprob_{1}\sqcup\dprob_{2}$ & $\ftor=\ftor_{1}\opcoprod\ftor_{2}$\tabularnewline
+    \end{tabular}
+\end{table}
+
+\begin{proof}
+    These expressions were derived in the proofs of~\cref{pro:dppar-monotone,pro:loop-continuous}.
+    The operators $\opseries,\oppar,\oploop,\opcoprod$ are defined
+    in \cref{def:opseries,def:opcoprod}.
+\end{proof}
+\begin{definition}
+    [Series operator~$\opseries$]
+    \label{def:opseries}
+    For two maps~$\ftor_{1}\colon\funsp_{1}\rightarrow\Aressp_{1}$
+    and~$\ftor_{2}\colon\funsp_{2}\rightarrow\Aressp_{2}$, if~$\ressp_{1}=\funsp_{2}$
+    , define
+    \begin{align*}
+    {\displaystyle \ftor_{1}\opseries\ftor_{2}\colon\funsp_{1}}
+        & \rightarrow\Aressp_{2},\\
+        \fun_{1} & \mapsto\Min_{\posleq_{\ressp_{2}}}\bigcup_{s\in\ftor_{1}(\fun)}\ftor_{2}(s).
+    \end{align*}
+\end{definition}
+
+\begin{definition}
+    [Parallel operator $\oppar$]
+    \label{def:opmaps}
+    For two maps $\ftor_{1}\colon\funsp_{1}\rightarrow\Aressp_{1}$
+    and $\ftor_{2}\colon\funsp_{2}\rightarrow\Aressp_{2}$, define
+    \begin{align}
+        \ftor_{1}\oppar\ftor_{2}:(\funsp_{1}\times\funsp_{2}) & \rightarrow\antichains(\ressp_{1}\times\ressp_{2}),\label{eq:oppar}\\
+        \left\langle \fun_{1},\fun_{2}\right\rangle  & \mapsto\ftor_{1}(\fun_{1})\acprod\ftor_{2}(\fun_{2}),\nonumber
+    \end{align}
+    where $\acprod$ is the product of two antichains.
+\end{definition}
+
+\begin{definition}
+    [Feedback operator $\oploop$]
+    \label{def:oploop}
+    For $\ftor:\funsp_{1}\times\ressp\rightarrow\Aressp$,
+    define
+    \begin{align}
+        \ftor^{\oploop}:\funsp_{1} & \rightarrow\Aressp,\nonumber \\
+        \fun_{1} & \mapsto\lfp\left(\Psi_{\fun_{1}}^{\ftor}\right),
+    \end{align}
+    where~$\Psi_{\fun_{1}}^{\ftor}$ is defined as
+    \begin{align}
+        \Psi_{\fun_{1}}^{\ftor}:\Aressp & \rightarrow\Aressp,\nonumber \\
+        {\colR R} & \mapsto\Min_{\posleq_{\ressp}}\bigcup_{\res\in{\colR R}}\ftor(\fun_{1},\res)\ \cap\upit\res.\label{eq:phi}
+    \end{align}
+\end{definition}
+
+\begin{definition}
+    [Coproduct operator $\opcoprod$]
+    \label{def:opcoprod}For $\ftor_{1},\ftor_{2}:\funsp\rightarrow\Aressp$,
+    define
+    \begin{align*}
+        \ftor_{1}\opcoprod\ftor_{2}:\funsp & \rightarrow\Aressp,\\
+        \fun& \mapsto\Min_{\posleq_{\ressp}}\left(\ftor_{1}(\fun)\cup\ftor_{2}(\fun)\right).
+    \end{align*}
+\end{definition}
+
+
+
+\subsection{Example: Optimizing over the natural numbers}
+
+This is the simplest example that can show two interesting properties
+of MCDPs:
+\begin{enumerate}
+    \item the ability to work with discrete posets; and
+    \item the ability to treat multi-objective optimization problems.
+\end{enumerate}
+Consider the family of optimization problems indexed by~${\colF c}\in\natnumbers$:
+\begin{equation}
+    \begin{cases}
+        \Min_{\posleq_{\overline{\natnumbers}\times\overline{\natnumbers}}} & \left\langle {\colR x},{\colR y}\right\rangle ,\\
+        \subto & x+y\geq\lceil\sqrt{x}\,\rceil+\lceil\sqrt{y}\,\rceil+{\colF c}.
+    \end{cases}\label{eq:example-1}
+\end{equation}
+One can show that this optimization problem is an MCDP by producing
+a co-design diagram with an equivalent semantics, such as the one
+in~\cref{fig:toydiagram}.
+
+\begin{figure}[h]
+    \subfloat[\label{fig:toydiagram}]{
+        \centering{}\includegraphics[width=6.2cm]{gmcdptro_example_diagram}}
+    \subfloat[\label{fig:toydiagram_tree}]{
+        \begin{centering}
+            \includegraphics[scale=0.33]{gmcdptro_example_diagram_tree}
+        \end{centering}
+    }
+
+    \caption{Co-design diagram equivalent to~\cref{eq:example-1} and its tree representation.}
+\end{figure}
+
+The diagram contains three primitive DPIs: $\dprob_{1},$
+$\dprob_{2}$ (used twice), and $\dprob_{3}$. Their $\ftor$ maps
+are:
+\begin{eqnarray*}
+    \ftor_{1}:{\colF\overline{\natnumbers}\times\overline{\natnumbers}\times\overline{\natnumbers}} & \rightarrow & {\colR\antichains\overline{\natnumbers}},\\
+    \left\langle \fun_{1},\fun_{2},\fun_{3}\right\rangle  & \mapsto & \{\fun_{1}+\fun_{2}+\fun_{3}\},\\
+    \ftor_{2}:{\colF\overline{\natnumbers}} & \rightarrow & {\colR\antichains\overline{\natnumbers}},\\
+    \fun& \mapsto & \{\lceil\sqrt{\fun}\,\rceil\},\\
+    \ftor_{3}:{\colF\overline{\natnumbers}} & \rightarrow & {\colR\antichains(\overline{\natnumbers}\times\overline{\natnumbers})},\\
+    \fun& \mapsto & \{\left\langle a,b\right\rangle \in\overline{\natnumbers}\times\overline{\natnumbers}:a+b=\fun\}.
+\end{eqnarray*}
+The tree decomposition (\cref{fig:toydiagram_tree}) corresponds to
+the expression
+\begin{equation}
+    \dprob=\dploop(\dpseries(\dppar(\dprob_{2},\dprob_{2}),\dpseries(\dprob_{1},\dprob_{3}))).\label{eq:expression}
+\end{equation}
+Consulting \cref{tab:Correspondence}, from~\cref{eq:expression}
+one obtains an expression for~$\ftor$:
+\begin{equation}
+    \ftor=\left((\ftor_{2}\oppar\ftor_{2})\opseries\ftor_{1}\opseries\ftor_{3}\right)^{\oploop}.\label{eq:h}
+\end{equation}
+This problem is small enough that we can write down an explicit expression
+for~$\ftor$. By substituting in~\cref{eq:h} the definitions given in~\cref{def:opseries,def:oploop}, we obtain that
+evaluating~$\ftor(\F{c})$ means finding the least fixed point of a map~$\Psi_{\F{c}}$:
+\[
+    \ftor:\F{c}\mapsto\lfp(\Psi_{\F{c}}).
+\]
+The map $\Psi_{\F{c}}:\R{\antichains(\overline{\natnumbers}\times\overline{\natnumbers})}\rightarrow\R{\antichains(\overline{\natnumbers}\times\overline{\natnumbers})}$
+can be obtained from~\cref{eq:phi} as follows:
+\begin{equation}
+    \Psi_{\F{c}}:\R{R}\mapsto\Min\bigcup_{\left\langle x,y\right\rangle \in\R{R}}\upit\left\langle x,y\right\rangle \cap\qquad\qquad\qquad\qquad
+\end{equation}
+\begin{equation}
+    \cap\left\{ \left\langle a,b\right\rangle \in\natnumbers^{2}:\left(a+b\geq\lceil\sqrt{x}\,\rceil+\lceil\sqrt{y}\,\rceil+\F{c}\right)\right\}.
+\end{equation}
+
+\begin{figure}
+    \begin{centering}
+        \includegraphics[bb=0bp 0bp 458bp 621bp,clip,scale=0.5]{gmcdptro_example20}
+    \end{centering}
+    \caption{\label{fig:example24}Kleene ascent to solve the problem~\cref{eq:example-1}
+    for $\F{c}=20$. The sequence converges in five steps to $\R{R}_{5}=\R{R}_{\infty}.$ }
+\end{figure}
+
+\noindent Kleene's algorithm is the iteration $\R{R}_{k+1}=\Psi_{\F{c}}(\R{R}_{k})$
+starting from $\R{R}_{0}=\bot_{\R{\antichains(\overline{\natnumbers}\times\overline{\natnumbers})}}=\{\left\langle 0,0\right\rangle \}$.
+
+\noindent For $\F{c}=0$, the sequence converges immediately:
+\[
+    \R{R}_{0}=\{\boldsymbol{\left\langle 0,0\right\rangle }\}=\ftor(\F{0}).
+\]
+For $\F{c}=1$, the sequence converges at the second step:
+\begin{align*}
+    \R{R}_{0} & =\{\left\langle 0,0\right\rangle \},\\
+    \R{R}_{1} & =\{\boldsymbol{\left\langle 0,1\right\rangle },\boldsymbol{\left\langle 1,0\right\rangle }\}=\ftor(\F{1}).
+\end{align*}
+For $\F{c}=2$, the sequence converges at the fourth step; however,
+some solutions (in bold) converge sooner:
+\begin{align*}
+    \R{R}_{0} & =\{\left\langle 0,0\right\rangle \},\\
+    \R{R}_{1} & =\{\left\langle 0,2\right\rangle ,\left\langle 1,1\right\rangle ,\left\langle 2,0\right\rangle \},\\
+    \R{R}_{2} & =\left\{ \boldsymbol{\left\langle 0,4\right\rangle },\left\langle 2,2\right\rangle ,\boldsymbol{\left\langle 4,0\right\rangle }\right\} ,\\
+    \R{R}_{3} & =\{\boldsymbol{\left\langle 0,4\right\rangle },\boldsymbol{\left\langle 3,3\right\rangle },\boldsymbol{\left\langle 4,0\right\rangle }\}=\ftor(\F{2}).
+\end{align*}
+The next values in the sequence are:
+\begin{align*}
+    \ftor(\F{3}) & =\left\{ \boldsymbol{\left\langle 0,6\right\rangle },\boldsymbol{\left\langle 3,4\right\rangle },\boldsymbol{\left\langle 4,3\right\rangle },\boldsymbol{\left\langle 6,0\right\rangle }\right\} ,\\
+    \ftor(\F{4}) & =\left\{ \boldsymbol{\left\langle 0,7\right\rangle },\boldsymbol{\left\langle 3,6\right\rangle },\boldsymbol{\left\langle 4,4\right\rangle },\boldsymbol{\left\langle 6,3\right\rangle },\boldsymbol{\left\langle 7,0\right\rangle }\right\} .
+\end{align*}
+\cref{fig:example24}~shows the sequence for $\F{c}=20$.
+
+\subsection{Guarantees of Kleene ascent}
+
+\noindent Solving an MCDP with cycles reduces to computing a Kleene
+ascent sequence~$\R{R}_{k}.$ At each instant~$k$ we have some
+additional guarantees.
+
+For any finite~$k$, the resources ``below''~$\R{R}_{k}$ (the
+set~$\ressp\ \backslash\upit\R{R}_{k}$,) are infeasible. (In \cref{fig:example24},
+those are colored in red.)
+
+If the iteration converges to a non-empty antichain~$\R{R}_{\infty}$,
+the antichain~$\R{R}_{\infty}$ divides~$\ressp$ in two. Below
+the antichain, all resources are infeasible. However, above the antichain
+(purple area), it is not necessarily true that all points are feasible,
+because there might be holes in the feasible set, as in \cref{exa:one}.
+Note that this method does not compute the entire feasible set, but
+rather only the \emph{minimal elements} of the feasible set, which
+might be much easier to compute.
+
+Finally, if the sequence converges to the empty set, it means that
+there are no solutions. The sequence~$\R{R}_{k}$ can be considered
+a certificate of infeasibility.
