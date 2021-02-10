@@ -17,7 +17,7 @@ tmpdir=tmp
 	latexmk -pdflatex   -f $<
 
 clean:
-	rm -f *.fdb_latexmk *.fls *.log CategoricalCoDesign.pdf *.aux *.dvi *.out *.maf *.mtc* *.ptc*
+	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc*
 
 
 ready: ACT4E-ready.pdf
@@ -85,7 +85,7 @@ mains=$(wildcard volumes/vol*/part*/*/main.tex)
 standalones=$(subst main.tex,standalone.tex,$(mains))
 
 standalone: $(standalones)
-	
+
 
 twovolumes:
 	make -B ACT4E-vol1.pdf
