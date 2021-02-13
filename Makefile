@@ -64,8 +64,8 @@ used-%.yaml:
 	@lsm_collect $(shell find volumes/$* -name '*.tex') >$@
 
 nomenc-%.tex: used-%.yaml
-	# lsm_nomenc  --only $< utils/symbols*.tex > $@
-	lsm_nomenc  utils/symbols*.tex > $@
+	lsm_nomenc  --only $< utils/symbols*.tex > $@
+	# lsm_nomenc  utils/symbols*.tex > $@
 
 nomenc: nomenc-vol1.tex  nomenc-vol2.tex
 

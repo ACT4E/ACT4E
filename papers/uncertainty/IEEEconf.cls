@@ -63,7 +63,7 @@
 %% 
 %% Major changes to the user interface should be indicated by an 
 %% increase in the version numbers. If a version is a beta, it will 
-%% be indicated with a BETA suffix, i.e., 1.4 BETA.
+%% be indicated with a BETA suffix, \ie , 1.4 BETA.
 %% Small changes can be indicated by appending letters to the version
 %% such as "IEEEtran_v14a.cls".
 %% In all cases, \Providesclass, any \typeout messages to the user,
@@ -74,7 +74,7 @@
 %%
 %
 % Available class options 
-% (e.g., \documentclass[10pt,conference]{ieeeconf} 
+% (\eg , \documentclass[10pt,conference]{ieeeconf} 
 % 
 %             *** choose only one from each category ***
 %
@@ -101,7 +101,7 @@
 %    determines if paper is formatted as a widely spaced draft (for
 %    handwritten editor comments) or as a properly typeset final version.
 %    draftcls restricts draft mode to the class file while all other LaTeX
-%    packages (i.e., \usepackage{graphicx}) will behave as final - allows
+%    packages (\ie , \usepackage{graphicx}) will behave as final - allows
 %    for a draft paper with visible figures, etc. draftclsnofoot is like
 %    draftcls, but does not display the date and the word "DRAFT" at the foot
 %    of the pages. If using one of the draft modes, the user will probably
@@ -197,7 +197,7 @@
 % 7/2002 V1.6 (MDS) changes:
 % 
 % 1) Added conference mode via conference option. Defaults to the traditional
-%    journal mode. i.e., \documentclass[conference]{IEEEtran}
+%    journal mode. \ie , \documentclass[conference]{IEEEtran}
 % 
 % 2) Added support for A4 paper via new a4paper option. Pdflatex's paper size
 %    lengths are now automatically set to the proper paper size being used.
@@ -226,7 +226,7 @@
 %    The biography environment now does a better job in preventing
 %    a biography photo area from being broken across pages or columns.
 %
-% 6) Fixed whitespace between \cite entries bug. i.e.,
+% 6) Fixed whitespace between \cite entries bug. \ie ,
 %    both \cite{einstein24, knuth84} and \cite{einstein24,knuth84}
 %    are now valid. \cite is now a robust command as it should be.
 %    IEEEtran now no longer defines the old non-standard \shortcite or 
@@ -247,7 +247,7 @@
 %    style.
 %    
 %    Note: Historically, IEEE has wanted authors to "hardcode" symbolics.
-%    (i.e., replace all \cite{} with fixed [x]). However, it now seems that
+%    (\ie , replace all \cite{} with fixed [x]). However, it now seems that
 %    most electronic manuscript submissions to IEEE are in .pdf format, and 
 %    as such, do not require the LaTeX document reference numbers to be hard
 %    coded. If an author is required to submit actual LaTeX files, I do 
@@ -305,7 +305,7 @@
 %    problem had been introduced in V1.5 in my rush to get \and to work for
 %    conferences. \and is unneeded (and invalid) in journal mode. For 
 %    conference mode, \and will work as expected and features an optional
-%    spacing argument. i.e., \and[\hspace{5ex}] 
+%    spacing argument. \ie , \and[\hspace{5ex}] 
 %    \and will default (recommended) to using \hfill which will result in
 %    equal spacing between author blocks.
 % 
@@ -359,7 +359,7 @@
 %    standard rubber spacers.
 %    
 %    Note: This problem can still crop up if you use floats that span both
-%    columns (i.e., figure*). It has been a decade+ long limitation with LaTeX
+%    columns (\ie , figure*). It has been a decade+ long limitation with LaTeX
 %    that the stretchable portion of \dbltextfloatsep is ignored. 
 %    If you get a problem with underful vbox warnings and paragraphs that "are
 %    pulled apart" on page with a float that spans both columns, tweak the 
@@ -388,7 +388,7 @@
 %    things that can go into \IEEEaftertitletext are the same as those into 
 %    \twocolumn[] - no \par, but \\ are OK. There is no restriction on the
 %    range of spacings that can be used. 
-%    i.e., \IEEEaftertitletext{\vspace{-100pt}} will push the main text well
+%    \ie , \IEEEaftertitletext{\vspace{-100pt}} will push the main text well
 %    into the title and \IEEEaftertitletext{\vspace{100pt}} will push it far down
 %    the page. You will have complete control. If used, place
 %    \IEEEaftertitletext{} before \maketitle like \title and \author. IEEEtran's
@@ -398,7 +398,7 @@
 %    manually adjust the height of the contents in \IEEEaftertitletext{} if the
 %    problem discussed in #14 above should develop. A safe bet is to keep
 %    the height of contents of \IEEEaftertitletext{} to integer multiples of 
-%    \baselineskip, i.e., \IEEEaftertitletext{\vspace{-1\baselineskip}} 
+%    \baselineskip, \ie , \IEEEaftertitletext{\vspace{-1\baselineskip}} 
 %    
 %    Because it can result in an IEEE nonstandard format, the use of
 %    \IEEEaftertitletext{} is discouraged. Possible uses include (1) the use of
@@ -1023,7 +1023,7 @@
 
 % V1.6, we are now going to fine tune the interword spacing
 % The default interword glue for Times under TeX appears to use a
-% nominal interword spacing of 25% (relative to the font size, i.e., 1em)
+% nominal interword spacing of 25% (relative to the font size, \ie , 1em)
 % a maximum of 40% and a minimum of 19%.
 % For example, 10pt text uses an interword glue of:
 % 
@@ -1393,8 +1393,8 @@
 % These values serve as a way a .tex file can
 % determine if the new features are provided.
 % The version number of this IEEEtrans.cls can be obtained from 
-% these values. i.e., V1.4
-% KEEP THESE AS INTEGERS! i.e., NO {4a} or anything like that-
+% these values. \ie , V1.4
+% KEEP THESE AS INTEGERS! \ie , NO {4a} or anything like that-
 % (no need to enumerate "a" minor changes here)
 \def\IEEEtransversionmajor{1}
 \def\IEEEtransversionminor{6}
@@ -1493,7 +1493,7 @@
 % at the beginning of the list. You can use this to set the 
 % parameters for some/all your IED list(s) without disturbing 
 % global parameters that affect things other than lists.
-% i.e., renewcommand{\iedlistdecl}{\setlength{\labelsep}{5em}}
+% \ie , renewcommand{\iedlistdecl}{\setlength{\labelsep}{5em}}
 % will alter the \labelsep for the next list(s) until 
 % \iedlistdecl is redefined. 
 \def\iedlistdecl{\relax}
@@ -1501,7 +1501,7 @@
 % This command provides an easy way to set \leftmargin based
 % on the \labelwidth, \labelsep and the argument \labelindent
 % Usage: \calcleftmargin{width-to-indent-the-label}
-% output is in the \leftmargin variable, i.e., effectively:
+% output is in the \leftmargin variable, \ie , effectively:
 % \leftmargin = argument + \labelwidth + \labelsep
 % Note controlled spacing here, shield end of lines with %
 \def\calcleftmargin#1{\setlength{\leftmargin}{#1}%
@@ -2203,7 +2203,7 @@ Using a default centering column instead}%
 \def\@IEEEeqnarraycolSEPcenter{1000pt plus 0pt minus 1000pt}
 
 % top level default tabskip glues for the start, end, and inter-column
-% may be reset within environments not always at the top level, e.g., \IEEEeqnarraybox
+% may be reset within environments not always at the top level, \eg , \IEEEeqnarraybox
 \edef\@IEEEeqnarraycolSEPdefaultstart{\@IEEEeqnarraycolSEPcenter}% default start glue
 \edef\@IEEEeqnarraycolSEPdefaultend{\@IEEEeqnarraycolSEPcenter}% default end glue
 \edef\@IEEEeqnarraycolSEPdefaultmid{\@IEEEeqnarraycolSEPzero}% default inter-column glue
@@ -3292,7 +3292,7 @@ between column types.}%
 % redefine them. The result will be the proper sorting of the
 % citation numbers and auto detection of 3 or more entry "ranges" -
 % all in IEEE style:  [1], [2], [5]--[7], [12]
-% This also allows for an optional note, i.e., \cite[mynote]{..}.
+% This also allows for an optional note, \ie , \cite[mynote]{..}.
 % If the \cite with note has more than one reference, the note will
 % be applied to the last of the listed references. It is generally
 % desired that if a note is given, only one reference is listed in
@@ -3425,7 +3425,7 @@ which is provided to fool Hyperref.}}
 % baseline spacing within name and affiliation blocks (confmode)
 % must be positive, spacings below certain values will make 
 % the position of line of text sensitive to the contents of the
-% line above it i.e., whether or not the prior line has descenders, 
+% line above it \ie , whether or not the prior line has descenders, 
 % subscripts, etc. For this reason it is a good idea to keep
 % these above 2.6ex
 \def\@IEEEauthorblockNinterlinespace{2.6ex}
@@ -4157,7 +4157,7 @@ which is provided to fool Hyperref.}}
 % so that it can respond to changes therein.
 \def\@IEEEPARstartDROPDEPTH{1.1\baselineskip}
 % This is the separation distance from the drop letter to the main text.
-% Lengths that depend on the font (i.e., ex, em, etc.) will be referenced
+% Lengths that depend on the font (\ie , ex, em, etc.) will be referenced
 % to the font that is active when PARstart is called. 
 \def\@IEEEPARstartSEP{0.15em}
 
