@@ -64,22 +64,20 @@ used-%.yaml:
 	@lsm_collect $(shell find volumes/$* -name '*.tex') >$@
 
 nomenc-%.tex: used-%.yaml
-	lsm_nomenc  --only used-$*.yaml utils/symbols*.tex > $@
+	# lsm_nomenc  --only $< utils/symbols*.tex > $@
+	lsm_nomenc  utils/symbols*.tex > $@
 
 nomenc: nomenc-vol1.tex  nomenc-vol2.tex
 
-
-redo-nomenc: nomenc
-	makeindex ACT4E-vol1.nlo -s nomencl.ist -o ACT4E-vol1.nls
-	makeindex ACT4E-vol2.nlo -s nomencl.ist -o ACT4E-vol2.nls
+#
+#redo-nomenc: nomenc
+#	makeindex ACT4E-vol1.nlo -s nomencl.ist -o ACT4E-vol1.nls
+#	makeindex ACT4E-vol2.nlo -s nomencl.ist -o ACT4E-vol2.nls
 
 
 table:
 	make -C utils
 
 vol1-nomenc-update: table
-	rm -f ACT4E-vol1.nlo   ACT4E-vol1.nls
-	$(MAKE) -B nomenc-vol1.tex
-	pdflatex ACT4E-vol1
-	makeindex ACT4E-vol1.nlo -s nomencl.ist -o ACT4E-vol1.nls
+	$(MAKE) nomenc
 	pdflatex ACT4E-vol1
