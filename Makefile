@@ -12,12 +12,19 @@ tmpdir=tmp
 #	latexmk -pdflatex -outdir=$(tmpdir) -f $<
 #	cp $(tmpdir)/$*.pdf $@
 
+
+ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
+
 %.pdf: %.tex
 	#rm -f $*.aux
 	latexmk -pdflatex   -f $<
+	# latexmk does not seem to do this, even though we put in latexmkrc
+	makeindex $*.nlo -s nomencl.ist -o $*.nls
+	pdflatex $*
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc*
+	rm -f nomenc-*.tex used*yaml
 
 
 ready: ACT4E-ready.pdf
@@ -33,8 +40,8 @@ ACT4E-full-fast.pdf::  chapters/*.tex utils/*.tex  common.tex
 
 tikz:
 	touch sag/*pdf
-	make -C sag -j 
-	
+	make -C sag -j
+
 %/standalone.tex:
 	cp template-standalone.tex $@
 
@@ -51,3 +58,28 @@ twovolumes:
 	make -B ACT4E-vol1.pdf
 	make -B ACT4E-vol2.pdf
 
+
+
+used-%.yaml:
+	@lsm_collect $(shell find volumes/$* -name '*.tex') >$@
+
+nomenc-%.tex: used-%.yaml
+	lsm_nomenc  --only used-$*.yaml utils/symbols*.tex > $@
+
+nomenc: nomenc-vol1.tex  nomenc-vol2.tex
+
+
+redo-nomenc: nomenc
+	makeindex ACT4E-vol1.nlo -s nomencl.ist -o ACT4E-vol1.nls
+	makeindex ACT4E-vol2.nlo -s nomencl.ist -o ACT4E-vol2.nls
+
+
+table:
+	make -C utils
+
+vol1-nomenc-update: table
+	rm -f ACT4E-vol1.nlo   ACT4E-vol1.nls
+	$(MAKE) -B nomenc-vol1.tex
+	pdflatex ACT4E-vol1
+	makeindex ACT4E-vol1.nlo -s nomencl.ist -o ACT4E-vol1.nls
+	pdflatex ACT4E-vol1
