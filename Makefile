@@ -61,7 +61,7 @@ twovolumes:
 
 
 used-%.yaml:
-	@lsm_collect $(shell find volumes/$* -name '*.tex') >$@
+	@lsm_collect $(shell find volumes/$* -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
 
 nomenc-%.tex: used-%.yaml
 	lsm_nomenc  --only $< utils/symbols*.tex > $@
@@ -79,5 +79,5 @@ table:
 	make -C utils
 
 vol1-nomenc-update: table
-	$(MAKE) nomenc
+	$(MAKE) nomenc -B
 	pdflatex ACT4E-vol1

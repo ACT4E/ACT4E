@@ -1,31 +1,36 @@
 % !TEX root = standalone.tex
 
 
-\section{Monoidal categories}\label{sec:parallelism-mon-cat}
+\section{Monoidal categories}
+\label{sec:parallelism-mon-cat}
+
 So far, we have described a single way to compose morphisms of a category: the~$\then$ operation. However, category theory allows to define other ways of composing morphisms, adding structure to the basic category defined in~\cref{def:categorymain}.
+
+
 \begin{ctdefinition}[\iindex{Monoidal category}]
   \label{def:monoidal_cat}
   A \emph{monoidal structure} on a category~\CatC consists of:
   \begin{compactenum}
-    \item An object~$\idmon\in \ObC$ called the \emph{monoidal unit}.
-    \item A functor~$\otimes \colon \CatC \times \CatC\to \CatC$, called the \emph{monoidal product}.
+    \item An object~$\idmoncat \in \ObC$ called the \emph{monoidal unit}.
+    \item A functor~$\mtimescat \colon \CatC \Ctimes \CatC\cto \CatC$, called the \emph{monoidal product}.
   \end{compactenum}
   The two constituents are subject to the natural isomorphisms:
   \begin{compactenum}
-    \item[a)] $\lambda_c \colon \idmon\otimes c \cong c$ for every~$c\in \ObC$,
-    \item[b)] $\rho_c \colon c\otimes \idmon \cong c$ for every~$c\in \ObC$,
-    \item[c)] $\alpha_{c,d,e}\colon (c\otimes d)\otimes e \cong c\otimes (d\otimes e)$ for every~$c,d,e\in \ObC$.
+    \item[a)] $\leftunitor_\obja \colon \idmoncat\mtimescat \obja \cong \obja$ for every~$\obja\in \ObC$,
+    \item[b)] $\rightunitor_\obja \colon \objc \mtimescat \idmoncat \cong \obja$ for every~$\obja\in \ObC$,
+    \item[c)] $\associator_{\obja,\objb,\objc}\colon (\obja \mtimescat \objb )\mtimescat \objc \cong \obja\mtimescat (\objb \mtimescat \objc)$ for every~$\obja,\objb,\objc\in \ObC$.
   \end{compactenum}
   These isomorphisms are themselves required to satisfy the triangle identity
-  \begin{equation}
+  \begin{center}
     \includesag{30_triangle_identity}
-  \end{equation}
+  \end{center}
   and the pentagon identity
-  \begin{equation}
+  \begin{center}
     \includesag{30_pentagon_identity}
-  \end{equation}
-  for $a,b,c,d\in \ObC$.
-  \noindent A category equipped with a monoidal structure is called a \emph{monoidal category}. Note that in the case in which the isomorphisms in a), b), and c) are equivalences, one calls the category \emph{strict} monoidal.
+  \end{center}
+  for $\obja,\objb,\objc,\objd\in \ObC$.
+  \noindent A category equipped with a monoidal structure is called a \emph{monoidal category}.
+  If the isomorphisms in a), b), and c) are equivalences, one calls the category \emph{strict} monoidal.
 \end{ctdefinition}
 
 \begin{example}
@@ -37,14 +42,14 @@ So far, we have described a single way to compose morphisms of a category: the~$
       \tup{a,b}&\mapsto \tup{f(a),g(b)}.
     \end{aligned}
   \end{equation*}
-  Furthermore, given any~$A,B,C\in \Ob_{\Set}$, we specify the unitor~$\alpha_{A,B,C}$:
+  Furthermore, given any~$A,B,C\in \Ob_{\Set}$, we specify the associator~$\associator_{A,B,C}$:
   \begin{equation*}
     \begin{aligned}
-      \alpha_{A,B,C}\colon (A\times B)\times C&\to A\times (B\times C)\\
+      \associator_{A,B,C}\colon (A\times B)\times C&\to A\times (B\times C)\\
       \tup{\tup{a,b},c}&\mapsto \tup{a,\tup{b,c}}
     \end{aligned}
   \end{equation*}
-  This defines an isomorphism (I can ``back and forth'', by switching the tuple separation). We now need to check whether~$\alpha$ is natural. We check this graphically, using the commutative diagram in \cref{fig:monoidal_set_ass_nat}.
+  This defines an isomorphism (I can ``back and forth'', by switching the tuple separation). We now need to check whether~$\associator$ is natural. We check this graphically, using the commutative diagram in \cref{fig:monoidal_set_ass_nat}.
 
   \begin{figure}[h!]
     \begin{center}
@@ -53,11 +58,11 @@ So far, we have described a single way to compose morphisms of a category: the~$
     \caption{\label{fig:monoidal_set_ass_nat}}
   \end{figure}
 
-  Given an object~$A\in \Ob_\Set$, the unitor~$\lambda_A$ is given by:
+  Given an object~$A\in \Ob_\Set$, the unitor~$\leftunitor_A$ is given by:
   \begin{equation*}
     \begin{aligned}
-      \lambda_A\colon \singleton \times A &\toiso A\\
-      \tup{\ast,a}&\mapsto a.
+      \leftunitor_A\colon \singleton \times A &\toiso A\\
+      \tup{\singletonel,a}&\mapsto a.
     \end{aligned}
   \end{equation*}
 
@@ -70,14 +75,14 @@ So far, we have described a single way to compose morphisms of a category: the~$
     \caption{\label{fig:monoidal_set_unit_nat}}
   \end{figure}
 
-  Analogously, given an object~$A\in \Ob_{\Set}$, the unitor isomorphism~$\rho_A$ is given by:
+  Analogously, given an object~$A\in \Ob_{\Set}$, the unitor isomorphism~$\rightunitor_A$ is given by:
   \begin{equation*}
     \begin{aligned}
-      \rho_A\colon A\times \singleton &\toiso A\\
-      \tup{a,\ast}&\mapsto a.
+      \rightunitor_A\colon A\times \singleton &\toiso A\\
+      \tup{a,\singletonel}&\mapsto a.
     \end{aligned}
   \end{equation*}
-  The proof for naturality is analogous to the one of~$\lambda_A$. We now need to check whether the triangle and pentagon identites are satisfied. We start by the triangle. Given~$A,B\in \Ob_{\Set}$, the proof is displayed in \cref{fig:set_mon_triangle}.
+  The proof for naturality is analogous to the one of~$\leftunitor_A$. We now need to check whether the triangle and pentagon identites are satisfied. We start by the triangle. Given~$A,B\in \Ob_{\Set}$, the proof is displayed in \cref{fig:set_mon_triangle}.
 
   \begin{figure}[h]
     \begin{center}
@@ -101,7 +106,7 @@ So far, we have described a single way to compose morphisms of a category: the~$
 
 \begin{example}
   \label{ex:robot}
-  Consider $\reals^2$, discretized as a two-dimensional grid, representing locations (cells) which a robot can reach. The configuration space of the robot is $\reals^2\times \Theta$, where $\Theta=[0,2\pi)$. A specific configuration $\tup{x,y,\theta}$ is characterized at each time by the position of the robot $x,y\in \reals$ and its orientation $\theta \in \Theta$. The action space of the robot is $\mathcal{A}=\{\mathsf{stay},\leftarrow, \rightarrow, \uparrow, \downarrow\}$. This is a category, where each configuration of the robot is an object, and morphisms are robot actions which change configurations. Each configuration has the identity morphism which does not change it ($\mathsf{stay}$). Composition of morphisms is given by concatenation of actions (\cref{fig:robotcategory}). Assuming the existence of multiple robots $r_i=\tup{x_i,y_i,\theta_i}$, it is possible to define a product $r_i\otimes r_j$, which is to be intended as ``we have a robot at configuration $r_i$ and another one at configuration $r_j$''. However, this cannot be a proper monoidal product, because two robots cannot have the same configuration (physically, they cannot lie on each other), and hence $r_i\otimes r_i$ does not exist. By assuming that two robots could share the same configuration, this would be a valid monoidal product.
+  Consider $\reals^2$, discretized as a two-dimensional grid, representing locations (cells) which a robot can reach. The configuration space of the robot is $\reals^2\times \Theta$, where $\Theta=[0,2\pi)$. A specific configuration $\tup{x,y,\theta}$ is characterized at each time by the position of the robot $x,y\in \reals$ and its orientation $\theta \in \Theta$. The action space of the robot is $\mathcal{A}=\{\mathsf{stay},\leftarrow, \rightarrow, \uparrow, \downarrow\}$. This is a category, where each configuration of the robot is an object, and morphisms are robot actions which change configurations. Each configuration has the identity morphism which does not change it ($\mathsf{stay}$). Composition of morphisms is given by concatenation of actions (\cref{fig:robotcategory}). Assuming the existence of multiple robots $r_i=\tup{x_i,y_i,\theta_i}$, it is possible to define a product $r_i\mtimescat r_j$, which is to be intended as ``we have a robot at configuration $r_i$ and another one at configuration $r_j$''. However, this cannot be a proper monoidal product, because two robots cannot have the same configuration (physically, they cannot lie on each other), and hence $r_i\mtimescat r_i$ does not exist. By assuming that two robots could share the same configuration, this would be a valid monoidal product.
   \begin{figure}[tbh]
     \begin{center}
       \includesag{120_robotcategory}
@@ -112,7 +117,7 @@ So far, we have described a single way to compose morphisms of a category: the~$
 
 
 \begin{ctdefinition}[\iindex{Symmetric monoidal category}]
-  Let~$\tup{\CatC,\otimes,\idmon}$ be a monoidal category (\cref{def:monoidal_cat}). A \emph{symmetric structure} on it consists of one component: For any objects~$c,d\in\ObC$ an isomorphism~$\sigma_{c,d}\colon (c\otimes d)\To{\cong}(d\otimes c)$, called the \emph{braiding}. The braiding must satisfy:
+  Let~$\tup{\CatC,\mtimescat,\idmoncat}$ be a monoidal category (\cref{def:monoidal_cat}). A \emph{symmetric structure} on it consists of one component: For any objects~$c,d\in\ObC$ an isomorphism~$\sigma_{c,d}\colon (c\mtimescat d)\To{\cong}(d\mtimescat c)$, called the \emph{braiding}. The braiding must satisfy:
   \begin{enumerate}
     \item \emph{Naturality:} Given any morphisms~$f_1\colon c_1\to d_1$ and~$f_2\colon c_2\to d_2$, the following diagram must commute:
     \begin{equation}
