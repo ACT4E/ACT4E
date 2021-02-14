@@ -75,9 +75,26 @@ nomenc: nomenc-vol1.tex  nomenc-vol2.tex
 #	makeindex ACT4E-vol2.nlo -s nomencl.ist -o ACT4E-vol2.nls
 
 
-table:
+used.yaml:
+	@lsm_collect $(shell find volumes -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
+
+
+table: utils/tables/full/all.tex
+
+
+utils/tables/full/all.tex: utils/symbols*.tex
+	$(MAKE) used.yaml -B
+	lsm_table --only used.yaml --style full $^ > $@
+	
+
+
+used-%.yaml:
+	@lsm_collect $(shell find volumes/$* -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
+
 	make -C utils
 
 vol1-nomenc-update: table
+	$(MAKE) used.yaml -B
+	$(MAKE) table -B
 	$(MAKE) nomenc -B
 	pdflatex ACT4E-vol1
