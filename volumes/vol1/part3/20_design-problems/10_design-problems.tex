@@ -17,7 +17,7 @@ We start by defining a ``design problem with implementation'', which is a tuple 
   \begin{compactitem}
     \item \funsp is a poset, called \emph{\Fcol{functionality} space};
     \item \ressp is a poset, called \emph{\Rcol{requirements} space};
-    \item $\impsp$ is a set, called \emph{\Icol{implementation} space};
+    \item \impsp is a set, called \emph{\Icol{implementation} space};
     \item the map~$\prov\colon\impsp\rightarrow\funsp$
     maps an implementation to the functionality it provides;
     \item the map~$\req\colon\impsp\rightarrow\ressp$
@@ -44,15 +44,11 @@ A graphical notation will help reasoning about composition. A DPI is represented
 
 %\captionsideleft{\label{fig:dp_graphical}}{\includegraphics[scale=0.33]{gmcdp_dp_graphical.pdf}}
 
-This means that the functionality and resources spaces can be factorized in~$\dpinumf$ and~$\dpinumr$ components:~$\funsp=\prod_{i=1}^{\dpinumf}\pi_{i}\funsp_{i}$,~$\ressp=\prod_{j=1}^{\dpinumr}\pi_{j}\ressp$, where ``$\pi_{i}$''
-represents the projection to the~$i$-th component. If there are no
-green (respectively, red) edges, then~$\dpinumf$ (respectively,~$\dpinumr$)
-is zero, and \funsp (respectively, \ressp) is equal to~$\One=\{\tup{} \}$,
-the set containing one element, the empty tuple~$\left\langle \right\rangle $.
+This means that the functionality and resources spaces can be factorized in~$\dpinumf$ and~$\dpinumr$ components:~$\funsp=\prod_{i=1}^{\dpinumf}\pi_{i}\funsp_{i}$,~$\ressp=\prod_{j=1}^{\dpinumr}\pi_{j}\ressp_{j}$, where ``$\pi_{i}$'' represents the projection to the~$i$-th component.
+If there are no green (respectively, red) edges, then~$\dpinumf$ (respectively,~$\dpinumr$) is zero, and \funsp (respectively, \ressp) is equal to~$\One=\{\emptytuple \}$, the set containing one element, the empty tuple~$\emptytuple$.
+\todotext{The $\One$ used above might clash with other parts}
 
-These \emph{co-design diagrams} are not to be confused with signal
-flow diagrams, in which the boxes represent oriented systems and the
-edges represent signals.
+These \emph{co-design diagrams} are not to be confused with signal flow diagrams, in which the boxes represent oriented systems and the edges represent signals.
 
 
 \begin{example}
@@ -78,15 +74,20 @@ edges represent signals.
     \label{tab:electric_motors_2}
   \end{table}
 
-  We can think of this as a catalogue of electric motors~$\tup{\impsp_\mathrm{EM},\prov_\mathrm{EM},\req_\mathrm{EM}}$. In particular, the set of implementations collects all the motor models, which we can specify using the motor IDs:
+  We can think of this as a catalogue of electric motors~$\tup{\impsp_\mathrm{EM},\prov_\mathrm{EM},\req_\mathrm{EM}}$.
+  In particular, the set of implementations collects all the motor models, which we can specify using the motor IDs:
   \begin{equation}
     \impsp_\mathrm{EM}=\{1204,1206,1207,2267,2279,1478,2299 \}.
   \end{equation}
-  We now have to think about \R{resources} and \F{functionalities}. Each motor \R{requires} some \R{weight} (in \unit[]{g}), \R{power} (in \unit[]{W}), and has some \R{cost} (in \stdcurr), and \F{provides} some \F{torque} (in~$\unit[]{kg\cdot cm}$). Thus, we can identify
+  We now have to think about \R{resources} and \F{functionalities}.
+  Each motor \R{requires} some \R{weight} (in \unit[]{g}), \R{power} (in \unit[]{W}), and has some \R{cost} (in \stdcurr), and \F{provides} some \F{torque} (in~$\unit[]{kg\cdot cm}$).
+  Thus, we can identify
   \begin{equation*}
-    \F{F}=\reals\times \{\unit[]{kg\cdot cm}\},\quad \RR=(\reals\times \{\unit[]{g}\})\times (\reals\times \{\unit[]{W}\})\times (\reals\times \{\unit[]{\stdcurr}\}),
+    \funsp =\reals\times \{\unit[]{kg\cdot cm}\},\quad \ressp=(\reals\times \{\unit[]{g}\})\times (\reals\times \{\unit[]{W}\})\times (\reals\times \{\unit[]{\stdcurr}\}),
   \end{equation*}
-  by considering the units as discussed in \cref{sec:currency_cat}. The correspondences are given by the details in \cref{tab:electric_motors_2}. For instance, we have
+  by considering the units as discussed in \cref{sec:currency_cat}.
+  The correspondences are given by the details in \cref{tab:electric_motors_2}.
+  For instance, we have
   \begin{equation}
     \prov_\mathrm{EM}(1204)=0.18, \quad \req_\mathrm{EM}(1204)=\tup{\unit[60]{g},\unit[2.34]{W},\unit[19.95]{USD}}.
   \end{equation}
@@ -160,18 +161,16 @@ edges represent signals.
 
 
 \begin{example}[Chassis design]
-  \label{exa:chassis}Suppose we need to choose a chassis for a robot~(\cref{fig:gmcdp_chassis_eval}).
-  The implementation space~$\impsp$ could be the set of all chassis
-  that could ever be designed (in case of a theoretical analysis), or
-  just the set of chassis available in the catalogue at hand (in case
-  of a practical design decision). The functionality of a chassis could
-  be formalized as ``the ability to transport a certain \F{payload
-      {[}g{]}}'' and ``at a given \F{speed {[}m/s{]}}''. More refined
-  functional requirements would include maneuverability, the cargo volume,
-  etc. The resources to consider could be the \R{cost {[}\${]}} of
-  the chassis; the total mass; and, for each motor to be placed in the
-  chassis, the required \R{speed {[}rad/s{]}} and \R{torque {[}Nm{]}}.
+  \label{exa:chassis}
+  Suppose we need to choose a chassis for a robot~(\cref{fig:gmcdp_chassis_eval}).
+  The implementation space~\impsp could be the set of all chassis that could ever be designed (in case of a theoretical analysis), or just the set of chassis available in the catalogue at hand (in case
+  of a practical design decision).
+  The functionality of a chassis could be formalized as ``the ability to transport a certain \F{payload
+      {[}g{]}}'' and ``at a given \F{speed {[}m/s{]}}''.
+  More refined functional requirements would include maneuverability, the cargo volume, etc.
+  The resources to consider could be the \R{cost {[}\${]}} of the chassis; the total mass; and, for each motor to be placed in the chassis, the required \R{speed {[}rad/s{]}} and \R{torque {[}Nm{]}}.
 \end{example}
+
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.4]{gmcdp_chassis_eval}
@@ -185,14 +184,11 @@ edges represent signals.
 
 % $A^{\op} \profto B \to \Set$
 
-Many mechanisms can be readily modeled as relations between a provided
-functionality and required resources.
+Many mechanisms can be readily modeled as relations between a provided  functionality and required resources.
 
 
 \begin{example}
-  The \F{functionality} of a DC motor~(\cref{fig:dc_motor})
-  is to provide a certain \F{speed} and \F{torque}, and the \R{resources}
-  are \R{current} and \R{voltage}.
+  The \F{functionality} of a DC motor~(\cref{fig:dc_motor}) is to provide a certain \F{speed} and \F{torque}, and the \R{resources} are \R{current} and \R{voltage}.
 \end{example}
 
 \begin{figure}[h]
@@ -248,9 +244,7 @@ functionality and required resources.
 
 \subsection{Geometrical constraints}
 
-Geometrical constraints are examples of constraints that are easily
-recognized as monotone, but possibly hard to write down in closed
-form.
+Geometrical constraints are examples of constraints that are easily recognized as monotone, but possibly hard to write down in closed form.
 
 \begin{example}[Bin packing]
   Suppose that each internal component occupies a volume
