@@ -91,7 +91,6 @@ utils/tables/full/all.tex: utils/symbols*.tex
 used-%.yaml:
 	@lsm_collect $(shell find volumes/$* -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
 
-	make -C utils
 
 vol1-nomenc-update: table
 	$(MAKE) used.yaml -B
