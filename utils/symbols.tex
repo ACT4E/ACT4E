@@ -42,9 +42,15 @@
 %:def:def:disjoint-union
 
 \newcommand{\disunionA}[1]{\tup{1, #1}}
+%:nomenc:\disunionA{a}, \disunionA{b}:Decorated elements of disjoint union
+%:def:def:disjoint-union
 \newcommand{\disunionB}[1]{\tup{2, #1}}
 \newcommand{\injA}{\stylemorph{\iota}_1}
+%:nomenc:\injA,\injB:Injections into $\setA \setdisunion \setB$.
+%:def:def:disjoint-union
 \newcommand{\injB}{\stylemorph{\iota}_2}
+%:nomenc-exclude:
+
 %%%%%%%%%%%%%%%%%%%%%%%%% Relations
 %:section:relations:Relations
 \newcommand{\relstyle}[1]{\mathbf{\color{blue} #1}} % style for relation (temporary)
@@ -89,7 +95,7 @@
 
 
 
-%:section:posets/operations:Operations
+%:section:posets/operations-sets:Operations on sets
 \newcommand{\Min}{\operatorname*{Min}}
 %:nomenc:\Min_{\posAleq} S : Minimal elements of the subset $S$.
 %:def:def:Min
@@ -97,11 +103,6 @@
 %:nomenc:\Max_{\posAleq} S : Maximal elements of the subset $S$.
 %:def:def:Max
 
-\newcommand{\join}{\pmb{\vee}} % Join
-%:nomenc:a \join b: Join of two elements $a$, $b$
-
-\newcommand{\meet}{\pmb{\wedge}} % Meet
-%:nomenc:a \meet b: Meet of two elements $a$, $b$
 
 \newcommand{\Inf}{\operatorname*{Inf}}
 \newcommand{\Sup}{\operatorname*{Sup}}
@@ -115,6 +116,15 @@
 %:nomenc:\downit S: Lower closure of $S$.
 %:def:def:lowerclosure
 
+%:section:posets/operations-elements:Operations on elements
+
+\newcommand{\join}{\pmb{\vee}} % Join
+%:nomenc:a \join b: Join of two elements $a$, $b$
+%:def:def:lattice
+
+\newcommand{\meet}{\pmb{\wedge}} % Meet
+%:nomenc:a \meet b: Meet of two elements $a$, $b$
+%:def:def:lattice
 
 %:section:posets/constructors: Constructors
 \newcommand{\antichains}{\mathcal{\colAnti A}} % antichain symbols
@@ -242,6 +252,7 @@
 \newcommand{\styleobj}[1]{{\colTransmuted #1}}
 \newcommand{\stylemorph}[1]{{\color{morphisms} #1}}
 \newcommand{\stylefunctors}[1]{{\color{functors}#1}}
+\newcommand{\stylemonads}[1]{{\color{functors}\mathcal{#1}}}
 \newcommand{\stylenat}[1]{{\color{naturaltransformations}#1}}
 % \newcommand{\arrowmorphism}{{-Triangle, draw=morphisms, line width=1pt}}
 %:section:comments: Personal comments
@@ -313,7 +324,7 @@
 %:nomenc:\morb\after\mora:``$\morb$ after $\mora$''
 
 
-\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\Ob}{\styleobj{\operatorname{Ob}}}
 %:nomenc:\Ob_\CatA:Objects of the category $\CatA$.
 %:def:def:categorymain
 
@@ -325,7 +336,6 @@
 
 
 
-\newcommand{\cat}[1]{\mathsf{#1}}
 \newcommand{\Cat}[1]{\ensuremath{\mathbf{#1}}\xspace}
 %:nomenc-exclude:
 
@@ -408,12 +418,7 @@
 %:nomenc-exclude:
 \newcommand{\ntrafod}{\stylenat{\delta}}
 %:nomenc-exclude:
-\newcommand{\leftunitor}{\stylenat{\lambda}} % Left unitor
-%:def:def:monoidal_cat
-\newcommand{\rightunitor}{\stylenat{\rho}} % Right unitor
-%:def:def:monoidal_cat
-\newcommand{\associator}{\stylenat{\alpha}} % Associator
-%:def:def:monoidal_cat
+
 %:section:transmutation: Transmutation
 
 \newcommand{\transmuter}[1]{\textbf{\colTransmuter #1}\xspace}
@@ -440,15 +445,27 @@
 
 %:section:categories/monads: Monads
 \newcommand{\monA}{\stylefunctors{T}}
-\newcommand{\monAA}{\stylefunctors{TT}}
-\newcommand{\monAAA}{\stylefunctors{TTT}}
 %:nomenc:\monA,\monB: Generic monads.
 %:def:def:monad
-\newcommand{\monB}{\stylefunctors{U}}
+\newcommand{\monAA}{\stylefunctors{TT}}
+%:nomenc-exclude:
+\newcommand{\monAAA}{\stylefunctors{TTT}}
+%:nomenc-exclude:
+\newcommand{\monB}{\stylefunctors{S}}
 %:nomenc-exclude:
 
-\newcommand{\monunit}{\stylenat{\eta}}
-\newcommand{\moncomp}{\stylenat{\mu}}
+\newcommand{\monunit}{\stylenat{\eta}} % Monad unit
+%:def:def:monad
+\newcommand{\moncomp}{\stylenat{\mu}} % Monad identity
+%:def:def:monad
+
+\newcommand{\Lendo}{\stylefunctors{L}} % lower-set endofunctor
+\newcommand{\Lmon}{\stylemonads{L}} % lower-set monad
+
+\newcommand{\Uendo}{\stylefunctors{U}} % upper-set endofunctor
+%:def:def:Uendo
+\newcommand{\Umon}{\stylemonads{U}} % upper-set monad
+%:def:def:Umon
 
 %:section:codesign-spaces: Co-design spaces
 \newcommand{\LF}{\lowersets\funsp}
@@ -534,7 +551,8 @@
 
 
 
-%:section:categories/monoidal: Monoidal categories
+%:section:categories/monoids: Monoids
+
 
 \newcommand{\idmon}{{\color{blue}1}} % identity for monoid
 %:def:def:monoid
@@ -542,19 +560,32 @@
 %:def:def:monoid
 \newcommand{\mtimes}{\mathrel{\pmb{\otimes}}} % Monoid operation
 
+%:section:categories/monoidal: Monoidal categories
+
 \newcommand{\mtimescat}{\mathrel{\stylefunctors{\pmb{\otimes}}}} % functor
-%:nomenc:\mtimes_{\CatA}:Monoidal operation for category $\CatA$.
+%:nomenc:\mtimescat_{\CatA}:Monoidal operation for category $\CatA$.
 %:def:def:monoidal_cat
-\newcommand{\idmoncat}{\styleobj{\mathbf{1}}} % identity for monoidal operation
+\newcommand{\idmoncat}{\styleobj{\mathbf{1}}} % Identity for monoidal operation
 %:def:def:monoidal_cat
 \newcommand{\mtimesD}{\mathrel{\mtimescat_{\CatD}}}
 %:nomenc-exclude:
 \newcommand{\mtimesC}{\mathrel{\mtimescat_{\CatC}}}
 %:nomenc-exclude:
-\newcommand{\strongmu}{\stylenat{\mu}}
+
+\newcommand{\leftunitor}{\stylenat{\lambda}} % Left unitor
+%:def:def:monoidal_cat
+\newcommand{\rightunitor}{\stylenat{\rho}} % Right unitor
+%:def:def:monoidal_cat
+\newcommand{\associator}{\stylenat{\alpha}} % Associator
+%:def:def:monoidal_cat
+
+
+
+\newcommand{\strongmu}{\stylenat{\mu}} % Isomorphism for strong monoidal functor
 %:def:def:strong-monoidal-functor
-\newcommand{\strongeps}{\stylenat{\epsilon}}
+\newcommand{\strongeps}{\stylenat{\epsilon}}  % Isomorphism for strong monoidal functor
 %:def:def:strong-monoidal-functor
+
 
 \newcommand{\Tr}{\operatorname{Tr}} % Trace operator
 %:def:def:traced-monoidal-category
@@ -717,7 +748,7 @@
 %:nomenc-exclude:
 
 %:section:abbrevs: Abbreviations
-\newcommand{\etal}{{et\,al.}\xspace} % avoid!
+\newcommand{\etal}{{et\,al.}\xspace}
 %:nomenc-exclude:
 \newcommand{\eg}{\textbf{\color{red} e.g.},\xspace}% avoid!
 %:nomenc-exclude:
