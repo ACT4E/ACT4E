@@ -23,8 +23,9 @@ ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 	pdflatex $*
 
 clean:
-	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc*
-	rm -f nomenc-*.tex used*yaml
+	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls
+
+# rm -f nomenc-*.tex used*yaml
 
 
 ready: ACT4E-ready.pdf
@@ -85,7 +86,7 @@ table: utils/tables/full/all.tex
 utils/tables/full/all.tex: utils/symbols*.tex
 	$(MAKE) used.yaml -B
 	lsm_table --only used.yaml --style full $^ > $@
-	
+
 
 
 used-%.yaml:
