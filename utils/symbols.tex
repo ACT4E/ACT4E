@@ -9,6 +9,7 @@
 \newcommand{\setA}{\stylesets{A}}
 %:nomenc:\setA,\setB,\setC:Generic names for sets.
 \newcommand{\setB}{\stylesets{B}}
+%:nomenc-exclude:
 \newcommand{\setC}{\stylesets{C}}
 %:nomenc-exclude:
 \newcommand{\ela}{\styleelements{x}}
@@ -19,8 +20,11 @@
 %:nomenc-exclude:
 \newcommand{\stylemaps}[1]{{\color{brown}#1}}
 \newcommand{\mapa}{\stylemaps{f}}
+%:nomenc:\mapa,\mapb,\mapc:Generic names for maps between sets.
 \newcommand{\mapb}{\stylemaps{g}}
+%:nomenc-exclude:
 \newcommand{\mapc}{\stylemaps{h}}
+%:nomenc-exclude:
 
 
 
@@ -33,6 +37,8 @@
 \newcommand{\nonNegRealsComp}{\overline{\reals}_{\geq0}} % Completion of non-negative real numbers.
 
 \newcommand{\Rcomp}{\nonNegRealsComp} % Not sure - need to check
+\newcommand{\singletonel}{\bullet} % element of the singleton
+\newcommand{\singleton}{\{\singletonel\}} % singleton set
 
 % R with units
 \newcommand{\Runit}[1]{\reals^{\!\!\textrm{[#1]}}}
@@ -329,13 +335,18 @@
 
 
 %:section:categories/basic: Basic
-\newcommand{\then}{\mathrel{\fatsemi}} % Composition (in general)
-\newcommand{\mthen}{\mathrel{\stylemorph{\fatsemi}}} % Composition for morphisms
-\newcommand{\fthen}{\mathrel{\stylefunctors{\fatsemi}}} % Composition for functors
-\newcommand{\nthen}{\mathrel{\stylenat{\fatsemi}}} % Compositions for natural transformations
 
 \newcommand{\after}{\mathrel{\circ}}
-%:nomenc:\morb\after\mora:``$\morb$ after $\mora$''
+%:nomenc:b \after a:``$b$ after $a$''
+
+\newcommand{\then}{\mathrel{\fatsemi}} % Composition (in general)
+%:nomenc:a \then b:``$a$ then $b$''
+\newcommand{\mthen}{\mathrel{\stylemorph{\fatsemi}}} % Composition for morphisms
+%:nomenc:\mora \mthen \morb: Composition of morphisms
+\newcommand{\fthen}{\mathrel{\stylefunctors{\fatsemi}}} % Composition for functors
+%:nomenc:\funa \fthen \funb: Composition of functors
+\newcommand{\nthen}{\mathrel{\stylenat{\fatsemi}}} % Compositions for natural transformations
+%:nomenc:\ntrafoa \nthen \ntrafob: Composition of natural transformations
 
 
 \newcommand{\Ob}{\styleobj{\operatorname{Ob}}}
@@ -421,7 +432,10 @@
 %:nomenc-exclude:
 
 \newcommand{\funid}{\stylefunctors{\operatorname{Id}}} % identity functor
+%:nomenc:\funid{\CatA}: Identity functor for category $\CatA$
 
+\newcommand{\natid}{\stylenat{\operatorname{Id}}} % identity natural transformation
+%:nomenc:\natid_{\funa}: Identity natural transformation for functor $\fun$
 
 \newcommand{\ntrafoa}{\stylenat{\alpha}}
 %:nomenc:\ntrafoa,\ntrafob,\ntrafoc,\ntrafod: Generic natural transformations
@@ -461,16 +475,16 @@
 \newcommand{\monA}{\stylefunctors{T}}
 %:nomenc:\monA,\monB: Generic monads.
 %:def:def:monad
-\newcommand{\monAA}{\stylefunctors{TT}}
+\newcommand{\monAA}{{\monA\fthen\monA}}
 %:nomenc-exclude:
-\newcommand{\monAAA}{\stylefunctors{TTT}}
+\newcommand{\monAAA}{{\monA\fthen\monA\fthen\monA}}
 %:nomenc-exclude:
 \newcommand{\monB}{\stylefunctors{S}}
 %:nomenc-exclude:
 
-\newcommand{\monunit}{\stylenat{\eta}} % Monad unit
+\newcommand{\monunit}{\stylenat{\operatorname{un}}} % Monad unit
 %:def:def:monad
-\newcommand{\moncomp}{\stylenat{\mu}} % Monad identity
+\newcommand{\moncomp}{\stylenat{\operatorname{mu}}} % Monad identity
 %:def:def:monad
 
 
@@ -610,7 +624,12 @@
 %:section:categories/adjunctions: Adjunctions
 
 \newcommand{\funl}{\stylefunctors{L}} % left adjunct functor
+%:def:def:cat-adjunction-v1
 \newcommand{\funr}{\stylefunctors{R}} % right adjunct functor
+%:def:def:cat-adjunction-v1
+\newcommand{\adjunction}{\dashv} % Adjunction
+%:nomenc:\funl \adjunction \funr: $\funl$ and $\funr$ are adjoint functors.
+%:def:def:cat-adjunction-v1
 
 \newcommand{\adjtau}{\stylenat{\tau}}
 
@@ -618,14 +637,14 @@
 \newcommand{\equivcounit}{\stylenat{\operatorname{co}}} % Co-unit
 %:def:def:cat-equivalence
 
+%:section:categories/traced: Traced monoidal categories
+
+
+
 \newcommand{\Tr}{\operatorname{Tr}} % Trace operator
 %:def:def:traced-monoidal-category
 
 \newcommand{\Conw}{\aword{Conw}} % Conway operator
-
-
-
-
 
 
 
@@ -665,6 +684,10 @@
 %:example: $\tup{\posA, \posAleq}$
 \newcommand{\tupp}[1]{\langle#1\rangle}
 %:example: $\tupp{\posA, \posAleq}$
+
+\newcommand{\emptytuple}{\left\langle \right\rangle} % zero-size tuple
+
+
 
 % The one below supposedly would allow splitting tuples over newlines,
 % but I could not make it work - AC
@@ -888,9 +911,6 @@
 
 \newcommand{\adp}{\mathbf{d}} % generic design problem as a profunctor
 
-\newcommand{\adjunction}{\dashv} % Adjunction
-%:nomenc:\funa \adjunction \funb: $\funa$ and $\funb$ are adjoint functors.
-%:def:def:cat-adjunction-v1
 
 \newcommand{\dprob}{\aword{dp}}
 \newcommand{\dpseries}{\aword{series}}
@@ -1038,8 +1058,7 @@
 
 
 \newcommand{\One}{\mathbf{1}} % \XXX not sure if category or set
-\newcommand{\singletonel}{\bullet}
-\newcommand{\singleton}{\{\singletonel\}}
+
 
 
 
@@ -1083,6 +1102,6 @@
 \newcommand{\dvert}{\operatorname{Vert}}
 
 
-\newcommand{\emptytuple}{\left\langle \right\rangle} % zero-size tuple
 
 \newcommand{\Si}{S\`i}
+%:nomenc-exclude:
