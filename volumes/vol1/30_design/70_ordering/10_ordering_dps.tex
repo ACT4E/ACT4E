@@ -1,19 +1,18 @@
 % !TEX root = standalone.tex
-
-
 \section{Ordering DPs}\label{sec:ordering-order}
 We claimed that category theory is an efficient language for talking about \emph{structure}, and showed how the category~\DP could accommodate all the basic operations required by a theory of formal engineering design. Here, we illustrate some of the applications and advantages of~\DP in reasoning about and solving design problems, starting with the fact that that~\DP is compact closed, which allows us to compose and reason about ``design problems of design problems''.
 
 \begin{definition}[Order on~\DP]
   \label{def:DP_loc_pos}
 
-  Suppose that~$A$ and~$B$ are posets, and that~$f,g \colon \F{A} \profto \R{B}$ are design problems. We say that~$f$ \emph{implies}~$g$, denoted~$f \ordgeq_{\DP} g$, if~$f(\F{a}^*,\R{b}) \ordleq g(\F{a}^*,\R{b} )$ in~\Bool, for all~$\F{a} \in \F{A}$
-  and~$\R{b} \in \R{B}$. In other words, if the fact that~$f$ is feasible implies that~$g$ is feasible. We diagrammatically represent the relation~$f \ordgeq_{\DP} g$ as in~\cref{fig:dpimplies}.
+  Suppose that~$A$ and~$B$ are posets, and that~$f,g \colon \F{A} \profto \R{B}$ are design problems. We say that~$f$ \emph{implies}~$g$, denoted~$f \posDPleq g$, if~$f(\F{a}^*,\R{b}) \ordleq g(\F{a}^*,\R{b} )$ in~\Bool, for all~$\F{a} \in \F{A}$
+  and~$\R{b} \in \R{B}$. In other words, if the fact that~$f$ is feasible implies that~$g$ is feasible. We diagrammatically represent the relation~$f \posDPleq g$ as in~\cref{fig:dpimplies}.
 \end{definition}
 
 \AC{I don't think it is particularly useful here to show a figure like this. I would draw
 the homset as a bubble and put two points in there. Also note that this figure was
 from before when we used the implication arrow instead of $\leq$.}
+\todo{change pic}
 \begin{figure}[h!]
   \begin{center}
     \includesag{60_relation}
@@ -26,22 +25,21 @@ from before when we used the implication arrow instead of $\leq$.}
 \end{remark}
 \begin{lemma}
   \label{lem:dpboundedlattice}
-  $\Hom_\DP(\F{A},\R{B})$ is a bounded lattice with union~$\vee$ as meet, intersection~$\wedge$ as join, least upper bound~$1_{\F{A},\R{B}}$ and greatest lower bound~$0_{\F{A},\R{B}}$.
+  $\HomSet{\DP}{\F{A}}{\R{B}}$ is a bounded lattice with union~$\vee$ as meet, intersection~$\wedge$ as join, least upper bound~$1_{\F{A},\R{B}}$ and greatest lower bound~$0_{\F{A},\R{B}}$.
 \end{lemma}
 
 \begin{proof}
-  First of all, we need to prove that~$\Hom_\DP(\F{A},\R{B})$ is a poset. To prove this, we check the following:
+  First of all, we need to prove that~$\HomSet{\DP}{\F{A}}{\R{B}}$ is a poset. To prove this, we check the following:
 
   \begin{compactitem}
-    \item \emph{Reflexivity}: Given~$f\in \Hom_\DP(\F{A},\R{B})$,~$f\ordgeq_\DP f$ is always true.
-    \item \emph{Antisymmetry}: Given~$f,g\in \Hom_\DP(\F{A},\R{B})$, if~$f\ordgeq_\DP g$ and~$g\ordgeq_\DP f$, then~$f=g$.
-    \item \emph{Transitivity}: Given~$f,g,h\in \Hom_\DP(\F{A},\R{B})$,~$f\ordgeq_\DP g$, and~$g\ordgeq_\DP h$, then~$f\ordgeq_\DP h$.
+    \item \emph{Reflexivity}: Given~$f\in \HomSet{\DP}{\F{A}}{\R{B}}$,~$f\posDPleq f$ is always true.
+    \item \emph{Antisymmetry}: Given~$f,g\in \HomSet{\DP}{\F{A}}{\R{B}}$, if~$f\posDPleq g$ and~$g\posDPleq f$, then~$f=g$.
+    \item \emph{Transitivity}: Given~$f,g,h\in \HomSet{\DP}{\F{A}}{\R{B}}$,~$f\posDPleq g$, and~$g\posDPleq h$, then~$f\posDPleq h$.
   \end{compactitem}
   Therefore,~$\Hom_\DP$ is a poset.
-  Furthermore, consider two design problems~$f,g\in \Hom_\DP(\F{A},\R{B})$.
+  Furthermore, consider two design problems~$f,g\in \HomSet{\DP}{\F{A}}{\R{B}}$.
   Their least upper bound (join) is~$f\wedge g$, since it is the least design problem implying both~$f$ and~$g$.
   Their greatest lower bound (meet), instead, is~$f\vee g$, since it is the greatest design problem implied by both~$f$ and~$g$.
   This proves that~$\Hom_\DP$ is a lattice.
   To prove that it is bounded, we identify the top element as~$1_{\F{A},\R{B}}$ (it implies all other design problems) and the bottom element as~$0_{\F{A},\R{B}}$ (it is implied by all the other design problems).
 \end{proof}
-
