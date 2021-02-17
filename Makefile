@@ -1,7 +1,8 @@
 all:
-	@echo
-	@echo Compile using \"make ready\" or \"make full\".
-	@echo
+	@echo do
+	@echo 	make -B ACT4E-vol1.pdf
+	@echo 	make -B ACT4E-vol1-final.pdf
+	@echo 	make -B ACT4E-vol2.pdf
 	@echo Create the chached tikz using \"make tikz\".
 
 
@@ -17,27 +18,16 @@ ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 
 %.pdf: %.tex
 	#rm -f $*.aux
-	latexmk -pdflatex   -f $<
+	latexmk -synctex=1 -pdflatex   -f $<
 	# latexmk does not seem to do this, even though we put in latexmkrc
 	makeindex $*.nlo -s nomencl.ist -o $*.nls
-	pdflatex $*
+	pdflatex -synctex=1 $*
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls
 
 # rm -f nomenc-*.tex used*yaml
-
-
-ready: ACT4E-ready.pdf
-full: ACT4E-full.pdf
-full-fast: ACT4E-full-fast.pdf
-
-ACT4E-ready.pdf::  chapters/*.tex utils/*.tex common.tex
-
-ACT4E-full.pdf::  chapters/*.tex utils/*.tex  common.tex
-
-ACT4E-full-fast.pdf::  chapters/*.tex utils/*.tex  common.tex
-
+ 
 
 tikz:
 	touch sag/*pdf
@@ -97,4 +87,4 @@ vol1-nomenc-update: table
 	$(MAKE) used.yaml -B
 	$(MAKE) table -B
 	$(MAKE) nomenc -B
-	pdflatex ACT4E-vol1
+	pdflatex -synctex=1 ACT4E-vol1
