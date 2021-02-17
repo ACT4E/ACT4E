@@ -20,7 +20,7 @@ ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 	#rm -f $*.aux
 	latexmk -synctex=1 -pdflatex   -f $<
 	# latexmk does not seem to do this, even though we put in latexmkrc
-	makeindex $*.nlo -s nomencl.ist -o $*.nls
+	# makeindex $*.nlo -s nomencl.ist -o $*.nls
 	pdflatex -synctex=1 $*
 
 clean:
