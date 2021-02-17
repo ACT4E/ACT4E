@@ -1,6 +1,8 @@
 TIME     = /usr/bin/time -p
 LATEXMK  = latexmk -xelatex -silent -f -g --pdf
-PDFLATEX = xelatex -interaction=batchmode
+
+#PDFLATEX = xelatex -interaction=batchmode
+PDFLATEX = pdflatex -interaction=batchmode
 PDFCROP  = pdfcrop
 RM       = /bin/rm
 
@@ -20,20 +22,20 @@ all: $(PDFGraphics)
 
 
 %.pdf : %.tex  ../utils/*.tex
-	$(PDFLATEX) $< 
-	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.*
+	$(PDFLATEX) $<
+	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc*
 
 
 %.pdf : %-page.pdf
 	$(PDFCROP) $< $@
 
 
-clean-aux: 
-	$(RM) -f -- *.aux *.bak *.bbl *.blg *.log *.run.xml *blx.bib *-page* *.out *.toc *.tdo _region.* *.auxlock
+clean-aux:
+	$(RM) -f -- *.aux *.bak *.bbl *.blg *.log *.run.xml *blx.bib *-page* *.out *.toc *.tdo _region.* *.auxlock  *.maf *.mtc*
 
 
 clean : .PHONY
-	$(MAKE) clean-aux 
+	$(MAKE) clean-aux
 	$(RM) -f -- $(PDFGraphics)
 	$(RM) -f -- *-page*tex
 	# $(RM) -f -- $(StandAloneGraphicsTeXFiles)

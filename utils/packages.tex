@@ -1,8 +1,17 @@
 % !TEX root = ../../ACT4E-full.tex
 \usepackage{xr}
 
+%
+\RedeclareSectionCommand[
+  beforeskip=10pt,
+  afterskip=10pt,
+%  headings=normal,
+%  style=chapter% no part page
+]{part}
 
-\usepackage{scrpage2}  %<---
+
+%\usepackage{scrpage2}  %<---
+\usepackage{scrlayer-scrpage}
 \usepackage[table,svgnames]{xcolor}
 
 
@@ -168,8 +177,8 @@
 \fi
 
 % % cache the tikz
-% \usetikzlibrary{external}
-% \tikzexternalize[prefix=tikz-cache/]
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=tikz-cache/]
 
 
 \usepackage{makeidx}
@@ -244,24 +253,44 @@
   \vfill
   \clearpage%
 }
+%
+%\newcommand{\partfirst}[3]{
+%  \vfill%
+%  \begin{minipage}{\textwidth}%
+%    #3%
+%  \end{minipage}%
+%  \vfill%
+%  \par%
+%  \parttoc%
+%  \par%
+%  \par%
+%  \smallskip%
+%  \begin{minipage}{\textwidth}%
+%    \small #2%
+%  \end{minipage}%
+%  \vfill
+%  \clearpage%
+%}
 
-\newcommand{\partfirst}[3]{
+
+\newcommand{\partfirstb}[4]{
   \vfill%
   \begin{minipage}{\textwidth}%
-    #3%
+    #1%
   \end{minipage}%
   \vfill%
-  \par%
-  \parttoc%
-  \par%
-  \vfill%
-  \includegraphics[width=\textwidth]{#1}
+  \includegraphics[width=\textwidth]{#2}
   \par%
   \smallskip%
   \begin{minipage}{\textwidth}%
-    \small #2%
+    \small #3%
   \end{minipage}%
   \vfill
+  \newpage
+  #4
+  \par%
+  \vfill
+  \parttoc%
   \clearpage%
 }
 
@@ -293,7 +322,7 @@
 \crefname{proposition}{Prop.}{Prop.}
 \Crefname{proposition}{Prop.}{Prop.}
 
-%
+% only make equations ref say (1) rather than Eq. (1)
 \crefformat{equation}{(#2#1#3)}
 
 \usepackage{bbding}
@@ -303,8 +332,7 @@
 \renewcommand{\afterparttoc}{\empty}
 \renewcommand{\ptctitle}{\empty}
 
-%\RedeclareSectionCommand[
-%  beforeskip=\dimexpr-3.3\baselineskip-\parskip\relax,
-%  afterskip=\dimexpr3.3\baselineskip+\parskip\relax,
-%  style=chapter% no part page
-%]{part}
+\makeatletter
+\def\@endpart{ }
+
+\makeatother
