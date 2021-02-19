@@ -94,4 +94,4 @@ vol1-nomenc-update: table
 pysnippets:
 	pysnip-make -c make
 remake:
-	pysnip-make -c "clean; make"
+	pysnip-make -c "clean; rmake; ls"
