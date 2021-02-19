@@ -1,0 +1,59 @@
+
+\usepackage[draft=false]{minted}
+\usepackage{pysnip}
+
+
+
+\definecolor{python-code-bg}{rgb}{0.85,0.90,0.95}
+\definecolor{yaml-code-bg}{rgb}{0.95,0.90,0.85}
+\setminted[python]{mathescape,bgcolor=python-code-bg,autogobble=true,fontsize=\footnotesize}
+\setmintedinline[python]{bgcolor={}}
+\setminted[yaml]{bgcolor=yaml-code-bg,autogobble=true,fontsize=\footnotesize}
+\usemintedstyle{monokay}
+\usepackage{currfile}
+
+% a better texttt font
+\renewcommand{\ttdefault}{txtt}
+\newcommand{\methodsource}[2]{%
+%  \begin{quote}%
+  \py[\currfilebase-\detokenize{#1}-\detokenize{#2}]{from pysnip import write_source_minted;%
+  from act4e_interfaces import #1;
+  write_source_minted(#1.#2, nodec=True)
+  }%
+%  \end{quote}
+}
+\newcommand{\classsource}[1]{%
+%  \begin{quote}%
+  \py[\currfilebase-\detokenize{#1}]{from pysnip import write_source_minted;%
+  from act4e_interfaces import #1;
+  write_source_minted(#1, nodec=True)
+  }%
+%  \end{quote}
+}
+% problem: the code takes too much space
+% solution: https://tex.stackexchange.com/questions/288968/natural-width-when-centering-a-minted-environment
+%\xpretocmd{\minted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
+%\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
+
+\newcommand{\funcname}[1]{{\color{blue}\mintinline{python}{#1()}}\xspace}
+\newcommand{\classname}[1]{{\bfseries\color{blue}\mintinline{python}{#1}}\xspace}
+\newcommand{\Setoid}{\classname{Setoid}}
+
+\newcommand{\datafile}[2]{%
+%  \begin{quote}%
+  \py[\currfilebase-#1]{from act4e_tex import visualize_data_file;%
+  visualize_data_file('#2');
+  }%
+%  \end{quote}
+}
+
+
+\newcommand{\datafilefig}[3]{%
+\begin{figure}[h]%
+  \datafile{#1}{#2}%
+  \caption{\texttt{#2}}%
+  \label{#3}%
+\end{figure}%
+}
+
+
