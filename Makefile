@@ -21,7 +21,7 @@ ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 	latexmk -synctex=1 -pdflatex -shell-escape  -f $<
 	# latexmk does not seem to do this, even though we put in latexmkrc
 	# makeindex $*.nlo -s nomencl.ist -o $*.nls
-	pdflatex -synctex=1 -shell-escape $*
+	#pdflatex --shell-escape -synctex=1 -shell-escape $*
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls
@@ -87,7 +87,7 @@ vol1-nomenc-update: table
 	$(MAKE) used.yaml -B
 	$(MAKE) table -B
 	$(MAKE) nomenc -B
-	pdflatex -synctex=1 ACT4E-vol1
+	pdflatex --shell-escape -synctex=1 ACT4E-vol1
 
 
 
