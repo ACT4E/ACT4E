@@ -1,4 +1,3 @@
-
 \usepackage[draft=false,cache=true,cachedir=cache-minted]{minted}
 \usepackage{pysnip}
 
@@ -6,30 +5,55 @@
 
 \definecolor{python-code-bg}{rgb}{0.85,0.90,0.95}
 \definecolor{yaml-code-bg}{rgb}{0.95,0.90,0.85}
+\definecolor{console-code-bg}{rgb}{0.90,0.95,0.95}
+\definecolor{output-code-bg}{rgb}{0.80,0.85,0.85}
+
 \setminted[python]{mathescape=true,bgcolor=python-code-bg,autogobble=true,fontsize=\footnotesize}
 \setmintedinline[python]{bgcolor={}}
 \setminted[yaml]{bgcolor=yaml-code-bg,autogobble=true,fontsize=\footnotesize}
+\setminted[console]{fontsize=\footnotesize,bgcolor=console-code-bg}
+
+\newminted[console]{console}{fontsize=\footnotesize,bgcolor=output-code-bg}
+\newminted[consoleoutput]{console}{fontsize=\footnotesize,bgcolor=output-code-bg}
 \usemintedstyle{monokay}
+
+\newmintinline[pystr]{python}{bgcolor={},fontsize=\footnotesize}
+\newmintinline[files]{text}{bgcolor={},fontsize=\footnotesize}
+\newmintinline[str]{text}{bgcolor={},fontsize=\footnotesize}
+
+
+
+\newcommand{\evalrepo}{\texttt{\footnotesize dockerrepo}\xspace}
 \usepackage{currfile}
 
 % a better texttt font
 \renewcommand{\ttdefault}{txtt}
 \newcommand{\methodsource}[2]{%
 %  \begin{quote}%
-  \py[\currfilebase-\detokenize{#1}-\detokenize{#2}]{from pysnip import write_source_minted;%
+  \py[\currfilebase-\detokenize{#1}-\detokenize{#2}]{from act4e_tex import write_source_minted;
   from act4e_interfaces import #1;
-  write_source_minted(#1.#2, nodec=True)
+  write_source_minted(#1.#2, nodec=False,reduce_space=True)
   }%
 %  \end{quote}
 }
 \newcommand{\classsource}[1]{%
 %  \begin{quote}%
-  \py[\currfilebase-\detokenize{#1}]{from pysnip import write_source_minted;%
+  \py[\currfilebase-\detokenize{#1}]{from act4e_tex import write_source_minted;
   from act4e_interfaces import #1;
-  write_source_minted(#1, nodec=True)
+  write_source_minted(#1, nodec=False,reduce_space=True)
   }%
 %  \end{quote}
 }
+\newcommand{\visualizemodule}[1]{%
+%  \begin{quote}%
+  \py[\currfilebase-\detokenize{#1}]{%
+    from act4e_tex import visualize_module;
+    visualize_module('#1',nodec=False,reduce_space=True)
+  }%
+%  \end{quote}
+}
+
+
 % problem: the code takes too much space
 % solution: https://tex.stackexchange.com/questions/288968/natural-width-when-centering-a-minted-environment
 %\xpretocmd{\minted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
@@ -49,11 +73,11 @@
 
 
 \newcommand{\datafilefig}[3]{%
-\begin{figure}[h]%
-  \datafile{#1}{#2}%
-  \caption{\texttt{#2}}%
-  \label{#3}%
-\end{figure}%
+  \begin{figure}[h]%
+    \datafile{#1}{#2}%
+    \caption{\texttt{#2}}%
+    \label{#3}%
+  \end{figure}%
 }
 
 

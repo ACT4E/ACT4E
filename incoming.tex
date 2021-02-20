@@ -1,124 +1,287 @@
 \part{Homework}
 %\partfirstb{(short desc)}{placeholder}{(caption)}{long desc}
 
+\instructors{
+  \input{incoming_instructors}
+}
+
 
 \chapter{Instructions}
-
-\instructors{
-
-
-
-  \section*{Introduction for admins}
-
-  \subsection*{Repositories}
-  There are 3 repositories involved:
-  \begin{compactenum}
-    \item \texttt{idsc-frazzoli/ACT4E-exercises} - a \textbf{public} repository.
-    This contains the Python interfaces, or ``problem statements''.
-    \item \texttt{idsc-frazzoli/ACT4E-exercises-template} - a \textbf{public} repository.
-    This is the repository that the students need to clone and work inside.
-    \item \texttt{idsc-frazzoli/ACT4E-private} - a \textbf{private} repository.
-    This contains the solutions to the exercises, plus all the test infrastructure that allows
-    the students to test the solution.
-  \end{compactenum}
-
-  To do development, these repositories need to be checked out inside the book repository.
-
-
-  \subsection*{Workflow}
-
-  From the point of view of the student, this is the workflow:
-
-  \begin{compactenum}
-    \item Fork \texttt{idsc-frazzoli/ACT4E-exercises-template}.
-    \item Work on the exercises inside this repository
-    \item To evaluate the exercises type \mintinline{console}{make check}.
-
-  \end{compactenum}
-
-
-}
 
 
 \section{Introduction}
 
 \subsection{Prerequisites}
+
+You will need the following skills:
+
+\begin{compactitem}
+  \item Python programming
+  \item Git / Github usage
+  \item Some idea of what Docker is.
+\end{compactitem}
+
 \todotext{Pointer to learning Python resources.}
-\todotext{Pointer to learning Git/Github resources.}
+
+If you want to learn Git and Github, go to \href{https://try.github.io/}{try.github.io}.
+
+\todotext{Pointer to learning Docker}
 
 
 \section{Set up}
 
-\todotext{Instructions on how to access Github Classroom}
+\subsection{Sign up on Github}
+
+Sign up on Github if you haven't already.
+
+\subsection{Option 1: Using Github Classroom}\label{subsec:with-classroom}
+
+\begin{quote}
+  \emph{
+    If you are following a class where the instructors are using Github Classroom,
+    this is the section for you. Otherwise, jump to \cref{sub:without-classroom}.}
+\end{quote}
+
+Github Classroom is a product that helps coordinate assignments for large classes.
+
+Your instructors will send you an invite link to join the classroom. An invite link is similar to this:
+
+\url{https://classroom.github.com/a/XXXXXXX}
+
+If you are not enrolled in an official class, then you can get the invite link on Zulip.
+
+In any case, do not pass invite links around: there are different ``classrooms''.
+Do not use old links because the classroom is refreshed after each season.
+
+Once you go through the procedure, you will have created a repository
+
+\url{https://github.com/INSTRUCTORS/solution-YOU}
+
+where \str{INSTRUCTORS} is the Github organization for the instructors, and \str{YOU} is your username.
+
+Clone the repository just created and jump into the directory.
+
+You should see the following content:
+
+% Trick so that pycharm does not reformat inside
+\begin{minted}[autogobble]{console}
+ .  src/
+ .   act4e_solutions/
+ .      __init__.py
+ .  Dockerfile
+ .  Makefile
+ .  requirements.txt
+ .  setup.py
+\end{minted}
+
+\subsection{Option 2: Independent use without Github Classroom}
+\label{sub:without-classroom}
+
+\begin{quote}
+  \emph{
+    If you are \emph{not} following a class where the instructors are using Github Classroom,
+    this is the section for you. Otherwise, jump to \cref{subsec:with-classroom}.
+  }
+\end{quote}
+
+In this section we assume that you are not part of a class.
+
+In that case, you can fork directly the repository
+
+\url{https://github.com/ACT4E/ACT4E-exercises-template}
+
+Note that there might be different branches to choose from. The instructions in this book correspond to
+the branch \texttt{spring2021}.
+
+You can do the exercises on your own by using this repository.
+
+In the following, ignore any other mention of Github Classroom.
+
+\subsection{Docker installation}
+
+\todotext{To write}
 
 
-\section{First Python exercise}
-
-\todotext{A simple exercise}
-
-
-\chapter{Sets and relations}
-
-
-\section{Finite sets}
+\section{Exercise tutorial: Finite sets}\label{sec:exercise-tutorial}
 
 \subsection*{Interface}
 Here is the interface for finite sets:
 %
 \classsource{FiniteSet}
 
-%
+The class derives from \classname{ABC}, which means \emph{abstract base class}; it tells the interpreter
+that some of the methods of the class will have to be implemented by the subclasses. This is the equivalent
+of the ``virtual'' methods in C++.
+The methods that need to be implemented are marked by a decorator \pystr|@abstractmethod|.
+
+
+The code contains also typing annotations.
+The symbol \classname{Element}, like the others we will see later, such as \classname{Object} and \classname{Morphism}, are simple aliases to Python's \classname{object} class; which means that they are not specifying the type at all.
+However, they are useful for intuition.
+The latest versions of Python have supported typing annotations with generics, so we could have chosen to use those and have more accurate typing, however we want these exercises to be accessible to all.
+
+The methods themselves are self-explanatory:
+
+\begin{compactitem}
+  \item The method \funcname{size} returns the size of the set.
+  \item The method \funcname{contains} checks if an element is part of this set.
+  \item The method \funcname{equal} checks if two elements are the same.
+  \item The method \funcname{elements} returns a Python \classname{Collection}: this is something that you can iterate.
+\end{compactitem}
+
+You will have to implement this class as part of the exercise.
+
 
 \subsection*{Representation}
-The format is shown in \cref{fig:set1}.
+
+We have defined file formats for all the structures to be used in the exercises.
+These are based on YAML\@.
+
+The file format for \classname{FiniteSet} is shown in \cref{fig:set1}.
 
 \datafilefig{set1code}{set1.finset.yaml}{fig:set1}
 
+The file represents a dictionary with only one field called \pystr|elements|, which contains a list of elements.
+YAML can represent most primitive data format of Python, as well as lists and dictionaries.
 
-\begin{exercise}[Loading finite sets]
-  Create a function to load the data.
-
+\begin{exercise}[\exname{TestFiniteSetRepresentation}]
+  \label{ex:setrepr}
+  The first exercise is to implement the methods that read and write from this file format.
+  You have to implement the following interface, \classname{FiniteSetRepresentation}:
 %
   \classsource{FiniteSetRepresentation}
-
+  You also have to implement a concrete subclass of \classname{FiniteSet}.
 \end{exercise}
+
+\subsection{Walk-through for first exercise}
+
+We are going to solve this exercise together.
+
+We assume that you have checked out the repository as explained in the setup section.
+
+Of all the files in the repository, we only need the following for now:
+
+\begin{minted}[autogobble]{console}
+. src/
+.   act4e_solutions/
+.     __init__.py
+. Makefile
+\end{minted}
+
+
+We can start by checking if this is a valid solution. There is a recipe for this in the \files{Makefile}.
+Type this:
+
+\begin{console}
+  $ make check-TestFiniteSetRepresentation
+\end{console}
+
+Here \exname{TestFiniteSetRepresentation} is the code name for the exercise. You can check other exercises by changing the name.
+
+This will fail; it will complain saying that it didn't even find any code implementing the exercise.
+
+
+Create a file called \files{first.py} in the \files|src/act4e_solutions| directory.
+This file will contain the implementation of the classes.
+
+For now we are just going to add non-functional code for the classes.
+
+\visualizemodule{act4e_book_examples.empty}
+
+Now modify \files|__init__.py| to import all the symbols from the \files{first} module.
+
+\begin{minted}{python}
+from .first import *
+\end{minted}
+
+At this point you can check again by typing:
+
+\begin{console}
+$ make check-TestFiniteSetRepresentation
+\end{console}
+
+The program will tell you that it found the code supposedly implementing the function,
+but that the tests failed. All of our functions returned \pystr{None}.
+
+At this point we need to implement the rest of the code.
+
+For example, this is a valid implementation of \classname{FiniteSet}.
+
+\visualizemodule{act4e_book_examples.f1}
+
+
+To read and write data, we use the \pystr{yaml} library.
+
+\visualizemodule{act4e_book_examples.f2}
+
+With this code, the tests should pass. Try again to run
+
+\begin{console}
+$ make check-TestFiniteSetRepresentation
+\end{console}
+
+Note that the types used by the function \funcname{save} of \classname{MyFiniteSetRepresentation} is \classname{FiniteSet},
+not \classname{MyFiniteSet}. The method must be able to work for \emph{any} implementation of  \classname{FiniteSet},
+not just yours. In fact, the tester will try to call that function with a different implementation.
+
+Note that the implementation above uses this line to get the elements:
+\begin{minted}{python}
+all_elements = sorted(f.elements())
+\end{minted}
+This is correct because it is using the method \funcname{elements} that all implementations of  \classname{FiniteSet}
+need to have. What could be wrong is using code like the following:
+\begin{minted}{python}
+all_elements = sorted(f._elements)
+\end{minted}
+This code accesses the attribute \pystr|_elements| of the class \classname{MyFiniteSet}.
+It will not work with other implementations. In fact, the tests will fail.
+
+
+\chapter{Sets and relations}
+
+We go on assuming that you have already completed the tutorial in \cref{sec:exercise-tutorial}.
 
 \subsection{Properties}
 
-\begin{exercise}
-  Given two finite sets, check if they are a subset of the other.
-  \methodsource{FiniteSetProperties}{is_subset}
+\begin{exercise}[\exname{TestFiniteSetProperties}]
+Given two finite sets, check if they are a subset of the other.
+Implement the following interface:
+\methodsource{FiniteSetProperties}{is_subset}
 \end{exercise}
 
-\subsection{Composition}
+Check your results with
+\begin{console}
+$ make check-TestFiniteSetProperties
+\end{console}
 
-\begin{exercise}
-  Given two finite sets, compute the union.
-
-
-  \methodsource{FiniteSetOperations}{union}
-\end{exercise}
-
-\begin{exercise}
-  Given two finite sets, compute the intersection.
+\subsection{Union and intersection}
 
 
-  \methodsource{FiniteSetOperations}{intersection}
+\begin{exercise}[\exname{TestFiniteSetOperations}]
+Given two finite sets, compute the union and intersection.
+\classsource{FiniteSetOperations}
 \end{exercise}
 
 
+Check your results with
+\begin{console}
+$ make check-TestFiniteSetOperations
+\end{console}
 
+
+
+
+\subsection{Product and disjoint union}
+
+\AC{Checks not implemented for the next exercises.}
 \begin{exercise}
-  Given two finite sets, compute the product.
+Given two finite sets, compute the product and disjoint union.
 
-
-  \methodsource{FiniteSetOperations}{product}
+\classsource{FiniteSetOperations2}
 \end{exercise}
 \begin{exercise}
-  Given two finite sets, compute the disjoint union.
+Given two finite sets, compute the disjoint union.
 
-
-  \methodsource{FiniteSetOperations}{disjoint_union}
 \end{exercise}
 
 
@@ -137,11 +300,11 @@ The format is shown in \cref{fig:rel1}.
 \datafilefig{rel11code}{rel1.finrel.yaml}{fig:rel1}
 
 \begin{exercise}[Loading finite relations]
-  Create a function to load the data.
+Create a function to load the data.
 
 
 %
-  \classsource{FiniteRelationRepresentation}
+\classsource{FiniteRelationRepresentation}
 
 \end{exercise}
 
@@ -150,10 +313,10 @@ The format is shown in \cref{fig:rel1}.
 
 \begin{exercise}[Relation properties]
 
-  Check that an endorelation has the properties mentioned in \cref{sec:relations}.
+Check that an endorelation has the properties mentioned in \cref{sec:relations}.
 
-  The
-  \classsource{FiniteRelationProperties}
+The
+\classsource{FiniteRelationProperties}
 
 \end{exercise}
 
@@ -161,25 +324,25 @@ The format is shown in \cref{fig:rel1}.
 
 
 \begin{exercise}[Opposite]
-  Compute the opposite relation.
+Compute the opposite relation.
 
-  \methodsource{FiniteEndorelationOperations}{transitive_closure}
+\methodsource{FiniteEndorelationOperations}{transitive_closure}
 
 \end{exercise}
 
 \begin{exercise}[Endorelation properties]
 
-  Check that an endorelation has the properties mentioned in \cref{sec:endorelations}.
+Check that an endorelation has the properties mentioned in \cref{sec:endorelations}.
 
-  The interfaces to implement:
-  \classsource{FiniteEndorelationProperties}
+The interfaces to implement:
+\classsource{FiniteEndorelationProperties}
 
 \end{exercise}
 
 \begin{exercise}[Transitive closure]
-  Compute the transitive closure (\cref{def:transitive-closure}) of a relation.
+Compute the transitive closure (\cref{def:transitive-closure}) of a relation.
 
-  \methodsource{FiniteEndorelationOperations}{transitive_closure}
+\methodsource{FiniteEndorelationOperations}{transitive_closure}
 
 \end{exercise}
 
@@ -199,11 +362,11 @@ The format is shown in \cref{fig:map1}.
 
 
 \begin{exercise}[Representation]
-  Create a function to load the data.
+Create a function to load the data.
 
 
 %
-  \classsource{FiniteMapRepresentation}
+\classsource{FiniteMapRepresentation}
 
 \end{exercise}
 
@@ -211,21 +374,21 @@ The format is shown in \cref{fig:map1}.
 
 
 \begin{exercise}[Composition]
-  Implement the composition of finite maps.
+Implement the composition of finite maps.
 
 
 %
-  \methodsource{FiniteMapOperations}{compose}
+\methodsource{FiniteMapOperations}{compose}
 
 \end{exercise}
 
 
 \begin{exercise}[Obtain relation]
-  Given a FiniteMap, obtain the relation.
+Given a FiniteMap, obtain the relation.
 
 
 %
-  \methodsource{FiniteMapOperations}{as_relation}
+\methodsource{FiniteMapOperations}{as_relation}
 
 \end{exercise}
 
@@ -247,19 +410,19 @@ The format is shown in \cref{fig:sm1}.
 
 
 \begin{exercise}[Representation]
-  Create a function to load the data.
+Create a function to load the data.
 
 
-  \classsource{FiniteSemigroupRepresentation}
+\classsource{FiniteSemigroupRepresentation}
 
 \end{exercise}
 
 \subsection*{Constructors}
 
 \begin{exercise}
-  Given a set, construct the free semigroup.
+Given a set, construct the free semigroup.
 
-  \methodsource{FiniteSemigroupConstruct}{free}
+\methodsource{FiniteSemigroupConstruct}{free}
 \end{exercise}
 
 
@@ -278,11 +441,11 @@ The format is shown in \cref{fig:monoid1}.
 
 
 \begin{exercise}[Representation]
-  Create a function to load the data.
+Create a function to load the data.
 
 
 %
-  \classsource{FiniteMonoidRepresentation}
+\classsource{FiniteMonoidRepresentation}
 
 \end{exercise}
 
@@ -309,11 +472,11 @@ Here is the interface for posets:
 \datafilefig{poset1}{poset1.poset.yaml}{fig:poset1}
 
 \begin{exercise}[Representation]
-  Create a function to load the data.
+Create a function to load the data.
 
 
 %
-  \classsource{FinitePosetRepresentation}
+\classsource{FinitePosetRepresentation}
 
 \end{exercise}
 
@@ -321,132 +484,132 @@ Here is the interface for posets:
 
 
 \begin{exercise}
-  Compute the width of a poset.
-  \methodsource{FinitePosetProperties}{width}
+Compute the width of a poset.
+\methodsource{FinitePosetProperties}{width}
 \end{exercise}
 
 \begin{exercise}
-  Compute the height of a poset.
-  \methodsource{FinitePosetProperties}{height}
+Compute the height of a poset.
+\methodsource{FinitePosetProperties}{height}
 \end{exercise}
 
 \subsection{Operations}
 
 
 \begin{exercise}
-  Given a poset, return the opposite.
-  \methodsource{FinitePosetOperations}{opposite}
+Given a poset, return the opposite.
+\methodsource{FinitePosetOperations}{opposite}
 \end{exercise}
 
 \subsection{Properties of subsets}
 
 
 \begin{exercise}
-  Check if a subset is a chain.
-  \methodsource{FinitePosetSubsetProperties}{is_chain}
+Check if a subset is a chain.
+\methodsource{FinitePosetSubsetProperties}{is_chain}
 \end{exercise}
 
 \begin{exercise}
-  Check if a subset is an antichain.
-  \methodsource{FinitePosetSubsetProperties}{is_antichain}
+Check if a subset is an antichain.
+\methodsource{FinitePosetSubsetProperties}{is_antichain}
 \end{exercise}
 
 \subsection{Operations on subsets of posets}
 
 \begin{exercise}
-  Compute the upper closure of a subset.
-  \methodsource{FinitePosetSubsetOperations}{upperclosure}
+Compute the upper closure of a subset.
+\methodsource{FinitePosetSubsetOperations}{upperclosure}
 
 \end{exercise}
 
 
 \begin{exercise}
-  Compute the lower closure of a subset, reducing to
-  using the function \funcname{upperclosure} that you
-  already defined.
-  \methodsource{FinitePosetSubsetOperations}{lowerclosure}
+Compute the lower closure of a subset, reducing to
+using the function \funcname{upperclosure} that you
+already defined.
+\methodsource{FinitePosetSubsetOperations}{lowerclosure}
 
 \end{exercise}
 
 
 
 \begin{exercise}
-  Compute the minimal elements of a subset.
+Compute the minimal elements of a subset.
 
-  \methodsource{FinitePosetSubsetOperations}{minimal}
-
-\end{exercise}
-
-
-\begin{exercise}
-  Compute the maximal elements of a subset, reducing
-  to use the function \funcname{minimal} already defined.
-
-  \methodsource{FinitePosetSubsetOperations}{maximal}
+\methodsource{FinitePosetSubsetOperations}{minimal}
 
 \end{exercise}
 
 
 \begin{exercise}
-  Compute the infimum/supremum/meet/join of a subset.
-  In case one does not exist, return None.
+Compute the maximal elements of a subset, reducing
+to use the function \funcname{minimal} already defined.
 
-  \methodsource{FinitePosetSubsetOperations}{infimum}
-  \methodsource{FinitePosetSubsetOperations}{supremum}
-  \methodsource{FinitePosetSubsetOperations}{meet}
-  \methodsource{FinitePosetSubsetOperations}{join}
+\methodsource{FinitePosetSubsetOperations}{maximal}
+
+\end{exercise}
+
+
+\begin{exercise}
+Compute the infimum/supremum/meet/join of a subset.
+In case one does not exist, return None.
+
+\methodsource{FinitePosetSubsetOperations}{infimum}
+\methodsource{FinitePosetSubsetOperations}{supremum}
+\methodsource{FinitePosetSubsetOperations}{meet}
+\methodsource{FinitePosetSubsetOperations}{join}
 
 \end{exercise}
 
 \subsection{Lower/upper sets}
 \begin{exercise}
-  Given a set, return the power set, a poset ordered by inclusion.
+Given a set, return the power set, a poset ordered by inclusion.
 
-  \methodsource{FinitePosetConstructors}{powerset}
+\methodsource{FinitePosetConstructors}{powerset}
 \end{exercise}
 
 
 \begin{exercise}
-  Given a poset, compute the interval poset.
+Given a poset, compute the interval poset.
 
-  \methodsource{FinitePosetConstructors}{intervals}
+\methodsource{FinitePosetConstructors}{intervals}
 \end{exercise}
 
 
 \begin{exercise}
-  Given a poset, compute the other interval poset.
+Given a poset, compute the other interval poset.
 
-  \methodsource{FinitePosetConstructors}{intervals2}
+\methodsource{FinitePosetConstructors}{intervals2}
 \end{exercise}
 
 
 \begin{exercise}
-  Given a poset, define the poset of upper sets.
+Given a poset, define the poset of upper sets.
 
-  \methodsource{FinitePosetConstructors}{uppersets}
+\methodsource{FinitePosetConstructors}{uppersets}
 \end{exercise}
 
 \begin{exercise}
-  Given a poset, define the poset of lower sets.
-  \methodsource{FinitePosetConstructors}{lowersets}
-\end{exercise}
-
-
-\begin{exercise}
-  Given a set, construct the discrete poset.
-
-  \methodsource{FinitePosetConstructors}{discrete}
+Given a poset, define the poset of lower sets.
+\methodsource{FinitePosetConstructors}{lowersets}
 \end{exercise}
 
 
 \begin{exercise}
-  Given two posets, return their product poset.
-  \methodsource{FinitePosetOperations}{product}
+Given a set, construct the discrete poset.
+
+\methodsource{FinitePosetConstructors}{discrete}
+\end{exercise}
+
+
+\begin{exercise}
+Given two posets, return their product poset.
+\methodsource{FinitePosetOperations}{product}
 \end{exercise}
 \begin{exercise}
-  Given two posets, return their disjoint union.
+Given two posets, return their disjoint union.
 
-  \methodsource{FinitePosetOperations}{disjoint_union}
+\methodsource{FinitePosetOperations}{disjoint_union}
 \end{exercise}
 
 
@@ -456,9 +619,9 @@ Here is the interface for posets:
 \classsource{FiniteMonoidalPoset}
 
 \begin{exercise}
-  Given a poset and a monoid with the same carrier set, check that together they define a monoidal poset.
+Given a poset and a monoid with the same carrier set, check that together they define a monoidal poset.
 
-  \methodsource{MonoidalPosetOperations}{is_monoidal_poset}
+\methodsource{MonoidalPosetOperations}{is_monoidal_poset}
 \end{exercise}
 
 
@@ -469,16 +632,16 @@ Here is the interface for posets:
 
 
 \begin{exercise}
-  Check if a map is monotone.
+Check if a map is monotone.
 
-  \methodsource{FiniteMonotoneMapProperties}{is_monotone}
+\methodsource{FiniteMonotoneMapProperties}{is_monotone}
 \end{exercise}
 
 
 \begin{exercise}
-  Check if a map is antitone. Reduce to a call of \funcname{is_antitone}.
+Check if a map is antitone. Reduce to a call of \funcname{is_antitone}.
 
-  \methodsource{FiniteMonotoneMapProperties}{is_antitone}
+\methodsource{FiniteMonotoneMapProperties}{is_antitone}
 \end{exercise}
 
 
@@ -518,15 +681,15 @@ The representation is the same as finite category.
 \subsection*{Operations}
 
 \begin{exercise}
-  Compute the disjoint union of two categories.
+Compute the disjoint union of two categories.
 
-  \methodsource{FiniteCategoryOperations}{disjoint_union}
+\methodsource{FiniteCategoryOperations}{disjoint_union}
 \end{exercise}
 
 \begin{exercise}
-  Compute the product of two categories.
+Compute the product of two categories.
 
-  \methodsource{FiniteCategoryOperations}{product}
+\methodsource{FiniteCategoryOperations}{product}
 \end{exercise}
 
 
@@ -534,16 +697,16 @@ The representation is the same as finite category.
 
 
 \begin{exercise}
-  Compute the arrow category.
+Compute the arrow category.
 
-  \methodsource{FiniteCategoryOperations}{arrow}
+\methodsource{FiniteCategoryOperations}{arrow}
 \end{exercise}
 
 
 \begin{exercise}
-  Compute the twisted arrow category.
+Compute the twisted arrow category.
 
-  \methodsource{FiniteCategoryOperations}{twisted_arrow}
+\methodsource{FiniteCategoryOperations}{twisted_arrow}
 \end{exercise}
 
 
@@ -563,9 +726,9 @@ The format is shown in \cref{fig:set1}.
 
 
 \begin{exercise}
-  Create a function to load the data.
+Create a function to load the data.
 %
-  \classsource{FiniteFunctorRepresentation}
+\classsource{FiniteFunctorRepresentation}
 \end{exercise}
 
 
@@ -587,10 +750,10 @@ The format is shown in \cref{fig:nat1}.
 
 
 \begin{exercise}
-  Create a function to load the data.
+Create a function to load the data.
 
 %
-  \classsource{FiniteNaturalTransformationRepresentation}
+\classsource{FiniteNaturalTransformationRepresentation}
 \end{exercise}
 
 
@@ -607,28 +770,28 @@ The format is shown in \cref{fig:nat1}.
 
 
 \begin{exercise}
-  Create a function to load the data.
+Create a function to load the data.
 
 %
-  \classsource{FiniteAdjunctionRepresentation}
+\classsource{FiniteAdjunctionRepresentation}
 \end{exercise}
 
 \subsection{Operations}
 \begin{exercise}
-  Given two functors, compute if they are an adjunction.
+Given two functors, compute if they are an adjunction.
 
-  \methodsource{FiniteAdjunctionsOperations}{is_adjunction}
+\methodsource{FiniteAdjunctionsOperations}{is_adjunction}
 \end{exercise}
 
 \begin{exercise}
-  Given a relation, return the induced adjunction.
-  \methodsource{FiniteAdjunctionsOperations}{from_relation}
+Given a relation, return the induced adjunction.
+\methodsource{FiniteAdjunctionsOperations}{from_relation}
 \end{exercise}
 
 
 \begin{exercise}
-  Compose two compatible adjunctions.
-  \methodsource{FiniteAdjunctionsOperations}{compose}
+Compose two compatible adjunctions.
+\methodsource{FiniteAdjunctionsOperations}{compose}
 \end{exercise}
 
 
@@ -650,24 +813,24 @@ The format is shown in \cref{fig:dp1}.
 \datafilefig{dp1}{dp1.dp.yaml}{fig:dp1}
 
 \begin{exercise}
-  Create a function to load DPs.
+Create a function to load DPs.
 %
-  \classsource{FiniteDP}
+\classsource{FiniteDP}
 \end{exercise}
 
 \subsection*{Constructors}
 
 
 \begin{exercise}
-  Generate the companion of a monotone map.
+Generate the companion of a monotone map.
 %
-  \methodsource{FiniteDPConstructors}{companion}
+\methodsource{FiniteDPConstructors}{companion}
 \end{exercise}
 
 \begin{exercise}
-  Generate the conjoint of a monotone map.
+Generate the conjoint of a monotone map.
 %
-  \methodsource{FiniteDPConstructors}{conjoint}
+\methodsource{FiniteDPConstructors}{conjoint}
 %
 \end{exercise}
 
@@ -676,21 +839,21 @@ The format is shown in \cref{fig:dp1}.
 
 
 \begin{exercise}
-  Compose two DPs.
+Compose two DPs.
 %
-  \methodsource{FiniteDPOperations}{series}
+\methodsource{FiniteDPOperations}{series}
 \end{exercise}
 
 \begin{exercise}
-  Compute union of two DPs.
+Compute union of two DPs.
 %
-  \methodsource{FiniteDPOperations}{union}
+\methodsource{FiniteDPOperations}{union}
 \end{exercise}
 
 \begin{exercise}
-  Compute intersection of two DPs.
+Compute intersection of two DPs.
 %
-  \methodsource{FiniteDPOperations}{intersection}
+\methodsource{FiniteDPOperations}{intersection}
 \end{exercise}
 
 
@@ -715,18 +878,18 @@ The format is shown in \cref{fig:prof1}.
 
 
 \begin{exercise}
-  Create a function to load profunctors.
+Create a function to load profunctors.
 
 %
-  \classsource{FiniteProfunctorRepresentation}
+\classsource{FiniteProfunctorRepresentation}
 
 \end{exercise}
 
 
 \begin{exercise}
-  Compute series of two profunctor.
+Compute series of two profunctor.
 %
-  \methodsource{FiniteProfunctorOperations}{series}
+\methodsource{FiniteProfunctorOperations}{series}
 \end{exercise}
 
 
@@ -755,23 +918,23 @@ The format is shown in \cref{fig:parts1}.
 \subsection{Assemblies}
 
 \begin{exercise}
-  Given a set of Lego blocks, find out if they are rigidly connected.
+Given a set of Lego blocks, find out if they are rigidly connected.
 \end{exercise}
 
 \begin{exercise}
-  Given a set of Lego blocks, find out if they are stable.
+Given a set of Lego blocks, find out if they are stable.
 \end{exercise}
 
 \begin{exercise}
-  Given a set of Lego blocks, find a stable assembly of them.
+Given a set of Lego blocks, find a stable assembly of them.
 \end{exercise}
 
 \begin{exercise}
-  Given a set of Lego blocks, find a plan to assembled them using 1 robot hand.
+Given a set of Lego blocks, find a plan to assembled them using 1 robot hand.
 \end{exercise}
 
 \begin{exercise}
-  Given a set of Lego blocks, find a plan to assemble them using n robot hands.
+Given a set of Lego blocks, find a plan to assemble them using n robot hands.
 \end{exercise}
 
 \subsection{Planning}
@@ -789,21 +952,21 @@ This is the \Setoid interface:
 \classsource{Setoid}
 %
 A \Setoid is an object that can tell use whether other objects belong to it.
-The \funcname{belong} function is akin to the indicator function.
+The \funcname{contains} function is akin to the indicator function.
 
 
 \begin{exercise}
-  Create the function \funcname{union_setoids}, which, given two setoids, returns another setoid that is the union of the two given setoids.
+Create the function \funcname{union_setoids}, which, given two setoids, returns another setoid that is the union of the two given setoids.
 %
-  \methodsource{SetoidOperations}{union_setoids}
+\methodsource{SetoidOperations}{union_setoids}
 %
-  Hint: The indicator of the union of sets is the OR of the two indicators.
+Hint: The indicator of the union of sets is the OR of the two indicators.
 \end{exercise}
 
 \begin{exercise}
-  Create the function \funcname{intersection_setoids}, which, given two setoids, returns another setoid that is the intersection of the two given setoids.
+Create the function \funcname{intersection_setoids}, which, given two setoids, returns another setoid that is the intersection of the two given setoids.
 %
-  \methodsource{SetoidOperations}{intersection_setoids}
+\methodsource{SetoidOperations}{intersection_setoids}
 \end{exercise}
 
 
@@ -817,24 +980,24 @@ An enumerable set is one that can enumerate its elements.
 The method \funcname{elements} returns an \emph{iterator} that enumerates the elements.
 
 \begin{exercise}
-  Create an Enumerable set given a function that provides the $i$-th element.
+Create an Enumerable set given a function that provides the $i$-th element.
 
-  The
+The
 %
-  \methodsource{EnumerableSetsOperations}{make_set_sequence}
+\methodsource{EnumerableSetsOperations}{make_set_sequence}
 \end{exercise}
 
 \begin{exercise}
-  Create a function that creates the union of two enumerable sets.
+Create a function that creates the union of two enumerable sets.
 
-  The
+The
 %
-  \methodsource{EnumerableSetsOperations}{union_esets}
+\methodsource{EnumerableSetsOperations}{union_esets}
 \end{exercise}
 
 \begin{exercise}
-  Explain why it is not possible to create a function that, given two enumerable sets,
-  creates the \emph{intersection} of the two sets.
+Explain why it is not possible to create a function that, given two enumerable sets,
+creates the \emph{intersection} of the two sets.
 \end{exercise}
 
 
