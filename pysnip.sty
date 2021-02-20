@@ -25,21 +25,40 @@
     \immediate\openout\@out=\prefix.py%
     \immediate\write\@out{\pycode}%
     \immediate\closeout\@out
-    \IfFileExists{\prefix.rc}{%
-        % Read the return code of the executed Python script.
-        \immediate\openin\@retcode=\prefix.rc
-        \immediate\read\@retcode to \rc
-        \immediate\closein\@retcode
-        \ifnumequal{\rc}{0}{%
-            % Everything is fine
-            \immediate\input\prefix.tex%
-        }{%
+    \IfFileExists{\prefix.tex}{%
+        \immediate\input\prefix.tex%
+    }{
+        \IfFileExists{\prefix.err}{%
             % Some problems
             \pyfailed{\prefix}{}{\rc}%
-        }%
-    }{\pynotready{\prefix}}%
+        }{\pynotready{\prefix}}%
+    }
     \immediate\stepcounter{@PythonEnvironmentCounter}%
 }
+
+
+%\newcommand{\py}[2][\@outname]{
+%    \immediate\write18{mkdir -p \snippetsdir}
+%    \def\pycode{#2}
+%    \def\prefix{\snippetsdir/#1}
+%    \immediate\openout\@out=\prefix.py%
+%    \immediate\write\@out{\pycode}%
+%    \immediate\closeout\@out
+%    \IfFileExists{\prefix.rc}{%
+%        % Read the return code of the executed Python script.
+%        \immediate\openin\@retcode=\prefix.rc
+%        \immediate\read\@retcode to \rc
+%        \immediate\closein\@retcode
+%        \ifnumequal{\rc}{0}{%
+%            % Everything is fine
+%            \immediate\input\prefix.tex%
+%        }{%
+%            % Some problems
+%            \pyfailed{\prefix}{}{\rc}%
+%        }%
+%    }{\pynotready{\prefix}}%
+%    \immediate\stepcounter{@PythonEnvironmentCounter}%
+%}
 
 
 % Warn that snippet is not ready
