@@ -256,7 +256,12 @@
 \setlength{\halfbrickwidth}{0.5\brickwidth}
 
 \newcommand{\startpos}[3]{($(0,#3\brickheight)+(7:#1\brickwidth)+(138:#2\halfbrickwidth)$)}
+\newcommand{\startposcustom}[4]{($(0,#3#4)+(7:#1\brickwidth)+(138:#2\halfbrickwidth)$)}
+
 \newcommand{\startposplusheight}[3]{($(0,#3\brickheight)+(7:#1\brickwidth)+(138:#2\halfbrickwidth)+(0mm,\brickheight)$)}
+
+\newcommand{\startposplusheightcustom}[4]{($(0,#3#4)+(7:#1\brickwidth)+(138:#2\halfbrickwidth)+(0mm,#4)$)}
+
 \newcommand{\pinposone}[5]{($(0,#3\brickheight)+(7:#1\brickwidth)+(138:#2\halfbrickwidth)+(7:#4*\brickwidth)+(138:#5*\halfbrickwidth)+(-0.6\brickwidth,-\halfbrickwidth)+(-0.05\brickwidth,1.35\brickheight)$)}
 \newcommand{\pinpostwo}[5]{($(0,#3\brickheight)+(7:#1\brickwidth)+(138:#2\halfbrickwidth)+(7:#4*\brickwidth)+(138:#5*\halfbrickwidth)+(-0.6\brickwidth,-\halfbrickwidth)+(0.3\brickwidth,1.35\brickheight)$)}
 
@@ -273,8 +278,25 @@
 }
 }
 
+\newcommand{\brickcustom}[7]{%
+\setlength{\brickmultipliedx}{#1\brickwidth}
+\setlength{\brickmultipliedy}{#2\brickwidth}
+\filldraw[fill=#3,draw=black,thick] \startposcustom{#4}{#5}{#6}{#7} -- ++(7:\brickmultipliedx) -- ++(0mm,#7) -- ++(138:0.5\brickmultipliedy) -- ++(187:\brickmultipliedx) -- ++(0mm,-#7) -- cycle;
+\draw[black,thick] \startposcustom{#4}{#5}{#6}{#7} -- ++(0mm,#7) -- ++(138:0.5\brickmultipliedy);
+\draw[black,thick] \startposplusheight{#4}{#5}{#6} -- ++(7:\brickmultipliedx);
+\foreach \i in {1,...,#1} {
+  \foreach \j in {1,...,#2} {
+    \pincustom{\pinposone{#4}{#5}{#6}{\i}{\j}}{\pinpostwo{#4}{#5}{#6}{\i}{\j}}{#3}{#7}
+  }
+}
+}
+
 \newcommand{\pin}[3]{%
 \filldraw[fill=#3,draw=black,thick] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1\brickheight) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
 \filldraw[fill=#3,draw=black,thick] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
 }
 
+\newcommand{\pincustom}[4]{%
+\filldraw[fill=#3,draw=black,thick] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1 #4) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
+\filldraw[fill=#3,draw=black,thick] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
+}
