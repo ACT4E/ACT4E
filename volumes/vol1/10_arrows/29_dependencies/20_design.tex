@@ -1,3 +1,159 @@
-\section{Design}
+% !TEX root = standalone.tex
 
-\todotext{Move here the example of the motor as a standalone. This is a boolean DP. }
+\section{\statusdraft{Design}}
+
+\todotext{This was moved after the definition of a category. Change accordingly.}
+
+
+\todo[inline]{Gives more examples before getting to the definition. Give more examples
+with different conventions for the arrow direction.}
+
+In engineering design, one creates \emph{systems} out of \emph{components}. Each component has a reason to be in there. We will show how category theory can help in formalizing the chains of causality that underlie a certain design.
+
+We will need to reason at the level of abstraction where we consider the ``function'', or ``functionality'', which each component provides, and the ``requirements'' that are needed to provide the function.
+
+We will start with a simple example of the functioning principle of an electric car.
+
+In an electric car, there is a battery, a store of the electric energy resource. We can see the production of motion as the chain of two transformations:
+
+\begin{itemize}
+  \item The \motor transmutes the \electricpower into \rotationalmotion.
+  \item The \rotationalmotion is converted into \translationalmotion by the \wheels and their friction with the road.
+\end{itemize}
+
+We see that there are two types of things in this example:
+\begin{enumerate}
+  \item The ``transmuters'': the \motor and \wheels.
+  \item The ``transmuted'': the \electricpower, the \rotationalmotion, the \translationalmotion.
+\end{enumerate}
+
+For a first qualitative description of the scenario, we might choose to just keep track of what is transmuted into what. We can draw a diagram in which each resource is a point (\cref{fig:e1}).
+
+\begin{figure}[h!]
+  \centering
+  \includesag{30_dpcatfig_e1}
+  \caption{Resources in the electric car example.}
+  \label{fig:e1}
+\end{figure}
+
+
+
+Now, we can draw arrows between two points if there is a transmuter between them.
+
+We choose the direction of the arrow such that
+\begin{equation}
+  \label{eq:arrow1}
+  \transmuted{X} \stackrel{\transmuter{transmuter}}{\mto} \transmuted{Y}
+\end{equation}
+means that ``using \textsf{transmuter}, having $\transmuted{Y}$ is sufficient to produce $\transmuted{X}$''.
+
+\begin{remark}[Are we going the wrong direction?]
+  The chosen direction
+  for the arrows is completely the opposite of what you would expect if you thought about
+  ``input and outputs''. There is a good reason to use this convention, though it will
+  be apparent only a few chapters later. In the meantime, it is a good exercise
+  to liberate your mind about the preconception of what an arrow means; in category theory
+  there will be categories where the arrows represent much more abstract concepts than input/output.
+\end{remark}
+
+Another way to write \cref{eq:arrow1} would be as follows:
+\begin{equation}
+  \transmuter{transmuter} \colon \transmuted{X} \mto \transmuted{Y}.
+\end{equation}
+This is now to you something syntactically familiar; when we study the categories of sets and functions between sets we will see that in that context the familiar meaning is also the correct meaning.
+
+With these conventions, we can describe the two transmuters as these arrows:
+%
+\begin{align}
+  \motor&:  \rotationalmotion \mto \electricpower, \\
+  \wheels&: \translationalmotion \mto \rotationalmotion.
+\end{align}
+%
+We can put these arrows in the diagrams, and obtain
+the following (\cref{fig:e2}).
+% In this simple setting, we can identify the key systems and subsystems: car, engine, axle, wheels, and road.
+
+% \AC{we don't refer to these subsystems later}
+
+
+% We can identify the functionality/resources of interest as:~\textsf{electric} \textsf{power}, \textsf{rotational} \textsf{motion}, and~\textsf{translational} \textsf{motion}. Note that each of these quantities plays a dual role. For example, the \textsf{rotational motion} is something which is produced by the motor, so it is a functionality for the motor, while it is a resource for axle/wheels, because they need it to provide~$\mathsf{translational}\ \mathsf{motion}$.
+
+
+% Furthermore, we can draw an arrow between two resources if we can obtain one from the other. In the example, we have described how \textsf{electric power} becomes \textsf{rotational motion}, described by the \textsf{engine} arrow, and how \textsf{rotational motion} becomes \textsf{translational motion}, described by the \textsf{wheel} arrow (\cref{fig:e2}).
+
+\begin{figure}[h!]
+  \centering
+  \includesag{30_dpcatfig_e2}
+  \caption{Transmuters are arrows between resources.}
+   \label{fig:e2}
+\end{figure}
+
+In this representation, the arrows are the components of the system.
+We will learn how to compose these arrows according to the rules of category theory.
+The basic rule will be \emph{composition}.
+If we use the semantics that an arrow from resource~$X$ to resource~$Y$ means ``having~$Y$ is
+enough to obtain~$X$'', then, since~$Y$ is enough for~$Y$ per definition, we can add a self-loop for each
+resource. We will call the self-loops \emph{identities} (\cref{fig:e3}).
+
+\begin{figure}[h!]
+  \centering
+  \includesag{30_dpcatfig_e3}
+  \caption{System components and identities. }
+  \label{fig:e3}
+\end{figure}
+
+Furthermore, we might consider the idea of composition of arrows.
+Suppose that we know that
+\begin{equation*}
+  \transmuted{X} \stackrel{\transmuter{a}}{\mto} \transmuted{Y}
+  \qquad \text{and} \qquad
+  \transmuted{Y} \stackrel{\transmuter{b}}{\mto} \transmuted{Z},
+\end{equation*}
+that is, using a $b$ we can get a $\transmuted{Y}$ from a $\transmuted{Z}$, and using an $\transmuter{a}$ we can get a $\transmuted{X}$ from a $\transmuted{Y}$,
+then we conclude that using and $\transmuter{a}$ and a $\transmuter{b}$ we can get an $\transmuted{X}$ from a $\transmuted{Z}$.
+
+In our example, if the arrows \wheels  and \motor exist, then also the arrow ``\wheels then \motor'' exists~(\cref{fig:e4}).
+
+\begin{figure}[h!]
+  \centering
+  \includesag{30_dpcatfig_e4}
+  \caption{Composition of system components. }
+  \label{fig:e4}
+\end{figure}
+
+So far, we have drawn only one arrow between two points, but we can draw as many as we want.
+If we want to distinguish between different brands of motors, we would just draw
+one arrow for each model. For example,~\cref{fig:e4bis} shows two models of
+motors (\transmuter{motor A}, and \transmuter{motor B}) and two models of wheels
+(\transmuter{wheels U} and \transmuter{wheels V}).
+
+
+\begin{figure}[h!]
+  \centering
+  \includesag{20_wheel_motor_options}
+  \caption{Multiple models for wheels and motors.}
+   \label{fig:e4bis}
+\end{figure}
+
+The figure implies now the existence of \emph{four} composed
+arrows: ``\transmuter{wheels U} then \transmuter{motor A}'',
+``\transmuter{wheels U} then \transmuter{motor B}'',
+``\transmuter{wheels V} then \transmuter{motor A}'', and
+``\transmuter{wheels V} then \transmuter{motor B}'', all going from \translationalmotion to \electricpower;
+
+
+A ``category`` is an abstract mathematical structure that captures the properties
+of these systems of points and arrows and the logic of composition.
+
+The basic terminology is that the points are called \textbf{objects},
+and the arrows are called \textbf{morphisms}.
+
+In our example, the \motor and the \wheels are the morphisms, and \electricpower, \rotationalmotion,
+\translationalmotion are the objects.
+
+Many things can be defined as categories and we will see many examples in this book.
+
+We are now just biding our time before introducing the formal definition of category.
+At first sight it will be intimidating: there are four parts to the definition, two axioms to define.
+Moreover, it is quite a bit technical and it takes half a page to write.
+

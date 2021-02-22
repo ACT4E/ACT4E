@@ -37,7 +37,7 @@ tikz:
 	cp template-standalone.tex $@
 
 
-mains=$(wildcard volumes/vol*/part*/*/main.tex)
+mains=$(wildcard volumes/vol*/*/*/main.tex)
 standalones=$(subst main.tex,standalone.tex,$(mains))
 
 standalone: $(standalones)
