@@ -1,0 +1,1446 @@
+%
+% prftree.sty
+% by Marco Benini - 19th June 2019
+% v1.6
+%
+% A package to typeset natural deduction proofs, or sequent proofs, or
+% tableau proofs
+%
+% This package is distributed under the GNU General Public License
+%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{prftree}[2019/06/19 Natural Deduction Proofs]
+
+% Package options: deactivated by default
+\newif\ifprf@NDOption\prf@NDOptionfalse
+\newif\ifprf@SEQOption\prf@SEQOptionfalse
+\newif\ifprfIMPOption\prfIMPOptionfalse
+\newif\ifprf@EQOption\prf@EQOptionfalse
+\newif\ifprf@MLOption\prf@MLOptionfalse
+\newif\ifprf@MLnodefOption\prf@MLnodefOptionfalse
+% but the STRUT and STRUTlabel are on by default
+\newif\ifprfSTRUToption\prfSTRUToptiontrue
+\newif\ifprfSTRUTlabeloption\prfSTRUTlabeloptiontrue
+
+\DeclareOption{ND}{\prf@NDOptiontrue}
+\DeclareOption{SEQ}{\prf@SEQOptiontrue}
+\DeclareOption{IMP}{\prfIMPOptiontrue}
+\DeclareOption{EQ}{\prf@EQOptiontrue}
+\DeclareOption{ML}{\prf@MLOptiontrue}
+\DeclareOption{MLnodef}{\prf@MLnodefOptiontrue}
+\DeclareOption{Strut}{\prfSTRUToptionfalse}
+\DeclareOption{StrutLabel}{\prfSTRUTlabeloptionfalse}
+\ProcessOptions\relax
+
+%--------------------------------------------------------------------
+% A proof tree is composed by a generic cell:
+%  A1 A2 A3
+% ---------- R
+%      C
+% We call A1, A2, A3. ... assumptions, C the conclusion and R the rule
+% name. The line dividing the assumptions from the conclusion is
+% called the proof line. A proof tree with no assumptions is an axiom.
+% An assumption which is not a proof tree is a pure assumption.
+%
+% A proof tree is typeset by
+% \prftree[<options>]...[<options>]
+%         {<assumption1>}...{<assumptionN>}
+%         {<conclusion>}
+% The possible options are:
+%   r             : the first argument after the options is the rule
+%                   name, typeset in text mode
+%   rule          : synonym for 'r'
+%   by rule       : synonym for 'r'
+%   by            : synonym for 'r'
+%   right         : synonym for 'r'
+%   l             : the first argument after the options is the rule
+%                   label, typeset in text mode; if there is also a
+%                   rule name, the label is the second argument
+%   label         : synonym for 'l'
+%   left          : synonym for 'l'
+%   straight      : the proof line will be a solid line (default) 
+%   straight line : synonym for 'l'
+%   straightline  : synonym for 'l'
+%   dotted        : the proof line will be a dotted line
+%   dotted line   : synonym for 'dotted'
+%   dottedline    : synonym for 'dotted'
+%   dashed        : the proof line will be a dashed line
+%   dashed line   : synonym for 'dashed'
+%   dashedline    : synonym for 'dashed'
+%   f             : the proof line will be fancy
+%   fancy         : synonym for 'f'
+%   fancy line    : synonym for 'f'
+%   fancyline     : synonym for 'f'
+%   s             : the proof line will be single, not double (default)
+%   single        : synonym for 's'
+%   single line   : synonym for 's'
+%   singleline    : synonym for 's'
+%   d             : the proof line will be double, not single
+%   double        : synonym for 'd'
+%   double line   : synonym for 'd'
+%   doubleline    : synonym for 'd'
+%   noline        : suppresses the proof line (prevails over all other
+%                   line options)
+%   summary       : renders the proof line as the summary symbol
+%                   (prevails over all other line options except
+%                   noline) 
+% 
+% The format of options is [<opt1>,...,<optM>]; it is correct to have
+% empty options. Options are parsed left-to-right: in case of
+% conflicting options, the latest prevails.
+%
+% If present, the rule name is typeset in text style, while the
+% conclusion and the assumptions are typeset in display math mode.
+% The result is a box with the correct height and width, whose
+% conclusion is aligned with the current baseline.
+%
+% Notice that the conclusion must be present, while the assumptions
+% may be absent.
+%
+% If there are no assumptions, i.e., if the proof tree represents an
+% axiom, you may use the following commands:
+%  \prfaxiom{<axiom>}
+%  \prfbyaxiom{<label>}{<axiom>}
+% the latter includes also the axiom name.
+%
+% A pure assumption is just a proof tree composed by the conclusion
+% only. It uses an option to suppress the drawing of the proof line.
+% The commands are:
+%   \prfassumption<reference>{<formula>}
+%   \prfboundedassumption<reference>{<formula>}
+% the second command discharges the assumption.
+%
+% A proof summary is just a proof tree whose proof line is bizarre. It
+% uses an option to specify the type of summary.
+% The command is:
+%   \prfsummary<reference>[<label>]
+%              {<assumption1>}...{<assumptionN>} 
+%              {<conclusion>}
+% The label is optional. The shape of the summary is controlled by the
+% global option \prfsummarystyle.
+%
+% The <reference> field above is used for labelling and
+% referencing, as explained in the documentation.
+%--------------------------------------------------------------------
+
+%--------------------------------------------------------------------
+% Parameters
+% These values can be safely used to configure the behaviour of the
+% macros in the package. Beware to modify them only outside a proof
+% tree as the order in which a proof tree is typeset may vary in
+% future version of the package.
+%--------------------------------------------------------------------
+
+% \prflinepadbefore          default 0.3ex
+% the space between the bottom of assumptions and the proof line
+\newdimen\prflinepadbefore\prflinepadbefore.3ex
+
+% \prflinepadafter           default 0.3ex
+% the space between the proof line and the top of the conclusion
+\newdimen\prflinepadafter\prflinepadafter.3ex
+
+% \prflineextra              default 0.3em 
+% the length which extends on the left and on the right the proof line
+% so that it is slightly longer than the largest between the
+% conclusion and the list of (direct) assumptions
+\newdimen\prflineextra\prflineextra.3em
+
+% \prflinethickness          default 0.12ex
+% the thickness of the proof line
+\newdimen\prflinethickness\prflinethickness.12ex
+
+% \prfemptylinethickness     default 4 times the linethickness
+% the thickness of the proof line which has to be drawn but it is empty
+\newdimen\prfemptylinethickness\prfemptylinethickness4\prflinethickness
+
+% \prfrulenameskip           default 0.2em
+% the space between the proof line and the rule name
+\newdimen\prfrulenameskip\prfrulenameskip.2em
+
+% \prflabelskip           default 0.2em
+% the space between the label and the proof line
+\newdimen\prflabelskip\prflabelskip.2em
+
+% \prfinterspace             default .8em
+% the space between two subsequent assumptions
+\newdimen\prfinterspace\prfinterspace.8em
+
+% \prfdoublelineinterspace   default 1.2pt
+% the space between a double line
+\newdimen\prfdoublelineinterspace\prfdoublelineinterspace0.06ex
+
+% \prfboundedstyle           default 0
+% defines the style of bounded (discharged) assumptions:
+% 0 = [<formula>]
+% 1 = <formula> cancelled by a horizontal line
+% >1 = uses the custom \prfdiscargedassumption command
+\newcount\prfboundedstyle\prfboundedstyle0
+
+% \prfsummarystyle           default 0
+% defines the style for the summary box. The argument takes the
+% following values
+% 0 = a vertical dotted line (default)
+% 1 = a huge \Pi
+% 2 = \prod
+% 3 = a calligraphic D
+% >3 = uses the custom \prffancysummarybox command
+\newcount\prfsummarystyle\prfsummarystyle0
+
+% \prffancyline
+% the command to draw "fancy" lines
+\def\prffancyline{\cleaders\hbox to .63em%
+  {\hss\raisebox{-.4ex}[.2ex][0pt]{$\sim$}\hss}\hfill}
+
+% \prfConclusionBox
+% the command to draw the conclusion box
+\def\prfConclusionBox#1{%
+  \hbox{$\displaystyle\begingroup#1\endgroup%
+    \ifprfSTRUToption\mathstrut\fi$}}
+
+% \prfAssumptionBox
+% the command to draw the assumption box
+\def\prfAssumptionBox#1{%
+  \hbox{$\displaystyle\begingroup#1\endgroup%
+    \ifprfSTRUToption\mathstrut\fi$}}
+
+% \prfRuleNameBox
+% the command to draw the rule name box.
+\def\prfRuleNameBox#1{\hbox{\begingroup#1\endgroup%
+    \ifprfSTRUTlabeloption\strut\fi}}
+
+% \prfLabelBox
+% the command to draw the label box.
+\def\prfLabelBox#1{\hbox{\begingroup#1\endgroup%
+    \ifprfSTRUTlabeloption\strut\fi}}
+
+% \prfdiscargedassumption
+% the command to draw a discharged assumption in a custom way.
+% Users may consider the cancel.sty package
+\def\prfdiscargedassumption#1{\left\langle{#1}\right\rangle}
+
+% \prffancysummarybox
+% the command to draw the body of a custom summary
+\newbox\prf@@fancysummarybox
+\newdimen\prf@@fancysymmarylen
+\def\prffancysummarybox{%
+  \sbox{\prf@@fancysummarybox}{\Huge$\bigtriangledown$}%
+  \prf@@fancysymmarylen\ht\prf@@fancysummarybox%
+  \advance\prf@@fancysymmarylen\dp\prf@@fancysummarybox%
+  \sbox{\prf@@fancysummarybox}{%
+    \raisebox{.25\prf@@fancysymmarylen}[.8\prf@@fancysymmarylen]%
+    [0pt]{\usebox{\prf@@fancysummarybox}}}%
+  \prf@@fancysymmarylen\wd\prf@summary@label%
+  \ifdim\prf@@fancysymmarylen>\z@\relax%
+    \prf@@fancysymmarylen\wd\prf@@fancysummarybox%
+    \wd\prf@summary@label.4em%
+    \hbox to\prf@@fancysymmarylen{%
+      \usebox\prf@@fancysummarybox}\kern-.4em%
+      \box\prf@summary@label%
+  \else\usebox\prf@@fancysummarybox\fi}
+
+%====================================================================
+
+%--------------------------------------------------------------------
+% What follows is intended for internal use of the package.
+% It shouldn't be used in documents and may vary in future versions.
+%
+% Notice that we use temporary registers shared with TeX & LaTeX, and
+% that some registers are shared also inside the drawing procedure!
+%--------------------------------------------------------------------
+
+% Lengths
+\newskip\prf@Lassum%     space between the left border of the
+                   %     assumption box and the left border of the
+                   %     conclusion of the first assumption;
+\newskip\prf@Rassum%     space between the right border of the
+                   %     assumption box and the right border of the
+                   %     conclusion of the last assumption 
+\skipdef\prf@assumline1%
+\skipdef\prf@concline3%
+\skipdef\prf@linewd5%
+\skipdef\prf@lineht3%
+\skipdef\prf@linedp1%
+\skipdef\prf@temp7%
+\skipdef\prf@tmp7%
+\skipdef\prf@Aval9%
+
+% Boxes
+\newbox\prf@assumptionsbox%   Assumptions
+\newbox\prf@conclusionbox%    Conclusion
+\newbox\prf@rulenamebox%      Rule name
+\newbox\prf@labelbox%         Label
+\newbox\prf@linebox%          Proof line
+\newbox\prf@summarybox%       Summary
+\newbox\prf@fancybox%         To compute the fancy line
+
+%--------------------------------------------------------------------
+% Stack implementation
+%--------------------------------------------------------------------
+%% End-of-stack, wrapper and stack declaration 
+\def\prf@eos{\noexpand\prf@eos}
+\def\prf@cons{\noexpand\prf@cons}
+\let\prf@stack\prf@eos
+
+%% Pushing a value puts the (decorated) value in front
+%% of the stack list
+\def\prf@push#1{\expandafter\edef\expandafter\prf@stack%
+  {\prf@cons{#1}\prf@stack}}
+
+%% Top retrieves the topmost value in the stack
+\def\prf@@top\prf@cons#1#2\prf@eos{#1}
+\def\prf@top{\expandafter\prf@@top\prf@stack}
+
+%% Pop discards the topmost value in the stack
+\def\prf@@pop\prf@cons#1#2\prf@eos{%
+  \expandafter\edef\expandafter\prf@stack{#2\prf@eos}}
+\def\prf@pop{\expandafter\prf@@pop\prf@stack}
+
+%--------------------------------------------------------------------
+% Checks whether two strings are equal
+% \prf@streq{A}{B} if A = B then the boolean value \ifprf@same is 
+% true otherwise false 
+%
+% There is also \prf@strlisteq{A}{L} which checks whether A is equal
+% to any element in the comma-separated list L of strings
+%--------------------------------------------------------------------
+\newif\ifprf@same
+
+\newcommand{\prf@streq}[2]{%
+  \global\prf@samefalse\begingroup\def\1{#1}\def\2{#2}%
+  \ifx\1\2\global\prf@sametrue\fi\endgroup}
+
+\def\prf@strlisteq#1#2{\prf@@strlisteq{#1}#2,@}
+\def\prf@@strlisteq#1#2,{\prf@streq{#1}{#2}%
+  \ifprf@same\expandafter\prf@@strlistignore%
+  \else\expandafter\prf@@@strlisteq\fi{#1}}
+\def\prf@@strlistignore#1@{\relax}
+\def\prf@@@strlisteq#1#2{%
+  \begingroup\def\1{@}\def\2{#2}%
+  \ifx\1\2\prf@@@strlistignore\else\prf@hop\fi\endgroup{#1}#2}
+\def\prf@hop\fi\endgroup#1#2{\fi\endgroup\prf@@strlisteq{#1}#2}
+\def\prf@@@strlistignore\else\prf@hop\fi\endgroup#1@{\fi\endgroup}
+
+% -------------------------------------------------------------------
+% Labelling and referencing
+% The following commands implement the reference mechanism to allow to
+% label and then refer to assumptions and summaries of proofs
+% -------------------------------------------------------------------
+
+% The counter to keep track of assumptions
+\newcounter{prfassumptioncounter}
+\setcounter{prfassumptioncounter}{0}
+
+% The counter to keep track of summaries
+\newcounter{prfsummarycounter}
+\setcounter{prfsummarycounter}{0}
+
+% To keep track of the options
+\newif\ifprf@lbl@arabic\prf@lbl@arabictrue
+\newif\ifprf@lbl@roman\prf@lbl@romanfalse
+\newif\ifprf@lbl@Roman\prf@lbl@Romanfalse
+\newif\ifprf@lbl@alph\prf@lbl@alphfalse
+\newif\ifprf@lbl@Alph\prf@lbl@Alphfalse
+\newif\ifprf@lbl@fnsymbol\prf@lbl@fnsymbolfalse
+\newif\ifprf@lbl@label\prf@lbl@labelfalse
+
+% The prftree environment is used to define the scope of the
+% assumption references
+\newenvironment{prfenv}%
+  {\setcounter{prfassumptioncounter}{0}}%
+  {\setcounter{prfassumptioncounter}{0}}
+
+% Test whether a reference is defined
+\def\ifprf@undefref<#1>{%
+  \expandafter\ifx\csname prf@ref@@#1\endcsname\relax}
+
+% Test whether a reference has never been referenced before
+\def\ifprf@unrefref<#1>{%
+  \expandafter\ifx\csname prf@refref@@#1\endcsname\relax}
+
+% Test whether a reference has been written in the .aux file
+\def\ifprf@unwrittenref<#1>{%
+  \expandafter\ifx\csname prf@w@ref@#1\endcsname\relax}
+
+% Write a reference
+\newif\ifprf@refhack\prf@refhacktrue
+\protected\def\prfref<#1>{%
+  \ifprf@undefref<#1>\relax\mbox{??}%
+    \ifprf@refhack\label{prf@ref@hack}% to force recompilation
+      \global\prf@refhackfalse\fi%
+    \PackageWarningNoLine{prftree}{Undefined reference <#1>}%
+    \expandafter\gdef\csname prf@ref@@#1\endcsname{\mbox{??}}\else%
+    \csname prf@ref@@#1\endcsname\fi\relax} 
+
+% Create the anchor from what stored in the .aux file
+\def\prfauxlabel#1#2{%
+  \ifprf@undefref<#1>%
+    \expandafter\gdef\csname prf@ref@@#1\endcsname{{#2}}\fi}
+
+% Write the newly created label in the .aux file
+\def\prf@auxwrite<#1>#2{%
+  \ifprf@unwrittenref<#1>%
+    \protected@write\@auxout{}{\string\prfauxlabel{#1}{#2}}%
+    \expandafter\gdef\csname prf@w@ref@#1\endcsname{0}\fi}
+
+% Generate an assumption label
+\def\prf@assum@lbl<#1>{\prf@generic@lbl<#1>{prfassumptioncounter}}
+
+% Generate a summary label 
+\def\prf@summary@lbl<#1>{\prf@generic@lbl<#1>{prfsummarycounter}}
+
+% Generate a label on a given counter
+\def\prf@generic@lbl<#1>#2{%
+  \prf@warningtrue\stepcounter{#2}%
+  \ifprf@lbl@arabic\prf@warningfalse%
+    \prf@auxwrite<#1>{\arabic{#2}}\fi%
+  \ifprf@lbl@roman\prf@warningfalse%
+    \prf@auxwrite<#1>{\roman{#2}}\fi%
+  \ifprf@lbl@Roman\prf@warningfalse%
+    \prf@auxwrite<#1>{\Roman{#2}}\fi%
+  \ifprf@lbl@alph\prf@warningfalse%
+    \prf@auxwrite<#1>{\alph{#2}}\fi%
+  \ifprf@lbl@Alph\prf@warningfalse%
+    \prf@auxwrite<#1>{\Alph{#2}}\fi%
+  \ifprf@lbl@fnsymbol\prf@warningfalse%
+    \prf@auxwrite<#1>{\fnsymbol{#2}}\fi%
+  \ifprf@warning\prf@auxwrite<#1>{\arabic{#2}}\fi}
+
+% Parsing of the labelled assumption options
+\def\prf@lblopt#1{%
+  \prf@warningtrue%
+  \global\prf@lbl@arabicfalse% 
+  \global\prf@lbl@romanfalse% 
+  \global\prf@lbl@Romanfalse%
+  \global\prf@lbl@alphfalse%
+  \global\prf@lbl@Alphfalse%
+  \global\prf@lbl@fnsymbolfalse%
+  \global\prf@lbl@labelfalse%
+  \prf@strlisteq{#1}{n,number,arabic}%
+  \ifprf@same\prf@warningfalse\global\prf@lbl@arabictrue\fi%
+  \prf@strlisteq{#1}{r,roman}%
+  \ifprf@same\prf@warningfalse\global\prf@lbl@romantrue\fi%
+  \prf@strlisteq{#1}{R,Roman}%
+  \ifprf@same\prf@warningfalse\global\prf@lbl@Romantrue\fi%
+  \prf@strlisteq{#1}{a,alph,alpha,alphabetic}%
+  \ifprf@same\prf@warningfalse\global\prf@lbl@alphtrue\fi%
+  \prf@strlisteq{#1}{A,Alph,Alpha,Alphabetic}%
+  \ifprf@same\prf@warningfalse\global\prf@lbl@Alphtrue\fi
+  \prf@strlisteq{#1}{f,s,function,symbol,function symbol}%
+  \ifprf@same\prf@warningfalse\global\prf@lbl@fnsymboltrue\fi%
+  \prf@strlisteq{#1}{l,label}%
+  \ifprf@same\prf@warningfalse\global\prf@lbl@labeltrue\fi%
+  \ifprf@warning%
+    \PackageWarning{prftree}{Unrecognised option #1}\fi}
+
+% How a labelled assumption is graphically rendered
+\def\prflabelledassumptionbox#1#2{%
+  \setbox\prf@fancybox\hbox{${#1}$}%
+  % \prf@tmp\wd\prf@fancybox% CHANGED FROM v1.0
+  \setbox\prf@fancybox\hbox{$\box\prf@fancybox^{#2}$}%
+  % \wd\prf@fancybox\prf@tmp% CHANGED FROM v1.0
+  \prf@assumption{\box\prf@fancybox}}
+
+% How a discharged fancy labelled assumption is graphically rendered
+\def\prflabelleddiscargedassumption#1#2{%
+  \prflabelledassumptionbox{\left\langle{#1}\right\rangle}{#2}}
+
+%--------------------------------------------------------------------
+% \prfassumption{<formula>}
+% \prfboundedassumption{<formula>}
+% 
+% Commands to draw a pure assumption: the former draws a pure
+% assumption, while the latter draws a pure assumption which is
+% discharged. The way to mark discharging is controlled by the global
+% option \prfboundedstyle
+%--------------------------------------------------------------------
+\def\prfassumption{\@ifnextchar<{\prf@assum@one}{\prf@assumption}}
+\def\prf@assum@one<#1>{\global\prf@lbl@labelfalse\prf@assum@two#1>}
+\def\prf@assum@two{\@ifnextchar[{\prf@assum@three}{\prf@assum@four}}
+\def\prf@assum@three[#1]{\prf@lblopt{#1}\prf@assum@four}
+\def\prf@assum@four#1>#2{%
+  \ifprf@unwrittenref<#1>\relax%
+  \else\ifprf@lbl@label\relax\else%
+    \global\prf@lbl@labeltrue%
+    \PackageWarningNoLine{prftree}{Label <#1> is [label]!}\fi\fi%
+  \ifprf@lbl@label\relax\else\prf@assum@lbl<#1>\fi%
+  \prflabelledassumptionbox{#2}{\prfref<#1>}}
+\def\prf@assumption#1{\prftree[noline]{#1}\relax}
+
+\def\prfboundedassumption{%
+  \@ifnextchar<{\prf@bassum@one}{\prf@boundedassumption}}
+\def\prf@bassum@one<#1>{\global\prf@lbl@labelfalse\prf@bassum@two#1>}
+\def\prf@bassum@two{\@ifnextchar[{\prf@bassum@three}{\prf@bassum@four}}
+\def\prf@bassum@three[#1]{\prf@lblopt{#1}\prf@bassum@four}
+\def\prf@bassum@four#1>#2{%
+  \ifprf@unwrittenref<#1>\relax%
+  \else\ifprf@lbl@label\relax\else%
+    \global\prf@lbl@labeltrue%
+    \PackageWarningNoLine{prftree}{Label <#1> is [label]!}\fi\fi%
+  \ifprf@lbl@label\relax\else\prf@assum@lbl<#1>\fi%
+  \prftree[noline]{\prf@labelledbounded{#2}{#1}}\relax}
+\def\prf@boundedassumption#1{\prftree[noline]{\prf@bounded{#1}}\relax}
+\def\prf@bounded#1{%
+  \ifnum\prfboundedstyle=0\left[{#1}\right]%
+  \else\ifnum\prfboundedstyle=1%
+      \setbox\prf@conclusionbox\prfConclusionBox{#1}%
+      \prf@tmp\wd\prf@conclusionbox%
+      \prf@linedp.5\ht\prf@conclusionbox%
+      \advance\prf@linedp-.5\dp\prf@conclusionbox%
+      \prf@lineht\prf@linedp\advance\prf@lineht\prflinethickness%
+      \edef\prf@cancel{\hskip-\prf@tmp%
+        \vrule width\prf@tmp height\prf@lineht depth-\prf@linedp}%
+      {#1}\prf@cancel%
+    \else\prfdiscargedassumption{#1}\fi\fi}  
+\def\prf@labelledbounded#1#2{%
+  \ifnum\prfboundedstyle=0%
+    \prflabelledassumptionbox{\left[{#1}\right]}{\prfref<#2>}%
+  \else\ifnum\prfboundedstyle=1%
+      \setbox\prf@conclusionbox\prfConclusionBox{#1}%
+      \prf@tmp\wd\prf@conclusionbox%
+      \prf@linedp.5\ht\prf@conclusionbox%
+      \advance\prf@linedp-.5\dp\prf@conclusionbox%
+      \prf@lineht\prf@linedp\advance\prf@lineht\prflinethickness%
+      \edef\prf@cancel{\hskip-\prf@tmp%
+        \vrule width\prf@tmp height\prf@lineht depth-\prf@linedp}%
+      \prflabelledassumptionbox{{#1}\prf@cancel}{\prfref<#2>}%
+    \else\prflabelleddiscargedassumption{#1}{\prfref<#2>}\fi\fi}  
+
+%--------------------------------------------------------------------
+% \prfaxiom{<axiom>}
+% \prfbyaxiom{<label>}{<axiom>}
+%
+% Commands to draw an axiom: the former draws the axiom, while the
+% latter includes also a rule name for the axiom.
+%--------------------------------------------------------------------
+\def\prfaxiom#1{\prftree[single,straight]{#1}\relax}
+\def\prfbyaxiom#1#2{\prftree[single,straight,rule]{#1}{#2}\relax}
+
+%--------------------------------------------------------------------
+% \prfsummary[<label>]
+%            {<assumption1>}...{<assumptionN>} 
+%            {<conclusion>}
+%
+% Command to draw a proof summary, i.e., a structure with assumptions
+% 1 to N and a conclusion which stands for a complex proof not
+% explicited. The label is optional.
+% The shape of the summary is controlled by the global option
+% \prfsummarystyle 
+%--------------------------------------------------------------------
+\def\prfsummary{\@ifnextchar<{\prf@summary@one}{\prf@summary}}
+\def\prf@summary@one<#1>{%
+  \global\prf@lbl@labelfalse\prf@summary@four#1>}
+\def\prf@summary@four{%
+  \@ifnextchar[{\prf@summary@five}{\prf@summary@six}}
+\def\prf@summary@five[#1]#2>{%
+  \prf@lblopt{#1}%
+  \ifprf@unwrittenref<#2>\relax%
+  \else\ifprf@lbl@label\relax\else%
+    \global\prf@lbl@labeltrue%
+    \PackageWarningNoLine{prftree}{Label <#2> is [label]!}\fi\fi%
+  \ifprf@lbl@label\relax\else\prf@summary@lbl<#2>\fi%
+  \setbox\prf@summary@label\hbox{\scriptsize\prfref<#2>}%
+  \prf@summary}
+\def\prf@summary@six#1>{%
+  \ifprf@lbl@label\relax\else\prf@summary@lbl<#1>\fi%
+  \setbox\prf@summary@label\hbox{\scriptsize\prfref<#1>}%
+  \prf@summary}
+\def\prf@summary{\@ifnextchar[{\prf@summary@two}{\prf@summary@three}}
+\def\prf@summary@two[#1]{\prftree[summary,rule]{#1}}
+\def\prf@summary@three{\prftree[summary]}
+
+\newbox\prf@summary@label
+\def\prf@@summarystyle{%
+  \ifnum3=\prfsummarystyle\relax%
+    \setbox\prf@summarybox\hbox{$\mathcal{D}$}%
+    %\prf@tmp\wd\prf@summarybox%
+    \setbox\prf@summarybox\hbox{$\mathcal{D}%
+      \hbox{\box\prf@summary@label}\mathstrut$}%
+    %\wd\prf@summarybox\prf@tmp%
+  \else\ifnum2=\prfsummarystyle\relax%
+    \setbox\prf@summarybox\hbox{$\prod$}%
+    %\prf@tmp\wd\prf@summarybox%
+    \setbox\prf@summarybox\hbox{$\prod\hbox{\box\prf@summary@label}$}% 
+    %\wd\prf@summarybox\prf@tmp%
+  \else\ifnum1=\prfsummarystyle\relax%
+    \setbox\prf@summarybox\hbox{\hbox{\Huge$\Pi$}}%
+    %\prf@tmp\wd\prf@summarybox%
+    \setbox\prf@summarybox\hbox{\hbox{\Huge$\Pi$}%
+      \hbox{\box\prf@summary@label}}%
+    %\wd\prf@summarybox\prf@tmp%
+  \else\ifnum0=\prfsummarystyle\relax%
+    \setbox\prf@summarybox\hbox{$\cdot$}%
+    %\prf@tmp\wd\prf@summarybox%
+    \setbox\prf@summarybox%
+      \vbox to4.2ex{\cleaders\hbox{$\cdot$}\vfill}%
+    \setbox\prf@summarybox\hbox{\usebox{\prf@summarybox}%
+      \hbox{\ \box\prf@summary@label}}%
+    %\wd\prf@summarybox\prf@tmp%
+  \else\setbox\prf@summarybox\hbox{\prffancysummarybox}\fi\fi\fi\fi% 
+  \prf@tmp.5\ht\prf@summarybox%
+  \advance\prf@tmp-.5\dp\prf@summarybox%
+  \setbox\prf@summarybox%
+    \hbox{\lower\prf@tmp\hbox{\box\prf@summarybox}}}%
+
+%--------------------------------------------------------------------
+% \prftree[<options>]...[<options>]
+%         {<assumption1>}...{<assumptionN>}
+%         {<conclusion>}
+% 
+% The format of options is [<opt1>,...,<optM>]; it is correct to have
+% empty options. Options are parsed left-to-right: in case of
+% conflicting options, the latest prevails. See the documentation for
+% their description.
+%
+% If present, the rule name is typesetted in text style, while the
+% conclusion and the assumptions are typesetted in math mode.
+% The result is a box with the correct height and width, whose
+% conclusion is aligned with the current baseline.
+%
+% Notice that the conclusion must be present, while the assumptions
+% may be absent.
+%
+% Options and the way things are drawn can be modified via the global
+% settings of the package (see above). Notice that changing these
+% settings inside a proof tree may lead to impredictable results, as
+% the typesetting may proceed in an arbitrary order.
+%--------------------------------------------------------------------
+\newif\ifprf@rule%
+\newif\ifprf@label%
+\newif\ifprf@noline%
+\newif\ifprf@doubleline%
+\newif\ifprf@straightline%
+\newif\ifprf@dottedline%
+\newif\ifprf@dashedline%
+\newif\ifprf@fancyline%
+\newif\ifprf@summary%
+\newif\ifprf@first%
+\newif\ifprf@warning%
+\newif\ifprf@assum
+
+% The real parsing command is \prf@Ntree; the external command sets
+% the right values for the various switches controlling the options
+\def\prftree{\prf@init\prf@Ntree}
+\def\prf@init{%
+  \global\prf@rulefalse%
+  \global\prf@labelfalse%
+  \global\prf@nolinefalse%
+  \global\prf@doublelinefalse%
+  \global\prf@straightlinetrue%
+  \global\prf@dottedlinefalse%
+  \global\prf@dashedlinefalse%
+  \global\prf@fancylinefalse%
+  \global\prf@summaryfalse}
+
+% If there are options then parse them, eventually setting the
+% booleans to their appropriate values. Then, expand \prf@@tree
+\def\prf@Ntree{\@ifnextchar[{\prf@options}{\prf@@tree}}
+
+% Parses a block [<opt>,...,<opt>] of options one by one, left to
+% right 
+\def\prf@options[#1]{\prf@opts#1,]\prf@Ntree}
+\def\prf@opts#1,{\prf@opt#1,\@ifnextchar]{\prf@optsskip}{\prf@opts}} 
+\def\prf@optsskip]{\relax} % to consume the final ]
+
+% Parses a single option eventually setting the appropriate flag 
+\def\prf@opt#1,{\prf@warningtrue%
+  \prf@strlisteq{#1}{r,by rule,rule,by,right}%
+  \ifprf@same\prf@warningfalse\global\prf@ruletrue\fi%
+  \prf@strlisteq{#1}{l,label,left}%
+  \ifprf@same\prf@warningfalse\global\prf@labeltrue\fi%
+  \prf@strlisteq{#1}{s,single line,single,singleline}%
+  \ifprf@same\prf@warningfalse\global\prf@doublelinefalse\fi%
+  \prf@strlisteq{#1}{d,double line,double,doubleline}%
+  \ifprf@same\prf@warningfalse\global\prf@doublelinetrue\fi%
+  \prf@strlisteq{#1}{straight,straight line,straightline}%
+  \ifprf@same\prf@warningfalse%
+  \global\prf@straightlinetrue\global\prf@dottedlinefalse%
+  \global\prf@dashedlinefalse\global\prf@fancylinefalse\fi%
+  \prf@strlisteq{#1}{dotted,dotted line,dottedline}%
+  \ifprf@same\prf@warningfalse%
+  \global\prf@straightlinefalse\global\prf@dottedlinetrue%
+  \global\prf@dashedlinefalse\global\prf@fancylinefalse\fi%
+  \prf@strlisteq{#1}{dashed,dashed line,dashedline}%
+  \ifprf@same\prf@warningfalse%
+  \global\prf@straightlinefalse\global\prf@dottedlinefalse%
+  \global\prf@dashedlinetrue\global\prf@fancylinefalse\fi%
+  \prf@strlisteq{#1}{f,fancy line,fancy,fancyline}%
+  \ifprf@same\prf@warningfalse%
+  \global\prf@straightlinefalse\global\prf@dottedlinefalse%
+  \global\prf@dashedlinefalse\global\prf@fancylinetrue\fi%
+  \prf@strlisteq{#1}{noline}%
+  \ifprf@same\prf@warningfalse\global\prf@nolinetrue\fi%
+  \prf@strlisteq{#1}{summary}%
+  \ifprf@same\prf@warningfalse\global\prf@summarytrue\fi%
+  \ifprf@warning\PackageWarning{prftree}%
+                               {Unrecognised option #1}\fi}%
+
+% At this point, options have been parsed. So, we process them
+% preparing the right parameters for the drawing procedure. 
+% We start from the proof line options:
+%   0 = single straight line
+%   1 = double straight line 
+%   2 = single dotted line
+%   3 = double dotted line
+%   4 = single dashed line
+%   5 = double dashed line
+%   6 = single fancy line
+%   7 = double fancy line
+%   8 = no line
+%   9 = summary
+\def\prf@@tree{%
+  \countdef\prf@linetype1\prf@linetype0%
+  \ifprf@dottedline\prf@linetype2\fi%
+  \ifprf@dashedline\prf@linetype4\fi%
+  \ifprf@fancyline\prf@linetype6\fi%
+  \ifprf@doubleline\advance\prf@linetype1\fi%
+  \ifprf@noline\prf@linetype8\fi%
+  \ifprf@summary\prf@linetype9\fi\relax%
+  \expandafter\prf@@Ntree\the\prf@linetype}
+
+% If there is no rule name, we put an empty one in place 
+% #1 the line options
+\def\prf@@Ntree#1{%
+  \edef\prf@choice{\ifprf@rule{#1}\else{#1}{}\fi}%
+  \expandafter\prf@@NNtree\prf@choice}
+
+% If there is no label, we put an empty one in place 
+% #1 the line options
+% #2 the rule name
+\def\prf@@NNtree#1#2{%
+  \def\prf@hackpar{#2}%
+  \edef\prf@choice{\ifprf@label{#1}{\noexpand\prf@hackpar}\else%
+    {#1}{\noexpand\prf@hackpar}{}\fi}%
+  \expandafter\prf@tree\prf@choice}
+
+% We collect the first assumption, if any, or the conclusion otherwise
+% and we look if there is another argument. If not, we draw the proof.
+% #1 the line options' value
+% #2 the rule name
+% #3 the label
+% #4 the conclusion or the first assumption 
+\def\prf@tree#1#2#3#4{\@ifnextchar\bgroup%
+  {\prf@assumptions{#1}{#2}{#3}{\prf@preprf{#4}}}%
+  {\prf@draw{#1}{#2}{#3}{#4}{\prf@preprf}{}}}
+
+% We examine assumptions from left to right. If we hit the last
+% argument, it is the conclusion and the proof is ready to be drawn. 
+% #1 the line options' value
+% #2 the rule name
+% #3 the label
+% #4 the first assumptions
+% #5 the current argument
+\def\prf@assumptions#1#2#3#4#5{\@ifnextchar\bgroup%
+  {\prf@assumenext{#1}{#2}{#3}{#4}{\prf@interprf{#5}}}%
+  {\prf@draw{#1}{#2}{#3}{#5}{#4}{}}}
+
+% An intermediate assumption is added to the assumptions' box, until
+% the last assumption has been collected. Then the proof is drawn.
+% #1 the line options' value
+% #2 the rule name
+% #3 the label
+% #4 the first assumption
+% #5 the complete list of assumptions
+% #6 the new argument
+\def\prf@assumenext#1#2#3#4#5#6{\@ifnextchar\bgroup%
+  {\prf@assumenext{#1}{#2}{#3}{#4}{{#5}\prf@interprf{#6}}}%
+  {\prf@draw{#1}{#2}{#3}{#6}{#4}{#5}}}
+
+% We need to reset some internal variables during the generation of
+% the assumptions
+\def\prf@preprf{\global\prf@Lassum\z@\global\prf@Rassum\z@}
+
+% We need to put some space between assumptions when generating them 
+\def\prf@interprf{\hskip\prfinterspace}
+
+%--------------------------------------------------------------------
+% The drawing procedure, i.e., the "core" of the package
+% #1 the line options' value
+% #2 the rule name
+% #3 the label 
+% #4 the conclusion
+% #5 the first assumption
+% #6 the list of assumptions
+%--------------------------------------------------------------------
+
+\newbox\prf@@@@proofbox
+\def\prf@draw#1#2#3#4#5#6{%
+  % We construct the boxes which will constitute the proof
+  \ifprf@first\prf@push{1}\else\prf@push{0}\fi%
+  \global\prf@firsttrue%
+  \setbox\prf@assumptionsbox\prfAssumptionBox{#5}%
+  \prf@push{\the\prf@Lassum}%
+  \global\prf@firstfalse%
+  \ifdim\wd\prf@assumptionsbox>\z@\relax\prf@assumtrue%
+    \setbox\prf@assumptionsbox%
+      \hbox{\box\prf@assumptionsbox\prfAssumptionBox{#6}}%
+  \else\prf@assumfalse%
+    \setbox\prf@assumptionsbox\hbox{}\fi%
+  \prf@push{\the\prf@Rassum}%
+  \setbox\prf@conclusionbox\prfConclusionBox{#4}%
+  \setbox\prf@rulenamebox\prfRuleNameBox{#2}%
+  \setbox\prf@labelbox\prfLabelBox{#3}%
+  % We set up the flags needed to format the proof tree box
+  \prf@nolinefalse\prf@doublelinefalse\prf@straightlinetrue%
+  \prf@dottedlinefalse\prf@dashedlinefalse\prf@fancylinefalse%
+  \prf@summaryfalse\prf@rulefalse\prf@labelfalse%
+  \ifcase#1\relax\or%
+  \prf@doublelinetrue\or%
+  \prf@dottedlinetrue\prf@straightlinefalse\or%
+  \prf@doublelinetrue\prf@dottedlinetrue\prf@straightlinefalse\or%
+  \prf@dashedlinetrue\prf@straightlinefalse\or%
+  \prf@doublelinetrue\prf@dashedlinetrue\prf@straightlinefalse\or%
+  \prf@fancylinetrue\prf@straightlinefalse\or%
+  \prf@doublelinetrue\prf@fancylinetrue\prf@straightlinefalse\or%
+  \prf@nolinetrue\prf@straightlinefalse\or%
+  \prf@summarytrue\prf@straightlinefalse\fi%
+  \ifdim\wd\prf@rulenamebox>\z@\relax\prf@ruletrue%
+  \else\prf@rulefalse\fi%
+  \ifdim\wd\prf@labelbox>\z@\relax\prf@labeltrue%
+  \else\prf@labelfalse\fi%
+  \ifdim\wd\prf@assumptionsbox>\z@\relax\prf@assumtrue%
+  \else\prf@assumfalse\fi%
+  % Now, we retrieve the right values for Lassum and Rassum
+  % since box construction may have overwritten them. Also, we need to
+  % know if this proof is the first of a list of assumptions
+  \edef\prf@tok{\prf@top}\prf@pop\global\prf@Rassum\prf@tok%
+  \edef\prf@tok{\prf@top}\prf@pop\global\prf@Lassum\prf@tok%
+  \edef\prf@tok{\prf@top}\prf@pop\global\prf@firstfalse%
+  \ifnum\prf@tok=1\global\prf@firsttrue\fi%
+  % The assumptions' box has the following shape
+  %  --------------------------------
+  % |<---------------------wd------->|
+  % | -----------       ------------ |
+  % ||<-->       |     |      <---->||
+  % || Lassum    | ... |   Rassum   ||
+  % ||   |       |     |      |     ||
+  % ||   V       |     |      V     ||
+  % | -----------       ------------ |
+  %  --------------------------------
+  % The assumptions' line is composed by the conclusions of the
+  % proofs which are the antecedents of the application of the
+  % inference rule
+  % The final box will be something like
+  %  --------------------------------
+  % |<---------------------wd------->|
+  % | -----------       ------------ |
+  % ||<-->       |     |      <---->||
+  % || Lassum    | ... |   Rassum   ||
+  % ||   |       |     |      |     ||
+  % ||   V       |     |      V     ||
+  % | -----------       ------------ |
+  %  --------------------------------
+  %     ========================   rule name
+  %             conclusion
+  % <--Lassum-->          <-----Rassum----->
+  % 
+  % We calculate the length of the assumptions' line:
+  %   assumline = assumptionsbox - Lassum - Rassum
+  % if there are no assumption, assumline = 0
+  % (for efficiency reasons, we actually calculate 1/2assumline)
+  \ifprf@assum\prf@assumline.5\wd\prf@assumptionsbox%
+    \advance\prf@assumline-.5\prf@Lassum%
+    \advance\prf@assumline-.5\prf@Rassum%
+    \else\prf@assumline\z@\fi%
+  % The length of the conclusionbox
+  % (for efficiency reasons, we actually calculate 1/2concline)
+  \prf@concline.5\wd\prf@conclusionbox%
+  % The length of the proof line is 
+  %   linewd = if summary then width of summary box else
+  %               max(concline,assumline)
+  %   if there is a line, we add 2extra
+  % (for efficiency reasons, we actually calculate 1/2linewd)
+  \ifprf@summary\prf@@summarystyle\prf@linewd.5\wd\prf@summarybox%
+  \else\prf@linewd\prf@assumline%
+    \ifdim\prf@assumline<\prf@concline\prf@linewd\prf@concline\fi% 
+    \ifprf@noline\relax\else\advance\prf@linewd\prflineextra\fi\fi%
+  % We calculate the proofline without label and rule name.
+  \ifprf@noline\setbox\prf@fancybox\hbox{\hskip2\prf@linewd}%
+  \else\ifprf@summary\setbox\prf@fancybox\copy\prf@summarybox%
+  \else\ifprf@fancyline%
+      \setbox\prf@fancybox\hbox to2\prf@linewd{\prffancyline}\else%
+      \ifprf@dashedline%
+      \setbox\prf@fancybox%
+%      \hbox to2\prf@linewd{\cleaders\hbox
+%      to.5em{\hss\_\hss}\hfill}\else% 
+      \hbox to2\prf@linewd{\cleaders\hbox to.5em{%
+          \hss\vrule height\prflinethickness%
+          width.3em depth0pt\hss}\hfill}%
+      \setbox\prf@fancybox\hbox to2\prf@linewd{%
+        \raise.4ex\box\prf@fancybox}\else%
+      \ifprf@dottedline%
+      \setbox\prf@fancybox%
+      \hbox to2\prf@linewd{\cleaders\hbox%
+        to.33em{\hss$\cdot$\hss}\hfill}\else%  
+   % it must be a straight line!
+      \setbox\prf@fancybox\hbox{\vrule width2\prf@linewd%
+        height\prflinethickness}%
+      \setbox\prf@fancybox\hbox{\raise.4ex%
+        \box\prf@fancybox}\fi\fi\fi%
+  % If the line is double, we draw it twice with enough
+  % (doublelineinterspace) space between the two copies. 
+    \ifprf@doubleline%
+      \setbox\prf@fancybox\hbox{\vbox{\copy\prf@fancybox%
+         \nointerlineskip\vskip\prfdoublelineinterspace\nointerlineskip%
+         \box\prf@fancybox}}\fi\fi\fi%
+  \prf@tmp\dp\prf@fancybox%
+  \setbox\prf@fancybox\hbox{\raise\prf@tmp\box\prf@fancybox}%
+  % Let A = max(1/2assumline + Lassum, 1/2conclusionbox, 1/2linewd +
+  % delta), where delta is 0 if there is no label, and it is the width
+  % of the label box plus prflabelskip otherwise.
+  % Then
+  %   Assumptions shift         = A - (1/2assumline + Lassum)
+  %   Rule line shift           = A - (1/2linewd + delta)
+  %   Lassum = Conclusion shift = A - 1/2conclusionbox
+  % And, so, we can prepare the assumptions box and the conclusion box 
+  \prf@Aval\prf@assumline\advance\prf@Aval\prf@Lassum%
+  \prf@tmp\prf@linewd\relax%
+  \ifprf@label\advance\prf@tmp\wd\prf@labelbox%
+    \advance\prf@tmp\prflabelskip\fi%
+  \ifdim\prf@Aval<\prf@tmp\prf@Aval\prf@tmp\fi%
+  \ifdim\prf@Aval<\prf@concline\prf@Aval\prf@concline\fi%
+  \prf@temp\prf@Aval\advance\prf@temp-\prf@assumline%
+  \advance\prf@temp-\prf@Lassum%
+  \setbox\prf@assumptionsbox%
+    \hbox{\hskip\prf@temp\box\prf@assumptionsbox}%
+  \prf@temp\prf@Aval\advance\prf@temp-\prf@concline%
+  \setbox\prf@conclusionbox%
+    \hbox{\hskip\prf@temp\box\prf@conclusionbox}%
+  \global\prf@Lassum\prf@temp%
+  % Rassum will be the width of the composition of all boxes (but we
+  % still have to cope with heigths...) minus (concline + conclusion
+  % shift) 
+  \global\prf@Rassum-2\prf@concline%
+  \global\advance\prf@Rassum-\prf@temp%
+  % Then, if there is a rule name, the line is raised to align with
+  % the centre of the rule name and the rule box gets attached to the
+  % proof line box.
+  \prf@linedp\z@%
+  \ifprf@rule\advance\prf@linedp.5\ht\prf@fancybox%
+    \advance\prf@linedp-.5\ht\prf@rulenamebox%
+    \advance\prf@linedp.5\dp\prf@rulenamebox%
+    \setbox\prf@linebox%
+      \hbox{\copy\prf@fancybox\hskip\prfrulenameskip%
+        \raise\prf@linedp\box\prf@rulenamebox}%
+  \else\setbox\prf@linebox\copy\prf@fancybox\fi%
+  \setbox\prf@linebox\hbox{\raise\dp\prf@linebox\box\prf@linebox}%
+  % Then, if there is a label, the line is raised to align with
+  % the centre of the label and the label box gets attached to the
+  % proof line box.
+  \prf@linedp\z@%
+  \prf@temp\prf@Aval\advance\prf@temp-\prf@linewd%
+  \ifprf@label\advance\prf@linedp.5\ht\prf@linebox%
+    \advance\prf@linedp-.5\ht\prf@labelbox%
+    \advance\prf@linedp.5\dp\prf@labelbox%
+    \advance\prf@temp-\prflabelskip%
+    \advance\prf@temp-\wd\prf@labelbox%
+    \setbox\prf@linebox%
+      \hbox{\raise\prf@linedp\box\prf@labelbox%
+        \hskip\prflabelskip\box\prf@linebox}\fi%
+  \setbox\prf@linebox%
+    \hbox{\hskip\prf@temp\raise\dp\prf@linebox\box\prf@linebox}%
+  % We need to calculate the distance between the assumptions and the
+  % proofline: if there are no assumptions, it is zero; if there are
+  % assumptions but no rule name, it is \prflinepadbefore; otherwise
+  % it is \linepadbefore plus half of the "real" line's height
+  \prf@tmp\z@%
+  \ifprf@assum%
+    \ifprf@rule\prf@tmp-.5\ht\prf@linebox%
+      \advance\prf@tmp.5\ht\prf@fancybox%
+      \advance\prf@tmp.5\dp\prf@fancybox\fi\relax%
+    \ifprf@label\ifprf@rule\relax\else%
+      \prf@tmp-.5\ht\prf@linebox%
+      \advance\prf@tmp.5\ht\prf@fancybox%
+      \advance\prf@tmp.5\dp\prf@fancybox\fi\fi%
+    \advance\prf@tmp\prflinepadbefore%
+    \setbox\prf@assumptionsbox%
+      \vbox{\box\prf@assumptionsbox\nointerlineskip\vskip\prf@tmp}\fi%
+  % We need to calculate the distance between the proofline and the
+  % conclusion: it is slightly complex to explain... try to draw the
+  % whole thing to make it clear!! 
+  \prf@temp\prflinepadafter%
+  \ifprf@noline%
+    \ifprf@assum%
+      \advance\prf@temp\prfemptylinethickness\else%
+    \advance\prf@temp-\prflinepadafter\fi\fi%
+  \ifprf@rule%
+    \advance\prf@temp-.5\ht\prf@linebox%
+    \advance\prf@temp.5\ht\prf@fancybox%
+    \advance\prf@temp.5\dp\prf@fancybox\fi%
+  \ifprf@label\ifprf@rule\relax\else%
+    \advance\prf@temp-.5\ht\prf@linebox%
+    \advance\prf@temp.5\ht\prf@fancybox%
+    \advance\prf@temp.5\dp\prf@fancybox\fi\fi%
+  \setbox\prf@conclusionbox%
+    \vbox{\vskip\prf@temp\box\prf@conclusionbox}%
+  % And, finally, we can prepare the proof box and we can calculate
+  % the right value from Rassum. At the very end, we can output the
+  % result (!!) 
+  \setbox\prf@rulenamebox%
+    \vbox{\box\prf@assumptionsbox\nointerlineskip%
+      \box\prf@linebox\nointerlineskip%
+      \box\prf@conclusionbox\nointerlineskip}%
+  \global\advance\prf@Rassum\wd\prf@rulenamebox%
+  \hbox{$\box\prf@rulenamebox$}}
+
+% -------------------------------------------------------------------
+% Support macros to define new inference rules
+%
+% \prfMakeInferenceRule#1#2
+% \prfMakeInferenceRuleRef#1#2
+% #1: name of the command associated to the inference rule
+% #2: rule name
+% The plain version generates a command for typesetting a proof with
+% the inference rule; the Ref version uses the first parameter of the
+% rule as a reference that is appended to the rule name
+% -------------------------------------------------------------------
+
+\def\prfMakeInferenceRule#1#2{%
+  \expandafter\def\csname #1\endcsname%
+  {\prftree[by]{$\scriptstyle{#2}$}}}
+\def\prfMakeInferenceRuleRef#1#2{%
+  \expandafter\def\csname #1\endcsname##1%
+  {\prftree[by]{$\scriptstyle{#2}^{\prfref<##1>}$}}}
+
+% -------------------------------------------------------------------
+% Macros to stack the premises of an inference rule
+%
+% \prfStackPremises{a_1}...{a_n} generates a vertical list containing
+% a_1 on the top and a_n on the bottom.
+% -------------------------------------------------------------------
+
+\def\prfStackPremises{\prf@StackPremises{}}
+\def\prf@StackPremises#1{\@ifnextchar\bgroup%
+  {\prf@@StackPremises{\prfassumption{#1}}}%
+  {\prfassumption{#1}}}
+\def\prf@@StackPremises#1#2{\@ifnextchar\bgroup%
+  {\prf@@@StackPremises{\prftree[noline]{#1}{#2}}}%
+  {\prftree[noline]{#1}{#2}}}
+\def\prf@@@StackPremises#1#2{\@ifnextchar\bgroup%
+  {\prf@@@StackPremises{\prftree[noline]{#1}{#2}}}
+  {\prftree[noline]{#1}{#2}}}
+
+% -------------------------------------------------------------------
+% Natural deduction systems
+%
+% Package option [ND]
+% -------------------------------------------------------------------
+
+\ifprf@NDOption%
+  \def\NDA{\prfassumption}
+  \def\NDD{\prfboundedassumption}
+  \def\NDAL#1{\prfassumption<#1>}
+  \def\NDDL#1{\prfboundedassumption<#1>}
+  \def\NDP{\prftree}
+  \prfMakeInferenceRule{NDANDI}{\mathord{\wedge}\textup{I}}
+  \prfMakeInferenceRule{NDANDEL}{\mathord{\wedge}\textup{E}_1}
+  \prfMakeInferenceRule{NDANDER}{\mathord{\wedge}\textup{E}_2}
+  \prfMakeInferenceRule{NDANDE}{\mathord{\wedge}\textup{E}}
+  \prfMakeInferenceRule{NDORIL}{\mathord{\vee}\textup{I}_1}
+  \prfMakeInferenceRule{NDORIR}{\mathord{\vee}\textup{I}_2}
+  \prfMakeInferenceRule{NDORI}{\mathord{\vee}\textup{I}}
+  \prfMakeInferenceRule{NDORE}{\mathord{\vee}\textup{E}}
+  \prfMakeInferenceRuleRef{NDOREL}{\mathord{\vee}\textup{E}}
+  \ifprfIMPOption
+    \prfMakeInferenceRule{NDIMPI}{\mathord{\supset}\textup{I}}
+    \prfMakeInferenceRule{NDIMPE}{\mathord{\supset}\textup{E}}
+    \prfMakeInferenceRuleRef{NDIMPIL}{\mathord{\supset}\textup{I}}
+  \else
+    \prfMakeInferenceRule{NDIMPI}{\mathord{\rightarrow}\textup{I}}
+    \prfMakeInferenceRule{NDIMPE}{\mathord{\rightarrow}\textup{E}}
+    \prfMakeInferenceRuleRef{NDIMPIL}{\mathord{\rightarrow}\textup{I}}
+  \fi
+  \prfMakeInferenceRule{NDNOTI}{\mathord{\neg}\textup{I}}
+  \prfMakeInferenceRuleRef{NDNOTIL}{\mathord{\neg}\textup{I}}
+  \prfMakeInferenceRule{NDNOTE}{\mathord{\neg}\textup{E}}
+  \prfMakeInferenceRule{NDALLI}{\mathord{\forall}\textup{I}}
+  \prfMakeInferenceRule{NDALLE}{\mathord{\forall}\textup{E}}
+  \prfMakeInferenceRule{NDEXI}{\mathord{\exists}\textup{I}}
+  \prfMakeInferenceRule{NDEXE}{\mathord{\exists}\textup{E}}
+  \prfMakeInferenceRuleRef{NDEXEL}{\mathord{\exists}\textup{E}}
+  \prfMakeInferenceRule{NDTI}{\mathord{\top}\textup{I}}
+  \prfMakeInferenceRule{NDFE}{\mathord{\bot}\textup{E}}
+  \prfMakeInferenceRule{NDLEM}{\textup{lem}}
+  \prfMakeInferenceRule{NDAX}{\textup{ax}}
+\fi
+
+% -------------------------------------------------------------------
+% Sequent systems
+%
+% Package option [SEQ]
+% -------------------------------------------------------------------
+
+\ifprf@SEQOption%
+  \def\SEQA{\prfassumption}
+  \def\SEQD{\prfboundedassumption}
+  \def\SEQP{\prftree} 
+  \prfMakeInferenceRule{SEQAX}{\textup{Ax}}
+  \prfMakeInferenceRule{SEQLF}{\textup{L}\mathord{\bot}}
+  \prfMakeInferenceRule{SEQLW}{\textup{LW}}
+  \prfMakeInferenceRule{SEQRW}{\textup{RW}}
+  \prfMakeInferenceRule{SEQLC}{\textup{LC}}
+  \prfMakeInferenceRule{SEQRC}{\textup{RC}}
+  \prfMakeInferenceRule{SEQLAND}{\textup{L}\mathord{\wedge}}
+  \prfMakeInferenceRule{SEQLANDL}{\textup{L}\mathord{\wedge}_1}
+  \prfMakeInferenceRule{SEQLANDR}{\textup{L}\mathord{\wedge}_2}
+  \prfMakeInferenceRule{SEQRAND}{\textup{R}\mathord{\wedge}}
+  \prfMakeInferenceRule{SEQLOR}{\textup{L}\mathord{\vee}}
+  \prfMakeInferenceRule{SEQROR}{\textup{R}\mathord{\vee}}
+  \prfMakeInferenceRule{SEQRORL}{\textup{R}\mathord{\vee}_1}
+  \prfMakeInferenceRule{SEQRORR}{\textup{R}\mathord{\vee}_2}
+  \ifprfIMPOption
+    \prfMakeInferenceRule{SEQLIMP}{\textup{L}\mathord{\supset}}
+    \prfMakeInferenceRule{SEQRIMP}{\textup{R}\mathord{\supset}}
+  \else
+    \prfMakeInferenceRule{SEQLIMP}{\textup{L}\mathord{\rightarrow}}
+    \prfMakeInferenceRule{SEQRIMP}{\textup{R}\mathord{\rightarrow}}
+  \fi
+  \prfMakeInferenceRule{SEQLALL}{\textup{L}\mathord{\forall}}
+  \prfMakeInferenceRule{SEQRALL}{\textup{R}\mathord{\forall}}
+  \prfMakeInferenceRule{SEQLEX}{\textup{L}\mathord{\exists}}
+  \prfMakeInferenceRule{SEQREX}{\textup{R}\mathord{\exists}}
+  \prfMakeInferenceRule{SEQCUT}{\textup{Cut}}
+\fi
+
+% -------------------------------------------------------------------
+% Equality rules
+%
+% Package option [EQ]
+% -------------------------------------------------------------------
+
+\ifprf@EQOption%
+  \prfMakeInferenceRule{EQREFL}{\textup{refl}}
+  \prfMakeInferenceRule{EQSYM}{\textup{sym}}
+  \prfMakeInferenceRule{EQTRANS}{\textup{trans}}
+  \prfMakeInferenceRule{EQSUBST}{\textup{subst}}
+\fi
+
+% -------------------------------------------------------------------
+% Martin-Lof and Homotopy Type Theory
+%
+% Package option [ML]
+% -------------------------------------------------------------------
+
+\ifprf@MLOption
+  \ifprf@MLnodefOption\relax\else
+    \def\type{\mathbin{:}}
+    \def\universe{\mathcal{U}}
+    \def\context{\mathsf{ctx}}
+    \def\judgementaldef{\mathbin{:\equiv}}
+    \def\propositionaldef{\mathbin{:=}}
+    \def\identitytype{\mathsf{Id}}
+    \def\refl{\mathsf{refl}}
+    \def\emptytype{\mathbf{0}}
+    \def\unittype{\mathbf{1}}
+    \def\booleantype{\mathbf{2}}
+    \def\axiomofchoice{\mathsf{AC}}
+    \def\accessibility{\mathsf{acc}}
+    \def\ap{\mathsf{ap}}
+    \def\apd{\mathsf{apd}}
+    \def\basepoint{\mathsf{base}}
+    \def\biinv{\mathsf{biinv}}
+    \def\cardtype{\mathsf{Card}}
+    \def\cocone{\mathsf{cocone}}
+    \def\cons{\mathsf{cons}}
+    \def\contr{\mathsf{contr}}
+    \def\equivtype{\mathsf{Equiv}}
+    \def\ext{\mathsf{ext}}
+    \def\fiber{\mathsf{fib}}
+    \def\funext{\mathsf{funext}}
+    \def\glue{\mathsf{glue}}
+    \def\happly{\mathsf{happly}}
+    \def\hom{\mathsf{hom}}
+    \def\id{\mathsf{id}}
+    \def\idtoeqv{\mathsf{idtoeqv}}
+    \def\idtoiso{\mathsf{idtoiso}}
+    \def\im{\mathsf{im}}
+    \def\ind{\mathsf{ind}}
+    \def\inj{\mathsf{inj}}
+    \def\inl{\mathsf{inl}}
+    \def\inr{\mathsf{inr}}
+    \def\iscontr{\mathsf{isContr}}
+    \def\isequiv{\mathsf{isequiv}}
+    \def\ishae{\mathsf{ishae}}
+    \def\isotoid{\mathsf{istoid}}
+    \def\isntype#1{\mathsf{is-}{#1}\mathsf{-type}}
+    \def\isprop{\mathsf{isProp}}
+    \def\isset{\mathsf{isSet}}
+    \def\ker{\mathsf{ker}}
+    \def\LEM{\mathsf{LEM}}
+    \def\linv{\mathsf{linv}}
+    \def\listtype{\mathsf{List}}
+    \def\loopcons{\mathsf{loop}}
+    \def\Map{\mathsf{Map}}
+    \def\merid{\mathsf{merid}}
+    \def\nil{\mathsf{nil}}
+    \def\ordtype{\mathsf{Ord}}
+    \def\pair{\mathsf{pair}}
+    \def\pred{\mathsf{pred}}
+    \def\pr{\mathsf{pr}}
+    \def\Prop{\mathsf{Prop}}
+    \def\qinv{\mathsf{qinv}}
+    \def\rec{\mathsf{rec}}
+    \def\rinv{\mathsf{rinv}}
+    \def\seg{\mathsf{seg}}
+    \def\Set{\mathsf{Set}}
+    \def\Succ{\mathsf{succ}}
+    \def\sup{\mathsf{sup}}
+    \def\total{\mathsf{total}}
+    \def\transport{\mathsf{transport}}
+    \def\transportconst{\mathsf{transportconst}}
+    \def\ua{\mathsf{ua}}
+    \def\Wtype{\mathsf{W}}
+  \fi
+  
+  \def\MLctxEMPrule{\ensuremath{\mathsf{ctx}\mathsf{-EMP}}}
+  \def\MLctxEXTrule{\ensuremath{\mathsf{ctx}\mathsf{-EXT}}}
+  \def\MLVblerule{\ensuremath{\mathsf{Vble}}}
+  \def\MLSubstrule{\ensuremath{\mathsf{Subst}}}
+  \def\MLWkgrule{\ensuremath{\mathsf{Wkg}}}
+  \def\MLEQreflrule{\ensuremath{\mathord{\equiv}\mathsf{-refl}}}
+  \def\MLEQsymrule{\ensuremath{\mathord{\equiv}\mathsf{-sym}}}
+  \def\MLEQtransrule{\ensuremath{\mathord{\equiv}\mathsf{-trans}}}
+  \def\MLEQsubstrule{\ensuremath{\mathord{\equiv}\mathsf{-subst}}}
+  \def\MLEQsubsteqrule{\ensuremath{\mathord{\equiv}%
+      \mathsf{-subst}\mathsf{-eq}}}
+  \def\MLUintrorule{\ensuremath{\universe\mathsf{-intro}}}
+  \def\MLUcumulrule{\ensuremath{\universe\mathsf{-cumul}}}
+  \def\MLUcumuleqrule{\ensuremath{\universe%
+      \mathsf{-cumul}\mathsf{-eq}}}
+  \def\MLpiformrule{\ensuremath{\Pi\mathsf{-form}}}
+  \def\MLpiformeqrule{\ensuremath{\Pi\mathsf{-form}\mathsf{-eq}}}
+  \def\MLpiintrorule{\ensuremath{\Pi\mathsf{-intro}}}
+  \def\MLpiintroeqrule{\ensuremath{\Pi\mathsf{-intro}\mathsf{-eq}}}
+  \def\MLpielimrule{\ensuremath{\Pi\mathsf{-elim}}}
+  \def\MLpielimeqrule{\ensuremath{\Pi\mathsf{-elim}\mathsf{-eq}}}
+  \def\MLpicomprule{\ensuremath{\Pi\mathsf{-comp}}}
+  \def\MLpiuniqrule{\ensuremath{\Pi\mathsf{-uniq}}}
+  \def\MLKintrorule{\ensuremath{k\mathsf{-intro}}}
+  \def\MLsigmaformrule{\ensuremath{\Sigma\mathsf{-form}}}
+  \def\MLsigmaintrorule{\ensuremath{\Sigma\mathsf{-intro}}}
+  \def\MLsigmaelimrule{\ensuremath{\Sigma\mathsf{-elim}}}
+  \def\MLsigmacomprule{\ensuremath{\Sigma\mathsf{-comp}}}
+  \def\MLsigmauniqrule{\ensuremath{\Sigma\mathsf{-uniq}}}
+  \def\MLplusformrule{\ensuremath{\mathord{+}\mathsf{-form}}}
+  \def\MLplusintrolrule{\ensuremath{\mathord{+}\mathsf{-intro}_1}}
+  \def\MLplusintrorrule{\ensuremath{\mathord{+}\mathsf{-intro}_2}}
+  \def\MLpluselimrule{\ensuremath{\mathord{+}\mathsf{-elim}}}
+  \def\MLpluscomplrule{\ensuremath{\mathord{+}\mathsf{-comp}_1}}
+  \def\MLpluscomprrule{\ensuremath{\mathord{+}\mathsf{-comp}_2}}
+  \def\MLplusuniqrule{\ensuremath{\mathord{+}\mathsf{-uniq}}}
+  \def\MLzeroformrule{\ensuremath{\mathbf{0}\mathsf{-form}}}
+  \def\MLzeroelimrule{\ensuremath{\mathbf{0}\mathsf{-elim}}}
+  \def\MLzerouniqrule{\ensuremath{\mathbf{0}\mathsf{-uniq}}}
+  \def\MLunitformrule{\ensuremath{\mathbf{1}\mathsf{-form}}}
+  \def\MLunitintrorule{\ensuremath{\mathbf{1}\mathsf{-intro}}}
+  \def\MLunitelimrule{\ensuremath{\mathbf{1}\mathsf{-elim}}}
+  \def\MLunitcomprule{\ensuremath{\mathbf{1}\mathsf{-comp}}}
+  \def\MLunituniqrule{\ensuremath{\mathbf{1}\mathsf{-uniq}}}
+  \def\MLnatformrule{\ensuremath{\mathbb{N}\mathsf{-form}}}
+  \def\MLnatintrozerorule{\ensuremath{\mathbb{N}\mathsf{-intro}_1}}
+  \def\MLnatintrosuccrule{\ensuremath{\mathbb{N}\mathsf{-intro}_2}}
+  \def\MLnatelimrule{\ensuremath{\mathbb{N}\mathsf{-elim}}}
+  \def\MLnatcompzerorule{\ensuremath{\mathbb{N}\mathsf{-comp}_1}}
+  \def\MLnatcompsuccrule{\ensuremath{\mathbb{N}\mathsf{-comp}_2}}
+  \def\MLnatuniqrule{\ensuremath{\mathbb{N}\mathsf{-uniq}}}
+  \def\MLidformrule{\ensuremath{\mathord{=}\mathsf{-form}}}
+  \def\MLidintrorule{\ensuremath{\mathord{=}\mathsf{-intro}}}
+  \def\MLidelimrule{\ensuremath{\mathord{=}\mathsf{-elim}}}
+  \def\MLidcomprule{\ensuremath{\mathord{=}\mathsf{-comp}}}
+  \def\MLiduniqrule{\ensuremath{\mathord{=}\mathsf{-uniq}}}
+  \def\MLwformrule{\ensuremath{\mathsf{W}\mathsf{-form}}}
+  \def\MLwintrorule{\ensuremath{\mathsf{W}\mathsf{-intro}}}
+  \def\MLwelimrule{\ensuremath{\mathsf{W}\mathsf{-elim}}}
+  \def\MLwcomprule{\ensuremath{\mathsf{W}\mathsf{-comp}}}
+  \def\MLwuniqrule{\ensuremath{\mathsf{W}\mathsf{-uniq}}}
+  \def\MLListformrule{\ensuremath{\mathsf{List}\mathsf{-form}}}
+  \def\MLListintronrule{\ensuremath{\mathsf{List}\mathsf{-intro_1}}}
+  \def\MLListintrocrule{\ensuremath{\mathsf{List}\mathsf{-intro_2}}}
+  \def\MLListelimrule{\ensuremath{\mathsf{List}\mathsf{-elim}}}
+  \def\MLListcompnrule{\ensuremath{\mathsf{List}\mathsf{-comp_1}}}
+  \def\MLListcompcrule{\ensuremath{\mathsf{List}\mathsf{-comp_2}}}
+  \def\MLListuniqrule{\ensuremath{\mathsf{List}\mathsf{-uniq}}}
+  \def\MLfunextrule{\ensuremath{\Pi\mathsf{-ext}}}
+  \def\MLunivrule{\ensuremath{\universe_i\mathsf{-univ}}}
+  \def\MLSformrule{\ensuremath{\mathbb{S}^1\mathsf{-form}}}
+  \def\MLSintrorule{\ensuremath{\mathbb{S}^1\mathsf{-intro}}}
+  \def\MLSelimrule{\ensuremath{\mathbb{S}^1\mathsf{-elim}}}
+  \def\MLScomprule{\ensuremath{\mathbb{S}^1\mathsf{-comp}}}
+  \def\MLSuniqrule{\ensuremath{\mathbb{S}^1\mathsf{-uniq}}}
+  \def\MLSpeqintrorule{\ensuremath{\mathbb{S}^1\mathsf{-intro}%
+      \mathsf{-}\mathsf{=}}}
+  \def\MLSpeqcomprule{\ensuremath{\mathbb{S}^1\mathsf{-comp}%
+      \mathsf{-}\mathsf{=}}}
+  \def\MLIformrule{\ensuremath{I\mathsf{-form}}}
+  \def\MLIintroarule{\ensuremath{I\mathsf{-intro}_1}}
+  \def\MLIintrobrule{\ensuremath{I\mathsf{-intro}_2}}
+  \def\MLIelimrule{\ensuremath{I\mathsf{-elim}}}
+  \def\MLIcomparule{\ensuremath{I\mathsf{-comp}_1}}
+  \def\MLIcompbrule{\ensuremath{I\mathsf{-comp}_2}}
+  \def\MLIuniqrule{\ensuremath{I\mathsf{-uniq}}}
+  \def\MLIpeqintrorule{\ensuremath{I\mathsf{-intro}%
+      \mathsf{-}\mathsf{=}}}
+  \def\MLIpeqcomprule{\ensuremath{I\mathsf{-comp}{-}\mathsf{=}}}
+  \def\MLsigmaintroarule{\ensuremath{\Sigma\mathsf{-intro}_1}}
+  \def\MLsigmaintrobrule{\ensuremath{\Sigma\mathsf{-intro}_2}}
+  \def\MLsigmacomparule{\ensuremath{\Sigma\mathsf{-comp}_1}}
+  \def\MLsigmacompbrule{\ensuremath{\Sigma\mathsf{-comp}_2}}
+  \def\MLsigmapeqintrorule{\ensuremath{\Sigma\mathsf{-intro}%
+      \mathsf{-}\mathsf{=}}}
+  \def\MLsigmapeqcomprule{\ensuremath{\Sigma\mathsf{-comp}%
+      \mathsf{-}\mathsf{=}}}
+  \def\MLPOformrule{\ensuremath{\sqcup\mathsf{-form}}}
+  \def\MLPOintroarule{\ensuremath{\sqcup\mathsf{-intro}_1}}
+  \def\MLPOintrobrule{\ensuremath{\sqcup\mathsf{-intro}_2}}
+  \def\MLPOelimrule{\ensuremath{\sqcup\mathsf{-elim}}}
+  \def\MLPOcomparule{\ensuremath{\sqcup\mathsf{-comp}_1}}
+  \def\MLPOcompbrule{\ensuremath{\sqcup\mathsf{-comp}_2}}
+  \def\MLPOuniqrule{\ensuremath{\sqcup\mathsf{-uniq}}}
+  \def\MLPOpeqintrorule{\ensuremath{\sqcup\mathsf{-intro}%
+      \mathsf{-}\mathsf{=}}}
+  \def\MLPOpeqcomprule{\ensuremath{\sqcup%
+      \mathsf{-comp}\mathsf{-}\mathsf{=}}}
+  \def\MLTformrule{\ensuremath{||\cdot||\mathsf{-form}}}
+  \def\MLTintrorule{\ensuremath{||\cdot||\mathsf{-intro}}}
+  \def\MLTelimrule{\ensuremath{||\cdot||\mathsf{-elim}}}
+  \def\MLTcomprule{\ensuremath{||\cdot||\mathsf{-comp}}}
+  \def\MLTuniqrule{\ensuremath{||\cdot||\mathsf{-uniq}}}
+  \def\MLTpeqintrorule{\ensuremath{||\cdot||\mathsf{-intro}%
+      \mathsf{-}\mathsf{=}}}
+  \def\MLTpeqcomprule{\ensuremath{||\cdot||\mathsf{-comp}%
+      \mathsf{-}\mathsf{=}}}
+  \def\MLtorusformrule{\ensuremath{T^2\mathsf{-form}}}
+  \def\MLtorusintrorule{\ensuremath{T^2\mathsf{-intro}}}
+  \def\MLtoruselimrule{\ensuremath{T^2\mathsf{-elim}}}
+  \def\MLtoruscomprule{\ensuremath{T^2\mathsf{-comp}}}
+  \def\MLtoruspeqintroarule{\ensuremath{T^2\mathsf{-intro}%
+      \mathsf{-}\mathsf{=_p}}}
+  \def\MLtoruspeqintrobrule{\ensuremath{T^2\mathsf{-intro}%
+      \mathsf{-}\mathsf{=_q}}}
+  \def\MLtoruspeqintrocrule{\ensuremath{T^2\mathsf{-intro}%
+      \mathsf{-}\mathsf{=_t}}}
+  \def\MLtoruspeqcomparule{\ensuremath{T^2\mathsf{-comp}%
+      \mathsf{-}\mathsf{=_p}}}
+  \def\MLtoruspeqcompbrule{\ensuremath{T^2\mathsf{-comp}%
+      \mathsf{-}\mathsf{=_q}}}
+  \def\MLtoruspeqcompcrule{\ensuremath{T^2\mathsf{-comp}%
+      \mathsf{-}\mathsf{=_t}}}
+  
+  \prfMakeInferenceRule{MLctxEMP}{\MLctxEMPrule}
+  \prfMakeInferenceRule{MLctxEXT}{\MLctxEXTrule}
+  \prfMakeInferenceRule{MLSubst}{\MLSubstrule}
+  \prfMakeInferenceRule{MLWkg}{\MLWkgrule}
+  \prfMakeInferenceRule{MLVble}{\MLVblerule}
+  \prfMakeInferenceRule{MLEQrefl}{\MLEQreflrule}
+  \prfMakeInferenceRule{MLEQsym}{\MLEQsymrule} 
+  \prfMakeInferenceRule{MLEQtrans}{\MLEQtransrule}
+  \prfMakeInferenceRule{MLEQsubst}{\MLEQsubstrule}
+  \prfMakeInferenceRule{MLEQsubsteq}{\MLEQsubsteqrule}
+  \prfMakeInferenceRule{MLUintro}{\MLUintrorule}
+  \prfMakeInferenceRule{MLUcumul}{\MLUcumulrule}
+  \prfMakeInferenceRule{MLUcumuleq}{\MLUcumuleqrule}
+  \prfMakeInferenceRule{MLpiform}{\MLpiformrule}
+  \prfMakeInferenceRule{MLpiformeq}{\MLpiformeqrule}
+  \prfMakeInferenceRule{MLpiintro}{\MLpiintrorule}
+  \prfMakeInferenceRule{MLpiintroeq}{\MLpiintroeqrule}
+  \prfMakeInferenceRule{MLpielim}{\MLpielimrule}
+  \prfMakeInferenceRule{MLpielimeq}{\MLpielimeqrule}
+  \prfMakeInferenceRule{MLpicomp}{\MLpicomprule}
+  \prfMakeInferenceRule{MLpiuniq}{\MLpiuniqrule}
+  \prfMakeInferenceRule{MLKintro}{\MLKintrorule}
+  \prfMakeInferenceRule{MLsigmaform}{\MLsigmaformrule}
+  \prfMakeInferenceRule{MLsigmaintro}{\MLsigmaintrorule}
+  \prfMakeInferenceRule{MLsigmaelim}{\MLsigmaelimrule}
+  \prfMakeInferenceRule{MLsigmacomp}{\MLsigmacomprule}
+  \prfMakeInferenceRule{MLsigmauniq}{\MLsigmauniqrule}
+  \prfMakeInferenceRule{MLplusform}{\MLplusformrule}
+  \prfMakeInferenceRule{MLplusintrol}{\MLplusintrolrule}
+  \prfMakeInferenceRule{MLplusintror}{\MLplusintrorrule}
+  \prfMakeInferenceRule{MLpluselim}{\MLpluselimrule}
+  \prfMakeInferenceRule{MLpluscompl}{\MLpluscomplrule}
+  \prfMakeInferenceRule{MLpluscompr}{\MLpluscomprrule}
+  \prfMakeInferenceRule{MLplusuniq}{\MLplusuniqrule}
+  \prfMakeInferenceRule{MLzeroform}{\MLzeroformrule}
+  \prfMakeInferenceRule{MLzeroelim}{\MLzeroelimrule}
+  \prfMakeInferenceRule{MLzerouniq}{\MLzerouniqrule}
+  \prfMakeInferenceRule{MLunitform}{\MLunitformrule}
+  \prfMakeInferenceRule{MLunitintro}{\MLunitintrorule}
+  \prfMakeInferenceRule{MLunitelim}{\MLunitelimrule}
+  \prfMakeInferenceRule{MLunitcomp}{\MLunitcomprule}
+  \prfMakeInferenceRule{MLunituniq}{\MLunituniqrule}
+  \prfMakeInferenceRule{MLnatform}{\MLnatformrule}
+  \prfMakeInferenceRule{MLnatintrozero}{\MLnatintrozerorule}
+  \prfMakeInferenceRule{MLnatintrosucc}{\MLnatintrosuccrule}
+  \prfMakeInferenceRule{MLnatelim}{\MLnatelimrule}
+  \prfMakeInferenceRule{MLnatcompzero}{\MLnatcompzerorule}
+  \prfMakeInferenceRule{MLnatcompsucc}{\MLnatcompsuccrule}
+  \prfMakeInferenceRule{MLnatuniq}{\MLnatuniqrule}
+  \prfMakeInferenceRule{MLidform}{\MLidformrule}
+  \prfMakeInferenceRule{MLidintro}{\MLidintrorule}
+  \prfMakeInferenceRule{MLidelim}{\MLidelimrule}
+  \prfMakeInferenceRule{MLidcomp}{\MLidcomprule}
+  \prfMakeInferenceRule{MLiduniq}{\MLiduniqrule}
+  \prfMakeInferenceRule{MLwform}{\MLwformrule}
+  \prfMakeInferenceRule{MLwintro}{\MLwintrorule}
+  \prfMakeInferenceRule{MLwelim}{\MLwelimrule}
+  \prfMakeInferenceRule{MLwcomp}{\MLwcomprule}
+  \prfMakeInferenceRule{MLwuniq}{\MLwuniqrule}
+  \prfMakeInferenceRule{MLListform}{\MLListformrule}
+  \prfMakeInferenceRule{MLListintron}{\MLListintronrule}
+  \prfMakeInferenceRule{MLListintroc}{\MLListintrocrule}
+  \prfMakeInferenceRule{MLListelim}{\MLListelimrule}
+  \prfMakeInferenceRule{MLListcompn}{\MLListcompnrule}
+  \prfMakeInferenceRule{MLListcompc}{\MLListcompcrule}
+  \prfMakeInferenceRule{MLListuniq}{\MLListuniqrule}
+  \prfMakeInferenceRule{MLfunext}{\MLfunextrule}
+  \prfMakeInferenceRule{MLuniv}{\MLunivrule}
+  \prfMakeInferenceRule{MLSform}{\MLSformrule}
+  \prfMakeInferenceRule{MLSintro}{\MLSintrorule}
+  \prfMakeInferenceRule{MLSelim}{\MLSelimrule}
+  \prfMakeInferenceRule{MLScomp}{\MLScomprule}
+  \prfMakeInferenceRule{MLSuniq}{\MLSuniqrule}
+  \prfMakeInferenceRule{MLSpeqintro}{\MLSpeqintrorule}
+  \prfMakeInferenceRule{MLSpeqcomp}{\MLSpeqcomprule}
+  \prfMakeInferenceRule{MLIform}{\MLIformrule}
+  \prfMakeInferenceRule{MLIintroa}{\MLIintroarule}
+  \prfMakeInferenceRule{MLIintrob}{\MLIintrobrule}
+  \prfMakeInferenceRule{MLIelim}{\MLIelimrule}
+  \prfMakeInferenceRule{MLIcompa}{\MLIcomparule}
+  \prfMakeInferenceRule{MLIcompb}{\MLIcompbrule}
+  \prfMakeInferenceRule{MLIuniq}{\MLIuniqrule}
+  \prfMakeInferenceRule{MLIpeqintro}{\MLIpeqintrorule}
+  \prfMakeInferenceRule{MLIpeqcomp}{\MLIpeqcomprule}
+  \prfMakeInferenceRule{MLsigmaintroa}{\MLsigmaintroarule}
+  \prfMakeInferenceRule{MLsigmaintrob}{\MLsigmaintrobrule}
+  \prfMakeInferenceRule{MLsigmacompa}{\MLsigmacomparule}
+  \prfMakeInferenceRule{MLsigmacompb}{\MLsigmacompbrule}
+  \prfMakeInferenceRule{MLsigmapeqintro}{\MLsigmapeqintrorule}
+  \prfMakeInferenceRule{MLsigmapeqcomp}{\MLsigmapeqcomprule}
+  \prfMakeInferenceRule{MLPOform}{\MLPOformrule}
+  \prfMakeInferenceRule{MLPOintroa}{\MLPOintroarule}
+  \prfMakeInferenceRule{MLPOintrob}{\MLPOintrobrule}
+  \prfMakeInferenceRule{MLPOelim}{\MLPOelimrule}
+  \prfMakeInferenceRule{MLPOcompa}{\MLPOcomparule}
+  \prfMakeInferenceRule{MLPOcompb}{\MLPOcompbrule}
+  \prfMakeInferenceRule{MLPOuniq}{\MLPOuniqrule}
+  \prfMakeInferenceRule{MLPOpeqintro}{\MLPOpeqintrorule}
+  \prfMakeInferenceRule{MLPOpeqcomp}{\MLPOpeqcomprule}
+  \prfMakeInferenceRule{MLTform}{\MLTformrule}
+  \prfMakeInferenceRule{MLTintro}{\MLTintrorule}
+  \prfMakeInferenceRule{MLTelim}{\MLTelimrule}
+  \prfMakeInferenceRule{MLTcomp}{\MLTcomprule}
+  \prfMakeInferenceRule{MLTuniq}{\MLTuniqrule}
+  \prfMakeInferenceRule{MLTpeqintro}{\MLTpeqintrorule}
+  \prfMakeInferenceRule{MLTpeqcomp}{\MLTpeqcomprule}
+  \prfMakeInferenceRule{MLtorusform}{\MLtorusformrule}
+  \prfMakeInferenceRule{MLtorusintro}{\MLtorusintrorule}
+  \prfMakeInferenceRule{MLtoruselim}{\MLtoruselimrule}
+  \prfMakeInferenceRule{MLtoruscomp}{\MLtoruscomprule}
+  \prfMakeInferenceRule{MLtoruspeqintroa}{\MLtoruspeqintroarule}
+  \prfMakeInferenceRule{MLtoruspeqintrob}{\MLtoruspeqintrobrule}
+  \prfMakeInferenceRule{MLtoruspeqintroc}{\MLtoruspeqintrocrule}
+  \prfMakeInferenceRule{MLtoruspeqcompa}{\MLtoruspeqcomparule}
+  \prfMakeInferenceRule{MLtoruspeqcompb}{\MLtoruspeqcompbrule}
+  \prfMakeInferenceRule{MLtoruspeqcompc}{\MLtoruspeqcompcrule}
+\fi
+% -------------------------------------------------------------------
