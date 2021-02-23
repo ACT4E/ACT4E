@@ -88,12 +88,13 @@ nomenc: nomenc-vol1.tex  nomenc-vol2.tex
 used.yaml:
 	@lsm_collect $(shell find volumes -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
 
+tablefile=volumes/vol1/00_front/05_developers/table.tex
+table: $(tablefile)
 
-table: volumes/vol1/00_front/05_instructions/table.tex
-
-volumes/vol1/00_front/05_instructions/table.tex: utils/symbols*.tex
+$(tablefile): utils/symbols*.tex
 	$(MAKE) used.yaml -B
-	lsm_table --only used.yaml --style full $^ > $@
+	#lsm_table --only used.yaml --style full $^ > $@
+	lsm_table --only used.yaml --style small $^ > $@
 
 
 
