@@ -33,15 +33,34 @@ tikz:
 	touch sag/*pdf
 	make -C sag -j
 
-%/standalone.tex:
-	cp template-standalone.tex $@
 
 
-mains=$(wildcard volumes/vol*/*/*/main.tex)
-standalones=$(subst main.tex,standalone.tex,$(mains))
+chapters=$(wildcard volumes/vol*/*/*/main.tex)
+chapters-standalones=$(subst main.tex,standalone.tex,$(chapters))
+chapters-links=$(subst main.tex,snippets-link,$(chapters))
+chapters-makefiles=$(subst main.tex,Makefile,$(chapters))
+parts=$(wildcard volumes/vol*/*/part.tex)
+parts-standalones=$(subst part.tex,part-standalone.tex,$(parts))
+parts-links=$(subst part.tex,part-snippets-link,$(parts))
+parts-makefiles=$(subst part.tex,Makefile,$(parts))
 
-standalone: $(standalones)
+%/snippets-link:
+	ln -s -f $(PWD)/snippets $@
+%/part-snippets-link:
+	ln -s -f $(PWD)/snippets $@
+volumes/%/Makefile: template-Makefile.mk
+	cp $< $@
 
+%/standalone.tex: template-standalone.tex
+	cp $< $@
+%/part-standalone.tex: template-part-standalone.tex
+	cp $< $@
+
+standalone: $(chapters-standalones) $(parts-standalones)
+links: $(chapters-links)  $(parts-links)
+makefiles: $(chapters-makefiles) $(parts-makefiles)
+
+recursive: links standalone makefiles
 
 twovolumes:
 	make -B ACT4E-vol1.pdf
@@ -70,10 +89,9 @@ used.yaml:
 	@lsm_collect $(shell find volumes -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
 
 
-table: utils/tables/full/all.tex
+table: volumes/vol1/00_front/05_instructions/table.tex
 
-
-utils/tables/full/all.tex: utils/symbols*.tex
+volumes/vol1/00_front/05_instructions/table.tex: utils/symbols*.tex
 	$(MAKE) used.yaml -B
 	lsm_table --only used.yaml --style full $^ > $@
 
