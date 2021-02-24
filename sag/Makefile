@@ -8,7 +8,6 @@ RM       = /bin/rm
 
 TikFiles = $(wildcard *.tikz)
 
-
 %-page.tex :  head.txt %.tikz foot.txt
 	cat $^ > $@
 

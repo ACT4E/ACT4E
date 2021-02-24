@@ -1,13 +1,19 @@
 all:
 
-chapter-once:
-	latexmk -r ../../../../latexmkrc -g  -nobibtex standalone.tex
+chapter-once: .FORCE
+	latexmk -r ../../../../latexmkrc -g  -nobibtex chapter-standalone.tex
 
-chapter-continuous:
-	latexmk -r ../../../../latexmkrc -pvc -nobibtex standalone.tex
+chapter-continuous: .FORCE
+	latexmk -r ../../../../latexmkrc -pvc -nobibtex chapter-standalone.tex
 
-part-once:
+part-once: .FORCE
 	latexmk -r ../../../latexmkrc -pvc -nobibtex part-standalone.tex
 
-part-continuous:
+part-continuous: .FORCE
 	latexmk -r ../../../latexmkrc -pvc -nobibtex part-standalone.tex
+
+
+
+
+.FORCE:
+.PHONY: .FORCE
