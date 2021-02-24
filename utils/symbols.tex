@@ -57,12 +57,28 @@
 \end{tikzpicture}
 }
 
-\newcommand{\rope}[6]{
-\begin{tikzpicture}
-[n/.style={circle,draw,minimum size=2mm,inner sep=0, fill=#1}]
-\draw[ultra thick, #1] #2 -- node[pos=#4, #1,n]{} node[pos=#5, #1,n] {} node[pos=0.5, above]{#6} #3{};
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+% 
+% #1 is color of main rope
+% #2 is color of rope after knot
+% #3 is x progress of the rope
+% #4 is y progress of the rope
+% #5 is position of first not (in [0,1])
+% #6 is position of second not (in [0,1])
+% #7 is label
+\newcommand{\rope}[7]{
+\begin{tikzpicture}[n/.style={circle,draw,minimum size=2mm,inner sep=0, fill=#1}, remember picture]
+\ifthenelse{\lengthtest{#5 pt=0 pt} \AND \lengthtest{#6 pt=1 pt}}
+{\draw[ultra thick, #1] (0,0) -- node[pos=#5, #1,n]{} node[pos=#6,n] {} node[pos=0.5, above, black]{#7} (#3,#4){};}
+{\draw[ultra thick, #1] (#5*#3,#5*#4) -- node[pos=0, #1,n,overlay]{} node[pos=1, #1,n] {} node[pos=0.5, above, black]{#7} (#6*#3,#6*#4){};
+\begin{pgfonlayer}{background}
+\draw[ultra thick, #2] (0,0)--(#5*#3,#5*#4){};
+\draw[ultra thick, #2] (#6*#3,#6*#4)--(#3,#4){};
+\end{pgfonlayer}}
 \end{tikzpicture}}
-%node[pos=#4, #1] {$\bullet$} node[pos=#5, #1] {$\bullet$} node[pos=0.5, above]{#6}
 
 \newcommand{\cod}{\operatorname{cod}}
 \newcommand{\dom}{\operatorname{dom}}
@@ -258,6 +274,8 @@
 \definecolor{staincold}{RGB}{241,219,200}
 \definecolor{staincole}{RGB}{92,24,13}
 \definecolor{staincolf}{RGB}{29,177,0}
+\definecolor{ropecola}{RGB}{187,127,14}
+\definecolor{ropecolb}{RGB}{97,216,54}
 % color commands
 \newcommand{\colR}{\color{requirements}}
 %:nomenc-exclude:
