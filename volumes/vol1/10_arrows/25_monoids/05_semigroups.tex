@@ -1,4 +1,4 @@
-% !TEX root = standalone.tex
+% !TEX root = chapter-standalone.tex
 
 \section{\statusdraft{Semigroups}}\label{sec:semigroups}
 
@@ -10,6 +10,14 @@
     \item Associative law:~$(x\mtimes y)\mtimes z=x\mtimes (y\mtimes z)$ for all $x , y, z \in \sgrpA$. 
   \end{enumerate}
 \end{definition}
+
+\begin{example}\label{natnum-semigroup}
+  Consider~$\tup{\natnumbers,+}$. This is a semigroup, since, for all~$l,m, n \in \natnumbers$, we have
+  \begin{equation*}
+  (l+m)
+    +n=l+(m+n).
+  \end{equation*}
+\end{example}
 
 \begin{example}\label{string-semigroup}
 Consider a finite set $A$, which we think of as an alphabet. For instance, consider $A = \{ L, R \}$. 
@@ -23,6 +31,8 @@ their concatenation is the string
 $$ LLRLRRRLRRLR.$$
 It is readily seen that concatenation satisfies the associative law, so $\sgrpA$, together with this multiplication, forms a semigroup. 
 \end{example}
+
+
 
 \begin{remark}
 Given a fixed set $\sgrpA$, there will in general be many different choices of multiplication operation which make $\sgrpA$ into a semigroup. So, technically, a semigroup is a pair $\tup{\sgrpA, \mtimes}$ consisting of a set $\sgrpA$ and a choice of multiplication $\mtimes$. The set $\sgrpA$ is the \emph{underlying set} of the semigroup. Often we will be slightly imprecise and refer to a semigroup simply by the name of its underlying set; this is practical when it is clear from context which multiplication operation we are considering, or when it is not necessary to refer to the multiplication explicitly. 
@@ -40,18 +50,32 @@ For example, one might consider the operation where, given an ordered pair of st
 
 
 \begin{example}\label{max-semigroup}
-The function $\Max : \natnumbers \times \natnumbers \sto \natnumbers$ defines a multiplication operation which equips $\natnumbers$ with the structure of a semigroup. 
+The function $\max : \natnumbers \times \natnumbers \sto \natnumbers$ defines a multiplication operation which equips $\natnumbers$ with the structure of a semigroup. 
 \end{example}
 
 \begin{exercise}
 Verify the statement made in \cref{max-semigroup}; that is, check that the associative law holds. 
 
-Does $\Min : \natnumbers \times \natnumbers \sto \natnumbers$ also define a semigroup structure on $\natnumbers$? 
+Does $\min : \natnumbers \times \natnumbers \sto \natnumbers$ also define a semigroup structure on $\natnumbers$? 
 \end{exercise}
 
 
-\begin{example}\label{trafo-semigroup}
-Let $X$ be a set... \todotext{JL: a concrete example of a transformation semigroup could go here. }
+\begin{example}\label{plant-trafo-semigroup}
+Consider the set $X = \{ \text{sprout}, \text{young}, \text{mature}, \text{old}, \text{dead} \}$ which describes five possible states of a plant. Let $T : X \sto X$ be the function that describes ``development'': 
+\begin{align*}
+T(\text{sprout}) &=  \text{young} \\
+T(\text{young}) &=  \text{mature} \\
+T(\text{mature}) &=  \text{old} \\
+T( \text{old}) &= \text{dead} \\
+T (\text{dead}) &= \text{dead}
+\end{align*}
+
+In other words, we think of $T$ as the change of state of the plant during a given time interval (say, three months). Composing the function $T$ with itself corresponds to considering multiples of the given time interval. For example, the function
+$$
+T \then T \then T : X \sto X
+$$
+models the change over the course of nine months. In general, for the n-fold composition of $T$ with itself we write $T^n$. The set $\sgrpA = \{ T^n \mid n \in \natnumbers \}$ is a semigroup, with the multiplication given by the composition operation. 
+
 \end{example}
 
 \begin{definition}[Semigroup homomorphism]
@@ -66,16 +90,16 @@ We think of the equation \cref{sgrp-mor-comp} as a way of saying that the functi
 
 \begin{definition}[Identity homomorphism]
   \label{def:identity-sgrp-mor}
-Let $\sgrpA$ be a semigroup. The identity function $\id: \sgrpA \sto \sgrpA$ is always a morphism of semigroups. Indeed, the condition
+Let $\sgrpA$ be a semigroup. The identity function $\id_\sgrpA: \sgrpA \sto \sgrpA$ is always a morphism of semigroups. Indeed, the condition
 \begin{equation}
 \id (\sgrpelAa \mtimes_{\sgrpA} \sgrpelAb) = \id (\sgrpelAa) \mtimes_{\sgrpA} \id(\sgrpelAb) \quad \quad \forall \sgrpelAa, \sgrpelAb \in \sgrpA
 \end{equation}
-is satisfied. We call this the \emph{identity homomorphism} of $\sgrpA$, and denote it by $\id_\sgrpA$. 
+is satisfied. We call this the \emph{identity homomorphism} of $\sgrpA$. 
 \end{definition}
 
 \begin{definition}[Semigroup isomorphism]
   \label{def:semigroup-iso}
-Let $\sgrpA$ and $\sgrpB$ be semigroups. A homomorphism of semigroups $\sgrpmorA: \sgrpA \sto \sgrpB$ is called a \emph{semigroup isomorphism} if there exists a homomorphism of semigroups $\sgrpmorB: \sgrpB \sto \sgrpA$ such that 
+Let $\sgrpA$ and $\sgrpB$ be semigroups. A homomorphism of semigroups $\sgrpmorA: \sgrpA \mto \sgrpB$ is called a \emph{semigroup isomorphism} if there exists a homomorphism of semigroups $\sgrpmorB: \sgrpB \mto \sgrpA$ such that 
 \begin{equation}\label{sgrp-iso-cond}
 \sgrpmorA \then \sgrpmorB = \id_\sgrpA \quad \text{ and } \quad  \sgrpmorB \then \sgrpmorA = \id_\sgrpB. 
 \end{equation} 
@@ -89,6 +113,12 @@ How many different non-isomorphic semigroups are there with precisely one elemen
 Let $\sgrpmorA: \sgrpA \mto \sgrpB$ be a morphism of semigroups. Prove that $\sgrpmorA$ is an isomorphism of semigroups if and only if the function $\sgrpmorA: \sgrpA \sto \sgrpB$ is bijective. 
 \end{exercise}
 
+
+Given a semigroup $\tup{S, \mtimes}$, for each $n \in \natnumbers$, we can define an induced n-ary multiplication operation
+$$
+S^n \sto S, \ \tup{s_1, s_2, ..., s_n} \mapsto s_1 \mtimes s_2 \dots \mtimes s_n.
+$$
+Thanks to the associative law, this is well-defined -- that is, we do not need to set parenthases. We'll say that an element $s \in S$ is an \emph{n-fold multiplication} if it is in the image of this n-ary multiplication operation. 
 
 
 
