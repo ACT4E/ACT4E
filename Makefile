@@ -34,7 +34,10 @@ tikz:
 	touch sag/*pdf
 	make -C sag -j
 
+texs=$(wildcard volumes/vol*/*/*/*.tex)
 
+find-missing:
+	grep -r -L '% !TEX' $(texs) | grep -v snippets | grep -v standalone
 
 chapters=$(wildcard volumes/vol*/*/*/chapter.tex)
 chapters-standalones=$(subst chapter.tex,chapter-standalone.tex,$(chapters))
