@@ -36,12 +36,12 @@ tikz:
 
 
 
-chapters=$(wildcard volumes/vol*/*/*/main.tex)
-chapters-standalones=$(subst main.tex,chapter-standalone.tex,$(chapters))
-chapters-pdf        =$(subst main.tex,chapter-standalone.pdf,$(chapters))
-chapters-links      =$(subst main.tex,chapter-link-snippets, $(chapters))
-chapters-link-minted=$(subst main.tex,chapter-link-minted, $(chapters))
-chapters-makefiles  =$(subst main.tex,Makefile,              $(chapters))
+chapters=$(wildcard volumes/vol*/*/*/chapter.tex)
+chapters-standalones=$(subst chapter.tex,chapter-standalone.tex,$(chapters))
+chapters-pdf        =$(subst chapter.tex,chapter-standalone.pdf,$(chapters))
+chapters-links      =$(subst chapter.tex,chapter-link-snippets, $(chapters))
+chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
+chapters-makefiles  =$(subst chapter.tex,Makefile,              $(chapters))
 
 parts=$(wildcard volumes/vol*/*/part.tex)
 parts-standalones=$(subst part.tex,part-standalone.tex,$(parts))
@@ -94,33 +94,35 @@ twovolumes:
 	make -B ACT4E-vol1.pdf
 	make -B ACT4E-vol2.pdf
 
+nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.tex
 
 
-used-%.yaml:
+
+
+generated/used-%.yaml: .FORCE
 	@lsm_collect $(shell find volumes/$* -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
 
-nomenc-%.tex: used-%.yaml
+nomenc-%.tex: generated/used-%.yaml utils/symbols*.tex
 	lsm_nomenc  --only $< utils/symbols*.tex > $@
 	# lsm_nomenc  utils/symbols*.tex > $@
 
-nomenc: nomenc-vol1.tex  nomenc-vol2.tex
+$(nomencvol1): generated/used-vol1.yaml utils/symbols*.tex
+	lsm_nomenc  --only $< utils/symbols*.tex > $@
 
-#
-#redo-nomenc: nomenc
-#	makeindex ACT4E-vol1.nlo -s nomencl.ist -o ACT4E-vol1.nls
-#	makeindex ACT4E-vol2.nlo -s nomencl.ist -o ACT4E-vol2.nls
+nomenc: $(nomencvol1)  nomenc-vol2.tex
 
-
-used.yaml:
+generated/used.yaml: .FORCE
 	@lsm_collect $(shell find volumes -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
 
 tablefile=volumes/vol1/00_front/05_developers/table.tex
+
 table: $(tablefile)
 
-$(tablefile): utils/symbols*.tex
-	$(MAKE) used.yaml -B
+$(tablefile): utils/symbols*.tex .FORCE
+	$(MAKE) generated/used.yaml -B
 	#lsm_table --only used.yaml --style full $^ > $@
-	lsm_table --only used.yaml --style small $^ > $@
+	lsm_table --only generated/used.yaml --style medium $< > $@
+	#lsm_table --only used.yaml --style small $^ > $@
 
 
 used-%.yaml:
@@ -128,7 +130,6 @@ used-%.yaml:
 
 
 vol1-nomenc-update: table
-	$(MAKE) used.yaml -B
 	$(MAKE) table -B
 	$(MAKE) nomenc -B
 	pdflatex --shell-escape -synctex=1 ACT4E-vol1
