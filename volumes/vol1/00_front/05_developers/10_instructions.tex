@@ -1,4 +1,6 @@
 % !TEX root = chapter-standalone.tex
+
+
 \section{Compiling the book}
 
 \subsection{Dependencies}
@@ -15,24 +17,36 @@ A quick way to start is:
 
 \subsection{Partial compilation}
 
-It is possible to do partial compilation of parts.
+It is possible to do partial compilation of chapters and parts.
 
-From a directory containing a file \files{standalone.tex}, give this command:
+
+From a directory containing a file \files{chapter-standalone.tex}, give this command:
 
 \begin{console}
-  make once
+  make chapter-once
 \end{console}
 
 You can use
 %
 \begin{console}
-  make continuous
+  make chapter-continuous
 \end{console}
 %
-to make \str{latexmk} compile continuously.
+to make \str{latexmk} compile continuously and your pdf viewer to synchronize if you set it up as in \cref{sub:overleaf-experience}.
+
+To compile entire parts, you can use \str{make part-once} or \str{make part-once} from any folder containing
+\files{part-standalone.tex}.
+
+You don't need to change into the directories.
+From the root you can use commands like these:
+%
+\begin{console}
+  make -C volumes/vol1/00_front/ part-continuous
+  make -C volumes/vol1/00_front/05_developers/ chapter-continuous
+\end{console}
 
 \subsection{Getting the overleaf experience locally}
-
+\label{sub:overleaf-experience}
 It is suggested you use a program like Skim that allows to click and jump to the code.
 
 Put this in a file \files{~/.latexmkrc}:
@@ -40,8 +54,6 @@ Put this in a file \files{~/.latexmkrc}:
 \begin{console}
   $pdf_previewer = 'open -a Skim'
 \end{console}
-
-
 
 \subsection{Flags}
 
@@ -89,6 +101,31 @@ Relevant top files with various choices of flags:
 For everything to run smoothly, there are a few steps to run outside latex.
 
 There are some other steps that generate some material.
+
+\subsubsection{Recreating the directory structure}
+
+If you add a chapter/part, you should use the command
+
+\begin{console}
+  make recursive
+\end{console}
+
+This will create the various stubs files in the various subdirectories.
+The files include:
+\begin{itemize}
+  \item \str{Makefile}
+  \item \str{chapter-standalone.tex}
+  \item \str{part-standalone.tex}
+  \item \str{part-standalone.tex}
+\end{itemize}
+Also these links will be created:
+\begin{itemize}
+  \item \str{chapter-link-snippets}
+  \item \str{chapter-link-minted}
+  \item \str{part-link-snippets}
+  \item \str{part-link-minted}
+\end{itemize}
+These links allow the partial compilation process to access the files in the root of the repo.
 
 \subsubsection{Nomenclature and symbol table}
 

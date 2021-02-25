@@ -3,17 +3,24 @@
 \usepackage{tikz}
 
 
-\usetikzlibrary{positioning,intersections,hobby,patterns,calc,decorations.pathmorphing,decorations.markings, shadows,shapes}
+\usetikzlibrary{positioning,
+  intersections,
+  hobby,
+  patterns,
+  calc,
+  decorations.pathmorphing,
+  decorations.markings,
+  shadows,
+  shapes,
+  cd,
+  decorations.markings,
+  positioning,
+  arrows.meta,
+  shapes,
+  calc,
+  fit,
+  quotes}
 
-\usetikzlibrary{
-    cd,
-    decorations.markings,
-    positioning,
-    arrows.meta,
-    shapes,
-    calc,
-    fit,
-    quotes}
 
 \tikzstyle{block} = [draw, rectangle, minimum height=2em, minimum width=3em,thick]
 
@@ -42,162 +49,162 @@
 \tikzset{loos/.store in =\loos, loos=2}
 \tikzset{feedback/.store in =\feedback, feedback=0}
 \tikzset{
-    DP/.style={%everything after equals replaces "DP" in key.
-        %every to/.style={out=0,in=180,draw},
-        label/.style={
-            font=\everymath\expandafter{\the\everymath\scriptstyle},
-            inner sep=5pt,
-            node distance=2pt and -2pt},
-        semithick,
-        node distance=1 and 1,
-        rconn/.style={color=white,opacity=0.0,postaction={decorate}, shorten <=3.2pt, shorten >= 0.8,
-        decoration={markings,
-        mark= at position 0 with {
-            \coordinate (a);
-        },
-        mark=at position .5 with
-                {
-                \ifthenelse{\equal{\feedback}{1}}{\def\angleOut{-90}\def\angleIn{-90}}{\def\angleOut{0}\def\angleIn{180}}
-                \coordinate (b);
-                \draw[dashed,\dpred,opacity=1.0] (a) to[out=\angleOut,in=\angleIn,looseness=\loos]
-                node[pos=\posres,\relres=\whereres mm,\dpred,opacity=1,fill=white,inner sep=1pt,outer sep=1pt]{\rcname} (b);
-            },
-            mark= at position 1 with
-                {
-                \ifthenelse{\equal{\feedback}{1}}{\def\angleOut{0}\def\angleIn{0}}{\def\angleOut{180}\def\angleIn{0}}
-                \ifthenelse{\equal{\feedback}{1}}{\def\symbol{\succeq}}{\def\symbol{\preceq}}
-                \coordinate (c);
-                \draw[\dpgreen,opacity=1.0] (c) to[out=\angleOut,in=\angleIn,looseness=\loos]
-                node[pos=\posfun,\relfun=\wherefun mm,\dpgreen,opacity=1,fill=white,inner sep=1pt,outer sep=1pt]{\fcname} (b){}; %bend right
-                \node[draw,circle,inner sep=0.5pt,color=black,fill=white,opacity=1.0,line width=0.2mm] at (b) (nodepreceq) {$\symbol$};
-            }
-        }},
-        runconn/.style={color=\dpred,dashed,postaction={decorate},
-        decoration={markings,
-        mark= at position 1 with {
-            \coordinate (a);
-            \draw[\dpred,opacity=1.0,dashed] ($(a)+(0.05,0)$) --++ (0.5,0) node[\relres,pos=\posres]{\runame};}
-        }
-        },
-        funconn/.style={color=white,postaction={decorate},
-        decoration={markings,
-        mark= at position 0 with {
-            \coordinate (a);
-            \draw[\dpgreen] ($(a)+(-0.05,0)$) -- ($(a)+(-0.5,0)$) node[\relfun,pos=\posfun]{\funame};}
-        }
-        },
-        execute at begin picture={\tikzset{
-            x=\dpx, y=\dpy,
-            every fit/.style={inner xsep=\dpx, inner ysep=\dpy}}}
+  DP/.style={%everything after equals replaces "DP" in key.
+    %every to/.style={out=0,in=180,draw},
+    label/.style={
+      font=\everymath\expandafter{\the\everymath\scriptstyle},
+      inner sep=5pt,
+      node distance=2pt and -2pt},
+    semithick,
+    node distance=1 and 1,
+    rconn/.style={color=white,opacity=0.0,postaction={decorate}, shorten <=3.2pt, shorten >= 0.8,
+    decoration={markings,
+    mark= at position 0 with {
+      \coordinate (a);
     },
-    dpx/.store in=\dpx,
-    dpx = 1.5cm,
-    dpy/.store in=\dpy,
-    dpy = 1.5ex,
-    dp port sep/.store in=\dpportsep,
-    dp port sep=2,
-    dp port length/.store in=\dpportlen,
-    dp port length=4pt,
-    dp min width/.store in=\dpminwidth,
-    dp min width=0.5cm,
-    dp rounded corners/.store in=\dpcorners,
-    dp rounded corners=2pt,
-    dp small/.style={dp port sep=1, dp port length=2.5pt, dpx=.4cm, dp min width=.4cm, dpy=.7ex},
-    dp/.code 2 args={%When you see this key, run the code below:
-        % put padding rather than minimum height
-        % the font size should be the same as the text
-        \pgfmathsetlengthmacro{\dpheight}{\dpportsep * (max(#1,#2)) * \dpy}
-        \pgfkeysalso{draw,%
-            minimum width=\dpminwidth,%
-            minimum height=\dpheight,%
-        %font=\bfseries,
-            outer sep=0pt,%
-            inner sep=5pt,%
-            rounded corners=\dpcorners,
-            thick,
-            prefix after command={\pgfextra{\let\fixname\tikzlastnode}},
-            append after command={\pgfextra{\draw
-            \ifnum #1=0{} \else foreach \i in {1,...,#1} {
-                ($(\fixname.north west)!{\i/(#1+1)}!(\fixname.south west)$) +(0,0) node[solid,left,circle,color=darkgreen,draw,fill=darkgreen,scale=0.3] {} coordinate (\fixname_fun\i) -- +(0,0) coordinate (\fixname_fun\i')}\fi %Define the endpoints of tickmarks
-            \ifnum #2=0{} \else foreach \i in {1,...,#2} {
-                ($(\fixname.north east)!{\i/(#2+1)}!(\fixname.south east)$) +(0,0) coordinate (\fixname_res\i') -- +(0,0) node[solid,right,circle,color=darkred,draw,fill=darkred,scale=0.3] {} coordinate (\fixname_res\i)}\fi;
-            }}}
+    mark=at position .5 with
+        {
+        \ifthenelse{\equal{\feedback}{1}}{\def\angleOut{-90}\def\angleIn{-90}}{\def\angleOut{0}\def\angleIn{180}}
+        \coordinate (b);
+        \draw[dashed,\dpred,opacity=1.0] (a) to[out=\angleOut,in=\angleIn,looseness=\loos]
+        node[pos=\posres,\relres=\whereres mm,\dpred,opacity=1,fill=white,inner sep=1pt,outer sep=1pt]{\rcname} (b);
+      },
+      mark= at position 1 with
+        {
+        \ifthenelse{\equal{\feedback}{1}}{\def\angleOut{0}\def\angleIn{0}}{\def\angleOut{180}\def\angleIn{0}}
+        \ifthenelse{\equal{\feedback}{1}}{\def\symbol{\succeq}}{\def\symbol{\preceq}}
+        \coordinate (c);
+        \draw[\dpgreen,opacity=1.0] (c) to[out=\angleOut,in=\angleIn,looseness=\loos]
+        node[pos=\posfun,\relfun=\wherefun mm,\dpgreen,opacity=1,fill=white,inner sep=1pt,outer sep=1pt]{\fcname} (b){}; %bend right
+        \node[draw,circle,inner sep=0.5pt,color=black,fill=white,opacity=1.0,line width=0.2mm] at (b) (nodepreceq) {$\symbol$};
+      }
+    }},
+    runconn/.style={color=\dpred,dashed,postaction={decorate},
+    decoration={markings,
+    mark= at position 1 with {
+      \coordinate (a);
+      \draw[\dpred,opacity=1.0,dashed] ($(a)+(0.05,0)$) --++ (0.5,0) node[\relres,pos=\posres]{\runame};}
+    }
     },
-    dp name/.style={append after command={\pgfextra{\node[label=center,inner sep=2pt,fill=white] at (\fixname) {#1};}}}
+    funconn/.style={color=white,postaction={decorate},
+    decoration={markings,
+    mark= at position 0 with {
+      \coordinate (a);
+      \draw[\dpgreen] ($(a)+(-0.05,0)$) -- ($(a)+(-0.5,0)$) node[\relfun,pos=\posfun]{\funame};}
+    }
+    },
+    execute at begin picture={\tikzset{
+      x=\dpx, y=\dpy,
+      every fit/.style={inner xsep=\dpx, inner ysep=\dpy}}}
+  },
+  dpx/.store in=\dpx,
+  dpx = 1.5cm,
+  dpy/.store in=\dpy,
+  dpy = 1.5ex,
+  dp port sep/.store in=\dpportsep,
+  dp port sep=2,
+  dp port length/.store in=\dpportlen,
+  dp port length=4pt,
+  dp min width/.store in=\dpminwidth,
+  dp min width=0.5cm,
+  dp rounded corners/.store in=\dpcorners,
+  dp rounded corners=2pt,
+  dp small/.style={dp port sep=1, dp port length=2.5pt, dpx=.4cm, dp min width=.4cm, dpy=.7ex},
+  dp/.code 2 args={%When you see this key, run the code below:
+    % put padding rather than minimum height
+    % the font size should be the same as the text
+    \pgfmathsetlengthmacro{\dpheight}{\dpportsep * (max(#1,#2)) * \dpy}
+    \pgfkeysalso{draw,%
+      minimum width=\dpminwidth,%
+      minimum height=\dpheight,%
+    %font=\bfseries,
+      outer sep=0pt,%
+      inner sep=5pt,%
+      rounded corners=\dpcorners,
+      thick,
+      prefix after command={\pgfextra{\let\fixname\tikzlastnode}},
+      append after command={\pgfextra{\draw
+      \ifnum #1=0{} \else foreach \i in {1,...,#1} {
+        ($(\fixname.north west)!{\i/(#1+1)}!(\fixname.south west)$) +(0,0) node[solid,left,circle,color=darkgreen,draw,fill=darkgreen,scale=0.3] {} coordinate (\fixname_fun\i) -- +(0,0) coordinate (\fixname_fun\i')}\fi %Define the endpoints of tickmarks
+      \ifnum #2=0{} \else foreach \i in {1,...,#2} {
+        ($(\fixname.north east)!{\i/(#2+1)}!(\fixname.south east)$) +(0,0) coordinate (\fixname_res\i') -- +(0,0) node[solid,right,circle,color=darkred,draw,fill=darkred,scale=0.3] {} coordinate (\fixname_res\i)}\fi;
+      }}}
+  },
+  dp name/.style={append after command={\pgfextra{\node[label=center,inner sep=2pt,fill=white] at (\fixname) {#1};}}}
 }
 
 \tikzset{
-    oriented WD/.style={%everything after equals replaces "oriented WD" in key.
-        every to/.style={out=0,in=180,draw},
-        label/.style={
-            font=\everymath\expandafter{\the\everymath\scriptstyle},
-            inner sep=0pt,
-            node distance=2pt and -2pt},
-        semithick,
-        node distance=1 and 1,
-        decoration={markings, mark=at position .5 with {\arrow{stealth};}},
-        ar/.style={postaction={decorate}},
-        execute at begin picture={\tikzset{
-            x=\bbx, y=\bby,
-            every fit/.style={inner xsep=\bbx, inner ysep=\bby}}}
-    },
-    bbx/.store in=\bbx,
-    bbx = 1.5cm,
-    bby/.store in=\bby,
-    bby = 1.75ex,
-    bb port sep/.store in=\bbportsep,
-    bb port sep=2,
+  oriented WD/.style={%everything after equals replaces "oriented WD" in key.
+    every to/.style={out=0,in=180,draw},
+    label/.style={
+      font=\everymath\expandafter{\the\everymath\scriptstyle},
+      inner sep=0pt,
+      node distance=2pt and -2pt},
+    semithick,
+    node distance=1 and 1,
+    decoration={markings, mark=at position .5 with {\arrow{stealth};}},
+    ar/.style={postaction={decorate}},
+    execute at begin picture={\tikzset{
+      x=\bbx, y=\bby,
+      every fit/.style={inner xsep=\bbx, inner ysep=\bby}}}
+  },
+  bbx/.store in=\bbx,
+  bbx = 1.5cm,
+  bby/.store in=\bby,
+  bby = 1.75ex,
+  bb port sep/.store in=\bbportsep,
+  bb port sep=2,
 % bb wire sep/.store in=\bbwiresep,
 % bb wire sep=1.75ex,
-    bb port length/.store in=\bbportlen,
-    bb port length=4pt,
-    bb min width/.store in=\bbminwidth,
-    bb min width=1cm,
-    bb rounded corners/.store in=\bbcorners,
-    bb rounded corners=2pt,
-    bb small/.style={bb port sep=1, bb port length=2.5pt, bbx=.4cm, bb min width=.4cm, bby=.7ex},
-    bb/.code 2 args={%When you see this key, run the code below:
-        \pgfmathsetlengthmacro{\bbheight}{\bbportsep * (max(#1,#2)+1) * \bby}
-        \pgfkeysalso{draw,minimum height=\bbheight,minimum width=\bbminwidth,outer sep=0pt,
-            rounded corners=\bbcorners,thick,
-            prefix after command={\pgfextra{\let\fixname\tikzlastnode}},
-            append after command={\pgfextra{\draw
-            \ifnum #1=0{} \else foreach \i in {1,...,#1} {
-                ($(\fixname.north west)!{\i/(#1+1)}!(\fixname.south west)$) +(-\bbportlen,0) coordinate (\fixname_in\i) -- +(\bbportlen,0) coordinate (\fixname_in\i')}\fi %Define the endpoints of tickmarks
-            \ifnum #2=0{} \else foreach \i in {1,...,#2} {
-                ($(\fixname.north east)!{\i/(#2+1)}!(\fixname.south east)$) +(-\bbportlen,0) coordinate (\fixname_out\i') -- +(\bbportlen,0) coordinate (\fixname_out\i)}\fi;
-            }}}
-    },
-    bb name/.style={append after command={\pgfextra{\node[anchor=north] at (\fixname.north) {#1};}}}
+  bb port length/.store in=\bbportlen,
+  bb port length=4pt,
+  bb min width/.store in=\bbminwidth,
+  bb min width=1cm,
+  bb rounded corners/.store in=\bbcorners,
+  bb rounded corners=2pt,
+  bb small/.style={bb port sep=1, bb port length=2.5pt, bbx=.4cm, bb min width=.4cm, bby=.7ex},
+  bb/.code 2 args={%When you see this key, run the code below:
+    \pgfmathsetlengthmacro{\bbheight}{\bbportsep * (max(#1,#2)+1) * \bby}
+    \pgfkeysalso{draw,minimum height=\bbheight,minimum width=\bbminwidth,outer sep=0pt,
+      rounded corners=\bbcorners,thick,
+      prefix after command={\pgfextra{\let\fixname\tikzlastnode}},
+      append after command={\pgfextra{\draw
+      \ifnum #1=0{} \else foreach \i in {1,...,#1} {
+        ($(\fixname.north west)!{\i/(#1+1)}!(\fixname.south west)$) +(-\bbportlen,0) coordinate (\fixname_in\i) -- +(\bbportlen,0) coordinate (\fixname_in\i')}\fi %Define the endpoints of tickmarks
+      \ifnum #2=0{} \else foreach \i in {1,...,#2} {
+        ($(\fixname.north east)!{\i/(#2+1)}!(\fixname.south east)$) +(-\bbportlen,0) coordinate (\fixname_out\i') -- +(\bbportlen,0) coordinate (\fixname_out\i)}\fi;
+      }}}
+  },
+  bb name/.style={append after command={\pgfextra{\node[anchor=north] at (\fixname.north) {#1};}}}
 }
 
 \tikzset{
-    tick/.style={postaction={
-        decorate,
-        decoration={markings, mark=at position 0.5 with {\draw[-] (0,.4ex) -- (0,-.4ex);}}}
-    }
+  tick/.style={postaction={
+    decorate,
+    decoration={markings, mark=at position 0.5 with {\draw[-] (0,.4ex) -- (0,-.4ex);}}}
+  }
 }
 
 \providecommand{\sagdir}{sag}
 
 \newcommand{\includesag}[1]{%
-    \ifthenelse{\boolean{debugimages}}{%
-        \texttt{\detokenize{#1}}
+  \ifthenelse{\boolean{debugimages}}{%
+    \texttt{\detokenize{#1}}
 
 %      \ \ {\footnotesize{\texttt{\detokenize{#1}}}}%
 %      \mbox[0pt]{\texttt{dekodkeoko kok}}
-    %   \framebox[5cm]{\texttt{\detokenize{#1}}}\hspace{-5.3cm}%
-    }{}%
-    \ifthenelse{\boolean{cachepdf}}{%
-    % \adjustbox{max width=\textwidth}{%
-        \scalebox{1.0}{\includegraphics{\sagdir/#1.pdf}}%
-    % }%
-    }{%
-    % \adjustbox{max width=\textwidth}{%
+  %   \framebox[5cm]{\texttt{\detokenize{#1}}}\hspace{-5.3cm}%
+  }{}%
+  \ifthenelse{\boolean{cachepdf}}{%
+  % \adjustbox{max width=\textwidth}{%
+    \scalebox{1.0}{\includegraphics{\sagdir/#1.pdf}}%
+  % }%
+  }{%
+  % \adjustbox{max width=\textwidth}{%
     \scalebox{1.0}{
-        \input{\sagdir/#1.tikz}}%
-    % }%
-    }%
+      \input{\sagdir/#1.tikz}}%
+  % }%
+  }%
 }
 
 
@@ -272,43 +279,42 @@
 \newcommand{\pinpostwocustom}[6]{($(0,#3*#6)+(7:#1\brickwidth)+(138:#2\halfbrickwidth)+(7:#4*\brickwidth)+(138:#5*\halfbrickwidth)+(-0.6\brickwidth,-\halfbrickwidth)+(0.3\brickwidth,1.35*#6)$)}
 
 \newcommand{\brick}[6]{%
-\setlength{\brickmultipliedx}{#1\brickwidth}
-\setlength{\brickmultipliedy}{#2\brickwidth}
-\filldraw[fill=#3,draw=black,thick] \startpos{#4}{#5}{#6} -- ++(7:\brickmultipliedx) -- ++(0mm,\brickheight) -- ++(138:0.5\brickmultipliedy) -- ++(187:\brickmultipliedx) -- ++(0mm,-\brickheight) -- cycle;
-\draw[black,thick] \startpos{#4}{#5}{#6} -- ++(0mm,\brickheight) -- ++(138:0.5\brickmultipliedy);
-\draw[black,thick] \startposplusheight{#4}{#5}{#6} -- ++(7:\brickmultipliedx);
-\foreach \i in {1,...,#1} {
-  \foreach \j in {1,...,#2} {
-    \pin{\pinposone{#4}{#5}{#6}{\i}{\j}}{\pinpostwo{#4}{#5}{#6}{\i}{\j}}{#3}
+  \setlength{\brickmultipliedx}{#1\brickwidth}
+  \setlength{\brickmultipliedy}{#2\brickwidth}
+  \filldraw[fill=#3,draw=black,thick] \startpos{#4}{#5}{#6} -- ++(7:\brickmultipliedx) -- ++(0mm,\brickheight) -- ++(138:0.5\brickmultipliedy) -- ++(187:\brickmultipliedx) -- ++(0mm,-\brickheight) -- cycle;
+  \draw[black,thick] \startpos{#4}{#5}{#6} -- ++(0mm,\brickheight) -- ++(138:0.5\brickmultipliedy);
+  \draw[black,thick] \startposplusheight{#4}{#5}{#6} -- ++(7:\brickmultipliedx);
+  \foreach \i in {1,...,#1} {
+    \foreach \j in {1,...,#2} {
+      \pin{\pinposone{#4}{#5}{#6}{\i}{\j}}{\pinpostwo{#4}{#5}{#6}{\i}{\j}}{#3}
+    }
   }
-}
 }
 
 \newcommand{\brickcustom}[7]{%
-\setlength{\brickmultipliedx}{#1\brickwidth}
-\setlength{\brickmultipliedy}{#2\brickwidth}
-\filldraw[fill=#3,draw=black,thick] \startposcustom{#4}{#5}{#6}{#7\brickheight} -- ++(7:\brickmultipliedx) -- ++(0mm,#7\brickheight) -- ++(138:0.5\brickmultipliedy) -- ++(187:\brickmultipliedx) -- ++(0mm,-#7\brickheight) -- cycle;
-\draw[black,thick] \startposcustom{#4}{#5}{#6}{#7\brickheight} -- ++(0mm,#7\brickheight) -- ++(138:0.5\brickmultipliedy);
-\draw[black,thick] \startposplusheightcustom{#4}{#5}{#6}{#7\brickheight} -- ++(7:\brickmultipliedx);
-\pgfmathsetmacro\weight{1/#7}
-\foreach \i in {1,...,#1} {
-  \foreach \j in {1,...,#2} {
+  \setlength{\brickmultipliedx}{#1\brickwidth}
+  \setlength{\brickmultipliedy}{#2\brickwidth}
+  \filldraw[fill=#3,draw=black,thick] \startposcustom{#4}{#5}{#6}{#7\brickheight} -- ++(7:\brickmultipliedx) -- ++(0mm,#7\brickheight) -- ++(138:0.5\brickmultipliedy) -- ++(187:\brickmultipliedx) -- ++(0mm,-#7\brickheight) -- cycle;
+  \draw[black,thick] \startposcustom{#4}{#5}{#6}{#7\brickheight} -- ++(0mm,#7\brickheight) -- ++(138:0.5\brickmultipliedy);
+  \draw[black,thick] \startposplusheightcustom{#4}{#5}{#6}{#7\brickheight} -- ++(7:\brickmultipliedx);
+  \pgfmathsetmacro\weight{1/#7}
+  \foreach \i in {1,...,#1} {
+    \foreach \j in {1,...,#2} {
 
-    \pincustom{\pinposonecustom{#4+0.05*\weight}{#5+0.15*\weight}{#6}{\i}{\j}{#7\brickheight}}{\pinpostwocustom{#4+0.05*\weight}{#5+0.15*\weight}{#6}{\i}{\j}{#7\brickheight}}{#3}{#7\brickheight}
+      \pincustom{\pinposonecustom{#4+0.05*\weight}{#5+0.15*\weight}{#6}{\i}{\j}{#7\brickheight}}{\pinpostwocustom{#4+0.05*\weight}{#5+0.15*\weight}{#6}{\i}{\j}{#7\brickheight}}{#3}{#7\brickheight}
+    }
   }
-}
 }
 
 \newcommand{\pin}[3]{%
-\filldraw[fill=#3,draw=black,thick] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1\brickheight) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
-\filldraw[fill=#3,draw=black,thick] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
+  \filldraw[fill=#3,draw=black,thick] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1\brickheight) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
+  \filldraw[fill=#3,draw=black,thick] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
 }
 
 \newcommand{\pincustom}[4]{%
-\filldraw[fill=#3,draw=black,thick] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1*#4) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
-\filldraw[fill=#3,draw=black,thick] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
+  \filldraw[fill=#3,draw=black,thick] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1*#4) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
+  \filldraw[fill=#3,draw=black,thick] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
 }
-
 
 
 % defining the new dimensions and parameters
@@ -318,29 +324,31 @@
 \newcommand{\hatchcolor}{}
 % declaring the keys in tikz
 \tikzset{hatchspread/.code={\setlength{\hatchspread}{#1}},
-         hatchthickness/.code={\setlength{\hatchthickness}{#1}},
-         hatchshift/.code={\setlength{\hatchshift}{#1}},% must be >= 0
-         hatchcolor/.code={\renewcommand{\hatchcolor}{#1}}}
+  hatchthickness/.code={\setlength{\hatchthickness}{#1}},
+  hatchshift/.code={\setlength{\hatchshift}{#1}},% must be >= 0
+  hatchcolor/.code={\renewcommand{\hatchcolor}{#1}}}
 % setting the default values
 \tikzset{hatchspread=3pt,
-         hatchthickness=0.4pt,
-         hatchshift=0pt,% must be >= 0
-         hatchcolor=black}
+  hatchthickness=0.4pt,
+  hatchshift=0pt,% must be >= 0
+  hatchcolor=black}
 % declaring the pattern
 \pgfdeclarepatternformonly[\hatchspread,\hatchthickness,\hatchshift,\hatchcolor]% variables
-   {custom north west lines}% name
-   {\pgfqpoint{\dimexpr-2\hatchthickness}{\dimexpr-2\hatchthickness}}% lower left corner
-   {\pgfqpoint{\dimexpr\hatchspread+2\hatchthickness}{\dimexpr\hatchspread+2\hatchthickness}}% upper right corner
-   {\pgfqpoint{\dimexpr\hatchspread}{\dimexpr\hatchspread}}% tile size
-   {% shape description
-    \pgfsetlinewidth{\hatchthickness}
-    \pgfpathmoveto{\pgfqpoint{0pt}{\dimexpr\hatchspread+\hatchshift}}
-    \pgfpathlineto{\pgfqpoint{\dimexpr\hatchspread+0.15pt+\hatchshift}{-0.15pt}}
-    \ifdim \hatchshift > 0pt
-      \pgfpathmoveto{\pgfqpoint{0pt}{\hatchshift}}
-      \pgfpathlineto{\pgfqpoint{\dimexpr0.15pt+\hatchshift}{-0.15pt}}
-    \fi
-    \pgfsetstrokecolor{\hatchcolor}
+{custom north west lines}% name
+{\pgfqpoint{\dimexpr-2\hatchthickness}{\dimexpr-2\hatchthickness}}% lower left corner
+{\pgfqpoint{\dimexpr\hatchspread+2\hatchthickness}{\dimexpr\hatchspread+2\hatchthickness}}% upper right corner
+{\pgfqpoint{\dimexpr\hatchspread}{\dimexpr\hatchspread}}% tile size
+{% shape description
+  \pgfsetlinewidth{\hatchthickness}
+  \pgfpathmoveto{\pgfqpoint{0pt}{\dimexpr\hatchspread+\hatchshift}}
+  \pgfpathlineto{\pgfqpoint{\dimexpr\hatchspread+0.15pt+\hatchshift}{-0.15pt}}
+  \ifdim \hatchshift > 0pt
+  \pgfpathmoveto{\pgfqpoint{0pt}{\hatchshift}}
+  \pgfpathlineto{\pgfqpoint{\dimexpr0.15pt+\hatchshift}{-0.15pt}}
+  \fi
+  \pgfsetstrokecolor{\hatchcolor}
 %    \pgfsetdash{{1pt}{1pt}}{0pt}% dashing cannot work correctly in all situation this way
-    \pgfusepath{stroke}
-   }
+  \pgfusepath{stroke}
+}
+
+

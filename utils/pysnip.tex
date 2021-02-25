@@ -22,21 +22,30 @@
 
 
 \newcommand{\py}[2][\@outname]{
-    \immediate\write18{mkdir -p \snippetsdir}
-    \def\pycode{#2}
-    \def\prefix{\snippetsdir/#1}
-    \immediate\openout\@out=\prefix.py%
-    \immediate\write\@out{\pycode}%
-    \immediate\closeout\@out
-    \IfFileExists{\prefix.tex}{%
-        \immediate\input\prefix.tex%
-    }{
-        \IfFileExists{\prefix.err}{%
-            % Some problems
-            \pyfailed{\prefix}{}{\rc}%
-        }{\pynotready{\prefix}}%
-    }
-    \immediate\stepcounter{@PythonEnvironmentCounter}%
+  \immediate\write18{mkdir -p \snippetsdir}
+  \def\pycode{#2}
+  \def\prefix{\snippetsdir/#1}
+  \immediate\openout\@out=\prefix.py%
+  \immediate\write\@out{\pycode}%
+  \immediate\closeout\@out
+  \IfFileExists{\prefix.tex}{%
+    \immediate\input\prefix.tex%
+  }{
+    \IfFileExists{\prefix.err}{%
+      \IfFileExists{\prefix.rc}{%
+      % Read the return code of the executed Python script.
+        \immediate\openin\@retcode=\prefix.rc
+        \immediate\read\@retcode to \rc
+        \immediate\closein\@retcode
+        \pyfailed{\prefix}{}{\rc}%
+      }{
+        \pyfailed{\prefix}{}{?}%
+      }
+    % Some problems
+
+    }{\pynotready{\prefix}}%
+  }
+  \immediate\stepcounter{@PythonEnvironmentCounter}%
 }
 
 
@@ -66,25 +75,24 @@
 
 % Warn that snippet is not ready
 \newcommand{\pynotready}[1]{%
-    % #1: outname
+% #1: outname
     {\color[rgb]{0.5,1,0}(Snippet \texttt{#1} not executed yet)}
 }
 
 
-
 % Warn that snippet failed
 \newcommand{\pyfailed}[3]{%
-    % #1: outname
-    % #2: python string
-    % #3: rc code
+% #1: outname
+% #2: python string
+% #3: rc code
     {\footnotesize\color{red}Snippet \texttt{#1} failed (exit code: #3)
-        \begingroup%
-            \footnotesize%
-            \color{red}%
+    \begingroup%
+    \footnotesize%
+    \color{red}%
 %            \verbatiminput{\@outname.err}
-            \verbatiminput{#1.err}
-        \endgroup
-    }
+    \verbatiminput{#1.err}
+    \endgroup
+  }
 }
 
 
