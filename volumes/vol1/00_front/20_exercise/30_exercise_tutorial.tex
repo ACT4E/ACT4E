@@ -1,15 +1,32 @@
 % !TEX root = chapter-standalone.tex
+
+
 \section{Exercise tutorial: Finite sets}\label{sec:exercise-tutorial}
 
 \subsection*{Interface}
-Here is the interface for finite sets:
-%
-\classsource{FiniteSet}
 
-The class derives from \classname{ABC}, which means \emph{abstract base class}; it tells the interpreter
-that some of the methods of the class will have to be implemented by the subclasses. This is the equivalent
-of the ``virtual'' methods in C++.
+During the exercises, you are going to build in Python a library to build and manipulate most of the concepts in the book.
+As a first step, we are going to build together the support for sets.
+
+The exercises will give you the \emph{interface} of an \emph{abstract class} to be generated.
+
+Let's define two interfaces: \classname{Setoid}, for a generic set, and \classname{FiniteSet}, for a setoid that has a finite set of elements. They are defined in the package \str{act4e_interfaces} which is in the repository \str{ACT4E/ACT4E-interfaces}.
+
+This is the interface for \classname{Setoid}:
+
+\classsource{Setoid}
+
+The class \classname{Setoid}  derives from \classname{ABC}, which means \emph{abstract base class}; it tells the interpreter that some of the methods of the class will have to be implemented by the subclasses.
+This is the equivalent of the ``virtual'' methods in C++.
 The methods that need to be implemented are marked by a decorator \pystr|@abstractmethod|.
+For \classname{Setoid}, we ask that the implementer implements the \funcname{contains} function, and they can optionally implement \funcname{equal}.
+
+This is the semantics of the methods:
+
+\begin{compactitem}
+  \item The method \funcname{contains} checks if an element is part of this set.
+  \item The method \funcname{equal} checks if two elements are the same. The default way to do this is to use Python's equality operator (which calls the \pystr|__equal__| method of the class of the first object); later we will see cases in which we might want to choose something different
+\end{compactitem}
 
 
 The code contains also typing annotations.
@@ -17,16 +34,28 @@ The symbol \classname{Element}, like the others we will see later, such as \clas
 However, they are useful for intuition.
 The latest versions of Python have supported typing annotations with generics, so we could have chosen to use those and have more accurate typing, however we want these exercises to be accessible to all.
 
-The methods themselves are self-explanatory:
 
+This is the interface for \classname{EnumerableSet}:
+
+\classsource{EnumerableSet}
+
+This is the interface for \classname{FiniteSet}:
+The additional method:
 \begin{compactitem}
-  \item The method \funcname{size} returns the size of the set.
-  \item The method \funcname{contains} checks if an element is part of this set.
-  \item The method \funcname{equal} checks if two elements are the same.
-  \item The method \funcname{elements} returns a Python \classname{Collection}: this is something that you can iterate.
+  \item The method \funcname{elements} returns a Python \classname{Iterator}: this is something that you can iterate.
 \end{compactitem}
 
-You will have to implement this class as part of the exercise.
+
+\classsource{FiniteSet}
+
+The class inherits from \classname{Setoid} and add some methods:
+
+The additional method:
+\begin{compactitem}
+  \item The method \funcname{size} returns the size of the set.
+\end{compactitem}
+
+You will have to implement the \classname{FiniteSet} class as part of the exercise.
 
 
 \subsection*{Representation}
