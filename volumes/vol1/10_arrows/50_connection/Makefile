@@ -13,7 +13,5 @@ part-continuous: .FORCE
 	latexmk -r ../../../latexmkrc -pvc -nobibtex part-standalone.tex
 
 
-
-
 .FORCE:
 .PHONY: .FORCE
