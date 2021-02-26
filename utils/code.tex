@@ -31,27 +31,27 @@
 
 % a better texttt font
 \renewcommand{\ttdefault}{txtt}
-\newcommand{\methodsource}[2]{%
+\newcommand{\methodsource}[3]{%
 %  \begin{quote}%
   \py[\currfilebase-\detokenize{#1}-\detokenize{#2}]{from act4e_tex import write_source_minted;
   from act4e_interfaces import #1;
-  write_source_minted(#1.#2, nodec=False,reduce_space=True)
+  write_source_minted(#1.#2, nodec=False,reduce_space=True\ifstrempty{#3}{}{,#3})
   }%
 %  \end{quote}
 }
-\newcommand{\classsource}[1]{%
+\newcommand{\classsource}[2]{%
 %  \begin{quote}%
   \py[\currfilebase-\detokenize{#1}]{from act4e_tex import write_source_minted;
   from act4e_interfaces import #1;
-  write_source_minted(#1, nodec=False,reduce_space=True)
+  write_source_minted(#1, nodec=False,reduce_space=True\ifstrempty{#2}{}{,#2})
   }%
 %  \end{quote}
 }
-\newcommand{\visualizemodule}[1]{%
+\newcommand{\visualizemodule}[2]{%
 %  \begin{quote}%
   \py[\currfilebase-\detokenize{#1}]{%
     from act4e_tex import visualize_module;
-    visualize_module('#1',nodec=False,reduce_space=True)
+    visualize_module('#1',nodec=False,reduce_space=True\ifstrempty{#2}{}{,#2})
   }%
 %  \end{quote}
 }
@@ -83,6 +83,23 @@
     \caption{\texttt{#2}}%
     \label{#3}%
   \end{figure*}%
+}
+
+
+
+\newcommand{\margindatafile}[2]{%
+%  \begin{quote}%
+  \py[\currfilebase-#1]{from act4e_tex import visualize_data_file;%
+  visualize_data_file('#2', min_size=10, max_size=30);
+  }%
+%  \end{quote}
+}
+\newcommand{\margindatafilefig}[3]{%
+  \begin{marginfigure}%
+    \margindatafile{#1}{#2}%
+    \caption{\texttt{#2}}%
+    \label{#3}%
+  \end{marginfigure}%
 }
 
 
