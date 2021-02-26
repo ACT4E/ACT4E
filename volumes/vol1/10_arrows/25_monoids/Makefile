@@ -1,6 +1,7 @@
 all:
 
 chapter-once: .FORCE
+	latexmk -r ../../../../latexmkrc -C  -nobibtex chapter-standalone.tex
 	latexmk -r ../../../../latexmkrc -g  -nobibtex chapter-standalone.tex
 
 chapter-continuous: .FORCE

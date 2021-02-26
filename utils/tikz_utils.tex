@@ -22,6 +22,7 @@
   quotes}
 
 
+
 \tikzstyle{block} = [draw, rectangle, minimum height=2em, minimum width=3em,thick]
 
 %\tikzcdset{every label/.append style = {font = \footnotesize}}
@@ -352,3 +353,60 @@
 }
 
 
+
+\newcommand{\stain}[1]{
+\scalebox{0.1}{
+\begin{tikzpicture}[use Hobby shortcut,closed=true]
+      \draw[fill=#1,thick](-2.5,-0.5).. (-3.5,0).. (-2.5,0.5).. (-3,1).. (-2,1.5).. (-2,3).. (-1,2.5).. (1,4.5).. (2.5,3).. (3,3.5).. (3.5,3).. (3,2).. (4.5,2).. (4.5,0).. (3,1).. (2.5,-0.5).. (3.5,-1.5).. (1.5,-1).. (0.5,-2).. (-2,-2.5).. (-1.5,-1).. (-2.5,-1.5).. (-2.5,-0.5);
+\end{tikzpicture}}}
+
+\newcommand{\stainfilled}{
+\scalebox{0.1}{
+\begin{tikzpicture}[use Hobby shortcut,closed=true]
+      \draw[pattern=custom north west lines,hatchspread=3pt,hatchthickness=1pt,thick, draw=black](-2.5,-0.5).. (-3.5,0).. (-2.5,0.5).. (-3,1).. (-2,1.5).. (-2,3).. (-1,2.5).. (1,4.5).. (2.5,3).. (3,3.5).. (3.5,3).. (3,2).. (4.5,2).. (4.5,0).. (3,1).. (2.5,-0.5).. (3.5,-1.5).. (1.5,-1).. (0.5,-2).. (-2,-2.5).. (-1.5,-1).. (-2.5,-1.5).. (-2.5,-0.5);
+\end{tikzpicture}
+}
+}
+
+\newcommand{\figplug}[1]{\subfloat[Type~#1. \label{fig:Type#1}]{%
+  \begin{tikzpicture}
+  \node at (0,0){
+    \includegraphics[height=2cm]{plugs/#1-button}};
+  \end{tikzpicture}
+}}
+
+
+\newcommand{\dashedbox}[1]{
+\begin{tikzpicture}
+\draw[#1, ultra thick,dashed] (-0.25,-0.25) rectangle (0.5,0.5){};
+\end{tikzpicture}
+}
+
+\newcommand{\filledbox}[2]{
+\begin{tikzpicture}
+\draw[black, ultra thick,fill=#1] (-0.5,-0.275*#2) rectangle (1.5,0.55*#2){};
+\end{tikzpicture}
+}
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+%
+% #1 is color of main rope
+% #2 is color of rope after knot
+% #3 is x progress of the rope
+% #4 is y progress of the rope
+% #5 is position of first not (in [0,1])
+% #6 is position of second not (in [0,1])
+% #7 is label
+\newcommand{\rope}[7]{
+\begin{tikzpicture}[n/.style={circle,draw,minimum size=2mm,inner sep=0, fill=#1}, remember picture]
+\ifthenelse{\lengthtest{#5 pt=0 pt} \AND \lengthtest{#6 pt=1 pt}}
+{\draw[ultra thick, #1] (0,0) -- node[pos=#5, #1,n]{} node[pos=#6,n] {} node[pos=0.5, above, black]{#7} (#3,#4){};}
+{\draw[ultra thick, #1] (#5*#3,#5*#4) -- node[pos=0, #1,n,overlay]{} node[pos=1, #1,n] {} node[pos=0.5, above, black]{#7} (#6*#3,#6*#4){};
+\begin{pgfonlayer}{background}
+\draw[ultra thick, #2] (0,0)--(#5*#3,#5*#4){};
+\draw[ultra thick, #2] (#6*#3,#6*#4)--(#3,#4){};
+\end{pgfonlayer}}
+\end{tikzpicture}}

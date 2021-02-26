@@ -3,8 +3,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%% Sets
 %:section:sets: Sets
 
-\newcommand{\stylesets}[1]{{\color{brown}\mathbf{#1}}}
-\newcommand{\styleelements}[1]{{\color{brown}{#1}}}
+\newcommand{\stylesets}[1]{{\color{setcolor}\mathbf{#1}}}
+\newcommand{\styleelements}[1]{{\color{setcolor}{#1}}}
 %:section:sets/generic: Generic sets and elements
 \newcommand{\setA}{\stylesets{A}}
 %:nomenc:\setA,\setB,\setC:Generic names for sets.
@@ -23,7 +23,7 @@
 %:nomenc-exclude:
 \newcommand{\elc}{\styleelements{z}}
 %:nomenc-exclude:
-\newcommand{\stylemaps}[1]{{\color{brown}#1}}
+\newcommand{\stylemaps}[1]{{\color{setcolor}#1}}
 \newcommand{\mapa}{\stylemaps{f}}
 %:nomenc:\mapa,\mapb,\mapc:Generic names for maps between sets.
 \newcommand{\mapb}{\stylemaps{g}}
@@ -31,62 +31,6 @@
 \newcommand{\mapc}{\stylemaps{h}}
 %:nomenc-exclude:
 
-\newcommand{\stain}[1]{
-\scalebox{0.1}{
-\begin{tikzpicture}[use Hobby shortcut,closed=true]
-      \draw[fill=#1,thick](-2.5,-0.5).. (-3.5,0).. (-2.5,0.5).. (-3,1).. (-2,1.5).. (-2,3).. (-1,2.5).. (1,4.5).. (2.5,3).. (3,3.5).. (3.5,3).. (3,2).. (4.5,2).. (4.5,0).. (3,1).. (2.5,-0.5).. (3.5,-1.5).. (1.5,-1).. (0.5,-2).. (-2,-2.5).. (-1.5,-1).. (-2.5,-1.5).. (-2.5,-0.5);
-\end{tikzpicture}}}
-
-\newcommand{\stainfilled}{
-\scalebox{0.1}{
-\begin{tikzpicture}[use Hobby shortcut,closed=true]
-      \draw[pattern=custom north west lines,hatchspread=3pt,hatchthickness=1pt,thick, draw=black](-2.5,-0.5).. (-3.5,0).. (-2.5,0.5).. (-3,1).. (-2,1.5).. (-2,3).. (-1,2.5).. (1,4.5).. (2.5,3).. (3,3.5).. (3.5,3).. (3,2).. (4.5,2).. (4.5,0).. (3,1).. (2.5,-0.5).. (3.5,-1.5).. (1.5,-1).. (0.5,-2).. (-2,-2.5).. (-1.5,-1).. (-2.5,-1.5).. (-2.5,-0.5);
-\end{tikzpicture}
-}
-}
-
-\newcommand{\figplug}[1]{\subfloat[Type~#1. \label{fig:Type#1}]{%
-  \begin{tikzpicture}
-  \node at (0,0){
-    \includegraphics[height=2cm]{plugs/#1-button}};
-  \end{tikzpicture}
-}}
-
-
-\newcommand{\dashedbox}[1]{
-\begin{tikzpicture}
-\draw[#1, ultra thick,dashed] (-0.25,-0.25) rectangle (0.5,0.5){};
-\end{tikzpicture}
-}
-
-\newcommand{\filledbox}[2]{
-\begin{tikzpicture}
-\draw[black, ultra thick,fill=#1] (-0.5,-0.275*#2) rectangle (1.5,0.55*#2){};
-\end{tikzpicture}
-}
-
-\pgfdeclarelayer{background}
-\pgfdeclarelayer{foreground}
-\pgfsetlayers{background,main,foreground}
-
-%
-% #1 is color of main rope
-% #2 is color of rope after knot
-% #3 is x progress of the rope
-% #4 is y progress of the rope
-% #5 is position of first not (in [0,1])
-% #6 is position of second not (in [0,1])
-% #7 is label
-\newcommand{\rope}[7]{
-\begin{tikzpicture}[n/.style={circle,draw,minimum size=2mm,inner sep=0, fill=#1}, remember picture]
-\ifthenelse{\lengthtest{#5 pt=0 pt} \AND \lengthtest{#6 pt=1 pt}}
-{\draw[ultra thick, #1] (0,0) -- node[pos=#5, #1,n]{} node[pos=#6,n] {} node[pos=0.5, above, black]{#7} (#3,#4){};}
-{\draw[ultra thick, #1] (#5*#3,#5*#4) -- node[pos=0, #1,n,overlay]{} node[pos=1, #1,n] {} node[pos=0.5, above, black]{#7} (#6*#3,#6*#4){};
-\begin{pgfonlayer}{background}
-\draw[ultra thick, #2] (0,0)--(#5*#3,#5*#4){};
-\draw[ultra thick, #2] (#6*#3,#6*#4)--(#3,#4){};
-\end{pgfonlayer}}
-\end{tikzpicture}}
 
 \newcommand{\cod}{\operatorname{cod}}
 \newcommand{\dom}{\operatorname{dom}}
@@ -261,6 +205,8 @@
 \definecolor{applegreen}{rgb}{0.55, 0.71, 0.0}
 \definecolor{custompurple}{rgb}{0.18,0.46,0.74}
 \definecolor{custompink}{rgb}{0.73,0.83,0.91}
+\definecolor{funcname}{named}{blue}
+\definecolor{classname}{named}{blue}
 
 \def\dpgreen{functionality}
 \def\dpred{requirements}
@@ -1126,16 +1072,16 @@
   -#1-%
   \hspace{-1.3mm}\raisebox{-2.2pt}{\includegraphics[width=4mm]{plug}}}
 %:nomenc:\cordG{\ell}: A cord of length $\ell$
- 
+
  \newcommand{\cord}[3]{
  \begin{tikzpicture}
  \node (flaga) at (0,0) {#1};
  \node[right=0.02cm of flaga] (sock) {\includegraphics[width=4mm]{socket}};
  \node[right=0.02cm of sock](lab) {$#2$};
   \draw ($(sock.east)+(-0.125,0)$) --  ($(lab.west)-(-0.05,0)$) {};
- \node[right=0.02cm of lab](plug){ \includegraphics[width=4mm]{plug}}; 
+ \node[right=0.02cm of lab](plug){ \includegraphics[width=4mm]{plug}};
  \draw ($(lab.east)+(-0.075,0)$) --  ($(plug.west)+(0.125,0)$) {};
- \node[right=0.02cm of plug] {#3}; 
+ \node[right=0.02cm of plug] {#3};
  \end{tikzpicture}
  }
 
