@@ -14,8 +14,22 @@ Then do this:
 Now our fork of kaobook should be available for the class.
 
 
-TODO:
+TODO/BUGS:
 
-* There are a lot of "caption lost" errors from floatrow. Not sure why the captions are not formatted well.
+* There are a lot of "caption lost" errors from floatrow. Not sure why the captions are not formatted well. The hack is to remove errors from floatrow.
 
-* Had to disable the parttoc, minitoc. Need to find a way to re-enable.
+* The commands `providelength` and `openbox` are doubly defined (not sure by who).
+
+* Not sure why, the itemize bullet points are too big.
+
+So these are the hacks in `packages.tex`:
+
+    %%% HACKS for kaobook
+
+    \let\providelength\relax
+    \let\openbox\relax
+
+    %\newcommand*\flrow@error[1]{\PackageError\flrow@package{#1}\flrow@eh}
+    \makeatletter
+    \renewcommand\flrow@error[1]{}
+    \makeatother
