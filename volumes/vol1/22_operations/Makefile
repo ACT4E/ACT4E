@@ -12,7 +12,8 @@ part-once: .FORCE
 part-continuous: .FORCE
 	latexmk -r ../../../latexmkrc -pvc -nobibtex part-standalone.tex
 
-
+clean:
+	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw
 
 
 .FORCE:

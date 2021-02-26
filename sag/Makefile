@@ -1,8 +1,8 @@
 TIME     = /usr/bin/time -p
-LATEXMK  = latexmk -xelatex -silent -f -g --pdf
+# LATEXMK  = latexmk -xelatex -silent -f -g --pdf
 
 #PDFLATEX = xelatex -interaction=batchmode
-PDFLATEX = pdflatex -interaction=batchmode
+PDFLATEX = pdflatex --shell-escape -interaction=batchmode
 PDFCROP  = pdfcrop
 RM       = /bin/rm
 
