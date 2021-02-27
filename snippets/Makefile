@@ -2,26 +2,29 @@ TIME     = /usr/bin/time -p
 # LATEXMK  = latexmk -xelatex -silent -f -g --pdf
 
 #PDFLATEX = xelatex -interaction=batchmode
-PDFLATEX = pdflatex --shell-escape -interaction=batchmode
+PDFLATEX = pdflatex --shell-escape -halt-on-error -file-line-error #-interaction=batchmode
 PDFCROP  = pdfcrop
 RM       = /bin/rm
 
-TikFiles = $(wildcard *.tex)
+TikFiles = $(wildcard */*.texi)
 
-out/%-page.tex :  head.txt %.tex foot.txt
+%-page.tex :  head.txt %.texi foot.txt
 	cat $^ > $@
 
 # StandAloneGraphicsTeXFiles = $(patsubst %.tikz,%.tex,$(TikFiles))
 
-PDFGraphics = $(patsubst %.tex,out/%.pdf,$(TikFiles))
+PDFGraphics = $(patsubst %.texi,%.pdf,$(TikFiles))
+
 
 # InputTeXFiles = $(wildcard *_input.tex)
 
 all: $(PDFGraphics)
 
+#pages: $(patsubst %.texi,%-page.tex,$(TikFiles))
 
-out/%.pdf : out/%.tex  ../utils/*.tex
-	$(PDFLATEX) $<
+%.pdf : %.tex
+	#$(PDFLATEX) -output-directory $(shell dirname $@) $<
+	cd $(shell dirname $@) && $(PDFLATEX) $(shell basename $*)
 	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc*
 
 

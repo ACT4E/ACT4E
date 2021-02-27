@@ -20,30 +20,39 @@
 
 \newcommand{\@outname}{\jobname\arabic{@PythonEnvironmentCounter}}
 
-
 \newcommand{\py}[2][\@outname]{
-  \immediate\write18{mkdir -p \snippetsdir}
+  \def\outdir{\snippetsdir/\currfilebase}
+  \immediate\write18{mkdir -p \outdir}
+  \def\pyfile{\outdir/#1.py}
+  \def\texfile{\outdir/#1.texi}
+  \def\errfile{\outdir/#1.err}
+  \def\pdffile{\outdir/#1.pdf}
+  \def\rcfile{\outdir/#1.rc}
   \def\pycode{#2}
-  \def\prefix{\snippetsdir/#1}
-  \immediate\openout\@out=\prefix.py%
+  \immediate\openout\@out=\pyfile%
   \immediate\write\@out{\pycode}%
   \immediate\closeout\@out
-  \IfFileExists{\prefix.tex}{%
-    \immediate\input\prefix.tex%
-  }{
-    \IfFileExists{\prefix.err}{%
-      \IfFileExists{\prefix.rc}{%
-      % Read the return code of the executed Python script.
-        \immediate\openin\@retcode=\prefix.rc
-        \immediate\read\@retcode to \rc
-        \immediate\closein\@retcode
-        \pyfailed{\prefix}{}{\rc}%
-      }{
-        \pyfailed{\prefix}{}{?}%
-      }
-    % Some problems
+  \IfFileExists{\pdffile}{%
+    \includegraphics{\pdffile}
+  }
+  {%
+    \IfFileExists{\texfile}{%
+      \immediate\input\texfile%
+    }{
+      \IfFileExists{\errfile}{%
+        \IfFileExists{\rcfile}{%
+        % Read the return code of the executed Python script.
+          \immediate\openin\@retcode=\rcfile
+          \immediate\read\@retcode to \rc
+          \immediate\closein\@retcode
+          \pyfailed{#1}{}{\rc}{\errfile}%
+        }{
+          \pyfailed{#1}{}{?}{\errfile}%
+        }
+      % Some problems
 
-    }{\pynotready{\prefix}}%
+      }{\pynotready{#1}}%
+    }
   }
   \immediate\stepcounter{@PythonEnvironmentCounter}%
 }
@@ -81,16 +90,17 @@
 
 
 % Warn that snippet failed
-\newcommand{\pyfailed}[3]{%
+\newcommand{\pyfailed}[4]{%
 % #1: outname
 % #2: python string
 % #3: rc code
+% #4: errfile
     {\footnotesize\color{red}Snippet \texttt{#1} failed (exit code: #3)
     \begingroup%
     \footnotesize%
     \color{red}%
 %            \verbatiminput{\@outname.err}
-    \verbatiminput{#1.err}
+    \verbatiminput{#4}
     \endgroup
   }
 }
