@@ -3,7 +3,7 @@
 
 \section{Exercise tutorial: Finite sets}\label{sec:exercise-tutorial}
 
-\subsection*{Interface}
+%\subsection*{Interface}
 
 During the exercises, you are going to build in Python a library to build and manipulate most of the concepts in the book.
 As a first step, we are going to build together the support for sets.
@@ -14,16 +14,18 @@ Let's define two interfaces: \classname{Setoid}, for a generic set, \classname{E
 They are defined in the package \str{act4e_interfaces} which is in the repository \str{ACT4E/ACT4E-interfaces}.
 \Cref{fig:Setoid-inheritance} shows their relation in an UML diagram.
 
-\begin{figure}
+\begin{marginfigure}
   \includesag{setoid-finiteset}
 
   \caption{}
   \label{fig:Setoid-inheritance}
-\end{figure}
+\end{marginfigure}
 
 This is the interface for \classname{Setoid}:
 
-\classsource{Setoid}{}
+\begin{widepar}
+\classsource{Setoid}{min_size=0}
+\end{widepar}
 
 The class \classname{Setoid}  derives from \classname{ABC}, which means \emph{abstract base class}; it tells the interpreter that some of the methods of the class will have to be implemented by the subclasses.
 This is the equivalent of the ``virtual'' methods in C++.
@@ -49,13 +51,15 @@ This is the interface for \classname{EnumerableSet}:
 \classsource{EnumerableSet}{}
 
 This is the interface for \classname{FiniteSet}:
+
+\classsource{FiniteSet}{}
+
 The additional method:
 \begin{compactitem}
   \item The method \funcname{elements} returns a Python \classname{Iterator}: this is something that you can iterate.
 \end{compactitem}
 
 
-\classsource{FiniteSet}{}
 
 The class inherits from \classname{Setoid} and add some methods:
 
@@ -72,10 +76,11 @@ You will have to implement the \classname{FiniteSet} class as part of the exerci
 We have defined file formats for all the structures to be used in the exercises.
 These are based on YAML\@.
 
+\margindatafilefig{set1code}{set1.finset.yaml}{fig:set1}
 
 The file format for \classname{FiniteSet} is shown in \cref{fig:set1}.
 
-\datafilefig{set1code}{set1.finset.yaml}{fig:set1}
+
 
 The file represents a dictionary with only one field called \pystr|elements|, which contains a list of elements.
 YAML can represent most primitive data format of Python, as well as lists and dictionaries.
@@ -84,8 +89,9 @@ YAML can represent most primitive data format of Python, as well as lists and di
   \label{ex:setrepr}
   The first exercise is to implement the methods that read and write from this file format.
   You have to implement the following interface, \classname{FiniteSetRepresentation}:
-%
-  \classsource{FiniteSetRepresentation}{}
+
+  \classsource{FiniteSetRepresentation}{min_size=0}
+
   You also have to implement a concrete subclass of \classname{FiniteSet}.
 \end{gradedexercise}
 
@@ -96,13 +102,16 @@ We are going to solve this exercise together.
 We assume that you have checked out the repository as explained in the setup section.
 
 Of all the files in the repository, we only need the following for now:
+%
+%\begin{minted}[autogobble]{console}
+%. src/
+%.   act4e_solutions/
+%.     __init__.py
+%. Makefile
+%\end{minted}
+%
 
-\begin{minted}[autogobble]{console}
-. src/
-.   act4e_solutions/
-.     __init__.py
-. Makefile
-\end{minted}
+\includesage{dirtree-relevant}
 
 
 We can start by checking if this is a valid solution. There is a recipe for this in the \files{Makefile}.
