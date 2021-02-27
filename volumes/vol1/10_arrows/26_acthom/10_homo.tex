@@ -1,27 +1,221 @@
-% !TEX root = chapter-standalone.tex
 
 
-\section{Homomorphisms}
+\section{\wHomos}
 
-
-\begin{definition}[Semigroup homomorphism]
+\begin{ctdefinition}[Semigroup \whomo]
   \label{def:semigroup-mor}
   Let~$\sgrpA$ and~$\sgrpB$ be semigroups. A homomorphism of semigroups from~$\sgrpA$ to~$\sgrpB$ is a function~$\sgrpmorA\colon \sgrpA \sto \sgrpB$ such that
   \begin{equation}
     \label{eq:sgrp-mor-comp}
     \sgrpmorA(\sgrpelAa \mtimes_{\sgrpA} \sgrpelAb) = \sgrpmorA (\sgrpelAa) \mtimes_{\sgrpB} \sgrpmorA(\sgrpelAb) \quad \quad \forall \sgrpelAa, \sgrpelAb \in \sgrpA
   \end{equation}
-  We think of the equation \cref{eq:sgrp-mor-comp} as a way of saying that the function of sets~$\sgrpmorA\colon \sgrpA \sto \sgrpB$  is \emph{compatible} with the multiplication operations on~$\sgrpA$ and$\sgrpB$, respectively.
+  We think of   \cref{eq:sgrp-mor-comp} as a way of saying that the function of sets~$\sgrpmorA\colon \sgrpA \sto \sgrpB$  is \emph{compatible} with the multiplication operations on~$\sgrpA$ and~$\sgrpB$, respectively.
+\end{ctdefinition}
+
+\begin{definition}[Semigroup isomorphism]
+  \label{def:semigroup-iso}
+  Let~$\sgrpA$ and~$\sgrpB$ be semigroups.
+  A homomorphism of semigroups~$\sgrpmorA\colon \sgrpA \mto \sgrpB$ is called a \emph{semigroup isomorphism} if there exists a homomorphism of semigroups~$\sgrpmorB\colon \sgrpB \mto \sgrpA$ such that
+  \begin{equation}
+    \label{eq:sgrp-iso-cond}
+    \sgrpmorA \then \sgrpmorB = \id_\sgrpA \text{ and }  \sgrpmorB \then \sgrpmorA = \id_\sgrpB.
+  \end{equation}
 \end{definition}
+
+
+\begin{example}[Logarithms]
+    The positive reals with multiplication  $\tup{\posReals, \cdot}$ is a semigroup.
+    The reals with addition $\tup{\reals, +}$ is a semigroup.
+
+    Now consider as a bridge between the two the logarithmic function
+    \begin{equation}
+        \log :  \posReals \to \reals
+    \end{equation}
+    and its inverse
+    \begin{equation}
+        \exp :  \reals \to \posReals
+    \end{equation}
+    We already know that these are inverse of each other:
+    \begin{equation}
+    \begin{aligned}
+        \exp \then \log &=& \id_{\reals} \\
+        \log \then \exp &=& \id_{\posReals}
+        \end{aligned}
+    \end{equation}
+    We can verify that $\log$ is also a semigroup \whomo, because of this property of the logarithms:
+    \begin{equation} \label{eq:log-property}
+        \log(a \cdot b) = \log(a) + \log(b).
+    \end{equation}
+    Because $\log$ is a bijection and $\exp$ is its inverse, it already follows that $\exp$ is
+    a homomorphism in the opposite direction. Alternatively we can see that is the case because of the property of the exponentials:
+    \begin{equation} \label{eq:exp-property}
+        \exp(c + d) = \exp(c) \cdot \exp(d).
+    \end{equation}
+    \Cref{eq:log-property,eq:exp-property} are both \cref{eq:sgrp-mor-comp} in disguise.
+\end{example}
+
+
+
+\begin{marginfigure}
+\includegraphics[width=\textwidth]{ascii}
+\caption{7-bit US-ASCII encoding }
+\label{fig:ascii}
+\end{marginfigure}
+
+\begin{example}[ASCII code]
+    ASCII encoding takes any alphanumerical characters and symbols into a number between 0 and 127 (\cref{fig:ascii}).
+    Let's call $\alphanums$ the set of those 127 symbols.
+    We can see ASCII encoding as a semigroup homorphism of $\alphanums^*$ to the free semigroup on the integers $[0,127]^*$.
+
+    Because we can also go back, by finding the inverse function, ASCII encoding is also an isomorphisms of semigroups.
+\end{example}
+\begin{example}[ASCII code to binary]
+    Currently, computers use binary to store data. (There were, in fact, \emph{trinary} computers.)
+    In \cref{fig:ascii}, you can see represented also the binary encoding of each character.
+    Therefore, we can see ASCII as a \whomo between $\alphanums^*$ and binary strings $\{0,1\}^*$.
+\end{example}
+\begin{exercise}
+Show that the homomorphism
+\begin{equation}
+\asciienc: \alphanums^* \to \{0,1\}^*
+ \end{equation}
+ is \emph{not} an isomorphism.
+\end{exercise}
+\begin{solution}
+We can show that we cannot find an inverse morphism
+ \begin{equation}
+ g:  \{0,1\}^* \to \alphanums^*
+ \end{equation}
+ At first sight everything seems in order: if we could find an isomorphism into $[0,127]^*$ and
+ we can express integers in binary, what could hold us back?
+
+What fails here is something so simple it could go unnoticed: the hypothetical function $g$ is not well defined for all points of its domain. We know how to translate a binary string of length $7,14,21,\dots$ back to symbols; but what would be the output of $g$ on the string $111$?
+
+The function $g$ is a left inverse for $\asciienc}$, in the sense that
+$\asciienc\then g = \id_{\alphanums^*}$, but it is not a right inverse.
+
+%There is a way to elegantly fix the situation. Let $\alphanums^\omega$ be the set of \emph{infinite streams} on $\alphanums$. (Recall that $\alphanums^*$ is the set of all \emph{finite} sequences.)
+%Then $\asciienc$ \emph{is} an isomorphism between
+\end{solution}
+
+\begin{margintable}
+\footnotesize
+\centering
+\caption{Morse encoding}
+
+\begin{tabular}{rl}
+\mst A&	\morsedot \morsedash\\
+\mst B&	\morsedash \morsedot \morsedot \morsedot\\
+\mst C&	\morsedash \morsedot \morsedash \morsedot\\
+\mst D&	\morsedash \morsedot \morsedot\\
+\mst E&	\morsedot\\
+\mst F&	\morsedot \morsedot \morsedash \morsedot\\
+\mst G&	\morsedash \morsedash \morsedot\\
+\mst H&	\morsedot \morsedot \morsedot \morsedot\\
+\mst I&	\morsedot \morsedot\\
+\mst J&	\morsedot \morsedash \morsedash \morsedash\\
+\mst K&	\morsedash \morsedot \morsedash\\
+\mst L&	\morsedot \morsedash \morsedot \morsedot\\
+\mst M&	\morsedash \morsedash\\
+\mst N&	\morsedash \morsedot\\
+\mst O&	\morsedash \morsedash \morsedash\\
+\mst P&	\morsedot \morsedash \morsedash \morsedot\\
+\mst Q&	\morsedash \morsedash \morsedot \morsedash\\
+\mst R&	\morsedot \morsedash \morsedot\\
+\mst S&	\morsedot \morsedot \morsedot\\
+\mst T&	\morsedash\\
+\mst U&	\morsedot \morsedot \morsedash\\
+\mst V&	\morsedot \morsedot \morsedot \morsedash\\
+\mst W&	\morsedot \morsedash \morsedash\\
+\mst X&	\morsedash \morsedot \morsedot \morsedash\\
+\mst Y&	\morsedash \morsedot \morsedash \morsedash\\
+\mst Z&	\morsedash \morsedash \morsedot \morsedot\\
+\end{tabular}
+\begin{tabular}{rl}
+\mst 0&	\morsedash \morsedash \morsedash \morsedash \morsedash\\
+\mst 1&	\morsedot \morsedash \morsedash \morsedash \morsedash\\
+\mst 2&	\morsedot \morsedot \morsedash \morsedash \morsedash\\
+\mst 3&	\morsedot \morsedot \morsedot  \morsedash \morsedash\\
+\mst 4&	\morsedot \morsedot \morsedot \morsedot \morsedash\\
+\mst 5&	\morsedot \morsedot \morsedot \morsedot \morsedot\\
+\mst 6&	\morsedash \morsedot \morsedot \morsedot \morsedot\\
+\mst 7&	\morsedash \morsedash \morsedot \morsedot \morsedot\\
+\mst 8&	\morsedash \morsedash \morsedash  \morsedot \morsedot\\
+\mst 9&	\morsedash \morsedash \morsedash \morsedash \morsedot\\
+\end{tabular}
+
+
+  \label{fig:morse}
+\end{margintable}
+
+\begin{example}[Morse code]
+  Consider the Morse code:  a way to encode the letters and numberals to an alphabet
+  of dots ($\morsedot$) and dashes ($\morsedash$). The encoding is shown in \cref{fig:morse}.
+  Here, the alphabet $\mathcal{A}$ is the letters A--Z and the numbers 0--9.
+  There is no difference between upper and lower case, and there are no punctuation marks.
+
+  Transcribing a text in Morse code is not just a matter of creating the right sequence of dots and dashes. The standard also requires a certain timing of the events. If the length of $\morsedot$ is 1, then the length of $\morsedash$ must be 3. There must be an interval of $3$ between letters, and $7$ between words.
+
+  Therefore, there are 5 symbols in the Morse alphabet (\cref{tab:morse5}); each representing a \emph{signal}.
+
+    \begin{margintable}
+    \caption{5 symbols for Morse encoding}
+    \small
+  \begin{tabular}{cll}
+    \morsedot & beep of length $\ell$ & \Morsedot\\
+    \morsedash & beep of length $3\ell$& \Morsedash \\
+    \morsedsp & silence of length $\ell$& \Morsedsp  \\
+    \morselsp & silence of length $3\ell$& \Morselsp \\
+    \morsewsp & silence of length $7\ell$& \Morsewsp
+  \end{tabular}
+  \label{tab:morse5}
+  \end{margintable}
+
+  Define now the extended alphabet  $\mathcal{A}'$ to be the union of $\mathcal{A}$ and the set $\{\lettersp, \wordsp\}$, where $\lettersp$ is interletter space, and $\wordsp$ is inter-word space.
+
+  Therefore, to encode the sentence
+  \begin{equation}
+  \text{``I am well''}
+  \end{equation}
+   we first transform it to upper case
+   \begin{equation}
+   \text{``I AM WELL''}
+    \end{equation}
+   Then we note the inter-letter space and the interword spaces:
+  \begin{equation}
+      \texttt{I} \wordsp \texttt{A} \lettersp \texttt{M} \wordsp \texttt{W} \lettersp
+       \texttt{E} \lettersp \texttt{L} \lettersp \texttt{L}
+  \end{equation}
+  At this point we can substitute the Morse code to obtain
+\begin{equation}
+      \morseI \morsewsp \morseA \morselsp \morseM \morsewsp \morseW \morselsp \morseE \morselsp \morseL \morselsp \morseL
+  \end{equation}
+    In signal space---what somebody would hear---this becomes
+\begin{equation}
+      \MorseI \Morsewsp \MorseA \Morselsp \MorseM \Morsewsp \MorseW \Morselsp \MorseE \Morselsp \MorseL \Morselsp \MorseL
+  \end{equation}
+  With this representation it is clear that 5 symbols are redundant: if we have a 1-period beep and a 1-period silence, we can obtain the 3-period silence and beeps and the 7-period silence.
+
+  In the end, the Morse alphabet is \emph{binary} in the sense that it all reduces to two symbols: not $\{\morsedot, \morsedash\}$ but rather the alphabet $\{\Morsedot, \Morsedsp\}$.
+
+\end{example}
+
+\begin{exercise}
+We have seen that Morse code transforms a word in the alphabet
+\begin{equation}
+\mathcal{A} = (\texttt{A} \ \text{to}\ \texttt{Z}) \cup (0 \ \text{to}\ 9) \cup \{\wordsp\}
+\end{equation}
+to the alphabet
+\begin{equation}
+\mathcal{B} = \{\Morsedot, \Morsedsp\}
+\end{equation}
+Is this map a \whomo of semigroups?
+\end{exercise}
 
 \begin{example}[Phonetic languages]
   \todotext{Nice example: the map from sequence of characters to sequences
   of sounds is monoidal in certain languages (Korean, Japanese, almost in Italian.) and
   also invertible.}
-\end{example}
-
-\begin{example}[Logarithms]
-  \todotext{Example of log from $\tup{\reals, \times}$ to  $\tup{\nonNegReals, +}$. }
 \end{example}
 
 
@@ -31,7 +225,7 @@
 
 
 \begin{example}[Transition function, continuation of \cref{exa:transition-functions}]
-  Consider the map $f: \nonNegReals \to (\reals^n \to \reals^n)$ that associated to a delta $\delta$
+  Consider the map $f: \nonNegReals \to (\reals^n \to \reals^n)$ that associates to a delta $\delta$
   its transition function $T_\delta$.
   Re-reading~\cref{eq:transition-property}, we can see that it is a homomorphism between the semigroup $\tup{\nonNegReals,+}$ and the semigroup of endormorphisms of $\reals^n$.
 \end{example}
@@ -48,15 +242,6 @@
   is satisfied. We call this the \emph{identity homomorphism} of~$\sgrpA$.
 \end{definition}
 
-\begin{definition}[Semigroup isomorphism]
-  \label{def:semigroup-iso}
-  Let~$\sgrpA$ and~$\sgrpB$ be semigroups.
-  A homomorphism of semigroups~$\sgrpmorA\colon \sgrpA \mto \sgrpB$ is called a \emph{semigroup isomorphism} if there exists a homomorphism of semigroups~$\sgrpmorB\colon \sgrpB \mto \sgrpA$ such that
-  \begin{equation}
-    \label{eq:sgrp-iso-cond}
-    \sgrpmorA \then \sgrpmorB = \id_\sgrpA \text{ and }  \sgrpmorB \then \sgrpmorA = \id_\sgrpB.
-  \end{equation}
-\end{definition}
 
 \begin{exercise}
   \label{ex:non-isomorphic}
