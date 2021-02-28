@@ -41,6 +41,7 @@ find-missing:
 
 chapters=$(wildcard volumes/vol*/*/*/chapter.tex)
 chapters-standalones=$(subst chapter.tex,chapter-standalone.tex,$(chapters))
+chapters-standalones-fast=$(subst chapter.tex,chapter-standalone-fast.tex,$(chapters))
 chapters-pdf        =$(subst chapter.tex,chapter-standalone.pdf,$(chapters))
 chapters-links      =$(subst chapter.tex,chapter-link-snippets, $(chapters))
 chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
@@ -48,6 +49,7 @@ chapters-makefiles  =$(subst chapter.tex,Makefile,              $(chapters))
 
 parts=$(wildcard volumes/vol*/*/part.tex)
 parts-standalones=$(subst part.tex,part-standalone.tex,$(parts))
+parts-standalones-fast=$(subst part.tex,part-standalone-fast.tex,$(parts))
 parts-pdf        =$(subst part.tex,part-standalone.pdf,$(parts))
 parts-links      =$(subst part.tex,part-link-snippets, $(parts))
 parts-link-minted =$(subst part.tex,part-link-minted, $(parts))
@@ -78,6 +80,12 @@ volumes/%/Makefile: template-Makefile.mk
 	cp $< $@
 
 
+%/chapter-standalone-fast.tex: template-chapter-standalone-fast.tex
+	cp $< $@
+%/part-standalone-fast.tex: template-part-standalone-fast.tex
+	cp $< $@
+
+
 %/chapter-standalone.pdf: %/chapter-standalone.tex %/Makefile .FORCE
 	make -C $* chapter-once
 
@@ -85,7 +93,7 @@ volumes/%/Makefile: template-Makefile.mk
 	make -C $* part-once
 
 
-standalone: $(chapters-standalones) $(parts-standalones)
+standalone: $(chapters-standalones) $(parts-standalones) $(chapters-standalones-fast) $(parts-standalones-fast)
 links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-minted)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 

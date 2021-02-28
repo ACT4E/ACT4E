@@ -5,7 +5,11 @@ Clone this repo:
 
 so that it is in the directory 
 
-    /usr/local/texlive/texmf-local/tex/latex/local/kaobook
+    /usr/local/texlive/texmf-local/tex/latex/local/ 
+
+For clarity, this file must exist:
+
+    /usr/local/texlive/texmf-local/tex/latex/local/kaobook/kaobook.cls
 
 Then do this:
 
