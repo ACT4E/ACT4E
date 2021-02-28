@@ -3,40 +3,40 @@
 
 \section{Exercise tutorial: Finite sets}\label{sec:exercise-tutorial}
 
-%\subsection*{Interface}
 
 During the exercises, you are going to build in Python a library to build and manipulate most of the concepts in the book.
 As a first step, we are going to build together the support for sets.
 
 The exercises will give you the \emph{interface} of an \emph{abstract class} to be generated.
 
-Let's define two interfaces: \classname{Setoid}, for a generic set, \classname{EnumarableSet}, and \classname{FiniteSet}, for a setoid that has a finite set of elements.
+Let's define two interfaces: \Setoid, for a generic set, \EnumerableSet, and \FiniteSet, for a setoid that has a finite set of elements.
 They are defined in the package \str{act4e_interfaces} which is in the repository \str{ACT4E/ACT4E-interfaces}.
 \Cref{fig:Setoid-inheritance} shows their relation in an UML diagram.
 
 \begin{marginfigure}
   \includesag{setoid-finiteset}
 
-  \caption{}
+  \caption{UML inheritance diagram}
   \label{fig:Setoid-inheritance}
 \end{marginfigure}
 
-This is the interface for \classname{Setoid}:
+This is the interface for \Setoid:
 
 \begin{widepar}
 \classsource{Setoid}{min_size=0}
 \end{widepar}
 
-The class \classname{Setoid}  derives from \classname{ABC}, which means \emph{abstract base class}; it tells the interpreter that some of the methods of the class will have to be implemented by the subclasses.
+The class \Setoid  derives from \classname{ABC}, which means \emph{abstract base class}; it tells the interpreter that some of the methods of the class will have to be implemented by the subclasses.
 This is the equivalent of the ``virtual'' methods in C++.
 The methods that need to be implemented are marked by a decorator \pystr|@abstractmethod|.
-For \classname{Setoid}, we ask that the implementer implements the \funcname{contains} function, and they can optionally implement \funcname{equal}.
+For \Setoid, we ask that the implementer implements the \funcname{contains} function, and they can optionally implement \funcname{equal}.
 
 This is the semantics of the methods:
 
 \begin{compactitem}
   \item The method \funcname{contains} checks if an element is part of this set.
-  \item The method \funcname{equal} checks if two elements are the same. The default way to do this is to use Python's equality operator (which calls the \pystr|__equal__| method of the class of the first object); later we will see cases in which we might want to choose something different
+  \item The method \funcname{equal} checks if two elements are the same.
+  The default way to do this is to use Python's equality operator (which calls the \pystr|__equal__| method of the class of the first object); later we will see cases in which we might want to choose something different
 \end{compactitem}
 
 
@@ -50,7 +50,7 @@ This is the interface for \classname{EnumerableSet}:
 
 \classsource{EnumerableSet}{}
 
-This is the interface for \classname{FiniteSet}:
+This is the interface for \FiniteSet:
 
 \classsource{FiniteSet}{}
 
@@ -61,14 +61,14 @@ The additional method:
 
 
 
-The class inherits from \classname{Setoid} and add some methods:
+The class inherits from \Setoid and add some methods:
 
 The additional method:
 \begin{compactitem}
   \item The method \funcname{size} returns the size of the set.
 \end{compactitem}
 
-You will have to implement the \classname{FiniteSet} class as part of the exercise.
+You will have to implement the \FiniteSet class as part of the exercise.
 
 
 \subsection*{Representation}
@@ -78,7 +78,7 @@ These are based on YAML\@.
 
 \margindatafilefig{set1code}{set1.finset.yaml}{fig:set1}
 
-The file format for \classname{FiniteSet} is shown in \cref{fig:set1}.
+The file format for \FiniteSet is shown in \cref{fig:set1}.
 
 
 
@@ -92,7 +92,7 @@ YAML can represent most primitive data format of Python, as well as lists and di
 
   \classsource{FiniteSetRepresentation}{min_size=0}
 
-  You also have to implement a concrete subclass of \classname{FiniteSet}.
+  You also have to implement a concrete subclass of \FiniteSet.
 \end{gradedexercise}
 
 \subsection{Walk-through for first exercise}
@@ -131,8 +131,9 @@ This file will contain the implementation of the classes.
 
 For now we are just going to add non-functional code for the classes.
 
+\begin{widepar}
 \visualizemodule{act4e_book_examples.empty}{}
-
+\end{widepar}
 Now modify \files|__init__.py| to import all the symbols from the \files{first} module.
 
 \begin{minted}{python}
@@ -150,7 +151,7 @@ but that the tests failed. All of our functions returned \pystr{None}.
 
 At this point we need to implement the rest of the code.
 
-For example, this is a valid implementation of \classname{FiniteSet}.
+For example, this is a valid implementation of \FiniteSet.
 
 \visualizemodule{act4e_book_examples.f1}{}
 
@@ -165,15 +166,15 @@ With this code, the tests should pass. Try again to run
   > make check-TestFiniteSetRepresentation
 \end{console}
 
-Note that the types used by the function \funcname{save} of \classname{MyFiniteSetRepresentation} is \classname{FiniteSet},
-not \classname{MyFiniteSet}. The method must be able to work for \emph{any} implementation of  \classname{FiniteSet},
+Note that the types used by the function \funcname{save} of \classname{MyFiniteSetRepresentation} is \FiniteSet,
+not \classname{MyFiniteSet}. The method must be able to work for \emph{any} implementation of  \FiniteSet,
 not just yours. In fact, the tester will try to call that function with a different implementation.
 
 Note that the implementation above uses this line to get the elements:
 \begin{minted}{python}
 all_elements = sorted(f.elements())
 \end{minted}
-This is correct because it is using the method \funcname{elements} that all implementations of  \classname{FiniteSet}
+This is correct because it is using the method \funcname{elements} that all implementations of  \FiniteSet
 need to have. What could be wrong is using code like the following:
 \begin{minted}{python}
 all_elements = sorted(f._elements)
