@@ -6,7 +6,8 @@ PDFLATEX = pdflatex --shell-escape -halt-on-error -file-line-error #-interaction
 PDFCROP  = pdfcrop
 RM       = /bin/rm
 
-TikFiles = $(wildcard */*.texi)
+#TikFiles = $(wildcard */*.texi)
+TikFiles = $(shell find . -name '*.texi')
 
 %-page.tex :  head.txt %.texi foot.txt
 	cat $^ > $@
@@ -20,16 +21,23 @@ PDFGraphics = $(patsubst %.texi,%.pdf,$(TikFiles))
 
 all: $(PDFGraphics)
 
+TikFiles_defs = $(shell find . -name 'def*.texi')
+PDFGraphics_defs = $(patsubst %.texi,%.pdf,$(TikFiles))
+
+defs: $(PDFGraphics_defs)
+
 #pages: $(patsubst %.texi,%-page.tex,$(TikFiles))
 
 %.pdf : %.tex
 	#$(PDFLATEX) -output-directory $(shell dirname $@) $<
 	cd $(shell dirname $@) && $(PDFLATEX) $(shell basename $*)
-	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc* *.mw *.idx
+	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc* $*.mw $*.idx
 
 
 %.pdf : %-page.pdf
-	$(PDFCROP) $< $@
+	$(PDFCROP) --margins 10 $< $*.tmp.pdf
+	cpdf $*.tmp.pdf -scale-page "3.2 3.2" -o $@
+	rm -f  $*.tmp.pdf
 
 
 clean-aux:
