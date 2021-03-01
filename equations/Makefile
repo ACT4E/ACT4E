@@ -36,6 +36,7 @@ defs: $(PDFGraphics_defs)
 
 %.pdf : %-page.pdf
 	$(PDFCROP) --margins 10 $< $*.tmp.pdf
+	#cpdf $*.tmp.pdf -scale-page "2.0 2.0" -o $@
 	cpdf $*.tmp.pdf -scale-page "3.2 3.2" -o $@
 	rm -f  $*.tmp.pdf
 
