@@ -161,3 +161,20 @@ find-equations:
 #	rm -rf  equations/vol1/40_computation
 .FORCE:
 .PHONY: .FORCE
+
+
+
+magic:
+	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+		reg-stage.zuper.ai/act4e/act4e-build:z7 \
+		make nomenc table find-equations
+
+ultramagic:
+	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+		reg-stage.zuper.ai/act4e/act4e-build:z7 \
+		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make remake'
+
+shell:
+	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+		reg-stage.zuper.ai/act4e/act4e-build:z7 \
+		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: bash'
