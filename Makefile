@@ -154,10 +154,10 @@ remake:
 
 find-equations:
 	lsm_equations --search volumes/vol1 --output equations/vol1
-	rm -rf  equations/vol1/20_orders
-	rm -rf  equations/vol1/22_operations
-	rm -rf  equations/vol1/25_translation
-	rm -rf  equations/vol1/30_design
-	rm -rf  equations/vol1/40_computation
+#	rm -rf  equations/vol1/20_orders
+#	rm -rf  equations/vol1/22_operations
+#	rm -rf  equations/vol1/25_translation
+#	rm -rf  equations/vol1/30_design
+#	rm -rf  equations/vol1/40_computation
 .FORCE:
 .PHONY: .FORCE
