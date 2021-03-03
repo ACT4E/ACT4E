@@ -1,17 +1,18 @@
-\begin{minipage}{60ex}
-\begin{minted}[mathescape]{python}
-import yaml
-
+\begin{minipage}{65ex}
+\begin{minted}[mathescape, breaklines]{python}
+from act4e_interfaces import (
+  FiniteSet,
+  FiniteSet_desc,
+  FiniteSetRepresentation,
+  IOHelper,
 
 class MyFiniteSetRepresentation(FiniteSetRepresentation):
-  def load(self, yaml_data: str) -> FiniteSet:
-    l = yaml.load(yaml_data, Loader=yaml.Loader)
-    elements = l["elements"]
+  def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet:
+    elements = data["elements"]
     return MyFiniteSet(elements)
 
-  def save(self, f: FiniteSet) -> str:
+  def save(self, h: IOHelper, f: FiniteSet) -> FiniteSet_desc:
     all_elements = sorted(f.elements())
-    data = {"elements": all_elements}
-    return yaml.dump(data)
+    return {"elements": all_elements}
 \end{minted}
 \end{minipage}

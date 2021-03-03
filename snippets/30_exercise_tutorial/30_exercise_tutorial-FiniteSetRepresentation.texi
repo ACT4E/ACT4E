@@ -1,14 +1,28 @@
-\begin{minipage}{51ex}
-\begin{minted}[mathescape]{python}
+\begin{minipage}{79ex}
+\begin{minted}[mathescape, breaklines]{python}
 class FiniteSetRepresentation(ABC):
+  @overload
+  def load(self, h: IOHelper, data: FiniteSetDisjointUnion_desc) \
+    -> FiniteSetDisjointUnion:
+    ...
+
+  @overload
+  def load(self, h: IOHelper, data: FiniteSetUnion_desc) -> FiniteSet:
+    ...
+
+  @overload
+  def load(self, h: IOHelper, data: FiniteSetProduct_desc) -> FiniteSetProduct:
+    ...
+
   @abstractmethod
-  def load(self, yaml_data: str) -> FiniteSet:
-    """Load a finite set from given YAML data.
+  def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet:
+    """
+    Load a finite set from data structure.
     Throw InvalidFormat if the format is incorrect.
     """
 
   @abstractmethod
-  def save(self, f: FiniteSet) -> str:
-    """ Save to a string. """
+  def save(self, h: IOHelper, f: FiniteSet) -> FiniteSet_desc:
+    """ Serializes into a data structure """
 \end{minted}
 \end{minipage}
