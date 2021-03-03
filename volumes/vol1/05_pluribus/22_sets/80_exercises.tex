@@ -17,49 +17,149 @@ Check your results with
   > make check-TestFiniteSetProperties
 \end{console}
 
-\subsection{Union and intersection}
+\subsection{Union of sets}
 
 
-\begin{gradedexercise}[\exname{TestFiniteSetOperations}]
-  Given two finite sets, compute the union and intersection.
-  \classsource{FiniteSetOperations}{}
+\begin{gradedexercise}[\exname{TestMakeSetUnion}]
+  Given two finite sets, compute the union.
+  \classsource{MakeSetUnion}{}
 \end{gradedexercise}
-
 
 Check your results with
 \begin{console}
-  > make check-TestFiniteSetOperations
+  > make check-TestMakeSetUnion
 \end{console}
 
-\subsection{Product and disjoint union}
+\margindatafilefig{set_union}{Product}{fig:set_union}
 
-\AC{Checks not implemented for the next exercises.}
-\begin{gradedexercise}
-  Given two finite sets, compute the product and disjoint union.
+Extend now the code you wrote for loading sets to allow the format in \cref{fig:set_product}.
 
-  \classsource{FiniteSetOperations2}{}
+This is the algorithm to implement.
+
+Given a dictionary:
+\begin{enumerate}
+\item If it has a field \str{elements}, it is a finite set described with elements directly.
+\item If it has a field \str{union}, then the value must be a list of set representation dictionaries.
+\item Otherwise, it is an error --- for now; we will introduce many more ways to describe sets.
+\end{enumerate}
+
+In particular, note that these are valid representations.
+
+An empty set:
+
+\begin{minted}{yaml}
+elements: []
+\end{minted}
+
+The union of 1 empty set:
+
+\begin{minted}{yaml}
+union:
+    - elements: []
+\end{minted}
+
+The union of 2 empty sets:
+
+\begin{minted}{yaml}
+union:
+    - elements: []
+    - elements: []
+\end{minted}
+
+The union of zero sets:
+
+\begin{minted}{yaml}
+union:  []
+\end{minted}
+
+\subsection{Product}
+
+When we compute the union of two sets, we want to forget the structure. With products we want to remember to structure.
+So we define a \classname{SetProduct} to be a special \Setoid that remembers its factors.
+
+\classsource{SetProduct}{}
+
+The semantics is the following:
+\begin{itemize}
+    \item The method \funcname{components} returns the ordered list of components.
+    \item The method  \funcname{pack} takes a number of arguments and creates an element of the product.
+    \item The method \funcname{projections} returns the list of projection mappings.
+            The $i$-th projection mapping takes an element of the product and returns the $i$-th component.
+
+\end{itemize}
+
+
+\begin{gradedexercise}[\exname{TestMakeSetProduct}]
+  Given two sets, compute their product:
+
+  \classsource{MakeSetProduct}{}
 \end{gradedexercise}
-\begin{gradedexercise}
-  Given two finite sets, compute the disjoint union.
 
-\end{gradedexercise}
+The interface above means that if you are passed 2 \FiniteSet{}s, you should return a \FiniteSet.
+Otherwise, you should return a \Setoid.
+
+\margindatafilefig{set_product}{Product}{fig:set_product}
+
+Extend now the code you wrote for loading sets to allow the format in \cref{fig:set_product}.
+
+We add another clause to the parsing algorithm:
+\begin{enumerate}
+\item \dots
+\item If there is a field \str{product}, it must be a list of sets, and the semantics is the product of those sets.
+\end{enumerate}
+
+Some special cases follow.
+
+The product of 3 sets:
+
+\begin{minted}{yaml}
+product:
+    - elements: [1]
+    - elements: [1]
+    - elements: [1]
+\end{minted}
+
+The product of 2 sets, of which one is empty:
+
+\begin{minted}{yaml}
+union:
+    - elements: [1]
+    - elements: []
+\end{minted}
 
 
+\subsection{Mapping}
 
+Our interface for a \classname{Mapping} is this:
 
+\classsource{Mapping}{}
 
-\section{Finite Maps}
+A \classname{Mapping} as a source and a target, which, in general, are setoids.
 
-\subsection*{Interface}
+Then, a \classname{Mapping} is able to take an element from the source setoid and return an element in the second setoid.
+Here we use Python's syntax sugar. If an object defines as \funcname{__call__} method, then these are equivalent:
 
-A finite relation \classname{FiniteMap} ...
+\begin{minted}{python}
+assert myobject(x) == myobject.__call__(x)
+\end{minted}
+
+Therefore, once you implement a \classname{Mapping} you can pass it around like if it was a Python function.
+
+We also define a subclass \classname{FiniteMap} which is constrained to have both source and target be a \FiniteSet rather than a \Setoid.
 
 \classsource{FiniteMap}{}
 
-\subsection*{Representation}
+\margindatafilefig{map1}{A map}{fig:map1}
 
-The format is shown in \cref{fig:map1}.
-\margindatafilefig{map1}{map1.map.yaml}{fig:map1}
+We define a YAML representation for finite maps as in~\cref{fig:map1}.
+
+The fields \pystr{source} and \pystr{target} are two sets. These are expressions that you can pass to the set constructors you developed previously.
+
+The field \pystr{values} is an array of pairs: each pair~$\tup{x, y}$ means that~$x$ maps to~$y$.
+
+For the data to be well-formed it is necessary that for each element in the domain, there is exactly one row for that element.
+If that is not the case, throw an exception.
+
 
 
 \begin{gradedexercise}[Representation]
@@ -92,3 +192,9 @@ The format is shown in \cref{fig:map1}.
   \methodsource{FiniteMapOperations}{as_relation}{}
 
 \end{gradedexercise}
+\subsection{Disjoint union}
+\begin{gradedexercise}
+  Given two finite sets, compute the disjoint union.
+
+\end{gradedexercise}
+
