@@ -13,31 +13,23 @@ The inventions of Professor Butts, transcribed by Rube Goldberg, are prodigious 
 
 
 
-We are going to assemble similar machines. We start by introducing some of the essential elements:
+We are going to assemble similar machines. We start by introducing some of the essential elements, reported in \cref{tab:basic_els}
 
-\begin{itemize}
-  \item Rope
-  \item Elastic
-  \item Brick
-  \item Glass
-  \item Spring
-  \item Rubber
-\end{itemize}
-
-\todographics{work on original icons}
-
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{ccc}
-  \rope{ropecola}{ropecolb}{2}{0}{0}{1}{}&
-  \includegraphics[width=2cm, height=2cm]{elastic_rope}&
-  \includegraphics[width=2cm, height=2cm]{brick}\\
-  rope&elastic&brick\\
-  \includegraphics[width=2cm, height=2cm]{empty_glass}&
-  \includegraphics[width=2cm, height=2cm]{spring}&
-  \includegraphics[width=2cm, height=2cm]{rubber}\\
+   \includegraphics[height=2cm]{rope}&
+  \includegraphics[height=2cm]{elastic}&
+  \includegraphics[height=2cm]{brick}\\
+  rope&elastic&brick\\[+10pt]
+  \includegraphics[height=2cm]{glass}&
+  \includegraphics[height=2cm]{spring}&
+  \includegraphics[height=2cm]{rubber}\\
   glass&spring&rubber
 \end{tabular}
 \end{center}
+  \caption{Essential elements. \label{tab:basic_els}}
+\end{table}
 
 These different elements can be classified by their elasticity properties, and hence by the way in which they deform.
 A good reference book for these concepts is Hibbeler~\cite{hibbeler2014mechanics}.
@@ -60,7 +52,7 @@ where~$\force$ represents the force,~$\deformation$ the deformation of the mater
 \begin{center}
 \includegraphics[width=10cm]{strain_stress}
 \end{center}
-  \caption{\todo{do our one}. \label{fig:stress_strain}}
+  \caption{Exemplary stress-strain diagram. \label{fig:stress_strain}}
 \end{figure}
 
 \begin{example}
@@ -98,73 +90,86 @@ One can also put them in parallel and get a spring with equivalent spring consta
   \springconst_\mathrm{p}=\springconst_1+\springconst_2.
 \end{equation*}
 
-\todo{Add remark with capacitors in electrical circuits (isomorphic example for ITET people) and temperature}
+\begin{remark}
+  This behavior is very typical in engineering. While the above represents a classic mechanical engineering example, we could define similar examples in electronics and thermodynamics. In electronics, capacitors in series behave as springs in series.
+  In thermodynamics, thermal resistances in series behave like springs in series.
+\end{remark}
 
 \begin{figure}[h]
+  \begin{center}
   \subfloat[c][Series \label{fig:spring_series}]{\includesag{30_spring_series}}\hspace{1cm}
   \subfloat[c][Parallel \label{fig:spring_parallel}]{\includesag{30_spring_parallel}}
+\end{center}
+  \caption{Series and parallel spring composition.}
 \end{figure}
 
-\todotext{Describe here the properties of these components (elasticity, etc.)}
+These formulas suggest that the property of being a spring are compositional. In the following exercise, we are going to highlight this by considering specific cases.
+
+\begin{gradedexercise}
+  Consider the components (and relative properties) listed in \cref{tab:spring_const}.
+  In this exercise we will compute the behavior of a chain of these components.
+  \begin{enumerate}
+    \item Suppose you hang a rope, an elastic, and a brick as depicted in \cref{fig:hang}. Assume that all components remain in their elastic deformation domains.
+    \begin{enumerate}[(a)]
+    \item Compute the deformation of each component at equilibrium.
+    \item Compute the deformation of each component at equilibrium, when you hang a \unit[1]{kg} weight at the end of the brick.
+\end{enumerate}
+    \item Assume now you are either pulling or pushing your chain horizontally, as depicted in \cref{fig:push} and \cref{fig:pull}.
+    Define the set of materials~$\setA\definedas \{ \tup{l_0, \springconst_\mathrm{push},\springconst_\mathrm{pull}, c_\mathrm{max}, e_\mathrm{max}} \in \nonNegReals^5\}$.
+Each material is characterized by a length at rest~$l_0$, spring constants for extension and compression~$\springconst_\mathrm{pull}, \springconst_\mathrm{push}$, maximum compression~$c_\mathrm{max}$, and maximum extension~$e_\mathrm{max}$.
+    Define the composition operation and a neutral element for this monoid (based on the discussion about springs above), and show that they satisfy the properties of a monoid.
+    \item It's now time to implement your discoveries. In this part of the exercise, you will implement the following interface:
+     \classsource{RupeGoldbergSolver}{max_size=1}
+    \begin{enumerate}
+      \item The first function answers what would happen if you were to hang any chain on one end, and let it hang. Would it break? If not, what would be the extended length? .
+      \item The second function answers what would happen if you were to let the chain rest horizontally, then fix one end to an \emph{immovable wall} and push to the other end. Would it break? If not, what would be the compressed length?
+    If a component breaks, consider it destroyed and of length 0.
+    \item The third function answers what would happen if you were to pull with a certain force (\cref{fig:pull}). Either you will break the chain, or there will be an equilibrium. What would be the length?
+    \end{enumerate}
+    \emph{Hint:} For simplicity, we say that the chain breaks if a component exceeds its maximum compression/elongation.
+  \end{enumerate}
+\end{gradedexercise}
 
 \begin{table}
   \begin{center}
-\begin{tabular}{llll}
-  Component & Spring constant (in \unit[]{[N/m]})&Length (in \unit[]{[m]})&Mass (in \unit[]{[kg]})\\
+\begin{tabular}{lllll}
+  Component & $\springconst_\mathrm{pull}$ (in \unit[]{[N/m]})&$\springconst_\mathrm{push}$ (in \unit[]{[N/m]})& Length (in \unit[]{[m]})&Mass (in \unit[]{[kg]})\\
   \toprule
-  Rope & $5.6\cdot 10^2$&0.2&0.1 \\
-  Elastic & 17.0&0.2&0.15 \\
-  Brick & $20\cdot 10^7$&0.2&2.0\\
-  Glass & $7.0\cdot 10^7$&0.2&0.5\\
-  Spring & 5.0&0.2&0.5\\
-  Rubber & 45.0&0.2&0.3
+  Rope & $5.6\cdot 10^2$&&0.2&0.1 \\
+  Elastic & 17.0&0.2&&0.15 \\
+  Brick & $20\cdot 10^7$&&0.2&2.0\\
+  Glass & $7.0\cdot 10^7$&&0.2&0.5\\
+  Spring & 5.0&0.2&&0.5\\
+  Rubber & 45.0&0.2&&0.3
 \end{tabular}
-  \caption{Spring constants for different materials. \label{tab:spring_const}}
+  \caption{Spring constants for different materials.}
+   \label{tab:spring_const}
 \end{center}
 \end{table}
 
 These are the classes that define the data.
 
 \classsource{Component}{max_size=25}
-\classsource{Rope}{max_size=25}
-\classsource{Brick}{max_size=25}
-\classsource{Elastic}{max_size=25}
+%\classsource{Rope}{max_size=25}
+%\classsource{Brick}{max_size=25}
+%\classsource{Elastic}{max_size=25}
 
-\begin{gradedexercise}[\exname{TestRopeGoldberg}]
-  In this exercise you will compute the behavior of a chain of those components.
-
-  The interface you need to implement is:
-
-  \classsource{RupeGoldbergSolver}{}
-
-
-  \begin{enumerate}
-    \item The first function asks what would happen if you were to hang this chain on one end, and let it hang (\cref{fig:hang}).
-    Would it break? If not, what would be the extended length?
-   \GZ{The ```would it break'' question is not as smooth as it seems. The strain-stress diagrams have nonlinearities and maybe we end up in oversimplifying.}
-    \item The second question asks what would happen if you were to let the chain rest horizontally (\cref{fig:push}). Then fix one end to an \emph{immovable wall} and push to the other end. What would happen? If the push destroys some of the objects, consider
-    them destroyed and of length 0.
-    \item  The third question asks what would happen if you were to pull with a certain force  (\cref{fig:pull}). Either you will break the chain, or there will be an equilibrium. What would be the length?
-  \end{enumerate}
-
-\end{gradedexercise}
 
 \begin{figure}
   \hfill
   \subfloat[\label{fig:hang}Hanging the chain]{
-    \includegraphics[width=3cm, height=4cm]{placeholder}
+    \includegraphics[height=3.5cm]{hang}
   }
   \hfill
   \subfloat[\label{fig:push}Horizontal compression]{
-  \includegraphics[width=3cm, height=4cm]{placeholder}
+  \includegraphics[height=1cm]{push}
   }
   \hfill
   \subfloat[\label{fig:pull}Horizontal extension]{
-  \includegraphics[width=3cm, height=4cm]{placeholder}
+  \includegraphics[height=1cm]{pull}
   }
   \hfill
-  \caption{Visualization of the three scenarios.
-  \todographics{Make graphics. }}
+  \caption{Visualization of the three scenarios.}
 \end{figure}
 
 
@@ -172,10 +177,3 @@ We will walk you through the theoretical part, but we will leave the implementat
 
 We should think \emph{compositionally}. We should first see what happens in the specific cases,
 and see if the answer can be generalized in a way that the solution is compositional.
-
-\todotext{Go through the specific cases}
-
-
-\todotext{Give breakthrough observation that all the behavior can be described by one relation between force and length. Hence what we are talking about is really composition in a certain monoid.}
-
-\todotext{The solution is to create for each component this relation, and then compose the relations.}

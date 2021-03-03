@@ -154,6 +154,9 @@ remake:
 
 find-equations:
 	lsm_equations --search volumes/vol1 --output equations/vol1
+
+compile-equations:
+	make -C equations -j -k 
 #	rm -rf  equations/vol1/20_orders
 #	rm -rf  equations/vol1/22_operations
 #	rm -rf  equations/vol1/25_translation
@@ -178,3 +181,8 @@ shell:
 	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		reg-stage.zuper.ai/act4e/act4e-build:z7 \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: bash'
+
+docker-%:
+	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+		reg-stage.zuper.ai/act4e/act4e-build:z7 \
+		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make *'
