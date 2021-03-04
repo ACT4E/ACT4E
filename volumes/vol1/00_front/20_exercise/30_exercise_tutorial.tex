@@ -11,7 +11,8 @@ The exercises will give you the \emph{interface} of an \emph{abstract class} to 
 
 Let's define two interfaces: \Setoid, for a generic set, \EnumerableSet, and \FiniteSet, for a setoid that has a finite set of elements.
 They are defined in the package \str{act4e_interfaces} which is in the repository \str{ACT4E/ACT4E-interfaces}.
-\Cref{fig:Setoid-inheritance} shows their relation in an UML diagram.
+
+\Cref{fig:Setoid-inheritance} shows their relation in an UML diagram. The arrow means ``inherits from''.
 
 \begin{marginfigure}
   \includesag{setoid-finiteset}
@@ -22,9 +23,11 @@ They are defined in the package \str{act4e_interfaces} which is in the repositor
 
 This is the interface for \Setoid:
 
-\begin{widepar}
+\begin{longcode}
 \classsource{Setoid}{}
-\end{widepar}
+\caption{}
+\label{lst:Setoid}
+\end{longcode}
 
 The class \Setoid  derives from \classname{ABC}, which means \emph{abstract base class}; it tells the interpreter that some of the methods of the class will have to be implemented by the subclasses.
 This is the equivalent of the ``virtual'' methods in C++.
@@ -36,8 +39,12 @@ This is the semantics of the methods:
 \begin{compactitem}
   \item The method \funcname{contains} checks if an element is part of this set.
   \item The method \funcname{equal} checks if two elements are the same.
-  The default way to do this is to use Python's equality operator (which calls the \pystr|__equal__| method of the class of the first object); later we will see cases in which we might want to choose something different
+  The default way to do this is to use Python's equality operator (which calls the \pystr|__equal__| method of the class of the first object); later we will see cases in which we might want to choose something different.
+   \item The method \funcname{apart} checks that two elements are ``apart''.
+     You can ignore this for the entire first volume, but it will become more relevant later when we talk more in detail about constructivism.\footnote{%
+     See \href{https://en.wikipedia.org/wiki/Apartness_relation}{Apartness relation} on Wikipedia.}
 \end{compactitem}
+
 
 
 The code contains also typing annotations.
@@ -48,7 +55,11 @@ The latest versions of Python have supported typing annotations with generics, s
 
 This is the interface for \classname{EnumerableSet}:
 
+\begin{longcode}
 \classsource{EnumerableSet}{}
+\caption{}
+\label{lst:EnumerableSet}
+\end{longcode}
 
 The class inherits from \Setoid and add one methods:
 \begin{compactitem}
@@ -56,24 +67,37 @@ The class inherits from \Setoid and add one methods:
 \end{compactitem}
 This is the interface for \FiniteSet:
 
+\begin{longcode}
 \classsource{FiniteSet}{}
+\caption{}
+\label{lst:FiniteSet}
+\end{longcode}
 
 The additional method:
 \begin{compactitem}
   \item The method \funcname{size} returns the size of the set.
 \end{compactitem}
 
+\margindatafilefig{set1}{Example shown in YAML format.}{fig:set1}
+
+\begin{marginfigure}
+\begin{minted}{python}
+{ "elements": ["a", "b", "c"] }
+\end{minted}
+\caption{We show data formats in YAML because it is terse, but in the exercises
+you will receive the Python data structure directly.}
+\label{fig:as-python}
+\end{marginfigure}
+
+
 You will have to implement the \FiniteSet class as part of the exercise.
 
 
 \subsection*{Representation}
 
-We have defined file formats for all the structures to be used in the exercises.
-These are based on YAML\@.
-
-%\margindatafilefig{set1}{\XXX}{fig:set1}
-
+We have defined formats for all the structures to be used in the exercises.
 The file format for \FiniteSet is shown in \cref{fig:set1}.
+We visualize them in the book using YAML, but you never have to deal with YAML yourself.
 
 
 
@@ -83,12 +107,22 @@ YAML can represent most primitive data format of Python, as well as lists and di
 \begin{gradedexercise}[\exname{TestFiniteSetRepresentation}]
   \label{ex:setrepr}
   The first exercise is to implement the methods that read and write from this file format.
-  You have to implement the following interface, \classname{FiniteSetRepresentation}:
-
-  \classsource{FiniteSetRepresentation}{}
-
-  You also have to implement a concrete subclass of \FiniteSet.
+  You have to implement the  interface \classname{FiniteSetRepresentation}
+  shown in \cref{fig:FiniteSetRepresentation}.
+   As part of the exercise, you will also  have to implement a concrete subclass of \FiniteSet.
 \end{gradedexercise}
+\begin{longcode}
+\classsource{FiniteSetRepresentation}{remove_comments=True}
+\caption{}
+\label{fig:FiniteSetRepresentation}
+\end{longcode}
+
+%
+%\begin{marginfigure}
+%\includesag{dirtree-relevant}
+%\caption{Relevant files for the moment}
+%\label{fig:dirtree-relevant}
+%\end{marginfigure}
 
 \subsection{Walk-through for first exercise}
 
@@ -96,7 +130,7 @@ We are going to solve this exercise together.
 
 We assume that you have checked out the repository as explained in the setup section.
 
-Of all the files in the repository, we only need the following for now:
+Of all the files in the repository, we only need the ones displayed in \cref{fig:dirtree-relevant}.
 %
 %\begin{minted}[autogobble]{console}
 %. src/
@@ -106,14 +140,13 @@ Of all the files in the repository, we only need the following for now:
 %\end{minted}
 %
 
-\includesag{dirtree-relevant}
 
-
-We can start by checking if this is a valid solution. There is a recipe for this in the \files{Makefile}.
+We can start by checking if this is a valid solution.
+There is a recipe for this in the \files{Makefile}.
 Type this:
 
 \begin{console}
-  > make check-TestFiniteSetRepresentation
+ make check-TestFiniteSetRepresentation
 \end{console}
 
 Here \exname{TestFiniteSetRepresentation} is the code name for the exercise. You can check other exercises by changing the name.
@@ -124,11 +157,15 @@ This will fail; it will complain saying that it didn't even find any code implem
 Create a file called \files{first.py} in the \files|src/act4e_solutions| directory.
 This file will contain the implementation of the classes.
 
-For now we are just going to add non-functional code for the classes.
+For now we are just going to add non-functional code for the classes,
+as in \cref{lst:act4e_book_examples.empty}
 
-\begin{widepar}
+\begin{longcode}
 \visualizemodule{act4e_book_examples.empty}{}
-\end{widepar}
+\caption{}
+\label{lst:act4e_book_examples.empty}
+\end{longcode}
+
 Now modify \files|__init__.py| to import all the symbols from the \files{first} module.
 
 \begin{minted}{python}
@@ -138,7 +175,7 @@ from .first import *
 At this point you can check again by typing:
 
 \begin{console}
-  > make check-TestFiniteSetRepresentation
+ make check-TestFiniteSetRepresentation
 \end{console}
 
 The program will tell you that it found the code supposedly implementing the function,
@@ -146,19 +183,30 @@ but that the tests failed. All of our functions returned \pystr{None}.
 
 At this point we need to implement the rest of the code.
 
-For example, this is a valid implementation of \FiniteSet.
+For example, \cref{lst:act4e_book_examples.f1} is a valid implementation of \FiniteSet.
 
+\begin{longcode}
 \visualizemodule{act4e_book_examples.f1}{}
+\caption{}
+\label{lst:act4e_book_examples.f1}
+\end{longcode}
 
+The loading and saving of the data is very simple.
+To load just take the \str{elements} field of the data structure and give it to \classname{MyFiniteSet}.
+To save, reconstruct the list elements from the \classname{MyFiniteSet} instance by using the method \funcname{elements}, which returns an iterator.
+Note that the \funcname{save} function you have to implement must work for all \FiniteSet instances, not just your particular implementation of \FiniteSet; therefore, you cannot access the \pystr{_elements} field directly.
+An example of this is shown in \cref{lst:act4e_book_examples.f2}.
 
-To read and write data, we use the \pystr{yaml} library.
-
+\begin{longcode}
 \visualizemodule{act4e_book_examples.f2}{}
+\caption{}
+\label{lst:act4e_book_examples.f2}
+\end{longcode}
 
-With this code, the tests should pass. Try again to run
+With this code, the tests should pass. Try again to run:
 
 \begin{console}
-  > make check-TestFiniteSetRepresentation
+  make check-TestFiniteSetRepresentation
 \end{console}
 
 Note that the types used by the function \funcname{save} of \classname{MyFiniteSetRepresentation} is \FiniteSet,
@@ -166,14 +214,18 @@ not \classname{MyFiniteSet}. The method must be able to work for \emph{any} impl
 not just yours. In fact, the tester will try to call that function with a different implementation.
 
 Note that the implementation above uses this line to get the elements:
+
 \begin{minted}{python}
 all_elements = sorted(f.elements())
 \end{minted}
+
 This is correct because it is using the method \funcname{elements} that all implementations of  \FiniteSet
 need to have. What could be wrong is using code like the following:
+
 \begin{minted}{python}
 all_elements = sorted(f._elements)
 \end{minted}
+
 This code accesses the attribute \pystr|_elements| of the class \classname{MyFiniteSet}.
 It will not work with other implementations. In fact, the tests will fail.
 
