@@ -1,22 +1,33 @@
-% original size: lines = 17 line width = 52
+% original size: lines = 28 line width = 64
 % bounds: min_size = 0 max_size = 120 min_lines = 0
-% transformed to maxlen = 52
+% transformed to maxlen = 64
 \begin{minted}[mathescape, breaklines]{python}
-class MyFiniteSet(FiniteSet):
-  def __init__(self, elements: Collection[Element]):
+from typing import Collection, Iterator
+
+import act4e_interfaces as I
+
+class MyFiniteSet(I.FiniteSet):
+
+  def __init__(self, elements: Collection[I.Element]):
     self._elements = list(elements)  # new list
 
   def size(self) -> int:
     return len(self._elements)
 
-  def contains(self, x: Element) -> bool:
+  def contains(self, x: I.Element) -> bool:
     for y in self._elements:
       if self.equal(x, y):
         return True
     return False
 
-  def elements(self) -> Iterator[Element]:
+  def elements(self) -> Iterator[I.Element]:
     # return a copy of our list
     for _ in self._elements:
       yield _
+
+  def save(self, h: I.IOHelper, x: I.Element) -> I.ConcreteRepr:
+    return x
+
+  def load(self, h: I.IOHelper, o: I.ConcreteRepr) -> I.Element:
+    return o
 \end{minted}
