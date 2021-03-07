@@ -15,7 +15,7 @@ Pages = $(patsubst %.texi,%-page.tex,$(Sources))
 
 
 
-all: $(PDFGraphics)
+all: $(PDFGraphics)  $(Pages)
 
 pages: $(Pages)
 
@@ -34,8 +34,9 @@ defs: $(PDFGraphics_defs)
 	$(PDFCROP) --margins 2 $< $*.tmp.pdf
 
 	cpdf $*.tmp.pdf -scale-page "3.2 3.2" -o  $*.tmp2.pdf
-	mv  $*.tmp2.pdf $@
-	rm -f  $*.tmp.pdf
+	cpdf -set-metadata-date 2010-01-01 $*.tmp2.pdf -o $*.tmp3.pdf
+	mv  $*.tmp3.pdf $@
+	rm -f  $*.tmp*.pdf
 #$(PDFCROP) --margins 10 $< $*.tmp.pdf
 #cpdf $*.tmp.pdf -scale-page "2.0 2.0" -o $@
 
