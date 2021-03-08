@@ -79,9 +79,13 @@
          \end{equation}
 \end{forslides}}
 
+When the underlying set of a semigroup~$\tup{\sgrpA, \mtimes}$ is a finite set, one way to specify the multiplication~$\mtimes$ is simply by writing out what it does with each pair of elements of~$\sgrpA$.
+Since~$\mtimes$ is a function of two variables, this can be conveniently displayed as a table, called a \emph{multiplication table}.
+
+
 \begin{example}[Booleans]
   \label{ex:bool_semigroup}
-  Consider the set~$B=\{\false, \true\}$, and~$\tup{B,\wedge}$, where the operation~$\wedge$ is defined as:
+  Consider the set~$B=\{\false, \true\}$, and~$\tup{B,\wedge}$, where the operation~$\wedge$ is defined via the multiplication table:
   \begin{center}
     \begin{tabular}{c|cc}
       $\wedge$ & $\false$ & $\true$  \\
@@ -166,13 +170,6 @@
   \todotext{Write solution of \cref{ex:alphabet}.}
 \end{solution}
 
-When the underlying set of a semigroup~$\tup{\sgrpA, \mtimes}$ is a finite set, one way to specify the multiplication~$\mtimes$ is simply by writing out what it does with each pair of elements of~$\sgrpA$.
-Since~$\mtimes$ is a function of two variables, this can be conveniently displayed as a table, called a \emph{multiplication table}.
-
-\todotext{JL: write out (and include graphic) of a simple multiplication table as an example}
-
-
-
 
 \begin{example}
   \label{max-semigroup}
@@ -232,7 +229,6 @@ Since~$\mtimes$ is a function of two variables, this can be conveniently display
   \end{equation}
   If~$\mat{x}$ has dimension~$n\geq1$,~$u$ dimension~$m\geq1$ and~$\mat{y}$ dimension~$p\geq1$, then~$\mat{A}$ has dimension~$n \times n$,~$\mat{B}$ has dimension~$n \times m$, and~$\mat{C}$ has dimension~$p \times n$.
 \end{definition}
-\JL{The choice of notation here seems confusing. Why not take e.g. ``p'' and ``q'' as the dimensions of the input and output spaces, respectively? ``m'' and ``n'' go together in the alphabet, but not conceptually in this example, it seems.}
 
 \begin{marginfigure}
   \begin{center}
@@ -251,7 +247,7 @@ Let's consider the first system~$d_1$:
   \label{eq:dlin-1}
   \begin{aligned}
     \mat{x}_{k+1} &= \mat{A} \mat{x}_k + \mat{B} u_k \\
-    \mat{y}_{k}   &= \mat{C} \mat{x}_k  \\
+    \mat{y}_{k}   &= \mat{C} \mat{x}_k
   \end{aligned}
 \end{equation*}
 and the second system (which has~$\mat{y}$ as input)~$d_2$:
@@ -259,7 +255,7 @@ and the second system (which has~$\mat{y}$ as input)~$d_2$:
   \label{eq:dlin-2}
   \begin{aligned}
     \mat{z}_{k+1} &= \mat{E} \mat{z}_k + \mat{F} \mat{y}_k \\
-    \mat{v}_{k}   &= \mat{G} \mat{z}_k  \\
+    \mat{v}_{k}   &= \mat{G} \mat{z}_k
   \end{aligned}
 \end{equation*}
 We can write their composition~$d_1\then d_2$ compactly as a discrete linear system with input~$\mat{u}$ and output~$\mat{v}$:
@@ -279,11 +275,10 @@ We can write their composition~$d_1\then d_2$ compactly as a discrete linear sys
     \begin{bmatrix}
       \mat{B}\\ 0
     \end{bmatrix}\mat{u}_k\\
-    \mat{v}_k&=\mat{G}\mat{z}_k
+    \mat{v}_k&=\begin{bmatrix} 0&\mat{G}\end{bmatrix} \begin{bmatrix} \mat{x}_k \\ \mat{z}_k\end{bmatrix}
   \end{aligned}
 \end{equation*}
 
-\JL{I think we want to take $[0 \ G]$ in the above, not just $G$. Similarly in the calculation below.}
 
 \begin{figure}[h]
   \centering
@@ -301,7 +296,7 @@ We now want to show that the composition of discrete linear systems is associati
   \label{eq:dlin-4}
   \begin{aligned}
     \mat{s}_{k+1} &= \mat{H} \mat{s}_k + \mat{I} \mat{v}_k \\
-    \mat{w}_{k}   &= \mat{J} \mat{s}_k  \\
+    \mat{w}_{k}   &= \mat{J} \mat{s}_k
   \end{aligned}
 \end{equation*}
 
@@ -324,7 +319,7 @@ We now want to show that~$(d_1\then d_2)\then d_3=d_1\then (d_2\then d_2)$. Proc
     \begin{bmatrix}
       \mat{B}\\ 0\\ 0
     \end{bmatrix}\mat{u}_k\\
-    \mat{w}_k&=\mat{J}\mat{z}_k.
+    \mat{w}_k&=\begin{bmatrix} 0&0&\mat{J}\end{bmatrix}\begin{bmatrix}\mat{x}_k\\ \mat{z}_k\\ \mat{s}_k\end{bmatrix}
   \end{aligned}
 \end{equation*}
 We now want to write the composition~$d_1\then (d_2\then d_3)$. To do so, we start by writing~$(d_2\then d_3)$ as:
@@ -344,7 +339,7 @@ We now want to write the composition~$d_1\then (d_2\then d_3)$. To do so, we sta
     \begin{bmatrix}
       \mat{F}\\ 0
     \end{bmatrix}\mat{y}_k\\
-    \mat{w}_k&=\mat{J}\mat{s}_k.
+    \mat{w}_k&=\begin{bmatrix}0&\mat{J}\end{bmatrix}\begin{bmatrix}\mat{z}_k\\ \mat{s}_k\end{bmatrix}
   \end{aligned}
 \end{equation*}
 From this we can write~$d_1\then (d_2\then d_3)$ as:
@@ -366,7 +361,7 @@ From this we can write~$d_1\then (d_2\then d_3)$ as:
     \begin{bmatrix}
       \mat{B}\\ 0\\ 0
     \end{bmatrix}\mat{u}_k\\
-    \mat{w}_k&=\mat{J}\mat{z}_k,
+    \mat{w}_k&=\begin{bmatrix} 0&0&\mat{J}\end{bmatrix}\begin{bmatrix}\mat{x}_k\\ \mat{z}_k\\ \mat{s}_k\end{bmatrix},
   \end{aligned}
 \end{equation*}
 showing associativity.
