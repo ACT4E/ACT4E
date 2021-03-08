@@ -17,11 +17,7 @@ tmpdir=tmp
 ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 
 ACT%.pdf: ACT%.tex .FORCE
-	#rm -f $*.aux
-	latexmk -synctex=1 -pdflatex -shell-escape  -f $<
-	# latexmk does not seem to do this, even though we put in latexmkrc
-	# makeindex $*.nlo -s nomencl.ist -o $*.nls
-	#pdflatex --shell-escape -synctex=1 -shell-escape $*
+	latexmk -synctex=1 -pdflatex -shell-escape  -f $< 
 	cp ACT$*.aux ACT$*-refs.aux
 
 clean:
