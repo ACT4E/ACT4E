@@ -17,8 +17,11 @@ tmpdir=tmp
 ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 
 ACT%.pdf: ACT%.tex .FORCE
-	latexmk -synctex=1 -pdflatex -shell-escape  -f $< 
+	latexmk -synctex=1 -pdflatex -shell-escape  -f $<
 	cp ACT$*.aux ACT$*-refs.aux
+
+%.pdf: %.tex .FORCE
+	latexmk -synctex=1 -pdflatex -shell-escape  -f $<
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw
@@ -111,7 +114,8 @@ generated/used-%.yaml: .FORCE
 
 nomenc-%.tex: generated/used-%.yaml utils/symbols*.tex
 	lsm_nomenc  --only $< utils/symbols*.tex > $@
-	# lsm_nomenc  utils/symbols*.tex > $@
+
+# lsm_nomenc  utils/symbols*.tex > $@
 
 $(nomencvol1): generated/used-vol1.yaml utils/symbols*.tex
 	lsm_nomenc  --only $< utils/symbols*.tex > $@
@@ -127,10 +131,9 @@ table: $(tablefile)
 
 $(tablefile): utils/symbols*.tex .FORCE
 	$(MAKE) generated/used.yaml -B
-	#lsm_table --only used.yaml --style full $^ > $@
 	lsm_table --only generated/used.yaml --style medium $< > $@
-	#lsm_table --only used.yaml --style small $^ > $@
-
+#lsm_table --only used.yaml --style full $^ > $@
+#lsm_table --only used.yaml --style small $^ > $@
 
 used-%.yaml:
 	@lsm_collect $(shell find volumes/$* -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
@@ -152,7 +155,7 @@ find-equations:
 	lsm_equations --search volumes/vol1 --output equations/vol1
 
 compile-equations:
-	make -C equations -j -k 
+	make -C equations -j -k
 #	rm -rf  equations/vol1/20_orders
 #	rm -rf  equations/vol1/22_operations
 #	rm -rf  equations/vol1/25_translation
