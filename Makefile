@@ -164,24 +164,25 @@ compile-equations:
 .FORCE:
 .PHONY: .FORCE
 
-
-
+tag=reg-stage.zuper.ai/act4e/act4e-build:z7
+pull: 
+	docker pull $(tag)
 magic:
 	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		reg-stage.zuper.ai/act4e/act4e-build:z7 \
+		$(tag) \
 		make nomenc table find-equations
 
 ultramagic:
 	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		reg-stage.zuper.ai/act4e/act4e-build:z7 \
+		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make remake'
 
 shell:
 	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		reg-stage.zuper.ai/act4e/act4e-build:z7 \
+		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: bash'
 
 docker-%:
 	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		reg-stage.zuper.ai/act4e/act4e-build:z7 \
+		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make *'
