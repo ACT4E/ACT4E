@@ -17,11 +17,11 @@ tmpdir=tmp
 ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 
 ACT%.pdf: ACT%.tex .FORCE
-	latexmk -synctex=1 -pdflatex -shell-escape  -f $<
+	nice -n 20 latexmk -synctex=1 -pdflatex -shell-escape  -f $<
 	cp ACT$*.aux ACT$*-refs.aux
 
 %.pdf: %.tex .FORCE
-	latexmk -synctex=1 -pdflatex -shell-escape  -f $<
+	nice -n 20 latexmk -synctex=1 -pdflatex -shell-escape  -f $<
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw
