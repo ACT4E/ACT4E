@@ -200,7 +200,8 @@
   \ifthenelse{\boolean{cachepdf}}{%
     \IfFileExists{\pdffile}{%
       \includegraphics[scale=1]{\pdffile}
-    }{{{\bfseries \color{red}could not find \pdffile}} \input{\srcfile}}
+%    }{{\blfootnote{\bfseries \color{red}could not find \pdffile}} \input{\srcfile}}
+    }{\input{\srcfile}}
   }{%
     \input{\srcfile}%
   }%
@@ -374,13 +375,18 @@
 \end{tikzpicture}
 }
 }
+%
+%\newcommand{\figplug}[1]{\subfloat[Type~#1. \label{fig:Type#1}]{%
+%  \begin{tikzpicture}
+%  \node at (0,0){
+%    \includegraphics[height=1cm]{plugs/#1-button}};
+%  \end{tikzpicture}
+%}}
 
-\newcommand{\figplug}[1]{\subfloat[Type~#1. \label{fig:Type#1}]{%
-  \begin{tikzpicture}
-  \node at (0,0){
-    \includegraphics[height=2cm]{plugs/#1-button}};
-  \end{tikzpicture}
-}}
+\newcommand{\figplug}[1]{
+ #1~\includegraphics[height=2cm,angle=-90,origin=c]{plugs/#1-button}
+}
+
 
 \newcommand{\cordG}[1]{%
   \raisebox{-2.6pt}{\includegraphics[width=4mm]{socket}}%
@@ -389,7 +395,7 @@
   \hspace{-1.3mm}\raisebox{-2.2pt}{\includegraphics[width=4mm]{plug}}}
 %:nomenc:\cordG{\ell}: A cord of length $\ell$
 
- \newcommand{\cord}[3]{
+\newcommand{\cord}[3]{
  \begin{tikzpicture}
  \node (flaga) at (0,0) {#1};
  \node[right=0.02cm of flaga] (sock) {\includegraphics[width=4mm]{socket}};
@@ -399,7 +405,7 @@
  \draw ($(lab.east)+(-0.075,0)$) --  ($(plug.west)+(0.125,0)$) {};
  \node[right=0.02cm of plug] {#3};
  \end{tikzpicture}
- }
+}
 
 %:nomenc:\TypeIrish}{c}{\TypeSwiss}: A cord with different types.
 
@@ -479,3 +485,8 @@
 \definecolor{cred}{rgb}{1.0,0.1,0.1}
 
 \definecolor{cwhite}{rgb}{0.95,0.95,0.97}
+
+
+\newcommand{\legob}[1]{%
+\adjustbox{scale=0.6}{\includesag{intro-lego-#1}}%
+}
