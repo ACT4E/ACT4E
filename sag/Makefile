@@ -14,13 +14,15 @@ TikFiles = $(wildcard *.tikz)
 # StandAloneGraphicsTeXFiles = $(patsubst %.tikz,%.tex,$(TikFiles))
 
 PDFGraphics = $(patsubst %.tikz,%.pdf,$(TikFiles))
-
+Pages = $(patsubst %.tikz,%-page.tex,$(TikFiles))
 # InputTeXFiles = $(wildcard *_input.tex)
 
-all: $(PDFGraphics)
 
+all: $(PDFGraphics) $(Pages)
 
-%.pdf : %.tex  ../utils/*.tex
+pages:  $(Pages)
+
+%.pdf : %.tex   
 	$(PDFLATEX) $<
 	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc*
 
