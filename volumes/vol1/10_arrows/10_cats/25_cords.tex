@@ -1,13 +1,79 @@
 
-\section{Extension cords}
+\section{Interfaces}
 
-We talked about ropes
+One way to understand categories is to see them as generalization of monoids. 
+In semigroups, monoids, groups, we could take any two elements and compose them: the elements always had a ``compatible'' interface. 
+
+To motivate the need for interfaces, consider the ropes of \cref{ch:putting-things-together},
+which had this composition rule:
 
 \begin{equation*}
 \prftree{\rope{ropecola}{ropecolb}{2}{0}{0}{1}{$a$}}
 {\rope{ropecola}{ropecolb}{2}{0}{0}{1}{$b$}}
 {\rope{ropecola}{ropecolb}{4}{0}{0}{1}{$a+b$}}
 \end{equation*}
+
+Two chapters later, it is easy to see that we were describing the monoid $\tup{\nonNegReals, +, 0}$.
+Being a monoid, all pieces of rope are compatible and can be composed.
+
+The first step towards discussing interfaces is to think of things that have a direction. 
+For example, consider extension cords. Let~$\cordG{c}$ be an extension cord of length~$c$.
+If you have an extension cord of length~$c$ and another of length~$d$, you can plug them together to get an extension cord of length~$c+d$.
+% 
+\begin{equation}
+  \label{eq:cords}
+  \prftree{\cordG{c}}{\cordG{d}}{\cordG{c+d}}
+\end{equation}
+% 
+In this form, this is still the same monoid. 
+
+But suppose now that, reading this book, you fall in love with Switzerland and want to visit. 
+As you start to plan your trip, at some point you need to think about electrical adapters.
+
+As you read this book and start to plan to visit Switzerland, at some point you need to buy some adapters. 
+Switzerland uses the connector of type~N (\cref{fig:plugs}).
+If you come from Ireland, your appliances use type~G.
+
+Now we when think of extension cords, we might allow either end to have a plug type. 
+% 
+These would be Irish and Swiss  extension cords of length $\ell$:
+% 
+\begin{equation}
+  \cord{\TypeIrish}{\ell}{\TypeIrish} \qquad \cord{\TypeSwiss}{\ell}{\TypeSwiss}
+\end{equation}
+% 
+You might want a cord that has a Swiss male end and an Irish female end:
+% 
+\begin{equation}\label{eq:want}
+  \cord{\TypeIrish}{\ell}{\TypeSwiss}
+\end{equation}
+% 
+Unfortunately these devices don't exit. 
+What you can buy are adapters, which we can think of extension cord of length zeros:
+\begin{equation}
+  \cord{\TypeIrish}{0}{\TypeSwiss}
+\end{equation}
+% 
+If you have an adapter, then you can attach an extension cord to it to obtain~\cref{eq:want}:
+% 
+\begin{equation}
+  \label{eq:irish-swiss-result}
+  \prftree{\cord{\TypeIrish}{\ell}{\TypeIrish}}{\cord{\TypeIrish}{0}{\TypeSwiss}}{\cord{\TypeIrish}{c}{\TypeSwiss}}
+\end{equation}
+
+The general formula to compose cords with generic types $\Obja, \Objb, \Objc$ is 
+\begin{equation}
+  \label{eq:cords-generic}
+  \prftree{\cord{\Obja}{a}{\Objb}}{\cord{\Objb}{b}{\Objc}}{\cord{\Obja}{a+b}{\Objc}}
+\end{equation}
+
+This kind of composition of things that have an input and an output interfaces, like cords, can be modeled by the notions of semicategory and category.
+
+
+
+
+% 
+
 %
 %
 %\begin{figure}
@@ -23,6 +89,7 @@ We talked about ropes
 
 
 \begin{marginfigure}
+  \centering
 \figplug{A}
 
 \figplug{B}
@@ -50,36 +117,9 @@ We talked about ropes
   \label{fig:plugs}
 \end{marginfigure}
 
-Let~$\cordG{c}$ be an extension cord of length~$c$.
-
-If you have an extension cord of length~$c$ and another of length~$d$, you can plug them together to get an extension cord of length~$c+d$.
-
-\begin{equation}
-  \label{eq:cords}
-  \prftree{\cordG{c}}{\cordG{d}}{\cordG{c+d}}
-\end{equation}
-
-The rule for extension cords is similar to the rule for Lego blocks.
-%
-%\begin{equation}
-%  \frac{\text{extension cord of length }\ c \qquad \text{extension cord of length }\ d }{%
-%    \text{extension cord of length }\ (c+d)%
-%  }
-%\end{equation}
-
-
-Extension cords are a bit more general: Lego blocks are constrainted to have a height that is a multiple of~$1/3$ of brick,  but extension cords can have any continuous value as length.
-
-On the other hand, Lego blocks also have this other property of the horizontal section~$a \times b$.
-We only gave rules for the connection of blocks of the same horizontal section.
-What would be the equivalent for extension cords?
-
-
-As you read this book and start to plan to visit Switzerland, at some point you need to buy some adapters.
-Switzerland uses the connector of type~N (\cref{fig:TypeN}).
-If you come from Ireland, your appliances use type~G (\cref{fig:TypeG}).
-
-\begin{equation}
-  \label{eq:irish-swiss}
-  \prftree{\cord{\TypeIrish}{c}{\TypeIrish}}{\cord{\TypeIrish}{0}{\TypeSwiss}}{\cord{\TypeIrish}{c}{\TypeSwiss}}
-\end{equation}
+ 
+ 
+% \begin{equation}
+%   \label{eq:irish-swiss}
+%   \prftree{\cord{\TypeIrish}{c}{\TypeIrish}}{\cord{\TypeIrish}{0}{\TypeSwiss}}{\cord{\TypeIrish}{c}{\TypeSwiss}}
+% \end{equation}
