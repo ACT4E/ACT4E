@@ -316,6 +316,24 @@
   }
 }
 
+\newcommand{\brickcustomtr}[7]{%
+
+  \setlength{\brickmultipliedx}{#1\brickwidth}
+  \setlength{\brickmultipliedy}{#2\brickwidth}
+  \filldraw[fill=none,draw=none,thick, rounded corners=0] \startposcustom{#4}{#5}{#6}{#7\brickheight} -- ++(7:\brickmultipliedx) -- ++(0mm,#7\brickheight) -- ++(138:0.5\brickmultipliedy) -- ++(187:\brickmultipliedx) -- ++(0mm,-#7\brickheight) -- cycle;
+  \draw[draw=none,thick, rounded corners=0] \startposcustom{#4}{#5}{#6}{#7\brickheight} -- ++(0mm,#7\brickheight) -- ++(138:0.5\brickmultipliedy);
+  \draw[draw=none,thick,rounded corners=0] \startposplusheightcustom{#4}{#5}{#6}{#7\brickheight} -- ++(7:\brickmultipliedx);
+  \pgfmathsetmacro\weight{1/#7}
+  \foreach \i in {1,...,#1} {
+    \foreach \j in {1,...,#2} {
+%
+%      \pincustom{\pinposonecustom{#4+0.05*\weight}{#5+0.15*\weight}{#6}{\i}{\j}{#7\brickheight}}{\pinpostwocustom{#4+0.05*\weight}{#5+0.15*\weight}{#6}{\i}{\j}{#7\brickheight}}{#3}{#7\brickheight}
+%
+      \pincustomtr{\pinposonecustom{#4+0.075*\weight}{#5+0.4+0.2*\weight}{#6}{\i}{\j}{#7\brickheight}}{\pinpostwocustom{#4+0.075*\weight}{#5+0.2*\weight}{#6}{\i}{\j}{#7\brickheight}}{#3}{#7\brickheight}
+    }
+  }
+}
+
 \newcommand{\pin}[3]{%
   \filldraw[fill=#3,draw=black,thick] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1\brickheight) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
   \filldraw[fill=#3,draw=black,thick] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
@@ -324,6 +342,11 @@
 \newcommand{\pincustom}[4]{%
   \filldraw[fill=#3,draw=black,thick, rounded corners=0] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1*#4) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
   \filldraw[fill=#3,draw=black,thick, rounded corners=0] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
+}
+
+\newcommand{\pincustomtr}[4]{%
+  \filldraw[fill=none,draw=none,thick, rounded corners=0] #1 -- ++(0mm,-1.6\brickdiaheight) .. controls +(\brickdia,-0.1*#4) .. ++(2\brickdia,0mm) -- ++(0mm,1.6\brickdiaheight) -- cycle;
+  \filldraw[fill=none, draw=none,thick, rounded corners=0] #2 ellipse[x radius=\brickdia, y radius=\brickdiaheight];
 }
 
 
@@ -418,6 +441,12 @@
 \newcommand{\dashedbox}[1]{
 \begin{tikzpicture}
 \draw[#1, ultra thick,dashed, rounded corners=0] (-0.25,-0.25) rectangle (0.5,0.5){};
+\end{tikzpicture}
+}
+
+\newcommand{\dashedboxinv}[2]{
+\begin{tikzpicture}
+\draw[white, text=#2, ultra thick,dashed, rounded corners=0] (-0.25,-0.25) rectangle (0.5,0.5) node[pos=0.5, text=#2]{\textcolor{#2}{#1}};
 \end{tikzpicture}
 }
 
