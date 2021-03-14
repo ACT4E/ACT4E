@@ -1,0 +1,155 @@
+% !TEX root = chapter-standalone.tex
+
+
+%\todotext{\cref{plant-trafo-semigroup} is an option for introducing the notion of action, or just as an example}
+%
+%\todotext{Make example of dynamical systems acting on sequences.}
+
+%\todotext{Mention group actions and give some simple examples, e.g. in terms of symmetries}
+
+\section{Actions}
+
+There are actually 2 versions for actions: a left and a right version, depending on the order of the transformations.
+
+
+\begin{ctdefinition}[Semigroup left action (preliminary version)]\label{def:semigroup-left-action-prelim}
+  A \emph{semigroup \textbf{left} action} of a semigroup $\sgrpA$ onto a set $\setA$ is a map
+  \begin{equation}\label{eq:lact}
+    \lact \colon \sgrpAset \cartprod \setA \to \setA
+  \end{equation}
+  such that
+  \begin{equation}\label{eq:lact1cond}
+    \lact(\monela, \lact(\monelb, a)) = \lact(\monela \mthen_\sgrpA \monelb, a).
+  \end{equation}
+\end{ctdefinition}
+
+
+\begin{ctdefinition}[Semigroup right action (preliminary version)]\label{def:semigroup-right-action-prelim}
+  A \emph{semigroup \textbf{right} action} of a semigroup $\sgrpA$ onto a set $\setA$ is a map
+  \begin{equation}\label{eq:ract}
+    \ract \colon \setA \cartprod \sgrpAset \to \setA
+  \end{equation}
+  such that
+  \begin{equation}\label{eq:ract1cond}
+    \ract(\ract(a, \monela), \monelb) = \ract(a, \monela \mthen_\sgrpA \monelb).
+  \end{equation}
+\end{ctdefinition}
+
+
+This definition is the standard algebraic definition.
+We will compress it a bit using the language of category theory.
+
+\begin{marginfigure}
+  \caption{Haskell Curry (X--X)}
+  \label{fig:haskell-curry}
+Haskell Curry
+\end{marginfigure}
+
+We need to introduce Dr.~Haskell Curry (\cref{fig:haskell-curry}).
+His first name,  Haskell, named the language.
+His last name, Curry, named the operation of \emph{currying} that we are going to need.
+
+Curry noticed that for describing the domain of a function, we do not need to have the Cartesian product.
+If we have a function
+\begin{equation}
+f \colon \setA \cartprod \setB \to \setC
+\end{equation}
+we can rewrite it as a function of higher type
+\begin{equation}
+f \colon \setA \to ( \setB \to \setC).
+\end{equation}
+If you feel like a cool computer scientist, you can also drop the parenthesis and write
+\begin{equation}
+f \colon \setA \to \setB \to \setC,
+\end{equation}
+because the expression is not ambiguous, as~$\to$ associates from the left.
+
+
+
+This specifies $f$ as a function that, given a~$\setA$, provides a function that, given a $\setB$,
+provides a $\setC$; this is the same as a function that needs the two arguments~$\setA$ and $\setB$ before giving the~$\setC$.  To describe the isomorphism we can write it as
+\begin{equation}
+  \setA \to ( \setB \to \setC) \simeq  \setA \cartprod \setB \to \setC,
+\end{equation}
+or, more precisely, highlighting that these are morphism arrows in~\Set, we have
+\begin{equation}
+  \HomSet\Set\setA{\HomSet\Set\setB\setC} \simeq \HomSet\Set{\setA \cartprod \setB}\setC.
+\end{equation}
+Keep this in mind, it will show up later.
+
+Now armed with currying, we can take a second look at~\cref{eq:lact} and realize that we can rewrite
+\begin{equation}
+\lact \colon \sgrpAset \cartprod \setA \to \setA
+\end{equation}
+as
+\begin{equation}
+  \lact \colon \sgrpAset \to (\setA \to \setA).
+\end{equation}
+We gave a name to functions of type~$\setA \to \setA$: these are the endomorphisms of $\setA$, written as~$\Endof\setA$.
+Thus, we rewrite this as
+\begin{equation}\label{eq:act-to-endo}
+  \lact \colon \sgrpAset \to \Endof\setA.
+\end{equation}
+Now we take a second look at \cref{eq:lact1cond}
+\begin{equation}
+  \lact(\monela, \lact(\monelb, a)) = \lact(\monela \mthen_\sgrpA \monelb, a).
+\end{equation}
+If we rewrite it as an equality of functions, we obtain
+\begin{equation} \label{eq:act-to-endo-properties}
+  \lact(\monela) \then_{\Endof\setA}  \lact(\monelb) =_{\Endof\setA} \lact(\monela \mthen_\sgrpA \monelb).
+\end{equation}
+
+Looking at \cref{eq:act-to-endo,eq:act-to-endo-properties} we recognize that together
+they indicated that~$\lact$ is a semigroup morphism~(\cref{def:semigroup-morphism}). This brings us to a more compact description of what is a semigroup action.
+
+\begin{ctdefinition}[Semigroup left action]\label{def:semigroup-left-action}
+  A \emph{semigroup \textbf{left} action} of a semigroup~$\sgrpA$ onto a set~$\setA$ is a semigroup morphism
+  \begin{equation}\label{eq:act-semigroup}
+    \lact \colon \sgrpA \fto \Endof\setA.
+  \end{equation}
+\end{ctdefinition}
+
+As it turns out, what could look like a new notion, is actually a special case of a general notion we already encountered.
+
+For completeness, we also define monoid action.
+
+\begin{ctdefinition}[Monoid left action]\label{def:monoid-left-action}
+  A \emph{monoid \textbf{left} action} of a monoid~$\monoidA$ onto a set~$\setA$ is a monoid morphism
+  \begin{equation}\label{eq:act-monoid}
+    \lact \colon \monoidA \fto \Endof\setA.
+  \end{equation}
+\end{ctdefinition}
+
+The neutral element of the monoid~$\Endof\setA$ is the identity function~$\mapid_{\setA}$.
+Thus, a monoid action must map the neutral element of~$\monoidA$ to~$\mapid_{\setA}$.
+%
+%We could also say:
+%\begin{quote}\itshape
+%A monoid action is a monoid of endomorphisms.
+%\end{quote}
+
+
+For defining a group left action, we must introduce a slight variation.
+The endomorphisms~$\Endof\setA$ are not a group, because they also contain non-invertible maps.
+
+We need to reference the \emph{automorphisms}~$\Autof\setA$, which is a group.
+
+\begin{ctdefinition}[Group left action]\label{def:group-left-action}
+  A \emph{group \textbf{left} action} of a group~$\grpA$ onto a set~$\setA$ is a group morphism
+  \begin{equation}\label{eq:act-group}
+    \lact \colon \grpA \fto \Autof\setA.
+  \end{equation}
+\end{ctdefinition}
+
+
+Regarding the right version of these definitions, it is easy to see that a right semigroup action is a left action of the opposite semigroup.
+
+
+\begin{ctdefinition}[Semigroup right action]\label{def:semigroup-right-action}
+  A \emph{semigroup \textbf{right} action} of a semigroup~$\sgrpA$ onto a set~$\setA$ is a semigroup morphism
+  \begin{equation}
+    \ract \colon \sgrpA^{\op} \fto \Endof\setA.
+  \end{equation}
+\end{ctdefinition}
+
+\todotext{Usual exercises}
