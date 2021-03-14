@@ -262,6 +262,7 @@ Let's check the condition for it being a morphism (\cref{XXX}):
 
 \begin{table*}[b]
   \caption{Some types of signals and processes}
+  \label{tab:processes-types}
   \begin{tabular}{rccc}
   & \multicolumn{2}{c}{\textbf{Signals}} & \textbf{Processes} \\
   &\rule{0pt}{10pt} one-sided & two-sided &   \\
@@ -291,7 +292,7 @@ Let's check the condition for it being a morphism (\cref{XXX}):
   
   \end{minipage}
   \\
-  event-based& $\seqsof{(\natnumbers \cartprod \prgen)}$&
+  event-based (\tmpEB) & $\seqsof{(\natnumbers \cartprod \prgen)}$&
    $\streamsof{(\natnumbers \cartprod \prgen)}$&
   \begin{minipage}{4cm}\raggedright
   \begin{equation*}
@@ -301,7 +302,7 @@ Let's check the condition for it being a morphism (\cref{XXX}):
   \end{cases}
   \end{equation*}
   \end{minipage}\\
-  continuous& $\nonNegReals \sto \prgen$ & $\reals \sto \prgen$ &
+  continuous  (\tmpDS) & $\nonNegReals \sto \prgen$ & $\reals \sto \prgen$ &
   \begin{minipage}{4cm}\raggedright
   \begin{equation*}
   \begin{cases}
@@ -354,8 +355,64 @@ Continuous-time dynamical systems would be described as
 \end{cases}
 \end{equation}
 % 
-One should put more conditions on the objects - typically, that they are manifolds, and more constraints about the dynamics for the trajectories to exist.
+One should put more conditions on the objects--typically, that they are manifolds, and more constraints about the dynamics for the trajectories to exist.
 
 
 
+\section{Action of a category}
+
+Now it is time to generalize from actions of a semigroup to action of a semicategory. 
+
+Let $\CatC$ a general process category, as in \cref{tab:processes-types}.
+
+We want a process in $\HomSet\CatC\Obja\Objb$ to induce a map between signals. 
+
+Note that each process type has a different signal types. 
+
+For example, a Moore machine in $\HomSet\Moore\Obja\Objb$ will map the set $\natnumbers \to \Obja$ to the set $\natnumbers \to \Objb$. 
+A More machine in  $\HomSet\More\Obja\Objb$  will map the set  $\seqsof \Obja$ to the set $\seqsof \Objb$. 
+An event based machine will map the set  $\seqsof{\natnumbers \cartprod \Obja}$ to the set $\seqsof{\natnumbers \cartprod \Objb}$.
+
+To look at this generically, we need to consider a map $\varphi$ that maps the base set $\Obja$ to the actual set $\varphi(\Obja)$. For example:
+\begin{equation}
+  \definemap{\varphi_{\Moore}}{\Set}{\Set}{\Obja}{(\natnumbers \to \Obja)}
+\end{equation}
+\begin{equation}
+\definemap{\varphi_{\More}}{\Set}{\Set}{\Obja}{\seqsof \Obja}
+\end{equation}
+\begin{equation}
+\definemap{\varphi_{\tmpEB}}{\Set}{\Set}{\Obja}{\seqsof{\natnumbers \cartprod \Obja}}
+\end{equation}
+\begin{equation}
+\definemap{\varphi_{\tmpDS}}{\Set}{\Set}{\Obja}{(\nonNegReals \to \Obja)}
+\end{equation}
+Note for the last one we need to define manifolds.
+
+
+Then we need another map $\gamma$ that given a process in $\HomSet\CatC\Obja\Objb$ 
+produces a map from $\varphi(\Obja)$ to $\varphi(\Objb)$.
+% 
+\begin{equation}
+  \gamma: \HomSet\CatC\Obja\Objb \to  (\varphi(\Obja) \sto \varphi(\Objb))
+\end{equation}
+% 
+Interpreting the arrows as morphisms in sets, we can say:
+\begin{equation}
+  \gamma: \HomSet\CatC\Obja\Objb \to  \HomSet\Set{\varphi(\Obja)}{\varphi(\Objb) }
+\end{equation}
+
+\begin{ctdefinition}[Semi-category action]
+  A semi-category action of a semi-category $\CatC$ is defined by 
+  \begin{itemize}
+    \item a map $\varphi$ that associates from each object $\Obja \in \ObC$, a set $\varphi(\Obja)$;
+    \item a map $\gamma$ that associates to each morphism a function:
+    \begin{equation}
+      \gamma: \HomSet\CatC\Obja\Objb \to  \HomSet\Set{\varphi(\Obja)}{\varphi(\Objb) }
+    \end{equation}
+  \end{itemize}
+  Moreover, this condition need hold:
+  \begin{equation}
+    \gamma(\mora\then\morb) = \gamma(\mora) \mthen \gamma(\morb)
+  \end{equation}
+\end{ctdefinition}
 
