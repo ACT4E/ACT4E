@@ -1,13 +1,13 @@
 % !TEX root = chapter-standalone.tex
 
-\section{\statusdraft{Modeling processes}}
+\section{Moore machines}
 
 We now look at processes, especially dynamical systems, and see them as categories that act on sequences.
 
 We have already seen linear discrete time systems.
 
 We can generalize by allowing non-linear functions, so to have
-the definition as follows. We call these \Moore machines.
+the definition as follows. We call these \textbf{Moore} machines.
 
 \begin{equation}
     \begin{cases}
@@ -15,25 +15,27 @@ the definition as follows. We call these \Moore machines.
     \prreadout \colon \prst \sto \prout
     \end{cases}
 \end{equation}
+
+
 We also need to have an $x_0 \in \prst$ to act as the initial state.
 
 Suppose we have two morphisms
 \begin{equation}
-  \mora = \tupp{\prin_1,\prst_1,\prout_1,\prdyn_1,\prreadout_1,\prstart_1}
+  \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
 \end{equation}
 and
 \begin{equation}
-\morb = \tupp{\prin_2,\prst_2,\prout_2,\prdyn_2,\prreadout_2,\prstart_2},
+\morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
 \end{equation}
-such that $\prout_1 \subseteq \prin_2$. The composition of these two systems should have a joint state that is the product of the states.
+such that $\prout_{\mora} \subseteq \prin_{\morb}$. The composition of these two systems should have a joint state that is the product of the states.
 
 Here is one way to do it 
 
 \begin{equation}
   \begin{aligned}
-  \prin &= \prin_1   \\
-  \prst &= \prst_1 \cartprod \prst_2 \\
-  \prout &= \prout_2 \\
+  \prin &= \prin_{\mora}   \\
+  \prst &= \prst_{\mora} \cartprod \prst_{\morb} \\
+  \prout &= \prout_{\morb} \\
   \end{aligned}
 \end{equation}
 
@@ -41,13 +43,13 @@ Here is one way to do it
   \definemap{
     \prdyn
     }{
-      \prin_1 \times (\prst_1 \times \prst_2) 
+      \prin_{\mora} \times (\prst_{\mora} \times \prst_{\morb}) 
     }{
-      (\prst_1 \times \prst_2)
+      (\prst_{\mora} \times \prst_{\morb})
     }{
-      \tup{u, \tup{x_1, x_2}}
+      \tup{u, \tup{x_{\mora}, x_{\morb}}}
     }{
-    \tup{ \prdyn_1 (u, x_1), \prdyn_2(\prreadout_1(x_1), x_2)}
+    \tup{ \prdyn_{\mora} (u, x_{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}
     }
 \end{equation}
 
@@ -55,19 +57,19 @@ Here is one way to do it
   \definemap{
     \prreadout
     }{
-      (\prst_1 \times \prst_2) 
+      (\prst_{\mora} \times \prst_{\morb}) 
     }{
-      \prout_2
+      \prout_{\morb}
     }{
-      \tup{x_1, x_2}
+      \tup{x_{\mora}, x_{\morb}}
     }{
-      \prreadout_2(x_2)
+      \prreadout_{\morb}(x_{\morb})
     }
 \end{equation}
 
-However, if we define it using the Cartesian product $\prst_1 \cartprod \prst_2$, we cannot compose the systems in an associative way. When we have three systems, composing in the two ways would bring
-$(\prst_1 \cartprod \prst_2) \cartprod \prst_3$ and 
-$\prst_1 \cartprod (\prst_2 \cartprod \prst_3$, which are \emph{isomorphic} sets but not equal.
+However, if we define it using the Cartesian product $\prst_{\mora} \cartprod \prst_{\morb}$, we cannot compose the systems in an associative way. When we have three systems, composing in the two ways would bring
+$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and 
+$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}$, which are \emph{isomorphic} sets but not equal.
 Elements of these sets are of the form $\tup{\tup{a,b},c}$ and 
 $\tup{a, \tup{b,c}}$. You can clearly spot the isomorphism. 
 
@@ -76,15 +78,15 @@ We can avoid lengthy book-keeping by using a slightly different construction.
 Let's consider the monoid of sequences of sets.
 
 \begin{equation}
-\prst_1 \setconcat \prst_2 \setconcat \prst_3 \in \seqsof\Set
+\prst_{\mora} \setconcat \prst_{\morb} \setconcat \prst_{\morc} \in \seqsof\Set
 \end{equation}
 
 for which we have 
 
 \begin{equation}
-  (\prst_1 \setconcat \prst_2 )\setconcat \prst_3 =
-  \prst_1 \setconcat \prst_2 \setconcat \prst_3 =
-  \prst_1 \setconcat (\prst_2 \setconcat \prst_3)
+  (\prst_{\mora} \setconcat \prst_{\morb} )\setconcat \prst_{\morc} =
+  \prst_{\mora} \setconcat \prst_{\morb} \setconcat \prst_{\morc} =
+  \prst_{\mora} \setconcat (\prst_{\morb} \setconcat \prst_{\morc})
 \end{equation}
   
 and for elements 
@@ -114,9 +116,9 @@ Here is a different way to do it:
 
 \begin{equation}
   \begin{aligned}
-  \prin &= \prst_1   \\
-  \prst &= \prst_1 \setconcat \prst_2 \\
-  \prout &= \prout_2 \\
+  \prin &= \prst_{\mora}   \\
+  \prst &= \prst_{\mora} \setconcat \prst_{\morb} \\
+  \prout &= \prout_{\morb} \\
   \end{aligned}
 \end{equation}
 
@@ -124,13 +126,13 @@ Here is a different way to do it:
   \definemap{
     \prdyn
     }{
-      \prin_1 \times (\prst_1 \setconcat \prst_2) 
+      \prin_{\mora} \times (\prst_{\mora} \setconcat \prst_{\morb}) 
     }{
-      (\prst_1 \setconcat \prst_2)
+      (\prst_{\mora} \setconcat \prst_{\morb})
     }{
-      \tup{u, \tupcat{x_1}{x_2}}
+      \tup{u, \tupcat{x_{\mora}}{x_{\morb}}}
     }{
-      \tupcat{ \prdyn_1 (u, x_1)}{\prdyn_2(\prreadout_1(x_1), x_2)}
+      \tupcat{ \prdyn_{\mora} (u, x_{\mora})}{\prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}
     }
 \end{equation}
 
@@ -138,23 +140,81 @@ Here is a different way to do it:
   \definemap{
     \prreadout
     }{
-      (\prst_1 \setconcat \prst_2) 
+      (\prst_{\mora} \setconcat \prst_{\morb}) 
     }{
-      \prout_2
+      \prout_{\morb}
     }{
-      \tupcat{x_1}{x_2}
+      \tupcat{x_{\mora}}{x_{\morb}}
     }{
-      \prreadout_2(x_2)
+      \prreadout_{\morb}(x_{\morb})
     }
 \end{equation}
 
+
 With this definition we can define the semi-category $\Moore$ of Moore machines. 
+
+\begin{definition}[\Moore]
+  \label{def:Moore}
+  The \emph{semi-category of Moore machines} \Moore is given by:
+  \begin{enumerate}
+    \item \emph{Objects:} sets.
+    \item \emph{Morphisms:} A morphism is a tuple
+    \begin{equation}
+    \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
+    \end{equation}
+    where
+    \begin{itemize}
+      \item $\prin$, $\prst$, $\prout$ are sets;
+      \item $  \prdyn \colon \prin \to \Endof \prst$
+      \item $ \prreadout \colon \prst \sto \prout$
+  \end{itemize}
+    \item \emph{Composition of morphisms:} Given by 
+    \begin{equation}
+      \begin{aligned}
+      \prin_{\mora\mthen\morb} &= \prst_{\mora}   \\
+      \prst_{\mora\mthen\morb} &= \prst_{\mora} \setconcat \prst_{\morb} \\
+      \prout_{\mora\mthen\morb} &= \prout_{\morb} \\
+      \end{aligned}
+    \end{equation}
+    % 
+    \begin{equation}
+      \definemap{
+        \prdyn_{\mora\mthen\morb}
+        }{
+          \prin_{\mora} \times (\prst_{\mora} \setconcat \prst_{\morb}) 
+        }{
+          (\prst_{\mora} \setconcat \prst_{\morb})
+        }{
+          \tup{u, \tupcat{x_{\mora}}{x_{\morb}}}
+        }{
+          \tupcat{ \prdyn_{\mora} (u, x_{\mora})}{\prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}
+        }
+    \end{equation}
+    % 
+    \begin{equation}
+      \definemap{
+        \prreadout_{\mora\mthen\morb}
+        }{
+          (\prst_{\mora} \setconcat \prst_{\morb}) 
+        }{
+          \prout_{\morb}
+        }{
+          \tupcat{x_{\mora}}{x_{\morb}}
+        }{
+          \prreadout_{\morb}(x_{\morb})
+        }
+    \end{equation}
+    
+  \end{enumerate}
+\end{definition}
+
+\section{Action on sequences}
 
 Let's now look at how machines like the above acts on sequences. 
 
 For now we only have defined monoid actions. So let's take the set of machines systems with $\prin = \prout = \prgen$, which is the homset $\HomSet\Moore\prgen\prgen$.
 
-Given a finite input sequence $u \in \seqsof \prgen$, of length $n$, the output is an instantaneous transformation of the state:
+Given a finite input sequence $u: \natnumbers \to \prgen$ of length $n$, the output is an instantaneous transformation of the state:
 
 \begin{equation}
   \begin{aligned}
@@ -162,7 +222,7 @@ Given a finite input sequence $u \in \seqsof \prgen$, of length $n$, the output 
   y_1 &= \prreadout(x_1) \\ 
   y_2 &= \prreadout(x_2) \\ 
   ... &= ...  \\
-  y_{n-1} &= \prreadout(x_{n-1}) 
+  y_{k} &= \prreadout(x_{k-1}) 
 \end{aligned} 
 \end{equation}
 
@@ -173,89 +233,129 @@ The state is computed recursively as follows
   x_1 &= \prdyn(u_1, x_0) \\ 
   x_2 &= \prdyn(u_2, x_1) \\ 
   ... &= ... \\
-  x_{n-1} &= \prdyn(u_{n-1}, x_{n-2}) 
+  x_{k} &= \prdyn(u_{k}, x_{k-1}) 
   \end{aligned}
 \end{equation}
 
-Therefore, given a machine $\mora \colon \prgen_{\Moore} \to \prgen$ we have defined a map from $\seqsof \prgen$ to itself. Let's call it $\act$.
+Therefore, given a machine $\mora \colon \prgen_{\Moore} \to \prgen$ we have defined a map from $\natnumbers \to \prgen$ to itself. Let's call it $\act$.
 % 
 \begin{equation}
-\act_{\mora}: \seqsof \prgen \sto \seqsof \prgen
+\act_{\mora}:  (\natnumbers \to \prgen)  \sto  (\natnumbers \to \prgen)
 \end{equation}
 % 
-or, more precisely,
-% 
-\begin{equation}
-  \act_{\mora}: \prgen^n \sto   \prgen^n ,
-  \end{equation}
-  % 
-  More formally
+or, more formally,
 % 
   \begin{equation}
-    \act: \HomSet\Moore\prgen\prgen \sto \Autof {\seqsof \prgen}
+    \act: \HomSet\Moore\prgen\prgen \sto \Autof {\natnumbers \to \prgen}
 \end{equation}
 %
-Note that both $\HomSet\Moore\prgen\prgen$ and $\Autof {\seqsof \prgen}$ are semigroups. Could it be that $\act$ is a semigroup morphism? (and consequently, is $\act$ a left semigroup action)?
-
+Note that both $\HomSet\Moore\prgen\prgen$ and $\Autof {\natnumbers \to \prgen}$ are semigroups. Could it be that $\act$ is a semigroup morphism? (and consequently, is $\act$ a left semigroup action)?
 
 Let's check the condition for it being a morphism (\cref{XXX}):
 \begin{equation}
-  \act ( \mora \mthen_{\Moore} \morb) \stackrel{?}{=}  \act ( \mora) \mthen_{\Autof  {\seqsof \prgen}} \act(\morb)
+  \act ( \mora \mthen_{\Moore} \morb) \stackrel{?}{=}  \act ( \mora) \mthen_{\Autof  {\natnumbers \to \prgen}} \act(\morb)
 \end{equation}
 
-\begin{table*}[p]
-\caption{Some types of signals and processes}
-\begin{tabular}{rccc}
-& \multicolumn{2}{c}{\textbf{Signals}} & \textbf{Processes} \\
-&\rule{0pt}{10pt} one-sided & two-sided &   \\
-discrete time &
-$\natnumbers \sto \prgen$
-&
-$\wnumbers \sto \prgen$
-&
-\begin{minipage}{4cm}\raggedright
-\begin{equation*}\label{eq:a}
-    \begin{cases}
-    \prdyn \colon \prin \sto \Endof \prst \\
-    \prreadout \colon \prst \sto \prout
-    \end{cases}
-\end{equation*}
-\end{minipage}
-\\
 
-asynchronous& $\seqsof \prgen$ &  $\streamsof \prgen$ &
-\begin{minipage}{4cm}\raggedright
+\section{Other machines}
+
+
+\begin{table*}[b]
+  \caption{Some types of signals and processes}
+  \begin{tabular}{rccc}
+  & \multicolumn{2}{c}{\textbf{Signals}} & \textbf{Processes} \\
+  &\rule{0pt}{10pt} one-sided & two-sided &   \\
+  Moore machines ($\Moore$) &
+  $\natnumbers \sto \prgen$
+  &
+  $\wnumbers \sto \prgen$
+  &
+  \begin{minipage}{4cm}\raggedright
+  \begin{equation*}\label{eq:a}
+      \begin{cases}
+      \prdyn \colon \prin \sto \Endof \prst \\
+      \prreadout \colon \prst \sto \prout
+      \end{cases}
+  \end{equation*}
+  \end{minipage}
+  \\
+  
+  More machines ($\More$)& $\seqsof \prgen$ &  $\streamsof \prgen$ &
+  \begin{minipage}{4cm}\raggedright
+  \begin{equation*}
+  \begin{cases}
+  \prdyn \colon \prin \sto \Endof \prst \\
+  \prreadout \colon \prst \sto \seqsof \prout
+  \end{cases}
+  \end{equation*}
+  
+  \end{minipage}
+  \\
+  event-based& $\seqsof{(\natnumbers \cartprod \prgen)}$&
+   $\streamsof{(\natnumbers \cartprod \prgen)}$&
+  \begin{minipage}{4cm}\raggedright
+  \begin{equation*}
+  \begin{cases}
+  \prdyn \colon (\natnumbers \cartprod \prin) \sto \Endof \prst \\
+  \prreadout \colon \prst \sto \seqsof{ (\natnumbers \cartprod \prout)}
+  \end{cases}
+  \end{equation*}
+  \end{minipage}\\
+  continuous& $\nonNegReals \sto \prgen$ & $\reals \sto \prgen$ &
+  \begin{minipage}{4cm}\raggedright
+  \begin{equation*}
+  \begin{cases}
+    \prdyn\colon \prin \to \vectorfield(\prst) \\
+  \prreadout\colon \prst \sto   \prout
+  \end{cases}
+  \end{equation*}
+  \end{minipage}
+  \\
+  \end{tabular}
+  \end{table*}
+  
+
+  
+But there are many different types of machines. 
+
+A Moore machine outputs 1 element at each time step; what if the machine was able to output more than one or zero output?
+
+The signature of this would be this:
 \begin{equation*}
-\begin{cases}
-\prdyn \colon \prin \sto \Endof \prst \\
-\prreadout \colon \prst \sto \seqsof \prout
-\end{cases}
+  \begin{cases}
+  \prdyn \colon \prin \sto \Endof \prst \\
+  \prreadout \colon \prst \sto \seqsof \prout
+  \end{cases}
+\end{equation*}
+where the output is not just $\prout$ but $\seqsof \prout$: the machine can produce zero or more outputs. We call these \emph{More} machines.
+  
+\begin{exercise}
+Define the category $\More$ of More machines.
+\end{exercise}
+
+We have these act on $\seqsof \prgen$; the timing information is not there.
+
+Another type of machine are the event-based machines, with signature 
+\begin{equation*}
+  \begin{cases}
+    \prdyn \colon (\natnumbers \cartprod \prin) \sto \Endof \prst \\
+    \prreadout \colon \prst \sto \seqsof{ (\natnumbers \cartprod \prout)}
+    \end{cases}    
 \end{equation*}
 
-\end{minipage}
-\\
-event-based& $\seqsof{(\nonNegReals \cartprod \prgen)}$&
- $\streamsof{(\nonNegReals \cartprod \prgen)}$&
-\begin{minipage}{4cm}\raggedright
-\begin{equation*}
+The natural numbers are the deltas between events. (This could be generalized to $\nonNegReals$.)
+
+Continuous-time dynamical systems would be described as 
+% 
+\begin{equation}
 \begin{cases}
-\prdyn \colon (\nonNegReals \cartprod \prin) \sto \Endof \prst \\
-\prreadout \colon \prst \sto \seqsof{ (\nonNegReals \cartprod \prout)}
-\end{cases}
-\end{equation*}
-\end{minipage}\\
-continuous& $\nonNegReals \sto \prgen$ & $\reals \sto \prgen$ &
-\begin{minipage}{4cm}\raggedright
-\begin{equation*}
-\begin{cases}
-  \prdyn\colon \prin \cartprod \prst \sto \tangbundle \prst \\
+  \prdyn\colon \prin \to \vectorfield(\prst) \\
 \prreadout\colon \prst \sto   \prout
 \end{cases}
-\end{equation*}
-\end{minipage}
-\\
-\end{tabular}
-\end{table*}
+\end{equation}
+% 
+One should put more conditions on the objects - typically, that they are manifolds, and more constraints about the dynamics for the trajectories to exist.
+
 
 
 
