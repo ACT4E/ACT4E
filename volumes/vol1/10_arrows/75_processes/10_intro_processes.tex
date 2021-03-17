@@ -36,6 +36,7 @@ fake one
     \label{eq:cond_moore_comp}
     \prout_{\mora} \subseteq \prin_{\morb}
 \end{equation}
+  \includesag{10_moore_comp_seq_bis}
 \end{forslides}}
 
 We also need to have an~$\prstart \in \prst$ to act as the initial state.
@@ -218,6 +219,7 @@ With this definition we can define the semi-category $\Moore$ of Moore machines.
     \end{equation}
     with
     \begin{equation}
+      \label{eq:moore_dyn_comp}
       \definemap{
         \prdyn_{\mora\mthen\morb}
         }{
@@ -247,6 +249,54 @@ With this definition we can define the semi-category $\Moore$ of Moore machines.
   \end{enumerate}
 \end{definition}
 
+\begin{exercise}
+  Show that indeed \Moore is a semi-category.
+\end{exercise}
+\begin{solution}
+  Given valid, composable machines~$\mora$,~$\morb$,~$\morc$, we can specify the spaces and initial conditions:
+  \begin{equation*}
+\begin{aligned}
+\prin_{(\mora \mthen \morb)\mthen \morc}&=\prin_{\mora \mthen (\morb \mthen \morc)}=\prin_{\mora},\\
+  \prst_{(\mora \mthen \morb)\mthen \morc}&=\prst_{\mora \mthen (\morb \mthen \morc)}=\prst_{\mora} \setconcat \prst_{\morb} \setconcat \prst_{\morc}\\
+\prstart_{(\mora \mthen \morb)\mthen \morc}&=\prstart_{\mora \mthen (\morb \mthen \morc)}=\tupcatt{\prstart_\mora}{\prstart_\morb}{\prstart_\morc}\\
+  \prout_{(\mora \mthen \morb)\mthen \morc}&=\prout_{\mora \mthen (\morb \mthen \morc)}=\prout_\morc
+\end{aligned}
+\end{equation*}
+Starting from \cref{eq:moore_dyn_comp} one can now check associativity of the dynamics:
+  \begin{equation*}
+    \label{eq:assoc_moore_1}
+\begin{aligned}
+  \prdyn_{(\mora\mthen\morb)\mthen \morc}\colon \prin_{\mora} \times ((\prst_{\mora} \setconcat \prst_{\morb})\setconcat \prst_{\morc})&\to (\prst_{\mora} \setconcat \prst_{\morb})\setconcat \prst_{\morc}\\
+  \tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}&\mapsto \tupcat{\prdyn_{\mora \mthen \morb}(u,\tupcat{x_\mora}{x_\morb})}{\prdyn_{\morc}(\prreadout_{\mora \mthen \morb}(\tupcat{x_\mora}{x_\morb}),x_\morc)}\\
+  &=\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
+\end{aligned}
+\end{equation*}
+  On the other hand, one has:
+    \begin{equation*}
+    \label{eq:assoc_moore_2}
+    \begin{aligned}
+      \prdyn_{\mora\mthen(\morb\mthen \morc)}\colon \prin_{\mora} \times (\prst_{\mora} \setconcat (\prst_{\morb}\setconcat \prst_{\morc}))&\to \prst_{\mora} \setconcat (\prst_{\morb}\setconcat \prst_{\morc})\\
+  \tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}&\mapsto \tupcat{\prdyn_{\mora}(u,x_\mora)}{\prdyn_{\morb\mthen \morc}(\prreadout_{\mora}(x_\mora),\tupcat{x_\morb}{x_\morc})}\\
+  &=\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
+\end{aligned}
+\end{equation*}
+  Finally, one can check associativity of the readout:
+  \begin{equation*}
+    \label{eq:assoc_moore_3}
+    \begin{aligned}
+      \prreadout_{(\mora \mthen \morb)\mthen \morc}\colon (\prst_\mora \setconcat \prst_\morb)\setconcat \prst_\morc &\to \prout_\morc\\
+      \tupcatt{x_\mora}{x_\morb}{x_\morc} &\mapsto \prreadout_\morc(x_\morc),
+\end{aligned}
+\end{equation*}
+  and
+    \begin{equation*}
+    \label{eq:assoc_moore_4}
+    \begin{aligned}
+      \prreadout_{\mora \mthen (\morb\mthen \morc)}\colon \prst_\mora \setconcat (\prst_\morb\setconcat \prst_\morc) &\to \prout_\morc\\
+      \tupcatt{x_\mora}{x_\morb}{x_\morc} &\mapsto \prreadout_\morc(x_\morc).
+\end{aligned}
+\end{equation*}
+\end{solution}
 \section{Action on sequences}
 
 Let's now look at how machines like the above acts on sequences.
