@@ -51,142 +51,161 @@
 %\end{proof}
 %
 
-\section{$\Lmon$ and $\Umon$ monads}
+\section{$\Lmon$ and~$\Umon$ monads}
 In this section we propose another example of monads related to posets and design problems. We start by defining the \emph{$\Uendo$ endofunctor}.
 \begin{definition}[$\Uendo$ endofunctor]
   \label{def:Uendo}
-  The \emph{$\Uendo$ endofunctor} has the form $\Uendo \colon \Pos \to \Pos$ and acts on objects and morphisms as follows:
+  The \emph{$\Uendo$ endofunctor} has the form~$\Uendo \colon \Pos \to \Pos$ and acts on objects and morphisms as follows:
   \begin{compactenum}
-    \item \emph{On objects}: Given a poset $P\in \Ob_\Pos$, $\Uendo$ maps $P$ to its upper set\footnote{Recall that in \cref{lem:u_bounded_lat} we proved that the upper set is itself an object of \Pos.}.
-    \item \emph{On morphisms}: Given posets $P,Q$, and a monotone map $f\colon P\to Q$, the $\Uendo$ endofunctor acts as:
+    \item \emph{On objects}: Given a poset~$\posA \in \Ob_\Pos$,~$\Uendo$ maps~$\posA$ to its upper set\footnote{Recall that in \cref{lem:u_bounded_lat} we proved that the upper set is itself an object of \Pos.}.
+    \item \emph{On morphisms}: Given posets~$\posA,\posB$, and a monotone map~$\mora \colon \posA\to \posB$, the~$\Uendo$ endofunctor acts as:
     \begin{equation}
       \begin{aligned}
-        \Uendo(f)\colon \Up P&\to \Up Q\\
-        P'&\mapsto \upit \left( \bigcup_{p\in P'} \{f(p)\}\right).
+        \Uendo(\mora)\colon \Up \posA&\to \Up \posB\\
+        \posA'&\mapsto \upit \left( \bigcup_{\posAel\in \posA'} \{\mapa(\posAel)\}\right).
       \end{aligned}
     \end{equation}
   \end{compactenum}
 \end{definition}
-We now want to prove that the $\Uendo$ endofunctor is an endofunctor, and the proof requires the following two facts.
+We now want to prove that the~$\Uendo$ endofunctor is an endofunctor, and the proof requires the following two facts.
 \begin{lemma}
   \label{lem:unpack_u_functor}
-  Given posets $P,Q$, a monotone map $f\colon P \to Q$, and a family of singleton sets $\{S_i\}_{i\in I}$, with $S_i=\{s_i\}$, $s_i\in P$, the following equality holds:
+  Given posets~$\posA,\posB$, a monotone map~$\mora \colon \posA \to \posB$, and a family of singleton sets~$\{S_i\}_{i\in I}$, with~$S_i=\{s_i\}$,~$s_i\in \posA$, the following equality holds:
   \begin{equation}
     \label{eq:lemma_unpack}
-    \upit\left( \bigcup_{p\in \upit \bigcup_{i\in I}S_i}\{f(p)\}\right)= \upit \left( \bigcup_{i\in I} \{f(s_i)\}\right).
+    \upit\left( \bigcup_{\posAel \in \upit \bigcup_{i\in I}S_i}\{\mora(\posAel)\}\right)= \upit \left( \bigcup_{i\in I} \{\mora(s_i)\}\right).
   \end{equation}
 \end{lemma}
 \begin{proof}
   We first want to show that:
   \begin{equation}
     \label{eq:unpack_1}
-    \underbrace{\upit \left(\bigcup_{p\in \upit \bigcup_{i\in I}S_i}\{f(p)\} \right)}_{\star}\subseteq \upit \underbrace{\left( \bigcup_{i\in I}\{f(s_i)\}\right)}_{\diamond}.
+    \underbrace{\upit \left(\bigcup_{\posAel \in \upit \bigcup_{i\in I}S_i}\{\mora(\posAel)\} \right)}_{\star}\subseteq \upit \underbrace{\left( \bigcup_{i\in I}\{\mora(s_i)\}\right)}_{\diamond}.
   \end{equation}
   Let's take a
   \begin{equation}
-    q\in \upit\left( \bigcup_{p\in \upit \bigcup_{i\in I}S_i}\{f(p)\}\right).
+    \posBel \in \upit\left( \bigcup_{\posAel \in \upit \bigcup_{i\in I}S_i}\{\mora(\posAel)\}\right).
   \end{equation}
-  If we have such a $q$, it means that there exists a
+  If we have such a~$\posBel$, it means that there exists a
   \begin{equation}
-    q'\in \bigcup_{p\in \upit\bigcup_{i\in I}S_i}\{f(p)\}
+    \posBel'\in \bigcup_{\posAel\in \upit\bigcup_{i\in I}S_i}\{\mora(\posAel)\}
   \end{equation}
-  such that~$q'\ordleq_Q q$, and hence there is a~$p'\in \upit \bigcup_{i\in I} S_i$ such that $q'=f(p')$. Consequently, there must exist an $i'\in I$ such that $s_{i'}\ordleq_P p'$. The monotonicity of $f$ implies:
+  such that~$\posBel'\posleq_\posB \posBel$, and hence there is a~$\posAel'\in \upit \bigcup_{i\in I} S_i$ such that~$\posBel'=\mora(\posAel')$.
+  Consequently, there must exist an~$i'\in I$ such that~$s_{i'}\posleq_\posA \posAel'$. The monotonicity of~$\mapa$ implies:
   \begin{equation}
-    f(s_{i'})\ordleq_Q f(p')=q'\ordleq_Q q.
+    \mora(s_{i'})\posleq_\posA \mora(\posAel')=\posBel'\posleq_\posB \posBel.
   \end{equation}
-  We know that $s_{i'}\in \diamond$ and any $q^*\in Q$ satisfying $f(s_{i'})\ordleq_Q q^*$ belongs to $\upit \diamond$. Therefore,~$\star\subseteq \upit \diamond$, which proves the validity of \cref{eq:unpack_1}.
+  We know that~$s_{i'}\in \diamond$ and any~$\posBel^*\in \posB$ satisfying~$\mora(s_{i'})\posleq_\posB \posBel^*$ belongs to~$\upit \diamond$.
+  Therefore,~$\star\subseteq \upit \diamond$, which proves the validity of \cref{eq:unpack_1}.
 
   We now want to show that:
   \begin{equation}
     \label{eq:unpack_2}
-    \upit \left(\bigcup_{p\in \upit \bigcup_{i\in I}S_i}\{f(p)\} \right)\supseteq \upit \left( \bigcup_{i\in I}\{f(s_i)\}\right).
+    \upit \left(\bigcup_{\posAel \in \upit \bigcup_{i\in I}S_i}\{\mora(\posAel)\} \right)\supseteq \upit \left( \bigcup_{i\in I}\{\mora(s_i)\}\right).
   \end{equation}
   By now taking a
   \begin{equation}
-    q\in \upit \left( \bigcup_{i\in I}\{f(s_i)\}\right),
+    \posBel\in \upit \left( \bigcup_{i\in I}\{\mora(s_i)\}\right),
   \end{equation}
-  we know that there is a $i'\in I$ such that $f(s_{i'})\ordleq_Q q$. Furthermore, we know that $f(s_{i'})\in \diamond$. Therefore, any $q^*\ordgeq_Q f(s_{i'})$ must be in $\upit \diamond$, meaning that $q\in \star$, and proving the validity of \cref{eq:unpack_2}.
+  we know that there is a~$i'\in I$ such that~$\mora(s_{i'})\posleq_\posB \posBel$.
+  Furthermore, we know that~$\mora(s_{i'})\in \diamond$.
+  Therefore, any~$\posBel^*\posleq_\posB \mora(s_{i'})$ must be in~$\upit \diamond$, meaning that~$\posBel\in \star$, and proving the validity of \cref{eq:unpack_2}.
 
   The validity of \cref{eq:unpack_1} and \cref{eq:unpack_2} implies \cref{eq:lemma_unpack}.
 \end{proof}
 
 \begin{lemma}
   \label{lem:unpack_part_2}
-  Given posets $P,Q$ and a monotone map $f\colon P\to Q$, we have:
+  Given posets~$\posA,\posB$ and a monotone map~$\mora\colon \posA\to \posB$, we have:
   \begin{equation}
-    \upit \left( \bigcup_{p'\in \upit \{p\}} \{f(p')\}\right)=\upit \{f(p)\}.
+    \upit \left( \bigcup_{\posAel'\in \upit \{\posAel\}} \{\mora(\posAel')\}\right)=\upit \{\mora(\posAel)\}.
   \end{equation}
 \end{lemma}
 \begin{proof}
-  The proof follows from \cref{lem:unpack_u_functor}, by considering a family of singleton sets consisting solely of the set $\{p\}$.
+  The proof follows from \cref{lem:unpack_u_functor}, by considering a family of singleton sets consisting solely of the set~$\{\posAel\}$.
 \end{proof}
-We can now show that the $\Uendo$ endofunctor is indeed a functor.
+We can now show that the~$\Uendo$ endofunctor is indeed a functor.
 \begin{lemma}
-  The $\Uendo$ endofunctor is indeed a functor.
+  The~$\Uendo$ endofunctor is indeed a functor.
 \end{lemma}
 \begin{proof}
-  $\Uendo$ has a valid form and given a poset $P$, maps $\catid_P$ to $\catid_{\Up P}$. We now need to show that $\Uendo$ fulfills morphism composition. Consider maps $f\colon P \to Q$ and $g\colon Q \to R$. We have:
+  $\Uendo$ has a valid form and given a poset~$\posA$, maps~$\catid_\posA$ to~$\catid_{\Up \posA}$.
+  We now need to show that~$\Uendo$ fulfills morphism composition. Consider maps~$\mora\colon \posA \to \posB$ and~$\morb\colon \posB \to \posC$. We have:
   \begin{equation}
     \label{eq:ufunctor_1}
     \begin{aligned}
-      U(f\then g)\colon \Pos &\to \Pos\\
-      P'&\mapsto \upit \left( \bigcup_{p\in P'} \{g(f(p))\}\right).
+      \Uendo(\mora\mthen \morb)\colon \Pos &\to \Pos\\
+      \posA'&\mapsto \upit \left( \bigcup_{\posAel\in \posA'} \{\morb(\mora(\posAel))\}\right).
     \end{aligned}
   \end{equation}
   On the other hand, we have:
   \begin{equation}
     \begin{aligned}
-      U(f)\colon \Pos &\to \Pos\\
-      P'&\mapsto \upit \left( \bigcup_{p\in P'}\{f(p)\}\right),
+      \Uendo(\mora)\colon \Pos &\to \Pos\\
+      \posA'&\mapsto \upit \left( \bigcup_{\posAel\in \posA'}\{\mora(\posAel)\}\right),
     \end{aligned}
   \end{equation}
   and
   \begin{equation}
     \begin{aligned}
-      U(g)\colon \Pos &\to \Pos\\
-      Q'&\mapsto \upit \left( \bigcup_{q\in Q'}\{g(q)\}\right),
+      \Uendo(\morb)\colon \Pos &\to \Pos\\
+      \posB'&\mapsto \upit \left( \bigcup_{\posBel\in \posB'}\{\morb(\posBel)\}\right),
     \end{aligned}
   \end{equation}
   leading to
   \begin{equation}
     \label{eq:ufunctor_2}
     \begin{aligned}
-      U(f)\then U(g)\colon \Pos &\to \Pos\\
-      P'&\mapsto \upit\left( \bigcup_{q\in \upit \bigcup_{p\in P'}\{f(p)\}}\{g(q)\}\right)\\
-      &\mapsto \upit \left(\bigcup_{p\in P'} \{ g(f(p))\}\right). \qquad \qquad (\cref{lem:unpack_u_functor})
+      \Uendo(\mora)\mthen \Uendo(\morb)\colon \Pos &\to \Pos\\
+      \posB'&\mapsto \upit\left( \bigcup_{\posBel\in \upit \bigcup_{\posAel\in \posB'}\{\mora(\posAel)\}}\{\morb(\posBel)\}\right)\\
+      &\mapsto \upit \left(\bigcup_{\posAel\in \posA'} \{ \morb(\mora(\posAel))\}\right). \qquad \qquad (\cref{lem:unpack_u_functor})
     \end{aligned}
   \end{equation}
   Since \cref{eq:ufunctor_1} and \cref{eq:ufunctor_2} are equivalent, $\Uendo$ is a functor.
 \end{proof}
-Having proven that $\Uendo$ is a valid functor, we are now ready to define the $\Umon$ monad.
+Having proven that~$\Uendo$ is a valid functor, we are now ready to define the~$\Umon$ monad.
 \begin{definition}[$\Umon$ monad]
   \label{def:Umon}
   The \emph{$\Umon$ monad} on \Pos consists of:
   \begin{compactenum}
-    \item The $\Uendo$ endofunctor (\cref{def:ufunctor}).
-    \item The unit natural transformation $\monunit_{\Umon} \colon \funid_{\Pos}\nto \Uendo$, which associates to every object $P\in \Ob_\Pos$ a morphisms in \Pos given by:
+    \item The~$\Uendo$ endofunctor (\cref{def:Uendo}).
+    \item The unit natural transformation~$\monunit_{\Umon} \colon \funid_{\Pos}\nto \Uendo$, which associates to every object~$\posA \in \Ob_\Pos$ a morphisms in \Pos given by:
     \begin{equation}
       \begin{aligned}
-        \monunit_{\Umon}^P\colon P &\to \Up P\\
-        p&\mapsto \upit \{p\}.
+        \monunit_{\Umon}^\posA\colon \posA &\to \Up \posA\\
+        \posAel&\mapsto \upit \{\posAel\}.
       \end{aligned}
     \end{equation}
-    \item The compositiona natural transformation $\moncomp_{\Umon}\colon \Uendo\then \Uendo\nto \Uendo$, which associates to every $P\in \Ob_\Pos$ the morphism in \Pos given by:
+    \item The compositional natural transformation~$\moncomp_{\Umon}\colon \Uendo\then \Uendo\nto \Uendo$, which associates to every~$\posA\in \Ob_\Pos$ the morphism in \Pos given by:
     \begin{equation}
       \begin{aligned}
-        \moncomp_{\Umon}^P\colon \Up{(\Up{P})}&\to \Up P\\
-        P''&\mapsto \bigcup_{P'\in P''}P'.
+        \moncomp_{\Umon}^\posA\colon \Up{(\Up{\posA})}&\to \Up \posA\\
+        \posA''&\mapsto \bigcup_{\posA'\in \posA''}\posA'.
       \end{aligned}
     \end{equation}
   \end{compactenum}
 \end{definition}
 
+Before showing that this indeed defines a monad, we list some results which will be instrumental later.
+\begin{lemma}
+  \label{lem:upperunionupper}
+  Given a poset~$\posA$ and a family of upper sets of~$\posA$, denoted~$\{\posA_i\}_{i\in I}$ (with index set~$I$), their union is also an upper set.
+\end{lemma}
 
 \begin{lemma}
-  The $\Umon$ monad is indeed a monad.
+  \label{lem:setunionset}
+  Given a set~$\setA$ and a family of subsets of~$\setA$, denoted~$\{\setA_i\}_{i\in I}$ (with index set~$I$), one has:
+  \begin{equation}
+    \bigcup \bigcup_{i\in I}\{A_i\} = \bigcup_{i\in I}\{A_i\}.
+  \end{equation}
+\end{lemma}
+
+
+\begin{lemma}
+  The~$\Umon$ monad is indeed a monad.
 \end{lemma}
 \begin{proof}
-  To show that $\Umon$ is indeed a monad, we need to show the following:
+  To show that~$\Umon$ is indeed a monad, we need to show the following:
   \begin{compactenum}
     \item $\monunit_{\Umon}$ is a natural transformation;
     \item $\moncomp_{\Umon}$ is a natural transformation;
@@ -196,36 +215,66 @@ Having proven that $\Uendo$ is a valid functor, we are now ready to define the $
   \end{compactenum}
   We prove them in order.
 
-  \emph{1)~$\monunit_{\Umon}$ is a natural transformation}: We need to show that for any~$\mora\in \HomSet{\Pos}{P}{Q}$, we have:
+  \emph{1)~$\monunit_{\Umon}$ is a natural transformation}: We need to show that for any~$\mora\in \HomSet{\Pos}{\posA}{\posB}$, we have:
   \begin{equation}
-    \funid_{\Pos}(\mora)\mthen \monunit_{\Umon}^Q=\monunit_{\Umon}^P\mthen \Uendo(\mora).
+    \funid_{\Pos}(\mora)\mthen \monunit_{\Umon}^\posB=\monunit_{\Umon}^\posA\mthen \Uendo(\mora).
   \end{equation}
   By expanding the left-hand side, we obtain:
   \begin{equation}
-    \left[\funid_{\Pos}(\mora)\mthen \monunit_{\Umon}^Q\right](p)=\upit \{\mora(p)\}.
+    \left[\funid_{\Pos}(\mora)\mthen \monunit_{\Umon}^\posB\right](\posAel)=\upit \{\mora(\posAel)\}.
   \end{equation}
   By expanding the right-hand side, we get:
   \begin{equation}
     \begin{aligned}
-      \monunit_{\Umon}^P\colon \Pos &\to \Pos\\
-      p&\mapsto \upit \{p\}. \qquad \qquad (\cref{lem:unpack_part_2})
+      \monunit_{\Umon}^\posA\colon \Pos &\to \Pos\\
+      \posAel&\mapsto \upit \{\posAel\}. \qquad \qquad (\cref{lem:unpack_part_2})
     \end{aligned}
   \end{equation}
   and
   \begin{equation}
     \begin{aligned}
       \Uendo(\mora)\colon \Pos &\to \Pos\\
-      P'&\mapsto \upit \bigcup_{p'\in P'}\{\mora(p')\},
+      \posA'&\mapsto \upit \bigcup_{\posAel'\in \posA'}\{\mora(\posAel')\},
     \end{aligned}
   \end{equation}
   and hence
   \begin{equation}
     \begin{aligned}
-      \left[\monunit_{\Umon}^P\mthen \Uendo(\mora)\right](p)&=\upit \left( \bigcup_{p'\in \upit \{p\}} \{\mora(p')\}\right)\\
-      &=\upit \{\mora(p)\}.
+      \left[\monunit_{\Umon}^\posA\mthen \Uendo(\mora)\right](\posAel)&=\upit \left( \bigcup_{\posAel'\in \upit \{\posAel\}} \{\mora(\posAel')\}\right)\\
+      &=\upit \{\mora(\posAel)\}.
     \end{aligned}
   \end{equation}
 
   \emph{2)~$\moncomp_{\Umon}$ is a natural transformation}:
-  \todo{finish/continue}
+  We want to show that for every~$\mora\in \HomSet{\Pos}{\posA}{\posB}$, one has:
+  \begin{equation}
+    \Uendo(\Uendo(\mora))\mthen \moncomp_{\Umon}^{\posB}=\moncomp_{\Umon}^\posA \mthen \Uendo(\mora).
+  \end{equation}
+  Let's start with the left-hand side. We first look at~$\Uendo(\Uendo(\mora))$:
+  \begin{equation}
+    \begin{aligned}
+      (\Uendo(\Uendo(\mora)))\colon \Pos&\to \Pos\\
+      \posA''&\mapsto \upit \left( \bigcup_{\posA' \in \posA''}\left \{ \upit \left( \bigcup_{\posAel \in \posA'} \left\{ \mora(\posAel)\right\}\right)\right\}\right).
+    \end{aligned}
+  \end{equation}
+  Furthermore, one has:
+  \begin{equation}
+  \begin{aligned}
+    \Uendo(\Uendo(\mora))\mthen \moncomp_{\Umon}^{\posB}\colon \Pos&\to \Pos\\
+    \posA''&\mapsto \bigcup_{\posB'\in \upit \left( \bigcup_{\posA'\in \posA''} \left\{ \upit \left( \bigcup_{\posAel \in \posA'} \{ \mora(\posAel)\}\right)\right\} \right)} \posB'\\
+    &\mapsto \bigcup \upit \left( \bigcup_{\posA'\in \posA''} \left\{ \upit \left( \bigcup_{\posAel \in \posA'} \{ \mora(\posAel)\}\right)\right\} \right)\\
+    &\mapsto \bigcup  \left( \bigcup_{\posA'\in \posA''} \left\{ \upit \left( \bigcup_{\posAel \in \posA'} \{ \mora(\posAel)\}\right)\right\} \right) \quad \quad (\text{\cref{lem:upperunionupper}})\\
+    &\mapsto   \bigcup_{\posA'\in \posA''} \left\{ \upit \left( \bigcup_{\posAel \in \posA'} \{ \mora(\posAel)\}\right)\right\} \quad \quad (\text{\cref{lem:setunionset}})\\
+    &\mapsto   \upit \left(\bigcup_{\posA'\in \posA''}  \bigcup_{\posAel \in \posA'} \{ \mora(\posAel)\}\right),
+  \end{aligned}
+  \end{equation}
+  where we used the fact that the union of upper sets is the upper closure of the union of sets. By looking at the right-hand side, one has:
+  \begin{equation}
+  \begin{aligned}
+    (\moncomp_{\Umon}^\posA \mthen \Uendo(\mora))\colon \Pos &\to \Pos\\
+    \posA''&\mapsto \upit \left( \bigcup_{\posAel \in \bigcup_{\posA'\in \posA''}\posA'} \{ \mora(\posAel)\}\right)\\
+    &\mapsto \upit \left( \bigcup_{\posA'\in \posA''}\bigcup_{\posAel \in \posA'}\{\mora(\posAel)\}\right),
+  \end{aligned}
+  \end{equation}
+  proving that~$\moncomp_{\Umon}$ is a valid natural transformation.
 \end{proof}
