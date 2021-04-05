@@ -326,34 +326,82 @@ is good to know that we can obtain motion from electric power, but, how fast can
 we go with a certain amount of power?
 
 To achieve a quantitative theory, we need to specify various degrees of resources and functionality.
-One way of doing this, is through the idea of partial orders.
+One way of doing this, is through the idea of orders.
 
 
-Such orderings arise naturally in engineering as criteria for judging whether one design is better or worse than another. As an example, suppose you need to prepare some pizza: you have to buy specific ingredients and cook them, using a recipe you decide to follow. In this simple example, you can think of having two resources: time and money. A quicker recipe might include more expensive ingredients, and a slower recipe could feature more affordable ones. How to choose among recipes, if you do not prefer one resource over the other? How to model this? In this section, we will assume that functionality and resources
-are \emph{partially-ordered sets} (\emph{posets}).
+Such orderings arise naturally in engineering as criteria for judging whether one design is better or worse than another.
+As an example, suppose you need to prepare some pizza: you have to buy specific ingredients and cook them, using a recipe you decide to follow.
+In this simple example, you can think of having two resources: time and money.
+A quicker recipe might include more expensive ingredients, and a slower recipe could feature more affordable ones.
+How to choose among recipes, if you do not prefer one resource over the other? How to model this? In this section, we will assume that functionality and resources
+are \emph{ordered sets} (\emph{posets}), and will introduce pre-orders, partial orders, and total orders.
 
 Davey and Priestley~\cite{davey02}
 and Roman~\cite{roman08} are possible reference texts.
 
-\todo{Introduce at the same time pre-order, poset, total order, like in slides.}
-
 \devel{\includepdf[scale=0.8,pages={22},nup=1x3,frame,pagecommand={}]{ACT4E-06-posets.pdf}} % order definition
 
-\todo{Remark: add remark about more general preference functions (Semiorder etc.)}
+We introduce these concepts by adding levels of specificity.
+
+\begin{definition}[Pre-ordered set]
+\label{def:preorder}
+    A \emph{pre-ordered} set is a tuple~$\tup{\posA,\posAleq}$, where~$\posA$ is a set (also called the \emph{carrier set}), together with a relation~$\posAleq$ that is:
+    \begin{compactitem}
+        \item \emph{Reflexive:}
+        \begin{equation*}
+            \prftree{\top}{\posAel \posAleq \posAel}
+        \end{equation*}
+        \item \emph{Transitive:}
+        \begin{equation*}
+            \prftree{\posAel \posAleq \posBel}{\posBel \posAleq \posCel}{\posAel \posAleq \posCel}
+        \end{equation*}
+    \end{compactitem}
+\end{definition}
+By adding a property called \emph{antisymmetry}, one obtains a partially ordered set.
 \begin{definition}[Partially ordered set]
   \label{def:poset}
-  A \emph{partially-ordered set (\iindex{poset})} is a tuple~$\tupp{\posA,\posAleq}$,
-  where~$\posA$ is a set (also called the \emph{carrier set}), together with a
-  relation~$\posAleq$   that is
-  \begin{compactenum}
-    \item \emph{Reflexive}: For all~$\posAel\in \posA$,~$\posAel \posAleq \posAel$.
-    \item \emph{Antisymmetric}: For all~$\posAel_1,\posAel_2\in \posA$, if~$\posAel_1\posAleq \posAel_2$ and~$\posAel_2\posAleq \posAel_1$, then~$\posAel_1=\posAel_2$.
-    \item \emph{Transitive}: For all~$\posAel_1,\posAel_2,\posAel_3\in \posA$, if~$\posAel_1\posAleq \posAel_2$ and~$\posAel_2\posAleq \posAel_3$, then~$\posAel_1\posAleq \posAel_3$.
-  \end{compactenum}
+  A pre-ordered set~$\tupp{\posA,\posAleq}$ is a \emph{partially-ordered set (\iindex{poset})} if the relation~$\posAleq$ is \emph{antisymmetric}. In other words, if:
+      \begin{equation*}
+          \prftree{\posAel \posAleq \posBel}{\posBel \posAleq \posAel}{\posAel = \posBel}
+    \end{equation*}
 \end{definition}
 
+\begin{definition}[Totally ordered set]
+    \label{def:total_order}
+    A partially ordered set~$\tupp{\posA,\posAleq}$ is a \emph{totally ordered set} if the relation~$\posAleq$ is \emph{total}. In other words, if:
+    \begin{equation*}
+        \prftree{\top}{(\posAel \posAleq \posBel) \vee (\posBel \posAleq \posAel)}
+    \end{equation*}
+\end{definition}
+
+\begin{remark}
+    There are more general ways to describe preferences. One has:
+    \begin{compactitem}
+    \item \emph{Quasitransitive relations}, which are relations~$\posAleq$ over a set~$\posA$ for which
+    \begin{equation*}
+        \prftree{(\posAel \posAleq \posBel)}{\neg(\posBel \posAleq \posAel)}{(\posBel \posAleq \posCel)}{\neg(\posCel \posAleq \posBel)}{(\posAel \posAleq \posCel) \wedge \neg(\posCel \posAleq \posAel)}
+    \end{equation*}
+    \item \emph{Semiorders}, which are relations~$\posAleq$ over a set~$\posA$ such that:
+    \begin{compactitem}
+        \item \emph{Asymmetry} (not antisymmetry!) holds:
+        \begin{equation*}
+            \prftree{\posAel \posAleq \posBel}{\neg(\posAel \posAleq \posAel)}
+        \end{equation*}
+        \item Let's denote two elements~$\posBel, \posCel \in \posA$ which are \emph{incomparable} by~$\posBel \sim \posCel$. One has:
+        \begin{equation*}
+            \prftree{\posAel \posAleq \posBel}{\posBel \sim \posCel}{\posCel \posAleq \posDel}{\posAel \posAleq \posDel}
+        \end{equation*}
+        \item One has:
+        \begin{equation*}
+            \prftree{\posAel \posAleq \posBel}{\posBel \posAleq \posCel}{(\posAel \posAleq \posDel) \vee (\posDel \posAleq \posAel)}
+        \end{equation*}
+    \end{compactitem}
+        An example of semiorder is the following. Say that you have to express your preference over numbers in~$\posA=\{10,11,12\}$. You are indifferent between 10 and 11, and between 11 and 12. Though, you prefer 10 to 12.
+    \end{compactitem}
+\end{remark}
+
 A \emph{\iindex{Hasse diagram}} is an economical (in terms of arrows) way to visualize a poset.
-In a Hasse diagram elements are points, and if~$\ela \posAleq \elb$ then~$\ela$ is drawn lower than~$\elb$ and with an ege connected to it, if no other point is in between.
+In a Hasse diagram elements are points, and if~$\posAel \posAleq \posBel$ then~$\posAel$ is drawn lower than~$\posBel$ and with an ege connected to it, if no other point is in between.
 Hasse diagrams are directed graphs.
 
 
@@ -434,7 +482,7 @@ This can be represented as in~\cref{fig:hassepizza}.
 \begin{figure*}[p]
     \centering
 %      \adjustbox{max width=\textwidth}{
-        \setlength{\tabcolsep}{20pt}
+        \setlength{\tabcolsep}{15pt}
         \begin{tabular}{cccc}
           \includesag{70_pos_1}  & \includesag{70_pos_2}  & \includesag{70_pos_3}  & \includesag{70_pos_4}  \\[+30pt]
           \includesag{70_pos_5}  & \includesag{70_pos_6}  & \includesag{70_pos_7}  & \includesag{70_pos_8}\\[+30pt]
@@ -551,28 +599,21 @@ Furthermore, the one representing~$\mat{B}$ includes the one representing~$\mat{
     Composition is given by composition of inclusions, meaning that if~$X\subseteq Y \subseteq Z$, then~$X\subseteq Z$.
   \end{example}
 
-\paragraph{A note on preorders}
-\begin{definition}[Preorder]
-  \label{def:preorder}
-  A \emph{\iindex{preorder}} is a tuple~$\tup{\posA, \posAleq}$, where~$\posA$ is a set (also called the \emph{carrier set}), together with a relation~$\posAleq$  that is
-  \begin{compactenum}
-    \item \emph{Reflexive}: For all~$\ela\in \posA$,~$\ela\posAleq \ela$.
-    \item \emph{Transitive}: For all~$\ela,\elb,\elc\in \posA$, if~$\ela\posAleq \elb$ and~$\elb\posAleq \elc$, then~$\ela\posAleq \elc$.
-  \end{compactenum}
-\end{definition}
-The theory of design problems can be easily generalized to preorders. This means that there could be two elements~$\ela$ and~$\elb$ such that~$\ela\posAleq \elb$ and~$\ela \ordgeq \elb$ but~$\ela \neq \elb$.
 
+\paragraph{A note on preorders}
+The theory of design problems can be easily generalized to preorders.
+This means that there could be two elements~$\posAel$ and~$\posBel$ such that~$\posAel\posAleq \posBel$ and~$\posAel \posAgeq \posBel$ but~$\posAel \neq \posBel$.
 
 This is actually common in practice.
 For example, if the order relation comes from human judgement, such as customer preference, all bets are off regarding the consistency of the relation.
 We will only refer to posets for two reasons:
 \begin{enumerate}
   \item The exposition is smoother.
-  \item Given a preorder, computation will always involve passing to the poset representation.
+  \item Given a pre-order, computation will always involve passing to the poset representation.
 \end{enumerate}
-This means that, given a preorder, we can consider the poset of its isomorphism classes, by means of the following equivalence relation:
+This means that, given a pre-order, we can consider the poset of its isomorphism classes, by means of the following equivalence relation:
 \begin{equation}
-  \ela \simeq \elb \quad \equiv \quad (\ela \posAleq \elb) \wedge (\elb \posAleq \ela).
+  \posAel \simeq \posBel \quad \equiv \quad (\posAel \posAleq \posBel) \wedge (\posBel \posAleq \posAel).
 \end{equation}
 
 \begin{gradedexercise}[\exname{PolynomialDivisibility}]\label{ex:PolynomialDivisibility}
