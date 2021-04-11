@@ -1,13 +1,12 @@
 % !TEX root = chapter-standalone.tex
 
 
-\section{Interconnection of DPIs}
+\section{The semi-category \DPI}
 
 \todo{Do here the interconnection of two DPIs and their semantics.}
 
-Graphically, one is allowed to connect only edges of different
-color, and of the same type. This interconnection is indicated with the symbol~``$\posleq$''
-in a rounded box~(\cref{fig:connection}).
+Graphically, one is allowed to connect only edges of different colors and of the same type. 
+This interconnection is indicated with the symbol~``$\posleq$'' in a rounded box~(\cref{fig:connection}).
 
 \begin{figure}[h]
   \centering
@@ -17,35 +16,107 @@ in a rounded box~(\cref{fig:connection}).
 
 %\captionsideleft{\label{fig:connection}}{\includegraphics[scale=0.33]{papers/uncertainty/unc_connection.pdf}}
 
-\noindent The semantics of the interconnection is that the resources
-required by the first DPI are provided by the second DPI. This is
-a partial order inequality constraint of the type~$\res_{1}\posleq\fun_{2}$.
+The semantics of the interconnection is that the second DPI provides the resources required by the first DPI. 
+This is a partial order inequality constraint of the type~$\res_{1}\posleq\fun_{2}$.
 
 
 \begin{definition}[$\dpseries$ composition]
   \label{def:series-composition}The series composition of two DPIs
-  ~$\dprob_{1}=\langle\funsp_{1},\ressp_{1},\impsp_{1},\prov_{1},\req_{1}\rangle$
-  and~$\dprob_{2}=\langle\funsp_{2},\ressp_{2},\impsp_{2},\prov_{2}$,
-  ~$\req_{2}\rangle$, for which~$\funsp_{2}=\ressp_{1}$, is
   \begin{equation}
-    \dpseries(\dprob_{1},\dprob_{2})\definedas\left\langle \funsp_{1},\ressp_{2},\impsp,\prov,\req\right\rangle ,
+    \dprob_{1}=\tup{\funsp_{1},\ressp_{1},\impsp_{1},\prov_{1},\req_{1}}
+  \end{equation}
+  and
+  \begin{equation}
+    \dprob_{2}=\tup{\funsp_{2},\ressp_{2},\impsp_{2},\prov_{2},
+\req_{2}},
+  \end{equation} 
+  for which
+  \begin{equation}\funsp_{2}=\ressp_{1},\end{equation} is
+  \begin{equation}
+    (\dprob_{1} \fthen \dprob_{2})
+    \definedas
+    \tup{ \funsp_{1},\ressp_{2},\impsp,\prov,\req},
   \end{equation}
   where:
   \begin{eqnarray}
-    \impsp & = & \{\left\langle \imp_{1},\imp_{2}\right\rangle \in\impsp_{1}\times\impsp_{2}\mid\req_{1}(\imp_{1})\posleq_{\ressp_{1}}\prov_{2}(\imp_{2})\},\\
-    \prov & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\prov_{1}(\imp_{1}),\\
-    \req & : & \left\langle \imp_{1},\imp_{2}\right\rangle \mapsto\req_{2}(\imp_{2}).
+    \impsp & = & \{  \tupcat {\imp_{1}} {\imp_{2}} \in (\impsp_{1} \setconcat \impsp_{2})\mid\req_{1}(\imp_{1})\posleq_{\ressp_{1}}\prov_{2}(\imp_{2})\},\\
+    \prov & : & \tupcat {\imp_{1}} {\imp_{2}}   \mapsto\prov_{1}(\imp_{1}),\\
+    \req & : & \tupcat {\imp_{1}} {\imp_{2}} \mapsto\req_{2}(\imp_{2}).
   \end{eqnarray}
 \end{definition}
 \captionsideleft{\label{fig:composition-2}}{
   \includegraphics[scale=0.33]{gmcdp_series3}
 }
 
+\begin{lemma}
+  Series composition is associative.
+\end{lemma}              
+\begin{proof}
+  \todo{Write proof of this lemma}
+\end{proof}
 
+These two properties are sufficient to conclude that there 
+is a semi-category of design problems.
 
+\begin{lemma}
+  There is a semicategory \DPI where 
+  \begin{itemize}
+    \item The objects are posets.
+    \item The morphisms are DPIs.
+  \end{itemize}
+\end{lemma}
 
-\todo{Show that composition so defined does not make DPI a category, but it makes it a bicategory (associative
-up to isomorphism)}
+\begin{lemma}
+\DPI is not a category, because we cannot find identities. 
+\end{lemma}
+\begin{proof}
+By contradiction. Suppose we can find a DPI that works as an identity for interconnection for any other DPI.
+Therefore, we have 
+\begin{equation}
+  \impsp_{1} \setconcat \impsp_{2} = \impsp_{1}.
+\end{equation}
+This implies that $\impsp_{2}$ must be an empty list of sets,  that is inhabited by only one element, the empty list of elements. Therefore, $\req_2$ of the identity is necessarily a constant because there is an . 
+\end{proof}
+% We also have an identity. 
 
+% \begin{definition}[Identity for DPI] For any poset $\posAn$, we can define a DPI 
+%   \begin{equation}
+%     \funid_\posAn = \tup{\funsp,\ressp,\impsp,\prov,\req}
+%   \end{equation}
+%   as follows:
+%   \begin{equation}
+%     \funsp = \ressp = \impsp = \posAn,
+%   \end{equation}
+%   \begin{equation}
+%     \prov = \req = \catid_{\posAset},
+%   \end{equation}
+%   where $\catid_{\posAset}$ is the identity on the set $\posAset$.
+
+%   %   \begin{equation}
+%   %   \definemap{\prov}{\impsp}{\funsp}{a}{a}
+%   % \end{equation}
+%   % \begin{equation}
+%   %   \definemap{\req}{\impsp}{\ressp}{a}{a}
+%   % \end{equation}
+% \end{definition}
+
+% \begin{lemma}
+%   $\dprob \fthen \funid_{\ressp} = \dprob$
+% \end{lemma}
+% \begin{proof}
+% Take 
+% \begin{equation}
+% \dprob = \tup{\funsp,\posAn,\impsp,\prov,\req}
+% \end{equation}
+% We have for the series
+% \begin{equation}
+%   \impsp = 
+%   \{  
+%     \tupcat {\imp_1} {\imp_2} \in (\impsp \setconcat \posAn)
+%       \mid
+%       \req_{1}(\imp_{1}) \posleq_{\posAn} \prov_{2}(\imp_{2})
+% \}
+% \end{equation}
+% \end{proof}
 
 \todo{discussion about \emph{decomposition is not decoupling}}
