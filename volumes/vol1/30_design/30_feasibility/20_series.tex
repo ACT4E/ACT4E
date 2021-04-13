@@ -1,25 +1,25 @@
 % !TEX root = chapter-standalone.tex
 \section{Series composition of design problems}
-
+\todotext{create macro also for the neutral elements of neutral posets}
 We will define several ways to connect and compose design problems. The first and most basic way is series composition, or just `composition'.
 
 \begin{definition}[Series composition]
   \label{def:dp-series}
-  Let~$f \colon  \F{A} \profto \R{B}$ and~$g \colon \F{B} \profto \R{C}$ be design problems. We define their \emph{series composition}~$(f\then g) \colon  \F{A} \profto \R{C}$ as:
+  Let~$f \colon  \funposA \profto \resposB$ and~$g \colon \funposB \profto \resposC$ be design problems. We define their \emph{series composition}~$(f\then g) \colon  \funposA \profto \resposC$ as:
   \begin{equation}
     \label{eq:composition2}
     \begin{aligned}
     (f \then g)
-      \colon \ \F{A}\op \times \R{C} & \toinPos  \Bool, \\
-      \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{b\in B} f(\F{a}^*,\R{b}) \wedge g(\F{b}^*,\R{c}).
+      \colon \ \funposA\op \times \resposC & \toinPos  \Bool, \\
+      \tup{\funposAel^*, \resposCel} &\mapsto \bigvee_{b\in \posgenB} f(\funposAel^*,\resposBel) \wedge g(\funposBel^*,\resposCel).
     \end{aligned}
   \end{equation}
   Alternatively:
   \begin{equation}
     \begin{aligned}
       \label{eq:composition}
-      (f \then g)\  \colon \ \F{A}\op \times \R{C} & \toinPos  \Bool,  \\
-      \tup{\F{a}^*, \R{c}} &\mapsto \bigvee_{\R{b_1}\leq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c}).
+      (f \then g)\  \colon \ \funposA\op \times \resposC & \toinPos  \Bool,  \\
+      \tup{\funposAel^*, \resposCel} &\mapsto \bigvee_{\resposBel_1\posleq\funposBel_2, \resposBel_1,\funposBel_2\in \posgenB} f(\funposAel^*,\resposBel_1) \wedge g(\funposBel_2^*,\resposCel).
     \end{aligned}
   \end{equation}
 \end{definition}
@@ -41,34 +41,34 @@ The \textR{resource} required by a component is limited by the \textF{functional
 
   First consider the direction \cref{eq:composition}~$\implies$ \cref{eq:composition2}. In order for%
   \begin{equation*}
-    \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})%
+    \bigvee_{\resposBel_1\ordleq\funposBel_2, \resposBel_1,\funposBel_2\in \posgenB} f(\funposAel^*,\resposBel_1) \wedge g(\funposBel_2^*,\resposCel)%
   \end{equation*}
-  to be true, there should exist some~$\R{b_1}\ordleq \F{b_2}$ for which~$f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})$ is true. However, due to the monotonicity of~$f$,~$f(\F{a}^*,\R{b_2}) \wedge g(\F{b_2}^*,\R{c})$ and \cref{eq:composition2} must be true as well. On the other hand, if%
+  to be true, there should exist some~$\resposBel_1\ordleq \funposBel_2$ for which~$f(\funposAel^*,\resposBel_1) \wedge g(\funposBel_2^*,\resposCel)$ is true. However, due to the monotonicity of~$f$,~$f(\funposAel^*,\R{b_2}) \wedge g(\funposBel_2^*,\resposCel)$ and \cref{eq:composition2} must be true as well. On the other hand, if%
   \begin{equation*}
-    \bigvee_{\R{b_1}\ordleq\F{b_2}, \R{b_1},\F{b_2}\in B} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c})%
+    \bigvee_{\resposBel_1\ordleq\funposBel_2, \resposBel_1,\funposBel_2\in \posgenB} f(\funposAel^*,\resposBel_1) \wedge g(\funposBel_2^*,\resposCel)%
   \end{equation*}
-  is false, then due to the equality, it is false for any~$\R{b_1}=\F{b_2}$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
+  is false, then due to the equality, it is false for any~$\resposBel_1=\funposBel_2$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
 
-  The other direction, \cref{eq:composition2}~$\implies$ \cref{eq:composition}, can be shown in a similar way. If \cref{eq:composition2} is true, then there must exist a~$b'$ such that~$f(\F{a}^*, \R{b'})=\true$ and~$g(\F{b'}^*, \R{c})=\true$. Then, the inner term in \cref{eq:composition} is true for~$\R{b_1}=\F{b_2}=b'$. If \cref{eq:composition2} is false, then there is no such~$b'$ for which both~$f(\F{a}^*, \R{b'})$ and~$g(\F{b'}^*, \R{c})$ are true, but then due to the monotonicity of~$f$ and~$g$ they also cannot be true for any~$\R{b_1} \ordleq \F{b_2} = b'$ or~$b'=\R{b_1} \ordleq \F{b_2}$. Hence, \cref{eq:composition} must also be false.
+  The other direction, \cref{eq:composition2}~$\implies$ \cref{eq:composition}, can be shown in a similar way. If \cref{eq:composition2} is true, then there must exist a~$b'$ such that~$f(\funposAel^*, \R{b'})=\true$ and~$g(\F{b'}^*, \resposCel)=\true$. Then, the inner term in \cref{eq:composition} is true for~$\resposBel_1=\funposBel_2=b'$. If \cref{eq:composition2} is false, then there is no such~$b'$ for which both~$f(\funposAel^*, \R{b'})$ and~$g(\F{b'}^*, \resposCel)$ are true, but then due to the monotonicity of~$f$ and~$g$ they also cannot be true for any~$\resposBel_1 \ordleq \funposBel_2 = b'$ or~$b'=\resposBel_1 \ordleq \funposBel_2$. Hence, \cref{eq:composition} must also be false.
 \end{remark}
 \begin{remark}
-  At first sight, \cref{eq:composition} might seem like a more verbose version of \cref{eq:composition2}. However, assume that we have the means to obtain the minimal antichain of the feasible set of resources that provide~$\F{a}$ for the first term:
+  At first sight, \cref{eq:composition} might seem like a more verbose version of \cref{eq:composition2}. However, assume that we have the means to obtain the minimal antichain of the feasible set of resources that provide~$\funposA$ for the first term:
   \begin{equation*}
-    \R{B_f} = \Min \{b_1\in B \mid f(\F{a}^*,\R{b_1})=\true\} \in \antichains B.
+    \resposB_f = \Min \{b_1\in \posgenB \mid f(\funposAel^*,\resposBel_1)=\true\} \in \antichains \posgenB.
   \end{equation*}
-  This represents the minimal resources with which~$f$ can provide~$\F{a}$. Assume further that we similarly have the means to obtain the maximal antichain of the feasible set of functionalities that~$\R{c}$ provides for the second term
+  This represents the minimal resources with which~$f$ can provide~$\funposA$. Assume further that we similarly have the means to obtain the maximal antichain of the feasible set of functionalities that~$\resposCel$ provides for the second term
   \begin{equation*}
-    \F{B_g} = \Max \{b_2\in B \mid g(\F{b_2}^*,\R{c})=\true\} \in \antichains B,
+    \funposB_g = \Max \{b_2\in \posgenB \mid g(\funposBel_2^*,\resposCel)=\true\} \in \antichains \posgenB,
   \end{equation*}
-  which represents the maximal functionality that~$g$ can provide given~$\R{c}$. Then, \cref{eq:composition} implies that it suffices to only evaluate
+  which represents the maximal functionality that~$g$ can provide given~$\resposCel$. Then, \cref{eq:composition} implies that it suffices to only evaluate
   \begin{equation*}
-    \bigvee_{\substack{\R{b_1}\ordleq\F{b_2} \\ \R{b_1}\in \R{B_f},~ \F{b_2}\in\F{B_g} }} f(\F{a}^*,\R{b_1}) \wedge g(\F{b_2}^*,\R{c}),
+    \bigvee_{\substack{\resposBel_1\ordleq\funposBel_2 \\ \resposBel_1\in \resposB_f,~ \funposBel_2\in\funposB_g }} f(\funposAel^*,\resposBel_1) \wedge g(\funposBel_2^*,\resposCel),
   \end{equation*}
-  which can be much more efficient than iterating over all~$b\in B$.
+  which can be much more efficient than iterating over all~$b\in \posgenB$.
 \end{remark}
 
 \paragraph{Intended semantics}
-The series composition~$f\then g$ judges a pair~$\tup{\F{a}^*,\R{c}}$ as feasible if and only if there exists a~$b \in B$ such that~$f(\F{a}^*,\R{b})$ and~$g(\F{b}^*,\R{c})$ are feasible.\footnote{In~\cref{eq:composition2} we could have written ``$\exists_{b\in B}$'' instead of ``$\bigvee_{b\in B}$''; the latter form highlights the connection with operations on matrices. Given a set~$I$ and a map~$s\colon I\to\Bool$, we can define the boolean~$\bigvee_{i\in I}s(i)$ by
+The series composition~$f\then g$ judges a pair~$\tup{\funposAel^*,\resposCel}$ as feasible if and only if there exists a~$b \in B$ such that~$f(\funposAel^*,\resposBel)$ and~$g(\funposBel^*,\resposCel)$ are feasible.\footnote{In~\cref{eq:composition2} we could have written ``$\exists_{b\in B}$'' instead of ``$\bigvee_{b\in B}$''; the latter form highlights the connection with operations on matrices. Given a set~$I$ and a map~$s\colon I\to\Bool$, we can define the boolean~$\bigvee_{i\in I}s(i)$ by
   \begin{equation*}
     \bigvee_{i\in I}s(i)\definedas
     \begin{cases}
@@ -103,7 +103,7 @@ Let us check that, given design problems~$f$ and~$g$, their series composition~$
   Series composition as in~\cref{eq:composition2} is monotone in~$a$ and~$c$.
 \end{lemma}
 \begin{proof}
-  We need to show that~$[f\then g](\F{a}^*,\R{c})$ is monotone in~$\F{a}^*$ and~$\R{c}$. Because~$f$ represents a design problem,~$f(\F{a}^*,\R{b})$ is monotone in~$\F{a}^*$, and similarly~$g(\F{b}^*,\R{c})$ is monotone in~$\R{c}$. The conjunction ``$\wedge$'' is monotone in both variables, and likewise the ``$\vee$'' operation.
+  We need to show that~$[f\then g](\funposAel^*,\resposCel)$ is monotone in~$\funposAel^*$ and~$\resposCel$. Because~$f$ represents a design problem,~$f(\funposAel^*,\resposBel)$ is monotone in~$\funposAel^*$, and similarly~$g(\funposBel^*,\resposCel)$ is monotone in~$\resposCel$. The conjunction ``$\wedge$'' is monotone in both variables, and likewise the ``$\vee$'' operation.
 \end{proof}
 
 We can show two important properties for the ``$\then$'' operation: associativity and unitality.
@@ -116,17 +116,18 @@ We can show two important properties for the ``$\then$'' operation: associativit
 \end{lemma}
 
 \begin{proof}
+  Consider~$f\colon \funposA\profto \resposB$,~$g\colon \funposB \profto \resposC$,~$h\colon \funposC\profto \resposD$.
   To show that the operation is associative, we can use distributivity and commutativity in~\Bool:
 %
   \begin{equation}
     \begin{aligned}
-      \left((f\then g) \then h\right) (\F{a}^*,\R{d})
-      &= \bigvee_{c \in C} \left (\ \bigvee_{b\in B } f(\F{a}^*,\R{b}) \wedge g(\F{b}^*,\R{c}) \right )  \wedge  h (\F{c}^*, \R{d}) \\
-      &= \bigvee_{c \in C} \left (\ \bigvee_{b\in B } f(\F{a}^*,\R{b})
-      \wedge g(\F{b}^*,\R{c}) \wedge h (\F{c}^*, \R{d})
+      \left((f\then g) \then h\right) (\funposAel^*,\resposDel)
+      &= \bigvee_{c \in \posgenC} \left (\ \bigvee_{b\in \posgenB} f(\funposAel^*,\resposBel) \wedge g(\funposBel^*,\resposCel) \right )  \wedge  h (\funposCel^*, \resposDel) \\
+      &= \bigvee_{c \in \posgenC} \left (\ \bigvee_{b\in B } f(\funposAel^*,\resposBel)
+      \wedge g(\funposBel^*,\resposCel) \wedge h (\funposCel^*, \resposDel)
       \right ) \\
-      &= \bigvee_{b \in B } f(\F{a}^*,\R{b}) \wedge \left ( \bigvee_{c\in C} g(\F{b}^*,\R{c}) \wedge h (\F{c}^*, \F{d}) \right ) \\
-      &= \left(f \then (g \then h )\right) (\F{a}^*, \R{d}).
+      &= \bigvee_{b \in \posgenB } f(\funposAel^*,\resposBel) \wedge \left ( \bigvee_{c\in \posgenC} g(\funposBel^*,\resposCel) \wedge h (\funposCel^*, \resposDel) \right ) \\
+      &= \left(f \then (g \then h )\right) (\funposAel^*, \resposDel).
     \end{aligned}
   \end{equation}
 %
@@ -143,19 +144,19 @@ Associativity of composition is represented as in~\cref{fig:compositionassociati
 \end{figure}
 
 There exists an identity for the ``$\then$'' operation.
-We define the identity~$\id_A\colon \F{A} \profto \R{A}$ as follows.
+We define the identity~$\id_\posgenA \colon \funposA \profto \resposA$ as follows.
 
 \begin{definition}[Identity design problem]
   \label{def:dp-identity}
-  For any poset~$A$, the \emph{\iindex{identity design problem}}~$\id_A\colon \F{A} \profto \R{A}$ is a monotone map
+  For any poset~$\posgenA$, the \emph{\iindex{identity design problem}}~$\id_\posgenA \colon \funposA \profto \resposA$ is a monotone map
   \begin{equation}
     \begin{aligned}
-      \id_A \colon \F{A}\op \times \R{A} & \toinPos   \Bool, \label{eq:identity}\\
-      \tup{\F{a_1}^*, \R{a_2}} & \mapsto \F{a_1} \ordleq_{A} \R{a_2}.
+      \id_\posgenA \colon \funposA\op \times \resposA & \toinPos   \Bool, \label{eq:identity}\\
+      \tup{\funposAel_1^*, \resposAel_2} & \mapsto \funposAel_1 \posleq_{\posgenA} \resposAel_2.
     \end{aligned}
   \end{equation}
 \end{definition}
-In the diagrammatic notation, we represent~$\id_A$ as in~\cref{fig:identitydp}.
+In the diagrammatic notation, we represent~$\id_\posgenA$ as in~\cref{fig:identitydp}.
 
 \begin{figure}[h!]
   \begin{center}
@@ -174,24 +175,27 @@ In the diagrammatic notation, we represent~$\id_A$ as in~\cref{fig:identitydp}.
     \caption{Composition satisfies left and right unit laws. \label{fig:compositionunital}}
   \end{figure}
 \begin{proof}
-  Given~$f\colon \F{A}\profto \R{B}$, we need to show:
+  Given~$f\colon \funposA\profto \resposB$, we need to show:
   \begin{equation*}
-    \id_A \then f= f = f\then \id_B.
+    \id_\posgenA \then f= f = f\then \id_\posgenB.
   \end{equation*}
-  In the following, we prove~$\id_A \then f = f$. Proving~$f\then \id_B=f$ is similar.
-  Consider the poset~\Bool. Since for~$x,y\in \Bool$,~$x\cong y \Imp x=y$ (also referred to as skeletality~\cite{fong2019}), we just need to show that~$f\ordleq \id_A\then f$ and~$\id_A\then f\ordleq f$.
+  In the following, we prove~$\id_\posgenA \then f = f$. Proving~$f\then \id_\posgenB=f$ is similar.
+  Consider the poset~\Bool. Since for~$x,y\in \Bool$,~$x\cong y \Imp x=y$ (also referred to as skeletality~\cite{fong2019}), we just need to show that~$f\ordleq \id_\posgenA\then f$ and~$\id_\posgenA\then f\posleq f$.
   We have
   \begin{equation*}
     \begin{aligned}
-      f(\F{a}^*,\R{b})&=\true \wedge f(\F{a}^*,\R{b})\\
-      &\ordleq \id_A(\F{a}^*,\R{a}) \wedge f(\F{a}^*,\R{b})\\
-      &\ordleq \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b})\\
-      &=(\id_A\then f)(\F{a}^*,\R{b}).
+      f(\funposAel^*,\resposBel)&=\true \wedge f(\funposAel^*,\resposBel)\\
+      &\posleq \id_A(\funposAel^*,\R{a}) \wedge f(\funposAel^*,\resposBel)\\
+      &\posleq \bigvee_{a'\in A}\id_A(\funposAel^*,\R{a'})\wedge f(\F{a'}^*,\resposBel)\\
+      &=(\id_\posgenA\then f)(\funposAel^*,\resposBel).
     \end{aligned}
   \end{equation*}
-  For the other direction, we need to show that~$\id_A\then f\ordleq f$:
+  For the other direction, we need to show that~$\id_\posgenA\then f\ordleq f$:
   \begin{equation*}
-    \bigvee_{a'\in A}\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b}).
+    \bigvee_{a'\in \posgenA}\id_\posgenA(\funposAel^*,\R{a'})\wedge f(\F{a'}^*,\resposBel) \posleq f(\funposAel^*,\resposBel).
   \end{equation*}
-  This holds if and only if~$\id_A(\F{a}^*,\R{a'})\wedge f(\F{a'}^*,\R{b}) \ordleq f(\F{a}^*,\R{b})$ for some~$a'\in A$. If there is no such~$a'$, then the inequality holds ($\false \ordleq \false$ and $\false \ordleq \true$). If there is such an~$a'$, it means that~$\id_A(\F{a}^*,\R{a'})=\true$ and~$f(\F{a'}^*,\R{b})=\true$. We know that~$\id_A(\F{a}^*,\R{a'})=\true \Leftrightarrow \F{a}\ordleq \R{a'}$, and hence~$f(\F{a}^*,\R{b})=\true$.
+  This holds if and only if~$\id_\posgenA(\funposAel^*,\R{a'})\wedge f(\F{a'}^*,\resposBel) \posleq f(\funposAel^*,\resposBel)$ for some~$a'\in \posgenA$.
+  If there is no such~$a'$, then the inequality holds ($\false \posleq \false$ and $\false \posleq \true$).
+  If there is such an~$a'$, it means that~$\id_\posgenA(\funposAel^*,\R{a'})=\true$ and~$f(\F{a'}^*,\resposBel)=\true$.
+  We know that~$\id_\posgenA(\funposAel^*,\R{a'})=\true \Leftrightarrow \funposA\posleq \R{a'}$, and hence~$f(\funposAel^*,\resposBel)=\true$.
 \end{proof}
