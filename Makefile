@@ -172,6 +172,11 @@ magic:
 		$(tag) \
 		make nomenc table find-equations
 
+magic-equations:
+	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+		$(tag) \
+		make find-equations
+
 ultramagic:
 	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
