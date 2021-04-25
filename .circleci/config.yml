@@ -9,11 +9,14 @@ workflows:
           context: z7-stage
       - build-vol1-instructors:
           context: z7-stage
+      - build-vol1-fast:
+          context: z7-stage
       - docs-deploy:
           requires:
             - build-vol1
             - build-vol1-final
             - build-vol1-instructors
+            - build-vol1-fast
           filters:
             branches:
               only: kaobook
@@ -63,6 +66,52 @@ jobs:
           root: .
           paths:
             - _build
+  build-vol1-fast:
+    docker:
+      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - run:
+          name: Build stats (1)
+          command: |
+            mkdir -p build-stats
+            env | tee  build-stats/env.txt
+      - store_artifacts:
+          path: build-stats
+          destination: build-stats
+      - run:
+          name: instructors
+          command: |
+            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+      - run:
+          name: install deps
+          command: |
+            apt-get update
+            apt-get install -y pdftk
+
+      - run:
+          name: Latex
+          command: |
+            mkdir _build
+            make nomenc
+            make table
+            make ACT4E-vol1-fast.pdf
+
+      - run:
+          name: encrypt
+          command: |
+            pdftk ACT4E-vol1-fast.pdf output _build/ACT4E-vol1-fast.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+      - store_artifacts:
+          path: _build
+          destination: _build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - _build
+
   build-vol1-instructors:
     docker:
       - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
