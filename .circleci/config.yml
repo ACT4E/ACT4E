@@ -5,7 +5,12 @@ workflows:
     jobs:
     - build1:
         context: z7-stage
-       
+    - docs-deploy:
+          requires:
+            - build1
+          filters:
+            branches:
+              only: kaobook
 jobs:
   build1:
     environment:
@@ -32,11 +37,31 @@ jobs:
         name: Latex
         command: |
           mkdir _build
-          make ACT4E-vol1.pdf
+          
           make ACT4E-vol1-final.pdf
           cp ACT4E-vol1.pdf _build
+          
+    - run:
+        name: instructors
+        command: |
+          git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git        
+          make ACT4E-vol1.pdf
           cp ACT4E-vol1-final.pdf _build
-          
-          
 
 
+  docs-deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: docs/_build
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "ci-build@klukas.net"
+            git config user.name "ci-build"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dist docs/_build/html
