@@ -11,6 +11,7 @@ workflows:
           requires:
             - build-vol1
             - build-vol1-final
+            - build-vol1-instructors
           filters:
             branches:
               only: kaobook
@@ -46,13 +47,11 @@ jobs:
           command: |
             mkdir _build
             make ACT4E-vol1.pdf
-            cp *.pdf _build
 
       - run:
           name: encrypt
           command: |
-            # micamale, malandrino
-            pdftk ACT4E-vol1.pdf output _build/ACT4E-vol1-encrypt.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+            pdftk ACT4E-vol1.pdf output _build/ACT4E-vol1.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
             cp *.pdf _build
       - store_artifacts:
           path: _build
@@ -60,8 +59,51 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-          - _build
+            - _build
+  build-vol1-instructors:
+    docker:
+      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - run:
+          name: Build stats (1)
+          command: |
+            mkdir -p build-stats
+            env | tee  build-stats/env.txt
+      - store_artifacts:
+          path: build-stats
+          destination: build-stats
+      - run:
+          name: instructors
+          command: |
+            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+      - run:
+          name: install deps
+          command: |
+            apt-get update
+            apt-get install -y pdftk
 
+      - run:
+          name: Latex
+          command: |
+            mkdir _build
+            make ACT4E-vol1-instructors.pdf
+
+      - run:
+          name: encrypt
+          command: |
+            pdftk ACT4E-vol1-instructors.pdf output _build/ACT4E-vol1-instructors.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+            cp *.pdf _build
+      - store_artifacts:
+          path: _build
+          destination: _build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - _build
 
   build-vol1-final:
     docker:
@@ -105,7 +147,7 @@ jobs:
           name: Install and configure dependencies
           command: |
             npm install -g --silent gh-pages@2.0.1
-            git config user.email "ci-build@klukas.net"
+            git config user.email "acensi@ethz.ch"
             git config user.name "ci-build"
       - run:
           name: Deploy docs to gh-pages branch
