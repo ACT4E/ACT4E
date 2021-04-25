@@ -202,11 +202,18 @@ jobs:
           name: Install and configure dependencies
           command: |
             npm install -g --silent gh-pages@2.0.1
-            git config user.email "acensi@ethz.ch"
-            git config user.name "ci-build"
+            git config --global user.email "acensi@ethz.ch"
+            git config --global  user.name "ci-build"
+      - run:
+          name: git lfs
+          command:
+            curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+            apt-get install git-lfs -y
+            git lfs install
+
       - run:
           name: Deploy docs to gh-pages branch
           command: |
             cp pages-index.html tmp/workspace/_build/index.html
-
+            rm tmp/workspace/_build/*fast.pdf # too big
             gh-pages --dist tmp/workspace/_build
