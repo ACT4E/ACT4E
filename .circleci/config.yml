@@ -57,6 +57,10 @@ jobs:
       - store_artifacts:
           path: _build
           destination: _build
+      - persist_to_workspace:
+          root: .
+          paths:
+          - _build
 
 
   build-vol1-final:
@@ -85,13 +89,18 @@ jobs:
       - store_artifacts:
           path: _build
           destination: _build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - _build
+
   docs-deploy:
     docker:
       - image: node:8.10.0
     steps:
       - checkout
       - attach_workspace:
-          at: products
+          at: /tmp/workspace
       - run:
           name: Install and configure dependencies
           command: |
@@ -100,4 +109,4 @@ jobs:
             git config user.name "ci-build"
       - run:
           name: Deploy docs to gh-pages branch
-          command: gh-pages --dist products/_build
+          command: gh-pages --dist /tmp/workspace/_build
