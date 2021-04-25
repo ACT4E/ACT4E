@@ -1,0 +1,36 @@
+version: 2
+workflows:
+  version: 2
+  build:
+    jobs:
+    - build1:
+        context: z7-stage
+       
+jobs:
+  build1:
+    environment:
+      COLUMNS: '160'
+      # default is /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      PATH: /root/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    docker:
+    - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+      auth:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+    working_directory: ~/repo
+    steps:
+    - checkout
+    - run:
+        name: Build stats (1)
+        command: |
+          env | tee  build-stats/env.txt
+    - store_artifacts:
+        path: build-stats
+        destination: build-stats
+    - run:
+        name: Latex
+        command: |
+          make ACT4E-vol1.pdf
+          
+
+
