@@ -167,27 +167,30 @@ compile-equations:
 tag=reg-stage.zuper.ai/act4e/act4e-build:z7
 pull: 
 	docker pull $(tag)
+
+as_user=-u $(shell id -u ${USER}):$(shell id -g ${USER})  -e USER=$(shell whoami) -e HOME=/tmp/home
+# as_user=
 magic:
-	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		make nomenc table find-equations
 
 magic-equations:
-	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		make find-equations
 
 ultramagic:
-	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make remake'
 
 shell:
-	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: bash'
 
 docker-%:
-	docker run -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make *'
