@@ -19,7 +19,7 @@ workflows:
             - build-vol1-fast
           filters:
             branches:
-              only: kaobook
+              only: master
 jobs:
   build-vol1:
     docker:
@@ -29,11 +29,6 @@ jobs:
           password: $DOCKER_PASSWORD
     steps:
       - checkout
-      #      - run:
-      #          name: Build stats (1)
-      #          command: |
-      #            mkdir -p build-stats
-      #            env | tee  build-stats/env.txt
       - store_artifacts:
           path: build-stats
           destination: build-stats
@@ -49,7 +44,7 @@ jobs:
             make nomenc
             make table
             make ACT4E-vol1.pdf
-
+            cp *log _build
       - run:
           name: encrypt
           command: |
@@ -69,14 +64,6 @@ jobs:
           password: $DOCKER_PASSWORD
     steps:
       - checkout
-      #      - run:
-      #          name: Build stats (1)
-      #          command: |
-      #            mkdir -p build-stats
-      #            env | tee  build-stats/env.txt
-      #      - store_artifacts:
-      #          path: build-stats
-      #          destination: build-stats
       - run:
           name: instructors
           command: |
@@ -90,11 +77,12 @@ jobs:
             make nomenc
             make table
             make ACT4E-vol1-fast.pdf
-
+            cp *log _build
       - run:
           name: encrypt
           command: |
             pdftk ACT4E-vol1-fast.pdf output _build/ACT4E-vol1-fast.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+
       - store_artifacts:
           path: _build
           destination: _build
@@ -131,7 +119,7 @@ jobs:
             make nomenc
             make table
             make ACT4E-vol1-instructors.pdf
-
+            cp *log _build
       - run:
           name: encrypt
           command: |
