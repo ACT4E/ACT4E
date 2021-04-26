@@ -18,7 +18,7 @@ ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 
 ACT%.pdf: ACT%.tex .FORCE
 	nice -n 20 latexmk -synctex=1 -pdflatex -shell-escape  -f $<
-	texloganalyser -r $*.log > $*.warnings.txt
+	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
 	cp ACT$*.aux ACT$*-refs.aux
 
 %.pdf: %.tex .FORCE
@@ -167,7 +167,7 @@ compile-equations:
 .PHONY: .FORCE
 
 tag=reg-stage.zuper.ai/act4e/act4e-build:z7
-pull: 
+pull:
 	docker pull $(tag)
 
 as_user=-u $(shell id -u ${USER}):$(shell id -g ${USER})  -e USER=$(shell whoami) -e HOME=/tmp/home
