@@ -14,6 +14,7 @@ workflows:
       - docs-deploy:
           requires:
             - build-vol1
+            - build-vol2
             - build-vol1-final
             - build-vol1-instructors
             - build-vol1-fast
@@ -49,6 +50,41 @@ jobs:
           name: encrypt
           command: |
             pdftk ACT4E-vol1.pdf output _build/ACT4E-vol1.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+      - store_artifacts:
+          path: _build
+          destination: _build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - _build
+  build-vol2:
+    docker:
+      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - store_artifacts:
+          path: build-stats
+          destination: build-stats
+      - run:
+          name: instructors
+          command: |
+            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+
+      - run:
+          name: Latex
+          command: |
+            mkdir _build
+            make nomenc
+            make table
+            make ACT4E-vol2.pdf
+            cp *log _build
+      - run:
+          name: encrypt
+          command: |
+            pdftk ACT4E-vol2.pdf output _build/ACT4E-vol1.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
       - store_artifacts:
           path: _build
           destination: _build
