@@ -194,3 +194,10 @@ docker-%:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make *'
+
+generate-videos:
+	 python3 -m act4e_videos.parsing \
+	 	--config videos/videos.yaml \
+		--base-url https://ACT4E.github.io/ACT4E/videos/ \
+		--html gh-pages/videos \
+		--tex  videos/generated
