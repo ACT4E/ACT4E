@@ -18,10 +18,12 @@ ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
 
 ACT%.pdf: ACT%.tex .FORCE
 	nice -n 20 latexmk -synctex=1 -pdflatex -shell-escape  -f $<
+	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
 	cp ACT$*.aux ACT$*-refs.aux
 
 %.pdf: %.tex .FORCE
 	nice -n 20 latexmk -synctex=1 -pdflatex -shell-escape  -f $<
+	texloganalyser -r $*.log > $*.warnings.txt
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw
@@ -165,7 +167,7 @@ compile-equations:
 .PHONY: .FORCE
 
 tag=reg-stage.zuper.ai/act4e/act4e-build:z7
-pull: 
+pull:
 	docker pull $(tag)
 
 as_user=-u $(shell id -u ${USER}):$(shell id -g ${USER})  -e USER=$(shell whoami) -e HOME=/tmp/home
@@ -194,3 +196,10 @@ docker-%:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make *'
+
+generate-videos:
+	 python3 -m act4e_videos.parsing \
+	 	--config videos/videos.yaml \
+		--base-url https://ACT4E.github.io/ACT4E/videos/ \
+		--html gh-pages/videos \
+		--tex  videos/generated
