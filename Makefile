@@ -197,9 +197,21 @@ docker-%:
 		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make *'
 
+pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E/sp21
+
 generate-videos:
 	 python3 -m act4e_videos.parsing \
 	 	--config videos/videos.yaml \
-		--base-url https://ACT4E.github.io/ACT4E/videos/ \
+		--base-url https://act4e-spring21.netlify.app/ \
 		--html gh-pages/videos \
-		--tex  videos/generated
+		--tex  videos/generated \
+		--pdfdir $(pdfdir)
+
+generate-videos-novideo:
+	 python3 -m act4e_videos.parsing \
+	 	--config videos/videos.yaml \
+		--base-url https://act4e-spring21.netlify.app/ \
+		--html gh-pages/videos \
+		--tex  videos/generated \
+		--pdfdir $(pdfdir) \
+		--no-video
