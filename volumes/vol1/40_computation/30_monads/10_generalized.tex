@@ -1,7 +1,177 @@
 % !TEX root = chapter-standalone.tex
 
 
+The definition of monads is very powerful because it is very abstract and can fit many possible scenarios. Before getting to the formal definition, it is useful to build up the intuition using several examples. 
+
 \section{Generalized objects and operations}
+
+
+Monads are a type of algebraic structure that is well suited to represent generalized objects and operations. We give here a set of several examples. 
+
+
+\subsection{Modeling nondeterministic uncertainty}
+
+For the engineer, one intuitive scenario where generalization is necessary is handling uncertainty. 
+We have seen the category \Set of sets and functions between sets. A function 
+\begin{equation}
+    \mora\colon\Obja\to\Objb
+\end{equation}
+between sets is ``deterministic'', in the sense that, given as input an element of $\Obja$, it always produces the same output in $\Objb$. 
+
+Suppose now we want to deal with nondeterministic functions: functions that return for each value any element of a certain subset.  We can model nondeterministic functions from $\Obja$ to $\Objb$ as functions of the type 
+\begin{equation}
+    \mora\colon\Obja\to\powerset\Objb.
+\end{equation}
+
+Note that this is a generalization, in the sense that any deterministic function is a special nondeterministic function. 
+For example, the function
+% 
+\begin{equation}
+    \definemap{\alpha}{\natnumbers}{\natnumbers,}%
+    {x}{x^2,}
+\end{equation}
+% 
+can be rewritten as the function
+% 
+\begin{equation}
+    \definemap{\alpha'}{\natnumbers}{\powerset\natnumbers,}%
+    {x}{\{x^2\},}
+\end{equation}
+% 
+which maps each element to a singleton set.
+
+Need: mapping a regular morphism into a generalized morphism.
+
+Once we have these generalized functions, we really want them to form a category, so that they can compose. To do this, we need extra information: additional structure.
+So far we know the rules of composition for functions:
+% 
+\begin{equation}
+    \prftree{\mora: \Obja \to \Objb}{\quad}{\morb: \Objb \to \Objc}
+    {\definemap{(\mora\mthen\morb)}{\Obja}{\Objc}%
+    {x}{\morb(\mora(x)),}}
+  \end{equation}
+%   
+but this does not help for the generalized functions. How can we compose nondeterministic function? What to fill in the space below?
+% 
+\begin{equation}
+    \prftree{\mora: \Obja \to \powerset\Objb}{\quad}{\morb: \Objb \to \powerset \Objc}
+    {\definemap{(\mora\mthen\morb)}{\Obja}{\powerset\Objc}%
+    {x}{\text{\color{red}?}}}
+  \end{equation}
+
+There is one natural way to define this operation. 
+Did you notice the following?
+
+\begin{lemma}
+Functions from $\Obja$ to $\powerset{\Objb}$ are exactly the relations from $\Obja$ to $\Objb$.
+\end{lemma}
+
+\todotext{Short proof}
+
+Therefore, we expect that nondeterministic functions compose like relations.
+If we have $\mora: \Obja \to \powerset\Objb$ and $\morb: \Objb \to \powerset \Objc$ then the composite nondeterministic function is 
+%
+\begin{equation}
+    \definemap{(\mora\mthen\morb)}{\Obja}{\powerset\Objc}%
+    {x}{ \displaystyle \bigcup_{y\in \mora(x)}\morb(y)}
+\end{equation}
+
+One can convince oneself that this is correct by looking at~\cref{fig:mapping-nondeterministic}.
+
+\begin{figure}[h]
+    \todographics{Put here the same figure for composition of relation; however now making it clear that it's not x in relation with many ys, but rather x maps to a subset of ys.}
+    \caption{}
+    \label{fig:mapping-nondeterministic}
+\end{figure}
+
+We should also check that this composition is associative; however, this comes automatically from the fact that we already know that \Rel is a category. 
+
+To summarize: 
+\begin{itemize}
+    \item We wanted to extend \Set from functions $\Obja \to \Objb$ to nondeterministic functions of type $\Obja \to \powerset\Objb$.
+    \item To do this, we needed three things:
+    \begin{enumerate}
+        \item The particular choice of $\powerset$ as what maps a set to another set. 
+    \item A way to lift a function of type $\Obja \to \Objb$ to a function of type $\Obja \to \powerset\Objb$, so that we can say that nondeterministic functions are a generalization of deterministic functions. This lifting operation is a family of functions of type 
+    \begin{equation}
+        \lift_{\Obja, \Objb}: (\Obja \to \Objb) \to (\Obja \to \powerset\Objb).
+    \end{equation}
+    \item A way to define composition, through a map, traditionally called ``fish'', of type
+    \begin{equation}
+        \fish_{\Obja, \Objb, \Objc}: (\Obja \to \powerset\Objb) \times (\Objb \to \powerset\Objc) 
+        \to (\Obja \to \powerset \Objc)
+    \end{equation}
+\end{enumerate}
+\item And we needed these pieces to satisfy the conditions:
+\begin{enumerate}
+    \item $\fish$ is associative. This ensures the generalized functions form a semi-category.
+    \item The composition of the lifted functions are the lifting of the composition:
+    \begin{equation} 
+        \prftree{\mora: \Obja \to \powerset\Objb}{\quad}{\morb: \Objb \to \powerset \Objc}{
+        \lift_{\Obja,\Objb}(\mora)\mthen\lift_{\Objb,\Objc}(\morb) =  \lift_{\Obja,\Objc}(\mora\mthen\morb)}
+    \end{equation}
+    This ensures that inside the generalized functions, the composition of regular functions continues to work as it should.
+\end{enumerate}
+\end{itemize}
+
+\subsection{Modeling interval uncertainty}
+
+We continue to build intuition considering another type of uncertainty.
+
+We have seen the category \Pos of posets and monotone functions between posets~(\cref{def:Pos}). 
+
+In this category it is easy to propagate uncertainty if the uncertain sets are represented by intervals. 
+
+Recall that for a poset $\posAn$, we can define the poset of intervals~$\Int\,\posAn$. \todotext{link}
+
+Analogously to the previous case, here we want to generalize from monotone functions to nondeterministic monotone functions, where the uncertainty is represented by intervals.
+
+For example, one such function is
+% 
+\begin{equation}
+    \definemap{\mora}{\reals}{\Int\,\reals,}%
+    {x}{ \interv{x-1}{x+1}. }
+\end{equation}
+Because an interval is defined by two values, a function that returns an interval is a pair of functions, whose results are constrained to be ordered. In the example above, we always have $x-1\leq x+1$.
+
+We now retrace the steps of the previous example.
+
+First, we need to ensure that we can see regular monotone functions as special cases of interval functions. For example, we want a function
+% 
+\begin{equation}
+    \definemap{\alpha}{\tup{\natnumbers,\leq}}{\tup{\natnumbers,\leq}}%
+    {x}{x^2,}
+\end{equation}
+% 
+can be rewritten as the function
+% 
+\begin{equation}
+    \definemap{\alpha'}{\tup{\natnumbers,\leq}}{\Int\,\tup{\natnumbers,\leq},}%
+    {x}{ \interv{x^2}{x^2}}
+\end{equation}
+% 
+Generically, this is the definition of the 
+\begin{equation}
+    \definemap%
+    {\lift_{\posAn, \posBn}}%
+    {(\posAn \to_{\Pos} \posBn)}%
+    {(\posAn \to_{\Pos} \Int\posBn)}%
+    {\mora}{%
+    \begin{cases}
+    \definemap{\lift_{\posAn, \posBn}\mora}%
+    {\posAn}{\Int\posBn}
+    {x}{\interv{\mora(x)}{\mora(x)}}
+    \end{cases}
+    }
+\end{equation}
+
+\subsection{Modeling probabilistic uncertainty}
+
+
+
+\subsection{Keeping track of resource use}
+
+
 
 
 \todo{... this additional structure is what constitutes a monad.}
