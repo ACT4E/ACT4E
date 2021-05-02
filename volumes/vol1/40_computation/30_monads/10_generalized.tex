@@ -13,27 +13,27 @@ Monads are a type of algebraic structure that is well-suited to represent genera
 
 For the engineer, one intuitive scenario where generalization is necessary is handling uncertainty. 
 We have seen the category  \Set of sets and functions between sets. A function 
-\begin{equation}
+\begin{equation}\label{eq:monad-simple}
     \mora\colon\Obja\to\Objb
 \end{equation}
 between sets is ``deterministic'', in the sense that, given as input an element of $\Obja$, it always produces the same output in $\Objb$. 
 
 Suppose now we want to deal with nondeterministic functions: functions that return for each value any element of a certain subset.  We can model nondeterministic functions from $\Obja$ to $\Objb$ as functions of the type 
-\begin{equation}
+\begin{equation}\label{eq:monad-generalized}
     \mora\colon\Obja\to\powerset\Objb.
 \end{equation}
 
 Note that this is a generalization, in the sense that any deterministic function is a special nondeterministic function. 
 For example, the function
 % 
-\begin{equation}
+\begin{equation}\label{eq:monad-alpha-example1}
     \definemap{\alpha}{\natnumbers}{\natnumbers,}%
     {x}{x^2,}
 \end{equation}
 % 
 can be rewritten as the function
 % 
-\begin{equation}
+\begin{equation}\label{eq:monad-alpha-example2}
     \definemap{\alpha'}{\natnumbers}{\powerset\natnumbers,}%
     {x}{\{x^2\},}
 \end{equation}
@@ -45,7 +45,7 @@ Need: mapping a regular morphism into a generalized morphism.
 Once we have these generalized functions, we really want them to form a category, so that they can compose. To do this, we need extra information: additional structure.
 So far we know the rules of composition for functions:
 % 
-\begin{equation}
+\begin{equation}\label{eq:monad-function-composition}
     \prftree{\mora: \Obja \to \Objb}{\quad}{\morb: \Objb \to \Objc}
     {\definemap{(\mora\mthen\morb)}{\Obja}{\Objc}%
     {x}{\morb(\mora(x)),}}
@@ -53,7 +53,7 @@ So far we know the rules of composition for functions:
 %   
 but this does not help for the generalized functions. How can we compose nondeterministic function? What to fill in the space below?
 % 
-\begin{equation}
+\begin{equation}\label{eq:monad-gen-function-composition}
     \prftree{\mora: \Obja \to \powerset\Objb}{\quad}{\morb: \Objb \to \powerset \Objc}
     {\definemap{(\mora\mthen\morb)}{\Obja}{\powerset\Objc}%
     {x}{\text{\color{red}?}}}
@@ -62,7 +62,7 @@ but this does not help for the generalized functions. How can we compose nondete
 There is one natural way to define this operation. 
 Did you notice the following?
 
-\begin{lemma}
+\begin{lemma}\label{lem:powersets-relations}
 Functions from $\Obja$ to $\powerset{\Objb}$ are exactly the relations from $\Obja$ to $\Objb$.
 \end{lemma}
 
@@ -93,11 +93,11 @@ To summarize:
     \begin{enumerate}
         \item The particular choice of $\powerset$ as what maps a set to another set. 
     \item A way to lift a function of type $\Obja \to \Objb$ to a function of type $\Obja \to \powerset\Objb$, so that we can say that nondeterministic functions are a generalization of deterministic functions. This lifting operation is a family of functions of type 
-    \begin{equation}
+    \begin{equation}\label{eq:monad-lift}
         \lift_{\Obja, \Objb}: (\Obja \to \Objb) \to (\Obja \to \powerset\Objb).
     \end{equation}
     \item A way to define composition, through a map, traditionally called ``fish'', of type
-    \begin{equation}
+    \begin{equation}\label{eq:monad-fish}
         \fish_{\Obja, \Objb, \Objc}: (\Obja \to \powerset\Objb) \times (\Objb \to \powerset\Objc) 
         \to (\Obja \to \powerset \Objc)
     \end{equation}
@@ -106,7 +106,7 @@ To summarize:
 \begin{enumerate}
     \item $\fish$ is associative. This ensures the generalized functions form a semi-category.
     \item The composition of the lifted functions are the lifting of the composition:
-    \begin{equation} 
+    \begin{equation}\label{eq:monad-fish-associative}
         \prftree{\mora: \Obja \to \powerset\Objb}{\quad}{\morb: \Objb \to \powerset \Objc}{
         \lift_{\Obja,\Objb}(\mora)\mthen\lift_{\Objb,\Objc}(\morb) =  \lift_{\Obja,\Objc}(\mora\mthen\morb)}
     \end{equation}
@@ -128,22 +128,29 @@ Analogously to the previous case, here we want to generalize from monotone funct
 
 We use the following notation for intervals:
 \begin{itemize}
-\item The interval $\{x\colon a \posleq x \posleq b\}$ is denoted $\interv{a}{b}$.
+\item The interval
+ \begin{equation}\label{eq:interv-1}
+    \{x\colon a \posleq x \posleq b\}
+ \end{equation}
+ is denoted 
+ \begin{equation}\label{eq:interv-2}
+    \interv{a}{b}
+\end{equation}
 \item $\udpL\cdot$ and $\udpU\cdot$ extract the lower and upper bound from the interval, so that we have
-\begin{equation}
+\begin{equation}\label{eq:interv-L}
     \udpL \interv{a}{b} = a
 \end{equation}
-\begin{equation}
+\begin{equation}\label{eq:interv-U}
     \udpU \interv{a}{b} = b
 \end{equation}
 \end{itemize}
 
-\begin{equation}
+\begin{equation}\label{eq:interv-L-def}
     \definemappos{\udpL_{\posAn}}{\Int\,\posAn}{\posAn}%
     {\interv{a}{b}}{ a }
 \end{equation}
 
-\begin{equation}
+\begin{equation}\label{eq:interv-U-def}
     \definemappos{\udpU_{\posAn}}{\Int\,\posAn^{\op}}{\posAn}%
     {\interv{a}{b}}{ b }
 \end{equation}
@@ -151,7 +158,7 @@ We use the following notation for intervals:
 
 For example, one such function is
 % 
-\begin{equation}
+\begin{equation}\label{eq:interval-func-example}
     \definemap{\mora}{\reals}{\Int\,\reals,}%
     {x}{ \interv{x-1}{x+1}. }
 \end{equation}
@@ -232,7 +239,7 @@ The $\lift$ operation is
     \begin{cases}
     \definemap{\lift_{\Obja, \Objb}\mora}%
     {\Obja}{\uppersets\Objb}
-    {x}{\upit x}
+    {x}{\upit \mora(x)}
     \end{cases}
     }
 \end{equation}
