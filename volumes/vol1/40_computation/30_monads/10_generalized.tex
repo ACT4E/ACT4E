@@ -126,6 +126,29 @@ Recall that for a poset $\posAn$, we can define the poset of intervals~$\Int\,\p
 
 Analogously to the previous case, here we want to generalize from monotone functions to nondeterministic monotone functions, where the uncertainty is represented by intervals.
 
+We use the following notation for intervals:
+\begin{itemize}
+\item The interval $\{x\colon a \posleq x \posleq b\}$ is denoted $\interv{a}{b}$.
+\item $\udpL\cdot$ and $\udpU\cdot$ extract the lower and upper bound from the interval, so that we have
+\begin{equation}
+    \udpL \interv{a}{b} = a
+\end{equation}
+\begin{equation}
+    \udpU \interv{a}{b} = b
+\end{equation}
+\end{itemize}
+
+\begin{equation}
+    \definemappos{\udpL_{\posAn}}{\Int\,\posAn}{\posAn}%
+    {\interv{a}{b}}{ a }
+\end{equation}
+
+\begin{equation}
+    \definemappos{\udpU_{\posAn}}{\Int\,\posAn^{\op}}{\posAn}%
+    {\interv{a}{b}}{ b }
+\end{equation}
+
+
 For example, one such function is
 % 
 \begin{equation}
@@ -150,28 +173,125 @@ can be rewritten as the function
     {x}{ \interv{x^2}{x^2}}
 \end{equation}
 % 
-Generically, this is the definition of the 
+Generically, this is the definition of the lift function
 \begin{equation}
     \definemap%
-    {\lift_{\posAn, \posBn}}%
-    {(\posAn \to_{\Pos} \posBn)}%
-    {(\posAn \to_{\Pos} \Int\posBn)}%
+    {\lift_{\Obja, \Objb}}%
+    {(\Obja \to_{\Pos} \Objb)}%
+    {(\Obja \to_{\Pos} \Int\,\Objb)}%
     {\mora}{%
     \begin{cases}
-    \definemap{\lift_{\posAn, \posBn}\mora}%
-    {\posAn}{\Int\posBn}
+    \definemap{\lift_{\Obja, \Objb}\mora}%
+    {\Obja}{\Int\,\Objb}
     {x}{\interv{\mora(x)}{\mora(x)}}
     \end{cases}
     }
 \end{equation}
 
-\subsection{Modeling probabilistic uncertainty}
+What is the "fish" function? Note that an interval-valued monotone map is also a special relation. Therefore, we want that composition continues to work in the same manner.
+
+
+Therefore, we obtain 
+\begin{equation}
+    \prftree%[l]{\fish\colon}%
+    {\mora: \Obja \to \Int\,\Objb}%
+    {\quad}{\morb: \Objb \to \Int\,\Objc}%
+    {\definemap{(\mora\mthen\morb)}{\Obja}{\Int\,\Objc}%
+    {x}{ \interv{\udpL\morb(\udpL\mora(x))}
+                {\udpU\morb(\udpU\mora(x))}}
+                }
+  \end{equation}
+ 
+
+\subsection{Keeping track of resource usage}
+
+As another example, we consider the case where we want to attach additional information to a category.
+
+Suppose we want to consider not functions, but \emph{procedures} which have resource consumption.
+A function is a mathematical entity - a procedure is a program that \emph{implements} a function.
+Suppose we want to model execution time - and, that execution time might depend on the input of the procedure.
+
+In this case, we would like to extend a function $\mora: \Obja \to \Objb$  
+into a procedure $\mora: \Obja \to (\Objb\times \nonNegReals)$ which gives both the result as well as the execution time. 
+
+We consider the ideal functions to be procedures that have zero execution time.
+
+We can define the lift map as follows:
+\begin{equation}
+    \definemap%
+    {\lift_{\Obja, \Objb}}%
+    {(\Obja \to \Objb)}%
+    {(\Obja \to \Objb \times \nonNegReals)}%
+    {\mora}{%
+    \begin{cases}
+    \definemap{\lift_{\Obja, \Objb}\mora}%
+    {\Obja}{\Objb\times\nonNegReals}
+    {x}{\tup{x, 0}}
+    \end{cases}
+    }
+\end{equation}
+
+
+% As for the fish function we have
+
+
+% \begin{equation}
+%     \prftree%[l]{\fish\colon}%
+%     {\mora: \Obja \to (\Objb \times \nonNegReals)}%
+%     {\quad}{\morb: \Objb \to (\Objc \times \nonNegReals)}%
+%     {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\times \nonNegReals)}%
+%     {x}{ \tup{\morb_1(\mora_1(x)), \morb_2(\mora_1(x)) + \mora_2(x) } }}
+%   \end{equation}
 
 
 
-\subsection{Keeping track of resource use}
+As for the fish function we have
 
 
+\begin{equation}
+    \prftree%[l]{\fish\colon}%
+    {\mora: \Obja \to (\Objb \times \nonNegReals)}%
+    {\quad}{\morb: \Objb \to (\Objc \times \nonNegReals)}%
+    {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\times \nonNegReals)}%
+    {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) + \mora_2(x) } }}
+  \end{equation}
+
+Note that we can recover the naked function by taking the first component of the tuple.
+
+
+\subsubsection{Generalization with monoid}
+
+
+This can be further generalized from the real numbers to an arbitrary monoid
+\begin{equation}
+    \monoidA = \tup{\monoidAset, \mtimes_\monoidA, \idmon_\monoidA}
+\end{equation} structure. 
+
+\begin{equation}
+    \definemap%
+    {\lift_{\Obja, \Objb}}%
+    {(\Obja \to \Objb)}%
+    {(\Obja \to \Objb \times \monoidAset)}%
+    {\mora}{%
+    \begin{cases}
+    \definemap{\lift_{\Obja, \Objb}\mora}%
+    {\Obja}{\Objb\times\monoidAset}
+    {x}{\tup{x, \idmon_\monoidA}}
+    \end{cases}
+    }
+\end{equation}
+
+
+As for the fish function we have
+
+
+\begin{equation}
+    \prftree%[l]{\fish\colon}%
+    {\mora: \Obja \to (\Objb \times \monoidAset)}%
+    {\quad}{\morb: \Objb \to (\Objc \times \monoidAset)}%
+    {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\times \monoidAset)}%
+    {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) \mtimes_\monoidA \mora_2(x) } }}
+  \end{equation}
 
 
 \todo{... this additional structure is what constitutes a monad.}
