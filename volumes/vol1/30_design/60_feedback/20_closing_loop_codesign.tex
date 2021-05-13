@@ -43,34 +43,34 @@ Can we ``close the loop'', as in the diagram reported in~\cref{fig:extrace_2}?
   \label{fig:extrace_2}
 \end{figure}
 
-\todotext{adapt style and macroize everything}
 It turns out that we can give a well-defined semantics to this loop-closing operation, which coincides with the notion of a \emph{trace} in category theory.
 
 The following is the formal definition of the trace operation for design problems.
 
 \begin{definition}[Trace of a design problem]
   \label{def:dp-trace}
-  Given a design problem~$\mora\colon \funposC \times \funposA \profto \resposC \times \resposB$, we can define
-  its \emph{trace}~$\Tr_{\funposA,\resposB}^\posgenC(\mora) \colon \funposA \profto \resposB$ as follows:
+  Given a design problem~$\adpa\colon \funposC \times \funposA \profto \resposC \times \resposB$, we can define
+  its \emph{trace}~$\Tr_{\funposA,\resposB}^\posgenC(\adpa) \colon \funposA \profto \resposB$ as follows:
 %
   \begin{equation}
     \label{eq:tracedef}
     \begin{aligned}
-      \Tr_{\funposA,\resposB}^\posgenC(\mora) \colon  \funposA\op \times \resposB &\toinPos \Bool \\
+      \Tr_{\funposA,\resposB}^\posgenC(\adpa) \colon  \funposA\op \times \resposB &\toinPos \Bool \\
       \tup{\F{a}^*, \R{b}} &\mapsto \bigvee_{c\in \posgenC}
-      f(\tup{\F{a}^*, \R{c}},
+      \adpa(\tup{\F{a}^*, \R{c}},
       \tup{\F{b}^*, \R{c}}).
     \end{aligned}
   \end{equation}
 \end{definition}
 
 
-Think of drawing a loop as a way of writing down the following requirement: Something that produces~$C$ should not use up more of~$C$ than it produces.
+Think of drawing a loop as a way of writing down the following requirement: Something that produces~$\posgenC$ should not use up more of~$\posgenC$ than it produces.
 
 \paragraph{Trace axioms}
-We will show that the loop operation~$\Tr_{A,B}^C$ corresponds to the \emph{trace} in~\DP.
+We will show that the loop operation~$\Tr_{\posgenA,\posgenB}^\posgenC$ corresponds to the \emph{trace} in~\DP.
 Intuitively, forming a loop models the idea of feedback in a control-theoretic setting--the output of a process influences the choice of input--while the idea of ``trace'' of a monoidal category comes from the trace of a square matrix~$(\Tr A = \sum_i a_{ii})$, which defines the categorical trace in the (monoidal) category of vector spaces.
-The connection between the two is more apparent if one decomposes the trace of a square matrix as a set of properties that any linear map from a space to itself should satisfy. One can find the trace axioms in any standard text on category theory, \eg  \cite{mac2013categories}; these are equivalent to certain diagrammatic conditions \cite{joyal96}, as in \cref{tab:traceaxioms}.
+The connection between the two is more apparent if one decomposes the trace of a square matrix as a set of properties that any linear map from a space to itself should satisfy. One can find the trace axioms in any standard text on category theory, for instance  \cite{mac2013categories};
+these are equivalent to certain diagrammatic conditions \cite{joyal96}, as in \cref{tab:traceaxioms}.
 
 
 \begin{table}[h!]
@@ -96,38 +96,42 @@ The connection between the two is more apparent if one decomposes the trace of a
 \end{lemma}
 \begin{proof}
   We have already shown that~$\tup{\DP,\otimes,\singleton,\sigma}$ is a symmetric monoidal category (\cref{lem:symmetricmonoidaldp}).
-  We prove the trace axioms one by one, starting from vanishing (\cref{eq:vanishing_1}, \cref{eq:vanishing_2}). Given any~$A,B\in \Ob_\DP$ and~$f\colon \F{A}\times \F{\singleton}\profto \R{B}\times \R{\singleton}$ in~\DP, we have
+  We prove the trace axioms one by one, starting from vanishing (\cref{eq:vanishing_1}, \cref{eq:vanishing_2}).
+  Given any~$\posgenA,\posgenB\in \Ob_\DP$ and~$\adpa\colon \F{\posgenA}\times \F{\singleton}\profto \R{\posgenB}\times \R{\singleton}$ in~\DP, we have
   \begin{equation}
     \begin{aligned}
-      \Tr_{\F{A},\R{B}}^{\singleton}(f)(\F{a^*},\R{b})&=\bigvee_{c\in \singleton}f(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{c}})\\
-      &=f(\tup{\F{a},\F{1}}^*,\tup{\R{b},\R{1}})\\
-      &=f(\F{a}^*,\R{b}).
+      \Tr_{\F{\posgenA},\R{\posgenB}}^{\singleton}(\adpa)(\F{a^*},\R{b})&=\bigvee_{c\in \singleton}\adpa(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{c}})\\
+      &=\adpa(\tup{\F{a},\F{1}}^*,\tup{\R{b},\R{1}})\\
+      &=\adpa(\F{a}^*,\R{b}).
     \end{aligned}
   \end{equation}
-  Furthermore, for any morphism~$f\colon \F{A}\times \F{X}\times \F{Y} \profto \R{B}\times \R{X} \times \R{Y}$ in \DP, one has
+  Furthermore, for any morphism~$\adpa\colon \F{\posgenA}\times \F{\posgenX}\times \F{\posgenY} \profto \R{\posgenB}\times \R{\posgenX} \times \R{\posgenY}$ in \DP, one has
   \begin{equation}
     \begin{aligned}
-      \Tr_{\F{A},\R{B}}^{X\times Y}(f)(\F{a}^*,\R{b})&=\bigvee_{\tup{x,y} \in X\times Y} f(\tup{\F{a},\F{x},\F{y}}^*,\tup{\R{b},\R{x},\R{y}})\\
-      &=\bigvee_{x \in X}\left(\bigvee_{y \in Y} f(\tup{\F{a},\F{x},\F{y}}^*,\tup{\R{b},\R{x},\R{y}})\right)\\
-      &=\Tr_{\F{A},\R{B}}^X\left(
-      \Tr_{\F{A}\times \F{X},\R{B}\times \R{X}}^Y(f)(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\right).
+      \Tr_{\F{\posgenA},\R{\posgenB}}^{\posgenX\times \posgenY}(\adpa)(\F{a}^*,\R{b})&=\bigvee_{\tup{x,y} \in \posgenX\times \posgenY} \adpa(\tup{\F{a},\F{x},\F{y}}^*,\tup{\R{b},\R{x},\R{y}})\\
+      &=\bigvee_{x \in \posgenX}\left(\bigvee_{y \in \posgenY} \adpa(\tup{\F{a},\F{x},\F{y}}^*,\tup{\R{b},\R{x},\R{y}})\right)\\
+      &=\Tr_{\F{\posgenA},\R{\posgenB}}^X\left(
+      \Tr_{\F{\posgenA}\times \F{\posgenX},\R{\posgenB}\times \R{\posgenX}}^Y(\adpa)(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\right).
     \end{aligned}
   \end{equation}
-  For the superposing axiom (\cref{eq:superposing}), consider~$f\colon \F{A}\times \F{X}\profto \R{B}\times \R{X}$ in \DP. One has
+  For the superposing axiom (\cref{eq:superposing}), consider~$\adpa\colon \F{\posgenA}\times \F{\posgenX}\profto \R{\posgenB}\times \R{\posgenX}$ in \DP.
+  One has
   \begin{equation}
     \begin{aligned}
-      \Tr_{C\times \F{A},C\times \R{B}}^{X}(\id_C\otimes f)(\tup{\F{c_1},\F{a}}^*,\tup{\R{c_2},\R{b}})&=\bigvee_{x\in X} \id_C(\F{c_1}^*,\R{c_2})\wedge f(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\\
-      &=\id_C(\F{c_1}^*,\R{c_2}) \wedge \bigvee_{x\in X} f(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\\
-      &=(\id_C \otimes \Tr_{\F{A},\R{B}}^X(f))(\tup{\F{c_1},\F{a}}^*,\tup{\R{c_2},\R{b}}).
+      \Tr_{\R{\posgenC}\times \F{\posgenA},\R{\posgenC}\times \R{\posgenB}}^{\posgenX}(\id_\posgenC\mtimescat \adpa)(\tup{\F{c_1},\F{a}}^*,\tup{\R{c_2},\R{b}})&=
+      \bigvee_{x\in \posgenX} \id_\posgenC(\F{c_1}^*,\R{c_2})\wedge \adpa(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\\
+      &=\id_\posgenC(\F{c_1}^*,\R{c_2}) \wedge \bigvee_{x\in \posgenX} \adpa(\tup{\F{a},\F{x}}^*,\tup{\R{b},\R{x}})\\
+      &=(\id_\posgenC \mtimescat \Tr_{\F{\posgenA},\R{\posgenB}}^\posgenX(\adpa))(\tup{\F{c_1},\F{a}}^*,\tup{\R{c_2},\R{b}}).
     \end{aligned}
   \end{equation}
-  Finally, for yanking (\cref{eq:yanking}) consider~$\sigma_{X,X}$. One has
+  Finally, for yanking (\cref{eq:yanking}) consider~$\sigma_{\posgenX,\posgenX}$.
+  One has
   \begin{equation}
     \begin{aligned}
-      \Tr_{X,X}^{X}(\sigma_{X,X})(\F{x_1}^*,\R{x_2})&=\bigvee_{x\in X} \sigma_{X,X}(\tup{\F{x_1},\F{x}}^*,\tup{\R{x},\R{x_2}}) \\
-      &=\bigvee_{x\in X} \F{x_1} \ordleq \R{x_2} \wedge \F{x}\ordleq \R{x}\\
-      &=\bigvee_{x\in X} \F{x_1} \ordleq \R{x_2}\\
-      &=\id_X(\F{x_1}^*,\R{x_2}).
+      \Tr_{\posgenX,\posgenX}^{\posgenX}(\sigma_{\posgenX,\posgenX})(\F{x_1}^*,\R{x_2})&=\bigvee_{x\in \posgenX} \sigma_{\posgenX,\posgenX}(\tup{\F{x_1},\F{x}}^*,\tup{\R{x},\R{x_2}}) \\
+      &=\bigvee_{x\in \posgenX} \F{x_1} \ordleq \R{x_2} \wedge \F{x}\ordleq \R{x}\\
+      &=\bigvee_{x\in \posgenX} \F{x_1} \ordleq \R{x_2}\\
+      &=\id_\posgenX(\F{x_1}^*,\R{x_2}).
     \end{aligned}
   \end{equation}
 \end{proof}
