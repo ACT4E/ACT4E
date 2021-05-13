@@ -1,10 +1,12 @@
 % !TEX root = chapter-standalone.tex
 
 
+\devel{
 \section{Enrichments}
 \label{sec:enriched}
 
 %\marginnote{This is a margin note using the geometry package}
+
 
 A design problem ``enriched in \Bool'' answers the question, ``is it feasible to provide a given functionality \fun with resources \res?''. A design problem ``enriched in \Set'' answers the question, ``which implementations provide \fun with \res?''. A design problem ``enriched in \DP'' answers the question, ``which design problems provide \fun with \res?'' If compact closure allows us to zoom out by studying design problems of design problems, then enrichment allows us to zoom in by studying the `subatomic' composition of design problems.
 
@@ -27,30 +29,50 @@ In order to sharpen the intuition of the above example (implementation spaces of
 Given that \DP is compact closed and the external hom is a poset, it is a short, visual step to seeing that \DP is also what we call a \emph{2-category}: a category where the (external) hom-object between any two objects is itself a category (remember that a poset is a kind of category, from \cref{sec:posetsarecats}). In other words, a 2-category is a category endowed with the extra structure of ``morphisms between morphisms''.
 
 Another way of defining a 2-category is to say that it is ``enriched in \Category'', the category of categories, whose objects are (small) categories and morphisms are functors. More generally, to say that a category \CatC is \emph{enriched in~\CatD}, where \CatD is a monoidal category, is to say that $\HomSet\CatC{A}{B} \in \CatD$ for all $A,B \in \CatC$, and that composition of morphisms in $\HomSet\CatC{A}{B}$ respects the rules of composition in \CatD.
-
+}
 
 \section{Enriched categories}\label{sec:enrichment-enriched-categories}
 
-\devel{
-\begin{forslides}
-\begin{definition}[Enriched category]
+\begin{ctdefinition}[Enriched category]
   \label{def:enriched_cat}
-  Let~$\tup{\CatB,\mtimescat, \idmoncat, \associator, \leftunitor,\rightunitor}$ be a monoidal category.
-  A category~$\CatC$ \emph{enriched} in~$\CatB$ is composed of:
+  Let~$\tup{\Cat{V},\mtimescat, \idmoncat, \associator, \leftunitor,\rightunitor}$ be a monoidal category.
+  A category~$\CatC$ \emph{enriched} in~$\Cat{V}$ is composed of:
   \begin{compactenum}
     \item The set of objects~$\Ob_\CatC$;
     \item For all~$\Obja,\Objb\in \Ob_\CatC$, an object~$\HomSet{\CatC}{\Obja}{\Objb}$, called the \emph{hom-object} from~$\Obja$ to~$\Objb$.
-    \item For all~$\Obja, \Objb, \Objc\in \Ob_\CatC$, there exists a morphism~$\stylemorph{m}_{\Obja,\Objb,\Objc}$ in~$\CatB$:
+    \item For all~$\Obja, \Objb, \Objc\in \Ob_\CatC$, there exists a morphism~$\mthen_{\Obja,\Objb,\Objc}$ in~$\Cat{V}$:
     \begin{equation}
-      \stylemorph{m}_{\Obja,\Objb,\Objc}\colon \HomSet{\CatC}{\Obja}{\Objb}\mtimescat \HomSet{\CatC}{\Objb}{\Objc}\mto \HomSet{\CatC}{\Obja}{\Objc}.
+      \mthen_{\Obja,\Objb,\Objc}\colon \HomSet{\CatC}{\Obja}{\Objb}\mtimescat \HomSet{\CatC}{\Objb}{\Objc}\mto \HomSet{\CatC}{\Obja}{\Objc}.
     \end{equation}
     This is called \emph{composition morphism}.
-    \item For each~$\Obja\in \Ob_\CatC$, a morphism~$\stylemorph{j}_\Obja\colon \idmoncat \mto \HomSet{\CatC}{\Obja}{\Obja}$, called \emph{identity element}.
+    \item For each~$\Obja\in \Ob_\CatC$, a morphism~$\catid_\Obja\colon \idmoncat \mto \HomSet{\CatC}{\Obja}{\Obja}$, called \emph{identity element}.
   \end{compactenum}
   Furthermore, for any~$\Obja,\Objb,\Objc,\Objd\in \Ob_\CatC$, the following diagrams must commute.
-\end{definition}
+\end{ctdefinition}
+
+\begin{center}
   \includesag{enrichment_assoc}
+\end{center}
+
+\begin{center}
   \includesag{enrichment_unital}
+\end{center}
+
+  \begin{definition}
+    \label{def:prod_enrich_cat}
+    Let \CatA and \CatB be categories enriched in a symmetric monoidal category~$\Cat{V}$. Their \emph{product} is a~$\Cat{V}$-enriched category~$\CatA\times \CatB$ with:
+    \begin{compactenum}
+      \item $\Ob_{\CatA\times \CatB}\coloneqq \Ob_\CatA \times \Ob_\CatB$;
+      \item $\HomSet{\CatA\times \CatB}{\tup{\Obja,\Objb}}{\tup{\Obja',\Objb'}}\coloneqq \HomSet{\CatA}{\Obja}{\Obja'}\mtimescat \HomSet{\CatB}{\Objb}{\Objb'}$, for two objects~$\tup{\Obja,\Objb}$ and~$\tup{\Obja',\Objb'}$ in~$\Ob_{\CatA\times \CatB}$.
+    \end{compactenum}
+\end{definition}
+
+
+\todotext{put contents of lecture}
+
+\devel{
+\begin{forslides}
+
 
   \begin{equation*}
     \label{eq:upos_lat_1}
@@ -182,36 +204,10 @@ Another way of defining a 2-category is to say that it is ``enriched in \Categor
       d_Y(f(x),f(y))\leq Kd_X(x,y),\quad \forall x\in X,y\in Y.
     \end{equation}
 \end{definition}
-  \begin{definition}
-    \label{def:prod_enrich_cat}
-    Let \CatA and \CatB be categories enriched in a symmetric monoidal category~$\Cat{V}$. Their \emph{product} is a~$\Cat{V}$-enriched category~$\CatA\times \CatB$ with:
-    \begin{compactenum}
-      \item $\Ob_{\CatA\times \CatB}\coloneqq \Ob_\CatA \times \Ob_\CatB$;
-      \item $\HomSet{\CatA\times \CatB}{\tup{\Obja,\Objb}}{\tup{\Obja',\Objb'}}\coloneqq \HomSet{\CatA}{\Obja}{\Obja'}\mtimescat \HomSet{\CatB}{\Objb}{\Objb'}$, for two objects~$\tup{\Obja,\Objb}$ and~$\tup{\Obja',\Objb'}$ in~$\Ob_{\CatA\times \CatB}$.
-    \end{compactenum}
-\end{definition}
 \end{forslides}
 }
 
-
-
-\begin{ctdefinition}[\iindex{Enriched category}]
-  \label{def:enriched-category}
-  We say that a category \CatC is enriched in \CatD if:
-  \begin{enumerate}
-    \item For all objects~$\Obja, \Objb$ of \CatC, the set~$\HomSet\CatC{\Obja}{\Objb}$ can be considered an object of \CatD;
-    \item \CatD is a monoidal category (\cref{def:monoidal_cat}),
-    with monoidal product~$\mtimesD$;
-    \item For all objects~$\Obja, \Objb, \Objc$ of \CatC, there exists
-    a certain morphism~$m_{\Obja, \Objb, \Objc}$ in \CatD,
-    which goes from the object~$\HomSet\CatC\Obja\Objb \mtimesD \HomSet\CatC\Objb\Objc$ to the object~$ \HomSet\CatC\Obja\Objc$:
-    \begin{equation}
-      \label{eq:enriched-condition}
-      m_{\Obja, \Objb, \Objc} \colon \HomSet\CatC\Obja\Objb \mtimesD \HomSet\CatC\Objb\Objc \mto \HomSet\CatC\Obja\Objc.
-    \end{equation}
-  \end{enumerate}
-\end{ctdefinition}
-
+\devel{
 % A locally-posetal 2-category is also known as a category enriched over posets.
 %\begin{definition}\label{def:loc_pos_cat}
 %A \emph{locally-posetal 2-category} is a category \CatC, with an additional pre-order structure $\leq$ on the hom-set $\CatC(p,q)$, for every two objects $p,q\in\CatC$, which additionally satisfies the condition that if $f\leq g$ in $\Hom(p,q)$ and $j\leq k$ in $\Hom(q,r)$, then $f;j\leq g;k$ in $\Hom(p,r)$.
@@ -336,6 +332,7 @@ The following is obvious, but we record it anyway.
   This $\phi$ is a morphism in \Set, and it is the witness required by~\cref{eq:enriched-condition}.
 
 \end{example}
+}
 
 \begin{gradedexercise}[\exname{DPIsEnrichedInBoundedLat}]\label{ex:DPIsEnrichedInBoundedLat}
 Show that the category of design problems (objects are posets and morphisms are $\Bool$-profunctors) can be viewed as a category enriched in the monoidal category of bounded lattices.
@@ -355,9 +352,7 @@ Let $\CatV$ be a symmetric monoidal category, and let $\CatC$ and $\CatD$ be $\C
 Is it needed that $\CatV$ be \emph{symmetric} monoidal? If yes, were is symmetry needed?
 \end{gradedexercise}
 
-
-
-
+\devel{
 \section{Set-enriched DPs (DPIs)}
 
 \begin{proposition}
@@ -379,6 +374,7 @@ Since posets are also categories, monotone maps between posets can be defined as
 \end{equation*}
 \end{widepar}
 is a morphism in \Bool---in other words, one among the set $1 \leq_\Bool 1, 0 \leq_\Bool 0$, and $0 \leq_\Bool 1$ familiar from \cref{ex:bool}.
+}
 
 \begin{ctdefinition}[\iindex{Enriched functor}]
   \label{def:enrichedfunctor}
@@ -401,6 +397,7 @@ is a morphism in \Bool---in other words, one among the set $1 \leq_\Bool 1, 0 \l
   \end{compactenum}
 \end{ctdefinition}
 
+\devel{
 \begin{proposition}
   Design problems in \DP are Boolean-enriched profunctors.
 \end{proposition}
@@ -667,7 +664,7 @@ The far more natural option, from the perspective of enriched category theory, i
 \end{example}
 
 \subsubsection{Operations on DPIs}
-
+}
 
 % \begin{table}[t!]
 %     \centering
