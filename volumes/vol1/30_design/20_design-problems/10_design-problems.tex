@@ -4,20 +4,14 @@
 \section{Design Problems}
 \label{sec:Design-Problems}
 
-\devel{
-
-\begin{center}
-  \includesag{funimpres_1}
-\end{center}
-
-}
-We start by defining a ``design problem with implementation'', which is a tuple of ``\F{functionality} space'', ``\Icol{implementation} space'', and ``\R{resources} space'', together with two maps that describe the feasibility relations between these three spaces (\cref{fig:setup}).
+We start by defining a ``design problem with implementation'', which is a tuple of ``\F{functionality} space'',
+``\Icol{implementation} space'', and ``\R{resources} space'', together with two maps that describe the feasibility relations between these three spaces (\cref{fig:setup}).
 
 \begin{definition}[Design problem with implementation]
   \label{def:DPI}
   A \emph{\iindex{design problem with implementation}} (DPI) is a tuple
   \begin{equation}
-    \tup{\funsp, \ressp, \impsp, \prov,\req}
+    \tup{\funsp, \ressp, \impsp, \prov,\req},
   \end{equation}
   where:
 
@@ -63,13 +57,14 @@ These \emph{co-design diagrams} are not to be confused with signal flow diagrams
 
 
 \begin{example}
+  \label{exa:dpi_elmotor}
   We now want to revisit the leading example of \cref{sec:attributes_sameness} with the newly introduced co-design perspective. Let's consider a list of electrical motors as in~\cref{tab:electric_motors_2}.
   \begin{table*}[h]
     \centering
     \adjustbox{max width=\textwidth}{%
       \begin{tabular}{c|c|c|c|c|c}
         Motor ID & Company & $\unit[\text{Torque}]{[kg\cdot cm]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
-        & \unit[Cost]{[\stdcurr]}
+        & \unit[Cost]{[USD]}
         \\
         \hline
         \textsf{1204} & \textsf{SOYO}        & 0.18 & 60.0  & 2.34 & 19.95  \\
@@ -91,10 +86,10 @@ These \emph{co-design diagrams} are not to be confused with signal flow diagrams
     \impsp_\mathrm{EM}=\{1204,1206,1207,2267,2279,1478,2299 \}.
   \end{equation}
   We now have to think about \textR{resources} and \textF{functionalities}.
-  Each motor \textR{requires} some \textR{weight} (in \unit[]{g}), \textR{power} (in \unit[]{W}), and has some \textR{cost} (in \stdcurr), and \textF{provides} some \textF{torque} (in~$\unit[]{kg\cdot cm}$).
+  Each motor \textR{requires} some \textR{weight} (in \unit[]{g}), \textR{power} (in \unit[]{W}), and has some \textR{cost} (in USD), and \textF{provides} some \textF{torque} (in~$\unit[]{kg\cdot cm}$).
   Thus, we can identify
   \begin{equation*}
-    \funsp =\reals\times \{\unit[]{kg\cdot cm}\},\quad \ressp=(\reals\times \{\unit[]{g}\})\times (\reals\times \{\unit[]{W}\})\times (\reals\times \{\unit[]{\stdcurr}\}),
+    \funsp =\reals\times \{\unit[]{kg\cdot cm}\},\quad \ressp=(\reals\times \{\unit[]{g}\})\times (\reals\times \{\unit[]{W}\})\times (\reals\times \{\unit[]{USD}\}),
   \end{equation*}
   by considering the units as discussed in \cref{sec:currency_cat}.
   The correspondences are given by the details in \cref{tab:electric_motors_2}.
@@ -102,11 +97,13 @@ These \emph{co-design diagrams} are not to be confused with signal flow diagrams
   \begin{equation}
     \prov_\mathrm{EM}(1204)=0.18, \quad \req_\mathrm{EM}(1204)=\tup{\unit[60]{g},\unit[2.34]{W},\unit[19.95]{USD}}.
   \end{equation}
+
+  \begin{comment}
   The catalogue induces a design problem~$d_\mathrm{EM}$ with diagrammatic form as in \cref{fig:dp_em}.
   In particular, we can query the design problem for combinations of \textF{functionalities} and \textR{resources}.
   For instance:
   \begin{equation}
-    d\left(\unit[0.2]{kg\cdot cm}, \tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{\stdcurr}} \right)=\false,
+    d\left(\unit[0.2]{kg\cdot cm}, \tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}} \right)=\false,
   \end{equation}
   since no listed model can provide~$\unit[0.2]{kg\cdot cm}$ \textF{torque} by requiring the set of \textR{resources} $\tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{\stdcurr}}$ or less.
 
@@ -116,6 +113,7 @@ These \emph{co-design diagrams} are not to be confused with signal flow diagrams
     \end{center}
     \caption{Electric motor design problem.}\label{fig:dp_em}
   \end{figure}
+  %%% THE ABOVE NEEDS TO BE PUT IN THE DP SECTION
 
   \begin{figure}[tbh]
     \begin{center}
@@ -145,16 +143,17 @@ These \emph{co-design diagrams} are not to be confused with signal flow diagrams
     \caption{Specifications of common battery technologies~\cite{censi2015}. }
     \label{tab:battery}
   \end{table}
-  \todo{finish with design problem description}
+\end{comment}
 
 \end{example}
 
 
 \begin{example}[Motor design]
-  \label{exa:motor}Suppose we need to choose a motor for a robot from
+  \label{exa:motor}
+  Suppose we need to choose a motor for a robot from
   a given set. The \emph{functionality} of a motor could be parametrized
   by \textF{torque} and \textF{speed}. The \emph{resources} to consider
-  could include the \R{\unit[cost]{[\stdcurr]}}, the \R{\unit[mass]{[g]}}, the
+  could include the \R{\unit[cost]{[USD]}}, the \R{\unit[mass]{[g]}}, the
   input \R{\unit[voltage]{[V]}}, and the input \R{\unit[current]{[A]}}.
   The map~$\prov \colon \impsp\to\funsp$ assigns to each motor its
   functionality, and the map~$\req \colon \impsp\rightarrow\ressp$ assigns
@@ -173,12 +172,13 @@ These \emph{co-design diagrams} are not to be confused with signal flow diagrams
 \begin{example}[Chassis design]
   \label{exa:chassis}
   Suppose we need to choose a chassis for a robot~(\cref{fig:gmcdp_chassis_eval}).
-  The implementation space~\impsp could be the set of all chassis that could ever be designed (in case of a theoretical analysis), or just the set of chassis available in the catalogue at hand (in case
-  of a practical design decision).
+  The implementation space~\impsp could be the set of all chassis that could ever be designed (in case of a theoretical analysis),
+or just the set of chassis available in the catalogue at hand (in case of a practical design decision).
   The functionality of a chassis could be formalized as ``the ability to transport a certain \F{payload
       {[}g{]}}'' and ``at a given \F{speed {[}m/s{]}}''.
   More refined functional requirements would include maneuverability, the cargo volume, \etc.
-  The resources to consider could be the \R{cost {[}\${]}} of the chassis; the total mass; and, for each motor to be placed in the chassis, the required \R{speed {[}rad/s{]}} and \R{torque {[}Nm{]}}.
+  The resources to consider could be the \R{cost {[}USD{]}} of the chassis; the total mass;
+and, for each motor to be placed in the chassis, the required \R{speed {[}rad/s{]}} and \R{torque {[}Nm{]}}.
 \end{example}
 
 \begin{figure}[h]
@@ -306,7 +306,7 @@ linear/Gaussian setting.
 
 \begin{example}
 (Stereo reconstruction)
-  Progressive reconstruction system (\eg ,~\cite{locher16progressive}),
+  Progressive reconstruction systems (\cite{locher16progressive}),
   which start with a coarse approximation of the solution that is progressively
   refined, are described by a smooth relation between the \F{resolution}
   and the \R{latency} to obtain the answer~(\cref{fig:progressive}).
@@ -356,8 +356,8 @@ linear/Gaussian setting.
   and "\F{\emph{minus} the packet drop probability}" for them
   to count as functionality. As for the resources, apart from the \R{transmission
   power [W]}, one should consider at least \R{the spectrum occupation},
-  which could be described as an interval $[f_0,f_1]$ of the frequency
-  axis $\Runit{Hz}$. Thus the resources space is $\ressp=\colR\Runit{W}\times\aword{intervals}(\Runit{Hz})$.
+  which could be described as an interval~$[f_0,f_1]$ of the frequency
+  axis $\reals^{\unit[]{[Hz]}}$. Thus the resources space is $\ressp=\colR\reals^{\unit[]{[W]}}\times\aword{intervals}(\reals^{\unit[]{[Hz]}})$.
 \end{example}
 
 \begin{figure}[h]
@@ -395,9 +395,10 @@ of robots and the capabilities of the single robot.
 
 \todographics{redo right-hand side in tikz}
 
+\devel{
 \subsection{LQG Control}
 
-\todotext{Write short summary}
+\todotext{Write short summary}}
 
 \subsection{Computation}
 
@@ -541,7 +542,7 @@ of \F{tasks} and the poset of physical resources, which is the product
 of \R{sensing}, \R{actuation}, and \R{computation} resources,
 plus other non-physical resources, such as \R{prior knowledge}~(\cref{fig:robot-generic}).
 Given a task, there is a minimal antichain in the resources poset
-that describes the possible trade-offs (\eg , compensating lousier
+that describes the possible trade-offs (for instance, compensating lousier
 sensors with more computation).
 
 \begin{figure}
@@ -551,12 +552,14 @@ sensors with more computation).
   \label{fig:robot-generic}
 \end{figure}
 
+
+\devel{
 \begin{figure}
   \centering
   \includesag{dp_robotics}
   \caption{}
   \todo{finish with axes}
-\end{figure}
+\end{figure}}
 
 
 %\captionsideleft{\label{fig:robot-generic}}{\includegraphics[scale=0.33]{batteries_okane.pdf}}
@@ -568,11 +571,11 @@ relations can be defined for actuation and computation. O'Kane and
 Lavalle~\cite{okane08comparing} define a robot as a union of ``robotic
 primitives'', where each primitive is an abstraction for a set of
 sensors, actuators, and control strategies that can be used together
-(\eg , a compass plus a contact sensor allow to ``drive North until
+(for instance, a compass plus a contact sensor allow to ``drive North until
 a wall is hit''). The effect of each primitive is modeled as an operator
 on the robot's information space. It is possible to work out what
 are the minimal combinations of robotic primitives (minimal antichain)
-that are sufficient to perform a task (\eg , global localization),
+that are sufficient to perform a task (for instance, global localization),
 and describe a dominance relation (partial order) of primitives. Other
 works have focused on minimizing the complexity of the controller.
 Egerstedt~\cite{egerstedt03motion} studies the relation between
@@ -582,7 +585,6 @@ a proxy for the computation necessary to perform the task. Soatto~\cite{soatto11
 studies the relation between the \F{performance of a visual task},
 and the \R{minimal representation} that is needed to perform that
 task.
-
 
 
 \begin{example}[Hoare logic]
