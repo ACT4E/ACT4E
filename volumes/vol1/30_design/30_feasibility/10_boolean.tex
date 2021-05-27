@@ -42,19 +42,62 @@ Therefore, we can define, DPs (design problems), now without implementation.
   We represent it by an arrow~$\adp \colon \funsp \profto \ressp$.
 \end{definition}
 
-\devel{
-\begin{forslides}
-  \begin{equation*}
-    \label{eq:dpi_to_dp_1}
-    \tup{\fun^*,\res}\mapsto \exists \imp \in \impsp \colon (\fun \posleq_\funsp \prov(\imp)) \wedge (\req(\imp)\posleq_\ressp \res)
-\end{equation*}
+Given a DPI~$\tup{\funsp, \ressp, \impsp, \prov,\req}$ it is always possible to obtain a DP
+\begin{equation}
+   \label{eq:dpi_to_dp_1}
+\begin{aligned}
+  \adp\colon \funsp\op \times \ressp &\toinPos \Bool\\
+  \tup{\fun^*,\res}&\mapsto \exists \imp \in \impsp \colon (\fun \posleq_\funsp \prov(\imp)) \wedge (\req(\imp)\posleq_\ressp \res).
+\end{aligned}
+\end{equation}
+Evaluating the DP is the same as asking whether the set
+\begin{equation}
+  \label{eq:dpi_to_dp_2}
+\{ \imp \in \impsp \colon (\fun \posleq_\funsp \prov(\imp)) \wedge (\req(\imp)\posleq_\ressp \res)\}
+\end{equation}
+is empty or not.
 
-    \begin{equation*}
-    \label{eq:dpi_to_dp_2}
-    \tup{\fun^*,\res}\mapsto \{ \imp \in \impsp \colon (\fun \posleq_\funsp \prov(\imp)) \wedge (\req(\imp)\posleq_\ressp \res)\}
-\end{equation*}
-\end{forslides}
-}
+
+\begin{example}
+  Recall \cref{exa:dpi_elmotor}, with the catalogue of electric motors in \cref{tab:electric_motors_3}.
+
+    \begin{table*}[h]
+    \centering
+    \adjustbox{max width=\textwidth}{%
+      \begin{tabular}{c|c|c|c|c|c}
+        Motor ID & Company & $\unit[\text{Torque}]{[kg\cdot cm]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
+        & \unit[Cost]{[USD]}
+        \\
+        \hline
+        \textsf{1204} & \textsf{SOYO}        & 0.18 & 60.0  & 2.34 & 19.95  \\
+        \textsf{1206} & \textsf{SOYO}        & 0.95 & 140.0 & 3.00 & 19.95  \\
+        \textsf{1207} & \textsf{SOYO}        & 0.65 & 130.0 & 2.07 & 12.95  \\
+        \textsf{2267} & \textsf{SOYO}        & 3.7  & 285.0 & 4.76 & 16.95  \\
+        \textsf{2279} & \textsf{Sanyo Denki} & 1.9  & 165.0 & 5.40 & 164.95 \\
+        \textsf{1478} & \textsf{SOYO}        & 19.0 & 1,000 & 8.96 & 49.95  \\
+        \textsf{2299} & \textsf{Sanyo Denki} & 2.2  & 150.0 & 5.90 & 59.95
+      \end{tabular}%
+    }
+    \caption{A simplified catalogue of motors.}
+    \label{tab:electric_motors_3}
+  \end{table*}
+
+  The catalogue induces a design problem~$\adp_\mathrm{EM}$ with diagrammatic form as in \cref{fig:dp_em_2}.
+  In particular, we can query the design problem for combinations of \textF{functionalities} and \textR{resources}.
+  For instance:
+  \begin{equation}
+    \adp\left(\unit[0.2]{kg\cdot cm}, \tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}} \right)=\false,
+  \end{equation}
+  since no listed model can provide~$\unit[0.2]{kg\cdot cm}$ \textF{torque} by requiring the set of \textR{resources}~$\tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}}$ or less.
+
+  \begin{figure}[tbh]
+    \begin{center}
+      \includesag{520_dp_electric_motor}
+    \end{center}
+    \caption{Electric motor design problem.}\label{fig:dp_em_2}
+  \end{figure}
+\end{example}
+
 
 %\paragraph{Intended semantics}
 %When we consider a design problem~$\adp\colon \funsp \profto \ressp$, we imagine the poset~\funsp to represent the \textbf{f}unctionality to be provided, while the poset~$R$ represents the \textbf{r}esources required.
@@ -65,16 +108,17 @@ Therefore, we can define, DPs (design problems), now without implementation.
 
 % The monotonicity of~$\adp$ represents the two following assumptions.
 
+\begin{comment}
 \todotext{not sure we need example here anyway}
 \begin{example}
   Imagine a truck to be driving at constant speed on a straight street.
   If it can cover \unit[100]{km} with \unit[10]{L} of gasoline, it can also cover \unit[80]{km} with it.
   Furthermore, it will be able to cover the \unit[100]{km} also with \unit[10]{L} of gasoline.
 \end{example}
+
 %
 %A design problem~$\adp$ will satisfy these conditions if and only if it is represented by a monotone function.
-
-\todotext{not sure if it is used later}
+\end{comment}
 
 
 \begin{definition}[Feasible set of a design problem]
@@ -91,6 +135,7 @@ Therefore, we can define, DPs (design problems), now without implementation.
   \end{equation}
 \end{definition}
 
+
 \begin{remark}\label{rem:feasible-set-is-upper}
   The set~$K_\adp$ is always an upper set (\cref{def:upperset}).
   In fact, another way to define a design problem is to declare it as ``an upper set in~$\funsp\op \times \ressp$''. This is perhaps simpler than declaring it as ``a monotone map to~\Bool''. However, the definition as a monotone map will lend very easily to further generalization. In any case, it is helpful to keep both of these perspectives in mind. 
@@ -98,11 +143,10 @@ Therefore, we can define, DPs (design problems), now without implementation.
 
 
 
+The Boolean-valued design problems we are considering here do not distinguish between particular implementations:
+they only tell us if \emph{any} implementation or solution exists for given functionality and resources.
+We will define~\Set-enriched design problems, which directly generalize Boolean-valued design problems and do distinguish between particular implementations.
 
-
-
-The Boolean-valued design problems we are considering here do not distinguish between particular implementations: they only tell us if \emph{any} implementation or solution exists for given functionality and resources. We will define~\Set-enriched design problems, which directly generalize Boolean-valued design problems and do distinguish between particular implementations.
-\todotext{The enriched section should not be cited here if it is in vol 2}
 
 \paragraph{Diagrammatic notation} We represent design problems using a diagrammatic notation. One design problem~$\adp \colon \funsp \profto \ressp$ is represented as a box with functionality~\funsp on the \emph{left} and resources~\ressp on the \emph{right} (\cref{fig:diagrammaticdp}).
 \begin{figure}[h!]
@@ -111,7 +155,7 @@ The Boolean-valued design problems we are considering here do not distinguish be
   \end{center}
   \caption{Diagrammatic representation of a design problem. \label{fig:diagrammaticdp}}
 \end{figure}
-We will connect these diagrams.
+As we did for DPIs, we will connect these diagrams.
 \begin{example}
   An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100. The engine requires fuel and provides thrust, and so it can be modeled as a design problem where \R{fuel} and \F{thrust} are two totally-ordered sets representing their respective resources. The corresponding diagram is reported in~\cref{fig:enginedp}.
 
