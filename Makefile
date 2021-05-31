@@ -208,7 +208,7 @@ pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-iclo
 generate-videos:
 	 python3 -m act4e_videos.parsing \
 	 	--config videos/videos.yaml \
-		--base-url https://act4e-spring21.netlify.app/ \
+		--base-url https://act4e-spring21.netlify.app/videos/ \
 		--html gh-pages/videos \
 		--tex  videos/generated \
 		--pdfdir $(pdfdir)
@@ -216,7 +216,7 @@ generate-videos:
 generate-videos-novideo:
 	 python3 -m act4e_videos.parsing \
 	 	--config videos/videos.yaml \
-		--base-url https://act4e-spring21.netlify.app/ \
+		--base-url https://act4e-spring21.netlify.app/videos/ \
 		--html gh-pages/videos \
 		--tex  videos/generated \
 		--pdfdir $(pdfdir) \
