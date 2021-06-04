@@ -1,35 +1,37 @@
 % !TEX root = chapter-standalone.tex
 
+
 \section{\readytoreview{Currency categories}}
 \label{sec:currency_cat}
 In this section, we introduce a kind of category for describing currency exchangers. Our idea is to model currencies as objects of a category, and morphisms will describe ways of exchanging between those currencies. As an example, currency exchangers offer this service.
 
 We start with a set~$\setC$ of labels for all the currencies we wish to consider:
 \begin{equation*}
-  \setC = \{ \EUR, \USD, \CHF, \SGD, ... \}.
+    \setC = \{ \EUR, \USD, \CHF, \SGD, ... \}.
 \end{equation*}
 For each currency~$\transmuted{c} \in \setC$ we define an object~$\reals \times \{\transmuted{c}\}$ which represents possible amounts of the given currency~$\transmuted{c}$ (we will ignore the issue of rounding currencies to an accuracy of two decimals places, and we allow negative amounts). The currency label keeps track of which ``units'' we are using.
 
 \showslides{
-\begin{forslides}
-\begin{center}
-  \includesag{40_currency_blocks}
-\end{center}
-  \begin{center}
-    \includesag{40_currency_comp}
-\end{center}
-    \begin{center}
-    \includesag{40_currency_comp_2}
-\end{center}
-\end{forslides}}
+    \begin{forslides}
+        \begin{center}
+            \includesag{40_currency_blocks}
+        \end{center}
+        \begin{center}
+            \includesag{40_currency_comp}
+        \end{center}
+        \begin{center}
+            \includesag{40_currency_comp_2}
+        \end{center}
+    \end{forslides}
+}
 
 Now consider two such objects, say~$\reals \times \{\USD\}$ and~$\reals \times \{\EUR\}$. How can we describe the process of changing an amount of \USD to an amount of \EUR? We model this using two numbers: an exchange rate~$a$ and a commission~$b$ for the transaction. Given an amount~$x \in \reals$ of \USD, we define a morphism (a currency exchanger) as:
 \begin{equation*}
-  \label{eq:def_curr_ex}
-  \begin{aligned}
-  E_{a,b} \colon \reals \times \{\USD\} &\rightarrow \reals \times \{\EUR\}\\
-  \tup{x, \USD} &\longmapsto \tup{ax - b, \EUR}.
-\end{aligned}
+    \label{eq:def_curr_ex}
+    \begin{aligned}
+        E_{a,b} \colon \reals \times \{\USD\} &\rightarrow \reals \times \{\EUR\}\\
+        \tup{x, \USD} &\longmapsto \tup{ax - b, \EUR}.
+    \end{aligned}
 \end{equation*}
 Note that that the commission is given in the units of the target currency. Of course, for changing \USD to \EUR, there may be various different banks or agencies which each offer different exchange rates and/or different commissions. Each of these corresponds to a different morphism from~$\reals \times \{\USD\}$ to~$\reals \times \{\EUR\}$.
 
@@ -38,122 +40,125 @@ the currencies? And shouldnt the morphisms just be functions $\reals \to \reals$
 
 To build our category, we also need to specify how currency exchangers compose. Given currencies~$\Obja, \Objb, \Objc$, and given currency exchangers
 \begin{equation*}
-  E_{a,b} \colon \reals \times \{\Obja \} \to \reals \times \{ \Objb\}
-   \text{ and }
-  E_{a',b'} \colon \reals \times \{\Objb\} \to \reals \times \{\Objc\},
+    E_{a,b} \colon \reals \times \{\Obja \} \to \reals \times \{ \Objb\}
+    \text{ and }
+    E_{a',b'} \colon \reals \times \{\Objb\} \to \reals \times \{\Objc\},
 \end{equation*}
 we define the composition~$E_{a,b} \mthen E_{a',b'}$ to be the currency exchanger
 \begin{equation}
-  \label{eq:comp-law-curr}
-  E_{aa',a'b + b'} \colon \reals \times \{\Obja \} \to \reals \times \{\Objc\}.
+    \label{eq:comp-law-curr}
+    E_{aa',a'b + b'} \colon \reals \times \{\Obja \} \to \reals \times \{\Objc\}.
 \end{equation}
 In other words, we compose currency exchangers as one would expect: we multiply the first and the second exchange rates together, and we add the commissions (paying attention to first transform the first commission into the units of the final target currency).
 
 Finally, we also need to specify unit morphisms for our category. These are currency exchangers which ``do nothing''. For any object~$\reals \times \{ \transmuted{c}\}$, its identity morphism is
 \begin{equation*}
-  E_{1,0} \colon \reals \times \{\transmuted{c}\} \to \reals \times \{\transmuted{c}\},
+    E_{1,0} \colon \reals \times \{\transmuted{c}\} \to \reals \times \{\transmuted{c}\},
 \end{equation*}
 the currency exchanger with exchange rate ``1'' and commission ``0''.
 
 We now want to check that the composition of currency exchangers as defined above obeys unitality and associativity. Given~$E_{a,b}\colon \reals \times \{\transmuted{c}_1\}\to \reals \times \{\transmuted{c}_2\}$ we have:
 \begin{equation*}
     \begin{aligned}
-      E_{1,0}\mthen E_{a,b}&=E_{1\cdot a, a\cdot 0+b}\\
-      &=E_{a,b},
+        E_{1,0}\mthen E_{a,b}&=E_{1\cdot a, a\cdot 0+b}\\
+        &=E_{a,b},
     \end{aligned}
 \end{equation*}
 and
 \begin{equation*}
     \begin{aligned}
-      E_{a,b}\mthen E_{1,0}&=E_{a\cdot 1, 1\cdot b+0}\\
-      &=E_{a,b},
+        E_{a,b}\mthen E_{1,0}&=E_{a\cdot 1, 1\cdot b+0}\\
+        &=E_{a,b},
     \end{aligned}
 \end{equation*}
 This is unitality. Furthermore, given~$E_{a',b'}\colon \reals \times \{\transmuted{c}_2\}\to \reals\times \{\transmuted{c}_3\}$, and~$E_{a'',b''}\colon \reals \times \{\transmuted{c}_3\}\to \reals \times \{\transmuted{c}_4\}$ we have:
 \begin{equation*}
     \begin{aligned}
-     \left( E_{a,b}\mthen E_{a',b'}\right)\mthen E_{a'',b''}&=E_{aa',a'b+b'}\mthen E_{a'',b''}\\
-     &=E_{aa'a'',a''(a'b+b')+b''}\\
-     &=E_{a,b}\mthen E_{a'a'',a''b'+b''}\\
-     &=E_{a,b}\mthen \left( E_{a',b'}\mthen E_{a'',b''}\right).
+        \left( E_{a,b}\mthen E_{a',b'}\right)\mthen E_{a'',b''}&=E_{aa',a'b+b'}\mthen E_{a'',b''}\\
+        &=E_{aa'a'',a''(a'b+b')+b''}\\
+        &=E_{a,b}\mthen E_{a'a'',a''b'+b''}\\
+        &=E_{a,b}\mthen \left( E_{a',b'}\mthen E_{a'',b''}\right).
     \end{aligned}
 \end{equation*}
 This is associativity.Thus we indeed have a category!
 
 \begin{remark}
-  In the above specification of our category of currency exchangers, we can actually just work with the set of currency labels~$\setC$ as our objects, instead of using ``amounts'' of the form~$\reals \times \{\transmuted{c}\}$ as our objects.
-  Indeed, on a mathematical level, the definition of currency exchangers and their composition law \cref{eq:comp-law-curr} do not depend on using amounts!
-  Namely, a currency exchanger~$E_{a,b}$ is specified by the pair of numbers~$\tup{a, b}$, and the composition law \cref{eq:comp-law-curr} may then, in this notation, be written as
-  \begin{equation}
-    \begin{aligned}
-      \label{eq:currencycomp}
-      \tup{a,b}\mthen \tupp{a',b'}&=\tupp{a' a, a' b + b'}.
-    \end{aligned}
-  \end{equation}
-  The interpretation is still that currency exchangers change amounts of one currency to amounts in an another currency, but for this we do not need to carry around copies of~$\reals$ in our notation.
+    In the above specification of our category of currency exchangers, we can actually just work with the set of currency labels~$\setC$ as our objects, instead of using ``amounts'' of the form~$\reals \times \{\transmuted{c}\}$ as our objects.
+    Indeed, on a mathematical level, the definition of currency exchangers and their composition law \cref{eq:comp-law-curr} do not depend on using amounts!
+    Namely, a currency exchanger~$E_{a,b}$ is specified by the pair of numbers~$\tup{a, b}$, and the composition law \cref{eq:comp-law-curr} may then, in this notation, be written as
+    \begin{equation}
+        \begin{aligned}
+            \label{eq:currencycomp}
+            \tup{a,b}\mthen \tupp{a',b'}&=\tupp{a' a, a' b + b'}.
+        \end{aligned}
+    \end{equation}
+    The interpretation is still that currency exchangers change amounts of one currency to amounts in an another currency, but for this we do not need to carry around copies of~$\reals$ in our notation.
 \end{remark}
 
 Following the above remark:
 
 \begin{definition}[Category \Curr]
-  \label{def:Curr}
-  The \emph{category of currencies} \Curr is specified by:
-  \begin{enumerate}
-    \item \emph{Objects:} a collection of currencies.
-    \item \emph{Morphisms:} given two currencies~$\transmuted{c}_1, \transmuted{c}_2$, morphisms between them are currency exchangers~$\tup{a,b}$ from~$\transmuted{c}_1$ to~$\transmuted{c}_2$.
-    \item \emph{Identity morphism:} given a currency~$\transmuted{c}$, its identity morphism is the currency exchanger~$\disunionA{0}$. We also call such morphisms ``trivial currency exchangers''.
-    \item \emph{Composition of morphisms:} the composition of morphisms is given by the formula \cref{eq:currencycomp}.
-  \end{enumerate}
+    \label{def:Curr}
+    The \emph{category of currencies} \Curr is specified by:
+    \begin{enumerate}
+        \item \emph{Objects:} a collection of currencies.
+        \item \emph{Morphisms:} given two currencies~$\transmuted{c}_1, \transmuted{c}_2$, morphisms between them are currency exchangers~$\tup{a,b}$ from~$\transmuted{c}_1$ to~$\transmuted{c}_2$.
+        \item \emph{Identity morphism:} given a currency~$\transmuted{c}$, its identity morphism is the currency exchanger~$\disunionA{0}$. We also call such morphisms ``trivial currency exchangers''.
+        \item \emph{Composition of morphisms:} the composition of morphisms is given by the formula \cref{eq:currencycomp}.
+    \end{enumerate}
 \end{definition}
 
 As an illustration, consider three currency exchange companies ExchATM, MoneyLah, and Frankurrencies, which operate on several currencies (\cref{tab:currencycompanies}).
 
 \begin{table*}[h]
-  \centering
+    \centering
     \begin{tabular}{c|c|c|c|c}
-      \textbf{Company name}                & \textbf{Exchanger label} & \textbf{Direction}    & \textbf{Exchange rate} $a$         & \textbf{Fixed commission} $b$   \\
-      \hline
-      ExchATM      & $\transmuter{A}$             & \USD to \CHF & \unitfrac[0.95]{\chf}{\usd} & \unit[2.0]{\chf}      \\
-      ExchATM       & $\transmuter{B}$             & \CHF to \USD & \unitfrac[1.05]{\usd}{\chf} & \unit[1.5]{\usd}      \\
-      ExchATM      & $\transmuter{C}$             & \USD to \SGD & \unitfrac[1.40]{\sgd}{\usd} & \unit[1.0]{\sgd}      \\
-      MoneyLah       & $\transmuter{D}$             & \USD to \CHF & \unitfrac[1.00]{\chf}{\usd} & \unit[1.0]{\chf}      \\
-      MoneyLah       & $\transmuter{E}$             & \SGD to \USD & \unitfrac[0.72]{\usd}{\sgd} & \unit[3.0]{\usd}      \\
-      Frankurrencies & $\transmuter{F}$             & \EUR to \CHF & \unitfrac[1.20]{\chf}{\eur} & \unit[0.0]{\chf}      \\
-      Frankurrencies & $\transmuter{G}$             & \CHF to \EUR & \unitfrac[1.00]{\eur}{\chf} & \unit[1.0]{\eur}
+        \textbf{Company name} & \textbf{Exchanger label} & \textbf{Direction} & \textbf{Exchange rate} $a$
+        & \textbf{Fixed commission} $b$
+        \\
+        \hline
+        ExchATM               & $\transmuter{A}$         & \USD to \CHF       & \unitfrac[0.95]{\chf}{\usd} & \unit[2.0]{\chf}              \\
+        ExchATM               & $\transmuter{B}$         & \CHF to \USD       & \unitfrac[1.05]{\usd}{\chf} & \unit[1.5]{\usd}              \\
+        ExchATM               & $\transmuter{C}$         & \USD to \SGD       & \unitfrac[1.40]{\sgd}{\usd} & \unit[1.0]{\sgd}              \\
+        MoneyLah              & $\transmuter{D}$         & \USD to \CHF       & \unitfrac[1.00]{\chf}{\usd} & \unit[1.0]{\chf}              \\
+        MoneyLah              & $\transmuter{E}$         & \SGD to \USD       & \unitfrac[0.72]{\usd}{\sgd} & \unit[3.0]{\usd}              \\
+        Frankurrencies        & $\transmuter{F}$         & \EUR to \CHF       & \unitfrac[1.20]{\chf}{\eur} & \unit[0.0]{\chf}              \\
+        Frankurrencies        & $\transmuter{G}$         & \CHF to \EUR       & \unitfrac[1.00]{\eur}{\chf} & \unit[1.0]{\eur}
     \end{tabular}
-  \caption{Three currency exchange companies operating different currencies.
-  }
-  \label{tab:currencycompanies}
+    \caption{Three currency exchange companies operating different currencies.
+    }
+    \label{tab:currencycompanies}
 \end{table*}
 We can represent this information as a graph, where the nodes are the currencies and the edges are particular exchange operations (\cref{fig:currencygraph}).
 
 \begin{figure}[h]
-  \begin{center}
-    \includesag{30_currencygraph}
-  \end{center}
-  \caption{Three currency exchange companies operating different currencies as a graph. }
-  \label{fig:currencygraph}
+    \begin{center}
+        \includesag{30_currencygraph}
+    \end{center}
+    \caption{Three currency exchange companies operating different currencies as a graph. }
+    \label{fig:currencygraph}
 \end{figure}
 
 There is a currency category built from the information in \cref{tab:currencycompanies} and the graph in \cref{fig:currencygraph}. Its collection of objects is the set $\{  \EUR, \USD, \CHF, \SGD \}$, and it morphisms are, in total:
 \begin{itemize}
-  \item the trivial currency exchanger (identity morphism)~$\disunionA{0}$ for each of the four currencies (which are the objects),
-  \item the currency exchangers corresponding to each item in \cref{tab:currencycompanies},
-  \item all possible compositions of the currency exchangers listed in \cref{tab:currencycompanies}.
+    \item the trivial currency exchanger (identity morphism)~$\disunionA{0}$ for each of the four currencies (which are the objects),
+    \item the currency exchangers corresponding to each item in \cref{tab:currencycompanies},
+    \item all possible compositions of the currency exchangers listed in \cref{tab:currencycompanies}.
 \end{itemize}
 
 The phrase ``all possible compositions'' is a bit vague. What we mean here can be made more precise. It corresponds to a general recipe for starting with a graph~$G$, such as in \cref{fig:currencygraph}, and obtaining from it an associated category, called the \emph{free category on}~$G$.
- \devel{We introduce this concept in \cref{sec:catsfromgraphs}.}
+\devel{We introduce this concept in \cref{sec:catsfromgraphs}.}
 
-\begin{exercise}[\exname{Temperatures}]\label{ex:temperatures}
-  Define a category of temperature converters, where the objects are
-  \transmuted{Celsius}, \transmuted{Kelvin}, \transmuted{Fahrenheit}, and the
-  morphisms are the rules to transform a measurement from one unit to another.
+\begin{exercise}[\exname{Temperatures}]
+    \label{ex:temperatures}
+    Define a category of temperature converters, where the objects are
+    \transmuted{Celsius}, \transmuted{Kelvin}, \transmuted{Fahrenheit}, and the
+    morphisms are the rules to transform a measurement from one unit to another.
 
-  Prove that this forms a category.
+    Prove that this forms a category.
 \end{exercise}
 \begin{solution}
-  \todotext{Solution of \cref{ex:temperatures}.}
+    \todotext{Solution of \cref{ex:temperatures}.}
 \end{solution}
 
 
