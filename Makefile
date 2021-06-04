@@ -99,12 +99,12 @@ links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-mi
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
 recursive: links standalone makefiles
-
-twovolumes:
-	make -B ACT4E-vol1.pdf
-	make -B ACT4E-vol2.pdf
-	make -B ACT4E-vol1.pdf
-	make -B ACT4E-vol2.pdf
+#
+#twovolumes:
+#	make -B ACT4E-vol1.pdf
+#	make -B ACT4E-vol2.pdf
+#	make -B ACT4E-vol1.pdf
+#	make -B ACT4E-vol2.pdf
 
 nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.tex
 

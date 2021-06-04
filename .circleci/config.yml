@@ -5,6 +5,8 @@ workflows:
     jobs:
     - build-devel:
         context: z7-stage
+    - build-devel-slides:
+        context: z7-stage
     - build-public:
         context: z7-stage
     - build-instructors:
@@ -88,40 +90,40 @@ jobs:
         root: .
         paths:
         - _build
-  #  build-vol1-fast:
-  #    docker:
-  #      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
-  #        auth:
-  #          username: $DOCKER_USERNAME
-  #          password: $DOCKER_PASSWORD
-  #    steps:
-  #      - checkout
-  #      - run:
-  #          name: instructors
-  #          command: |
-  #            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
-  #
-  #
-  #      - run:
-  #          name: Latex
-  #          command: |
-  #            mkdir _build
-  #            make nomenc
-  #            make table
-  #            make ACT4E-vol1-fast.pdf
-  #            cp *log *warnings.txt _build
-  #      - run:
-  #          name: encrypt
-  #          command: |
-  #            pdftk ACT4E-vol1-fast.pdf output _build/ACT4E-vol1-fast.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
-  #
-  #      - store_artifacts:
-  #          path: _build
-  #          destination: _build
-  #      - persist_to_workspace:
-  #          root: .
-  #          paths:
-  #            - _build
+  build-devel-slides:
+    docker:
+      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - run:
+          name: instructors
+          command: |
+            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+
+
+      - run:
+          name: Latex
+          command: |
+            mkdir _build
+            make nomenc
+            make table
+            make ACT4E-devel-fastslides.pdf
+            cp *log *warnings.txt _build
+      - run:
+          name: encrypt
+          command: |
+            pdftk  ACT4E-devel-fastslides.pdf output _build/ACT4E-devel-fastslides.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+
+      - store_artifacts:
+          path: _build
+          destination: _build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - _build
   #
   #  build-vol1-instructors:
   #    docker:
