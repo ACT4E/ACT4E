@@ -26,7 +26,7 @@ ACT%.pdf: ACT%.tex .FORCE
 	texloganalyser -r $*.log > $*.warnings.txt
 
 clean:
-	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw
+	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw *warnings.txt
 
 # rm -f nomenc-*.tex used*yaml
 
@@ -99,12 +99,12 @@ links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-mi
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
 recursive: links standalone makefiles
-
-twovolumes:
-	make -B ACT4E-vol1.pdf
-	make -B ACT4E-vol2.pdf
-	make -B ACT4E-vol1.pdf
-	make -B ACT4E-vol2.pdf
+#
+#twovolumes:
+#	make -B ACT4E-vol1.pdf
+#	make -B ACT4E-vol2.pdf
+#	make -B ACT4E-vol1.pdf
+#	make -B ACT4E-vol2.pdf
 
 nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.tex
 
