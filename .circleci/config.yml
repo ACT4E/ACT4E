@@ -3,217 +3,211 @@ workflows:
   version: 2
   build:
     jobs:
-      - build-vol1:
-          context: z7-stage
-      - build-vol2:
-          context: z7-stage
-      - build-vol1-final:
-          context: z7-stage
-      - build-vol1-instructors:
-          context: z7-stage
-      - build-vol1-fast:
-          context: z7-stage
-      - docs-deploy:
-          requires:
-            - build-vol1
-            - build-vol2
-            - build-vol1-final
-            - build-vol1-instructors
-            - build-vol1-fast
-          filters:
-            branches:
-              only: publish
+    - build-devel:
+        context: z7-stage
+    - build-public:
+        context: z7-stage
+    - build-instructors:
+        context: z7-stage
+    - docs-deploy:
+        requires:
+        - build-devel
+        - build-public
+        - build-instructors
+        filters:
+          branches:
+            only: publish
 jobs:
-  build-vol1:
+  build-devel:
     docker:
-      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
-        auth:
-          username: $DOCKER_USERNAME
-          password: $DOCKER_PASSWORD
+    - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+      auth:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
     steps:
-      - checkout
-      - store_artifacts:
-          path: build-stats
-          destination: build-stats
-      - run:
-          name: instructors
-          command: |
-            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+    - checkout
+    - store_artifacts:
+        path: build-stats
+        destination: build-stats
+    - run:
+        name: instructors
+        command: |
+          git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
 
-      - run:
-          name: Latex
-          command: |
-            mkdir _build
-            make nomenc
-            make table
-            make ACT4E-vol1.pdf
-            cp *log *warnings.txt _build
-      - run:
-          name: encrypt
-          command: |
-            pdftk ACT4E-vol1.pdf output _build/ACT4E-vol1.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
-      - store_artifacts:
-          path: _build
-          destination: _build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - _build
-  build-vol2:
+    - run:
+        name: Latex
+        command: |
+          mkdir _build
+          make nomenc
+          make table
+          make ACT4E-devel-fast.pdf
+          cp *log *warnings.txt _build
+    - run:
+        name: encrypt
+        command: |
+          pdftk ACT4E-devel-fast.pdf output _build/ACT4E-devel.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+    - store_artifacts:
+        path: _build
+        destination: _build
+    - persist_to_workspace:
+        root: .
+        paths:
+        - _build
+  build-instructors:
     docker:
-      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
-        auth:
-          username: $DOCKER_USERNAME
-          password: $DOCKER_PASSWORD
+    - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+      auth:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
     steps:
-      - checkout
-      - store_artifacts:
-          path: build-stats
-          destination: build-stats
-      - run:
-          name: instructors
-          command: |
-            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+    - checkout
+    - store_artifacts:
+        path: build-stats
+        destination: build-stats
+    - run:
+        name: instructors
+        command: |
+          git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
 
-      - run:
-          name: Latex
-          command: |
-            mkdir _build
-            make nomenc
-            make table
-            make ACT4E-vol2.pdf
-            cp *log *warnings.txt _build
-      - run:
-          name: encrypt
-          command: |
-            pdftk ACT4E-vol2.pdf output _build/ACT4E-vol1.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
-      - store_artifacts:
-          path: _build
-          destination: _build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - _build
-  build-vol1-fast:
+    - run:
+        name: Latex
+        command: |
+          mkdir _build
+          make nomenc
+          make table
+          make ACT4E-instructors-slow.pdf
+          cp *log *warnings.txt _build
+    - run:
+        name: encrypt
+        command: |
+          pdftk ACT4E-instructors-slow.pdf output _build/ACT4E-instructors.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+    - store_artifacts:
+        path: _build
+        destination: _build
+    - persist_to_workspace:
+        root: .
+        paths:
+        - _build
+  #  build-vol1-fast:
+  #    docker:
+  #      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+  #        auth:
+  #          username: $DOCKER_USERNAME
+  #          password: $DOCKER_PASSWORD
+  #    steps:
+  #      - checkout
+  #      - run:
+  #          name: instructors
+  #          command: |
+  #            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+  #
+  #
+  #      - run:
+  #          name: Latex
+  #          command: |
+  #            mkdir _build
+  #            make nomenc
+  #            make table
+  #            make ACT4E-vol1-fast.pdf
+  #            cp *log *warnings.txt _build
+  #      - run:
+  #          name: encrypt
+  #          command: |
+  #            pdftk ACT4E-vol1-fast.pdf output _build/ACT4E-vol1-fast.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+  #
+  #      - store_artifacts:
+  #          path: _build
+  #          destination: _build
+  #      - persist_to_workspace:
+  #          root: .
+  #          paths:
+  #            - _build
+  #
+  #  build-vol1-instructors:
+  #    docker:
+  #      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+  #        auth:
+  #          username: $DOCKER_USERNAME
+  #          password: $DOCKER_PASSWORD
+  #    steps:
+  #      - checkout
+  #      - run:
+  #          name: instructors
+  #          command: |
+  #            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+  #
+  #      - run:
+  #          name: Latex
+  #          command: |
+  #            mkdir _build
+  #            make nomenc
+  #            make table
+  #            make ACT4E-vol1-instructors.pdf
+  #            cp *log *warnings.txt _build
+  #      - run:
+  #          name: encrypt
+  #          command: |
+  #            pdftk ACT4E-vol1-instructors.pdf output _build/ACT4E-vol1-instructors.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+  #      - store_artifacts:
+  #          path: _build
+  #          destination: _build
+  #      - persist_to_workspace:
+  #          root: .
+  #          paths:
+  #            - _build
+
+  build-public:
     docker:
-      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
-        auth:
-          username: $DOCKER_USERNAME
-          password: $DOCKER_PASSWORD
+    - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
+      auth:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
     steps:
-      - checkout
-      - run:
-          name: instructors
-          command: |
-            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
+    - checkout
+    - run:
+        name: Latex
+        command: |
+          mkdir _build
+          make nomenc
+          make table
+          make ACT4E-public-slow.pdf
+          cp ACT4E-public-slow.pdf _build/ACT4E-public.pdf
+          cp *log *warnings.txt _build
 
-
-      - run:
-          name: Latex
-          command: |
-            mkdir _build
-            make nomenc
-            make table
-            make ACT4E-vol1-fast.pdf
-            cp *log *warnings.txt _build
-      - run:
-          name: encrypt
-          command: |
-            pdftk ACT4E-vol1-fast.pdf output _build/ACT4E-vol1-fast.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
-
-      - store_artifacts:
-          path: _build
-          destination: _build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - _build
-
-  build-vol1-instructors:
-    docker:
-      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
-        auth:
-          username: $DOCKER_USERNAME
-          password: $DOCKER_PASSWORD
-    steps:
-      - checkout
-      - run:
-          name: instructors
-          command: |
-            git clone -b spring2021 git@github.com:ACT4E/ACT4E-solutions.git
-
-      - run:
-          name: Latex
-          command: |
-            mkdir _build
-            make nomenc
-            make table
-            make ACT4E-vol1-instructors.pdf
-            cp *log *warnings.txt _build
-      - run:
-          name: encrypt
-          command: |
-            pdftk ACT4E-vol1-instructors.pdf output _build/ACT4E-vol1-instructors.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
-      - store_artifacts:
-          path: _build
-          destination: _build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - _build
-
-  build-vol1-final:
-    docker:
-      - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
-        auth:
-          username: $DOCKER_USERNAME
-          password: $DOCKER_PASSWORD
-    steps:
-      - checkout
-      - run:
-          name: Latex
-          command: |
-            mkdir _build
-            make nomenc
-            make table
-            make ACT4E-vol1-final.pdf
-            cp ACT4E-vol1-final.pdf _build
-            cp *log *warnings.txt _build
-
-      - store_artifacts:
-          path: _build
-          destination: _build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - _build
+    - store_artifacts:
+        path: _build
+        destination: _build
+    - persist_to_workspace:
+        root: .
+        paths:
+        - _build
 
   docs-deploy:
     docker:
-      - image: node:8.10.0
+    - image: node:8.10.0
     steps:
-      - checkout
-      - attach_workspace:
-          at: tmp/workspace
-      - run:
-          name: Install and configure dependencies
-          command: |
-            npm install -g --silent gh-pages@2.0.1
-            git config --global user.email "acensi@ethz.ch"
-            git config --global  user.name "ci-build"
-      - run:
-          name: git lfs
-          command: |
-            curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-            apt-get install git-lfs -y
-            git lfs install
+    - checkout
+    - attach_workspace:
+        at: tmp/workspace
+    - run:
+        name: Install and configure dependencies
+        command: |
+          npm install -g --silent gh-pages@2.0.1
+          git config --global user.email "acensi@ethz.ch"
+          git config --global  user.name "ci-build"
+    - run:
+        name: git lfs
+        command: |
+          curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+          apt-get install git-lfs -y
+          git lfs install
 
-      - run:
-          name: Deploy docs to gh-pages branch
-          command: |
-            git clone --depth 1 -b gh-pages git@github.com:ACT4E/ACT4E.git docs
-            cp pages-index.html docs
-            cp tmp/workspace/_build/* docs
-            git -C docs add .
-            git -C docs commit -a -m "update [ci skip]"
-            git -C docs push
+    - run:
+        name: Deploy docs to gh-pages branch
+        command: |
+          git clone --depth 1 -b gh-pages git@github.com:ACT4E/ACT4E.git docs
+          cp pages-index.html docs
+          cp tmp/workspace/_build/* docs
+          git -C docs add .
+          git -C docs commit -a -m "update [ci skip]"
+          git -C docs push
