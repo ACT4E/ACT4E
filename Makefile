@@ -221,3 +221,7 @@ generate-videos-novideo:
 		--tex  videos/generated \
 		--pdfdir $(pdfdir) \
 		--no-video
+
+find-unused: 
+	python -m act4e_videos.check_used --config videos/videos.yaml --tex-src volumes > unused.txt
+	cat unused.txt
