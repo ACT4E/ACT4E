@@ -563,7 +563,7 @@ of robots and the capabilities of the single robot.
 
 \begin{equation*}
 \label{eq:general_continuous_cost}
-    J=\lim_{T\to \infty} \frac{1}{T}\mathbb{E}\{\int_{0}^{T} \left(\left( \mat{x}_t^\intercal \mat{Q} \mat{x}_t\right)+\left( \mat{u}_t^\intercal \mat{R}\mat{u}_t\right)\right) \text{d} t\},
+    J=\lim_{T\to \infty} \frac{1}{T}\mathbb{E}\left\{\int_{0}^{T} \left(\left( \mat{x}_t^\intercal \mat{Q} \mat{x}_t\right)+\left( \mat{u}_t^\intercal \mat{R}\mat{u}_t\right)\right) \text{d} t\right\},
 \end{equation*}
 
 
@@ -608,8 +608,8 @@ where~$\bar{\mat{\Sigma}}\in \posdef$ is the solution of the Riccati equation
 The metrics $\track$ and $\effort$ can be written as
 \begin{equation*}
 \begin{aligned}
-    \lim_{t\to \infty}\mathbb{E}\{ \mat{x}_t^\intercal \mat{Q}_0\mat{x}_t\}&=\trace{\mat{Q}_0\left( \mat{\Sigma} +\mat{F}\right)}, \\
-    \lim_{t\to \infty}\mathbb{E}\{ \mat{u}_t^\intercal \mat{R}_0\mat{u}_t\}&=\trace{\mat{S}\mat{B}^*\mat{R}^{-1}\mat{R}_0\mat{R}^{-1}\mat{B}\mat{S}\mat{F}},
+    \lim_{t\to \infty}\mathbb{E}\{ \mat{x}_t^\intercal \mat{Q}_0\mat{x}_t\}&=\trace(\mat{Q}_0\left( \mat{\Sigma} +\mat{F}\right)), \\
+    \lim_{t\to \infty}\mathbb{E}\{ \mat{u}_t^\intercal \mat{R}_0\mat{u}_t\}&=\trace(\mat{S}\mat{B}^*\mat{R}^{-1}\mat{R}_0\mat{R}^{-1}\mat{B}\mat{S}\mat{F}),
 \end{aligned}
 \end{equation*}
 where 
@@ -646,6 +646,113 @@ Consider the situation of \cref{lemma:codesigncnt_1}:
     \item Fix $P_\mathrm{effort}$. $P_\mathrm{track}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
 \end{compactitem}
 \end{lemma}
+
+\begin{equation*}
+\label{eq:lqg_simple}
+\begin{tikzpicture}[DP, dp port sep =3]
+            \node(ref) at (0,0){};
+            \node[dp={2}{2},below=0.5cm of ref] (cnt) {LQG};
+            \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
+            \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
+            \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
+            \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
+\end{tikzpicture}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:brown_1}
+\mat{v}_t
+\end{equation*}
+
+\begin{equation*}
+\label{eq:brown_2}
+\mat{w}_t
+\end{equation*}
+
+\begin{equation*}
+\label{eq:cov_1}
+\mat{W}=\mat{EE^*}
+\end{equation*}
+\begin{equation*}
+\label{eq:cov_2}
+\mat{V}=\mat{GG^*}
+\end{equation*}
+
+
+\begin{equation*}
+\label{eq:optimal_control}
+\mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t
+\end{equation*}
+
+\begin{equation*}
+\label{eq:x_estimate}
+\hat{\mat{x}}_t
+\end{equation*}
+\begin{equation*}
+\label{eq:x_real}
+\mat{x}_t
+\end{equation*}
+
+\begin{equation*}
+\label{eq:ric_1}
+\bar{\mat{S}}
+\end{equation*}
+\begin{equation*}
+\label{eq:ric_2}
+\bar{\mat{\Sigma}}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:mon_est}
+\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')
+\end{equation*}
+
+\begin{definition}
+\label{def:poset_cont}
+A \emph{poset} is a tuple $\langle P,\preceq_P\rangle$, where $P$ is a set and $\preceq_P$ is a partial order, defined as a reflexive, transitive, and antisymmetric relation.
+\end{definition}
+
+\begin{equation*}
+\label{eq:posreals}
+\tup{\reals_{\geq 0},\leq}
+\end{equation*}
+\begin{equation*}
+\label{eq:nats}
+\tup{\natnumbers,\leq}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:matrix_poset}
+\mat{A}=\begin{pmatrix}1&0\\0&1\end{pmatrix}, \quad \mat{B}=\begin{pmatrix}2&0\\0&1\end{pmatrix},\quad \mat{C}=\begin{pmatrix}2&0\\0&0.5\end{pmatrix}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:lqg_delay}
+\begin{tikzpicture}[DP, dp port sep =3]
+            \node[dp={3}{2}] (cnt) {LQG};
+            \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
+            \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
+            \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
+            \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
+            \draw[funconn, funame={delay},relfun=above, posfun=1] (cnt_fun3){};
+\end{tikzpicture}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:lqg_disc}
+\begin{tikzpicture}[DP, dp port sep = 1.5]
+            \node[dp={4}{2}] (cnt) {LQG Control};
+            \draw[runconn, runame={tracking error $\track$}, relres=right] (cnt_res1){};
+            \draw[runconn, runame={control effort $\effort$},relres=right] (cnt_res2){};
+            \draw[funconn, funame={observation noise $\mat{V}$},relfun=left] (cnt_fun1){};
+            \draw[funconn, funame={system noise $\mat{W}$},relfun=left] (cnt_fun2){};
+            \draw[funconn, funame={delay $d$},relfun=left] (cnt_fun3){};
+            %\draw[funconn, funame={sampling period $\delta$},relfun=left] (cnt_fun4){};
+            \draw[funconn, funame={dropping probability $p$},relfun=left] (cnt_fun4){};
+\end{tikzpicture}
+\end{equation*}
+
+
 \end{forslides}
 
 
