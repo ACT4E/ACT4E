@@ -22,7 +22,7 @@ Note also that if we were to try to define a function $\setB \to \setA$ which ta
 
 The pseudo-philosophical introduction above is intended to sensitize the reader to aspects of ``input/output'' thinking, and to motivate our definition of functions below. The idea is that we can formally define a function $\mapa: \setA \to \setB$ by the ordered pairs $\tup{\ela, \elb} \in \setA \times \setB$ which are the elements of what might be called the ``graph'' of the function. In other words, those ordered pairs of the form ``$\tup{\ela, \mapa(\ela)}$''.
 
-\begin{definition}
+\begin{definition}\label{def:function}
 Let $\setA$ and $\setB$ be sets. A \emph{function} $\mapa: \setA \to \setB$ is a subset
 \begin{equation}
 \mapa \subseteq \setA \times \setB
@@ -38,15 +38,50 @@ The property \cref{eq:function-determinism} describes the ``mathematical determi
 
 Another important aspect of \cref{eq:function-determinism} is that it says \emph{for every} $\ela \in \setA$ there exists a $\elb \in \setB$ that is related to $\ela$ by $\mapa$. In other words, we do not allow functions to be ``partially defined''. For example, the formula ``$\mapa(x) = \frac{1}{x}$'' could be used to define a function $\reals \backslash \{ 0 \} \to \reals$ but it would \emph{not} be valid for defining a function $\reals \to \reals$. The ``domain'' of a function is ``baked in'' as its source set, and the source and target of a function are \emph{part of the definition} of the function. For example, the formula $\mapa(x) = x^2$ defines \emph{different} functions, depending on whether we think of it as defining a function $\reals \to \reals$, $\reals \to \reals_{\geq 0}$, or $[0,1] \to [0,1]$, etc. 
 
+Although we take \cref{def:function} as our \emph{formal} definition of functions, we will continue to use the standard kinds of notation for functions, for example usually writing $\elb = \mapa(\ela)$ and not $\tup{\ela, \elb} \in \mapa$. The formal definition above is useful to keep in the back of our minds though. For instance, when thinking about situations involving the empty set. Do there exist functions $\emptyset \to \setB$ for any set $\setB$? What about $\setA \to \emptyset$? 
 
-\todo{make comment that we'll usually use the ``standard'' notation for functions, and not think in terms of the formel def}
+Consulting \cref{def:function}, we can figure out, using \cref{eq:function-determinism}, that there are \emph{no} functions of the type $\setA \to \emptyset$, and for any set $\setB$, except for the case $\setB = \emptyset$, there \emph{is} a function $\emptyset \to \setB$ (and in fact only one such function). For the case $\setA \to \emptyset$, there is no such function because the part ``$\exists ! \ \elb \in \setB$'' of \cref{eq:function-determinism} cannot be satisfied, since here $\setB = \emptyset$. For the case $\emptyset \to \setB$, with $\setB \neq \emptyset$, we see that because of the condition ``$\forall \ \ela \in \setA ...$'', \cref{eq:function-determinism} is trivially satisfied since $\setA = \emptyset$ here. In this case, $\mapa \subseteq \setA \times \setB$ corresponds to $\emptyset \subseteq \emptyset \times \setB = \emptyset$. 
 
-\todo{remark that the formal def can be helpful for thinking about special cases involving the empty set}
+It is worth remarking that functions can be specified in a variety of ways. Sometime they are given using formulae, such as $\mapa(x)=x^2$ (and specifying the source and target set). Sometimes the are defined using a table, like in the in the phone book example above. Other times a function might be characterized by equations or properties. For example, the exponential function $\exp : \reals \to \reals$ is known to be  characterized by the fact that it satisfies the differential equation $\mapa'(x) = f(x)$ and the initial condition $f(0) =1$. Still other times one might be able to prove the existence (and perhaps also uniqueness) of some function satisfying some given properties, but one might not have any means to ``evaluate'' or ``calculate'' that function! 
 
-\todo{say and give examples for different ways to define functions (e.g. exponential function defined by properties/equations!)}
+Even if we don't know a lot of the specifics of some functions, there is a lot we can still say about how functions between sets can behave \emph{in general}. In the following we review a number of basic observations and properties. 
+
+Let $\mapa: \setA \to \setB$ be a function. Recall that $\mapa$ is said to be \emph{injective} if the condition
+\begin{equation}\label{eq:injectivity-cond}
+\forall \ \ela_1, \ela_2 \in \setA : \mapa(\ela_1) = \mapa(\ela_2) \ \Rightarrow \  \ela_1 = \ela_2
+\end{equation}
+is satisfied. And $\mapa$ is called \emph{surjective} if the condition
+\begin{equation}\label{eq:surjectivity-cond}
+\forall \ \elb \in \setB \ \exists \ \ela \in \setA : \mapa(\ela) = \elb
+\end{equation}
+holds. A function which is both injective and surjective is called \emph{bijective}. 
+
+The \emph{image} of $\mapa: \setA \to \setB$ is the set
+\begin{equation}
+\mapa(\setA) := \{ \elb \in \setB \mid \exists \ela \in \setA : \mapa(\ela) = \elb \}. 
+\end{equation}
+More generally, given a subset $\subA \subseteq \setA$, its image under $\mapa$ is
+\begin{equation}
+\mapa(\subA) := \{ \elb \in \setB \mid \exists \ela \in \subA : \mapa(\ela) = \elb \}. 
+\end{equation}
+Given a subset $\subB \subseteq \setB$, its \emph{preimage} under $\mapa$ is
+\begin{equation}
+\mapa^{-1}(\subB) :=\{ \ela \in \setA \mid  \mapa(\ela) \in \subB \}. 
+\end{equation}
+An alternative way of phrasing injectivity of $\mapa$ is to say that for every singleton subset $\{ \elb \} \subseteq \setB$, its preimage under $\mapa$ is either a singleton set or the empty set. Surjectivity of $\mapa$ is equivalent to saying that $\mapa(\setA) = \setB$. 
+
+Importantly, functions can be \emph{composed} when the target set of one functions is the same as the source set of another. Given functions $\mapa: \setA \to \setB$ and $\mapb : \setB \to \setC$, we will denote their composition by
+\begin{equation}\label{eq:composition-notation-functions}
+\mapa \then \mapb : \setA \to \setB,
+\end{equation}
+which is different from the more traditional notation ``$\mapb \circ \mapa$''. We speak \cref{eq:composition-notation-functions} as ``$\mapa$ then $\mapb$'', which aligns with the fact that, to evaluate the composition $\mapa \then \mapb$ at an element $\ela \in \setA$, we first apply $\mapa$ to compute $\mapa(\ela)$ and \emph{then} we apply $\mapb$ to compute
+$$\mapb(\mapa(\ela))=(\mapa \then \mapb)(\ela).$$ 
 
 
-\todo{define image and preimage of a function}
+\
+
+\
+
 
 \todo{define surjective, injective, bijective, section, inverse}
 
