@@ -2,17 +2,163 @@
 
 
 \section{Sets}
-We are working on this section, and more content will appear.
 
-\devel{
-\todotext{Enter some foundational material on sets}
 
-\todotext{Say something about the operations of "element of" and "equals"}
+Intuitively speaking, sets describe ``collections of things'' -- whether it be a collection of people, of objects, of abstract symbols, etc.
+The ``things'' making up a set are called the \emph{elements} of the set.
+There are several typical ways of indicating a set. One is ``list-like'':
+we list the elements of the given set, separated by commas, and surround this list with curled brackets.
+For example, the set of persons who are co-authors of this book can be written $\{ \text{Andrea}, \text{Gioele}, \text{Jonathan} \}$, and the set consisting of the symbols ``$+$'', ``$-$'', ``$?$'' and ``$\%$'' is indicated by $\{ +, -, ?, @ \}$. In a ``list-like" representation, the order that we list elements in does not matter: $\{ -, ?, +, @ \}$ and $\{ \%, +, -, ?, \}$ and $\{ -, ?, @, + \}$ are, for instance, difference ways of indicating one and the same set. Also, we do not allow repetitions: $\{ @, +, +, +, -, ?, \}$ is not a valid way of indicating a set. Given any two elements of a set, they can be only either equal (identical) or unequal (distinct).\footnote{There is a notion of ``multiset'', where repetitions are allowed (the ``same'' element can appear multiple times), but we are not considering that notion here.} Because in general the elements of set are not ordered in any way, one often visualizes sets as ``clouds'' or ``bags'' of elements.
 
-\todotext{Say something about the different ways a set might be specified}
+\todo{insert figure}
 
-\todotext{Compare sets to other related but distinct notions: multisets, sequences, ... what else?}
 
+
+Suppose now for a moment that we have some sets to work with, such as for instance the sets described above.
+There are a few basic operations that allow to construct new sets from the ones we have, and to reason about them.
+
+%(One of the ways to formalize set theory rigorously is via the axiomatic route, for which there are various different well-known approaches.) 
+
+Firstly, a fundamental notion is the relation of ``being an element of'', indicated by the symbol ``$\in$''.
+For example, the statement that the symbol ``$@$'' is an element of the set $\{ -, ?, +, @ \}$ is written ``$@ \in \{ -, ?, +, @ \}$''.
+Similarly, ``$\text{Gioele} \in \{ \text{Andrea}, \text{Gioele}, \text{Jonathan} \}$'' is a true statement.
+
+Second, we can talk about whether two sets are \emph{equal} or not.
+Two sets~$\setA$ and~$\setB$ are equal if and only if ``they have the same elements''.
+In other words,~$\setA$ and~$\setB$ are equal if and only if the statements
+``$x \in \setA$'' and  ``$x \in \setB$'' are logically equivalent: if these statements are always either both true or both false for any instantiation of the variable~$x$.
+For example, $\{ -, ?, +, @ \}$ and $\{ @, +, -, ?\}$ and $\{ -, ?, @, + \}$ are all equal as sets, because their elements are the same.
+
+Now consider the set~$\{ -, ?, + \}$, and compare it with~$\{ -, ?, +, @ \}$.
+Each of the elements of the first set is also an element of the second set; in such a case we say that the first set is \emph{included} in the second set. In symbols,
+\begin{equation}
+  \label{eq:subset}
+\{ -, ?, + \} \subseteq \{ -, ?, +, @ \}.
+\end{equation}
+Generally, given sets~$\setA$ and~$\setB$, the statement~$\setA \subseteq \setB$ is logically equivalent to the statement
+\begin{equation*}
+x \in \setA \quad \Rightarrow  x \in \setB.
+\end{equation*}
+
+Returning to \cref{eq:subset}, the second set is, on the other hand, \emph{not} included in the first set, since~$@$ is an element of the second set, but not the first.
+If we say a set is ``strictly included'' in another, then we mean ``included in and not equal'';
+if the adjective ``strictly'' is not used, then inclusion means for us that equality is also possible.
+In other words, for us it is true that any set~$\setA$ is included in itself:~$\setA \subseteq \setA$.
+Given sets~$\setA$ and~$\setB$, if it is the case that~$\setA \subseteq \setB$, then we say that~$\setA$ is a \emph{subset} of~$\setB$.
+Inclusion and equality are related as follows: given sets~$\setA$ and~$\setB$,
+\begin{equation*}
+\setA = \setB \text{ if and only if } \setA \subseteq \setB \text{ and } \setB \subseteq \setA.
+\end{equation*}
+
+In addition to the ``list-like'' way of specifying a set that we discussed above, many times sets are specified with the help of a logical ``statement'' or ``sentence'' which is used to give a characterization of its elements.
+The idea is this: we start out with some given set~$\setB$, and then we consider a statement~$S(x)$ which depends on a variable~$x$, which we think of as running over the elements of~$\setB$.
+We can then ask: for which elements~$x$ of~$\setB$ is the statement~$S(x)$ true? These elements form a subset of~$\setB$, often denoted
+\begin{equation}
+  \label{eq:axiom-specialization}
+\{ x \in \setB \mid S(x) \}.
+\end{equation}
+For example, let~$\setB = \{ \text{apple}, \text{banana}, \text{carrot} \}$ and consider the statement
+\begin{equation*}
+S(x) = \text{``} x \text{ is the name of a fruit''}.
+\end{equation*}
+Then, 
+\begin{equation*}
+\{ x \in \setB \mid x \text{ is the name of a fruit} \} = \{ \text{apple}, \text{banana} \}.
+\end{equation*}
+
+There is an interesting special case of this way of constructing subsets of a set~$\setB$:
+what if, for a given statement~$S(x)$, \emph{none} of the elements~$x \in \setB$ are such that~$S(x)$ is true?
+For example, consider the statement~$S(x) =\text{ ``} x \text{ is the name of a planet''}$.
+Then, for the set~$\setB = \{ \text{apple}, \text{banana}, \text{carrot} \}$, the subset
+\begin{equation*}
+\{ x \in \setB \mid x \text{ is the name of a planet} \}
+\end{equation*}
+has \emph{no} elements: it is ``empty''.
+In most formalizations of set theory, mathematicians agree to use a single unique set -- called the \emph{empty set} and denoted~$\emptyset$ -- to play the role of ``the set with no elements''.
+In particular, by definition, the empty set is a subset of any set!
+
+And now is probably as good a moment as any to note that the empty set~$\emptyset$ should not be confused with the set~$\{ \emptyset \}$.
+While~$\emptyset$ denotes the unique set with~$\emph{no elements}$, the notation~$\{ \emptyset \}$ denotes a set which has precisely one element, and that element happens to be the set~$\emptyset$.
+Generally, sets can have other sets as their elements: for example, we might consider the set
+\begin{equation*}
+\{ \{ + \}, \{ -, ?, +, @ \}, \emptyset \}
+\end{equation*}
+which has three elements: namely~$\{ + \}$, $\{ -, ?, +, @ \}$,  and~$\emptyset$.
+
+
+This leads us nicely to another fundamental construction.
+Given any set~$\setA$, we can form a new set whose elements are precisely the subsets of~$\setA$.
+This new set is called the \emph{powerset} of~$\setA$, and we denote it by~$\powerset \setA$.
+For example, if~$\setA = \{ -, ?, + \}$, then its powerset is
+\begin{equation*}
+\powerset \setA = \{ \emptyset, \{ - \}, \{ ? \}, \{ + \}, \{ -, ? \}, \{ ?, + \}, \{ -, +\}, \{ -, ?, + \} \}. 
+\end{equation*}
+The powerset is thus a set of sets. 
+Two basic operations on the powerset of any set are those of \emph{union} (denoted ``$\cup$'') and \emph{intersection} (denoted ``$\cap$'').
+Given subsets~$\subA \subseteq \setA$ and~$\subB \subseteq \setA$, by definition
+\begin{equation*}
+\subA \cup \subB \coloneqq \{ x \in \setA \mid x \in \subA \text{ or } x \in \subB \}
+\end{equation*}
+and
+\begin{equation*}
+\subA \cup \subB \coloneqq \{ x \in \subA \text{ and } x \in \subB \}.
+\end{equation*}
+
+
+We will use an assumption (or ``axiom'') that will in fact allow us to take ``arbitrary'' unions and intersections. 
+Namely, given any two sets~$\setA$ and~$\setB$, we assume that there always exists some other set~$\setC$ such that~$\setA \subseteq \setC$ and~$\setB \subseteq \setC$.
+In other words, there exists~$\setC$ such that~$\setA \in \powerset \setC$ and~$\setB \in \powerset \setC$.
+And more generally, suppose that we are given not just two sets, but a whole collection~$\mathcal{S}$ of sets, in other words, a set~$\mathcal{S}$ of sets (we are using the word ``collection'' interchangeably with the word ``set'').
+We will assume there exists a set~$\setC$ such that~$\setA \in \setC$ for all~$\setA \in \mathcal{S}$.
+
+Now we can take the union and intersection of the collection~$\mathcal{S}$ of sets:
+\begin{equation*}
+\bigcup \mathcal{S} \coloneqq \{ x \in \setC \mid \exists \  \setA \in \setC : x \in \setA \}
+\end{equation*}
+and
+\begin{equation*}
+\bigcap \mathcal{S} \coloneqq \{ x \in \setC \mid \forall \  \setA \in \setC : x \in \setA \}.
+\end{equation*}
+
+\medskip
+
+As a final topic in this section, we discuss the notion of ``ordered pairs'', and the definitions of the cartesian product and disjoint union of sets. 
+
+When we first started speaking about sets, we described them as ``unordered lists'' of things. Sometimes, though, we want to keep track of an ordering! Let's start with just two things, call them $x$ and $y$. The \emph{ordered pair} $\tup{x,y}$ is a list where the order \emph{does} matter. In other words, the ordered pair $\tup{y,x}$ is \emph{not} equal to the ordered pair $\tup{x,y}$. Ordered pairs can be defined rigorously using sets, by setting 
+\begin{equation}
+  \label{eq:ordered-pair}
+\tup{x, y} \coloneqq \{ \{x \} , \{ x, y \} \},
+\end{equation}
+using the the nesting of the elements of this set to encode the order. We will not usually need this technical definition however; the important point is to clarify that this notion describes ordered lists, specifically denoted with certain symbols (the use of commas and brackets). Generalizing to lists of more than two things, given any finite number $n \in \natnumbers$ of things $x_1$, $x_1$, ..., $x_n$, we similarly define the ordered list $\tup{x_1, x_2, ... , x_n}$, which we call an \emph{tuple}. 
+
+
+Given sets~$\setA$ and~$\setB$, their \emph{cartesian product}, denoted~$\setA \times \setB$, is the set
+\begin{equation*}
+\{ \tup{\ela, \elb} \mid \ela \in \setA \text{ and } \elb \in \setB \}.\footnote{In order to accurately follow the schema given in \cref{eq:axiom-specialization} and using the formal definition \cref{def:ordered-pair}, it would in fact be correct to define the cartesian product as
+$$
+\setA \times \setB = \{ \elc \in \powerset \powerset (\setA \cup \setB) \mid \exists \ela \in \setA, \exists \elb \in \setB : \elc = \tup{\ela, \elb} \}.
+$$
+}
+\end{equation*}
+For example, if~$\setA = \{ \text{a}, \text{b}, \text{c} \}$ and~$\setB = \{ @, ? \}$, then
+\begin{equation*}
+\setA \times \setB = \{ \tup{\text{a}, @}, \tup{\text{a}, ?}, \tup{\text{b}, @}, \tup{\text{b}, ?},  \tup{\text{c}, @}, \tup{\text{c}, ?}\}
+\end{equation*}
+We remark that in the special case where~$\setA = \emptyset$ or $\setB = \emptyset$, then~$\setA \times \setB = \emptyset$.
+
+Later we will see that the cartesian product is a special case of a very general construction in category theory. This construction also has a ``dual'', which, in the specific context of sets, corresponds to the notion \emph{disjoint union}. Given sets $\setA$ and $\setB$, their disjoint union, denoted $\setA + \setB$ is the set
+\begin{equation*}
+\{ \tup{\ela, 1} \mid \ela \in \setA \} \cup \{ \tup{\elb, 2} \mid \elb \in \setB \}.
+\end{equation*}
+If again~$\setA = \{ \text{a}, \text{b}, \text{c} \} $ and~$\setB = \{ @, ? \}$, then
+\begin{equation*}
+\setA + \setB = \{ \tup{\text{a}, 1}, \tup{\text{b}, 1}, \tup{\text{c}, 1}, \tup{@, 2},  \tup{?, 2}\}.
+\end{equation*}
+In the special case where~$\setA = \emptyset$, then~$\emptyset + \setB = \{ \tup{\elb,2} \mid \elb \in \setB \}$, and similarly~$\setA + \emptyset =  \{ \tup{\ela,1} \mid \ela \in \setA \}$.
+
+
+\devel{ 
+\todo{There is a break in content here; it will be filled/bridged}
 
 We will name here some special sets that we will find convenient to use later. These names are not all standard; however they should be intuitively clear.
 
@@ -25,12 +171,10 @@ In settings where we'd like to have a specific set of a certain finite size to r
   [3] & \definedas \{ 1, 2, 3\}
 \end{align*}
 ...and so on. Generally,
-\begin{equation}
+\begin{equation*}
 [n]
   \definedas \{ 1, ..., n\}
-\end{equation}
+\end{equation*}
 for any $n \in \natnumbers$.}
-
-
 
 \clearpage

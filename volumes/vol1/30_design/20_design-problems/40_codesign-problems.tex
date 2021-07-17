@@ -4,16 +4,17 @@
 \section{Co-design problems}
 \label{sec:Co-design-problems}
 
-A ``co-design problem'' will be defined as a multigraph of design
+A ``co-design problem'' will be defined as a \emph{multigraph} of design
 problems.
 \begin{definition}[Co-design problem with implementation]
     \label{def:cdpi}
     A \emph{Co-Design Problem with Implementation} (CDPI)
-    is a tuple~$\tup{\funsp,\ressp,\tup{\cdpiN,\mathcal{E}}}$,
-    where~\funsp and~\ressp are two posets, and~$\tup{ \cdpiN,\mathcal{E}} $
-    is a multigraph of DPIs. Each node~$\cdpin\in\cdpiN$ is a
+    is a tuple~$\tup{\funsp,\ressp,\tup{\cdpiN,\cdpiE}}$,
+    where~\funsp and~\ressp are two posets, and~$\tup{ \cdpiN,\cdpiE} $
+    is a multigraph of DPIs.
+    Each node~$\cdpin\in\cdpiN$ is a
     DPI~$\cdpin=\tup{\funsp_{\cdpin},\ressp_{\cdpin},\impsp_{\cdpin},\prov_{\cdpin},\req_{\cdpin}}.$
-    An edge~$e\in\mathcal{E}$ is a tuple $e=\left\langle \left\langle \cdpinA,\cdpiresindA\right\rangle ,\left\langle \cdpinB,\cdpifunindB\right\rangle \right\rangle $,
+    An edge~$\cdpie\in\cdpiE$ is a tuple $\cdpie=\tup{ \tup{ \cdpinA,\cdpiresindA} ,\tup{\cdpinB,\cdpifunindB}}$,
     where~$\cdpinA,\cdpinB\in\cdpiN$ are two nodes and~$\cdpiresindA$
     and~$\cdpifunindB$ are the indices of the components of the functionality
     and resources to be connected, and it holds that~$\pi_{\cdpiresindA}\ressp_{\cdpinA}=\pi_{\cdpifunindB}\funsp_{\cdpinB}$~(\cref{fig:mcdps}).
@@ -21,9 +22,8 @@ problems.
     \begin{figure}[h]
         \centering
         \includegraphics[scale=0.33]{gmcdptro_cdpi}
-        \caption{\label{fig:mcdps}}
+        \caption{\todographics{redo in tikz}\label{fig:mcdps}}
     \end{figure}
-
 
 \end{definition}
 
@@ -32,35 +32,47 @@ that is a subset of the product $\prod_{\cdpin\in\cdpiN}\impsp_{\cdpin}$,
 and contains only the tuples that satisfy the co-design constraints.
 An implementation tuple~$\imp\in\prod_{\cdpin\in\cdpiN}\impsp_{\cdpin}$
 belongs to~\impsp iff it respects all functionality--resources
-constraints on the edges, in the sense that, for all edges~$\left\langle \left\langle \cdpinA,\cdpiresindA\right\rangle ,\left\langle \cdpinB,\cdpifunindB\right\rangle \right\rangle $
-in~$\mathcal{E}$, it holds that
-\[
+constraints on the edges, in the sense that, for all edges~$\tup{\tup{ \cdpinA,\cdpiresindA} ,\tup{\cdpinB,\cdpifunindB}}$
+in~$\cdpiE$, it holds that
+\begin{equation*}
     \pi_{\cdpiresindA}\req_{\cdpinA}(\pi_{\cdpinA}\imp)\posleq\pi_{\cdpifunindB}\prov_{\cdpinB}(\pi_{\cdpinB}\imp).
-\]
+\end{equation*}
 The posets~$\funsp,\ressp$ for the entire CDPI are the products
-of the functionality and resources of the nodes that remain unconnected.
+of the functionality and resources of the nodes that remain \emph{unconnected}.
 For a node~$\cdpin$, let~$\unconnectedfun_{\cdpin}$ and~$\unconnectedres_{\cdpin}$
-be the set of unconnected functionalities and resources. Then~\funsp
-and~\ressp for the CDPI are defined as the product of the unconnected
-functionality and resources of all DPIs: $\funsp=\prod_{\cdpin\in\cdpiN}\prod_{\cdpifunind\in\unconnectedfun_{\cdpin}}\pi_{\cdpifunind}\funsp_{\cdpin}$
-and $\ressp=\prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}}\pi_{\cdpiresind}\ressp_{\cdpin}.$
-The maps $\prov,\req$ return the values of the unconnected functionality
+be the set of unconnected functionalities and resources.
+Then~$\funsp$ and~$\ressp$ for the CDPI are defined as the product of the unconnected functionality and resources of all DPIs:
+~$\funsp=\prod_{\cdpin\in\cdpiN}\prod_{\cdpifunind\in\unconnectedfun_{\cdpin}}\pi_{\cdpifunind}\funsp_{\cdpin}$
+and~$\ressp=\prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}}\pi_{\cdpiresind}\ressp_{\cdpin}.$
+The maps~$\prov,\req$ return the values of the unconnected functionality
 and resources:
-\begin{align*}
-    \prov:\imp & \mapsto{\scriptstyle {\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpifunind\in\unconnectedfun_{\cdpin}}}}\pi_{\cdpifunind}\prov_{\cdpin}(\pi_{\cdpin}\imp),\\
-    \req:\imp & \mapsto{\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}}}\pi_{\cdpiresind}\req_{\cdpin}(\pi_{\cdpin}\imp).
-\end{align*}
+\begin{equation*}
+\begin{aligned}
+    \prov\colon \imp & \mapsto{\scriptstyle {\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpifunind\in\unconnectedfun_{\cdpin}}}}\pi_{\cdpifunind}\prov_{\cdpin}(\pi_{\cdpin}\imp),\\
+    \req\colon \imp & \mapsto{\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}}}\pi_{\cdpiresind}\req_{\cdpin}(\pi_{\cdpin}\imp).
+\end{aligned}
+\end{equation*}
 
+\todotext{macro for unconnected a bit similar to upper sets?}
 \todo{Re-do a concrete example like this}
+
 \begin{example}
     The MCDP in~\cref{fig:exampleq} is the interconnection of 3
-    DPs $\ftor_{a},\ftor_{b},\ftor_{c}.$ The semantics of the MCDP as
-    an optimization problem is shown in~\cref{fig:example-semanticsq}.
+    DPs~$\ftor_{a},\ftor_{b},\ftor_{c}.$ The semantics of the MCDP as
+    an optimization problem is given by:
+    \begin{equation*}
+    \fun_1\mapsto \begin{cases}
+                      \Min \res_4,& \res_1\in \ftor_a(\fun_1,\fun_2),\quad \res_1\posleq \fun_3, \quad \fun_3=\tup{\fun_4,\fun_5},\\
+                      &\res_2\in \ftor_b(\fun_4),\quad \res_4\posleq \fun_2,\quad \res_4=\tup{\res_2,\res_3},\\
+                      &\res_3\in \ftor_c(\fun_5).
+\end{cases}
+\end{equation*}
 \end{example}
 
-\captionsideleft{\label{fig:exampleq}}{ \includegraphics[scale=0.33]{unc_atoms_g_v_graph}}\\
-\captionsideleft{\label{fig:example-semanticsq}}{\includegraphics[scale=0.33]{unc_semantics}}
+\captionsideleft{\todographics{redo in tikz}\label{fig:exampleq}}{ \includegraphics[scale=0.33]{unc_atoms_g_v_graph}}
 
+
+%\captionsideleft{\label{fig:example-semanticsq}}{\includegraphics[scale=0.33]{unc_semantics}}
 
 
 \begin{example}
