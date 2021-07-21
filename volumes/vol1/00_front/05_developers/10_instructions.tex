@@ -1,19 +1,118 @@
 % !TEX root = chapter-standalone.tex
 
 
-\section{Compiling the book}
+\section{Compiling the book using Docker}
 
-\subsection{Dependencies}
+\subsection{Setup}
 
-You need to install Pygments.
+Install docker.
 
-\subsection{Top level compilation}
-
-A quick way to start is:
+Run:
 
 \begin{console}
-    make ACT4E-devel-slow.pdf -B
+    docker login reg-stage.zuper.ai
 \end{console}
+
+using the credentials that Andrea gave you.
+
+Run:
+
+\begin{console}
+    docker pull reg-stage.zuper.ai/act4e/act4e-build:z7
+\end{console}
+
+Stop if any error.
+
+
+\subsection{Clone the book repo}
+
+Clone the root repo:
+
+\begin{console}
+    git clone --depth=1  git@github.com:ACT4E/ACT4E.git
+\end{console}
+
+Inside the resulting folder, clone the solutions repo:
+
+\begin{console}
+    git clone git@github.com:ACT4E/ACT4E-solutions.git
+\end{console}
+
+
+\subsection{Compilation}
+
+In the repo root use:
+
+\begin{console}
+    make shell
+\end{console}
+
+and from the shell you can run the commands you would usually run.
+
+For example, to compile the book in development mode, use:
+
+
+\begin{console}
+    make ACT4E-devel-slow.pdf
+\end{console}
+
+To compile a chapter:
+
+\begin{console}
+    make -C volumes/vol1/10_arrows/10_cats/ chapter-continuous
+\end{console}
+
+\begin{remark}
+    The \str{.aux} files and other temporary files are incompatible between the Docker latex and your system's latex. You will have to delete them when switching; or the first compilation will fail.
+\end{remark}
+
+\subsection{Regenerating nomenclature and other generated tables}
+
+
+Now go to the book repo and type:
+
+\begin{console}
+    make magic
+\end{console}
+
+This will create nomenclature, table, standalone equations.
+
+To compile the standalone equations, you should run (in or outside) Docker,
+
+\begin{console}
+    make -C equations
+\end{console}
+
+\subsection{Regenerating snippets for Python code}
+
+
+For the next step you must have checked out in the book root the two repos
+\str{ACT4E-exercises} and \str{ACT4E-private}.
+
+
+If everything is good you should be able to run:
+\begin{console}
+    make ultramagic
+\end{console}
+which does fancier things (extracts Python code).
+
+
+%
+%\section{Compiling the book}
+%
+%\subsection{Dependencies}
+%
+%You need to install Pygments.
+%
+%\subsection{Top level compilation}
+%
+%A quick way to start is:
+%
+%\begin{console}
+%    make ACT4E-devel-slow.pdf -B
+%\end{console}
+
+\section{Details about compilation process}
 
 \subsection{Partial compilation}
 
@@ -103,8 +202,8 @@ Relevant top files with various choices of flags are shown in \cref{tab:top-targ
     \end{tabular}
 \end{table*}
 
-\subsection{Details about compilation process}
 
+\subsection{Magic}
 For everything to run smoothly, there are a few steps to run outside latex.
 
 There are some other steps that generate some material.
@@ -146,76 +245,3 @@ These links allow the partial compilation process to access the files in the roo
 
 \todotext{@AC: document prerender }
 
-
-\section{Compiling the book using Docker}
-
-\subsection{Setup}
-
-Install docker.
-
-Run:
-
-\begin{console}
-    docker login reg-stage.zuper.ai
-\end{console}
-
-using the credentials that Andrea gave you.
-
-Run:
-
-\begin{console}
-    docker pull reg-stage.zuper.ai/act4e/act4e-build:z7
-\end{console}
-
-Stop if any error.
-
-\subsection{Compiling with Docker}
-
-Now go to the book repo and type:
-
-\begin{console}
-    make shell
-\end{console}
-
-and from the shell you can run the commands you would usually run, like:
-
-\begin{console}
-    make -C volumes/vol1/10_arrows/29_dependencies/ chapter-continuous
-    make -C volumes/vol1/10_arrows/ part-continuous
-    make ACT4E-devel-slow.pdf
-\end{console}
-
-\begin{remark}
-    The \str{.aux} files and other temporary files are incompatible between the Docker latex and your system's latex. You will have to delete them when switching; or the first compilation will fail.
-\end{remark}
-
-\subsection{Regenerating nomenclature and other generated tables}
-
-
-
-Now go to the book repo and type:
-
-\begin{console}
-    make magic
-\end{console}
-
-This will create nomenclature, table, standalone equations.
-
-To compile the standalone equations, you should run (in or outside) Docker,
-
-\begin{console}
-    make -C equations
-\end{console}
-
-\subsection{Regenerating snippets for Python code}
-
-
-For the next step you must have checked out in the book root the two repos
-\str{ACT4E-exercises} and \str{ACT4E-private}.
-
-
-If everything is good you should be able to run:
-\begin{console}
-    make ultramagic
-\end{console}
-which does fancier things (extracts Python code).
