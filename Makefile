@@ -43,6 +43,7 @@ find-missing:
 chapters=$(wildcard volumes/vol*/*/*/chapter.tex)
 chapters-standalones=$(subst chapter.tex,chapter-standalone.tex,$(chapters))
 chapters-standalones-fast=$(subst chapter.tex,chapter-standalone-fast.tex,$(chapters))
+chapters-standalones-public-fast=$(subst chapter.tex,chapter-standalone-public-fast.tex,$(chapters))
 chapters-pdf        =$(subst chapter.tex,chapter-standalone.pdf,$(chapters))
 chapters-links      =$(subst chapter.tex,chapter-link-snippets, $(chapters))
 chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
@@ -51,6 +52,7 @@ chapters-makefiles  =$(subst chapter.tex,Makefile,              $(chapters))
 parts=$(wildcard volumes/vol*/*/part.tex)
 parts-standalones=$(subst part.tex,part-standalone.tex,$(parts))
 parts-standalones-fast=$(subst part.tex,part-standalone-fast.tex,$(parts))
+parts-standalones-public-fast=$(subst part.tex,part-standalone-public-fast.tex,$(parts))
 parts-pdf        =$(subst part.tex,part-standalone.pdf,$(parts))
 parts-links      =$(subst part.tex,part-link-snippets, $(parts))
 parts-link-minted =$(subst part.tex,part-link-minted, $(parts))
@@ -86,6 +88,11 @@ volumes/%/Makefile: template-Makefile.mk
 %/part-standalone-fast.tex: template-part-standalone-fast.tex
 	cp $< $@
 
+%/chapter-standalone-public-fast.tex: template-chapter-standalone-public-fast.tex
+	cp $< $@
+%/part-standalone-public-fast.tex: template-part-standalone-public-fast.tex
+	cp $< $@
+
 
 %/chapter-standalone.pdf: %/chapter-standalone.tex %/Makefile .FORCE
 	make -C $* chapter-once
@@ -94,7 +101,7 @@ volumes/%/Makefile: template-Makefile.mk
 	make -C $* part-once
 
 
-standalone: $(chapters-standalones) $(parts-standalones) $(chapters-standalones-fast) $(parts-standalones-fast)
+standalone: $(chapters-standalones) $(parts-standalones) $(chapters-standalones-fast) $(parts-standalones-fast) $(parts-standalones-public-fast) $(chapters-standalones-public-fast)
 links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-minted)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
@@ -222,6 +229,6 @@ generate-videos-novideo:
 		--pdfdir $(pdfdir) \
 		--no-video
 
-find-unused: 
+find-unused:
 	python -m act4e_videos.check_used --config videos/videos.yaml --tex-src volumes > unused.txt
 	cat unused.txt
