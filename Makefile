@@ -1,4 +1,3 @@
-
 all:
 	@echo do
 	@echo 	make -B ACT4E-vol1.pdf
