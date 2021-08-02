@@ -10,14 +10,14 @@
 
 \begin{ctdefinition}[Trace of an endomorphism]
     \label{def:trace_endo}
-    Let~$\tup{\CatC,\mtimesC,\idmoncat_{\CatC}, \braiding}$ be a symmetric monoidal category.
+    Let~$\tup{\CatC,\mtimescat,\idmoncat_{\CatC}, \braiding}$ be a symmetric monoidal category.
     Let~$\Obja \in \ObC$ be dualizable and let~$\mora \in \Hom(\Obja, \Obja)$. The \emph{trace} of~$\mora$ is the morphism~$\Tr(\mora) \in \Hom(\idmoncat, \idmoncat)$ defined by
     \begin{equation}
         \includesag{endo_trace}
     \end{equation}
     %\begin{equation}
     %\label{eq:endomorphism-gen-trace}
-%\idmoncat \overset{\coev_\Obja}{\mto} \Obja \mtimescat \Obja^\vee  \overset{\mora \mtimescat \id_{\Obja^\vee}}{\mto} \Obja \mtimescat \Obja^\vee  \overset{\braiding}{\mto}  \Obja^\vee \mtimescat \Obja \overset{\ev_\Obja}{\mto} \idmoncat.
+%\idmoncat \overset{\coev_\Obja}{\mto} \Obja \mtimescatat \Obja^\vee  \overset{\mora \mtimescat \id_{\Obja^\vee}}{\mto} \Obja \mtimescat \Obja^\vee  \overset{\braiding}{\mto}  \Obja^\vee \mtimescat \Obja \overset{\ev_\Obja}{\mto} \idmoncat.
 %\end{equation}
 \end{ctdefinition}
 
@@ -48,7 +48,7 @@
 
 \begin{ctdefinition}[Trace of a generalized endomorphism]
     \label{def:trace_gen_endo}
-    Let~$\tup{\CatC,\mtimesC,\idmoncat_{\CatC}, \braiding}$ be a symmetric monoidal category.
+    Let~$\tup{\CatC,\mtimescat,\idmoncat, \braiding}$ be a symmetric monoidal category.
     Let~$\Obja \in \ObC$ be dualizable and let~$\mora \in \HomSet{\CatC}{\Objb \mtimescat \Obja}{\Objc \mtimescat \Obja}$.
     The \emph{trace over}~$\Obja$ of~$\mora$ is the morphism~$\Tr_{\Objb, \Objc}^\Obja (\mora) \in \Hom(\Objb, \Objc)$ defined by
 %\begin{equation}\label{eq:endomorphism-trace}
@@ -85,29 +85,37 @@
 %\end{forslides}
 %}
 
-\begin{ctdefinition}[Traced monoidal category]
+\begin{ctdefinition}[Traced monoidal category]\label{def:traced-monoidal-cat}
     \label{def:traced-monoidal-category}
-    A symmetric monoidal category~$\tup{\CatC,\mtimesC,\idmoncat_{\CatC}, \braiding}$ is said to be \emph{traced} if it is equipped with a family of functions
+    A symmetric monoidal category~$\tup{\CatC,\mtimescat,\idmoncat, \braiding}$ is said to be \emph{traced} if it is equipped with a family of functions
     \begin{equation}
-        \Tr_{\Obja,\Objb}^\Objc\colon \HomSet{\CatC}{\Obja \mtimesC \Objc}{\Objb\mtimesC \Objc}\to \HomSet{\CatC}{\Obja}{\Objb},
+        \Tr_{\Obja,\Objb}^\Objc\colon \HomSet{\CatC}{\Obja \mtimescat \Objc}{\Objb\mtimescat \Objc}\to \HomSet{\CatC}{\Obja}{\Objb},
     \end{equation}
     satisfying the following axioms:
     \begin{compactenum}
+    	\item \emph{Naturality in $\Obja$:} For all morphisms $\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ and $\morb : \Obja' \mto \Obja$,
+	\begin{equation}
+            \Tr_{\Obja', \Objb}^\Objc ( (\morb \mtimescat \catid_\Objc) \then \mora) = \morb \then \Tr_{\Obja, \Objb}^\Objc (\mora) 
+        \end{equation}
+	\item \emph{Naturality in $\Objb$:} For all morphisms $\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ and $\morb : \Objb \mto \Objb'$,
+	\begin{equation}
+            \Tr_{\Obja, \Objb'}^\Objc ( \mora \then (\morb \mtimescat \catid_\Objc) ) =  \Tr_{\Obja, \Objb}^\Objc (\mora) \then \morb
+        \end{equation}
         \item \emph{Vanishing:} For all morphisms~$\mora \colon \Obja\mto \Objb$ in \CatC,
         \begin{equation}
             \label{eq:vanishing_1}
-            \Tr_{\Obja,\Objb}^1(\mora)=\mora.
+            \Tr_{\Obja,\Objb}^\idmoncat (\mora)=\mora.
         \end{equation}
-        Furthermore, for all morphisms~$\mora \colon \Obja\mtimesC \Objc \mtimesC \Objd \mto \Objb\mtimesC \Objc \mtimesC \Objd$ in \CatC:
+        Furthermore, for all morphisms~$\mora \colon \Obja\mtimescat \Objc \mtimescat \Objd \mto \Objb\mtimescat \Objc \mtimescat \Objd$ in \CatC,
         \begin{equation}
             \label{eq:vanishing_2}
-            \Tr_{\Obja,\Objb}^{\Objc\mtimesC \Objd}(\mora)=\Tr_{\Obja,\Objb}^\Objc\left(
-            \Tr_{\Obja \mtimesC \Objc , \Objb \mtimesC \Objc}^\Objd(\mora)\right).
+            \Tr_{\Obja,\Objb}^{\Objc\mtimescat \Objd}(\mora)=\Tr_{\Obja,\Objb}^\Objc\left(
+            \Tr_{\Obja \mtimescat \Objc , \Objb \mtimescat \Objc}^\Objd(\mora)\right).
         \end{equation}
-        \item \emph{Superposing:} For all morphisms~$\mora\colon \Obja\mtimesC \Objc \mto \Objb\mtimesC \Objc$ in \CatC:
+        \item \emph{Superposing:} For all morphisms~$\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ in \CatC,
         \begin{equation}
             \label{eq:superposing}
-            \Tr_{\Obje\mtimesC \Obja,\Obje\mtimesC \Objb}^{\Objc}(\catid_\Obje\mtimesC \mora)=\catid_\Obje\mtimesC \Tr_{\Obja,\Objb}^\Objc(\mora).
+            \Tr_{\Obje\mtimescat \Obja,\Obje\mtimescat \Objb}^{\Objc}(\catid_\Obje\mtimescat \mora)=\catid_\Obje\mtimescat \Tr_{\Obja,\Objb}^\Objc(\mora).
         \end{equation}
         \item \emph{Yanking:}
         \begin{equation}
@@ -116,3 +124,21 @@
         \end{equation}
     \end{compactenum}
 \end{ctdefinition}
+
+\begin{remark}
+Other variants of the definition of a traced monoidal category can be found in the literature. For instance, some include a more general version of the superposing law, see \cref{le:general-superposing-law} below. 
+\end{remark}
+
+\begin{lemma}\label{le:general-superposing-law}
+Let $\tup{\CatC,\mtimescat,\idmoncat_{\CatC}, \braiding, \Tr}$ be a traced monoidal category. Then a more general version 
+of the superposing law holds: for any morphisms~$\mora\colon \Obja\mtimescat \Objc \mto \Objb \mtimescat \Objc$ and $\morb \colon \Objd \mto \Obje$, 
+\begin{equation}
+            \label{eq:superposing}
+            \Tr_{\Objd\mtimescat \Obja,\Obje\mtimescat \Objb}^{\Objc}(\morb \mtimescat \mora)=\morb \mtimescat \Tr_{\Obja,\Objb}^\Objc(\mora).
+        \end{equation}
+\end{lemma}
+
+\begin{proof}
+\todotext{Jira ACT4EBOOK-165: Do the proof. Also, this could be made into a graded exercise.}
+\end{proof}
+
