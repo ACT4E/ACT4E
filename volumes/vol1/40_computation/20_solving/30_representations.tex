@@ -11,23 +11,28 @@ It is useful to also describe a design problem as a map from functionality to re
 
 A useful analogy is the state space representation \emph{vs} the transfer function representation of a linear time-invariant system: the state space representation is richer, but we only need the transfer function to characterize the input-output response.
 
-\todojira{218}{define the map from functionality to upper sets (somewhere already)}
-
 \begin{definition}
   \label{def:ftor}
-  Given a DPI $\tup{ \funsp,\ressp,\impsp,\prov,\req} $,
-  define the map~$\ftor\colon \funsp\to\Aressp$ that associates
+  Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req} $,
+  define the map~$\ftor\colon \funsp\toinPos\Aressp$ that associates
   to each functionality~\fun the objective function of~\cref{prob:problem1},
   which is the set of minimal resources necessary to realize~\fun:
   \begin{eqnarray*}
-    \ftor\colon \funsp & \to & \Aressp,\\
+    \ftor\colon \funsp & \toinPos & \Aressp,\\
     \fun& \mapsto & \resMin\{\req(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\fun\posleq\prov(\imp)\right)\}.
   \end{eqnarray*}
   If a certain functionality~\fun is infeasible, then~$\ftor(\fun)=\emptyset$.
 \end{definition}
 \captionsideleft{\label{fig:setup_h-1}}{\includegraphics[scale=0.33]{gmcdp_setup_h}}
 
-\todojira{219}{add remark of when this might fail (antichains do not capture the uppersets)}
+
+\begin{remark}
+  The minimal elements of any upper set form an antichain, and one might be tempted to represent upper sets via antichains.
+  However, one does not always have a one-to-one correspondence between antichains and upper sets.
+  Particularly, the correspondence exists for partial orders satisfying the \emph{descending chain condition}, and does not hold in general.
+  In short, the condition is satisfied if in the poset no \emph{infinite descending chain} exists.
+  For instance, consider~$\tup{\mathbb{Z},\leq}$. The chain $-1, -2, -3, \ldots$ is an infinite descending chain.
+\end{remark}
 
 
 \begin{example}
@@ -53,6 +58,16 @@ Monotonicity of~\ftor means that if the functionality~\fun is increased the anti
 and at some point it might reach the top of~$\Aressp$, which is the empty set, meaning that the problem is not feasible.
 
 
-\todojira{221}{describe equally the map $\rtof$}
+\begin{definition}
+  \label{def:rtof}
+  Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$,
+  define the map~$\rtof\colon \ressp\toinPos \Afunsp$ that associates
+  to each resource~\res the set of maximal functionalities which can be realized with~$\res$:
+  \begin{eqnarray*}
+    \rtof\colon \ressp & \toinPos & \Afunsp,\\
+    \res& \mapsto & \funMax\{\prov(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\res\posgeq\req(\imp)\right)\}.
+  \end{eqnarray*}
+  If a certain resource~\res only leads to infeasible functionalities, then~$\rtof(\res)=\emptyset$.
+\end{definition}
 
-\todojira{222}{Style of whole section.}
+\todojira{254}{Do example as for ftor.}
