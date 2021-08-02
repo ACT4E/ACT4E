@@ -1,16 +1,74 @@
 % !TEX root = chapter-standalone.tex
 
 \section{From math to implementation}
+
+\subsection{How can category theory help?}
+\todojira{250}{Do discussion: descriptive vs. actionable, workflow systematization}
+
+\subsection{The four phases}
 \todojira{211}{Discuss the 4 phases}
 \linkvideo{spring2021-functorial-comp-a:how-cat-helps} % How can category theory help?
-\linkvideo{spring2021-functorial-comp-a:patterns} % Looking for patterns
-\todojira{212}{remove compositional theories bit}
-\linkvideo{spring2021-functorial-comp-a:compositionality} % Looking for compositionality
+%\linkvideo{spring2021-functorial-comp-a:patterns} % Looking for patterns
+%\todojira{212}{remove compositional theories bit}
+%\linkvideo{spring2021-functorial-comp-a:compositionality} % Looking for compositionality
 \linkvideo{spring2021-functorial-comp-a:from-math-to-impl} % From math to implementation
 We are working on this section, and more content will appear.
 
-How can category theory help?
+In this section, we will discuss the four phases that bring you from the mathematical definition of a problem to the implementation on a specific machine of the algorithm finding a solution.
+To practically explain each phase, we will use the underlying example of vector normalization, inspired by John Carmack's \emph{fast inverse square root algorithm}.
 
+\todotextjira{251}{History/intro bit of Carmack's stuff.}
+
+\paragraph*{Mathematical phase}
+The \emph{mathematical phase}, consists in proving that the given problem is well posed, and that a solution exists.
+For the example of vector normalization, given a vector $v\in \reals^3$, you want to find a \emph{unit} vector~$n\in \reals^3$ which has the same direction as~$v$.
+Mathematically, for any vector~$v\in \reals^3$, there exists a~$n\in \reals^3$ such that~$\tup{n,v}=\Vert v \Vert$.
+How many such~$n$ are there? If~$v=\begin{bmatrix}0&0&0\end{bmatrix}^\intercal$ any~$n\in \reals^3$ will satisfy the condition.
+In all other cases, there will be just one single~$n$ satisfying the condition.
+\paragraph*{Constructive phase}
+The \emph{constructive} phase consists in defining a constructive method to actually find the solution.
+For our example, this amounts to, while assuming~$v$ is not the zero vector, writing
+\begin{equation}
+    \label{eq:normalization}
+    n=\frac{v}{\Vert v \Vert}.
+\end{equation}
+It is clear that \cref{eq:normalization} satisfies the condition for~$n$ to be a solution of the problem.
+\paragraph*{Algorithmic phase}
+Given a constructive method to find the solution, one needs to find an \emph{effective} method for a specific model of computation.
+In other words, we need to answer the question ``how do we actually compute the solution?''
+An effective way to compute the solution of our example problem is to first compute the norm squared (given by the sum of the squares of the vector components), and to then apply the Newton method for a couple of iterations:
+\begin{equation}
+    \label{eq:newton_normalization}
+    \begin{aligned}
+        &M\leftarrow v_1^2+v_2^2+v_3^2\\
+        &m\leftarrow \text{Newton}\left(a\mapsto 1/\sqrt{a},M\right)\\
+        &\text{return }\tup{mv_1,mv_2,mv_3}
+    \end{aligned}
+\end{equation}
+
+\paragraph*{Implementation phase}
+The actual implementation of the algorithm is targeted to a \emph{specific machine}, which has limited resources.
+John Carmack's fast inverse square root implementation uses particularities about the bit representation of floating point numbers and integers in x86 and proposes the following implementation:
+
+\begin{center}
+\begin{minted}{cpp}
+float InvSqrt(float x){
+    float xhalf = 0.5f * x;
+    int i = *(int*)&x;
+    i = 0x5f3759df - (i >> 1);
+    x = x*(1.5f - xhalf*x*x);
+    return x;
+}
+\end{minted}
+\end{center}
+
+\paragraph*{Philosophical perspectives}
+The \emph{mathematical} phase and the \emph{constructive phase} are the same, if you are a \emph{constructivist}.
+Also, the \emph{algorithmic} phase becomes the same if you are a \emph{finitist}.
+Finally, the \emph{implementation} phase becomes the same if you are an \emph{ultra-finitist}.
+\todojira{252}{Elaborate more here.}
+
+\todojira{251}{Also provide a reference.}
 \devel{
 \includepdf[scale=0.8,pages={7-10},nup=1x3,frame,pagecommand={}]{ACT4E-12-computation.pdf}}
 
@@ -21,6 +79,37 @@ Looking for patterns.
 
 
 \includepdf[scale=0.8,pages={18-23},nup=1x3,frame,pagecommand={}]{ACT4E-12-computation.pdf}}
-\todojira{214}{Discuss and move setoids to sets and functions.}
 
-\todojira{213}{example: fast inverse square root}
+\paragraph*{The four phases when solving design problems}
+We can use the very same four phases to think about the solution of design problems.
+The next sections will explain the details of each part, but here we want to give you an overview on the steps in each phase.
+We will focus our exposition on \FixFunMinReq.
+
+Given any design problem to be solved, we want to find a map
+\begin{equation}
+    \label{eq:hfromftoupr}
+\ftor\colon \funsp \toinPos \uppersets \ressp.
+\end{equation}
+
+A constructive method to find the solution consists in applying two restrictions, needed allow computation:
+\begin{compactenum}
+    \item First, we allow only posets~$\posA$ such that~$\uppersets \posA$ is a \emph{direct complete partial order}.
+    \item Second, we only allow design problems for which \cref{eq:hfromftoupr} is a \emph{Scott-continuous} map.
+\end{compactenum}
+Note that a \emph{sufficient} conditions for the restrictions above is that all posets are \emph{finite}.
+\begin{remark}
+    In this context, the two conditions above are analogous to \emph{compactness} and Cauchy sequences in analysis: they ensure that some type of sequences will converge somewhere.
+\end{remark}
+
+Now, given the constructive method, we actually need to find an effective method to compute the solution.
+In this case we want to find finite solutions, and allow only upper sets that can be represented as finite antichains:
+\begin{equation*}
+    \posA=\upit \Min \posA.
+\end{equation*}
+In other words, we want to find a map
+\begin{equation}
+    \label{eq:hfromftoantir}
+    \ftor\colon \funsp \toinPos \antichains \ressp.
+\end{equation}
+
+\todojira{253}{I think it is good to have an overview that connects to the four phases before starting the meat. Should we also talk about functors DP to UPos, UPoscomp, UPosdiscrete?}
