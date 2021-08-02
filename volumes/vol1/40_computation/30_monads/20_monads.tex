@@ -321,21 +321,44 @@ To show that $\tup{\stylefunctors{\powerset}, \moncomp, \monunit}$ is a monad,
 \end{equation}
 
 
--------
+\paragraph*{Example: interval construction}
+In the following, we analyze the interval construction and show that it gives rise to a monad.
+Given \Pos, we define the action of the $\Arrow$ functor on objects (posets) as
 
-\begin{equation}\label{eq:monad-arrow-functor}
+\todo{I think we should use two different notations for the functor for the monad and the actual arrow construction...}
+\begin{equation}
+  \label{eq:monad-arrow-functor-objects}
+  \begin{aligned}
+    \Arrow\colon \Pos&\to \Pos\\
+    \posA&\mapsto \Arrow(\posA)
+  \end{aligned}
+\end{equation}
+and on morphisms as
+\begin{equation}
+  \label{eq:monad-arrow-functor-morphisms}
+  \begin{aligned}
+    \Arrow \mora\colon \Arrow(\posA)&\to \Arrow(\posB)\\
+    \interv{a}{b}&\mapsto \interv{\mora(a)}{\mora(b)}.
+  \end{aligned}
+\end{equation}
+
+Furthermore, we define the multiplication as
+
+\begin{equation}\label{eq:monad-arrow-moncomp}
   \definemap{
-    \Arrow  \mora
+    \moncomp_{\Obja}
   }{
-    \Arrow  \Obja
+    \Arrow (\Arrow(\Obja))
   }{
-    \Arrow  \Objb
+    \Arrow (\Obja)
   }{
-    \interv{a}{b}
+    \interv{\interv{\alpha}{\beta}}{ \interv{\gamma}{ \delta}}
   }{
-    \interv{\mora(a)}{\mora(b)}
+    \interv{\min(\alpha, \gamma)}{\max(\beta, \delta)} = \interv{\alpha}{\delta},
   }
 \end{equation}
+
+and the unit as
 
 \begin{equation}\label{eq:monad-arrow-monunit}
   \definemap{
@@ -343,67 +366,62 @@ To show that $\tup{\stylefunctors{\powerset}, \moncomp, \monunit}$ is a monad,
   }{
     \Obja
   }{
-    \Arrow\Obja
+    \Arrow(\Obja)
   }{
     x
   }{
-    \interv{x}{x}
+    \interv{x}{x}.
   }
 \end{equation}
-
-
-\begin{equation}\label{eq:monad-arrow-monunit-arrow}
-  \definemap{
-    \monunit_{\Arrow \Obja}
-  }{
-    \Arrow \Obja
-  }{
-    \Arrow (\Arrow\Obja)
-  }{
-    \interv{a}{b}
-  }{
-    \interv{\interv{a}{b}}{\interv{a}{b}}
-  }
+First of all, we need to show that both the multiplication and the unit are indeed natural transformation.
+Let's start with multiplication.
+On one hand, we have:
+\begin{equation}
+  \label{eq:example_arrow_nat_1}
+  \begin{aligned}
+    ((\Arrow\fthen \Arrow)(\mora) \mthen \moncomp_\Objb)(\interv{\interv{a}{b}}{\interv{c,d}})&=\moncomp_\Objb(\interv{\interv{\mora(a)}{\mora(b)}}{\interv{\mora(c)}{\mora(d)}})\\
+    &=\interv{\mora(a)}{\mora(d)}.
+  \end{aligned}
 \end{equation}
-
-
-\begin{equation}\label{eq:monad-arrow-arrow-monunit}
-  \definemap{
-    \Arrow(\monunit_\Obja)
-  }{
-    \Arrow \Obja
-  }{
-    \Arrow (\Arrow\Obja)
-  }{
-    \interv{a}{b}
-  }{
-    \interv{\interv{a}{a}}{\interv{b}{b}}
-  }
+On the other hand we have:
+\begin{equation}
+  \label{eq:example_arrow_nat_2}
+  \begin{aligned}
+    (\moncomp_\Obja \fthen \Arrow)(\interv{\interv{a}{b}}{\interv{c}{d}})&=\Arrow(\mora)(\interv{a}{d})\\
+    &=\interv{\mora(a)}{\mora(d)}.
+  \end{aligned}
 \end{equation}
-
-
-\begin{equation}\label{eq:monad-arrow-moncomp}
-  \definemap{
-    \moncomp_{\Obja}
-  }{
-    \Arrow (\Arrow\Obja)
-  }{
-    \Arrow \Obja
-  }{
-    \interv{\interv{\alpha}{\beta}}{ \interv{\gamma}{ \delta}}
-  }{
-    \interv{\min(\alpha, \gamma)}{\max(\beta, \delta)} = \interv{\alpha}{\delta}
-  }
+The equivalence of \cref{eq:example_arrow_nat_1} and \cref{eq:example_arrow_nat_2} proves naturality.
+Let's not check that the unit defines a natural transformation.
+We have
+\begin{equation}
+  \label{eq:example_arrow_nat_3}
+  \begin{aligned}
+    (\mora \mthen \monunit_\Objb)(x)&=\mora(x)\mthen \monunit_\Objb\\
+    &=\interv{\mora(x),\mora(x)},
+\end{aligned}
 \end{equation}
+and
+\begin{equation}
+  \label{eq:example_arrow_nat_4}
+  \begin{aligned}
+    (\monunit_\Obja \mthen \Arrow(\mora))(x)&=\Arrow(\mora)(\interv{x}{x})\\
+    &=\interv{\mora(x),\mora(x)},
+\end{aligned}
+\end{equation}
+Again, equivalence of \cref{eq:example_arrow_nat_3} and \cref{eq:example_arrow_nat_4} proves naturality.
 
+We now need to check associativity and left and right unitality.
+Let's start with associativity. To clearly see the property holding, we need to define intermediate quantities.
+One has
 
 \begin{equation}\label{eq:monad-arrow-arrow-moncomp}
   \definemap{
     \Arrow \moncomp_{\Obja}
   }{
-    \Arrow (\Arrow (\Arrow\Obja))
+    \Arrow (\Arrow (\Arrow(\Obja)))
   }{
-    \Arrow (\Arrow \Obja)
+    \Arrow (\Arrow (\Obja))
   }{
     \interv{\interv{\interv{\alpha_1}{\beta_1}}{ \interv{\gamma_1}{ \delta_1}}}%
            {\interv{\interv{\alpha_2}{\beta_2}}{ \interv{\gamma_2}{ \delta_2}}}
@@ -412,14 +430,15 @@ To show that $\tup{\stylefunctors{\powerset}, \moncomp, \monunit}$ is a monad,
   }
 \end{equation}
 
+and
 
 \begin{equation}\label{eq:monad-arrow-moncomp-arrow}
   \definemap{
-    \moncomp_{\Arrow \Obja}
+    \moncomp_{\Arrow (\Obja)}
   }{
-    \Arrow (\Arrow (\Arrow\Obja))
+    \Arrow (\Arrow (\Arrow(\Obja)))
   }{
-    \Arrow (\Arrow \Obja)
+    \Arrow (\Arrow(\Obja))
   }{
     \interv{\interv{\interv{\alpha_1}{\beta_1}}{ \interv{\gamma_1}{ \delta_1}}}%
     {\interv{\interv{\alpha_2}{\beta_2}}{ \interv{\gamma_2}{ \delta_2}}}
@@ -427,3 +446,46 @@ To show that $\tup{\stylefunctors{\powerset}, \moncomp, \monunit}$ is a monad,
     \interv{\interv{\alpha_1}{\beta_1}}{ \interv{\gamma_2}{ \delta_2}}
   }
 \end{equation}
+
+With this in mind, it is easy to see that the following diagram commutes.
+
+\begin{center}
+  \todographicsjira{260}{add associativity diagram in tikz. Take it from GZ recital.}
+\end{center}
+
+For left and right unitality, we need to work out two additional quantities:
+
+\begin{equation}\label{eq:monad-arrow-monunit-arrow}
+  \definemap{
+    \monunit_{\Arrow(\Obja)}
+  }{
+    \Arrow(\Obja)
+  }{
+    \Arrow (\Arrow(\Obja))
+  }{
+    \interv{a}{b}
+  }{
+    \interv{\interv{a}{b}}{\interv{a}{b}},
+  }
+\end{equation}
+
+and
+\begin{equation}\label{eq:monad-arrow-arrow-monunit}
+  \definemap{
+    \Arrow(\monunit_\Obja)
+  }{
+    \Arrow(\Obja)
+  }{
+    \Arrow (\Arrow(\Obja))
+  }{
+    \interv{a}{b}
+  }{
+    \interv{\interv{a}{a}}{\interv{b}{b}}.
+  }
+\end{equation}
+
+With this in mind, it is easy to see that the following diagrams commute.
+
+\begin{center}
+  \todographicsjira{261}{add left and right diagrams in tikz. Take it from GZ recital.}
+\end{center}
