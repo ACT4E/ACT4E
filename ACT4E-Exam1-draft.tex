@@ -279,20 +279,6 @@ Prove that the direct sum of real vector spaces -- together with inclusion morph
 
 \begin{gradedexercise}[\exname{ComposingDesignProblems}]\label{ex:ComposingDesignProblems} (5 points) 
 
-
-\newcommand{\fast}{\text{fast}}
-\newcommand{\slow}{\text{slow}}
-\newcommand{\llarge}{\text{large}}
-\newcommand{\ssmall}{\text{small}}
-\newcommand{\llong}{\text{long}}
-\newcommand{\sshort}{\text{short}}
-\newcommand{\speed}{\text{speed}}
-\newcommand{\size}{\text{size}}
-\newcommand{\money}{\text{money}}
-\newcommand{\ttime}{\text{time}}
-\newcommand{\cheap}{\text{cheap}}
-\newcommand{\midprice}{\text{mid-price}}
-\newcommand{\expensive}{\text{expensive}}
 Consider the following posets, given in terms of Hasse diagrams:
 \begin{itemize}
 \item $\speed$:
@@ -371,22 +357,12 @@ If yes, how long will she have to work, at minimum, to save enough money to buy 
 
 \begin{gradedexercise}[\exname{BatteryDP}]\label{ex:BatteryDP} (X points)
 
-\newcommand{\energy}{\text{energy}}
-\newcommand{\mass}{\text{mass}}
-\newcommand{\money}{\text{money}}
-
 Define the design problem of a battery as
     \begin{equation}
         \adp \colon \F{\energy}\profto (\R{\mass}\times \R{\money})
     \end{equation}
     \begin{center}
-            \begin{tikzpicture}[DP, dp port sep=3pt]
-  \node[dp={1}{2}, dp port sep=6pt] (car) {$\adp$};
-
-  \draw[funconn, funame={\energy}] (car_fun1){};
-  \draw[runconn, runame={\mass}] (car_res1){};
-  \draw[runconn, runame={\money}] (car_res2){};
-\end{tikzpicture}
+        \includesag{exam_battery}
     \end{center}
 Let~$\energy,\mass,\money\coloneqq \bar{\nonNegReals}=\nonNegReals \cup \{\top\}$. Furthermore, let~$C$ be a \emph{catalogue} of batteries.
 
@@ -397,28 +373,7 @@ A recipe for creating a new battery given two batteries~$\adp_1,\adp_2$ is given
 where~$\adpb$ is given by:
 
     \begin{center}
-        \begin{tikzpicture}[DP, dp port sep=2pt, background rectangle/.style={fill=white}, show background rectangle]
-            \node[dp={1}{2}] (b1) at (0,0) {$\adp_1$};
-            \node[dp={1}{2}] (sum1)  at (-2,-3) {$+$};
-            \node[dp={1}{2}] (b2)  at (0,-5) {$\adp_2$};
-            \node[dp={3}{1}] (sum2)  at (3,-1) {$+$};
-            \node[dp={3}{1}] (sum3)  at (3,-9.5) {$+$};
-            \node[dp={0}{2}, dp port sep=6pt] (b3)  at (0,-10) {$\adp_3$};
-            \draw[rconn, rcname={},relres=above, relfun=above] (sum1_res1) to[in=180,out=0] (b1_fun1);
-            \draw[rconn, rcname={},relres=above, relfun=above] (sum1_res2) to[in=180,out=0] (b2_fun1);
-            \draw[rconn, rcname={},relres=above, relfun=above] (b1_res1) to (sum2_fun1);
-            \draw[rconn, rcname={},relres=above, relfun=above] (b2_res1) to (sum2_fun2);
-            \draw[rconn, rcname={},relres=above, relfun=above] (b2_res1) to (sum2_fun2);
-            \draw[rconn, rcname={10 g},relres=above, relfun=above, posres=0.1] (b3_res1) to (sum2_fun3);
-            \draw[rconn, rcname={},relres=above, relfun=above] (b1_res2) to(sum3_fun1);
-            \draw[rconn, rcname={},fcname={},relres=above, relfun=above] (b2_res2) to (sum3_fun2);
-            \draw[rconn, rcname={5 CHF},relres=above, relfun=above, posres=0.2] (b3_res2) to (sum3_fun3);
-            \draw[runconn, runame={\mass}, relres=above] (sum2_res1);
-            \draw[runconn, runame={\money},relres=above] (sum3_res1);
-            \draw[funconn, funame={\energy},relfun=above] (sum1_fun1);
-
-        \end{tikzpicture}
-
+    \includesag{exam_create_batteries}
     \end{center}
     What are all the batteries that you can construct? We would write:
     \begin{equation*}
@@ -427,8 +382,48 @@ where~$\adpb$ is given by:
 
 \end{gradedexercise}
 
-%\solutionof{DirectSumCopr}
+\solutionof{BatteryDP}
 
+\clearpage
+
+\begin{gradedexercise}[\exname{SpringMonoid}] (X points)
+
+    In this exercise you will work on elasticity properties of materials.
+    As you have learned in your engineering studies, materials react to the application of specific forces.
+    The force applied per unit area is usually referred to as \emph{stress}, and the compression produced in the material is called \emph{strain}.
+    When stress is applied, each material experiences a specific strain, which depends on the chemical bonds creating the material.
+    Whether the material returns to its original shape when stress is removed, depends on the entity of the deformation and on the material's properties.
+
+    One usually differentiates between \emph{elastic} deformation (when removing the applied stress makes the material return to its original shape), and \emph{plastic} deformation (when the material deforms irreversibly).
+
+    In this exercise, we will focus on elastic deformations. In this domain, the force required to deform an elastic material is directly proportional to its deformation.
+    This is commonly known as the Hooke's law, due to the physicist Robert Hooke:
+    \begin{equation*}
+        F=-k\Delta x,
+    \end{equation*}
+    where~$F$ represents the applied force,~$\Delta x$ the deformation of the material, and~$k$ the so-called \emph{spring constant}, which is specific to each material.
+
+    Now, it is interesting to see what happens when one combines multiple materials with different properties.
+    Consider two springs, with spring constants~$k_1,k_2$, respectively.
+
+
+    When you combine them in \emph{series}
+
+     \begin{center}
+            \includesag{30_spring_series}
+        \end{center}
+    they form a new spring with spring constant~$k_{1,2}$ satisfying:
+    \begin{equation*}
+        \frac{1}{k_{1,2}}=\frac{1}{k_1}+\frac{1}{k_2}.
+    \end{equation*}
+
+    \textbf{Task:} Characterize materials based on their elastic properties. In particular, take into account their length at rest (when no stress is applied), their spring constants (one for extension, and one for compression), their maximum compression, and their maximum extension.
+    Explicitly construct the monoid/semigroup characterizing this model, thoroughly showing all the needed properties.
+    (Note: If you drop the length at rest from the model, you actually get a material which is very hard, and maybe monoid would be ok?)
+    .... finish
+\end{gradedexercise}
+
+    \solutionof{SpringMonoid}
 
 
 
