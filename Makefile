@@ -44,6 +44,7 @@ chapters=$(wildcard volumes/vol*/*/*/chapter.tex)
 chapters-standalones=$(subst chapter.tex,chapter-standalone.tex,$(chapters))
 chapters-standalones-fast=$(subst chapter.tex,chapter-standalone-fast.tex,$(chapters))
 chapters-standalones-public-fast=$(subst chapter.tex,chapter-standalone-public-fast.tex,$(chapters))
+chapters-standalones-noslides-fast=$(subst chapter.tex,chapter-standalone-noslides-fast.tex,$(chapters))
 chapters-pdf        =$(subst chapter.tex,chapter-standalone.pdf,$(chapters))
 chapters-links      =$(subst chapter.tex,chapter-link-snippets, $(chapters))
 chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
@@ -90,6 +91,8 @@ volumes/%/Makefile: template-Makefile.mk
 
 %/chapter-standalone-public-fast.tex: template-chapter-standalone-public-fast.tex
 	cp $< $@
+%/chapter-standalone-noslides-fast.tex: template-chapter-standalone-noslides-fast.tex
+	cp $< $@
 %/part-standalone-public-fast.tex: template-part-standalone-public-fast.tex
 	cp $< $@
 
@@ -101,7 +104,7 @@ volumes/%/Makefile: template-Makefile.mk
 	make -C $* part-once
 
 
-standalone: $(chapters-standalones) $(parts-standalones) $(chapters-standalones-fast) $(parts-standalones-fast) $(parts-standalones-public-fast) $(chapters-standalones-public-fast)
+standalone: $(chapters-standalones) $(parts-standalones) $(chapters-standalones-fast) $(parts-standalones-fast) $(parts-standalones-public-fast) $(chapters-standalones-public-fast) $(chapters-standalones-noslides-fast)
 links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-minted)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 

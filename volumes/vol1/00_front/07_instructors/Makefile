@@ -12,6 +12,9 @@ chapter-continuous-fast: .FORCE
 chapter-continuous-public-fast: .FORCE
 	latexmk -r ../../../../latexmkrc -pvc -nobibtex chapter-standalone-public-fast.tex
 
+chapter-continuous-noslides-fast: .FORCE
+	latexmk -r ../../../../latexmkrc -pvc -nobibtex chapter-standalone-noslides-fast.tex
+
 part-once: .FORCE
 	latexmk -r ../../../latexmkrc -g -nobibtex part-standalone.tex
 
