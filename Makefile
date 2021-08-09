@@ -116,10 +116,13 @@ recursive: links standalone makefiles
 #	make -B ACT4E-vol1.pdf
 #	make -B ACT4E-vol2.pdf
 
-nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.tex
+nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.texi
 
 
 
+
+generated/used.yaml: .FORCE
+	@lsm_collect $(shell find volumes -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
 
 generated/used-%.yaml: .FORCE
 	@lsm_collect $(shell find volumes/$* -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
@@ -134,10 +137,7 @@ $(nomencvol1): generated/used-vol1.yaml utils/symbols*.tex
 
 nomenc: $(nomencvol1)  nomenc-vol2.tex
 
-generated/used.yaml: .FORCE
-	@lsm_collect $(shell find volumes -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
-
-tablefile=volumes/vol1/00_front/05_developers/table.tex
+tablefile=volumes/vol1/00_front/05_developers/table.texi
 
 table: $(tablefile)
 
