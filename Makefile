@@ -143,7 +143,8 @@ table: $(tablefile)
 
 $(tablefile): utils/symbols*.tex .FORCE
 	$(MAKE) generated/used.yaml -B
-	lsm_table --only generated/used.yaml --style medium $< > $@
+	lsm_table --verbose --only generated/used.yaml --style medium $< > $@
+	
 #lsm_table --only used.yaml --style full $^ > $@
 #lsm_table --only used.yaml --style small $^ > $@
 
