@@ -1,0 +1,275 @@
+
+\section{$\UPos$ and $\LPos$ categories}
+
+\begin{definition}[Category \UPos]
+\label{def:upos_cat}
+The category \UPos consists of:
+\begin{compactenum}
+    \item \emph{Objects}: objects are posets;
+    \item \emph{Morphisms}: given objects~$\Obja,\Objb\in \Ob_\UPos$, morphisms from~$\Obja$ to~$\Objb$ are monotone maps of the form~$\mora \colon \Obja \to \Up{\Objb}$.
+    \item \emph{Composition of morphisms}: Given morphisms $\mora\colon \Obja \to \Up{\Objb}$~ $\morb\colon \Objb\to \Up{\Objc}$, their composition is given as
+    \begin{equation}
+    \begin{aligned}
+        \mora \mthen \morb \colon \Obja&\to \Up{\Objc}\\
+        \Objael&\mapsto \bigcup_{\Objbel\in \mora(\Objael)}\morb(\Objbel);
+    \end{aligned}
+    \end{equation}
+    \item \emph{Identity morphism}: given an object~$\Obja\in \Ob_\UPos$, the identity morphism is given by the application of the upper closure operator:~$\catid_\Obja(\Objael)\definedas \upit\{\Objael\}$.
+\end{compactenum}
+\end{definition}
+
+\todo{J: maybe we could name this category using the standard notation for Kleisli categories? i.e. $\Pos_{\Up{} } $.}
+
+\begin{remark}
+Note that the composition of morphisms in this category corresponds to the generalization of the series operator for boolean profunctors.
+\end{remark}
+
+Analogously, we can define the \LPos category.
+\begin{definition}[Category \LPos]
+\label{def:lpos_cat}
+The category \LPos consists of:
+\begin{compactenum}
+    \item \emph{Objects}: objects are posets;
+    \item \emph{Morphisms}: given objects~$\Obja,\Objb\in \Ob_\LPos$, morphisms from~$\Obja$ to~$\Objb$ are monotone maps of the form~$\mora \colon \Obja \to \Lo{\Objb}$.
+    \item \emph{Composition of morphisms}: Given morphisms $\mora \colon \Obja \mto \Lo{\Objb}$, $\morb \colon \Objb\mto \Lo{\Objc}$, their composition is given by
+    \begin{equation}
+    \begin{aligned}
+        \mora \mthen \morb \colon \Obja &\mto \Lo{\Objc}\\
+        \Objael&\mapsto \bigcup_{\Objbel\in \mora (\Objael)}\morb(\Objbel);
+    \end{aligned}
+    \end{equation}
+    \item \emph{Identity morphism}: given an object $\Obja\in \Ob_\LPos$, the identity morphism is given by the application of the lower closure operator:~$\catid_\Obja(\Objael)\definedas \downit\{\Objael\}$.
+\end{compactenum}
+\end{definition}
+We now show that \UPos and \LPos are indeed categories.
+\todo{J: this is automatic if we know that U and L are monads.}
+
+\begin{lemma}
+\label{lem:upos_lpos_cats}
+\UPos and \LPos are categories.
+\end{lemma}
+
+\begin{proof}
+We prove that \UPos is a category. The proof for \LPos is analogous. In the following, we show unitality and associativity.
+\paragraph*{Unitality} Given~$\mora\colon \Obja \mto \Up{\Objb}$, we have:
+\begin{equation*}
+    \begin{aligned}
+    \left( \mora \mthen \catid_\Objb\right)(\Objael)&=\bigcup_{\Objbel\in \mora(\Objael)}\catid_\Objb(\Objbel)\\
+    &=\bigcup_{\Objbel\in \mora(\Objael)}\upit\{\Objbel\}\\
+    &=\bigcup_{\Objbel\in \mora(\Objael)}\{\Objbel'\in \Objb \colon \Objbel\posleq_\Objb \Objbel' \}
+    \end{aligned}
+\end{equation*}
+We know that~$\mora(\Objael)$ is an upperset:
+\begin{equation*}
+    \begin{aligned}
+    \mora(\Objael)&=\bigcup_{\Objbel\in \mora(\Objael)}\{\Objbel\}\\
+    &=\bigcup_{\Objbel\in \mora(\Objael)}\{ \Objbel'\in \Objb \colon \Objbel\posleq_\Objb \Objbel'\}.
+    \end{aligned}
+\end{equation*}
+Therefore,~$\left( \mora \mthen \catid_\Objb\right)(\Objael)=\mora(\Objael)$ for all~$\Objael\in \Obja$. Similarly, we have:
+\begin{equation*}
+    \begin{aligned}
+    (\catid_\Obja \mthen \mora)(\Objael)&=\bigcup_{\Objael'\in \catid_\Obja(\Objael)}\mora(\Objael')\\
+    &=\bigcup_{\Objael'\in \upit \{\Objael\}}\mora(\Objael')\\
+    &=\mora(\Objael),
+    \end{aligned}
+\end{equation*}
+where the last equality holds since~$\mora$ is a monotone function and~$\mora(\Objael')\subseteq \mora(\Objael)$ for all~$\Objael'\in \upit \{\Objael\}$.
+\paragraph*{Associativity} Let's consider three morphisms~$\mora\colon \Obja \mto \Up{\Objb}$,~$\morb\colon \Objb\mto \Up{\Objc}$, and~$\morc\colon \Objc\mto \Up{\Objd}$. We have:
+\begin{equation*}
+    \begin{aligned}
+    \left( \left( \mora \mthen \morb\right)\mthen\morc\right)(\Objael)&=\bigcup_{\Objcel \in \left( \bigcup_{\Objbel \in \mora(\Objael)}\morb(\Objbel)\right)}\morc(\Objcel)\\
+    &=\bigcup_{\Objbel\in \mora(\Objael)}\bigcup_{\Objcel\in \morb(\Objbel)}\morc(\Objcel)\\
+    &=\left( \mora \mthen \left( \morb\then \morc\right)\right)(\Objael).
+    \end{aligned}
+\end{equation*}
+Therefore, \UPos is a category.
+\end{proof}
+
+%\begin{definition}[Equivalence of categories]
+%\label{def:equivalence_cat}
+%An \emph{equivalence} between two categories \CatC and \CatD is given by:
+%\begin{compactenum}
+%\item A pair of functors~$\funa,\funb$ of the form:
+%    \begin{equation}
+%    \includesag{cat_equiv}
+%    \end{equation}
+%\item natural isomorphisms~$\funa\then \funb\cong \catid_\CatC$ and~$\funb\then \funa\cong \catid_\CatD$.
+%\end{compactenum}
+%\end{definition}
+%\todo{This definition should be moved to the chapter on adjunctions (and is perhaps already there?).}
+
+
+We can show that \UPos and \LPos are equivalent categories (\cref{def:cat-equivalence}).
+
+\begin{lemma}
+\label{lem:ulposequiv}
+\UPos and \LPos are equivalent: there exists a pair of functors
+\begin{equation}
+    \begin{aligned}
+    \funeqa\colon \UPos&\fto \LPos,\\
+    \funeqb\colon \LPos&\fto \UPos,
+    \end{aligned}
+\end{equation}
+such that~$\funeqa \then \funeqb=\funid_{\UPos}$ and~$\funeqb \then \funeqa=\funid_{\LPos}$, where~$\funid_{\UPos}$ and~$\funid_{\LPos}$ are the identity functors on $\UPos$ and~$\LPos$, respectively.
+\end{lemma}
+
+\begin{proof}
+To prove this, we need to define the needed functors and to show that they satisfy the listed properties.
+We choose the functors to be the ones that map a poset~$\posA$ in a category to its opposite version~$\posA\op$ in another category.
+Given a morphism~$\mora\colon \Obja \mto \Up{\Objb}$ in \UPos, we have:
+\begin{equation*}
+    \begin{aligned}
+    \funeqa(\mora)\colon \Obja\op &\mto \Lo(\Objb \op)\\
+    \Objael&\mapsto \mora(\Objael).
+    \end{aligned}
+\end{equation*}
+Given a morphism~$\morb\colon \Obja \mto \Lo{\Objb}$ in \LPos, we have:
+\begin{equation*}
+    \begin{aligned}
+    \funeqb(\morb)\colon \Obja\op &\mto \Up(\Objb \op)\\
+    \Objael&\mapsto \morb(\Objael).
+    \end{aligned}
+\end{equation*}
+\paragraph*{$\funeqa$ and~$\funeqb$ are functors}
+\begin{itemize}
+    \item \emph{Preservation of identites}: Given~$\Obja\in \Ob_\UPos$, we have:
+    \begin{equation*}
+        \begin{aligned}
+            \funeqa(\catid_\Obja)&=\upit_\Obja\{\Objael\}\\
+            &=\downit_{\Obja\op}\{\Objael\}\\
+            &=\catid_{\Obja\op},
+        \end{aligned}
+    \end{equation*}
+where~$\catid_\Obja$ is an identity morphism in \UPos, and~$\catid_{\Obja\op}$ is an identity morphism in \LPos. Similarly, given~$\Obja\in \Ob_\LPos$ we have:
+\begin{equation*}
+    \begin{aligned}
+    \funeqb(\catid_\Obja)&=\downit_\Obja\{\Objael\}\\
+    &=\upit_{\Obja\op}\{\Objael\}\\
+    &=\catid_{\Obja\op}.
+    \end{aligned}
+\end{equation*}
+\item \emph{Preservation of composition}: This can be easily seen as follows. Given any~$\mora\in \HomSet{\UPos}{\Obja}{\Objb}$,~$\morb\in \HomSet{\UPos}{\Objb}{\Objc}$:
+\begin{equation*}
+    \begin{aligned}
+    \funeqa(\mora \mthen \morb)&=\mora \mthen \morb\\
+    &=\funeqa(\mora)\mthen \funeqa(\morb).
+    \end{aligned}
+\end{equation*}
+Similarly, given any~$\mora\in \HomSet{\LPos}{\Obja}{\Objb}$,~$\morb\in \HomSet{\LPos}{\Objb}{\Objc}$:
+\begin{equation*}
+    \begin{aligned}
+    \funeqb(\mora \mthen \morb)&=\mora \mthen \morb\\
+    &=\funeqb(\mora)\mthen \funeqb(\morb).
+    \end{aligned}
+\end{equation*}
+\end{itemize}
+\paragraph*{Compositions return identity functors}
+We want to show that by composing the two functors we obtain the identity functors in \UPos and \LPos, respectively. Clearly, comosing the two functors returns the identity on the objects, since for any poset~$\posA$, one has~$(\posA\op)\op=\posA$. The functors act on morphisms by ``flipping the context'', and ``flipping'' twice is the ``same'' as not flipping.
+\end{proof}
+
+We can show that~$\UPos$ and~$\LPos$ are monoidal categories.
+
+
+\begin{lemma}
+\label{lem:upos_moncat}
+\UPos is a monoidal category with the following additional structure:
+\begin{enumerate}
+    \item \emph{Tensor product $\mtimes$}: On objects, the tensor product corresponds to the product of posets. Given two morphisms~$\mora\colon \Obja\mto \Up{\Objb}$ and~$\morb\colon \Objc\mto \Up{\Objd}$, we have:
+    \begin{equation}
+    \begin{aligned}
+        \mora \mtimes \morb\colon \Obja \times \Objc &\mto \Up(\Objb\times \Objd)\\
+        \tup{\Objael,\Objcel}&\mapsto \mora(\Objael)\times \morb(\Objcel).
+    \end{aligned}
+    \end{equation}
+    Note that the Cartesian product of upper sets is an upper set.
+    \item \emph{Unit}: The unit is the identity poset.
+    \item \emph{Left unitor}: The left unitor is given by the pair of morphisms
+    \begin{equation}
+        \begin{aligned}
+            \leftunitor_\posA\colon \styleobj{\singleton}\mtimes \Obja &\mto \Up{\Obja}\\
+            \tup{\styleobj{\singletonel},\Objael}&\mapsto \upit\{\Objael\},
+        \end{aligned}
+    \end{equation}
+    and
+    \begin{equation}
+        \begin{aligned}
+            \leftunitor_\posA^{-1}\colon \Obja &\mto \Up(\styleobj{\singleton}\mtimes \Obja) \\
+            \Objael&\mapsto \{\styleobj{\singletonel}\} \times \upit \{\Objael\}.
+        \end{aligned}
+    \end{equation}
+    \item \emph{Right unitor}: The right unitor is given by the pair of morphisms
+    \begin{equation}
+        \begin{aligned}
+            \rightunitor_\posA\colon \Obja\mtimes \styleobj{\singleton}  &\mto \Up{\Obja}\\
+            \tup{\Objael,\styleobj{\singletonel}}&\mapsto \upit\{\Objael\},
+        \end{aligned}
+    \end{equation}
+    and
+    \begin{equation}
+        \begin{aligned}
+            \rightunitor_\posA^{-1}\colon \Obja &\mto \Up( \Obja \mtimes \styleobj{\singleton}) \\
+            \Objael&\mapsto \upit \{\Objael\} \times \{\styleobj{\singletonel}\}.
+        \end{aligned}
+    \end{equation}
+    \item \emph{Associator}: The associator is given by the pair of morphisms:
+    \begin{equation}
+        \begin{aligned}
+            \associator_{\Obja\Objb,\Objc}\colon (\Obja\mtimes \Objb)\mtimes \Objc &\mto \Up \Obja\times (\Up \Objb \times \Up \Objc)\\
+            \tup{\tup{\Objael,\Objbel},\Objcel}&\mapsto \upit\{\Objael\}\times (\upit\{\Objbel\}\times \upit\{\Objcel\}),
+        \end{aligned}
+    \end{equation}
+    and
+    \begin{equation}
+        \begin{aligned}
+            \associator_{\Obja,\Objb\Objc}\colon \Obja\mtimes (\Objb\mtimes \Objc) &\mto (\Up \Obja\times \Up \Objb) \times \Up \Objc\\
+            \tup{\Objael,\tup{\Objbel,\Objcel}}&\mapsto (\upit\{\Objael\}\times \upit\{\Objbel\})\times \upit\{\Objcel\}.
+        \end{aligned}
+    \end{equation}
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+    \todojira{238}{type proof}
+\end{proof}
+
+\begin{lemma}\label{lem:UPos-is-traced}
+  \UPos is a traced monoidal category.
+\end{lemma}
+\begin{proof}
+  \todotextjira{339}{@Gioele: Show UPos traced}
+\end{proof}
+
+
+
+\section{From~$\DP$ to~$\UPos$ and~$\LPos$}
+\begin{lemma}
+\label{lem:covfunctor}
+There is a \emph{functor}~$\cofun\colon \DP \fto \UPos$ which maps:
+\begin{compactenum}
+\item An object (poset) in \DP to the same object (poset) in \UPos.
+\item A morphism~$\stylemorph{d}\in \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\stylemorph{h_d}\in \HomSet{\UPos}{\funsp}{\ressp}$, where:
+\begin{equation}
+\begin{aligned}
+    \stylemorph{h_d}\colon \funsp\op &\toinPos \tup{\Up{\ressp},\subseteq}\\
+    \fun^*&\mapsto \{\res \in \ressp\mid d(\fun^*,\res)=\true\}.
+\end{aligned}
+\end{equation}
+\end{compactenum}
+\end{lemma}
+
+\begin{lemma}
+\label{lem:confunctor}
+There is a \emph{contravariant functor} $\confun\colon \DP \fto \LPos$ which maps:
+\begin{compactenum}
+\item An object (poset) of \DP to the same object (poset) in \LPos.
+\item A morphism $\dprob \in \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\morb\in \HomSet{\LPos}{\ressp}{\funsp}$, where:
+\begin{equation*}
+    \begin{aligned}
+    \morb\colon \ressp &\to \Lo{\funsp}\\
+    \res&\mapsto \{ \fun \in \funsp \mid \dprob(\fun,\res)=\true\}.
+    \end{aligned}
+\end{equation*}
+\end{compactenum}
+\end{lemma}
+
+\todojira{240}{I have proofs for this and for many other things handwritten. Will type them once we decide we want this to be in the book. There is a nice interpretation with an endofunctor Dual, which commutes with the aforementioned ones, meaning that you can solve and then convert to lowersets, or dualize , solve, and then convert to upper sets.}

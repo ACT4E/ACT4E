@@ -3,40 +3,73 @@
 
 \section{Problem statement}
 \label{sec:Optimization}
- \linkvideo{spring2021-functorial-comp-a:optimization-semantics} % Optimization semantics
 
-Consider an arbitrary graph of design problems, in which nodes are design problems and edges are interconnections.
-\todographics{Draw diagram} 
+\linkvideo{spring2021-functorial-comp-a:optimization-semantics} % Optimization semantics
+
+In this and the following chapters we are going to build towards the solution of co-design problems.
+
+We consider an arbitrary graph of design problems, in which nodes are design problems and edges are interconnections
+between functionality and resources. On this structure we want to solve the query \FixFunMinRes (or, symmetrically, \FixResMaxFun).
+
+\todographics{Draw diagram}
+
+
+
+We look at this from a compositional point of view. We will assume that we know the solution to \FixFunMinRes for each of the components. We think of the components as primitive blocks, because they are given in a catalogue format as a DPI, or they are special cases ($+$, $\times$, etc.) which we will solve as special cases.
+Given the solution for the primitive blocks, we want to know what is the solution for \FixFunMinRes for the entire diagram.
+
+What is the form of the solution that we expect? Given a DP $\adp: \funsp \profto \ressp$ we expect the solution
+to \FixFunMinRes to be a function that, given a fixed functionality $\fun\in\funsp$, returns the minimal resources. We think intuitively of the minimal resources as a Pareto front. This would give a function of type
+\begin{equation}
+    \funsp \to \antichains\ressp.
+\end{equation}
+Alternatively, we can think of the answer to be an upper set of resources, of which the Pareto front is the minimal resources. This is more general---not all upper sets are supported by an antichain. In this view the function we are looking for has the type
+\begin{equation}
+    \funsp \to \uppersets\ressp.
+\end{equation}
+For this chapter we use this formalization. In the next chapter we will then consider antichains as a computable representation.
+
+For the symmetric problem \FixResMaxFun, the types would be
+\begin{equation}
+    \ressp \to \antichains\funssp
+\end{equation}
+and
+\begin{equation}
+    \ressp \to \lowersets\funsp.
+\end{equation}
+
+
 Assuming we know how to solve each problem separately (in other words, we know the map~$\ftor$ defined in \cref{eq:hfromftoupr} for each design problem), we ask whether we can solve
 the \emph{co-design} problem optimally.
 
-We will focus our exposition on the solution of \FixFunMinReq; the solution of the other queries will be analogous.
+We will focus our exposition on the solution of \FixFunMinRes; the solution of the other queries will be analogous.
 
 
-\begin{problem}
-  \label{prob:MCDP}
-  Suppose that we are given a CDPI~$\tup{ \funsp,\ressp,\tup{ \cdpiN,\cdpiE} }$, and
-  that we can evaluate the map~$\ftor_{\cdpin}$ \todo{This notation is not yet introduced, I think.} for all design problems~$\cdpin\in\cdpiN$.
-  Given a required functionality~$\fun\in\funsp$, we wish to find
-  the \emph{minimal} resources in~\ressp for which there exists
-  a \emph{feasible} implementation vector that makes all sub-problems feasible
-  at the same time and all co-design constraints satisfied; or, if
-  none exist, provide a certificate of infeasibility.
+\begin{problem}[\FixFunMinRes for a graph]
+    \label{prob:MCDP}
+    Suppose that we are given a CDPI~$\tup{ \funsp,\ressp,\tup{ \cdpiN,\cdpiE} }$, and
+    that we have a solution to the \FixFunMinRes problem for each component~$\cdpin\in\cdpiN$.
+
+    Given a required functionality~$\fun\in\funsp$, we wish to find
+    the \emph{minimal} resources in~\ressp for which there exists
+    a \emph{feasible} implementation vector that makes all sub-problems feasible
+    at the same time and all co-design constraints satisfied; or, if
+    none exist, provide a certificate of infeasibility.
 \end{problem}
 In other words, given the maps~$\{\ftor_{\cdpin},\,\cdpin\in\cdpiN\}$
 for the subproblems, one needs to evaluate \todo{evaluate or compute?} the map~$\ftor\colon\funsp \toinPos \uppersets \ressp$
 for the entire CDPI (\cref{fig:question}).
 
 \captionsideleft{\todographicsjira{217}{make this in tikz}\label{fig:question}}{
-  \includegraphics[width=7cm]{gmcdptro_question}
+    \includegraphics[width=7cm]{gmcdptro_question}
 }
 
 The rest of the chapter will provide a solution to~\cref{prob:MCDP},
 under the following assumptions:
 
 \begin{compactenum}
-  \item The posets~$\funsp,\ressp$ are complete partial orders (\cref{def:cpo}).
-  \item The maps~\ftor is \scottcontinuous (\cref{def:scott}).
+    \item The posets~$\funsp,\ressp$ are complete partial orders (\cref{def:cpo}).
+    \item The maps~\ftor is \scottcontinuous (\cref{def:scott}).
 \end{compactenum}
 \todo{Rather "maps $h_v$ are" ??}
 
@@ -58,52 +91,51 @@ is the possibility of introducing feedback interconnections. To show
 this, we will give an example of a 1-dimensional problem with a continuous~\ftor
 for which the feasible set is disconnected (and in particular non-convex).
 
-\todographics{@Gioele: Redo figure in \cref{fig:Simple-DP} using Tikz}
+\todographicjira{340}{@Gioele: Redo figure in \cref{fig:Simple-DP} using Tikz}
 \begin{marginfigure}
-  \centering
-  \subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex1b}}
-  \\
-  \subfloat[\label{fig:nonconvex3}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex3}}
-  \caption{One feedback connection and a topologically continuous~\ftor
-  are sufficient to induce a disconnected feasible set.}
-  \label{fig:ceil-1}
+    \centering
+    \subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex1b}}
+    \\
+    \subfloat[\label{fig:nonconvex3}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex3}}
+    \caption{One feedback connection and a topologically continuous~\ftor
+    are sufficient to induce a disconnected feasible set.}
+    \label{fig:ceil-1}
 \end{marginfigure}
 
-\medskip{}
 
 \begin{example}[Non-convexity]
-  \label{exa:one}
-  Consider the CDPI in \cref{fig:Simple-DP}.
-  The \uline{m}inimal resources~$M\subseteq\uppersets \ressp$ are the objectives of this optimization problem:
-  \begin{equation*}
-    M\definedas\begin{cases}
-                 \with & \fun,\res\in\funsp=\ressp,\\
-                 \Min_{\posleq} & \res,\\
-                 & \res\in\ftor(\fun),\\
-                 & \res\posleq\fun.
-    \end{cases}
-  \end{equation*}
-  The \uline{fea}sible % \todo{why underlined?} fea -> feasible
-  set~$\Phi\subseteq\funsp\times\ressp$ is
-  the set of functionality and resources that satisfy the constraints~$\res\in\ftor(\fun)$
-  and~$\res\posleq\fun$:
-  \begin{equation}
-    \Phi=\left\{ \tup{\fun,\res}\in\funsp\times\ressp\colon (\res\in\ftor(\fun))\wedge(\res\posleq\fun)\right\} .\label{eq:feasible}
-  \end{equation}
-  The \uline{p}rojection~$P$ of~$\Phi$ to the functionality space
-  is:
-  \begin{equation*}
-    P=\left\{ \fun\mid\tup{\fun,\res} \in\Phi\right\}.
-  \end{equation*}
-  In the scalar case ($\funsp=\ressp=\tup{\nonNegRealsComp,\leq}$),
-  the map~$\ftor\colon\funsp\toinPos\uppersets \ressp$ is simply a map~$\ftor\colon\F{\nonNegRealsComp}\to \uppersets\R{\nonNegRealsComp}$.
-  The set~$P$ of feasible functionality is described by
-  \begin{equation}
-    P=\{\fun\in\nonNegRealsComp\colon \ftor(\fun)\leq\fun\}.\label{eq:Pfeasible}
-  \end{equation}
-  \cref{fig:nonconvex3} shows an example of a continuous map~\ftor
-  that gives a disconnected feasible set~$P$. Moreover,~$P$ is disconnected
-  under any order-preserving nonlinear re-parametrization.
+    \label{exa:one}
+    Consider the CDPI in \cref{fig:Simple-DP}.
+    The \uline{m}inimal resources~$M\subseteq\uppersets \ressp$ are the objectives of this optimization problem:
+    \begin{equation*}
+        M\definedas\begin{cases}
+                       \with & \fun,\res\in\funsp=\ressp,\\
+                       \Min_{\posleq} & \res,\\
+                       & \res\in\ftor(\fun),\\
+                       & \res\posleq\fun.
+        \end{cases}
+    \end{equation*}
+    The \uline{fea}sible % \todo{why underlined?} fea -> feasible
+    set~$\Phi\subseteq\funsp\times\ressp$ is
+    the set of functionality and resources that satisfy the constraints~$\res\in\ftor(\fun)$
+    and~$\res\posleq\fun$:
+    \begin{equation}
+        \Phi=\left\{ \tup{\fun,\res}\in\funsp\times\ressp\colon (\res\in\ftor(\fun))\wedge(\res\posleq\fun)\right\} .\label{eq:feasible}
+    \end{equation}
+    The \uline{p}rojection~$P$ of~$\Phi$ to the functionality space
+    is:
+    \begin{equation*}
+        P=\left\{ \fun\mid\tup{\fun,\res} \in\Phi\right\}.
+    \end{equation*}
+    In the scalar case ($\funsp=\ressp=\tup{\nonNegRealsComp,\leq}$),
+    the map~$\ftor\colon\funsp\toinPos\uppersets \ressp$ is simply a map~$\ftor\colon\F{\nonNegRealsComp}\to \uppersets\R{\nonNegRealsComp}$.
+    The set~$P$ of feasible functionality is described by
+    \begin{equation}
+        P=\{\fun\in\nonNegRealsComp\colon \ftor(\fun)\leq\fun\}.\label{eq:Pfeasible}
+    \end{equation}
+    \cref{fig:nonconvex3} shows an example of a continuous map~\ftor
+    that gives a disconnected feasible set~$P$. Moreover,~$P$ is disconnected
+    under any order-preserving nonlinear re-parametrization.
 
 \end{example}
 
