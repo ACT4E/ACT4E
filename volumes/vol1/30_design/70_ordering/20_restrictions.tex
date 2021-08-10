@@ -174,7 +174,7 @@ We denote by~$\posbot_{\F{\posgenA},\R{\posgenB}}$ the design problem which is n
     First, we need to prove that~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a poset. To prove this, we check the following:
 % 
     \begin{compactitem}
-        \item \emph{Reflexivity}: Given~$\adpa\in \HomSet{\DP}{\F{A}}{\R{B}}$,~$\adpa\posDPleq \adpa$ is always true.
+        \item \emph{Reflexivity}: Given~$\adpa\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$,~$\adpa\posDPleq \adpa$ is always true.
         \item \emph{Antisymmetry}: Given~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$, if~$\adpa\posDPleq \adpb$ and~$\adpb\posDPleq \adpa$, then~$\adpa=\adpb$.
         \item \emph{Transitivity}: Given~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$,~$\adpa\posDPleq \adpb$, and~$\adpb\posDPleq \adpc$, then~$\adpa\posDPleq \adpc$.
     \end{compactitem}
@@ -188,7 +188,7 @@ We denote by~$\posbot_{\F{\posgenA},\R{\posgenB}}$ the design problem which is n
 
 \devel{
 
-We show that a DP Homset is a \emph{complete lattice}.
+We show that a \DP Homset is a \emph{complete lattice}.
 
 \begin{definition}[Complete Lattice]\label{def:complete-lattice}
     A poset~$\tup{\posA,\posleq}$ is a \emph{\iindex{complete lattice}} if every subset~$\posB$ of~$\posA$ has both a \emph{greatest lower bound} (often referred to as the \emph{infimum, meet}) and a \emph{least upper bound} (often referred to as the \emph{supremum, join}) in~$\tup{\posA, \posleq}$.
@@ -207,6 +207,53 @@ We show that a DP Homset is a \emph{complete lattice}.
 \subsection{Interaction with composition}
 
 Furthermore, we show that all composition operations preserve meet and joins.
+
+\begin{lemma}
+    \label{lem:series_vee}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$. One has
+    \begin{equation*}
+        (\adpa \vee \adpb)\mthen \adpc=(\adpa \mthen \adpc) \vee (\adpb\mthen \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \vee \adpb)\mthen \adpc)(\F{a}^*,\R{c})&=\bigvee_{b\in \posgenB} (\adpa \vee \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c})\\
+            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{b}^*,\R{c})\\
+            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{b}^*,\R{c})) \vee (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c}))\\
+            &=((\adpa \mthen \adpc) \vee (\adpb\mthen \adpc))(\F{a}^*,\R{c}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{remark}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc,\adpd\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$.
+    In general, one has:
+    \begin{equation*}
+        (\adpa\vee \adpb)\mthen (\adpc\vee \adpd) \neq (\adpa \mthen \adpc)\vee (\adpb \mthen \adpd).
+    \end{equation*}
+\end{remark}
+
+\begin{lemma}
+    \label{lem:series_wedge}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$. One has
+    \begin{equation*}
+        (\adpa \wedge \adpb)\mthen \adpc=(\adpa \mthen \adpc) \wedge (\adpb\mthen \adpc).
+    \end{equation*}
+    \todojira{275}{Write down counterexample (after derivation).}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \wedge \adpb)\mthen \adpc)(\F{a}^*,\R{c})&=\bigvee_{b\in \posgenB} (\adpa \wedge \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c})\\
+            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{b}^*,\R{c})\\
+            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{b}^*,\R{c})) \wedge (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c}))\\
+            &=((\adpa \mthen \adpc) \wedge (\adpb\mthen \adpc))(\F{a}^*,\R{c}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
 
 \todotextjira{275}{Prove that the composition operations preserve join and meet}
 
