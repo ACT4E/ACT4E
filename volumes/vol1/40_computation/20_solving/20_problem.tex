@@ -6,20 +6,40 @@
 
 \linkvideo{spring2021-functorial-comp-a:optimization-semantics} % Optimization semantics
 
-In this and the following chapters we are going to build towards the solution of co-design problems.
-
-We consider an arbitrary graph of design problems, in which nodes are design problems and edges are interconnections
-between functionality and resources. On this structure we want to solve the query \FixFunMinRes (or, symmetrically, \FixResMaxFun).
-
-\todographics{Draw diagram}
 
 
+\begin{definition}
+  \label{def:ftoR}
+  Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req} $,
+  we denote by~$\ftoR\colon \funsp\toinPos\Uressp$ the monotone map that associates
+  to each functionality~\fun the set of minimal resources sufficient to realize~\fun:
+  \begin{eqnarray*}
+    \ftoR\colon \funsp & \toinPos & \Uressp,\\
+    \fun& \mapsto & \{\req(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\fun\posleq\prov(\imp)\right)\}.
+  \end{eqnarray*}
+  If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
+\end{definition}
 
-We look at this from a compositional point of view. We will assume that we know the solution to \FixFunMinRes for each of the components. We think of the components as primitive blocks, because they are given in a catalogue format as a DPI, or they are special cases ($+$, $\times$, etc.) which we will solve as special cases.
-Given the solution for the primitive blocks, we want to know what is the solution for \FixFunMinRes for the entire diagram.
+Symmetrically, we can define the function $\rtoF$ as the solution of \FixResMaxFun.
 
-What is the form of the solution that we expect? Given a DP $\adp: \funsp \profto \ressp$ we expect the solution
-to \FixFunMinRes to be a function that, given a fixed functionality $\fun\in\funsp$, returns the minimal resources. We think intuitively of the minimal resources as a Pareto front. This would give a function of type
+\begin{definition}
+  \label{def:rtoF}
+  Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$,
+  define the map~$\rtoF\colon \ressp\toinPos \Lfunsp$ that associates
+  to each resource~\res the set of functionalities which can be realized with~$\res$:
+  \begin{eqnarray*}
+    \rtoF\colon \ressp & \toinPos & \Lfunsp,\\
+    \res& \mapsto & \funMax\{\prov(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\res\posgeq\req(\imp)\right)\}.
+  \end{eqnarray*}
+  If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
+\end{definition}
+
+We can also define these functions directly on \DP.
+
+
+
+
+We think intuitively of the minimal resources as a Pareto front. This would give a function of type
 \begin{equation}
     \funsp \to \antichains\ressp.
 \end{equation}
@@ -31,7 +51,7 @@ For this chapter we use this formalization. In the next chapter we will then con
 
 For the symmetric problem \FixResMaxFun, the types would be
 \begin{equation}
-    \ressp \to \antichains\funssp
+    \ressp \to \antichains\funsp
 \end{equation}
 and
 \begin{equation}
@@ -91,7 +111,7 @@ is the possibility of introducing feedback interconnections. To show
 this, we will give an example of a 1-dimensional problem with a continuous~\ftor
 for which the feasible set is disconnected (and in particular non-convex).
 
-\todographicjira{340}{@Gioele: Redo figure in \cref{fig:Simple-DP} using Tikz}
+\todographicsjira{340}{@Gioele: Redo figure in \cref{fig:Simple-DP} using Tikz}
 \begin{marginfigure}
     \centering
     \subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex1b}}
@@ -127,7 +147,7 @@ for which the feasible set is disconnected (and in particular non-convex).
     \begin{equation*}
         P=\left\{ \fun\mid\tup{\fun,\res} \in\Phi\right\}.
     \end{equation*}
-    In the scalar case ($\funsp=\ressp=\tup{\nonNegRealsComp,\leq}$),
+    In the scalar case ($\funsp=\ressp=\tupp{\nonNegRealsComp,\leq}$),
     the map~$\ftor\colon\funsp\toinPos\uppersets \ressp$ is simply a map~$\ftor\colon\F{\nonNegRealsComp}\to \uppersets\R{\nonNegRealsComp}$.
     The set~$P$ of feasible functionality is described by
     \begin{equation}

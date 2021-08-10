@@ -1,5 +1,53 @@
+\section{Queries are functors from problem statements to solutions}
 
-\section{$\UPos$ and $\LPos$ categories}
+In this and the following chapters we are going to build towards the solution of co-design problems.
+We will consider an arbitrary graph of design problems, in which nodes are design problems and edges are arbitary interconnections between functionality and resources, obtained through the operations of a traced monoidal category (series, parallel, feedback) plus the lattice structure (and, or) of design problems. On this structure we want to solve the query \FixFunMinRes (\cref{pro:FixFunMinRes}) or, symmetrically, \FixResMaxFun (\cref{pro:FixResMaxFun})
+
+\todographics{Draw diagram}
+
+We look at this from a compositional point of view. We will assume that we know the solution to \FixFunMinRes for each of the components. We think of the components as primitive blocks, because they are given in a catalogue format as a DPI, or they are special cases ($+$, $\times$, etc.) which we will solve as special cases.  Given the solution for the primitive blocks, we want to know what is the solution for \FixFunMinRes for the entire diagram.
+
+What is the form of the solution that we expect? Given a DP $\adp: \funsp \profto \ressp$ we expect the solution to \FixFunMinRes to be a function that, given a fixed functionality~$\fun\in\funsp$, returns the minimal resources, which form an upper set. We call this function~$\ftoR_\adp$.
+
+\begin{definition}
+  \label{def:ftoR-dp}
+  Given a DP~$\adp:\funsp\profto\ressp$
+  we denote by~$\ftoR_{\adp}\colon \funsp\toinPos\Uressp$ the map that associates
+  to each functionality~\fun the set of minimal resources sufficient to realize~\fun:
+  \begin{eqnarray*}
+    \ftoR_{\adp}\colon \funsp & \toinPos & \tup{\Uressp, \supseteq},\\
+    \fun& \mapsto & \{ \res \in \ressp : \adp(\fun, \res)\}
+  \end{eqnarray*}
+  If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
+\end{definition}
+
+\todo{show why monotone}
+
+Symmetrically, the solution to \FixResMaxFun is given by a function that we call~$\rtoF_\adp$.
+
+\begin{definition}
+  \label{def:rtoF-dp}
+  Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$,
+  define the map~$\rtoF_{\adp}\colon \ressp\toinPos \tup{\Lfunsp, \subseteq}$ that associates
+  to each resource~\res the set of functionalities which can be realized with~$\res$:
+  \begin{eqnarray*}
+    \rtoF_{\adp}\colon \ressp & \toinPos & \tup{\Lfunsp, \subseteq},\\
+    \res& \mapsto & \{ \fun \in \funsp : \adp(\fun, \res)\}.
+  \end{eqnarray*}
+  If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
+\end{definition}
+
+\todo{show why monotone}
+
+A question that arises naturally is whether the map $\ftoR_\adp$ is sufficient to reconstruct the original DP. The answer is yes. We will prove that
+  $\ftoR_\adp$ is a morphism in a category called \UPos, and that this category is equivalent (\cref(\cref{def:cat-equivalence}) to \DP, therefore being traced monoidal with a lattice structure. In fact, \FixFunMinRes can be seen as a functor from \DP to \UPos.
+  Symmetrically, $\rtoF_\adp$ is a morphism in a category \LPos equivalent to \DP and \FixResMaxFun can be seen as the functor from \DP to \LPos.
+
+  \todographics{@Gioele: put here }
+
+
+
+\subsection{$\UPos$ and $\LPos$ categories}
 
 \begin{definition}[Category \UPos]
 \label{def:upos_cat}
@@ -42,7 +90,8 @@ The category \LPos consists of:
 \end{compactenum}
 \end{definition}
 We now show that \UPos and \LPos are indeed categories.
-\todo{J: this is automatic if we know that U and L are monads.}
+% this is now before monads
+% \todo{J: this is automatic if we know that U and L are monads.} 
 
 \begin{lemma}
 \label{lem:upos_lpos_cats}
@@ -239,7 +288,14 @@ We can show that~$\UPos$ and~$\LPos$ are monoidal categories.
   \todotextjira{339}{@Gioele: Show UPos traced}
 \end{proof}
 
-
+\begin{lemma}\label{lem:UPos-is-traced}
+    The homsets of \UPos are bounded lattices.
+  \end{lemma}
+  \begin{proof}
+    \todotextjira{339}{@Gioele: Show UPos has lattice structure}
+  \end{proof}
+  
+  
 
 \section{From~$\DP$ to~$\UPos$ and~$\LPos$}
 \begin{lemma}
@@ -273,3 +329,5 @@ There is a \emph{contravariant functor} $\confun\colon \DP \fto \LPos$ which map
 \end{lemma}
 
 \todojira{240}{I have proofs for this and for many other things handwritten. Will type them once we decide we want this to be in the book. There is a nice interpretation with an endofunctor Dual, which commutes with the aforementioned ones, meaning that you can solve and then convert to lowersets, or dualize , solve, and then convert to upper sets.}
+
+\todotext{@Gioele: we need to show that they are equivalent, that the functor preserves traces, and meet/join}
