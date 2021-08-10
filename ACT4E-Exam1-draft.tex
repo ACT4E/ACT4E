@@ -14,7 +14,7 @@
     \setboolean{cachepdf}{true}
     \setboolean{devel}{true}
     \setboolean{showslides}{false}
-    \setboolean{instructors}{false}
+    \setboolean{instructors}{true}
     \setboolean{codeexercises}{true}
 
 \maketitle
@@ -366,7 +366,7 @@ If yes, will she have to work, at minimum, a long or a short amount of time in o
 \newpage
 
 
-\begin{gradedexercise}[\exname{BatteryDP}]\label{ex:BatteryDP} (X points)
+\begin{gradedexercise}[\exname{BatteryDP}]\label{ex:BatteryDP} (10 points)
 
 In this exercise, we think of batteries as morphisms in the category of design problems having the following type.
     \begin{equation}
@@ -375,30 +375,34 @@ In this exercise, we think of batteries as morphisms in the category of design p
     \begin{center}
         \includesag{exam_battery}
     \end{center}
-We let $\energy,\mass,\money$ all be equal to the poset given by the set $\overset{\nonNegReals} := \nonNegReals \cup \{\top\}$ equipped with the usual ordering and with $\{ \top \}$ as an added top element. Let $P$ denote the poset $\Hom_{DP}(\energy, \mass \times \money)$ and recall that is poset is a lattice. In fact, it is a complete lattice, because the join
+We let $\energy,\mass,\money$ all be equal to the poset given by the set $\overline{\nonNegReals} := \nonNegReals \cup \{\top\}$, equipped with the usual ordering and with $\top$ as an added top element. Let $(\posA, \leq)$ denote the poset $\Hom_{DP}(\energy, \mass \times \money)$ ordered by inclusion (thinking of design problems as relations), and recall that this poset is a lattice. In fact, it is a complete lattice: for any subset $\setA \subseteq \posA$, the join
 $$
-[INSERT]
+\bigvee_{\adp \in \setA} \adp : \F{\energy}\op \times (\R{\mass}\times \R{\money}) \mto \Bool, (f, r) \mapsto \exists \adp \in \setA : \adp(f, r)
 $$
-exists for any set $\setA \subseteq P$ and similarly for the meet over any $\setA \subseteq P$. 
+and the meet
+$$
+\bigwedge_{\adp \in \setA} \adp : \F{\energy}\op \times (\R{\mass}\times \R{\money}) \mto \Bool, (f, r) \mapsto \forall \adp \in \setA : \adp(f, r)
+$$
+exist.  
 
-We fix an element $C \in P$, which is a DP that we think of as some standard mass-manufactured battery. Consider the following recipe for creating a new battery, given two batteries~$\adp_1,\adp_2$:
+Consider the following recipe for creating a new battery, given two batteries~$\adp_1,\adp_2$:
     \begin{center}
     \includesag{exam_create_batteries}
     \end{center}
-This defines a function 
+The component $\wdp$ in this diagram is a fixed design problem that models the weight and cost of the wiring needed to wire $\adp_1$ and $\adp_2$ together in the way shown. The diagram as a whole defines a function 
 $$
-\sigma: P \times P \to P, \tup{\adp_1,\adp_2} \mapsto \sigma(\adp_1,\adp_2).
+\sigma: \posA \times \posA \to \posA, \tup{\adp_1,\adp_2} \mapsto \sigma(\adp_1,\adp_2).
 $$
 
 \begin{enumerate}
-\item We can think of $\sigma$ as a DP itself. Draw the corresponding string diagram. 
-\item Consider the function $f: P \to P, B \mapsto C \vee \sigma(B,B)$, and consider the sequence of batteries that could be built using $f$ as a recipe: 
+\item (4 points) Explain why we can think of $\sigma$ as a design problem itself, and draw the corresponding string diagram. 
+\item (2 points) We fix an element $\adp_0 \in \posA$, which is a design problem that we think of as some standard mass-manufactured battery. Consider the function $\phi : \posA \to \posA, \adp \mapsto \adp_0 \vee \sigma(\adp,\adp)$, and consider the sequence of batteries that could be built using $\phi$ as a recipe: 
 $$
-C, \quad C \vee \sigma(C,C), \quad C \vee \sigma(C \vee \sigma(C,C), C \vee \sigma(C,C)), ... \text{etc.}
+\adp_0, \quad \adp_0 \vee \sigma(\adp_0,\adp_0), \quad \adp_0 \vee \sigma(\adp_0 \vee \sigma(\adp_0,\adp_0), \adp_0 \vee \sigma(\adp_0,\adp_0)), \ ... \  \text{etc.}
 $$
-Consider all the possible batteries that can be constructed in this way and think of them as a catalogue of feasibility relations. 
-Explain why there is a DP in $P$, call it $K$, that describes this catalogue.
-\item Describe an iterative algorithmic recipe for approximating the DP $K$. 
+Consider \emph{all} the possible batteries that can be constructed in this way and think of them as a catalogue of feasibility relations. 
+Explain why there is a design problem in $\posA$ -- call it $\cdp$ -- that describes this catalogue.
+\item (4 points) Describe an iterative algorithmic recipe for approximating the design problem $\cdp$. 
 \end{enumerate}
 
 \end{gradedexercise}
