@@ -8,14 +8,6 @@ all:
 
 tmpdir=tmp
 
-#%.pdf: %.tex
-#	rm -f $*.aux $(tmpdir)/$*.aux
-#	latexmk -pdflatex -outdir=$(tmpdir) -f $<
-#	cp $(tmpdir)/$*.pdf $@
-
-
-ACTE-vol%.pdf:: nomenc-vol%.tex redo-nomenc
-
 ACT%.pdf: ACT%.tex .FORCE
 	nice -n 20 latexmk -synctex=1 -pdflatex -shell-escape  -f $<
 	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
@@ -27,9 +19,6 @@ ACT%.pdf: ACT%.tex .FORCE
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw *warnings.txt
-
-# rm -f nomenc-*.tex used*yaml
-
 
 tikz:
 	touch sag/*pdf
@@ -108,7 +97,7 @@ standalone: $(chapters-standalones) $(parts-standalones) $(chapters-standalones-
 links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-minted)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
-recursive: links standalone makefiles 
+recursive: links standalone makefiles
 
 nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.texi
 
