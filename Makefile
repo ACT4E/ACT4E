@@ -75,25 +75,25 @@ clean-links:
 %/part-link-minted:
 	cd $*  && ln -f -F -s ../../../cache-minted  part-link-minted
 
-volumes/%/Makefile: template-Makefile.mk
+volumes/%/Makefile: templates/template-Makefile.mk
 	cp $< $@
 
-%/chapter-standalone.tex: template-chapter-standalone.tex
+%/chapter-standalone.tex: templates/template-chapter-standalone.tex
 	cp $< $@
-%/part-standalone.tex: template-part-standalone.tex
-	cp $< $@
-
-
-%/chapter-standalone-fast.tex: template-chapter-standalone-fast.tex
-	cp $< $@
-%/part-standalone-fast.tex: template-part-standalone-fast.tex
+%/part-standalone.tex: templates/template-part-standalone.tex
 	cp $< $@
 
-%/chapter-standalone-public-fast.tex: template-chapter-standalone-public-fast.tex
+
+%/chapter-standalone-fast.tex: templates/template-chapter-standalone-fast.tex
 	cp $< $@
-%/chapter-standalone-noslides-fast.tex: template-chapter-standalone-noslides-fast.tex
+%/part-standalone-fast.tex: templates/template-part-standalone-fast.tex
 	cp $< $@
-%/part-standalone-public-fast.tex: template-part-standalone-public-fast.tex
+
+%/chapter-standalone-public-fast.tex: templates/template-chapter-standalone-public-fast.tex
+	cp $< $@
+%/chapter-standalone-noslides-fast.tex: templates/template-chapter-standalone-noslides-fast.tex
+	cp $< $@
+%/part-standalone-public-fast.tex: templates/template-part-standalone-public-fast.tex
 	cp $< $@
 
 
@@ -108,13 +108,7 @@ standalone: $(chapters-standalones) $(parts-standalones) $(chapters-standalones-
 links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-minted)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
-recursive: links standalone makefiles
-#
-#twovolumes:
-#	make -B ACT4E-vol1.pdf
-#	make -B ACT4E-vol2.pdf
-#	make -B ACT4E-vol1.pdf
-#	make -B ACT4E-vol2.pdf
+recursive: links standalone makefiles 
 
 nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.texi
 
@@ -146,7 +140,7 @@ table: $(tablefile)
 $(tablefile): utils/symbols*.tex .FORCE
 	$(MAKE) generated/used.yaml -B
 	lsm_table --verbose --only generated/used.yaml --style medium $< > $@
-	
+
 #lsm_table --only used.yaml --style full $^ > $@
 #lsm_table --only used.yaml --style small $^ > $@
 
