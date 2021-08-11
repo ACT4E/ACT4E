@@ -11,7 +11,7 @@ What is the form of the solution that we expect? Given a DP $\adp: \funsp \proft
 
 \begin{definition}
   \label{def:ftoR-dp}
-  Given a DP~$\adp:\funsp\profto\ressp$
+  Given a DP~$\adp\colon\funsp\profto\ressp$
   we denote by~$\ftoR_{\adp}\colon \funsp\toinPos \upperposet{\ressp}$ the map that associates
   to each functionality~\fun the set of minimal resources sufficient to realize~\fun:
   \begin{eqnarray*}
@@ -21,7 +21,18 @@ What is the form of the solution that we expect? Given a DP $\adp: \funsp \proft
   If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
 \end{definition}
 
-\todo{show why monotone}
+\begin{remark}[Monotonicity]
+    Consider a DP~$\adp\colon\funsp\profto\ressp$ and~$\fun\posleq \fun'$. We know
+    \begin{equation*}
+        \begin{aligned}
+            \ftoR_\adpa(\fun)&=\{ \res \in \ressp \colon \adp(\fun, \res)\} \\
+            &\supseteq \{ \res \in \ressp \colon \adp(\fun', \res)\}\\
+            &=\ftoR_\adpa(\fun'),
+        \end{aligned}
+    \end{equation*}
+    showing monotonicity.
+\end{remark}
+
 
 Symmetrically, the solution to \FixResMaxFun is given by a function that we call~$\rtoF_\adp$.
 
@@ -37,16 +48,23 @@ Symmetrically, the solution to \FixResMaxFun is given by a function that we call
   If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
 \end{definition}
 
-\todo{show why monotone}
+\begin{remark}[Monotonicity]
+    Consider a DP~$\adp\colon\funsp\profto\ressp$ and~$\res\posleq \res'$. We know
+    \begin{equation*}
+        \begin{aligned}
+            \rtoF_\adpa(\res)&=\{ \fun \in \funsp \colon \adp(\fun, \res)\} \\
+            &\subseteq \{ \fun \in \funsp \colon \adp(\fun, \res')\}\\
+            &=\rtoF_\adpa(\res'),
+        \end{aligned}
+    \end{equation*}
+    showing monotonicity.
+\end{remark}
 
 A question that arises naturally is whether the map~$\ftoR_\adp$ is sufficient to reconstruct the original DP.
 The answer is yes.
-We will prove that~$\ftoR_\adp$ is a morphism in a category called \UPos, and that this category is equivalent (\cref(\cref{def:cat-equivalence}) to \DP, therefore being traced monoidal with a lattice structure.
+We will prove that~$\ftoR_\adp$ defines a morphism in a category called \UPos, and that this category is equivalent (\cref(\cref{def:cat-equivalence}) to \DP, therefore being traced monoidal, with a lattice structure.
 In fact, \FixFunMinRes can be seen as a functor from \DP to \UPos.
 Symmetrically,~$\rtoF_\adp$ is a morphism in a category \LPos equivalent to \DP and \FixResMaxFun can be seen as the functor from \DP to \LPos.
-
-  \todographics{@Gioele: put here }
-
 
 
 \subsection{$\UPos$ and $\LPos$ categories}
@@ -60,7 +78,7 @@ The category \UPos consists of:
     \item \emph{Composition of morphisms}: Given morphisms~$\mora\colon \Obja \mto \Objb$,~$\morb\colon \Objb\mto \Objc$, their composition~$\mora\mthen \morb\colon \Obja\mto \Objc$ is given by
     \begin{equation}
     \begin{aligned}
-        \ulposmap{\mapa} \mthen \ulposmap{\mapb} \colon \Obja&\toinPos \upperposet{\Objc}\\
+        \ulposmap{(\mapa \mthen \mapb)} \colon \Obja&\toinPos \upperposet{\Objc}\\
         \Objael&\mapsto \bigcup_{\Objbel\in \ulposmap{\mapa}(\Objael)}\ulposmap{\mapb}(\Objbel);
     \end{aligned}
     \end{equation}
@@ -82,7 +100,7 @@ The category \LPos consists of:
     \item \emph{Composition of morphisms}: Given morphisms~$\mora \colon \Obja \mto \Objb$,~$\morb \colon \Objb\mto \Objc$, their composition~$\mora\mthen \morb\colon \Obja\mto \Objc$ is given by
     \begin{equation}
     \begin{aligned}
-        \ulposmap{\mora} \mthen \ulposmap{\morb} \colon \Obja &\toinPos \lowerposet{\Objc}\\
+       \ulposmap{(\mapa \mthen \mapb)} \colon \Obja &\toinPos \lowerposet{\Objc}\\
         \Objael&\mapsto \bigcup_{\Objbel\in \ulposmap{\mora} (\Objael)}\ulposmap{\morb}(\Objbel);
     \end{aligned}
     \end{equation}
@@ -129,10 +147,10 @@ where the last equality holds since~$\ulposmap{\mora}$ is a monotone function an
 We have:
 \begin{equation*}
     \begin{aligned}
-    \left( \left( \ulposmap{\mora} \mthen \ulposmap{\morb}\right)\mthen\ulposmap{\morc}\right)(\Objael)&=
+    \ulposmap{\left( (\mora \mthen \morb) \mthen \morc\right)}(\Objael)&=
     \bigcup_{\Objcel \in \left( \bigcup_{\Objbel \in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel)\right)}\ulposmap{\morc}(\Objcel)\\
     &=\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\bigcup_{\Objcel\in \ulposmap{\morb}(\Objbel)}\ulposmap{\morc}(\Objcel)\\
-    &=\left( \ulposmap{\mora} \mthen \left( \ulposmap{\morb}\then \ulposmap{\morc}\right)\right)(\Objael).
+    &=\ulposmap{\left( \mora \mthen \left( \morb\then \morc\right)\right)}(\Objael).
     \end{aligned}
 \end{equation*}
 Therefore, \UPos is a category.
