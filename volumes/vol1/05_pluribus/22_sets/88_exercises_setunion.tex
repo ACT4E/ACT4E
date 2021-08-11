@@ -1,0 +1,72 @@
+\subsection{Set union \hardexercise}
+\begin{remark}
+  This is a more advanced exercise; feel free to skip the first time around.
+\end{remark}
+
+
+When in mathematics we compute the union of two sets, we obtain a set but we forget the structure.
+We cannot do this when we take a constructive approach.
+
+For example, suppose that we have two \Setoid{}s~$\setA = \{a,b,c\}$ and~$\setB = \{a,b,3\}$.
+By all accounts the elements $a,b$ are in both. However, how can we judge that~$a=b$?
+Should we use the first setoid or the second? Both? What if they disagree?
+
+We choose this semantics: when comparing two elements, we see the set of components to which they both belong.
+Then we compare them using all the equalities. The elements are equal if they are equal according to all of them.
+
+From the point of view of the implementation, we create an interface like
+in \cref{lst:SetUnion}, together with \EnumerableSetUnion and \FiniteSetUnion, not shown.
+
+\classlisting{SetUnion}
+
+The method \funcname{components} allows us to recover the components for the union.
+
+\begin{codeexercise}[\exname{TestMakeSetUnion} (for advanced students)]
+  Implement the interface in \cref{lst:MakeSetUnion}.
+\end{codeexercise}
+
+The \str{@overload} annotations means that:
+\begin{compactitem}
+  \item if the method is given all \FiniteSet, it should return a \FiniteSet;
+  \item if the method is give all \EnumerableSet, it should return an \EnumerableSet;
+  \item otherwise, in the general case, it should return a \Setoid.
+\end{compactitem}
+
+\classlisting{MakeSetUnion}
+
+Check your results with
+\begin{console}
+  make check-TestMakeSetUnion
+\end{console}
+
+
+\margindatafilefig{set_union}{Union}{fig:set_union}
+
+Extend now the code you wrote for loading sets to allow the format in \cref{fig:set_product}.
+
+This is the algorithm to implement.
+
+Given a dictionary:
+\begin{compactenum}
+  \item If it has a field \fieldname{elements}, it is a finite set described with elements directly.
+  \item If it has a field \fieldname{union}, then the value must be a list of set representation dictionaries.
+  \item Otherwise, it is an error --- for now; we will introduce many more ways to describe sets.
+\end{compactenum}
+
+In particular, note that these are valid representations.
+\begin{table*}[h]
+  \begin{tabular}{cccc}
+    An empty set &
+    The union of 1 empty set &
+    The union of 2 empty sets &
+    The union of zero sets \\
+%
+    \datafile{set_empty}{min_lines=5} &
+    \datafile{set_union_empty1}{min_lines=5} &
+    \datafile{set_union_empty2}{min_lines=5}
+    &
+    \datafile{set_union_zero}{min_lines=5}
+    \\
+  \end{tabular}
+\end{table*}
+

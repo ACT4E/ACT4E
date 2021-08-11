@@ -1,0 +1,313 @@
+
+% !TEX root = chapter-standalone.tex
+\section{Uncertainty Monad in \DP}
+
+\todo{check where already defined}
+
+
+\begin{definition}[Uncertainty endofunctor]
+  \label{def:uncertainty-endofunctor}
+    \label{def:unc-endof}
+The \emph{uncertainty endofunctor}~$\unc\colon \DP\fto \DP$ is defined as follows:
+\begin{compactenum}
+  \item It maps an object~$\posA$ in \DP (poset) to its poset of intervals $\posint{\posA}$.
+  \item It maps a morphism in \DP $\adp \colon \funsp \profto \ressp$ to~$\unc(\adp)$, where:
+  \begin{equation}
+  \label{eq:unc_dp}
+    \begin{aligned}
+      \unc(\adp)\colon \posint{\funsp}\op \times \posint{\ressp}&\toinPos \Bool\\
+      \tup{[\fun_{\low},\fun_{\upp}]^*,[\res_{\low},\res_{\upp}]}&\mapsto \adp(\fun_{\low}^*,\res_{\low})\wedge  \adp(\fun_{\upp}^*,\res_{\upp}).
+    \end{aligned}
+  \end{equation}
+\end{compactenum}
+\end{definition}
+
+\begin{lemma}
+\label{lem:uncendofunctor}
+$\unc$ is a valid  endofunctor.
+\end{lemma}
+
+\begin{proof}
+First, we need to show this is a valid endofunctor (meaning that~$\unc(\adp)$ really is a boolean profunctor characterized by a morphism in \Pos).
+This can be easily seen. Take \cref{eq:unc_dp}. One has:
+\begin{compactitem}
+\item If~$\interval{\fun_\low,\fun_\upp}$ is feasible with~$\interval{\res_\low,\res_\upp}$, then any~$\interval{\fun'_\low,\fun'_\upp}\posleq_{\posint{\funsp}}\interval{\fun_\low,\fun_\upp}$ (which means any~$\fun'_\low\posleq_{\funsp}\fun_\low$ and~$\fun'_\upp\posleq_{\funsp}\fun_\upp$) is feasible with~$\interval{\res_\low,\res_\upp}$).
+\item If $\interval{\fun_\low,\fun_\upp}$ is feasible with~$\interval{\res_\low,\res_\upp}$, then it is feasible with any~$\interval{\res'_\low,\res'_\upp}\posgeq_{\posint{\ressp}} \interval{\res_\low,\res_\upp}$ (which means for any~$\res'_\low\posgeq_{\ressp} \res_\low$ and~$\res'_\upp \posgeq_{\ressp} \res_\upp$).
+\end{compactitem}
+Furthermore, we need to show functoriality. Let's show the two conditions separately.
+\begin{itemize}
+    \item First, take~$\catid_\neutra \colon \funspa\profto \resspa$ and apply the functor to it. One has
+\begin{equation*}
+\begin{aligned}
+    \unc(\catid_\neutra)\colon \posint{\funspa}\op \times \posint{\resspa}&\toinPos \Bool\\
+    \tup{[\F{a_\low},\F{a_\upp}]^*,[\R{a'_\low},\R{a'_\upp}]}&\mapsto (\F{a_\low}\posleq \R{a'_\low})\wedge (\F{a_\upp}\posleq \R{a'_\upp}).
+\end{aligned}
+\end{equation*}
+On the other hand, we know that by applying the functor to the object~$\neutra$, one gets:
+\begin{equation*}
+      \unc(\neutra)=\posint{\neutra}
+\end{equation*}
+The order on~$\posint{\neutra}$ is given by interval inclusion, and therefore one can write
+\begin{equation*}
+    \begin{aligned}
+      \catid_{\unc(\neutra)}\colon \posint{\funspa}\op \times \posint{\resspa}&\toinPos \Bool\\
+      \tup{[\F{a_\low},\F{a_\upp}]^*,[\R{a'_\low},\R{a'_\upp}]}&\mapsto [\F{a_\low},\F{a_\upp}]^* \posleq [\R{a'_\low},\R{a'_\upp}]\\
+      &= (\F{a_\low}\posleq \R{a'_\low})\wedge (\F{a_\upp}\posleq \R{a'_\upp}).
+    \end{aligned}
+\end{equation*}
+This proves the first condition.
+\end{itemize}
+Consider two design problems~$\adpa\colon \funspa\profto \resspb$ and~$\adpb\colon \funspb\profto \resspc$. We know that
+\begin{equation*}
+    \unc(\adpa\mthen \adpb)\colon  \posint{\funspa}\op \times \posint{\resspc}\toinPos \Bool
+\end{equation*}
+In particular, we have:
+\begin{equation*}
+    \begin{aligned}
+      \unc(\adpa\mthen \adpb)([\F{a_\low},\F{a_\upp}]^*, [\R{c_\low},\R{c_\upp}])&=(\adpa\mthen \adpb)(\F{a_\low}^*,\R{c_\low})\wedge (f\then g)(\F{a_\upp}^*,\R{c_\upp})\\
+      &=\left( \bigvee_{b_\low \in \neutrb} \adpa(\F{a_\low}^*,\R{b_\low})\wedge \adpb(\F{b_\low}^*,\R{c_\low})\right)\wedge
+      \left( \bigvee_{b_\upp \in \neutrb} \adpa(\F{a_\upp}^*,\R{b_\upp})\wedge \adpb(\F{b_\upp}^*,\R{c_\upp})\right)\\
+      &=\bigvee_{[b_\low,b_\upp] \in \posint{\neutrb}}  \adpa(\F{a_\low}^*,\R{b_\low})\wedge  \adpb(\F{b_\low}^*,\R{c_\low})\wedge  \adpa(\F{a_\upp}^*,\R{b_\upp})\wedge \adpb(\F{b_\upp}^*,\R{c_\upp}).
+    \end{aligned}
+\end{equation*}
+  We know that
+  \begin{equation}
+    \begin{aligned}
+      \unc(\adpa)&\colon  \posint{\funspa}\op \times \posint{\resspb}\toinPos \Bool,\\
+      \unc(\adpb)&\colon  \posint{\funspb}\op \times \posint{\resspc}\toinPos \Bool.\\
+    \end{aligned}
+  \end{equation}
+We can therefore write:
+\begin{equation*}
+\begin{aligned}
+    (\unc(\adpa)\mthen \unc(\adpb))([\F{a_\low},\F{a_\upp}]^*,[\R{c_\low},\R{c_\upp}])&=\bigvee_{b\in \posint{\neutrb}} \unc(\adpa)([\F{a_\low},\F{a_\upp}]^*,\R{b})\wedge \unc(\adpb)(\F{b}^*,[\R{c_\low},\R{c_\upp}])\\
+    &=\bigvee_{[b_\low,b_\upp] \in \posint{\neutrb}} \adpa(\F{a_\low}^*,\R{b_\low})\wedge  \adpb(\F{b_\low}^*,\R{c_\low})\wedge  \adpa(\F{a_\upp}^*,\R{b_\upp})\wedge \adpb(\F{b_\upp}^*,\R{c_\upp}).
+\end{aligned}
+\end{equation*}
+This proves the second condition.
+\end{proof}
+
+\begin{definition}[The~$\uncmon$ monad]
+  \label{def:uncmon}
+    \label{def:unc_monad}
+The~$\uncmon$ monad on \DP consists of:
+\begin{compactenum}
+\item The functor~$\unc\colon \DP \fto \DP$;
+\item The natural transformation~$\monunit_{\uncmon}\colon \funid_\DP \nto \unc$, specified as
+\begin{equation}
+\label{eq:uncunit}
+    \begin{aligned}
+    \monunit_{\uncmon}^\neutra\colon \funspa&\profto \posint{\resspa}\\
+    \tup{\F{a}^*, \interval{\R{x},\R{y}}}&\mapsto \F{a}\posleq \R{x}.
+    \end{aligned}
+\end{equation}
+\item The natural transformation~$\moncomp_{\uncmon}\colon \unc \unc \nto \unc$, specified as:
+\begin{equation}
+\label{eq:unccomp}
+    \begin{aligned}
+    \moncomp_{\uncmon}^\neutra \colon \posint{\posint{\funspa}}\op \times \posint{\resspa}&\toinPos \Bool\\
+    \tup{\interval{\interval{\F{a},\F{b}},\interval{\F{c},\F{d}}}^*,\interval{\R{e},\R{f}}}&\mapsto (\F{a}\posleq \R{e})\wedge (\F{b}\posleq \R{e})\wedge (\F{c}\posleq \R{f})\wedge (\F{d}\posleq \R{f}).
+    \end{aligned}
+\end{equation}
+\end{compactenum}
+\end{definition}
+
+\begin{remark}
+If you wonder how we came to the technical definition of the two natural transformations, here is the explanation. \cref{eq:uncunit} can be obtained by the following comparison:
+\begin{equation*}
+    \begin{aligned}
+    p\posleq \interval{x,y} &= \interval{p,p}\posleq \interval{x,y}\\
+    &= (p\posleq x)\wedge (p\posleq y)\\
+    &= p\posleq x.
+    \end{aligned}
+\end{equation*}
+Similarly, for \cref{eq:unccomp} one has:
+\begin{equation*}
+    \begin{aligned}
+    \interval{\interval{a,b},\interval{c,d}}\posleq \interval{e,f}&= \interval{\interval{a,b},\interval{c,d}}\posleq\interval{\interval{e,e},\interval{f,f}}\\
+    &=(\interval{a,b}\posleq \interval{e,e})\wedge (\interval{c,d}\posleq \interval{f,f})\\
+    &=(a\posleq e)\wedge (b\posleq e)\wedge (c\posleq f)\wedge (d\posleq f).
+    \end{aligned}
+\end{equation*}
+\end{remark}
+\begin{lemma}
+$\uncmon$ is a valid monad.
+\end{lemma}
+\begin{proof}
+  To show that~$\uncmon$ is indeed a monad, we need to show the following:
+  \begin{compactenum}
+    \item $\unc$ is a valid endofunctor;
+    \item $\monunit_{\uncmon}$ is a natural transformation;
+    \item $\moncomp_{\uncmon}$ is a natural transformation;
+    \item left unitality holds;
+    \item right unitality holds;
+    \item associativity holds;
+  \end{compactenum}
+  We prove them in order.
+
+  \paragraph*{1)~$\unc$ is a valid endofunctor:} This was proven in \cref{lem:uncendofunctor}
+
+  \paragraph*{2)~$\monunit_\uncmon$ is a valid natural transformation:} First of all we need to check that the natural transformation in \cref{eq:uncunit} really defines a morphism in \DP.
+  This is easily shown. Consider~$\F{\posAeln}$ feasible with~$\interval{\R{x},\R{y}}$ (i.e,~$\F{\posAeln}\posleq \R{x}$).
+  \begin{compactitem}
+  \item Then any~$\F{\posAeln'}\posleq \F{\posAeln}$ is feasible with~$\interval{\R{x},\R{y}}$ (i.e.,~$\F{\posAeln'}\posleq \F{\posAeln} \implies \F{\posAeln'}\posleq \R{x}$).
+  \item Then~$\F{\posAeln}$ is feasible with any~$\interval{\R{x'},\R{y'}}\posgeq_{\posint{\posAn}}~\interval{\R{x},\R{y}}$ (i.e.,~$\F{\posAeln}\posleq \R{x}\implies \F{\posAeln}\posleq \R{x'}$).
+  \end{compactitem}
+ We now need to show that for any~$\adpa \in \HomSet{\DP}{\F{\posAn}}{\R{\posBn}}$, we have:
+  \begin{equation}
+    \funid_{\DP}(\adpa)\mthen \monunit_{\uncmon}^\posBn=\monunit_{\uncmon}^\posAn\mthen \unc(\adpa).
+  \end{equation}
+  By expanding the left-hand side one has:
+  \begin{equation}
+  \label{eq:monunit_a}
+      \begin{aligned}
+        (\funid_{\DP}(\adpa)\mthen \monunit_{\uncmon}^\posBn)(\F{\posAeln}^*,\interval{\R{\posBeln_1},\R{\posBeln_2}})&=(\adpa\mthen \monunit_{\uncmon}^\posBn)(\F{\posAeln}^*,\interval{\R{\posBeln_1},\R{\posBeln_2}})\\
+        &=\bigvee_{\posBeln \in \posBn}\adpa(\F{\posAeln}^*,\R{\posBeln})\wedge \monunit_{\uncmon}^\posBn(\F{\posBeln}^*,\interval{\R{\posBeln_1},\R{\posBeln_2}})\\
+        &=\bigvee_{\posBeln \in \posBn}\adpa(\F{\posAeln}^*,\R{\posBeln})\wedge (\F{\posBeln} \posleq \R{\posBeln_1}).
+      \end{aligned}
+  \end{equation}
+  By expanding the right-hand side one has:
+  \begin{equation}
+  \label{eq:monunit_b}
+      \begin{aligned}
+        (\monunit_{\uncmon}^\posAn \mthen \unc(\adpa))(\F{\posAeln}^*,\interval{\R{\posBeln_1},\R{\posBeln_2}})&=\bigvee_{\interval{\posAeln_1,\posAeln_2}\in \posint{\posAn}} \monunit_{\uncmon}^\posAn(\F{\posAeln}^*,\interval{\R{\posAeln_1},\R{\posAeln_2}})\wedge \unc(\mora)(\interval{\F{\posAeln_1},\F{\posAeln_2}}^*,\interval{\R{\posBeln_1},\R{\posBeln_2}})\\
+        &=\bigvee_{\interval{\posAeln_1,\posAeln_2}\in \posint{\posAn}} (\F{\posAeln}\posleq \R{\posAeln_1})\wedge \adpa(\F{\posAeln_1}^*,\R{\posBeln_1})\wedge \adpa(\F{\posAeln_2}^*,\R{\posBeln_2})
+      \end{aligned}
+  \end{equation}
+  We now want to show that \cref{eq:monunit_a} and \cref{eq:monunit_b} are equivalent:
+  \begin{compactitem}
+  \item \cref{eq:monunit_a}$\implies \adpa(\F{\posAeln}^*,\R{\posBeln_1}) \implies$\cref{eq:monunit_b}.
+  \item \cref{eq:monunit_b}$\implies\adpa(\F{\posAeln}^*,\R{\posBeln_1})\wedge \adpa(\F{\posAeln}^*,\R{\posBeln_2})\implies$\cref{eq:monunit_a}.
+  \end{compactitem}
+  \paragraph*{3)~$\moncomp_\uncmon$ is a valid natural transformation:}
+  First of all we need to check that the natural transformation in \cref{eq:unccomp} really defines a morphism in \DP.
+  This is easily shown. Consider~$\interval{\interval{\F{a},\F{b}},\interval{\F{c},\F{d}}}$ feasible with~$\interval{\R{e},\R{f}}$.
+  In other words:
+  \begin{equation}
+  \interval{\F{a},\F{d}}\posleq_{\posint{\posAn}}\interval{\R{e},\R{f}}\Leftrightarrow (\F{a}\posleq \R{e}) \wedge (\F{d}\posleq \R{f})
+  \end{equation}
+  Then:
+  \begin{compactitem}
+  \item Any~$\interval{\interval{\F{a'},\F{b'}},\interval{\F{c'},\F{d'}}}\posleq \interval{\interval{\F{a},\F{b}},\interval{\F{c},\F{d}}}$ is feasible with~$\interval{\R{e},\R{f}}$.
+  This is easily seen through the following implication:
+  \begin{equation}
+  (\F{a'}\posleq \F{a})\wedge (\F{b'}\posleq \F{d'}) \wedge (\F{a}\posleq \R{e}) \wedge (\F{d}\posleq \R{f})\implies (\F{a'}\posleq \R{e}) \wedge (\F{b'}\posleq \R{f}).
+  \end{equation}
+  \item $\interval{\interval{\F{a},\F{b}},\interval{\F{c},\F{d}}}$ is feasible with any~$\interval{\R{e'},\R{f'}}\posgeq_{\posint{\posAn}} ~\interval{\R{e},\R{f}}$.
+  This is easily seen through the following implication:
+  \begin{equation}
+  (\F{a}\posleq \R{e}) \wedge (\F{d}\posleq \R{f}) \wedge (\R{e}\posleq \R{e'})\wedge (\R{f}\posleq \R{f'})\implies \interval{\F{a},\F{d}}\posleq_{\posint{\posAn}}\interval{\R{e'},\R{f'}}.
+  \end{equation}
+  \end{compactitem}
+  We now want to show that for any~$\adpa \in \HomSet{\DP}{\F{\posAn}}{\R{\posBn}}$, we have:
+  \begin{equation}
+      \unc(\unc(\adpa))\mthen \moncomp_{\uncmon}^{\posBn}=\moncomp_{\uncmon}^{\posAn}\mthen \unc(\adpa).
+  \end{equation}
+  By expanding the left-hand side one has:
+  \begin{equation}
+  \label{eq:moncomp_1}
+      \begin{aligned}
+        &(\unc(\unc(\adpa))\mthen \moncomp_{\uncmon}^{\posBn})(\interval{\interval{\F{\posAeln_{11}}, \F{\posAeln_{12}}},\interval{\F{\posAeln_{21}}, \F{\posAeln_{22}}}}^*, \interval{\R{\posBeln_1},\R{\posBeln_2}})\\
+        &=\bigvee_{\interval{\interval{{\posBeln_{11}}, {\posBeln_{12}}},\interval{{\posBeln_{21}}, {\posBeln_{22}}}}\in \posint{\posint{\posBn}}}\unc(\adpa)(\interval{\F{\posAeln_{11}}, \F{\posAeln_{12}}}^*, \interval{\R{\posBeln_{11}}, \R{\posBeln_{12}}})\wedge \unc(\adpa)(\interval{\F{\posAeln_{21}}, \F{\posAeln_{22}}}^*, \interval{\R{\posBeln_{21}}, \R{\posBeln_{22}}})\\
+        &\wedge (\F{\posBeln_{11}}\posleq \R{\posBeln_1})\wedge (\F{\posBeln_{12}}\posleq \R{\posBeln_1})\wedge (\F{\posBeln_{21}}\posleq \R{\posBeln_2})\wedge (\F{\posBeln_{22}}\posleq \R{\posBeln_2})\\
+        &=\bigvee_{\interval{\interval{\F{\posBeln_{11}}, \F{\posBeln_{12}}},\interval{\F{\posBeln_{21}}, \F{\posBeln_{22}}}}\in \posint{\posint{\posBn}}}
+        \adpa(\F{\posAeln_{11}}^*,\R{\posBeln_{11}})\wedge \adpa(\F{\posAeln_{12}}^*,\R{\posBeln_{12}})\wedge \adpa(\F{\posAeln_{21}}^*,\R{\posBeln_{21}})\wedge \adpa(\F{\posAeln_{22}}^*,\R{\posBeln_{22}})\\
+        &\wedge (\F{\posBeln_{11}}\posleq \R{\posBeln_1})\wedge (\F{\posBeln_{12}}\posleq \R{\posBeln_1})\wedge (\F{\posBeln_{21}}\posleq \R{\posBeln_2})\wedge (\F{\posBeln_{22}}\posleq \R{\posBeln_2}).
+      \end{aligned}
+  \end{equation}
+  By expanding the right-hand side one has:
+    \begin{equation}
+    \label{eq:moncomp_2}
+      \begin{aligned}
+      &(\moncomp_{\uncmon}^{\posAn}\mthen \unc(\adpa))(\interval{\interval{\F{\posAeln_{11}}, \F{\posAeln_{12}}},\interval{\F{\posAeln_{21}}, \F{\posAeln_{22}}}}^*, \interval{\R{\posBeln_1},\R{\posBeln_2}})\\
+      &=\bigvee_{\interval{\posAeln_1,\posAeln_2}\in \posint{\posAn}}
+      ((\F{\posAeln_{11}}\posleq \R{\posAeln_1})\wedge (\F{\posAeln_{12}}\posleq \R{\posAeln_1})\wedge (\F{\posAeln_{21}}\posleq \R{\posAeln_2})\wedge (\F{\posAeln_{22}}\posleq \R{\posAeln_2})) \\
+      &\wedge(\adpa(\F{\posAeln_1}^*,\R{\posBeln_1})\wedge \adpa(\F{\posAeln_2}^*,\R{\posBeln_2})).
+      \end{aligned}
+     \end{equation}
+     Similarly to before, one can show that \cref{eq:moncomp_1} and \cref{eq:moncomp_2} are equivalent.
+
+  \paragraph*{Left-unitality holds:} We need to chech that
+\begin{equation*}
+    \monunit_{\uncmon}^{\unc(\posAn)}\mthen \moncomp_{\uncmon}^{\posAn}=\funid_{\DP}^{\unc(\posAn)}.
+\end{equation*}
+Starting from the left-hand side one has:
+\begin{equation}
+    \begin{aligned}
+    &(\monunit_{\uncmon}^{\unc(\posAn)}\mthen \moncomp_{\uncmon}^{\posAn})(\interval{\F{\posAeln_1},\F{\posAeln_2}}^*,\interval{\R{\posAeln_1'}, \R{\posAeln_2'}})\\
+    &=\bigvee_{\interval{\interval{{\posAeln_{11}}, {\posAeln_{12}}},\interval{{\posAeln_{21}}, {\posAeln_{22}}}}\in \posint{\posint{\posA}}}\monunit_{\uncmon}^{\unc(\posA)}(\interval{\F{\posAeln_1},\F{\posAeln_2}}^*,\interval{\interval{{\R{\posAeln_{11}}}, {\R{\posAeln_{12}}}},\interval{{\R{\posAeln_{21}}}, {\R{\posAeln_{22}}}}})\\
+    &\wedge \moncomp_{\uncmon}^{\posAn}(\interval{\interval{{\F{\posAeln_{11}}}, {\F{\posAeln_{12}}}},\interval{{\F{\posAeln_{21}}}, {\F{\posAeln_{22}}}}}^*,\interval{\R{\posAeln_1'}, \R{\posAeln_2'}})\\
+    &=\bigvee_{\interval{\interval{{\posAeln_{11}}, {\posAeln_{12}}},\interval{{\posAeln_{21}}, {\posAeln_{22}}}}\in \posint{\posint{\posAn}}}(\F{\posAeln_1}\posleq \R{\posAeln_{11}})\wedge (\F{\posAeln_2}\posleq \R{\posAeln_{21}})\wedge (\F{\posAeln_{11}}\posleq \R{\posAeln_{1}'})\wedge (\F{\posAeln_{12}}\posleq \R{\posAeln_{1}'})\\
+    &\wedge (\F{\posAeln_{21}}\posleq \R{\posAeln_{2}'})\wedge (\F{\posAeln_{22}}\posleq \R{\posAeln_{2}'})\\
+    &=(\F{\posAeln_{1}}\posleq \R{\posAeln_{1}'})\wedge (\F{\posAeln_{2}}\posleq \R{\posAeln_{2}'})\\
+    &=\funid_{\DP}^{\unc(\posAn)}(\interval{\F{\posAeln_1},\F{\posAeln_2}}^*,\interval{\R{\posAeln_1'}, \R{\posAeln_2'}}).
+    \end{aligned}
+\end{equation}
+
+\paragraph*{Right-unitality holds:} We need to check that
+\begin{equation*}
+    \unc(\monunit_{\uncmon}^{\posAn})\mthen \moncomp_{\uncmon}^{\posAn}=\funid_{\DP}^{\unc(\posAn)}.
+\end{equation*}
+Starting from the left, one has:
+\begin{equation}
+    \begin{aligned}
+    &(\unc(\monunit_{\uncmon}^{\posAn})\mthen \moncomp_{\uncmon}^{\posA})(\interval{\F{\posAeln_1},\F{\posAeln_2}}^*,\interval{\R{\posAeln_1'}, \R{\posAeln_2'}})\\
+    &=\bigvee_{\interval{\interval{{\posAeln_{11}}, {\posAeln_{12}}},\interval{{\posAeln_{21}}, {\posAeln_{22}}}}\in \posint{\posint{\posAn}}}\monunit_{\uncmon}^{\posA}(\F{\posAeln_1}^*,\interval{\R{\posAeln_{11}},\R{\posAeln_{12}}})\wedge \monunit_{\uncmon}^{\posA}(\F{\posAeln_2}^*,\interval{\R{\posAeln_{21}},\R{\posAeln_{22}}})\wedge
+    \moncomp_{\uncmon}^{\posA}(\interval{\interval{{\F{\posAeln_{11}}}, {\F{\posAeln_{12}}}},\interval{{\F{\posAeln_{21}}}, {\F{\posAeln_{22}}}}}^*,\interval{\R{\posAeln_1'}, \R{\posAeln_2'}})\\
+    &=\bigvee_{\interval{\interval{{\posAeln_{11}}, {\posAeln_{12}}},\interval{{\posAeln_{21}}, {\posAeln_{22}}}}\in \posint{\posint{\posAn}}}(\F{\posAeln_1}\posleq \R{\posAeln_{11}})\wedge (\F{\posAeln_2}\posleq \R{\posAeln_{21}})\wedge (\F{\posAeln_{11}}\posleq \R{\posAeln_{1}'})\wedge (\F{\posAeln_{21}} \posleq \R{\posAeln_{1}'}) \wedge (\F{\posAeln_{21}}\posleq\R{\posAeln_{2}'})\wedge (\F{\posAeln_{22}}\posleq \R{\posAeln_{2}'})\\
+    &=(\F{\posAeln_1}\posleq \R{\posAeln_{1}'})\wedge (\F{\posAeln_2}\posleq \R{\posAeln_{2}'})\\
+    &=\funid_{\DP}^{\unc(\posAn)}(\interval{\F{\posAeln_1},\F{\posAeln_2}}^*,\interval{\R{\posAeln_1'}, \R{\posAeln_2'}})
+    \end{aligned}
+\end{equation}
+    \paragraph*{Associativity holds:} We need to check that
+\begin{equation*}
+    \unc(\moncomp_{\uncmon}^{\posAn})\mthen \moncomp_{\uncmon}^{\posAn}=\moncomp_{\uncmon}^{\unc(\posAn)}\mthen \moncomp_{\uncmon}^{\posAn}.
+\end{equation*}
+Let's start from the left-hand side:
+\begin{equation}
+    \begin{aligned}
+    &(\unc(\moncomp_{\uncmon}^{\posAn})\mthen \moncomp_{\uncmon}^{\posAn})(\interval{\interval{\interval{{\F{\posAeln_{11}}}, {\F{\posAeln_{12}}}},\interval{{\F{\posAeln_{21}}}, {\F{\posAeln_{22}}}}}, \interval{\interval{{\F{\posAeln_{11}'}}, {\F{\posAeln_{12}'}}},\interval{{\F{\posAeln_{21}'}}, {\F{\posAeln_{22}'}}}}}^*, \interval{\R{\posAeln_1},\R{\posAeln_2}})\\
+    &=\bigvee_{\interval{\interval{{\posAeln_{1\low}}, {\posAeln_{2\low}}},\interval{{\posAeln_{1\upp}}, {\posAeln_{2\upp}}}}\in \posint{\posint{\posAn}}}\moncomp_{\uncmon}^{\posA}(\interval{\interval{{\F{\posAeln_{11}}}, {\F{\posAeln_{12}}}},\interval{{\F{\posAeln_{21}}}, {\F{\posAeln_{22}}}}}^*, \interval{\R{\posAeln_{1\low}},\R{\posAeln_{2\low}}})\\
+    &\wedge \moncomp_{\uncmon}^{\posA}(\interval{\interval{{\F{\posAeln_{11}'}}, {\F{\posAeln_{12}'}}},\interval{{\F{\posAeln_{21}'}}, {\F{\posAeln_{22}'}}}}^*, \interval{\R{\posAeln_{1\upp}},\R{\posAeln_{2\upp}}})\wedge \moncomp_{\uncmon}^{\posA}(\interval{\interval{{\F{\posAeln_{1\low}}}, {\F{\posAeln_{2\low}}}},\interval{{\F{\posAeln_{1\upp}}}, {\F{\posAeln_{2\upp}}}}}^*, \interval{\R{\posAeln_{1}},\R{\posAeln_{2}}})\\
+    &=\bigvee_{\interval{\interval{{\posAeln_{1\low}}, {\posAeln_{2\low}}},\interval{{\posAeln_{1\upp}}, {\posAeln_{2\upp}}}}\in \posint{\posint{\posAn}}}(\F{\posAeln_{11}}\posleq \F{\posAeln_{21}}\posleq \R{\posAeln_{1\low}})\wedge (\F{\posAeln_{12}}\posleq \F{\posAeln_{22}}\posleq \R{\posAeln_{2\low}})\wedge (\F{\posAeln_{11}'}\posleq \F{\posAeln_{21}'}\posleq \R{\posAeln_{1\upp}})\wedge (\F{\posAeln_{12}'}\posleq \F{\posAeln_{22}'}\posleq \R{\posAeln_{2\upp}})\\
+    &\wedge (\F{\posAeln_{1\low}}\posleq \F{\posAeln_{1\upp}}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{2\low}}\posleq \F{\posAeln_{2\upp}}\posleq \R{\posAeln_{2}})\\
+    &=(\F{\posAeln_{11}}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{21}}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{12}}\posleq \R{\posAeln_{2}})\wedge (\F{\posAeln_{22}}\posleq \R{\posAeln_{2}})\wedge
+    (\F{\posAeln_{11}'}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{21}'}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{12}'}\posleq \R{\posAeln_{2}})\wedge (\F{\posAeln_{22}'}\posleq \R{\posAeln_{2}}).
+    \end{aligned}
+\end{equation}
+From the right-hand side, one has:
+\begin{equation}
+    \begin{aligned}
+    &\moncomp_{\uncmon}^{\unc(\posAn)}\mthen \moncomp_{\uncmon}^{\posAn}(\interval{\interval{\interval{{\F{\posAeln_{11}}}, {\F{\posAeln_{12}}}},\interval{{\F{\posAeln_{21}}}, {\F{\posAeln_{22}}}}}, \interval{\interval{{\F{\posAeln_{11}'}}, {\F{\posAeln_{12}'}}},\interval{{\F{\posAeln_{21}'}}, {\F{\posAeln_{22}'}}}}}^*, \interval{\R{\posAeln_1},\R{\posAeln_2}})\\
+    &=\bigvee_{\interval{\interval{{\posAeln_{1\low}}, {\posAeln_{2\low}}},\interval{{\posAeln_{1\upp}}, {\posAeln_{2\upp}}}}\in \posint{\posint{\posAn}}}\moncomp_{\uncmon}^{\unc(\posA)}(\interval{\interval{\interval{{\F{\posAeln_{11}}}, {\F{\posAeln_{12}}}},\interval{{\F{\posAeln_{21}}}, {\F{\posAeln_{22}}}}}, \interval{\interval{{\F{\posAeln_{11}'}}, {\F{\posAeln_{12}'}}},\interval{{\F{\posAeln_{21}'}}, {\F{\posAeln_{22}'}}}}}^*,\\
+    &\interval{\interval{{\R{\posAeln_{1\low}}}, {\R{\posAeln_{2\low}}}},\interval{{\R{\posAeln_{1\upp}}}, {\R{\posAeln_{2\upp}}}}})\wedge \moncomp_{\uncmon}^{\posAn}(\interval{\interval{{\R{\posAeln_{1\low}}}, {\R{\posAeln_{2\low}}}},\interval{{\R{\posAeln_{1\upp}}}, {\R{\posAeln_{2\upp}}}}}^*,\interval{\R{\posAeln_1},\R{\posAeln_2}})\\
+    &=\bigvee_{\interval{\interval{{\posAeln_{1\low}}, {\posAeln_{2\low}}},\interval{{\posAeln_{1\upp}}, {\posAeln_{2\upp}}}}\in \posint{\posint{\posAn}}}(\F{\posAeln_{11}}\posleq \F{\posAeln_{21}}\posleq \R{\posAeln_{1\low}})\wedge (\F{\posAeln_{12}}\posleq \F{\posAeln_{22}}\posleq \R{\posAeln_{2\low}})\wedge (\F{\posAeln_{11}'}\posleq \F{\posAeln_{21}'}\posleq \R{\posAeln_{1\upp}})\wedge (\F{\posAeln_{12}'}\posleq \F{\posAeln_{22}'}\posleq \R{\posAeln_{2\upp}})\\
+    &\wedge (\F{\posAeln_{1\low}}\posleq \F{\posAeln_{1\upp}}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{2\low}}\posleq \F{\posAeln_{2\upp}}\posleq \R{\posAeln_{2}})\\
+    &=(\F{\posAeln_{11}}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{21}}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{12}}\posleq \R{\posAeln_{2}})\wedge (\F{\posAeln_{22}}\posleq \R{\posAeln_{2}})\wedge
+    (\F{\posAeln_{11}'}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{21}'}\posleq \R{\posAeln_{1}})\wedge (\F{\posAeln_{12}'}\posleq \R{\posAeln_{2}})\wedge (\F{\posAeln_{22}'}\posleq \R{\posAeln_{2}}).
+    \end{aligned}
+\end{equation}
+\end{proof}
+
+\begin{lemma}
+    Consider two design problems~$\adpa,\adpb\colon \funsp\op \times \ressp \toinPos \Bool$. Then
+    \begin{equation}
+        \adpa\posleq_{\DP}\adpb\implies \unc(\adpa)\posleq_{\DP}\unc(\adpb).
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation}
+        \begin{aligned}
+            \unc(\adpa)(\tup{[\fun_{\low},\fun_{\upp}]^*,[\res_{\low},\res_{\upp}]})&=\adpa(\fun_{\low}^*,\res_{\low})\wedge  \adpa(\fun_{\upp}^*,\res_{\upp})\\
+            &\posleq_{\DP}\adpb(\fun_{\low}^*,\res_{\low})\wedge  \adpb(\fun_{\upp}^*,\res_{\upp})\\
+            &=\unc(\adpb)(\tup{[\fun_{\low},\fun_{\upp}]^*,[\res_{\low},\res_{\upp}]}).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\todo{Seems enough to show monad enriched in Pos as well (from which the RAL construction follows)}
+
+\todo{Show that the monad is strong}
+
+

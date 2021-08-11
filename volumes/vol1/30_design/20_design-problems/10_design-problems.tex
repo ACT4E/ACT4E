@@ -1,0 +1,960 @@
+% !TEX root = chapter-standalone.tex
+
+
+\section{Design Problems  with Implementation}
+\label{sec:Design-Problems}
+\linkvideo{spring2021-design:design:dpi-def} % Design problems with implementation (DPIs)
+We start by defining a ``design problem with implementation'', which is a tuple of ``\F{functionality} space'',
+``\Icol{implementation} space'', and ``\R{resources} space'', together with two maps that describe the feasibility relations between these three spaces (\cref{fig:setup}).
+
+\begin{definition}[Design problem with implementation]
+    \label{def:DPI}
+    A \emph{\iindex{design problem with implementation}} (DPI) is a tuple
+    \begin{equation}
+        \tup{\funsp, \ressp, \impsp, \prov,\req},
+    \end{equation}
+    where:
+
+    \begin{compactitem}
+        \item \funsp is a poset, called \emph{\Fcol{functionality} space};
+        \item \ressp is a poset, called \emph{\Rcol{requirements} space};
+        \item \impsp is a set, called \emph{\Icol{implementation} space};
+        \item the map~$\prov\colon\impsp\to\funsp$
+        maps an implementation to the functionality it provides;
+        \item the map~$\req\colon\impsp\to\ressp$
+        maps an implementation to the resources it requires.
+    \end{compactitem}
+
+\end{definition}
+
+\begin{figure}[h]
+    \begin{center}
+        \includesag{funimpres_1}
+    \end{center}
+    \caption{\label{fig:setup}}
+\end{figure}
+
+\showslides{
+    \begin{forslides}
+        \begin{equation*}
+            \label{eq:fun_poset}
+            \tup{\funsp, \preceq_{\funsp}}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:res_poset}
+            \tup{\ressp, \preceq_{\ressp}}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:decl_dp}
+            \adp \colon \funsp \profto \ressp
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:decl_dp_1}
+            \adpa \colon \funspa \profto \resspb
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:decl_dp_std}
+            \adp \colon \funsp \op \times \ressp \toinPos \Bool
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:decl_dp_2}
+            \adpb \colon \funspb \profto \resspc
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:decl_dp_3}
+            (\adpa\fthen \adpb) \colon \funspa \profto \resspc
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:opt_1}
+            \res_k\in \tup{\ressp_k,\posleq_{\ressp_k}}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:opt_2}
+            \fun_k\in \tup{\funsp_k,\posleq_{\funsp_k}}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:opt_3}
+            \adp_k\colon \funsp_k \profto \ressp_k
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:opt_4}
+            \adp_k(\fun_k^*,\res_k)=\true
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:opt_5}
+            \res_i\posleq \fun_j
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:opt_6}
+            \Min_{\posleq}\bar{\res}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_1}
+            \ressp
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_2}
+            \funsp
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_3}
+            \ressp_1
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_3_1}
+            \ressp_2
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_3_2}
+            \ressp_1\times \ressp_2
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_4}
+            \funsp_1
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_5}
+            \funsp_2
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_6}
+            \fun_1
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_7}
+            \fun_2
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_8}
+            \res
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_9}
+            \begin{aligned}
+                \ftor_\mathrm{loop}\colon \funsp_1 &\mto \antichains(\ressp)\\
+                \fun_1&\mapsto \text{least-fixed-point}(\Phi_{\fun_1})
+            \end{aligned}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_10}
+            \begin{aligned}
+                \Phi_{\fun_1}\colon \antichains(\ressp)&\mto \antichains(\ressp)\\
+                \R{S}&\mapsto \Min_{\posleq_\ressp} \bigcup_{\res \in \R{S}}\ftor(\fun_1,\res)\cap \upit \res
+            \end{aligned}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_11}
+            \R{S}\subset \antichains(\ressp)
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_12}
+            \R{S_0}=\{ \bot_\ressp\}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_13}
+            \R{S_{k+1}}=\Phi_{\fun_1}(\R{S_k})
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:genfun_14}
+            \bot_{\ressp}
+        \end{equation*}
+        \includesag{520_battery}
+        \includesag{520_particle_filters}
+        \includesag{520_chassis_comp}
+        \includesag{520_motor_comp}
+        \includesag{520_motor_chassis_comp}
+        \includesag{520_imp_comp}
+        \includesag{generic_dp_1}
+        \includesag{generic_dp_2}
+        \includesag{generic_dp_comp}
+        \includesag{edge_opt_dp}
+        \includesag{node_opt_dp}
+        \includesag{generic_dp_3}
+        \includesag{generic_dp_4}
+        \includesag{bin_packing_dp}
+        \begin{equation*}
+            \label{eq:imp_comp}
+            \impsp \subseteq \impsp_{1} \setconcat \impsp_{2}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:dp_mob_4}
+            \ftor_k\colon \funsp_k \mto \antichains \ressp_k
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:dp_mob_5}
+            \ftor\colon \funsp \mto \antichains \ressp
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:dp_mob_6}
+            \adpa\colon \funspa \mto \uppersets \resspb
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:dp_mob_7}
+            \adpb\colon \funspb \mto \uppersets \resspc
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:dp_mob_8}
+            (\adpa \fthen \adpb) \colon \funspa \mto \uppersets \resspc
+        \end{equation*}
+    \end{forslides}
+}
+
+
+
+
+\begin{example}[Motor design]
+    \label{exa:motor}
+    Suppose we need to choose a motor for a robot from
+    a given set. The \F{functionality} of a motor could be parametrized
+    by \textF{torque} and \textF{speed}. The \R{resources} to consider
+    could include the \R{\unit[cost]{[USD]}}, the \R{\unit[mass]{[g]}}, the
+    input \R{\unit[voltage]{[V]}}, and the input \R{\unit[current]{[A]}}.
+    The map~$\prov \colon \impsp\to\funsp$ assigns to each motor its
+    functionality, and the map~$\req \colon \impsp\rightarrow\ressp$ assigns
+    to each motor the resources it needs~(\cref{fig:motor_evalexec}).
+\end{example}
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=0.4]{gmcdp_motor_evalexec}
+    \includesag{motor_evalexec}
+    \caption{}
+    \label{fig:motor_evalexec}
+\end{figure}
+%\captionsideleft{\label{fig:motor_evalexec}}{\includegraphics[scale=0.33]{gmcdp_motor_evalexec}}
+
+
+
+\begin{example}[Chassis design]
+    \label{exa:chassis}
+    Suppose we need to choose a chassis for a robot~(\cref{fig:gmcdp_chassis_eval}).
+    The implementation space~\impsp could be the set of all chassis that could ever be designed (in case of a theoretical analysis),
+    or just the set of chassis available in the catalogue at hand (in case of a practical design decision).
+    The functionality of a chassis could be formalized as ``the ability to transport a certain \F{payload
+            {[}g{]}}'' and ``at a given \F{speed {[}m/s{]}}''.
+    More refined functional requirements would include maneuverability, the cargo volume, \etc.
+    The resources to consider could be the \R{cost {[}USD{]}} of the chassis; the total mass;
+    and, for each motor to be placed in the chassis, the required \R{speed {[}rad/s{]}} and \R{torque {[}Nm{]}}.
+\end{example}
+
+\begin{figure}[h]
+    \centering
+    \includesag{chassis_execeval}
+    \caption{}
+    \label{fig:gmcdp_chassis_eval}
+\end{figure}
+
+\todotextjira{295}{Integrate \cref{exa:dpi_elmotor} with \cref{exa:motor}}
+
+\begin{example}
+    \label{exa:dpi_elmotor}
+    We  revisit the leading example of \cref{sec:attributes_sameness} with the newly introduced co-design perspective. Let's consider a list of electrical motors as in~\cref{tab:electric_motors_2}.
+    \begin{table*}[h]
+        \centering
+        \adjustbox{max width=\textwidth}{%
+            \begin{tabular}{c|c|c|c|c|c}
+                Motor ID & Company & $\unit[\text{Torque}]{[kg\cdot cm]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
+                & \unit[Cost]{[USD]}
+                \\
+                \hline
+                \textsf{1204} & \textsf{SOYO}        & 0.18 & 60.0  & 2.34 & 19.95  \\
+                \textsf{1206} & \textsf{SOYO}        & 0.95 & 140.0 & 3.00 & 19.95  \\
+                \textsf{1207} & \textsf{SOYO}        & 0.65 & 130.0 & 2.07 & 12.95  \\
+                \textsf{2267} & \textsf{SOYO}        & 3.7  & 285.0 & 4.76 & 16.95  \\
+                \textsf{2279} & \textsf{Sanyo Denki} & 1.9  & 165.0 & 5.40 & 164.95 \\
+                \textsf{1478} & \textsf{SOYO}        & 19.0 & 1,000 & 8.96 & 49.95  \\
+                \textsf{2299} & \textsf{Sanyo Denki} & 2.2  & 150.0 & 5.90 & 59.95
+            \end{tabular}%
+        }
+        \caption{A simplified catalogue of motors.}
+        \label{tab:electric_motors_2}
+    \end{table*}
+
+    We can think of this as a catalogue of electric motors~$\tup{\impsp_\mathrm{EM},\prov_\mathrm{EM},\req_\mathrm{EM}}$.
+    In particular, the set of implementations collects all the motor models, which we can specify using the motor IDs:
+    \begin{equation}
+        \impsp_\mathrm{EM}=\{1204,1206,1207,2267,2279,1478,2299 \}.
+    \end{equation}
+    We now have to think about \textR{resources} and \textF{functionalities}.
+    Each motor \textR{requires} some \textR{weight} (in \unit[]{g}), \textR{power} (in \unit[]{W}), and has some \textR{cost} (in USD), and \textF{provides} some \textF{torque} (in~$\unit[]{kg\cdot cm}$).
+    Thus, we can identify
+    \begin{equation*}
+        \funsp =\reals^{\unit[]{kg\cdot cm}},\quad \ressp=\reals^{\unit[]{g}}\times \reals^{\unit[]{W}}\times \reals^{\unit[]{USD}},
+    \end{equation*}
+    by considering the units as discussed in \cref{sec:currency_cat}.
+    The correspondences are given by the details in \cref{tab:electric_motors_2}.
+    For instance, we have
+    \begin{equation}
+        \prov_\mathrm{EM}(1204)=\unit[0.18]{kg\cdot cm}, \quad \req_\mathrm{EM}(1204)=\tup{\unit[60]{g},\unit[2.34]{W},\unit[19.95]{USD}}.
+    \end{equation}
+
+    \begin{comment}
+
+        \begin{table}[tbh]
+            \begin{center}
+                \begin{tabular}{cccc}
+                    Technology & Specific energy [\unitfrac[]{J}{kg}] & Specific cost [\unitfrac[]{J}{\stdcurr}]
+                    & Life [\# cycles]
+                    \\
+                    \hline
+                    $\mathsf{NiMH}$  & 100.0 & 3.41 & 500    \\
+                    $\mathsf{NiH2}$  & 45.0  & 10.5 & 20,000 \\
+                    $\mathsf{LCO}$   & 195.0 & 2.84 & 750    \\
+                    $\mathsf{LMO}$   & 150.0 & 2.84 & 500    \\
+                    $\mathsf{NiCad}$ & 30.0  & 7.50 & 500    \\
+                    $\mathsf{SLA}$   & 30.0  & 7.00 & 500    \\
+                    $\mathsf{LiPo}$  & 250.0 & 2.50 & 600    \\
+                    $\mathsf{LFP}$   & 90.0  & 1.50 & 1,500
+                \end{tabular}
+            \end{center}
+            \caption{Specifications of common battery technologies~\cite{censi2015}. }
+            \label{tab:battery}
+        \end{table}
+    \end{comment}
+
+\end{example}
+
+
+
+
+\FloatBarrier
+\subsubsection{Graphical notation}
+
+A graphical notation will help reasoning about composition. A DPI is represented as a box with~$\dpinumf$ green edges and~$\dpinumr$ red edges~(\cref{fig:dp_graphical}).
+
+\todographics{Add $\dpinumf$, $\dpinumr$ to the figure (counting the wires).}
+\begin{figure}[h]
+    \centering
+    \includesag{520_general_dp}
+    \caption{\label{fig:dp_graphical}}
+\end{figure}
+
+%\captionsideleft{\label{fig:dp_graphical}}{\includegraphics[scale=0.33]{gmcdp_dp_graphical.pdf}}
+
+This means that the functionality and resources spaces can be factorized in~$\dpinumf$ and~$\dpinumr$ components:
+\begin{equation*}
+    \funsp=\prod_{i=1}^{\dpinumf}\pi_{i}\funsp_{i},\quad \ressp=\prod_{j=1}^{\dpinumr}\pi_{j}\ressp_{j},
+\end{equation*}
+where ``$\pi_{i}$'' represents the projection to the~$i$-th component.
+If there are no \textF{green} (respectively, \textR{red}) edges, then~$\dpinumf$ (respectively,~$\dpinumr$) is zero, and \funsp (respectively, \ressp) is equal to~$\One=\{\emptytuple \}$, the set containing one element, the empty tuple~$\emptytuple$.
+
+These \emph{co-design diagrams} are not to be confused with signal flow diagrams, in which the boxes represent oriented systems and the edges represent signals.
+
+
+%\captionsideleft{\label{fig:gmcdp_chassis_eval}}{\includegraphics[scale=0.33]{gmcdp_chassis_eval.pdf}}
+
+\section{Examples}
+We now present a list of design problems for different disciplines, to showcase the universality of the approach.
+\subsubsection{Mechatronics}
+Many mechanisms can be readily modeled as relations between a provided functionality and required resources.
+
+\todostructure{Yet another different model of a motor. Either harmonize all in one, or explicitly
+have discussion about how the same thing can have different models}
+\begin{example}
+    The \textF{functionality} of a DC motor~(\cref{fig:dc_motor}) is to provide a certain \textF{speed} and \textF{torque}, and the \textR{resources} are \textR{current} and \textR{voltage}.
+\end{example}
+\todotextjira{296}{Add equation that relate all.}
+\todotextjira{296}{What are the implementations?}
+
+\begin{figure}[h]
+    \begin{center}
+        \includesag{520_dc_motor}
+    \end{center}
+    \caption{\label{fig:dc_motor}}
+\end{figure}
+
+
+\begin{example}
+    A gearbox (\cref{fig:gearbox}) provides a certain \textF{output
+    torque~$\tau_o$} and \textF{speed~$\tau_o$}, given a certain
+    \R{input torque $\tau_i$} and \R{speed $\omega_i$}. For
+    an ideal gearbox with a reduction ratio $r \in \ratnumbers_+$ and
+    efficiency ratio $\gamma$, $0<\gamma<1$, the constraints among
+    those quantities are ${\colR \omega_i}\geq r\,{\colF \omega_o}$
+    and ${\colR \tau_i\omega_i}\geq\gamma\,{\colF \tau_o\omega_o}.$
+\end{example}
+\todotextjira{296}{What are the implementations?}
+\begin{figure}[h]
+    \begin{center}
+        \includesag{520_dp_gearbox}
+    \end{center}
+    \caption{}
+    \label{fig:gearbox}
+\end{figure}
+
+
+\begin{example}
+    \emph{Propellers}~(\cref{fig:propeller}) generate \F{thrust}
+    given a certain \R{torque} and \R{speed}.
+\end{example}
+\todotextjira{296}{What are the implementations?}
+\begin{figure}[h]
+    \begin{center}
+        \includesag{520_dp_propellers}
+    \end{center}
+    \caption{\label{fig:propeller}}
+\end{figure}
+
+\begin{example}
+    A \emph{crank-rocker} (\cref{fig:crack}) converts \R{rotational
+    motion} into a \F{rocking motion}.
+\end{example}
+\todographics{296}{Put here an additional crank-rocker mechanism figure so that
+people who don't know that can get an idea.}
+\todotextjira{296}{What are the implementations?}
+\begin{figure}[h]
+    \centering
+    \includesag{520_crank}
+    \caption{\label{fig:crack}}
+\end{figure}
+
+\subsubsection{Geometrical constraints}
+
+Geometrical constraints are examples of constraints that are easily recognized as monotone, but possibly hard to write down in closed form.
+
+\begin{example}[Bin packing]
+    Suppose that each internal component occupies a volume
+    bounded by a parallelepiped, and that we must choose the minimal enclosure
+    in which to place all components~(\cref{fig:packing}). What
+    is the minimal size of the enclosure? This is a variation of the \emph{bin
+    packing} problem, which is in NP for both 2D and 3D~\cite{lodi02two}.
+    It is easy to see that the problem is monotone, by noticing that,
+    if one the components shapes increases, then the size of the enclosure
+    cannot shrink.
+\end{example}
+\todotextjira{296}{What are the implementations?}
+\begin{figure}[tbh]
+        \centering
+        \includesag{bin_packing}
+        \caption{\label{fig:packing}}
+    \end{figure}
+
+\subsubsection{Inference}
+
+Many inference problems have a monotone formalization, taking the
+\F{accuracy} or \F{robustness} as functionality, and \R{computation}
+or \R{sensing} as resources. Typically these bounds are known in
+a closed form only for restricted classes of systems, such as the
+linear/Gaussian setting.
+
+\begin{example}
+(SLAM)
+    One issue with particle-filter-based estimation procedures,
+    such as the ones used in the popular GMapping~\cite{grisetti07improved}
+    method, is that the filter might diverge if there aren't enough particles.
+    Although the relation might be hard to characterize, there is a monotone
+    relation between the \F{robustness} (1 - probability of failure),
+    the \F{accuracy}, and the \R{number of particles}~(\cref{fig:gmapping}).
+\end{example}
+\todotextjira{296}{What are the implementations?}
+\begin{figure}[h]
+    \centering
+    \includesag{520_mapping}
+    \caption{\label{fig:gmapping}}
+\end{figure}
+
+
+
+\begin{example}
+(Stereo reconstruction)
+    Progressive reconstruction systems (\cite{locher16progressive}),
+    which start with a coarse approximation of the solution that is progressively
+    refined, are described by a smooth relation between the \F{resolution}
+    and the \R{latency} to obtain the answer~(\cref{fig:progressive}).
+    A similar relation characterizes any anytime algorithms in other domains,
+    such as robot motion planning.
+\end{example}
+
+\todotextjira{296}{What are the implementations?}
+\begin{figure}[h]
+    \centering
+    \includesag{520_stereo}
+    \caption{\label{fig:progressive}}
+\end{figure}
+
+
+\begin{example}
+    The empirical characterization of the monotone relation between \F{the
+    accuracy of a visual SLAM solution} and \R{the power consumption}
+    is the goal of recent work by Davison and colleagues~\cite{nardi15introducing,zia16comparative}.
+\end{example}
+\todotextjira{296}{What are the implementations?}
+\todographicsjira{153}{Reproduce plot from paper.}
+
+\subsubsection{Communication}
+
+\begin{example}[Transducers]
+    Any type of "transducer" that bridges between different
+    mediums can be modeled as a DP. For example, an access point~(\cref{fig:accesspoint})
+    provides the \F{"wireless access"} functionality, and requires
+    that the infrastructure provides the \R{"Ethernet access"} resource.
+\end{example}
+
+\todotextjira{296}{What are the implementations?}
+\begin{figure}[h]
+    \centering
+    \includesag{520_ethernet}
+    \caption{\label{fig:accesspoint}}
+\end{figure}
+
+\begin{example}[Wireless link]
+    The basic functionality of a wireless link is to provide
+    a certain \F{bandwidth} (\cref{fig:networklink}). Further refinements could include bounds
+    on the latency or the probability that a packet drop is dropped. Given
+    the established convention about the the preference relations for
+    functionality, in which a \emph{lower} functionality is "easier"
+    to achieve, one needs to choose "\F{\emph{minus} the latency}"
+    and "\F{\emph{minus} the packet drop probability}" for them
+    to count as functionality. As for the resources, apart from the \R{transmission
+    power [W]}, one should consider at least \R{the spectrum occupation},
+    which could be described as an interval~$[f_0,f_1]$ of the frequency
+    axis $\reals^{\unit[]{[Hz]}}$. Thus the resources space is $\ressp=\colR\reals^{\unit[]{[W]}}\times\aword{intervals}(\reals^{\unit[]{[Hz]}})$.
+\end{example}
+\todotextjira{296}{What are the implementations?}
+\begin{figure}[h]
+    \begin{center}
+        \includesag{520_dp_wireless}
+    \end{center}
+    \caption{ \label{fig:networklink}}
+\end{figure}
+
+\subsubsection{Multi-robot systems}
+
+In a multi-robot system there is always a trade-off between the number
+of robots and the capabilities of the single robot.
+\begin{example}
+    Suppose we need to create a swarm of agents whose functionality is
+    \F{to sweep an area}. If the functionality is fixed, one expects
+    a three-way trade-off between the three resources: number of agents,
+    the speed of a single agent, and the execution time. For example,
+    if the time available decreases, one has to increase either the speed
+    of an agent or the number of agents~(\cref{fig:multirobot2}).
+\end{example}
+
+
+\begin{figure}[h]
+    \subfloat[]{
+        \scalebox{1}{\includesag{520_dp_swarm}}
+    }\\
+    \subfloat[\label{fig:multirobot2}]{
+        \includegraphics[scale=0.33]{reits2_multirobot2}
+    }
+    \caption{}
+\end{figure}
+
+\todographicsjira{154}{redo right-hand side in tikz}
+
+\subsubsection{LQG Control}
+\todojira{155}{Fill LQG section}
+
+\begin{publictodo}
+    Missing: discussion of LGQ control as a design problem.
+\end{publictodo}
+\showslides{
+
+\begin{forslides}
+\begin{equation*}
+\label{eq:cont_dyn}
+    \begin{aligned}
+    \text{d} \mat{x}_t&=\mat{A}\mat{x}_t\text{d} t+\mat{B}\mat{u}_t \text{d} t+\mat{E} \text{d} \mat{w}_t\\
+    \text{d} \mat{y}_t &= \mat{C}\mat{x}_t \text{d} t+\mat{G}\text{d} \mat{v}_t,
+    \end{aligned}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:general_continuous_cost}
+    J=\lim_{T\to \infty} \frac{1}{T}\mathbb{E}\left\{\int_{0}^{T} \left(\left( \mat{x}_t^\intercal \mat{Q} \mat{x}_t\right)+\left( \mat{u}_t^\intercal \mat{R}\mat{u}_t\right)\right) \text{d} t\right\},
+\end{equation*}
+
+
+\begin{lemma}
+\label{lem:lqgstandard}
+The optimal control law for the LQG problem is~$\mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t$, where $\hat{\mat{x}}_t$ is the unbiased minimum-variance estimate of $\mat{x}_t$ given previous measurements and $\bar{\mat{S}}\in \posdef$ solves the Riccati equation
+\begin{equation}
+\label{eq:cont_ric_1}
+    \mat{SA}+\mat{A}^*\mat{S}-\mat{SBR}^{-1}\mat{B}^*\mat{S}+\mat{Q}=\mat{0}.
+\end{equation}
+The minimum cost~$J^\star$ achieved by the optimal control is:
+%\footnote{Note that~\cite{davis1977} contains a typo at p.188 (one extra $\mat{V}^{-1}$ factor). Instead,~\cite{kwakernaak1972} has a cleaner derivation and exposition.}
+\begin{equation*}
+\label{eq:contmincost}
+\begin{aligned}
+J^\star&=\trace{(\bar{\mat{S}}\bar{\mat{\Sigma}}\mat{C}^*\mat{V}^{-1}\mat{C}\bar{\mat{\Sigma}}+\bar{\mat{\Sigma}}\mat{Q})}\\
+&=\trace{(\bar{\mat{\Sigma}}\bar{\mat{S}}\mat{BR}^{-1}\mat{B}^*\bar{\mat{S}}+\bar{\mat{S}}\mat{W})},
+\end{aligned}
+\end{equation*}
+where~$\bar{\mat{\Sigma}}\in \posdef$ is the solution of the Riccati equation
+\begin{equation}
+\label{eq:cont_ric_2}
+    \mat{A\Sigma} + \mat{\Sigma A}^*-\mat{\Sigma C}^*\mat{V}^{-1}\mat{C\Sigma}+\mat{W}=\mat{0}.
+\end{equation}
+\end{lemma}
+
+
+
+\begin{equation*}
+\label{eq:ptrack}
+\track=\lim_{t\to \infty}\mathbb{E}\{\mat{x}_t^\intercal \mat{Q}\mat{x}_t\}.
+\end{equation*}
+
+\begin{equation*}
+\label{eq:peffort}
+\effort=\lim_{t\to \infty}\mathbb{E}\{\mat{u}_t^\intercal \mat{R} \mat{u}_t \}
+\end{equation*}
+
+
+\begin{lemma}
+\label{lem:precision}
+The metrics $\track$ and $\effort$ can be written as
+\begin{equation*}
+\begin{aligned}
+    \lim_{t\to \infty}\mathbb{E}\{ \mat{x}_t^\intercal \mat{Q}_0\mat{x}_t\}&=\trace(\mat{Q}_0\left( \mat{\Sigma} +\mat{F}\right)), \\
+    \lim_{t\to \infty}\mathbb{E}\{ \mat{u}_t^\intercal \mat{R}_0\mat{u}_t\}&=\trace(\mat{S}\mat{B}^*\mat{R}^{-1}\mat{R}_0\mat{R}^{-1}\mat{B}\mat{S}\mat{F}),
+\end{aligned}
+\end{equation*}
+where
+$\mat{\Sigma}$ solves the Riccati equation for estimation,~$\mat{F}$ solves the Lyapunov equation
+\begin{equation}
+\label{eq:lyapct}
+    \left( \mat{A}-\mat{B}\mat{K}\right)\mat{F}+\mat{F}\left(\mat{A}-\mat{B}\mat{K}\right)^*+\mat{L}\mat{V}\mat{L}^*=\mat{0},
+\end{equation}
+$\mat{S}$ solves the Riccati equation for control, and~$\mat{L}=\mat{\Sigma}\mat{C}^*\mat{V}^{-1}$ is the Kalman gain.
+\end{lemma}
+
+
+\begin{lemma}
+\label{lem:codesigncnt_1}
+Let~$\mat{Q}(\alpha)=\alpha \mat{Q}_0$ and~$\mat{R}(\alpha)=\frac{1}{\alpha}\mat{R}_0$, $\alpha\in \mathbb{R}_+$. Let~$\mat{u}^\star(\alpha)$ be the solution of the LQG problem with $\mat{Q}(\alpha)$ and $\mat{R}(\alpha)$. Then, under optimal control one has:
+\begin{compactitem}
+    \item $P_\mathrm{track}(\alpha)$ is decreasing with $\alpha$
+    increasing.
+    \item $P_\mathrm{effort}(\alpha)$ is increasing with $\alpha$ increasing.
+\end{compactitem}
+\end{lemma}
+
+
+\begin{lemma}
+\label{lem:cont_V_W}
+The solution of  \cref{eq:cont_ric_2} is monotonic in $\mat{V}$ and $\mat{W}$, i.e., $\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')$.
+\end{lemma}
+
+\begin{lemma}
+\label{lem:codesigncnt_2}
+Consider the situation of \cref{lemma:codesigncnt_1}:
+\begin{compactitem}
+    \item Fix $P_\mathrm{track}$. $P_\mathrm{effort}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
+    \item Fix $P_\mathrm{effort}$. $P_\mathrm{track}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
+\end{compactitem}
+\end{lemma}
+
+\begin{equation*}
+\label{eq:lqg_simple}
+\begin{tikzpicture}[DP, dp port sep =3]
+            \node(ref) at (0,0){};
+            \node[dp={2}{2},below=0.5cm of ref] (cnt) {LQG};
+            \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
+            \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
+            \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
+            \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
+\end{tikzpicture}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:brown_1}
+\mat{v}_t
+\end{equation*}
+
+\begin{equation*}
+\label{eq:brown_2}
+\mat{w}_t
+\end{equation*}
+
+\begin{equation*}
+\label{eq:cov_1}
+\mat{W}=\mat{EE^*}
+\end{equation*}
+\begin{equation*}
+\label{eq:cov_2}
+\mat{V}=\mat{GG^*}
+\end{equation*}
+
+
+\begin{equation*}
+\label{eq:optimal_control}
+\mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t
+\end{equation*}
+
+\begin{equation*}
+\label{eq:x_estimate}
+\hat{\mat{x}}_t
+\end{equation*}
+\begin{equation*}
+\label{eq:x_real}
+\mat{x}_t
+\end{equation*}
+
+\begin{equation*}
+\label{eq:ric_1}
+\bar{\mat{S}}
+\end{equation*}
+\begin{equation*}
+\label{eq:ric_2}
+\bar{\mat{\Sigma}}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:mon_est}
+\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')
+\end{equation*}
+
+\begin{definition}
+\label{def:poset_cont}
+A \emph{poset} is a tuple $\langle P,\preceq_P\rangle$, where $P$ is a set and $\preceq_P$ is a partial order, defined as a reflexive, transitive, and antisymmetric relation.
+\end{definition}
+
+\begin{equation*}
+\label{eq:posreals}
+\tup{\reals_{\geq 0},\leq}
+\end{equation*}
+\begin{equation*}
+\label{eq:nats}
+\tup{\natnumbers,\leq}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:matrix_poset}
+\mat{A}=\begin{pmatrix}1&0\\0&1\end{pmatrix}, \quad \mat{B}=\begin{pmatrix}2&0\\0&1\end{pmatrix},\quad \mat{C}=\begin{pmatrix}2&0\\0&0.5\end{pmatrix}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:lqg_delay}
+\begin{tikzpicture}[DP, dp port sep =3]
+            \node[dp={3}{2}] (cnt) {LQG};
+            \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
+            \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
+            \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
+            \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
+            \draw[funconn, funame={delay},relfun=above, posfun=1] (cnt_fun3){};
+\end{tikzpicture}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:lqg_disc}
+\begin{tikzpicture}[DP, dp port sep = 1.5]
+            \node[dp={4}{2}] (cnt) {LQG Control};
+            \draw[runconn, runame={tracking error $\track$}, relres=right] (cnt_res1){};
+            \draw[runconn, runame={control effort $\effort$},relres=right] (cnt_res2){};
+            \draw[funconn, funame={observation noise $\mat{V}$},relfun=left] (cnt_fun1){};
+            \draw[funconn, funame={system noise $\mat{W}$},relfun=left] (cnt_fun2){};
+            \draw[funconn, funame={delay $d$},relfun=left] (cnt_fun3){};
+            %\draw[funconn, funame={sampling period $\delta$},relfun=left] (cnt_fun4){};
+            \draw[funconn, funame={dropping probability $p$},relfun=left] (cnt_fun4){};
+\end{tikzpicture}
+\end{equation*}
+
+\begin{equation*}
+\label{eq:poset_order_mat}
+\mat{A}\posleq \mat{B} \Leftrightarrow (\mat{B}-\mat{A})\in \mathcal{P}^n, \quad \mat{A},\mat{B}\in \mathcal{P}^n
+\end{equation*}
+
+
+\end{forslides}
+}
+
+\subsubsection{Computation}
+
+
+The trivial model of a CPU is as a device that provides \Fcol{computation,
+    measured in flops}, and requires \Rcol{power [W]}. Clearly there
+is a monotone relation between the two.
+
+\begin{figure}[h]
+    \begin{center}
+        \includesag{520_dp_cpu}
+    \end{center}
+    \caption{}
+\end{figure}
+
+A similar monotone relation between application requirements and computation
+resources holds in a much more general setting, where both application
+and computation resources are represented by graphs. This will be
+an example of a monotone relation between nontrivial partial orders.
+
+In the Static Data Flow (SDF) model of computation~\cite[Chapter 3]{sriram00,lee10},
+the application is represented as a graph of procedures that need
+to be allocated on a network of processors.
+
+\begin{figure}[h]
+    \begin{center}
+        \subfloat[]{
+            \includegraphics[scale=0.65]{reits2_small_app_graph}
+        }
+        \subfloat[]{
+            \includegraphics[scale=0.65]{reits2_small_res_graph}
+        }
+        \subfloat[]{
+            \includegraphics[scale=0.65]{reits2_small_allocation}
+        }
+    \end{center}
+    \caption{}
+\end{figure}
+
+
+Define the\emph{ application graph }(sometimes called "computation
+graph") as a graph where each node is a procedure (or "actor")
+and each edge is a message that needs to be passed between procedures.
+Each node is labeled by the number of ops necessary to run the procedure.
+Each edge is labeled by the size of the message. There is a partial
+order~$\ordleq$ on application graphs. In this order, it holds that~$A_1 \ordleq A_2$
+if the application graph~$A_2$ needs more computation or bandwidth
+for its execution than~$A_1$. Formally, it holds that~$A_1 \ordleq A_2$
+if there is a homomorphism~$\varphi \colon A_1  \Rightarrow A_2$; and,
+for each node~$n \in A_1$, the node~$\varphi(n)$ has equal or
+larger computational requirements than~$n$; and for each edge~$\tup{n_1,n_2}$
+in~$~A_2$, the edge~$\tup{\varphi (n_1), \varphi (n_2)}$ has equal or larger message size.
+
+
+Define a \emph{resource graph} as a graph where each node represents
+a processor, and each edge represents a network link. Each node is
+labeled by the processor capacity [flops] Each edge is labeled
+by latency [s] and bandwidth [B/s]. There is a partial order
+on resources graph as well: it holds that~$R_1 \ordleq R_2$ if
+the resource graph~$R_2$ has more computation or network available
+than~$R_1$. The definition is similar to the case of the application
+graph: there must exist a graph homomorphism~$\varphi \colon R_1  \Rightarrow R_2$
+and the corresponding nodes (edges) of~$R_2$ must have larger
+or equal computation (bandwidth) than those of~$R_1$.
+
+Given an application graph~$A$ and a resource graph~$R$, a typical
+resource allocation problem consists in choosing in which processor
+each actor must be scheduled to maximize the throughput~$T$~[Hz].
+This is equivalent to the problem of finding a graph homomorphism~$\Psi \colon A \Rightarrow R$.
+Let~$T^{\ast}$ be the optimal throughput, and write it as a function
+of the two graphs:
+\begin{equation*}
+    T^{\ast}=T^{\ast}(A,R).
+\end{equation*}
+Then the optimal throughput~$T^{\ast}$ is decreasing in~$A$ (a more
+computationally demanding application graph decreases the throughput)
+and increasing in~$R$ (more available computation/bandwidth increase
+the throughput).
+
+Therefore, we can formalize this as a design problem where the two
+functionalities are \F{the throughput~$T$ [Hz]} and \F{the
+application graph~$A$}, and the \R{resource graph~$R$} is the
+resource.
+
+\begin{figure}[h!]
+    \begin{center}
+        \includesag{dp_resourcegraph}
+    \end{center}
+    \caption{}
+\end{figure}
+
+
+\begin{example}
+    Svorenova\,\,\etal~\cite{svorenova16resource} consider a joint
+    sensor scheduling and control synthesis problem, in which a robot
+    can decide to not perform sensing to save power, given performance
+    objectives on the probability of reaching the target and the probability
+    of collision. The method outputs a Pareto frontier of all possible
+    operating points. This can be cast as a design problem with functionality
+    equal to the \F{probability of reaching the target} and (the inverse
+    of) \F{the collision probability}, and with resources equal to the
+    \R{actuation power}, \R{sensing power}, and \R{sensor accuracy}.
+
+\end{example}
+
+\begin{figure}[h]
+    \begin{center}
+        \includesag{520_dp_svorenova}
+    \end{center}
+    \caption{\label{fig:progressive-1-1}}
+\end{figure}
+%\captionsideleft{\label{fig:progressive-1-1}}{\includegraphics[scale=0.33]{batteries_svorenova.pdf}}
+
+
+\begin{example}
+    Nardi\,\,\etal~\cite{zia16comparative} describe a benchmarking
+    system for visual SLAM that provides the empirical characterization
+    of the monotone relation between \F{the accuracy} of the visual
+    SLAM solution, the \F{throughput {[}frames/s{]}} and \R{the energy
+    for computation {[}J/frame{]}}.
+    The implementation space is the product
+    of algorithmic parameters, compiler flags, and architecture choices,
+    such as the number of GPU cores active.
+    This is an example of a design
+    problem whose functionality-resources map needs to be experimentally
+    evaluated.
+\end{example}
+
+\begin{figure}[h]
+    \centering
+    \includesag{520_dp_zia}
+    \caption{}
+    \label{fig:dp_zia}
+\end{figure}
+
+\subsubsection{Other examples in minimal robotics}
+
+Many works have sought to find ``minimal'' designs for robots, and
+can be understood as characterizing the relation between the poset
+of \F{tasks} and the poset of physical resources, which is the product
+of \R{sensing}, \R{actuation}, and \R{computation} resources,
+plus other non-physical resources, such as \R{prior knowledge}~(\cref{fig:robot-generic}).
+Given a task, there is a minimal antichain in the resources poset
+that describes the possible trade-offs (for instance, compensating lousier
+sensors with more computation).
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[scale=0.33]{batteries_okane}
+%     \caption{}
+%     \label{fig:robot-generic}
+% \end{figure}
+
+
+\begin{figure}
+    \centering
+    \includesag{dp_robotics}
+    \caption{}
+    \label{fig:robot-generic}
+    \todojira{156}{finish with axes}
+\end{figure}
+
+
+%\captionsideleft{\label{fig:robot-generic}}{\includegraphics[scale=0.33]{batteries_okane.pdf}}
+
+The poset structure arises naturally: for example, in the \emph{sensor
+lattice}~\cite{lavalle12sensing}, a sensor dominates another
+if it induces a finer partition of the state space. Similar dominance
+relations can be defined for actuation and computation. O'Kane and
+Lavalle~\cite{okane08comparing} define a robot as a union of ``robotic
+primitives'', where each primitive is an abstraction for a set of
+sensors, actuators, and control strategies that can be used together
+(for instance, a compass plus a contact sensor allow to ``drive North until
+a wall is hit''). The effect of each primitive is modeled as an operator
+on the robot's information space. It is possible to work out what
+are the minimal combinations of robotic primitives (minimal antichain)
+that are sufficient to perform a task (for instance, global localization),
+and describe a dominance relation (partial order) of primitives. Other
+works have focused on minimizing the complexity of the controller.
+Egerstedt~\cite{egerstedt03motion} studies the relation between
+the \F{complexity of the environment} and a notion of \R{minimum
+description length of control strategies}, which can be taken as
+a proxy for the computation necessary to perform the task. Soatto~\cite{soatto11steps}
+studies the relation between the \F{performance of a visual task},
+and the \R{minimal representation} that is needed to perform that
+task.
+
+\subsubsection{Computer science}
+
+\todotextjira{157}{to write}
+\begin{publictodo}
+    Missing: Example of Hoare triples.
+\end{publictodo}
+% \begin{example}[Hoare logic]
+
+
+
+% \end{example}

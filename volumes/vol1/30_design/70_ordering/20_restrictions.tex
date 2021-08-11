@@ -1,0 +1,411 @@
+% !TEX root = chapter-standalone.tex
+
+
+\section{Restrictions and alternatives}
+
+\linkvideo{spring2021-functorial-comp-b:solving-queries:or-and-and} % Join and Meet in DP
+
+\subsection{Union of Design Problems}
+Let~$\adpa\colon \F{\posgenA}\profto \R{\posgenB}$ and~$\adpb\colon \F{\posgenA}\profto \R{\posgenB}$ be design problems.
+We define the \emph{union}~$\adpa \vee \adpb$ to be the design problem which is feasible whenever \emph{either}~$\adpa$ or~$\adpb$ is feasible.
+This models~$\adpa$ and~$\adpb$ as interchangeable technologies: either one can replace the other.
+
+\begin{definition}[Union of design problems]
+    \label{def:union_dp}
+    Given two design problems~$\adpa \colon \F{\posgenA} \profto \R{\posgenB}$ and~$\adpb\colon \F{\posgenA} \profto \R{\posgenB}$, their \emph{union}~$\adpa \vee \adpb\colon \F{\posgenA} \profto \R{\posgenB}$ is defined by
+    \begin{equation}
+        \begin{aligned}
+        (\adpa \vee \adpb)
+            \colon \F{\posgenA}\op \times \R{\posgenB} & \toinPos \Bool \\
+            \tup{\F{a}^*, \R{b}} & \mapsto \adpa(\F{a}^*, \R{b}) \vee \adpb(\F{a}^*, \R{b}).
+        \end{aligned}
+    \end{equation}
+\end{definition}
+
+The union of design problems is represented as in~\cref{fig:uniondp}.
+
+\begin{figure}[h!]
+    \begin{center}
+        \includesag{52_union}
+    \end{center}
+    \caption{Diagrammatic representation of the union of design problems. }
+    \label{fig:uniondp}
+\end{figure}
+
+\begin{example}
+    Jeb's Spaceship Parts is locked in a deadly rivalry with Starshow Bob to supply engines for the new X103 space orbiter. Neither knows the exact operational scenario that the X103 will encounter, but have provided a range of performance benchmarks for their engines (\cref{fig:exunion_1}).
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{50_rival_jeb_bob}
+        \end{center}
+        \caption{Example of two engine producers. }
+        \label{fig:exunion_1}
+    \end{figure}
+    Back at NASA headquarters, Beau has uploaded Jeb and Bob's data in order to construct the design problem reported in~\cref{fig:exunion_2}.
+    \begin{figure}[h!]
+        \begin{center}
+            \includesag{50_rival_beau}
+        \end{center}
+        \caption{Example of the union of the engine design problems. }
+        \label{fig:exunion_2}
+    \end{figure}
+\end{example}
+
+\subsection{In DPI}\label{subsec:dpi-union}
+
+\todojira{204}{Finish}
+
+The union of two design problems with implementation is a design problem with the implementation
+space~$\impsp=\impsp_{1}\sqcup\impsp_{2}$, and it represents the
+exclusive choice between two possible alternative families of designs.
+\begin{definition}[Coproduct of DPIs]
+    \label{def:parallel-1}Given two DPIs with same functionality and
+    resources~$\adpa=\tup{\funsp,\ressp,\impsp_{1},\prov_{1},\req_{1}}$
+    and~$\adpb=\tup{\funsp,\ressp,\impsp_{2},\prov_{2},\req_{2}}$,
+    define their co-product as
+    \begin{equation}
+        \adpa\sqcup\adpb\definedas\tup{\funsp,\ressp,\impsp_{1}\sqcup\impsp_{2},\prov,\req} ,
+    \end{equation}
+    where
+    \begin{eqnarray}
+        \prov & \colon & \imp\mapsto\begin{cases}
+                                        \prov_{1}(\imp), & \text{if }\imp\in\impsp_{1},\\
+                                        \prov_{2}(\imp), & \text{if }\imp\in\impsp_{2},
+        \end{cases}\label{eq:dppar-exec-1}\\
+        \req & \colon & \imp\mapsto\begin{cases}
+                                       \req_{1}(\imp), & \text{if }\imp\in\impsp_{1},\\
+                                       \req_{2}(\imp), & \text{if }\imp\in\impsp_{2}.
+        \end{cases}\nonumber
+    \end{eqnarray}
+\end{definition}
+
+%
+%\captionsideleft{\label{fig:dpcoproduct}}{
+%  \includegraphics[scale=0.33]{gmcdp_coproduct}
+%}
+
+\begin{figure}[h!]
+    \centering
+    \includesag{20_dpi_coproduct}
+    \caption{\label{fig:dpcoproduct}}
+\end{figure}
+
+\subsection{Intersection of Design Problems}
+
+Given two design problems~$\adpa, \adpb \colon \F{\posgenA} \profto \R{\posgenB}$, we can define a design problem~$\adpa \wedge \adpb$ that is feasible if only if~$\adpa$ and~$\adpb$ are both feasible.
+We call~$\adpa \wedge \adpb$ the \emph{intersection} of~$\adpa$ and~$\adpb$.
+One interpretation of~$\adpa \wedge \adpb$ is that~$\adpa$ and~$\adpb$ are two slightly different models of the same process, and we want to make sure that the design is conservatively feasible for both models.
+
+\begin{definition}[Intersection of design problems]
+    \label{def:intersection_dp}
+    \label{def:dp-intersection}
+    Given design problems~$\adpa\colon \F{\posgenA} \profto \R{\posgenB}$ and~$\adpb\colon \F{\posgenA} \profto \R{\posgenB}$,
+    their \emph{intersection} is denoted~$(\adpa \wedge \adpb)\colon \F{\posgenA} \profto \R{\posgenB}$, defined by:
+    \begin{equation}
+        \begin{aligned}
+        (\adpa \wedge \adpb)
+            \colon \F{\posgenA}\op \times \R{\posgenB} & \toinPos \Bool \\
+            \tup{\F{a}^*, \R{b}} & \mapsto \adpa(\F{a}^*, \R{b}) \wedge  \adpb(\F{a}^*, \R{b}).
+        \end{aligned}
+    \end{equation}
+\end{definition}
+The intersection of design problems is represented as in~\cref{fig:intersectiondp}.
+
+\begin{figure}[h!]
+    \begin{center}
+        \includesag{52_intersection}
+    \end{center}
+    \caption{Diagrammatic representation of the intersection of design problems. }
+    \label{fig:intersectiondp}
+\end{figure}
+
+We can directly generalize the intersection~$\adpa \wedge \adpb$ by allowing~$\adpa$ and~$\adpb$ to have different domain and codomains,~$\adpa \colon \F{\posgenA} \profto \R{\posgenB}$ and~$\adpb \colon \F{\posgenC} \profto \R{\posgenD}$.
+We call this putting two design problems ``in parallel''.
+
+\subsection{In DPI}\label{subsec:dpi-intersection}
+
+\todotextjira{205}{not sure the definition below is what we want}
+\devel{
+\begin{definition}[Intersection of DPIs]
+    \label{def:intersection-1}
+    Given two DPIs with same functionality and
+    resources~$\adpa=\tup{\funsp,\ressp,\impsp_{1},\prov_{1},\req_{1}}$
+    and~$\adpb=\tup{\funsp,\ressp,\impsp_{2},\prov_{2},\req_{2}}$,
+    define their intersection as
+    \begin{equation}
+        \adpa\sqcap\adpb\definedas\tup{\funsp,\ressp,\impsp_{1}\cap\impsp_{2},\prov,\req} ,
+    \end{equation}
+    where
+    \begin{eqnarray}
+        \prov & \colon & \imp\mapsto\begin{cases}
+                                        \prov_{1}(\imp), & \text{if }\imp\in\impsp_{1}\cap \impsp_{2} \text{ and }\prov_1(\imp)\posleq \prov_2(\imp)\\
+                                        \prov_{2}(\imp), & \text{if }\imp\in\impsp_{1}\cap \impsp_{2} \text{ and }\prov_2(\imp)\posleq \prov_1(\imp)\\
+                                        \bot_\funsp,& \text{else}.
+        \end{cases}\label{eq:dppar-exec-2}\\
+        \req & \colon & \imp\mapsto\begin{cases}
+                                       \req_{1}(\imp), & \text{if }\imp\in\impsp_{1}\cap \impsp_{2} \text{ and }\req_1(\imp)\posgeq \req_2(\imp)\\
+                                        \req_{2}(\imp), & \text{if }\imp\in\impsp_{1}\cap \impsp_{2} \text{ and }\req_2(\imp)\posgeq \req_1(\imp)\\
+                                        \top_\ressp,& \text{else}.
+        \end{cases}\nonumber
+    \end{eqnarray}
+\end{definition}}
+
+\begin{figure}[h!]
+    \centering
+    \includesag{dpi_intersection}
+    \caption{\label{fig:intersection}}
+\end{figure}
+
+\section{Lattice structure of DP homsets}
+
+Given the definitions of $\vee$ and $\wedge$ in the previous sections, we can prove that 
+every \DP homsets have a lattice structure. 
+
+This lattice is bounded by a "true" and a "false" DP.
+For any functionality-resource pair~$\F{\posgenA},\R{\posgenB}$, we denote by~$\postop_{\F{\posgenA},\R{\posgenB}}$ the design problem which is always feasible.
+We denote by~$\posbot_{\F{\posgenA},\R{\posgenB}}$ the design problem which is never feasible, for any functionality-resource pair~$\F{\posgenA},\R{\posgenB}$.
+
+\begin{lemma}
+    \label{lem:dpboundedlattice}
+    $\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a bounded lattice with union~$\vee$ as meet, intersection~$\wedge$ as join, least upper bound~$\top_{\F{\posgenA},\R{\posgenB}}$ and greatest lower bound~$\bot_{\F{\posgenA},\R{\posgenB}}$.
+\end{lemma}
+
+\begin{proof}
+    First, we need to prove that~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a poset. To prove this, we check the following:
+% 
+    \begin{compactitem}
+        \item \emph{Reflexivity}: Given~$\adpa\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$,~$\adpa\posDPleq \adpa$ is always true.
+        \item \emph{Antisymmetry}: Given~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$, if~$\adpa\posDPleq \adpb$ and~$\adpb\posDPleq \adpa$, then~$\adpa=\adpb$.
+        \item \emph{Transitivity}: Given~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$,~$\adpa\posDPleq \adpb$, and~$\adpb\posDPleq \adpc$, then~$\adpa\posDPleq \adpc$.
+    \end{compactitem}
+    Therefore,~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a poset.
+    Furthermore, consider two design problems~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    Their least upper bound (join) is~$\adpa\wedge \adpb$, since it is the least design problem implying both~$\adpa$ and~$\adpb$.
+    Their greatest lower bound (meet), instead, is~$\adpa\vee \adpb$, since it is the greatest design problem implied by both~$\adpa$ and~$\adpb$.
+    This proves that~$\Hom_\DP$ is a lattice.
+    To prove that it is bounded, we identify the top element as~$\top_{\F{\posgenA},\R{\posgenB}}$ (it implies all other design problems) and the bottom element as~$\top_{\F{\posgenA},\R{\posgenB}}$ (it is implied by all the other design problems).
+\end{proof}
+
+\devel{
+
+We show that a \DP Homset is a \emph{complete lattice}.
+
+\begin{definition}[Complete Lattice]\label{def:complete-lattice}
+    A poset~$\tup{\posA,\posleq}$ is a \emph{\iindex{complete lattice}} if every subset~$\posB$ of~$\posA$ has both a \emph{greatest lower bound} (often referred to as the \emph{infimum, meet}) and a \emph{least upper bound} (often referred to as the \emph{supremum, join}) in~$\tup{\posA, \posleq}$.
+\end{definition}
+
+\begin{example}
+    Consider the power set of any given set, ordered by inclusion. The supremum of any two subsets is given by their union.
+    The infimum of any two subsets is given by their intersection.
+\end{example}
+
+
+\begin{lemma}[\DP homsets are complete lattices]\label{def:DP-homsets-complete-lattice}
+    \todotextjira{274}{Show DP homsets are complete lattices.}
+\end{lemma}
+
+\subsection{Interaction with composition}
+
+Furthermore, we show that all composition operations preserve meet and joins.
+
+\begin{lemma}
+    \label{lem:series_vee}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$. One has
+    \begin{equation*}
+        (\adpa \vee \adpb)\mthen \adpc=(\adpa \mthen \adpc) \vee (\adpb\mthen \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \vee \adpb)\mthen \adpc)(\F{a}^*,\R{c})&=\bigvee_{b\in \posgenB} (\adpa \vee \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c})\\
+            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{b}^*,\R{c})\\
+            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{b}^*,\R{c})) \vee (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c}))\\
+            &=((\adpa \mthen \adpc) \vee (\adpb\mthen \adpc))(\F{a}^*,\R{c}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{remark}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc,\adpd\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$.
+    In general, one has:
+    \begin{equation*}
+        (\adpa\vee \adpb)\mthen (\adpc\vee \adpd) \neq (\adpa \mthen \adpc)\vee (\adpb \mthen \adpd).
+    \end{equation*}
+    \todojira{275}{Write down counterexample (after derivation).}
+\end{remark}
+
+\begin{lemma}
+    \label{lem:series_wedge}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$. One has
+    \begin{equation*}
+        (\adpa \wedge \adpb)\mthen \adpc=(\adpa \mthen \adpc) \wedge (\adpb\mthen \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \wedge \adpb)\mthen \adpc)(\F{a}^*,\R{c})&=\bigvee_{b\in \posgenB} (\adpa \wedge \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c})\\
+            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{b}^*,\R{c})\\
+            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{b}^*,\R{c})) \wedge (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c}))\\
+            &=((\adpa \mthen \adpc) \wedge (\adpb\mthen \adpc))(\F{a}^*,\R{c}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}
+    \label{lem:times_vee}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenC}}{\R{\posgenD}}$. One has
+    \begin{equation*}
+        (\adpa \vee \adpb)\mtimescat \adpc=(\adpa \mtimescat \adpc) \vee (\adpb\mtimescat \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \vee \adpb)\mtimescat \adpc)(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{d}})&=
+            (\adpa \vee \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{c}^*,\R{d})\\
+            &=(\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{c}^*,\R{d})\\
+            &=(\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{c}^*,\R{d})) \vee (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{c}^*,\R{d}))\\
+            &=((\adpa \mtimescat \adpc) \vee (\adpb\mtimescat \adpc))(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{d}}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}
+    \label{lem:times_wedge}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenC}}{\R{\posgenD}}$. One has
+    \begin{equation*}
+        (\adpa \wedge \adpb)\mtimescat \adpc=(\adpa \mtimescat \adpc) \wedge (\adpb\mtimescat \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \wedge \adpb)\mtimescat \adpc)(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{d}})&=
+            (\adpa \wedge \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{c}^*,\R{d})\\
+            &=(\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{c}^*,\R{d})\\
+            &=(\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{c}^*,\R{d})) \wedge (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{c}^*,\R{d}))\\
+            &=((\adpa \mtimescat \adpc) \wedge (\adpb\mtimescat \adpc))(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{d}}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+
+\begin{lemma}
+    \label{lem:vee_vee}
+    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$. One has
+    \begin{equation*}
+        (\adpa \vee \adpb)\vee \adpc=(\adpa \vee \adpc) \vee (\adpb\vee \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \vee \adpb)\vee \adpc)(\F{a}^*,\R{b})&=
+            (\adpa \vee \adpb)(\F{a}^*,\R{b})\vee \adpc(\F{a}^*,\R{b})\\
+            &=(\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\vee \adpc(\F{a}^*,\R{b})\\
+            &=(\adpa(\F{a}^*,\R{b}) \vee  \adpc(\F{a}^*,\R{b})) \vee (\adpb(\F{a}^*,\R{b})\vee \adpc(\F{a}^*,\R{b}))\\
+            &=((\adpa \vee \adpc) \vee (\adpb\vee \adpc))(\F{a}^*,\R{b}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}
+    \label{lem:vee_wedge}
+    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$. One has
+    \begin{equation*}
+        (\adpa \wedge \adpb)\vee \adpc=(\adpa \vee \adpc) \wedge (\adpb\vee \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \wedge \adpb)\vee \adpc)(\F{a}^*,\R{b})&=
+            (\adpa \wedge \adpb)(\F{a}^*,\R{b})\vee \adpc(\F{a}^*,\R{b})\\
+            &=(\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\vee \adpc(\F{a}^*,\R{b})\\
+            &=(\adpa(\F{a}^*,\R{b}) \vee  \adpc(\F{a}^*,\R{b})) \wedge (\adpb(\F{a}^*,\R{b})\vee \adpc(\F{a}^*,\R{b}))\\
+            &=((\adpa \vee \adpc) \wedge (\adpb\vee \adpc))(\F{a}^*,\R{b}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+
+\begin{lemma}
+    \label{lem:wedge_vee}
+    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$. One has
+    \begin{equation*}
+        (\adpa \vee \adpb)\wedge \adpc=(\adpa \wedge \adpc) \vee (\adpb\wedge \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \vee \adpb)\wedge \adpc)(\F{a}^*,\R{b})&=
+            (\adpa \vee \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{a}^*,\R{b})\\
+            &=(\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\vee \adpc(\F{a}^*,\R{b})\\
+            &=(\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{a}^*,\R{b})) \vee (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{a}^*,\R{b}))\\
+            &=((\adpa \wedge \adpc) \vee (\adpb\wedge \adpc))(\F{a}^*,\R{b}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}
+    \label{lem:wedge_wedge}
+    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$. One has
+    \begin{equation*}
+        (\adpa \wedge \adpb)\wedge \adpc=(\adpa \wedge \adpc) \wedge (\adpb\wedge \adpc).
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            ((\adpa \wedge \adpb)\wedge \adpc)(\F{a}^*,\R{b})&=
+            (\adpa \wedge \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{a}^*,\R{b})\\
+            &=(\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{a}^*,\R{b})\\
+            &=(\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{a}^*,\R{b})) \wedge (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{a}^*,\R{b}))\\
+            &=((\adpa \wedge \adpc) \wedge (\adpb\wedge \adpc))(\F{a}^*,\R{b}).
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}
+    \label{lem:trace_vee}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenC}\times\F{\posgenA}}{\R{\posgenC} \times\R{\posgenB}}$. One has
+    \begin{equation*}
+        \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\vee \adpb)=\Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)\vee  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+           \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\vee \adpb)(\F{a}^*,\R{b})&=
+            \bigvee_{c\in \posgenC} (\adpa\vee \adpb)(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\\
+            &=\bigvee_{c\in \posgenC} \adpa(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\vee \adpb(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\\
+            &=\bigvee_{c\in \posgenC} \adpa(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\vee \bigvee_{c\in \posgenC} \adpb(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\\
+            &=\Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)(\F{a}^*,\R{b})\vee  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)(\F{a}^*,\R{b})
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
+\begin{remark}
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenC}\times\F{\posgenA}}{\R{\posgenC} \times\R{\posgenB}}$. In general, one has
+    \begin{equation*}
+        \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\wedge \adpb)\neq \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)\wedge  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)
+    \end{equation*}
+\end{remark}
+
+\todotextjira{275}{Prove that the composition operations preserve join and meet}
+
+
+}
+

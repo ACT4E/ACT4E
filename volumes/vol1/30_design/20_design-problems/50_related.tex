@@ -1,0 +1,89 @@
+% !TEX root = chapter-standalone.tex
+
+
+\section{Discussion of related work}
+\label{sec:design-problems-related}
+
+\subsection{Theory of design}
+
+Modern engineering has long since recognized the two ideas of modularity
+and hierarchical decomposition, yet there exists no general quantitative
+theory of design that is applicable to different domains. Most of
+the works in the theory of design literature study abstractions that
+are meant to be useful for a human designer, rather than an automated
+system. For example, a \emph{function structure} diagram~\cite[p. 32]{pahl07}
+decomposes the function of a system in subsystems that exchange energy,
+materials, and signals, but it is not a formal representation. From
+the point of view of the theory of design, the contribution of this
+work is that the \emph{design problem }abstraction developed, where
+one takes functionality and resources as the interfaces for the subsystems,
+is at the same time (1) mathematically precise; (2)~intuitive to
+understand; and (3)~leads to tractable optimization problems.
+
+This work also provides a clear answer to one long-standing issue
+in the theory of design: the inter-dependence between subsystems,
+(in other words, cycles in the co-design graph). Consider, as an example, Suh's
+theory of \emph{axiomatic design~}\cite{suh01}, in which the first
+``axiom'' is to keep the design requirements orthogonal (in other words, do
+not introduce cycles). This work shows that it is possible to deal
+elegantly with recursive constraints.
+
+\subsection{Partial Order Programming}
+
+In ``Partial Order Programming''~\cite{parkerjr89partial} Parker
+studies a hierarchy of optimization problems that can be represented
+as a set of partial order constraints. The main interest is to study
+partial order constraints as the means to define the semantics of
+programming languages and for declarative approaches to knowledge
+representation.
+
+In Parker's hierarchy, MCDPs are most related to the class of problems
+called \emph{continuous monotone partial order program} (CMPOP). CMPOPs
+are the least specific class of problems studied by Parker for which
+it is possible to obtain existence results and a systematic solution
+procedure. MCDPs subsume CMPOPs. A CMPOP is an MCDP where: 1)~All
+functionality and resources belong to the same poset~$\posA$ ($\funsp_{v}=\ressp_{v}=\posA$);
+2)~Each functionality/resource relation is a simple map, rather than
+a multi-valued relation; 3)~There are no dangling functionality edges
+in the co-design diagram ($\funsp=\One$).
+
+In a MCDP, each DP is described by a \scottcontinuous map~$\ftor:\funsp\rightarrow\Aressp$
+which maps one functionality to a minimal set of resources. By contrast,
+in a CMPOP an operator corresponds to a \scottcontinuous map~$\ftor:\funsp\rightarrow\ressp$.
+The consequence is that a CMPOP has a unique solution~\cite[Theorem 8]{parkerjr89partial},
+while an MCDP can have multiple minimal solutions (or none at all).
+
+\subsection{Abstract interpretation}
+
+The methods used from order theory are the same used in the field
+of \emph{abstract interpretation}~\cite{cousot14abstract}. In
+that field, the least fixed point semantics arises from problems such
+as computing the sets of reachable states. Given a starting state,
+one is interested to find a subset of states that is closed under
+the dynamics (in other words, a fixed point), and that is the smallest that contains
+the given initial state (in other words, a \emph{least} fixed point). Reachability
+and other properties lead to considering systems of equation of the
+form
+\begin{align}
+    x_{i} & =\varphi_{i}(x_{1},\,\dots\,,x_{i},\,\dots\,,x_{n}),\quad i=1,\dots,n,\label{eq:ai}
+\end{align}
+where each value of the index $i$ is for a control point of the program,
+and~$\varphi_{i}$ are \scottcontinuous functions on the abstract
+lattice that represents the properties of the program. In the simplest
+case, each~$x_{i}$ could represent intervals that a variable could
+assume at step~$i$. By applying the iterations, one finds which
+properties can be inferred to be valid at each step.
+
+We can repeat the same considerations we did for Parker's CMPOPs vs
+MCDPs. In particular, in MCDP we deal with multi-valued maps, and
+there is more than one solution.
+
+In the field of abstract interpretation much work has been done towards
+optimizing the rate of convergence. The order of evaluation in~\cref{eq:ai}
+does not matter. Asynchronous and ``chaotic'' iterations were proposed
+early~\cite{cousot77asynchronous} and are still object of investigation~\cite{bourdoncleefficient}.
+To speed up convergence, the so called ``widening'' and ``narrowing''
+operators are used~\cite{cortesi11widening}. The ideas of chaotic
+iteration, widening, narrowing, are not immediately applicable to
+MCDPs, but it is a promising research direction.
+

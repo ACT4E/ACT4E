@@ -1,0 +1,84 @@
+\subsection{Code exercises}
+
+\begin{remark}
+    In this course we assume, unless otherwise noted, that you have done the previous exercises, so that you can build on top of the code that you already have. The first exercise and tutorial was in \cref{sec:exercise-tutorial}.
+\end{remark}
+
+\begin{figure*}[b]
+    \label{fig:uml_semigroup}
+    \includesag{uml_semigroup}
+\end{figure*}
+
+We define two classes: \Semigroup and \FiniteSemigroup.
+Their relations are shown in \cref{fig:uml_semigroup}.
+
+A \Semigroup is something that \emph{has} a carrier set, which is a \Setoid.
+It also has a compose function.
+
+\classlisting{Semigroup}{}
+
+
+\begin{codeexercise}[\exname{TestFiniteSemigroupConstruct}]
+    \label{ex:TestFiniteSemigroupConstruct}
+    Given a finite set, construct the free semigroup.
+    Implement the interface in \cref{lst:FiniteSemigroupConstruct}
+\end{codeexercise}
+
+\classlisting{FiniteSemigroupConstruct}{}
+
+A \FreeSemigroup is a semigroup with an additional method, \funcname{unit}, which converts an element of the carrier set to an element of the free group. (e.g. from element to a list with one element.)
+
+\classlisting{FreeSemigroup}{}
+
+
+
+A \FiniteSemigroup is a special \Semigroup whose carrier is a \FiniteSet.
+
+
+\classlisting{FiniteSemigroup}{}
+
+
+The data format to define a finite semigroup is given in \cref{lst:sm_min3}.
+
+The data structure contains two fields:
+\begin{enumerate}
+    \item \str{carrier} is the serialization of a \FiniteSet $\setA$.
+    \item \str{compose} is the serialization of a \FiniteMap. The \str{source}
+    for this map must be a product of sets ($\setA \times \setA$.), and the target
+    must be equal to $\setA$.
+\end{enumerate}
+
+\begin{longcode}
+    \begin{minted}{yaml}
+carrier:
+    elements: [0, 1]
+composition:
+    source:
+        product:
+        - elements: [0, 1]
+        - elements: [0, 1]
+    target:
+        - elements: [0, 1]
+    values:
+       - [[0, 0], 0]
+       - [[0, 1], 0]
+       - [[1, 0], 0]
+       - [[1, 1], 1]
+    \end{minted}
+    \caption{}
+    \label{lst:sm_min3}
+\end{longcode}
+%\margindatafilefig{paint}{the paint}{fig:sm1}
+
+
+
+\begin{codeexercise}[\exname{TestFiniteSemigroupRepresentation}]
+    \label{ex:TestFiniteSemigroupRepresentation}
+    Create a function to load the data, with the interface shown in \cref{lst:FiniteSemigroupRepresentation}.
+    Hint: you want to reuse the code you already have to load a \FiniteSet
+    and a \FiniteMap.
+\end{codeexercise}
+
+
+\classlisting{FiniteSemigroupRepresentation}{}
+

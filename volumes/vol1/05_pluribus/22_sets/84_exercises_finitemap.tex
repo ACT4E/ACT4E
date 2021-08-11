@@ -1,0 +1,58 @@
+\subsection{Mappings}
+
+\Cref{lst:Mapping} shows our interface for \Mapping.
+
+\classlisting{Mapping}
+
+A \Mapping has a source and a target, which, in general, are setoids.
+
+A \Mapping is able to take an element from the source setoid and return an element in the second setoid.
+
+Here we use Python's syntax sugar. If an object defines as \funcname{__call__} method, then these are equivalent:
+
+\begin{minted}{python}
+assert myobject(x) == myobject.__call__(x)
+\end{minted}
+
+Therefore, once you implement a \Mapping you can pass it around like if it was a Python function.
+
+We also define a subclass \FiniteMap which is constrained to have both source and target be a \FiniteSet rather than a \Setoid (\cref{lst:FiniteMap}).
+
+\classlisting{FiniteMap}
+
+\begin{marginfigure}
+  \begin{minipage}{4cm}
+    \begin{minted}{yaml}
+source:
+  elements: [a, b, c]
+target:
+  elements: [1, 2]
+values:
+  - [a, 1]
+  - [b, 2]
+  - [c, 1]
+    \end{minted}
+  \end{minipage}
+  \label{fig:mapexample}
+  \caption{Format for representing maps.}
+\end{marginfigure}
+
+
+We define a YAML representation for finite maps as in~\cref{fig:mapexample}.
+
+The fields \fieldname{source} and \fieldname{target} are two sets. These are expressions that you can pass to the set constructors you developed previously.
+
+The field \fieldname{values} is an array of pairs: a pair~$\tup{x, y}$ means that~$x$ maps to~$y$.
+
+For the data to be well-formed it is necessary that for each element in the domain, there is exactly one row for that element.
+If that is not the case, throw an exception \classname{InvalidFormat}.
+
+
+
+\begin{codeexercise}[\exname{TestFiniteMapRepresentation}]
+  Create a function to load the data by implementing the interface in \cref{lst:FiniteMapRepresentation}.
+\end{codeexercise}
+
+\classlisting{FiniteMapRepresentation}
+
+

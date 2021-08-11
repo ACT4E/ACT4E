@@ -1,0 +1,93 @@
+%
+%\providecommand{\mintedcache}{cache-minted}
+%
+%\usepackage[draft=false,cache=true,cachedir=\mintedcache]{minted}
+%\usepackage{pysnip}
+
+
+\definecolor{python-code-bg}{rgb}{0.85,0.90,0.95}
+\definecolor{yaml-code-bg}{rgb}{0.95,0.90,0.85}
+\definecolor{console-code-bg}{rgb}{0.90,0.95,0.95}
+\definecolor{output-code-bg}{rgb}{0.80,0.85,0.85}
+
+\setminted[python]{mathescape=true,bgcolor=python-code-bg,autogobble=true,fontsize=\footnotesize}
+\setmintedinline[python]{bgcolor={}}
+\setminted[yaml]{bgcolor=yaml-code-bg,fontsize=\footnotesize}
+\setminted[console]{fontsize=\footnotesize,bgcolor=console-code-bg}
+\setminted[latex]{bgcolor=yaml-code-bg,autogobble=true,fontsize=\footnotesize}
+\newminted[console]{text}{fontsize=\footnotesize,bgcolor=output-code-bg}
+\newminted[consoleoutput]{console}{fontsize=\footnotesize,bgcolor=output-code-bg}
+\usemintedstyle{monokay}
+
+\newmintinline[pystr]{python}{bgcolor={},fontsize=\footnotesize}
+\newmintinline[files]{text}{bgcolor={},fontsize=\footnotesize}
+\newmintinline[str]{text}{bgcolor={},fontsize=\footnotesize}
+
+
+
+\newcommand{\evalrepo}{\texttt{\footnotesize dockerrepo}\xspace}
+\usepackage{currfile}
+
+% a better texttt font
+\renewcommand{\ttdefault}{txtt}
+\newcommand{\methodsource}[3]{%
+  \py[\currfilebase-\detokenize{#1}-\detokenize{#2}]{from act4e_tex import write_source_minted;
+  from act4e_interfaces import #1;
+  write_source_minted(#1.#2, nodec=False,boxit=False,reduce_space=True\ifstrempty{#3}{}{,#3})
+  }%
+}
+\newcommand{\classsource}[2]{%
+  \index{\classnamestyle{#1}}%
+  \py[\currfilebase-\detokenize{#1}]{from act4e_tex import write_source_minted;
+  from act4e_interfaces import #1;
+  write_source_minted(#1, nodec=False,boxit=False,reduce_space=True\ifstrempty{#2}{}{,#2})
+  }%
+}
+\newcommand{\visualizemodule}[2]{%
+  \py[\currfilebase-\detokenize{#1}]{%
+    from act4e_tex import visualize_module;
+    visualize_module('#1',nodec=False,boxit=False,reduce_space=True\ifstrempty{#2}{}{,#2})
+  }%
+}
+
+
+% problem: the code takes too much space
+% solution: https://tex.stackexchange.com/questions/288968/natural-width-when-centering-a-minted-environment
+%\xpretocmd{\minted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
+%\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
+
+
+
+\newcommand{\datafile}[2]{%
+%  \begin{quote}%
+  \py[\currfilebase-\detokenize{#1}]{from act4e_tex import visualize_data_file;%
+  visualize_data_file('#1'\ifstrempty{#2}{}{,#2});
+  }%
+%  \end{quote}
+}
+
+
+\newcommand{\datafilefig}[3]{%
+  \begin{figure*}%
+    \datafile{#1}{}%
+    \caption{\texttt{#2}}%
+    \label{#3}%
+  \end{figure*}%
+}
+
+
+
+\newcommand{\margindatafile}[1]{%
+  \py[\currfilebase-\detokenize{#1}]{from act4e_tex import visualize_data_file;%
+  visualize_data_file('#1', min_size=10, max_size=30);
+  }%
+}
+\newcommand{\margindatafilefig}[3]{%
+  \begin{marginfigure}%
+    \margindatafile{#1}{}%
+    \caption{#2}%
+    \label{#3}%
+  \end{marginfigure}%
+}
+
+

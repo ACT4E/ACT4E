@@ -1,0 +1,96 @@
+% !TEX root = chapter-standalone.tex
+
+
+\section{A locally-posetal pro-arrow equipment}
+
+\begin{definition}[2-category]
+  A \emph{strict 2-category} is a category enriched over \Category.
+\end{definition}
+
+\begin{definition}[Locally posetal 2-category]
+  \label{def:locallyposetalcat}
+  A 2-category \CatC is \emph{locally posetal} (or enriched in \Pos) if every hom-category~$\Hom_{\CatC}(x,y)$ is a poset.
+\end{definition}
+In \cref{def:comp_conj} on companions and conjoints, we saw how any monotone map in \Pos can be turned into a design problem. But \DP is not a subcategory of \Pos, nor vice versa. Using the 2-category language, we can now precisely characterize the relationship between \Pos and \DP. % Both have the same objects, but the morphisms in \DP are more permissive.
+
+\begin{example}
+  Take any category~\CatC, and enrich it in~$\tup{\Bool,\wedge,\true}$. The resulting category is composed of:
+  \begin{itemize}
+    \item Objects are~$\Ob_\CatC$;
+    \item For each~$x,y\in \Ob_\CatC$, we have~$\Hom_\CatC(x,y)\in \Ob_\Bool$. In words, we assign each morphism to either~$\true$ or~$\false$;
+    \item For any~$x,y,z\in \Ob_\CatC$, we define the composition operator
+    \begin{equation*}
+      \then \colon \Hom_\CatC(x,y)\wedge \Hom_\CatC(y,z)\leq \Hom_\CatC(x,z).
+    \end{equation*}
+    This composition operator describes transitivity.
+    \item Given~$x\in \Ob_\CatC$, we define~$\id_X\colon \true \leq \Hom_\CatC(x,x)$, which implies~$x\leq x$ (reflexivity).
+  \end{itemize}
+  In which sense this corresponds to a preorder? If a morphism~$f\in \Hom_\CatC(x,y)$ is~$\true$, $x\sim y$, else not. This, together, with transitivity and reflexivity, defines a preorder.
+\end{example}
+
+\begin{proposition}
+  \label{prop:companion_2}
+  The companion functor $\comp{(\cdot)}\colon\Pos\to\DP$ preserves the 2-structure; \ie \ if $f\Imp g$ with $f,g\colon \cP \to\cQ $, then $\comp{f}\geq_\DP\comp{g}$, where $\comp{f},\comp{g}\colon \F{\cQ} \profto\R{\cP}$. In fact, it is locally fully faithful (\cref{def:functorfullfaith}): $f\Imp g$ iff $\comp{f}\geq_\DP \comp{g}$.
+\end{proposition}
+\begin{proof}
+  Let $f,g$ be as in the proposition statement. We have the following chain of equivalences:
+  \begin{equation}
+    \begin{aligned}
+      f\Imp g&\text{ iff }
+      \forall p\in P, f(p)\leq g(p)\\&\text{ iff }
+      \forall p\in P, \forall q\in Q, (q\leq f(p))\Imp (q\leq g(p))\\&\text{ iff }
+      \comp{f}\geq_\DP \comp{g}.
+    \end{aligned}
+  \end{equation}
+\end{proof}
+
+\begin{proposition}
+  \label{lem:comp_conj_adj}
+  For any monotone map $f\colon\cP \to\cQ $ we have implications
+  \begin{equation}
+    \Unit{\cP }\geq_\DP (\conj{f}\then \comp{f})
+    \qquad\text{and}\qquad
+    (\comp{f}\then \conj{f})\geq_\DP \Unit{\cQ }
+  \end{equation}
+\end{proposition}
+\begin{proof}
+  For any $p_1,p_2\in P$, we have
+  \begin{equation}
+    \Unit{\cP }(\F{p_1}^*,\R{p_2})=\cP (\F{p_1},\R{p_2})
+    \Imp\bigvee_{q\in Q}\cQ (f(\F{p_1}),\R{q})\wedge\cQ (\F{q},f(\R{p_2}))=\left(\comp{f}\then \conj{f}\right)(\F{p_1}^*,\R{p_2})
+  \end{equation}
+  where the implication arrow comes, \eg  from taking $q=f(p_1)$. For transitivity, we have for any $q_1,q_2\in Q$:
+  \begin{equation}
+    \left(\conj{f}\then \comp{f}\right)(\F{q_1}^*,\R{q_2})=\bigvee_{q\in Q}\cQ (\F{q_1},f(\R{p}))\wedge\cQ (f(\F{p}),\R{q_2})
+    \Imp\cQ (\F{q_1},\R{q_2})=\Unit{\cQ }(\F{q_1}^*,\R{q_2}).
+  \end{equation}
+\end{proof}
+
+For the sake of completeness, we add the following theorem, which is in fact a summary of every proposition we have developed since the beginning of the section.
+
+\begin{theorem}
+  The 2-categories \Pos and $\DP\op$, together with the companion and conjoint functors from \cref{lem:comp_conj}, form a locally-posetal pro-arrow equipment.
+\end{theorem}
+\begin{proof}
+  A locally-posetal pro-arrow equipment consists of the following data:
+  \begin{compactitem}
+    \item A locally posetal 2-category $\CatC$ (\cref{def:locallyposetalcat}),
+    \item a locally-posetal 2-category $\CatD$, and
+    \item a 2-functor $c\colon\CatC\to\CatD$, having the properties that
+    \begin{compactitem}
+      \item $c$ is bijective on objects,
+      \item $c$ is locally fully faithful, and
+      \item for every 1-morphism $f\colon p\to q$ in $\CatC$, there is a morphism $c'(f)$ such that
+      \begin{equation}
+        \id_p\Imp c(f)\then c'(f)\quad\text{and}\quad c'(f)\then c(f)\Imp\id_q
+      \end{equation}
+    \end{compactitem}
+  \end{compactitem}
+  In our situation, the locally-posetal 2-categories are $\CatC\definedas\Pos$, $\CatD\definedas\DP$; see \cref{def:Pos_loc_pos,prop:Pos_loc_pos,def:DP_loc_pos,prop:DP_loc_pos,lem:loc_pos_op}. The 2-functor is basically the conjoint map; on objects it is the identity, on morphisms it is the conjoint $c(f)\definedas\conj{f}$ as in \cref{def:comp_conj}, and it is 2-functorial and fully faithful by \cref{prop:companion_2}. For every $f$, the final property is satisfied by the companion $c'(f)\definedas \comp{f}$.
+\end{proof}
+
+\todo{Can we give a reference for ``locally posetal proarrow equipment''?
+We should do this in many parts of the paper. At the beginning, give references
+to the usual introductory books. And when we use some non-trivial words, give references to the literature somewhere, even if it is a bit too difficult for the reader of the paper.}
+\devel{
+\AC{Is the 2-category structure preserved by the trace? I suspect it follows from something we already say, but it would be nice to point it out for the slow children.}}
