@@ -122,11 +122,13 @@ nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.texi
 
 
 generated/used.yaml: .FORCE
+	@echo Generating $@...
 	@lsm_collect $(shell find volumes -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
-
+	@echo Generating $@... done
 generated/used-%.yaml: .FORCE
+	@echo Generating $@
 	@lsm_collect $(shell find volumes/$* -name '*.tex') $(shell find papers -name '*.tex')  $(shell find sag -name '*.tikz') >$@
-
+	@echo Generating $@... done
 nomenc-%.tex: generated/used-%.yaml utils/symbols*.tex
 	lsm_nomenc  --only $< utils/symbols*.tex > $@
 
