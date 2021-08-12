@@ -1,9 +1,11 @@
 % !TEX root = chapter-standalone.tex
 
-\clearpage
+
 \section{Co-design problems}
 \label{sec:Co-design-problems}
 
+
+\todotext{Use the notation $\adp$ rather than $\cdpin$.}
 A ``co-design problem'' will be defined as a \emph{multigraph} of design
 problems.
 \begin{definition}[Co-design problem with implementation]
@@ -47,33 +49,63 @@ and~$\ressp=\prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}
 The maps~$\prov,\req$ return the values of the unconnected functionality
 and resources:
 \begin{equation*}
-\begin{aligned}
-    \prov\colon \imp & \mapsto{\scriptstyle {\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpifunind\in\unconnectedfun_{\cdpin}}}}\pi_{\cdpifunind}\prov_{\cdpin}(\pi_{\cdpin}\imp),\\
-    \req\colon \imp & \mapsto{\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}}}\pi_{\cdpiresind}\req_{\cdpin}(\pi_{\cdpin}\imp).
-\end{aligned}
+    \begin{aligned}
+        \prov\colon \imp & \mapsto{\scriptstyle {\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpifunind\in\unconnectedfun_{\cdpin}}}}\pi_{\cdpifunind}\prov_{\cdpin}(\pi_{\cdpin}\imp),\\
+        \req\colon \imp & \mapsto{\displaystyle \prod_{\cdpin\in\cdpiN}\prod_{\cdpiresind\in\unconnectedres_{\cdpin}}}\pi_{\cdpiresind}\req_{\cdpin}(\pi_{\cdpin}\imp).
+    \end{aligned}
 \end{equation*}
 
 \todotextjira{160}{macro for unconnected a bit similar to upper sets? }
-\todojira{161}{Re-do a concrete example like this}
 
-\begin{example}
-    The MCDP in~\cref{fig:exampleq} is the interconnection of 3
-    DPs~$\ftor_{a},\ftor_{b},\ftor_{c}.$ The semantics of the MCDP as
-    an optimization problem is given by:
-    \begin{equation*}
-    \fun_1\mapsto \begin{cases}
-                      \Min \res_4,& \res_1\in \ftor_a(\fun_1,\fun_2),\quad \res_1\posleq \fun_3, \quad \fun_3=\tup{\fun_4,\fun_5},\\
-                      &\res_2\in \ftor_b(\fun_4),\quad \res_4\posleq \fun_2,\quad \res_4=\tup{\res_2,\res_3},\\
-                      &\res_3\in \ftor_c(\fun_5).
-\end{cases}
-\end{equation*}
-\end{example}
+\devel{ % Devel because the figure is wrong.
 
-\captionsideleft{\todographicsjira{162}{redo in tikz}\label{fig:exampleq}}{ \includegraphics[scale=0.33]{unc_atoms_g_v_graph}}
+    \begin{marginfigure}
+        \centering
+        \includegraphics[scale=0.33]{unc_atoms_g_v_graph}
+        \caption{}
+        \label{fig:exampleq}
+    \end{marginfigure}
+    \todographicsjira{162}{redo \cref{fig:exampleq} in tikz. Urgent because the current figure is wrong.
+    Also feel free to rename the resources in a more consistent way. E.g. $\res_\adpa &= \req(\imp_\adpa)$.}
+
+    \begin{example}
+        The MCDP in~\cref{fig:exampleq} is the interconnection of 3
+        DPs~$\adpa,\adpb,\adpc$.
+        The implementation space is a subset of the product
+        \begin{equation}
+            \impsp_\adpa \times  \impsp_\adpb \times \impsp_\adpc.
+        \end{equation}
+        The elements $\tupp{\imp_\adpa, \imp_\adpb, \imp_\adpc}$ that are feasible
+        are the ones that respect the following constraints:
+        \begin{enumerate}
+            \item Functionality and resources of each DPI are given by their implementation:
+            \begin{eqnarray}
+                \res_1 &= \req(\imp_\adpa), \\
+                \res_2 &= \req(\imp_\adpb), \\
+                \res_3 &= \req(\imp_\adpc), \\
+                \fun_\adpa &= \prov(\imp_\adpa), \\
+                \fun_4 &= \prov(\imp_\adpb), \\
+                \fun_5 &= \prov(\imp_\adpc).
+            \end{eqnarray}
+            \item Wiring constraints:
+            \begin{eqnarray}
+                \tupp{\fun_1, \fun_2}  = \fun_\adpa, \\
+                \res_4=\tup{\res_2,\res_3}, \\
+                \fun_3=\tup{\fun_4,\fun_5}.
+            \end{eqnarray}
+            \item Co-design constraints:
+            \begin{eqnarray}
+                \res_4\posleq \fun_2,\\
+                \res_1\posleq \fun_3.
+            \end{eqnarray}
+        \end{enumerate}
+    \end{example}
+
+}
 
 
-%\captionsideleft{\label{fig:example-semanticsq}}{\includegraphics[scale=0.33]{unc_semantics}}
-\FloatBarrier\vfill\clearpage
+\FloatBarrier\vfill\clearpage % keep for floats
+
 \subsection{Recursion}
 
 \begin{example}
@@ -156,7 +188,8 @@ and resources:
         \todographicsjira{163}{finish dpchassismotorloop}
     }
 
-        \FloatBarrier \vfill\clearpage
+    \FloatBarrier \vfill\clearpage
+
     \subsection{Abstraction}
     This formalism makes it easy to abstract away the details
     in which we are not interested. Once a diagram like~\cref{fig:gmcdp_chassis_plus_motor}
