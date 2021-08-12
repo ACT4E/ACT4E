@@ -120,7 +120,7 @@ nomenc-%.tex: generated/used-%.yaml utils/symbols*.tex
 $(nomencvol1): generated/used-vol1.yaml utils/symbols*.tex
 	lsm_nomenc  --only $< utils/symbols*.tex > $@
 
-nomenc: $(nomencvol1)  nomenc-vol2.tex
+nomenc: $(nomencvol1)
 
 tablefile=volumes/vol1/00_front/05_developers/table.texi
 
@@ -152,8 +152,8 @@ remake:
 find-equations:
 	lsm_equations --search volumes/vol1 --output equations/vol1
 
-find-equations-vol2:
-	lsm_equations --search volumes/vol2 --output equations/vol2
+#find-equations-vol2:
+#	lsm_equations --search volumes/vol2 --output equations/vol2
 
 compile-equations:
 	make -C equations -j -k
@@ -180,9 +180,9 @@ magic-equations:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		make find-equations
-	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		$(tag) \
-		make find-equations-vol2
+	#docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+#		$(tag) \
+#		make find-equations-vol2
 
 ultramagic:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
