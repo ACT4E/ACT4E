@@ -11,64 +11,80 @@ What is the form of the solution that we expect? Given a DP $\adp: \funsp \proft
 
 \begin{definition}
   \label{def:ftoR-dp}
-  Given a DP~$\adp:\funsp\profto\ressp$
-  we denote by~$\ftoR_{\adp}\colon \funsp\toinPos\Uressp$ the map that associates
+  Given a DP~$\adp\colon\funsp\profto\ressp$
+  we denote by~$\ftoR_{\adp}\colon \funsp\toinPos \uppersets{\ressp}$ the map that associates
   to each functionality~\fun the set of minimal resources sufficient to realize~\fun:
   \begin{eqnarray*}
-    \ftoR_{\adp}\colon \funsp & \toinPos & \upperposetop{\ressp},\\
-    \fun& \mapsto & \{ \res \in \ressp : \adp(\fun, \res)\}
+    \ftoR_{\adp}\colon \funsp & \toinPos & \uppersets{\ressp},\\
+    \fun& \mapsto & \{ \res \in \ressp \colon \adp(\fun, \res)\}
   \end{eqnarray*}
   If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
 \end{definition}
 
-\todo{show why monotone}
+\begin{remark}[Monotonicity]
+    Consider a DP~$\adp\colon\funsp\profto\ressp$ and~$\fun\posleq \fun'$. We know
+    \begin{equation*}
+        \begin{aligned}
+            \ftoR_\adpa(\fun)&=\{ \res \in \ressp \colon \adp(\fun, \res)\} \\
+            &\supseteq \{ \res \in \ressp \colon \adp(\fun', \res)\}\\
+            &=\ftoR_\adpa(\fun'),
+        \end{aligned}
+    \end{equation*}
+    showing monotonicity.
+\end{remark}
+
 
 Symmetrically, the solution to \FixResMaxFun is given by a function that we call~$\rtoF_\adp$.
 
 \begin{definition}
   \label{def:rtoF-dp}
-  Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$,
-  define the map~$\rtoF_{\adp}\colon \ressp\toinPos \tup{\Lfunsp, \subseteq}$ that associates
+  Given a DP~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$,
+  define the map~$\rtoF_{\adp}\colon \ressp\toinPos  \lowersets{\funsp}$ that associates
   to each resource~\res the set of functionalities which can be realized with~$\res$:
   \begin{eqnarray*}
-    \rtoF_{\adp}\colon \ressp & \toinPos & \tup{\Lfunsp, \subseteq},\\
-    \res& \mapsto & \{ \fun \in \funsp : \adp(\fun, \res)\}.
+    \rtoF_{\adp}\colon \ressp & \toinPos & \lowersets{\funsp},\\
+    \res& \mapsto & \{ \fun \in \funsp \colon \adp(\fun, \res)\}.
   \end{eqnarray*}
   If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
 \end{definition}
 
-\todo{show why monotone}
+\begin{remark}[Monotonicity]
+    Consider a DP~$\adp\colon\funsp\profto\ressp$ and~$\res\posleq \res'$. We know
+    \begin{equation*}
+        \begin{aligned}
+            \rtoF_\adpa(\res)&=\{ \fun \in \funsp \colon \adp(\fun, \res)\} \\
+            &\subseteq \{ \fun \in \funsp \colon \adp(\fun, \res')\}\\
+            &=\rtoF_\adpa(\res'),
+        \end{aligned}
+    \end{equation*}
+    showing monotonicity.
+\end{remark}
 
 A question that arises naturally is whether the map~$\ftoR_\adp$ is sufficient to reconstruct the original DP.
 The answer is yes.
-We will prove that~$\ftoR_\adp$ is a morphism in a category called \UPos, and that this category is equivalent (\cref(\cref{def:cat-equivalence}) to \DP, therefore being traced monoidal with a lattice structure.
+We will prove that~$\ftoR_\adp$ defines a morphism in a category called \UPos, and that this category is equivalent (\cref(\cref{def:cat-equivalence}) to \DP, therefore being traced monoidal, with a lattice structure.
 In fact, \FixFunMinRes can be seen as a functor from \DP to \UPos.
 Symmetrically,~$\rtoF_\adp$ is a morphism in a category \LPos equivalent to \DP and \FixResMaxFun can be seen as the functor from \DP to \LPos.
 
-  \todographics{@Gioele: put here }
 
-
-
-\subsection{$\UPos$ and $\LPos$ categories}
+\subsection{$\UPos$ and~$\LPos$ categories}
 
 \begin{definition}[Category \UPos]
 \label{def:upos_cat}
 The category \UPos consists of:
 \begin{compactenum}
     \item \emph{Objects}: objects are posets;
-    \item \emph{Morphisms}: given objects~$\Obja,\Objb\in \Ob_\UPos$, morphisms from~$\Obja$ to~$\Objb$ are monotone maps of the form~$\mora \colon \Obja \to \Up{\Objb}$.
-    \item \emph{Composition of morphisms}: Given morphisms $\mora\colon \Obja \to \Up{\Objb}$,~$\morb\colon \Objb\to \Up{\Objc}$, their composition is given as
+    \item \emph{Morphisms}: given objects~$\Obja,\Objb\in \Ob_{\UPos}$, morphisms from~$\mora\colon \Obja \mto \Objb$ are monotone maps of the form~$\ulposmap{\mapa} \colon \Obja \toinPos \uppersets{\Objb}$.
+    \item \emph{Composition of morphisms}: Given morphisms~$\mora\colon \Obja \mto \Objb$,~$\morb\colon \Objb\mto \Objc$, their composition~$\mora\mthen \morb\colon \Obja\mto \Objc$ is given by
     \begin{equation}
     \begin{aligned}
-        \mora \mthen \morb \colon \Obja&\to \Up{\Objc}\\
-        \Objael&\mapsto \bigcup_{\Objbel\in \mora(\Objael)}\morb(\Objbel);
+        \ulposmap{(\mapa \mthen \mapb)} \colon \Obja&\toinPos \uppersets{\Objc}\\
+        \Objael&\mapsto \bigcup_{\Objbel\in \ulposmap{\mapa}(\Objael)}\ulposmap{\mapb}(\Objbel);
     \end{aligned}
     \end{equation}
-    \item \emph{Identity morphism}: given an object~$\Obja\in \Ob_\UPos$, the identity morphism is given by the application of the upper closure operator:~$\catid_\Obja(\Objael)\definedas \upit\{\Objael\}$.
+    \item \emph{Identity morphism}: given an object~$\Obja\in \Ob_{\UPos}$, the identity morphism is given by the application of the upper closure operator:~$\catid_\Obja(\Objael)\definedas \upit\{\Objael\}$.
 \end{compactenum}
 \end{definition}
-
-\todo{J: maybe we could name this category using the standard notation for Kleisli categories? i.e. $\Pos_{\Up{} } $.}
 
 \begin{remark}
 Note that the composition of morphisms in this category corresponds to the generalization of the series operator for boolean profunctors.
@@ -80,15 +96,15 @@ Analogously, we can define the \LPos category.
 The category \LPos consists of:
 \begin{compactenum}
     \item \emph{Objects}: objects are posets;
-    \item \emph{Morphisms}: given objects~$\Obja,\Objb\in \Ob_\LPos$, morphisms from~$\Obja$ to~$\Objb$ are monotone maps of the form~$\mora \colon \Obja \to \Lo{\Objb}$.
-    \item \emph{Composition of morphisms}: Given morphisms~$\mora \colon \Obja \mto \Lo{\Objb}$,~$\morb \colon \Objb\mto \Lo{\Objc}$, their composition is given by
+    \item \emph{Morphisms}: given objects~$\Obja,\Objb\in \Ob_{\LPos}$, morphisms~$\mora\colon \Obja\mto \Objb$ are monotone maps of the form~$\ulposmap{\mora} \colon \Obja \toinPos \lowersets{\Objb}$.
+    \item \emph{Composition of morphisms}: Given morphisms~$\mora \colon \Obja \mto \Objb$,~$\morb \colon \Objb\mto \Objc$, their composition~$\mora\mthen \morb\colon \Obja\mto \Objc$ is given by
     \begin{equation}
     \begin{aligned}
-        \mora \mthen \morb \colon \Obja &\mto \Lo{\Objc}\\
-        \Objael&\mapsto \bigcup_{\Objbel\in \mora (\Objael)}\morb(\Objbel);
+       \ulposmap{(\mapa \mthen \mapb)} \colon \Obja &\toinPos \lowersets{\Objc}\\
+        \Objael&\mapsto \bigcup_{\Objbel\in \ulposmap{\mora} (\Objael)}\ulposmap{\morb}(\Objbel);
     \end{aligned}
     \end{equation}
-    \item \emph{Identity morphism}: given an object $\Obja\in \Ob_\LPos$, the identity morphism is given by the application of the lower closure operator:~$\catid_\Obja(\Objael)\definedas \downit\{\Objael\}$.
+    \item \emph{Identity morphism}: given an object $\Obja\in \Ob_{\LPos}$, the identity morphism is given by the application of the lower closure operator:~$\catid_\Obja(\Objael)\definedas \downit\{\Objael\}$.
 \end{compactenum}
 \end{definition}
 
@@ -100,37 +116,41 @@ We now show that \UPos and \LPos are indeed categories.
 \end{lemma}
 
 \begin{proof}
-We prove that \UPos is a category. The proof for \LPos is analogous. In the following, we show unitality and associativity.
-\paragraph*{Unitality} Given~$\mora\colon \Obja \mto \Up{\Objb}$, we have:
+We prove that \UPos is a category. The proof for \LPos is analogous.
+In the following, we show unitality and associativity.
+\paragraph*{Unitality} Given~$\mora\colon \Obja \mto \Objb$, we have:
 \begin{equation*}
     \begin{aligned}
-    \left( \mora \mthen \catid_\Objb\right)(\Objael)&=\bigcup_{\Objbel\in \mora(\Objael)}\catid_\Objb(\Objbel)\\
-    &=\bigcup_{\Objbel\in \mora(\Objael)}\upit\{\Objbel\}\\
-    &=\bigcup_{\Objbel\in \mora(\Objael)}\{\Objbel'\in \Objb \colon \Objbel\posleq_\Objb \Objbel' \}
+    \left( \ulposmap{\mora} \mthen \catid_\Objb\right)(\Objael)&=\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\catid_\Objb(\Objbel)\\
+    &=\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\upit\{\Objbel\}\\
+    &=\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\{\Objbel'\in \Objb \colon \Objbel\posleq_\Objb \Objbel' \}
     \end{aligned}
 \end{equation*}
-We know that~$\mora(\Objael)$ is an upperset:
+We know that~$\ulposmap{\mora}(\Objael)$ is an upperset:
 \begin{equation*}
     \begin{aligned}
-    \mora(\Objael)&=\bigcup_{\Objbel\in \mora(\Objael)}\{\Objbel\}\\
-    &=\bigcup_{\Objbel\in \mora(\Objael)}\{ \Objbel'\in \Objb \colon \Objbel\posleq_\Objb \Objbel'\}.
+    \ulposmap{\mora}(\Objael)&=\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\{\Objbel\}\\
+    &=\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\{ \Objbel'\in \Objb \colon \Objbel\posleq_\Objb \Objbel'\}.
     \end{aligned}
 \end{equation*}
-Therefore,~$\left( \mora \mthen \catid_\Objb\right)(\Objael)=\mora(\Objael)$ for all~$\Objael\in \Obja$. Similarly, we have:
+Therefore,~$\left( \ulposmap{\mora} \mthen \catid_\Objb\right)(\Objael)=\ulposmap{\mora}(\Objael)$ for all~$\Objael\in \Obja$.
+Similarly, we have:
 \begin{equation*}
     \begin{aligned}
-    (\catid_\Obja \mthen \mora)(\Objael)&=\bigcup_{\Objael'\in \catid_\Obja(\Objael)}\mora(\Objael')\\
-    &=\bigcup_{\Objael'\in \upit \{\Objael\}}\mora(\Objael')\\
-    &=\mora(\Objael),
+    (\catid_\Obja \mthen \ulposmap{\mora})(\Objael)&=\bigcup_{\Objael'\in \catid_\Obja(\Objael)}\ulposmap{\mora}(\Objael')\\
+    &=\bigcup_{\Objael'\in \upit \{\Objael\}}\ulposmap{\mora}(\Objael')\\
+    &=\ulposmap{\mora}(\Objael),
     \end{aligned}
 \end{equation*}
-where the last equality holds since~$\mora$ is a monotone function and~$\mora(\Objael')\subseteq \mora(\Objael)$ for all~$\Objael'\in \upit \{\Objael\}$.
-\paragraph*{Associativity} Let's consider three morphisms~$\mora\colon \Obja \mto \Up{\Objb}$,~$\morb\colon \Objb\mto \Up{\Objc}$, and~$\morc\colon \Objc\mto \Up{\Objd}$. We have:
+where the last equality holds since~$\ulposmap{\mora}$ is a monotone function and~$\ulposmap{\mora}(\Objael')\subseteq \ulposmap{\mora}(\Objael)$ for all~$\Objael'\in \upit \{\Objael\}$.
+\paragraph*{Associativity} Let's consider three morphisms~$\mora\colon \Obja \mto \Objb$,~$\morb\colon \Objb\mto \Objc$, and~$\morc\colon \Objc\mto \Objd$.
+We have:
 \begin{equation*}
     \begin{aligned}
-    \left( \left( \mora \mthen \morb\right)\mthen\morc\right)(\Objael)&=\bigcup_{\Objcel \in \left( \bigcup_{\Objbel \in \mora(\Objael)}\morb(\Objbel)\right)}\morc(\Objcel)\\
-    &=\bigcup_{\Objbel\in \mora(\Objael)}\bigcup_{\Objcel\in \morb(\Objbel)}\morc(\Objcel)\\
-    &=\left( \mora \mthen \left( \morb\then \morc\right)\right)(\Objael).
+    \ulposmap{\left( (\mora \mthen \morb) \mthen \morc\right)}(\Objael)&=
+    \bigcup_{\Objcel \in \left( \bigcup_{\Objbel \in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel)\right)}\ulposmap{\morc}(\Objcel)\\
+    &=\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\bigcup_{\Objcel\in \ulposmap{\morb}(\Objbel)}\ulposmap{\morc}(\Objcel)\\
+    &=\ulposmap{\left( \mora \mthen \left( \morb\then \morc\right)\right)}(\Objael).
     \end{aligned}
 \end{equation*}
 Therefore, \UPos is a category.
@@ -167,23 +187,23 @@ such that~$\funeqa \then \funeqb=\funid_{\UPos}$ and~$\funeqb \then \funeqa=\fun
 \begin{proof}
 To prove this, we need to define the needed functors and to show that they satisfy the listed properties.
 We choose the functors to be the ones that map a poset~$\posA$ in a category to its opposite version~$\posA\op$ in another category.
-Given a morphism~$\mora\colon \Obja \mto \Up{\Objb}$ in \UPos, we have:
+Given a morphism~$\mora\colon \Obja \mto \Objb$ in \UPos, we have:
 \begin{equation*}
     \begin{aligned}
-    \funeqa(\mora)\colon \Obja\op &\mto \Lo(\Objb \op)\\
-    \Objael&\mapsto \mora(\Objael).
+        \ulposmap{(\funeqa(\mora))}\colon \Obja\op &\mto \lowersets{\Objb}\op\\
+    \Objael&\mapsto \ulposmap{\mora}(\Objael).
     \end{aligned}
 \end{equation*}
-Given a morphism~$\morb\colon \Obja \mto \Lo{\Objb}$ in \LPos, we have:
+Given a morphism~$\morb\colon \Obja \mto \Objb$ in \LPos, we have:
 \begin{equation*}
     \begin{aligned}
-    \funeqb(\morb)\colon \Obja\op &\mto \Up(\Objb \op)\\
-    \Objael&\mapsto \morb(\Objael).
+    \ulposmap{(\funeqb(\morb))}\colon \Obja\op &\mto \uppersets{\Objb}\op\\
+    \Objael&\mapsto \ulposmap{\morb}(\Objael).
     \end{aligned}
 \end{equation*}
 \paragraph*{$\funeqa$ and~$\funeqb$ are functors}
 \begin{itemize}
-    \item \emph{Preservation of identites}: Given~$\Obja\in \Ob_\UPos$, we have:
+    \item \emph{Preservation of identites}: Given~$\Obja\in \Ob_{\UPos}$, we have:
     \begin{equation*}
         \begin{aligned}
             \funeqa(\catid_\Obja)&=\upit_\Obja\{\Objael\}\\
@@ -191,7 +211,7 @@ Given a morphism~$\morb\colon \Obja \mto \Lo{\Objb}$ in \LPos, we have:
             &=\catid_{\Obja\op},
         \end{aligned}
     \end{equation*}
-where~$\catid_\Obja$ is an identity morphism in \UPos, and~$\catid_{\Obja\op}$ is an identity morphism in \LPos. Similarly, given~$\Obja\in \Ob_\LPos$ we have:
+where~$\catid_\Obja$ is an identity morphism in \UPos, and~$\catid_{\Obja\op}$ is an identity morphism in \LPos. Similarly, given~$\Obja\in \Ob_{\LPos}$ we have:
 \begin{equation*}
     \begin{aligned}
     \funeqb(\catid_\Obja)&=\downit_\Obja\{\Objael\}\\
@@ -202,15 +222,15 @@ where~$\catid_\Obja$ is an identity morphism in \UPos, and~$\catid_{\Obja\op}$ i
 \item \emph{Preservation of composition}: This can be easily seen as follows. Given any~$\mora\in \HomSet{\UPos}{\Obja}{\Objb}$,~$\morb\in \HomSet{\UPos}{\Objb}{\Objc}$:
 \begin{equation*}
     \begin{aligned}
-    \funeqa(\mora \mthen \morb)&=\mora \mthen \morb\\
-    &=\funeqa(\mora)\mthen \funeqa(\morb).
+    \ulposmap{(\funeqa(\mora \mthen \morb))}&=\ulposmap{\mora} \mthen \ulposmap{\morb}\\
+    &=\funeqa(\ulposmap{\mora})\mthen \funeqa(\ulposmap{\morb}).
     \end{aligned}
 \end{equation*}
 Similarly, given any~$\mora\in \HomSet{\LPos}{\Obja}{\Objb}$,~$\morb\in \HomSet{\LPos}{\Objb}{\Objc}$:
 \begin{equation*}
     \begin{aligned}
-    \funeqb(\mora \mthen \morb)&=\mora \mthen \morb\\
-    &=\funeqb(\mora)\mthen \funeqb(\morb).
+    \funeqb(\ulposmap{\mora} \mthen \ulposmap{\morb})&=\ulposmap{\mora} \mthen\ulposmap{\morb}\\
+    &=\funeqb(\ulposmap{\mora})\mthen \funeqb(\ulposmap{\morb}).
     \end{aligned}
 \end{equation*}
 \end{itemize}
@@ -225,44 +245,47 @@ We can show that~$\UPos$ and~$\LPos$ are monoidal categories.
 \label{lem:upos_moncat}
 \UPos is a monoidal category with the following additional structure:
 \begin{enumerate}
-    \item \emph{Tensor product~$\mtimescat$}: On objects, the tensor product corresponds to the product of posets. Given two morphisms~$\mora\colon \Obja\mto \Up{\Objb}$ and~$\morb\colon \Objc\mto \Up{\Objd}$, we have:
+    \item \emph{Tensor product~$\mtimescat$}: On objects, the tensor product corresponds to the product of posets.
+    Given two morphisms~$\mora\colon \Obja\mto \Objb$ and~$\morb\colon \Objc\mto \Objd$, we have~$\mora \mtimescat \morb\colon  \Obja \times \Objc \mto \Objb\times \Objd$, with
     \begin{equation}
     \begin{aligned}
-        \mora \mtimescat \morb\colon \Obja \times \Objc &\mto \Up(\Objb\times \Objd)\\
-        \tup{\Objael,\Objcel}&\mapsto \mora(\Objael)\times \morb(\Objcel).
+       \ulposmap{(\mora\mtimescat \morb)}\colon \Obja \times \Objc &\mto \uppersets{(\Objb\times \Objd)}\\
+        \tup{\Objael,\Objcel}&\mapsto \tup{\ulposmap{\mora}(\Objael), \ulposmap{\morb}(\Objcel)}.
     \end{aligned}
     \end{equation}
     Note that the Cartesian product of upper sets is an upper set.
+
     \item \emph{Unit}: The unit is the identity poset: the poset with a singleton carrier set and only the identity relation.
     We denote this by~$\singleton$.
-    \item \emph{Left unitor}: The left unitor is given by the pair of morphisms
+    \item \emph{Left unitor}: The left unitor is given by the pair of morphisms~$\leftunitor_\Obja\colon \singletonobj\mtimescat \Obja \mto \Obja$ and~$\leftunitor_\Obja^{-1}\colon \Obja \mto \singletonobj\mtimescat \Obja$, with
     \begin{equation}
         \begin{aligned}
-            \leftunitor_\posA\colon \styleobj{\singleton}\mtimescat \Obja &\mto \Up{\Obja}\\
+            \ulposmap{\leftunitor_\Obja}\colon \singletonobj\mtimescat \Obja &\mto \Up{\Obja}\\
             \tup{\styleobj{\singletonel},\Objael}&\mapsto \upit\{\Objael\},
         \end{aligned}
     \end{equation}
     and
     \begin{equation}
         \begin{aligned}
-            \leftunitor_\posA^{-1}\colon \Obja &\mto \Up(\styleobj{\singleton}\mtimescat \Obja) \\
-            \Objael&\mapsto \{\styleobj{\singletonel}\} \times \upit \{\Objael\}.
+            \ulposmap{\leftunitor_\Obja^{-1}}\colon \Obja &\mto \Up(\singletonobj\mtimescat \Obja) \\
+            \Objael&\mapsto \singletonobj \times \upit \{\Objael\}.
         \end{aligned}
     \end{equation}
-    \item \emph{Right unitor}: The right unitor is given by the pair of morphisms
+    \item \emph{Right unitor}: The right unitor is given by the pair of morphisms~$\rightunitor_\Obja\colon \Obja\mtimescat \singletonobj  \mto \Obja$ and~$\rightunitor_\Obja^{-1}\colon \Obja \mto \Obja \mtimescat \singletonobj$, with
     \begin{equation}
         \begin{aligned}
-            \rightunitor_\posA\colon \Obja\mtimescat \styleobj{\singleton}  &\mto \Up{\Obja}\\
+            \ulposmap{\rightunitor_\Obja}\colon \Obja\mtimescat \singletonobj  &\mto \Up{\Obja}\\
             \tup{\Objael,\styleobj{\singletonel}}&\mapsto \upit\{\Objael\},
         \end{aligned}
     \end{equation}
     and
     \begin{equation}
         \begin{aligned}
-            \rightunitor_\posA^{-1}\colon \Obja &\mto \Up( \Obja \mtimescat \styleobj{\singleton}) \\
-            \Objael&\mapsto \upit \{\Objael\} \times \{\styleobj{\singletonel}\}.
+            \ulposmap{\rightunitor_\Obja^{-1}}\colon \Obja &\mto \Up( \Obja \mtimescat \singletonobj) \\
+            \Objael&\mapsto \upit \{\Objael\} \times \singletonobj.
         \end{aligned}
     \end{equation}
+    \todo{Continue from here with new notation, still to be adapted.}
     \item \emph{Associator}: The associator is given by the pair of morphisms:
     \begin{equation}
         \begin{aligned}
@@ -375,23 +398,24 @@ One has
         \end{aligned}
     \end{equation*}
 Note that this comes from the fact that~$\braiding$ is an involute.
-We now show naturality. Consider~$\mora \colon \Obja \mto \uppersets \Objb$,~$\morb\colon \Objc \mto \uppersets \Objd$.
+We now show naturality.
+Consider~$\mora \colon \Obja \mto \Objb$,~$\morb\colon \Objc \mto \Objd$.
 One has
     \begin{equation}
         \label{eq:braid-upos-natural-a}
     \begin{aligned}
-        \left(\left( \mora \mtimescat \morb\right)\mthen \braiding_{\uppersets \Objb, \uppersets \Objd}\right)(\Objael,\Objcel)&=
-        \tup{\mora(\Objael),\morb(\Objcel)}\mthen \braiding_{\uppersets \Objb, \uppersets \Objd}\\
-        &=\tup{\bigcup_{\Objcel'\in \morb(\Objcel)}\upit \Objcel',\bigcup_{\Objael'\in \mora(\Objael)}\upit \Objael'}.
+        \left(\left( \ulposmap{\mora} \mtimescat \ulposmap{\morb}\right)\mthen \braiding_{\uppersets \Objb, \uppersets \Objd}\right)(\Objael,\Objcel)&=
+        \tup{\ulposmap{\mora}(\Objael),\ulposmap{\morb}(\Objcel)}\mthen \braiding_{\uppersets \Objb, \uppersets \Objd}\\
+        &=\tup{\bigcup_{\Objcel'\in \ulposmap{\morb}(\Objcel)}\upit \Objcel',\bigcup_{\Objael'\in \ulposmap{\mora}(\Objael)}\upit \Objael'}.
     \end{aligned}
     \end{equation}
     On the other hand:
     \begin{equation}
         \label{eq:braid-upos-natural-b}
     \begin{aligned}
-        \left(\braiding_{\uppersets \Objd, \uppersets \Objb}\mthen \left( \mora \mtimescat \morb\right)\right)(\Objael,\Objcel)&=
-        \tup{\upit\{\Objcel\},\upit\{\Objael\}}\mthen \left( \mora \mtimescat \morb\right)\\
-        &=\tup{\bigcup_{\Objcel'\in \upit\{\Objcel\}} \morb(\Objcel'),\bigcup_{\Objael'\in \upit\{\Objael\}}\mora(\Objael')}.
+        \left(\braiding_{\uppersets \Objd, \uppersets \Objb}\mthen \left( \ulposmap{\mora} \mtimescat \ulposmap{\morb}\right)\right)(\Objael,\Objcel)&=
+        \tup{\upit\{\Objcel\},\upit\{\Objael\}}\mthen \left( \ulposmap{\mora} \mtimescat \ulposmap{\morb}\right)\\
+        &=\tup{\bigcup_{\Objcel'\in \upit\{\Objcel\}} \ulposmap{\morb}(\Objcel'),\bigcup_{\Objael'\in \upit\{\Objael\}}\ulposmap{\mora}(\Objael')}.
     \end{aligned}
     \end{equation}
     Clearly, from \cref{lem:unpack_u_functor} and \cref{lem:unpack_part_2} we know that \cref{eq:braid-upos-natural-a} and \cref{eq:braid-upos-natural-b} are equivalent, proving naturality.
@@ -415,11 +439,11 @@ One has
 \begin{proof}
     We have already checked that~$\tup{\UPos,\mtimescat, \idmoncat,\braiding}$ forms a symmetric monoidal category.
     First, we check that the trace indeed returns a valid morphism in \UPos.
-    Given any~$\Obja,\Objb,\Objc\in \Ob_\UPos$ and~$\mora\colon \Obja\times \Objc \mto \uppersets(\Objb\times \Objc)$,
+    Given any~$\Obja,\Objb,\Objc\in \Ob_{\UPos}$ and~$\mora\colon \Obja\times \Objc \mto \uppersets(\Objb\times \Objc)$,
     and any~$\Objael\posleq \Objael'\in \Obja$, we need to prove that
-    \todo{notation for order to be adapted}
+
     \begin{equation*}
-        \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael) \posleq_\UPos  \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael') \Leftrightarrow \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael) \supseteq \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael').
+        \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael) \posleq_{\uppersets{\Objb}}  \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael') \Leftrightarrow \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael) \supseteq \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael').
     \end{equation*}
     We know that~$\mora$ is a monotone map, meaning that
     \begin{equation*}
@@ -438,7 +462,7 @@ One has
     We now check the trace axioms one by one.
 
     \paragraph*{Naturality I}
-    Given any~$\Obja,\Objb,\Objc \in \Ob_\UPos$,~$\mora\colon \Obja\times \Objc \mto \uppersets(\Objb\times \Objc)$, and~$\morb\colon \Obja'\mto \uppersets \Obja$, one has:
+    Given any~$\Obja,\Objb,\Objc \in \Ob_{\UPos}$,~$\mora\colon \Obja\times \Objc \mto \uppersets(\Objb\times \Objc)$, and~$\morb\colon \Obja'\mto \uppersets \Obja$, one has:
     \begin{equation}
         \label{eq:natu-1-upos-a}
     \begin{aligned}
@@ -462,14 +486,14 @@ One has
     \paragraph*{Naturality II}
     \todo{finish with second one.}
     \paragraph*{Vanishing}
-    Given any~$\Obja,\Objb\in \Ob_\UPos$ and~$\mora\colon \Obja \mto \uppersets \Objb$ in \UPos, one has
+    Given any~$\Obja,\Objb\in \Ob_{\UPos}$ and~$\mora\colon \Obja \mto \uppersets \Objb$ in \UPos, one has
     \begin{equation*}
         \begin{aligned}
             \Tr_{\Obja,\Objb}^{\singleton}(\mora)(\Objael)&=\{\Objbel \in \Objb \mid \tup{\Objbel,\singletonel}\in (\mora\times \catid_{\singleton})(\Objael,\singletonel)\}\\
             &=\mora(\Objael).
         \end{aligned}
     \end{equation*}
-    Furthermore, given any~$\Obja,\Objb,\Objc,\Objd \in \Ob_\UPos$ and~$\mora\colon \Obja \times \Objc \times \Objd\mto \Objb \times \Objc \times \Objd$, one has
+    Furthermore, given any~$\Obja,\Objb,\Objc,\Objd \in \Ob_{\UPos}$ and~$\mora\colon \Obja \times \Objc \times \Objd\mto \Objb \times \Objc \times \Objd$, one has
     \begin{equation}
         \label{eq:vanish-upos-a}
     \begin{aligned}
@@ -495,7 +519,7 @@ One has
     \end{equation}
     Clearly, \cref{eq:vanish-upos-a} and \cref{eq:vanish-upos-b} are equivalent, proving the second vanishing axiom.
     \paragraph*{Superposing}
-    Given any~$\Obja,\Objb,\Objc\in \Ob_\UPos$ and~$\mora\colon \Obja\times \Objc \mto \Objb \times \Objc$, one has:
+    Given any~$\Obja,\Objb,\Objc\in \Ob_{\UPos}$ and~$\mora\colon \Obja\times \Objc \mto \Objb \times \Objc$, one has:
     \begin{equation}
         \label{eq:superposing-upos-a}
         \begin{aligned}
@@ -517,7 +541,7 @@ One has
     \end{equation}
     Clearly, \cref{eq:superposing-upos-a} and \cref{eq:superposing-upos-b} are equivalent, proving the superposing axiom.
     \paragraph*{Yanking}
-    Consider~$\Obja\in \Ob_\UPos$. One has
+    Consider~$\Obja\in \Ob_{\UPos}$. One has
     \begin{equation*}
     \begin{aligned}
         \Tr_{\Obja,\Obja}^{\Obja}(\braiding_{\Obja,\Obja})(\Objael)&=\{ \Objael'\in \Obja \mid \bigvee_{\Objael''\in \Obja}\tup{\Objael',\Objael''}\in \braiding_{\Obja,\Obja}(\Objael,\Objael'')\}\\
@@ -544,14 +568,14 @@ One has
 \section{From~$\DP$ to~$\UPos$ and~$\LPos$}
 \begin{lemma}
 \label{lem:covfunctor}
-There is a \emph{functor}~$\cofun\colon \DP \fto \UPos$ which maps:
+There is a functor~$\FixFunMinRes\colon \DP \fto \UPos$ which maps:
 \begin{compactenum}
 \item An object (poset) in \DP to the same object (poset) in \UPos.
-\item A morphism~$\stylemorph{d}\in \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\stylemorph{h_d}\in \HomSet{\UPos}{\funsp}{\ressp}$, where:
+\item A morphism~$\adpb\in \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\ftoR_{\adpb}\in \HomSet{\UPos}{\funsp}{\ressp}$, where:
 \begin{equation}
 \begin{aligned}
-    \stylemorph{h_d}\colon \funsp\op &\toinPos \tup{\Up{\ressp},\subseteq}\\
-    \fun^*&\mapsto \{\res \in \ressp\mid d(\fun^*,\res)=\true\}.
+    \ftoR_{\adpb}\colon \funsp &\toinPos \uppersets{\ressp}\\
+    \fun&\mapsto \{\res \in \ressp\mid \adpb(\fun^*,\res)\}.
 \end{aligned}
 \end{equation}
 \end{compactenum}
@@ -559,19 +583,54 @@ There is a \emph{functor}~$\cofun\colon \DP \fto \UPos$ which maps:
 
 \begin{lemma}
 \label{lem:confunctor}
-There is a \emph{contravariant functor} $\confun\colon \DP \fto \LPos$ which maps:
+There is a functor~$\FixResMaxFun\colon \DP \fto \LPos$ which maps:
 \begin{compactenum}
 \item An object (poset) of \DP to the same object (poset) in \LPos.
-\item A morphism $\dprob \in \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\morb\in \HomSet{\LPos}{\ressp}{\funsp}$, where:
+\item A morphism $\adpb \in \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\rtoF_\adpb\in \HomSet{\LPos}{\ressp}{\funsp}$, where:
 \begin{equation*}
     \begin{aligned}
-    \morb\colon \ressp &\to \Lo{\funsp}\\
-    \res&\mapsto \{ \fun \in \funsp \mid \dprob(\fun,\res)=\true\}.
+    \rtoF_\adpb\colon \ressp &\to \lowersets{\funsp}\\
+    \res&\mapsto \{ \fun \in \funsp \mid \adpb(\fun,\res)\}.
     \end{aligned}
 \end{equation*}
 \end{compactenum}
 \end{lemma}
 
-\todojira{240}{I have proofs for this and for many other things handwritten. Will type them once we decide we want this to be in the book. There is a nice interpretation with an endofunctor Dual, which commutes with the aforementioned ones, meaning that you can solve and then convert to lowersets, or dualize , solve, and then convert to upper sets.}
+\begin{marginfigure}
+\begin{center}
+\includesag{upos_lpos_dp}
+\end{center}
+    \caption{TODO.}
+\end{marginfigure}
 
-\todotext{@Gioele: we need to show that they are equivalent, that the functor preserves traces, and meet/join}
+
+\todojira{240}{@Gioele: we need to show that they are equivalent, that the functor preserves traces, and meet/join}
+
+\todo{define functor that goes back. Show equivalence. Transcribe strong monoidal functor story.}
+\begin{lemma}
+    \FixFunMinRes preserves meets and joins.
+\end{lemma}
+\begin{proof}
+    \todojira{240}{Do it.}
+\end{proof}
+
+\begin{lemma}
+    \FixFunMinRes preserves traces.
+\end{lemma}
+\begin{proof}
+    \todojira{240}{Do it.}
+\end{proof}
+
+\begin{lemma}
+    \FixResMaxFun preserves meets and joins.
+\end{lemma}
+\begin{proof}
+    \todojira{240}{Do it.}
+\end{proof}
+
+\begin{lemma}
+    \FixResMaxFun preserves traces.
+\end{lemma}
+\begin{proof}
+    \todojira{240}{Do it.}
+\end{proof}
