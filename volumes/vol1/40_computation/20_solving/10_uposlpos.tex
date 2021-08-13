@@ -556,11 +556,95 @@ One has
   \todotextjira{339}{@Gioele: S how UPos traced}
 \end{proof}
 
-\begin{lemma}\label{lem:UPos-is-traced}
-    The homsets of \UPos are bounded lattices.
+
+\begin{definition}[Order on morphisms in~$\UPos$]
+    \label{def:upos_order}
+    Given any two morphisms~$\mora,\morb\colon \Obja \mto \Objb$ in~$\UPos$, we define an order between them as
+    \begin{equation*}
+        \prftree{\mora \posleq_\UPos \morb}{\ulposmap{\mora}(\Objael)\posleq_{\uppersets \Objb} \ulposmap{\morb}(\Objael), \quad \forall \Objael \in \Obja}.
+    \end{equation*}
+\end{definition}
+
+
+\begin{definition}[Intersection of morphisms in~$\UPos$]
+Given two morphisms~$\mora,\morb\colon \Obja \mto \Objb$ in \UPos, their \emph{intersection} (join) is a morphism~$\mora \wedge \morb \colon \Obja \mto \Objb$, given by
+    \begin{equation*}
+        \begin{aligned}
+        \ulposmap{(\mora \wedge \morb)}\colon \Obja &\mto \uppersets \Objb\\
+        \Objael&\mapsto \ulposmap{\mora}(\Objael) \cap \ulposmap{\morb}(\Objael).
+        \end{aligned}
+    \end{equation*}
+\end{definition}
+
+\begin{definition}[Union of morphisms in~$\UPos$]
+Given two morphisms~$\mora,\morb\colon \Obja \mto \Objb$ in \UPos, their \emph{union} (meet) is a morphism~$\mora \vee \morb \colon \Obja \mto \Objb$, given by
+    \begin{equation*}
+        \begin{aligned}
+        \ulposmap{(\mora \vee \morb)}\colon \Obja &\mto \uppersets \Objb\\
+        \Objael&\mapsto \ulposmap{\mora}(\Objael) \cup \ulposmap{\morb}(\Objael).
+        \end{aligned}
+    \end{equation*}
+\end{definition}
+
+\begin{lemma}\label{lem:UPos-is-bounded-lattice}
+    Given any~$\Obja,\Objb\in \Ob_\UPos$,~$\HomSet{\UPos}{\Obja}{\Objb}$ is a bounded lattice with union~$\vee$ of morphisms in~$\UPos$ as meet, intersection~$\wedge$ of morphisms in \UPos as join, least upper bound~$\top_{\HomSet{\UPos}{\Obja}{\Objb}}\colon \Obja \mto \Objb$ given by
+    \begin{equation*}
+        \begin{aligned}
+        \ulposmap{\top_{\HomSet{\UPos}{\Obja}{\Objb}}}\colon \Obja &\mto \uppersets \Objb\\
+            \Objael &\mapsto \emptyset,
+        \end{aligned}
+    \end{equation*}
+    and greatest lower bound~$\bot_{\HomSet{\UPos}{\Obja}{\Objb}}\colon \Obja \mto \Objb$ given by
+    \begin{equation*}
+        \begin{aligned}
+        \ulposmap{\bot_{\HomSet{\UPos}{\Obja}{\Objb}}}\colon \Obja &\mto \uppersets \Objb\\
+            \Objael &\mapsto \Objb.
+        \end{aligned}
+    \end{equation*}
   \end{lemma}
   \begin{proof}
-    \todotextjira{339}{@Gioele: Show UPos has lattice structure}
+      First, we need to prove that~$\HomSet{\UPos}{\Obja}{\Objb}$ forms a poset.
+      To prove this, we check the following, using the order defined in \cref{def:upos_order}
+      \begin{compactitem}
+          \item \emph{Reflexivity:} Given~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$, one can write
+          \begin{equation*}
+              \ulposmap{\mora}(\Objael) \supseteq \ulposmap{\mora}(\Objael), \quad \forall \Objael \in \Obja,
+          \end{equation*}
+          which implies~$\mora \posleq_{\UPos} \mora$.
+          \item \emph{Antisymmetry:} Consider~$\mora,\morb \in \HomSet{\UPos}{\Obja}{\Objb}$ with~$\mora \posleq_\UPos \morb$ and~$\morb \posleq_\UPos \mora$.
+          We know
+          \begin{equation*}
+              (\mora \posleq_\UPos \morb) \implies \ulposmap{\mora}(\Objael) \supseteq \ulposmap{\morb}(\Objael), \quad \forall \Objael \in \Obja,
+          \end{equation*}
+          but also
+          \begin{equation*}
+              (\morb \posleq_\UPos \mora) \implies \ulposmap{\morb}(\Objael) \supseteq \ulposmap{\mora}(\Objael), \quad \forall \Objael \in \Obja,
+          \end{equation*}
+          implying~$\mora=\morb$.
+          \item \emph{Transitivity:} Consider~$\mora,\morb,\morc \in \HomSet{\UPos}{\Obja}{\Objb}$ with~$\mora \posleq_\UPos \morb$ and~$\morb \posleq_\UPos \morc$.
+          One has, for all~$\Objael\in \Obja$,
+          \begin{equation*}
+            \begin{aligned}
+                (\ulposmap{\mora}(\Objael) \supseteq \ulposmap{\morb}(\Objael))\wedge ( \ulposmap{\morb}(\Objael) \supseteq \ulposmap{\morc}(\Objael))
+                &\implies \ulposmap{\mora}(\Objael) \supseteq \ulposmap{\morc}(\Objael)\\
+                &\implies \mora \posleq_\UPos \morc.
+            \end{aligned}
+          \end{equation*}
+      \end{compactitem}
+      Consider now~$\mora,\morb \in \HomSet{\UPos}{\Obja}{\Objb}$.
+    Their least upper bound (join) is~$\mora \wedge \morb$, since it is the least morphism such that~$\mora \posleq_\UPos (\mora \wedge \morb)$ and~$\morb \posleq_\UPos (\mora \wedge \morb)$.
+    Their greatest lower bound (meet) is~$\mora \vee \morb$, since it is the greatest morphism such that~$(\mora \vee \morb)\posleq_\UPos \mora $ and~$(\mora \vee \morb)\posleq_\UPos \morb$.
+      \todo{Discuss with J if we actually want to show explicitly ``greatest'' and ``lowest''}
+      Furthermore, for any~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$, one will have, for all~$\Objael \in \Obja$
+      \begin{equation*}
+          \ulposmap{\mora}(\Objael) \supseteq \emptyset=\ulposmap{\top_{\HomSet{\UPos}{\Obja}{\Objb}}}(\Objael),
+      \end{equation*}
+    implying that for all~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$ one has~$\mora \posleq_\UPos \top_{\HomSet{\UPos}{\Obja}{\Objb}}$.
+      Finally, for any~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$, one will have, for all~$\Objael \in \Obja$
+      \begin{equation*}
+          \ulposmap{\bot_{\HomSet{\UPos}{\Obja}{\Objb}}}(\Objael)=\Objb \supseteq \ulposmap{\mora}(\Objael)
+      \end{equation*}
+    implying that for all~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$ one has~$\bot_{\HomSet{\UPos}{\Obja}{\Objb}}\posleq_\UPos \mora$.
   \end{proof}
   
   
@@ -608,10 +692,38 @@ There is a functor~$\FixResMaxFun\colon \DP \fto \LPos$ which maps:
 
 \todo{define functor that goes back. Show equivalence. Transcribe strong monoidal functor story.}
 \begin{lemma}
-    \FixFunMinRes preserves meets and joins.
+    \FixFunMinRes the bounded lattice structure.
+    \todo{Actually, preserves the complete one?}
 \end{lemma}
 \begin{proof}
-    \todojira{240}{Do it.}
+    Given~$\Obja,\Objb \in \Ob_\DP$ and~$\adpa,\adpb \in \HomSet{\DP}{\Obja}{\Objb}$, we want to check the following properties.
+    \paragraph*{Order preservation}
+    We want to check
+    \begin{equation*}
+        \adpa \posleq_\DP \adpb \implies \FixFunMinRes(\adpa) \posleq_\UPos \FixFunMinRes(\adpb).
+    \end{equation*}
+    \todo{check it}
+    \paragraph*{Meet and join preservation}
+    We want to check
+    \begin{equation*}
+        \FixFunMinRes(\adpa \wedge_\DP \adpb)=\FixFunMinRes(\adpa) \wedge_\UPos \FixFunMinRes(\adpb),
+    \end{equation*}
+    and
+    \begin{equation*}
+        \FixFunMinRes(\adpa \vee_\DP \adpb)=\FixFunMinRes(\adpa) \vee_\UPos \FixFunMinRes(\adpb).
+    \end{equation*}
+    \todo{check it}
+    \paragraph*{Top and bottom preservation}
+    We want to check
+    \begin{equation*}
+        \FixFunMinRes(\bot_{\HomSet{\DP}{\Obja}{\Objb}})=\bot_{\HomSet{\UPos}{\Obja}{\Objb}},
+    \end{equation*}
+    and
+    \begin{equation*}
+        \FixFunMinRes(\top_{\HomSet{\DP}{\Obja}{\Objb}})=\top_{\HomSet{\UPos}{\Obja}{\Objb}}.
+    \end{equation*}
+    \todo{check it}
+
 \end{proof}
 
 \begin{lemma}
@@ -631,6 +743,14 @@ There is a functor~$\FixResMaxFun\colon \DP \fto \LPos$ which maps:
 \begin{lemma}
     \FixResMaxFun preserves traces.
 \end{lemma}
+\begin{proof}
+    \todojira{240}{Do it.}
+\end{proof}
+
+\begin{lemma}
+    \FixFunMinRes and \FixResMaxFun are strong monoidal functors.
+\end{lemma}
+
 \begin{proof}
     \todojira{240}{Do it.}
 \end{proof}
