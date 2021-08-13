@@ -483,13 +483,13 @@ One has
     We now check the trace axioms one by one.
 
     \paragraph*{Naturality I}
-    Given any~$\Obja,\Objb,\Objc \in \Ob_{\UPos}$,~$\mora\colon \Obja\times \Objc \mto \Objb\times \Objc$, and~$\morb\colon \Obja'\mto \Obja$, one has:
+    Given any~$\Obja,\Obja',\Objb,\Objc \in \Ob_{\UPos}$,~$\mora\colon \Obja\times \Objc \mto \Objb\times \Objc$, and~$\morb\colon \Obja'\mto \Obja$, one has:
     \begin{equation}
         \label{eq:natu-1-upos-a}
     \begin{aligned}
         \ulposmap{\Tr_{\Obja',\Objb}^{\Objc}((\morb\times \catid_\Objc)\mthen \mora)}(\Objael')&=
-        \left\{ \Objbel \in \Objb \mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel,\Objcel}\in ((\ulposmap{(\morb \times \catid_\Objc)\mthen \mora)})(\Objael',\Objcel)\right\}\\
-        &=\left\{ \Objbel \in \Objb \mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel,\Objcel}\in \bigcup_{\tup{\Objael,\Objcel'}\in \ulposmap{\morb}(\Objael')\times\{\Objcel\}}\ulposmap{\mora}(\Objael,\Objcel')\right\}\\
+        \left\{ \Objbel \in \Objb \mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel,\Objcel}\in (\ulposmap{(\morb \times \catid_\Objc)\mthen \mora)}(\Objael',\Objcel)\right\}\\
+        &=\left\{ \Objbel \in \Objb \mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel,\Objcel}\in \bigcup_{\tup{\Objael,\Objcel'}\in \ulposmap{\morb}(\Objael')\times\upit\{\Objcel\}}\ulposmap{\mora}(\Objael,\Objcel')\right\}\\
         &=\left\{\Objbel \in \Objb\mid \bigvee_{\Objcel\in \Objc}\tup{\Objbel,\Objcel}\in \bigcup_{\Objael\in \ulposmap{\morb}(\Objael')} \ulposmap{\mora}(\Objael,\Objcel)\right\}.
     \end{aligned}
     \end{equation}
@@ -505,7 +505,22 @@ One has
     \end{equation}
     Clearly \cref{eq:natu-1-upos-a} and \cref{eq:natu-1-upos-b} are equivalent, proving the first naturality condition.
     \paragraph*{Naturality II}
-    \todo{finish with second one.}
+    Given any~$\Obja,\Objb,\Objb',\Objc \in \Ob_{\UPos}$,~$\mora\colon \Obja\times \Objc \mto \Objb\times \Objc$, and~$\morb\colon \Objb\mto \Objb'$, one has:
+    \begin{equation*}
+        \begin{aligned}
+            \ulposmap{\Tr_{\Obja,\Objb'}^{\Objc}(\mora \mthen (\morb \times \catid_\Objc))}(\Objael)&=
+            \left \{\Objbel'\in \Objb' \mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel',\Objcel}\in \ulposmap{(\mora \mthen (\morb \times \catid_\Objc))}(\Objael,\Objcel)\right\}\\
+            &=\left\{ \Objbel'\in \Objb'\mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel',\Objcel}\in \bigcup_{\tup{\Objbel,\Objcel}\in \ulposmap{\mapa}(\Objael,\Objcel)} \ulposmap{\morb}(\Objbel) \times \upit\{ \Objcel\}\right\}
+        \end{aligned}
+    \end{equation*}
+    On the other hand
+    \begin{equation*}
+    \begin{aligned}
+        \ulposmap{(\Tr_{\Obja,\Objb}^{\Objc}(\mora)\mthen \morb)}(\Objael)&=
+        \bigcup_{\Objbel \in \{ \Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc}\tup{\Objbel,\Objcel}\in \ulposmap{\mora}(\Objael,\Objcel)\}}\ulposmap{\morb}(\Objbel)
+    \end{aligned}
+    \end{equation*}
+    \todo{Not clear yet how to massage to show equivalence. Talk with J}
     \paragraph*{Vanishing}
     Given any~$\Obja,\Objb\in \Ob_{\UPos}$ and~$\mora\colon \Obja \mto \Objb$ in \UPos, one has
     \begin{equation*}
@@ -807,7 +822,37 @@ There is a functor~$\FixFunMinResBack\colon \UPos \fto \DP$ which maps:
 \end{lemma}
 
 \begin{proof}
-    \todo{do it.}
+    We prove the two conditions.
+    \paragraph*{Preservation of identities}
+    One has
+    \begin{equation*}
+        \begin{aligned}
+            \ulposmap{\FixFunMinResBack(\catid_{\Obja}^{\UPos})}(\F{\Objael}^*,\R{\Objbel})&=
+            \Objbel \in \ulposmap{\catid_{\Objb}^{\UPos}}\\
+            &=\Objbel \in \upit \{ \Objael\}\\
+            &=\catid_{\Obja}^{\DP}(\Objael^*,\Objbel).
+        \end{aligned}
+    \end{equation*}
+    \paragraph*{Preservation of composition}
+    On one hand, one has
+    \begin{equation}
+        \label{eq:fixfunminresback_a}
+        \begin{aligned}
+            \ulposmap{\FixFunMinResBack(\mora\mthen_\UPos \morb)}(\Objael^*,\Objcel)&=
+            \Objcel \in \ulposmap{(\mora \mthen_\UPos \morb)}(\Objael)\\
+            &=\Objcel \in \bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel).
+    \end{aligned}
+    \end{equation}
+    On the other hand:
+    \begin{equation}
+        \label{eq:fixfunminresback_b}
+        \begin{aligned}
+            \ulposmap{(\FixFunMinResBack(\mora)\mthen_\DP \FixFunMinResBack(\morb))}(\Objael^*,\Objcel)&=
+            \bigvee_{\Objbel \in \Objb}(\Objbel \in \ulposmap{\mora}(\Objael))\wedge (\Objcel\in \ulposmap{\morb}(\Objbel))\\
+            &=\Objcel \in \bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel).
+        \end{aligned}
+    \end{equation}
+    Clearly, \cref{eq:fixfunminresback_a} and \cref{eq:fixfunminresback_b} concide.
 \end{proof}
 
 
@@ -827,7 +872,7 @@ There is a functor~$\FixResMaxFunBack\colon \LPos \fto \DP$ which maps:
 \end{lemma}
 
 \begin{proof}
-    \todo{do it.}
+    The proof is analogous to the one of \cref{lem:covfunctorback}.
 \end{proof}
 
 
@@ -848,8 +893,7 @@ There is a functor~$\FixResMaxFunBack\colon \LPos \fto \DP$ which maps:
 \end{lemma}
 \begin{proof}
     Given~$\Obja,\Objb \in \Ob_\DP$ and~$\adpa,\adpb \in \HomSet{\DP}{\Obja}{\Objb}$, we want to check the following properties.
-    \paragraph*{Order preservation}
-    \todo{Actually, order reversing}
+    \paragraph*{Order reversing}
     We want to check
     \begin{equation*}
         \adpa \posleq_\DP \adpb \implies \FixFunMinRes(\adpa) \posgeq_\UPos \FixFunMinRes(\adpb).
