@@ -360,17 +360,13 @@ To do so, we first need the following two facts.
   The validity of \cref{eq:unpack_1} and \cref{eq:unpack_2} implies \cref{eq:lemma_unpack}.
 \end{proof}
 
-\begin{lemma}
-  \label{lem:unpack_part_2}
+\begin{remark}
   Given posets~$\posA,\posB$ and a monotone map~$\mora\colon \posA\to \posB$, we have:
   \begin{equation}
     \upit \left( \bigcup_{\posAel'\in \upit \{\posAel\}} \{\mora(\posAel')\}\right)=\upit \{\mora(\posAel)\}.
   \end{equation}
-\end{lemma}
-\begin{proof}
-  The proof follows from \cref{lem:unpack_u_functor}, by considering a family of singleton sets consisting solely of the set~$\{\posAel\}$.
-\end{proof}
-\todotextjira{243}{I wouldn't make the above its own lemma, that seems a bit silly/overkill.}
+  This follows from \cref{lem:unpack_u_functor}, by considering a family of singleton sets consisting solely of the set~$\{\posAel\}$.
+\end{remark}
 
 \begin{lemma}
     The cartesian product of upper sets is an upper set.
@@ -827,7 +823,7 @@ There is a functor~$\FixFunMinResBack\colon \UPos \fto \DP$ which maps:
     One has
     \begin{equation*}
         \begin{aligned}
-            \ulposmap{\FixFunMinResBack(\catid_{\Obja}^{\UPos})}(\F{\Objael}^*,\R{\Objbel})&=
+            \FixFunMinResBack(\catid_{\Obja}^{\UPos})(\F{\Objael}^*,\R{\Objbel})&=
             \Objbel \in \ulposmap{\catid_{\Objb}^{\UPos}}\\
             &=\Objbel \in \upit \{ \Objael\}\\
             &=\catid_{\Obja}^{\DP}(\Objael^*,\Objbel).
@@ -838,7 +834,7 @@ There is a functor~$\FixFunMinResBack\colon \UPos \fto \DP$ which maps:
     \begin{equation}
         \label{eq:fixfunminresback_a}
         \begin{aligned}
-            \ulposmap{\FixFunMinResBack(\mora\mthen_\UPos \morb)}(\Objael^*,\Objcel)&=
+            \FixFunMinResBack(\mora\mthen_\UPos \morb)(\Objael^*,\Objcel)&=
             \Objcel \in \ulposmap{(\mora \mthen_\UPos \morb)}(\Objael)\\
             &=\Objcel \in \bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel).
     \end{aligned}
@@ -847,7 +843,7 @@ There is a functor~$\FixFunMinResBack\colon \UPos \fto \DP$ which maps:
     \begin{equation}
         \label{eq:fixfunminresback_b}
         \begin{aligned}
-            \ulposmap{(\FixFunMinResBack(\mora)\mthen_\DP \FixFunMinResBack(\morb))}(\Objael^*,\Objcel)&=
+            (\FixFunMinResBack(\mora)\mthen_\DP \FixFunMinResBack(\morb))(\Objael^*,\Objcel)&=
             \bigvee_{\Objbel \in \Objb}(\Objbel \in \ulposmap{\mora}(\Objael))\wedge (\Objcel\in \ulposmap{\morb}(\Objbel))\\
             &=\Objcel \in \bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel).
         \end{aligned}
@@ -886,7 +882,45 @@ There is a functor~$\FixResMaxFunBack\colon \LPos \fto \DP$ which maps:
 
 \todojira{240}{@Gioele: we need to show that they are equivalent, that the functor preserves traces, and meet/join}
 
-\todo{define functor that goes back. Show equivalence. Transcribe strong monoidal functor story.}
+\todo{Show equivalence. Transcribe strong monoidal functor story.}
+
+\begin{lemma}
+    The pair of functors \FixFunMinRes and \FixFunMinResBack together with the natural isomorphisms
+    \begin{equation*}
+        \FixFunMinRes \fthen \FixFunMinResBack \cong \funid_\DP,
+    \end{equation*}
+    and
+     \begin{equation*}
+        \FixFunMinResBack \fthen \FixFunMinRes \cong \funid_\UPos,
+    \end{equation*}
+    form an equivalence for \DP and \UPos.
+\end{lemma}
+
+\begin{proof}
+    First, consider any morphism~~ in~$\HomSet{\DP}{\Obja}{\Objb}$.
+    One has
+    \begin{equation*}
+    \begin{aligned}
+        (\FixFunMinRes \fthen \FixFunMinResBack)(\adpa)(\F{\Objael}^*,\R{\Objbel})&=
+        \Objbel \in \ulposmap{\FixFunMinRes(\adpa)}(\Objael)\\
+        &=\Objbel \in \{ \Objbel' \in \Objb \mid \adpa(\F{\Objael^*,\Objbel})\}\\
+        &=\adpa(\F{\Objael^*,\Objbel})\\
+        &=\funid_\DP(\adpa)(\F{\Objael^*,\Objbel}).
+    \end{aligned}
+    \end{equation*}
+    Now consider any morphism~$\ftoR_\adpa \in \HomSet{\UPos}{\Obja}{\Objb}$.
+    One has
+    \begin{equation*}
+    \begin{aligned}
+        (\FixFunMinResBack \fthen \FixFunMinRes)(\ftoR_\adpa)(\Objael)&=
+        \{ \Objbel \in \Objb\mid \Objbel \in \ulposmap{\ftoR_\adpa}(\Objael)\}\\
+        &=\{ \Objbel \in \Objb\mid \adpa(\Objael^*,\Objbel)\}\\
+        &=\funid_\UPos(\ftoR_\adpa)(\Objael).
+    \end{aligned}
+    \end{equation*}
+    \todo{Finish with naturality.}
+
+\end{proof}
 \begin{lemma}
     \FixFunMinRes preserves the bounded lattice structure.
     \todo{Actually, preserves the complete one?}
@@ -978,7 +1012,7 @@ There is a functor~$\FixResMaxFunBack\colon \LPos \fto \DP$ which maps:
     On the other hand, one has
     \begin{equation*}
     \begin{aligned}
-       \Tr_{\Obja,\Objb}^{\Objc}(\FixFunMinRes(\adpa))(\Objael)&=\{ \Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc} \tup{\Objbel,\Objcel}\in \ulposmap{\FixFunMinRes(\adpa)}(\Objael,\Objcel)\}\\
+       \ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\FixFunMinRes(\adpa))}(\Objael)&=\{ \Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc} \tup{\Objbel,\Objcel}\in \ulposmap{\FixFunMinRes(\adpa)}(\Objael,\Objcel)\}\\
         &=\{ \Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc} \tup{\Objbel,\Objcel}\in \{ \tup{\Objbel,\Objcel}\in \Objb\times \Objc \mid \adpa(\tup{\F{\Objael},\F{\Objcel}}^* ,\tup{\R{\Objbel},\R{\Objcel}}\}\}\\
         &=\{\Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc} \adpa(\tup{\F{\Objael},\F{\Objcel}}^* ,\tup{\R{\Objbel},\R{\Objcel}}) \}.
     \end{aligned}
