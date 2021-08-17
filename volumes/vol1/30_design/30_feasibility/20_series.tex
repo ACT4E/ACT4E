@@ -25,23 +25,13 @@ We will define several ways to connect design problems together. The first and m
         \end{aligned}
     \end{equation}
 \end{definition}
-We represent series composition in the diagrammatic notation given in~\cref{fig:compositiondiagram}.
-
-\begin{figure}[h!]
-    \begin{center}
-        \includesag{50_series_diag}
-    \end{center}
-    \caption{Diagrammatic representation of the series composition of design problems. \label{fig:compositiondiagram}}
-\end{figure}
-
-One can notice the ``co-design constraint'' $\posleq$ (already encountered in DPIs), which can be interpreted as follows.
-The \textR{resource} required by a component is limited by the \textF{functionality} produced by another component.
 
 
-\begin{remark}
-    \label{lem:composition_equivalency}
-    The series composition operations given in \cref{eq:composition2,eq:composition} are equivalent.
+\begin{exercise} \label{ex:composition_equivalency}
+    Prove that the series composition operations given in \cref{eq:composition2,eq:composition} are equivalent.
+\end{exercise}
 
+\begin{solution}
     First consider the direction \cref{eq:composition}~$\implies$ \cref{eq:composition2}. In order for%
     \begin{equation*}
         \bigvee_{\resposBel_1\posleq\funposBel_2, \resposBel_1,\funposBel_2\in \posgenB} \adpa(\funposAel^*,\resposBel_1) \wedge \adpb(\funposBel_2^*,\resposCel)%
@@ -59,7 +49,10 @@ The \textR{resource} required by a component is limited by the \textF{functional
     Then, the inner term in \cref{eq:composition} is true for~$\resposBel_1=\funposBel_2=b'$.
     If \cref{eq:composition2} is false, then there is no such~$b'$ for which both~$\adpa(\funposAel^*, \R{b'})$ and~$\adpb(\F{b'}^*, \resposCel)$ are true, but then due to the monotonicity of~$\adpa$ and~$\adpb$ they also cannot be true for any~$\resposBel_1 \posleq \funposBel_2 = b'$ or~$b'=\resposBel_1 \posleq \funposBel_2$.
     Hence, \cref{eq:composition} must also be false.
-\end{remark}
+\end{solution}
+
+
+
 \begin{remark}
     At first sight, \cref{eq:composition} might seem like a more verbose version of \cref{eq:composition2}.
     However, assume that we have the means to obtain the minimal antichain of the feasible set of resources that provide~$\funposA$ for the first term:
@@ -79,13 +72,64 @@ The \textR{resource} required by a component is limited by the \textF{functional
     which can be much more efficient than iterating over all~$b\in \posgenB$.
 \end{remark}
 
-\begin{remark}
-In cases where the posets involved are (small) finite posets, design problems can be visualized nicely using directed graphs,  and then composition of design problems can be calculated conveniently by following certain paths in the ``concatenation'' of such graphs. For examples and explanations of this, see Chapter 4 in the book ``An invitation to applied category theory'' by Fong and Spivak. 
-\end{remark}
 
-\todotext{Implement material explaining and illustrating the above remark.}
+When the posets involved are finite, the series composition of design problems can be calculated visually, using the kind of representation discussed in \cref{exa:visualize-dp}. To explain how this works, consider the design problem
+$$
+\adp \colon \posA \op \times  \posB \toinPos \Bool,
+$$
+from \cref{exa:visualize-dp}, visualized again for convenience in \cref{fig:example_dp_graph_xy_again}. 
+ \begin{marginfigure}
+        \begin{center}
+            \includesag{example_dp_composition_xy}
+        \end{center}
+        \caption{ \label{fig:example_dp_graph_xy_again}}
+  \end{marginfigure}
+And consider another design problem of the type
+$$
+\bdp \colon \posB \op \times  \posC \toinPos \Bool,
+$$
+as given by the visualization in \cref{fig:example_dp_graph_yz}.
+\begin{marginfigure}
+        \begin{center}
+            \includesag{example_dp_composition_yz}
+        \end{center}
+        \caption{ \label{fig:example_dp_graph_yz}}
+  \end{marginfigure}
+We can calculate the series composition $\adp \then \bdp$ by tracing paths in the ``composite'' visualization given in \cref{fig:example_dp_graph_xyz}. Namely, a pair $\tup{\setAel, \setCel}$ is in the feasibility set of $\adp \then \bdp$ if and only if we can trace a path from $\setAel$ to $\setCel$ by only moving upwards in the posets $\posA$, $\posB$, and $\posC$, or crossing from one poset to another following dashed arrows (in the direction they are pointing). Thus the visualization of the composite $\adp \then \bdp$ is as in \cref{fig:example_dp_graph_xz}. 
+ \begin{figure}[h!]
+        \begin{center}
+            \includesag{example_dp_composition_xyz}
+        \end{center}
+        \caption{\label{fig:example_dp_graph_xyz}}
+    \end{figure}
+ \begin{figure}[h!]
+        \begin{center}
+            \includesag{example_dp_composition_xz}
+        \end{center}
+        \caption{\label{fig:example_dp_graph_xz}}
+    \end{figure}
 
-\todotext{Implement material explaining and illustrating the perspective on design problems in terms of matrices and matrix multiplication.}
+\
+
+\
+
+\
+
+\todotext{Implement material explaining and illustrating the perspective on composing design problems in terms of matrices and matrix multiplication.}
+
+\paragraph{Diagramnatic notation}
+We represent series composition in the diagrammatic notation given in~\cref{fig:compositiondiagram}.
+
+\begin{figure}[h!]
+    \begin{center}
+        \includesag{50_series_diag}
+    \end{center}
+    \caption{Diagrammatic representation of the series composition of design problems. \label{fig:compositiondiagram}}
+\end{figure}
+
+One can notice the ``co-design constraint'' $\posleq$ (already encountered in DPIs), which can be interpreted as follows.
+The \textR{resource} required by a component is limited by the \textF{functionality} produced by another component.
+
 
 \paragraph{Intended semantics}
 The series composition~$\adpab$ judges a pair~$\tup{\funposAel^*,\resposCel}$ as feasible if and only if there exists a~$b \in \posgenB$ such that~$\adpa(\funposAel^*,\resposBel)$ and~$\adpb(\funposBel^*,\resposCel)$ are feasible.
