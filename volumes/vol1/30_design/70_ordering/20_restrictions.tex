@@ -17,7 +17,7 @@ This models~$\adpa$ and~$\adpb$ as interchangeable technologies: either one can 
         \begin{aligned}
         (\adpa \vee \adpb)
             \colon \F{\posgenA}\op \times \R{\posgenB} & \toinPos \Bool \\
-            \tup{\F{a}^*, \R{b}} & \mapsto \adpa(\F{a}^*, \R{b}) \vee \adpb(\F{a}^*, \R{b}).
+            \tup{\F{\posgenAel}^*, \R{\posgenBel}} & \mapsto \adpa(\F{\posgenAel}^*, \R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*, \R{\posgenBel}).
         \end{aligned}
     \end{equation}
 \end{definition}
@@ -105,7 +105,7 @@ One interpretation of~$\adpa \wedge \adpb$ is that~$\adpa$ and~$\adpb$ are two s
         \begin{aligned}
         (\adpa \wedge \adpb)
             \colon \F{\posgenA}\op \times \R{\posgenB} & \toinPos \Bool \\
-            \tup{\F{a}^*, \R{b}} & \mapsto \adpa(\F{a}^*, \R{b}) \wedge  \adpb(\F{a}^*, \R{b}).
+            \tup{\F{\posgenAel}^*, \R{\posgenBel}} & \mapsto \adpa(\F{\posgenAel}^*, \R{\posgenBel}) \wedge  \adpb(\F{\posgenAel}^*, \R{\posgenBel}).
         \end{aligned}
     \end{equation}
 \end{definition}
@@ -156,6 +156,7 @@ We call this putting two design problems ``in parallel''.
     \caption{\label{fig:intersection}}
 \end{figure}
 
+
 \section{Lattice structure of DP homsets}
 
 Given the definitions of $\vee$ and $\wedge$ in the previous sections, we can prove that 
@@ -180,10 +181,10 @@ We denote by~$\posbot_{\F{\posgenA},\R{\posgenB}}$ the design problem which is n
     \end{compactitem}
     Therefore,~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a poset.
     Furthermore, consider two design problems~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
-    Their least upper bound (join) is~$\adpa\wedge \adpb$, since it is the least design problem implying both~$\adpa$ and~$\adpb$.
-    Their greatest lower bound (meet), instead, is~$\adpa\vee \adpb$, since it is the greatest design problem implied by both~$\adpa$ and~$\adpb$.
+    Their greatest lower bound (meet) is~$\adpa\wedge \adpb$, since it is the greatest design problem implying both~$\adpa$ and~$\adpb$.
+    Their least upper bound (join), instead, is~$\adpa\vee \adpb$, since it is the least design problem implied by both~$\adpa$ and~$\adpb$.
     This proves that~$\Hom_\DP$ is a lattice.
-    To prove that it is bounded, we identify the top element as~$\top_{\F{\posgenA},\R{\posgenB}}$ (it implies all other design problems) and the bottom element as~$\top_{\F{\posgenA},\R{\posgenB}}$ (it is implied by all the other design problems).
+    To prove that it is bounded, we identify the top element as~$\top_{\F{\posgenA},\R{\posgenB}}$ (it is implied by all other design problems) and the bottom element as~$\bot_{\F{\posgenA},\R{\posgenB}}$ (it implies by all the other design problems).
 \end{proof}
 
 \devel{
@@ -202,7 +203,7 @@ We show that a \DP Homset is a \emph{complete lattice}.
 
 \begin{lemma}[\DP homsets are complete lattices]\label{def:DP-homsets-complete-lattice}
     \todotextjira{274}{Show DP homsets are complete lattices.}
-\end{lemma}
+\end{lemma}}
 
 \subsection{Interaction with composition}
 
@@ -219,10 +220,10 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \vee \adpb)\mthen \adpc)(\F{a}^*,\R{c})&=\bigvee_{b\in \posgenB} (\adpa \vee \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c})\\
-            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{b}^*,\R{c})\\
-            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{b}^*,\R{c})) \vee (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c}))\\
-            &=((\adpa \mthen \adpc) \vee (\adpb\mthen \adpc))(\F{a}^*,\R{c}).
+            ((\adpa \vee \adpb)\mthen \adpc)(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{\posgenBel\in \posgenB} (\adpa \vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
+            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
+            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenBel}^*,\R{\posgenCel})) \vee (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel}))\\
+            &=((\adpa \mthen \adpc) \vee (\adpb\mthen \adpc))(\F{\posgenAel}^*,\R{\posgenCel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -233,7 +234,23 @@ Furthermore, we show that all composition operations preserve meet and joins.
     \begin{equation*}
         (\adpa\vee \adpb)\mthen (\adpc\vee \adpd) \neq (\adpa \mthen \adpc)\vee (\adpb \mthen \adpd).
     \end{equation*}
-    \todojira{275}{Write down counterexample (after derivation).}
+    Indeed, consider~$\adpa=\top_{\F{\posgenA},\R{\posgenB}}$,~$\adpb=\bot_{\F{\posgenA},\R{\posgenB}}$,~$\adpc=\bot_{\F{\posgenB},\R{\posgenC}}$, and~$\adpd=\top_{\F{\posgenB},\R{\posgenC}}$.
+    Clearly:
+    \begin{equation*}
+    \begin{aligned}
+        ((\adpa\vee \adpb)\mthen (\adpc\vee \adpd))(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{\posgenBel\in \posgenB} (\adpa\vee \adpb)(\F{\posgenAel}^*,\R{\posgenCel})\wedge (\adpc\vee \adpd)(\F{\posgenBel}^*,\R{\posgenCel})\\
+        &=\true,
+    \end{aligned}
+    \end{equation*}
+    but
+    \begin{equation*}
+    \begin{aligned}
+        ((\adpa \mthen \adpc)\vee (\adpb \mthen \adpd))(\F{\posgenAel}^*,\R{\posgenCel})&=\left( \bigvee_{b\in \posgenB} \adpa (\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\right)\vee
+        \left( \bigvee_{\posgenBel\in \posgenB} \adpb (\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpd(\F{\posgenBel}^*,\R{\posgenCel})\right)\\
+        &=\false \vee \false\\
+        &=\false.
+    \end{aligned}
+    \end{equation*}
 \end{remark}
 
 \begin{lemma}
@@ -247,10 +264,10 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \wedge \adpb)\mthen \adpc)(\F{a}^*,\R{c})&=\bigvee_{b\in \posgenB} (\adpa \wedge \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c})\\
-            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{b}^*,\R{c})\\
-            &=\bigvee_{b\in \posgenB} (\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{b}^*,\R{c})) \wedge (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{b}^*,\R{c}))\\
-            &=((\adpa \mthen \adpc) \wedge (\adpb\mthen \adpc))(\F{a}^*,\R{c}).
+            ((\adpa \wedge \adpb)\mthen \adpc)(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{b\in \posgenB} (\adpa \wedge \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
+            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
+            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenBel}^*,\R{\posgenCel})) \wedge (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel}))\\
+            &=((\adpa \mthen \adpc) \wedge (\adpb\mthen \adpc))(\F{\posgenAel}^*,\R{\posgenCel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -266,11 +283,11 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \vee \adpb)\mtimescat \adpc)(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{d}})&=
-            (\adpa \vee \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{c}^*,\R{d})\\
-            &=(\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{c}^*,\R{d})\\
-            &=(\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{c}^*,\R{d})) \vee (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{c}^*,\R{d}))\\
-            &=((\adpa \mtimescat \adpc) \vee (\adpb\mtimescat \adpc))(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{d}}).
+            ((\adpa \vee \adpb)\mtimescat \adpc)(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}})&=
+            (\adpa \vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenCel}^*,\R{\posgenDel})) \vee (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel}))\\
+            &=((\adpa \mtimescat \adpc) \vee (\adpb\mtimescat \adpc))(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -286,11 +303,11 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \wedge \adpb)\mtimescat \adpc)(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{d}})&=
-            (\adpa \wedge \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{c}^*,\R{d})\\
-            &=(\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{c}^*,\R{d})\\
-            &=(\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{c}^*,\R{d})) \wedge (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{c}^*,\R{d}))\\
-            &=((\adpa \mtimescat \adpc) \wedge (\adpb\mtimescat \adpc))(\tup{\F{a},\F{c}}^*,\tup{\R{b},\R{d}}).
+            ((\adpa \wedge \adpb)\mtimescat \adpc)(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}})&=
+            (\adpa \wedge \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenCel}^*,\R{\posgenDel})) \wedge (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel}))\\
+            &=((\adpa \mtimescat \adpc) \wedge (\adpb\mtimescat \adpc))(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -307,11 +324,11 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \vee \adpb)\vee \adpc)(\F{a}^*,\R{b})&=
-            (\adpa \vee \adpb)(\F{a}^*,\R{b})\vee \adpc(\F{a}^*,\R{b})\\
-            &=(\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\vee \adpc(\F{a}^*,\R{b})\\
-            &=(\adpa(\F{a}^*,\R{b}) \vee  \adpc(\F{a}^*,\R{b})) \vee (\adpb(\F{a}^*,\R{b})\vee \adpc(\F{a}^*,\R{b}))\\
-            &=((\adpa \vee \adpc) \vee (\adpb\vee \adpc))(\F{a}^*,\R{b}).
+            ((\adpa \vee \adpb)\vee \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            (\adpa \vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \vee (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
+            &=((\adpa \vee \adpc) \vee (\adpb\vee \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -327,11 +344,11 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \wedge \adpb)\vee \adpc)(\F{a}^*,\R{b})&=
-            (\adpa \wedge \adpb)(\F{a}^*,\R{b})\vee \adpc(\F{a}^*,\R{b})\\
-            &=(\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\vee \adpc(\F{a}^*,\R{b})\\
-            &=(\adpa(\F{a}^*,\R{b}) \vee  \adpc(\F{a}^*,\R{b})) \wedge (\adpb(\F{a}^*,\R{b})\vee \adpc(\F{a}^*,\R{b}))\\
-            &=((\adpa \vee \adpc) \wedge (\adpb\vee \adpc))(\F{a}^*,\R{b}).
+            ((\adpa \wedge \adpb)\vee \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            (\adpa \wedge \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \wedge (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
+            &=((\adpa \vee \adpc) \wedge (\adpb\vee \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -348,11 +365,11 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \vee \adpb)\wedge \adpc)(\F{a}^*,\R{b})&=
-            (\adpa \vee \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{a}^*,\R{b})\\
-            &=(\adpa(\F{a}^*,\R{b}) \vee \adpb(\F{a}^*,\R{b}))\vee \adpc(\F{a}^*,\R{b})\\
-            &=(\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{a}^*,\R{b})) \vee (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{a}^*,\R{b}))\\
-            &=((\adpa \wedge \adpc) \vee (\adpb\wedge \adpc))(\F{a}^*,\R{b}).
+            ((\adpa \vee \adpb)\wedge \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            (\adpa \vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \vee (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
+            &=((\adpa \wedge \adpc) \vee (\adpb\wedge \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -368,11 +385,11 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \wedge \adpb)\wedge \adpc)(\F{a}^*,\R{b})&=
-            (\adpa \wedge \adpb)(\F{a}^*,\R{b})\wedge \adpc(\F{a}^*,\R{b})\\
-            &=(\adpa(\F{a}^*,\R{b}) \wedge \adpb(\F{a}^*,\R{b}))\wedge \adpc(\F{a}^*,\R{b})\\
-            &=(\adpa(\F{a}^*,\R{b}) \wedge  \adpc(\F{a}^*,\R{b})) \wedge (\adpb(\F{a}^*,\R{b})\wedge \adpc(\F{a}^*,\R{b}))\\
-            &=((\adpa \wedge \adpc) \wedge (\adpb\wedge \adpc))(\F{a}^*,\R{b}).
+            ((\adpa \wedge \adpb)\wedge \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            (\adpa \wedge \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \wedge (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
+            &=((\adpa \wedge \adpc) \wedge (\adpb\wedge \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -388,24 +405,21 @@ Furthermore, we show that all composition operations preserve meet and joins.
     One has:
     \begin{equation*}
         \begin{aligned}
-           \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\vee \adpb)(\F{a}^*,\R{b})&=
-            \bigvee_{c\in \posgenC} (\adpa\vee \adpb)(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\\
-            &=\bigvee_{c\in \posgenC} \adpa(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\vee \adpb(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\\
-            &=\bigvee_{c\in \posgenC} \adpa(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\vee \bigvee_{c\in \posgenC} \adpb(\tup{\F{c},\F{a}}^*,\tup{\R{c},\R{b}})\\
-            &=\Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)(\F{a}^*,\R{b})\vee  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)(\F{a}^*,\R{b})
+           \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            \bigvee_{\posgenCel\in \posgenC} (\adpa\vee \adpb)(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
+            &=\bigvee_{\posgenCel\in \posgenC} \adpa(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\vee \adpb(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
+            &=\bigvee_{\posgenCel\in \posgenC} \adpa(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\vee \bigvee_{c\in \posgenC} \adpb(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
+            &=\Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)(\F{\posgenAel}^*,\R{\posgenBel})\vee  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)(\F{\posgenAel}^*,\R{\posgenBel})
         \end{aligned}
     \end{equation*}
 \end{proof}
 
 \begin{remark}
-    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenC}\times\F{\posgenA}}{\R{\posgenC} \times\R{\posgenB}}$. In general, one has
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenC}\times\F{\posgenA}}{\R{\posgenC} \times\R{\posgenB}}$.
+    In general, one has
     \begin{equation*}
         \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\wedge \adpb)\neq \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)\wedge  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)
     \end{equation*}
 \end{remark}
 
-\todotextjira{275}{Prove that the composition operations preserve join and meet}
-
-
-}
 
