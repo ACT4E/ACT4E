@@ -33,7 +33,6 @@ Because we use~$\funsp\op$ rather than \funsp, the map~$\adp$ is monotone.
 
 The feasibility map~$\adp$ has now forgotten everything about the implementations; however, it does contain all the information we need to solve co-design feasibility problems.
 
-Therefore we can define DPs (design problems) now without implementation.
 
 \linkvideo{spring2021-design:design:bool-prof} % Boolean profunctors
 \begin{definition}[Design Problem]
@@ -43,10 +42,11 @@ Therefore we can define DPs (design problems) now without implementation.
         \label{eq:design_prob_as_monfun}
         \adp \colon  \funsp\op \Ctimes \ressp \toinPos \Bool.
     \end{equation*}
-    We represent it by an arrow~$\adp \colon \funsp \profto \ressp$.
+    We will also use the notation~$\adp \colon \funsp \profto \ressp$ for design problems, in order to emphasize how we think of them as morphisms. This will be explained below. 
 \end{definition}
 
-Given a DPI~$\tup{\funsp, \ressp, \impsp, \prov,\req}$ it is always possible to obtain a DP
+\begin{remark}
+Given a DPI~$\tup{\funsp, \ressp, \impsp, \prov,\req}$ it is always possible to obtain from it the following DP
 \begin{equation}
     \label{eq:dpi_to_dp_1}
     \begin{aligned}
@@ -54,13 +54,13 @@ Given a DPI~$\tup{\funsp, \ressp, \impsp, \prov,\req}$ it is always possible to 
         \tup{\fun^*,\res}&\mapsto \exists \imp \in \impsp \colon (\fun \posleq_\funsp \prov(\imp)) \wedge (\req(\imp)\posleq_\ressp \res).
     \end{aligned}
 \end{equation}
-Evaluating the DP is the same as asking whether the set
+Evaluating this DP is the same as asking whether the set
 \begin{equation}
     \label{eq:dpi_to_dp_2}
     \{ \imp \in \impsp \colon (\fun \posleq_\funsp \prov(\imp)) \wedge (\req(\imp)\posleq_\ressp \res)\}
 \end{equation}
 is empty or not.
-
+\end{remark}
 
 \begin{example}
     Recall \cref{exa:dpi_elmotor}, with the catalogue of electric motors in \cref{tab:electric_motors_3}.
@@ -130,7 +130,7 @@ is empty or not.
     We define the \emph{feasible set}~$K_\adp$ of a design problem~
     \begin{equation}
         \label{eq:generic-design-prob}
-        \adp\colon \funsp\op \times \ressp\toinPos \Bool
+        \adp\colon \funsp\op \times \ressp \toinPos \Bool
     \end{equation}
     as the subset of~$\funsp \op\times \ressp$ for which~$\adp$ is the \emph{indicator function}, that is%
     \begin{equation}
@@ -141,12 +141,24 @@ is empty or not.
     \end{equation}
 \end{definition}
 
+Note that the feasibility set $K_\adp$ of a design problem $\adp \colon \funsp \op \times \ressp\toinPos \Bool$ is a binary relation $K_\adp \subseteq \funsp\op \times \ressp$. We saw in [REF] that there is a one-to-one correspondence between functions $\mapa : \setA \times \setB \to \Bool$ and binary relations $\relA \subseteq \setA \times \setB$. An analogous correspondence holds in the context of design problems:
 
-\begin{remark}
-    \label{rem:feasible-set-is-upper}
-    The set~$K_\adp$ is always an upper set (\cref{def:upperset}).
-    In fact, another way to define a design problem is to declare it as ``an upper set in~$\funsp\op \times \ressp$''. This is perhaps simpler than declaring it as ``a monotone map to~\Bool''. However, the definition as a monotone map will lend very easily to further generalization. In any case, it is helpful to keep both of these perspectives in mind.
-\end{remark}
+\begin{exercise}
+Prove that there is a one-to-one correspondence between design problems $\adp \colon \funsp \op \times \ressp\toinPos \Bool$ and upper sets $K \subseteq \funsp\op \times \ressp$. 
+\end{exercise}
+
+Recall that when working with a relation $\relA \subseteq \setA \times \setB$ between sets, if the sets in question were finite, then we could conveniently draw the relation $\relA$ using arrows to connect elements of $\setA$ to those elements of $\setB$ to which they are related via $\relA$. Given a design problem $\adp \colon \funsp \op \times \ressp\toinPos \Bool$ involving finite posets, we can visualize it in a similar fashion. We use Hasse diagrams to visualize the posets involved, and we use dashed arrows to connect those elements which are related via the feasibility set $K_\adp$. 
+
+
+For example...
+
+\
+
+[FIGURE]
+
+\
+
+
 
 
 \begin{remark}\label{re:dp-from-monotone}
@@ -154,7 +166,7 @@ Given any monotone map $\mapb: \funsp \toinPos \ressp$, we can turn it into a de
 $$\adp_\mapb \colon \funsp\op \times \ressp \toinPos \Bool$$
 via the following recipe. Set 
 $$
-\adp_\mapb (\tup{\fun^*, \res}) = \true \quad \text{if and only if} \quad \fun \leq \mapb(\res).
+\adp_\mapb (\tup{\fun^*, \res}) = \true \quad \text{if and only if} \quad \mapb(\fun) \leq \res.
 $$
 \end{remark}
 
@@ -167,6 +179,9 @@ The Boolean-valued design problems we are considering in this section do not dis
 they only tell us if \emph{any} implementation or solution exists for given functionality and resources.
 We will define~\Set-enriched design problems, which directly generalize Boolean-valued design problems and do distinguish between particular implementations.
 
+\todotext{JL: move the above paragraph somewhere else? E.g. to the place where we introduce Set-enriched design problems.}
+
+\todotext{JL: maybe move the below bit on diagrammatic notation to the section on series composition of DPs, to motivate the notation and to not create confusion with the graphical visualization of DPs introduced above using arrrows between Hasse diagrams?}
 \paragraph{Diagrammatic notation} We represent design problems using a diagrammatic notation. One design problem~$\adp \colon \funsp \profto \ressp$ is represented as a box with functionality~\funsp on the \emph{left} and resources~\ressp on the \emph{right} (\cref{fig:diagrammaticdp}).
 \begin{figure}[h!]
     \begin{center}
