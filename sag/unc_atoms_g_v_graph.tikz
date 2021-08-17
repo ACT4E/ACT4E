@@ -1,19 +1,20 @@
     \begin{tikzpicture}[DP]
         \node[dp={2}{1}] (f) {$\adpa$};
-        %\node[rectangle, draw = black, fill = black, minimum width=0.02cm, minimum height = 1cm, right=1.5cm of f] (wi_1) {};
-        \node[dp={1}{2}, fill=black, minimum width=0.01cm,minimum height=2cm, inner sep=1pt, rounded corners=0,dp port sep=10, right=2 cm of f] (wi) {};
-        \node[dp={1}{1}, right=2cm of wi_res1] (g) {$\adpb$};
-        \node[dp={1}{1}, right=2cm of wi_res2] (h) {$\adpc$};
-        \node[dp={2}{1}, fill=black, minimum width=0.01cm,minimum height=2cm, inner sep=1pt, rounded corners=0,dp port sep=10, right=6 cm of f] (wibis) {};
-        \draw[rconn, rcname={$\fun_{\adpb}$}, fcname={$\fun_{\adpb}$}, posres=0.5, posfun=0.5, relfun=above, relres=above] (wi_res1) to (g_fun1) {};
-        \draw[rconn, rcname={$\fun_{\adpc}$}, fcname={$\fun_{\adpc}$}, posres=0.5, posfun=0.5, relfun=above, relres=above] (wi_res2) to (h_fun1) {};
-        \draw[rconn, rcname={$\res_{\adpb}$}, fcname={$\res_{\adpb}$}, posres=0.5, posfun=0.5, relfun=above, relres=above] (g_res1) to (wibis_fun1) {};
-        \draw[rconn, rcname={$\res_{\adpc}$}, fcname={$\res_{\adpc}$}, posres=0.5, posfun=0.5, relfun=above, relres=above] (h_res1) to (wibis_fun2) {};
-        \draw[rconn, rcname={$\res_{\adpa}$}, fcname={$\fun_{\adpb,\adpc}$}, posres=0.5, posfun=0.5, relfun=above, relres=above] (f_res1) to (wi_fun1) {};
-        \draw[runconn, runame={$\res_{\adpb,\adpc}$}, posres=0.5, relres=above] (wibis_res1) {};
-        \draw[funconn, funame={$\fun_{\adpa,1}$}, posfun=0.5, relfun=above] (f_fun1) {};
-        %\draw[rconn, runame={$\res_{\adpb,\adpc}$}, posres=0.5, relres=above, feedback=1] ($(wibis_res1) + (0.25,0)$) to[in=90,out=90] ($(g) + (0,-1)$) to (f_fun2){};
-        \node[draw,circle,inner sep=0.5pt,color=black,fill=white,opacity=1.0,line width=0.2mm, below=0.5cm of wi] (nodepreceq) {$\succeq$};
-        \draw[\dpred, dashed] ($(wibis_res1) + (0.35,0)$) to[in=0,out=-90,looseness=1.2] (nodepreceq.east) {};
-        \draw[\dpgreen] (nodepreceq) to [in=-180,out=-180,looseness=1.5] node[pos=0.5, left]{$\fun_{\adpa,2}$} ($(f_fun2) + (0,0)$);
+        \node[block, fill=black, minimum width=0.01cm,minimum height=1cm, inner sep=1pt, rounded corners=0, right=2 cm of f] (wi) {};
+        \node[dp={1}{1}] at ($(wi.east)+(1,1.35)$) (g) {$\adpb$};
+        \node[dp={1}{1}] at ($(wi.east)+(1,-1.35)$) (h) {$\adpc$};
+        \node[block, fill=black, minimum width=0.01cm,minimum height=1cm, inner sep=1pt, rounded corners=0, right=5 cm of f] (wibis) {};
+        \draw[\dpgreen] ($(g_fun1)+(-0.05,0)$) -- ($(wi.east)+(0,1.35)$) node[pos=0.5,above]{$\fun_\adpb$};
+        \draw[\dpgreen] ($(h_fun1)+(-0.05,0)$) -- ($(wi.east)+(0,-1.35)$) node[pos=0.5,above]{$\fun_\adpc$};
+        \draw[\dpred,dashed] ($(g_res1)+(0.05,0)$) -- ($(wibis.west)+(0,1.35)$) node[pos=0.5,above]{$\res_\adpb$};
+        \draw[\dpred,dashed] ($(h_res1)+(0.05,0)$) -- ($(wibis.west)+(0,-1.35)$) node[pos=0.5,above]{$\res_\adpc$};
+        \draw[rconn, rcname={$\res_{\adpa}$}, fcname={$\fun_{\adpb,\adpc}$}, posres=0.5, posfun=0.5, relfun=above, relres=above] (f_res1) to ($(wi.west)+(0.075,0)$) {};
+        \draw[\dpred,dashed] (wibis.east) --++(0.7,0) node[pos=0.5,above]{$\res_{\adpb,\adpc}$};
+        \node[draw,circle,inner sep=0.5pt,color=black,fill=white,opacity=1.0,line width=0.2mm, below=0.2cm of wi] (nodepreceq) {$\succeq$};
+        \draw[\dpred, dashed] ($(wibis.east) + (0.35,0)$) to[in=0,out=-90,looseness=1.2] (nodepreceq.east) {};
+        \draw[\dpgreen] (nodepreceq) to [in=-180,out=-180,looseness=1.75] node[pos=0.5, left]{$\fun_{\adpa,2}$} ($(f_fun2) + (-0.05,0)$);
+        \draw[\dpgreen] ($(f_fun1) + (-0.05,0)$)-- ($(f_fun1) + (-0.75,0)$) node[pos=0.5,above] {$\fun_{\adpa,1}$};
+         \node at ($(f_fun1)+(-1.35,0)$)  {\begin{tabular}{c} \F{(chosen by}\\ \F{the user)}\end{tabular}};
+         \node at ($(wibis.east)+(1.35,0)$)  {\begin{tabular}{c} \R{(to minimize)}\end{tabular}};
+         \draw[dotted,rounded corners=2, thick] (-0.85,-4.75) rectangle (4.15,4);
     \end{tikzpicture}
