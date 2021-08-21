@@ -99,7 +99,7 @@ makefiles: $(chapters-makefiles) $(parts-makefiles)
 
 recursive: links standalone makefiles
 
-nomencvol1=volumes/vol1/50_backmatter/96_nomenclature/nomenc-vol1.texi
+nomencvol1=volumes/vol1/80_backmatter/96_nomenclature/nomenc-vol1.texi
 
 
 
