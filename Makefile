@@ -127,8 +127,9 @@ tablefile=volumes/vol1/00_front/05_developers/table.texi
 table: $(tablefile)
 
 $(tablefile): utils/symbols*.tex .FORCE
-	$(MAKE) generated/used.yaml -B
-	lsm_table --verbose --only generated/used.yaml --style medium $< > $@
+	$(MAKE) generated/used-vol1.yaml -B
+	# lsm_table --verbose --only generated/used-vol1.yaml --style medium $< > $@
+	lsm_table --verbose --only generated/used-vol1.yaml --style full $< > $@
 
 #lsm_table --only used.yaml --style full $^ > $@
 #lsm_table --only used.yaml --style small $^ > $@
@@ -175,6 +176,11 @@ magic:
 	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(tag) \
 		make nomenc table find-equations
+
+magic-table:
+	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+		$(tag) \
+		make nomenc table
 
 magic-equations:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
