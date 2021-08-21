@@ -1,7 +1,7 @@
 % !TEX root = chapter-standalone.tex
 
 
-\section{Design Problems  with Implementation}
+\section{Design Problems with Implementation}
 \label{sec:Design-Problems}
 \linkvideo{spring2021-design:design:dpi-def} % Design problems with implementation (DPIs)
 We start by defining a ``design problem with implementation'', which is a tuple of ``\F{functionality} space'',
@@ -248,7 +248,7 @@ We start by defining a ``design problem with implementation'', which is a tuple 
 
 \begin{example}
     \label{exa:dpi_elmotor}
-    We  revisit the leading example of \cref{sec:attributes_sameness} with the newly introduced co-design perspective. Let's consider a list of electrical motors as in~\cref{tab:electric_motors_2}.
+    We revisit the leading example of \cref{sec:attributes_sameness} with the newly introduced co-design perspective. Let's consider a list of electrical motors as in~\cref{tab:electric_motors_2}.
     \begin{table*}[h]
         \centering
         \adjustbox{max width=\textwidth}{%
@@ -318,6 +318,7 @@ We start by defining a ``design problem with implementation'', which is a tuple 
 
 
 \FloatBarrier
+
 \subsubsection{Graphical notation}
 
 A graphical notation will help reasoning about composition. A DPI is represented as a box with~$\dpinumf$ green edges and~$\dpinumr$ red edges~(\cref{fig:dp_graphical}).
@@ -342,8 +343,10 @@ These \emph{co-design diagrams} are not to be confused with signal flow diagrams
 
 %\captionsideleft{\label{fig:gmcdp_chassis_eval}}{\includegraphics[scale=0.33]{gmcdp_chassis_eval.pdf}}
 
+
 \section{Examples}
 We now present a list of design problems for different disciplines, to showcase the universality of the approach.
+
 \subsubsection{Mechatronics}
 Many mechanisms can be readily modeled as relations between a provided functionality and required resources.
 
@@ -423,10 +426,10 @@ Geometrical constraints are examples of constraints that are easily recognized a
 \end{example}
 \todotextjira{296}{What are the implementations?}
 \begin{figure}[tbh]
-        \centering
-        \includesag{bin_packing}
-        \caption{\label{fig:packing}}
-    \end{figure}
+    \centering
+    \includesag{bin_packing}
+    \caption{\label{fig:packing}}
+\end{figure}
 
 \subsubsection{Inference}
 
@@ -551,213 +554,219 @@ of robots and the capabilities of the single robot.
 \end{publictodo}
 \showslides{
 
-\begin{forslides}
-\begin{equation*}
-\label{eq:cont_dyn}
-    \begin{aligned}
-    \text{d} \mat{x}_t&=\mat{A}\mat{x}_t\text{d} t+\mat{B}\mat{u}_t \text{d} t+\mat{E} \text{d} \mat{w}_t\\
-    \text{d} \mat{y}_t &= \mat{C}\mat{x}_t \text{d} t+\mat{G}\text{d} \mat{v}_t,
-    \end{aligned}
-\end{equation*}
+    \begin{forslides}
+        \begin{equation*}
+            \label{eq:cont_dyn}
+            \begin{aligned}
+                \text{d} \mat{x}_t&=\mat{A}\mat{x}_t\text{d} t+\mat{B}\mat{u}_t \text{d} t+\mat{E} \text{d} \mat{w}_t\\
+                \text{d} \mat{y}_t &= \mat{C}\mat{x}_t \text{d} t+\mat{G}\text{d} \mat{v}_t,
+            \end{aligned}
+        \end{equation*}
 
-\begin{equation*}
-\label{eq:general_continuous_cost}
-    J=\lim_{T\to \infty} \frac{1}{T}\mathbb{E}\left\{\int_{0}^{T} \left(\left( \mat{x}_t^\intercal \mat{Q} \mat{x}_t\right)+\left( \mat{u}_t^\intercal \mat{R}\mat{u}_t\right)\right) \text{d} t\right\},
-\end{equation*}
+        \begin{equation*}
+            \label{eq:general_continuous_cost}
+            J=\lim_{T\to \infty} \frac{1}{T}\mathbb{E}\left\{\int_{0}^{T} \left(\left( \mat{x}_t^\intercal \mat{Q} \mat{x}_t\right)+\left( \mat{u}_t^\intercal \mat{R}\mat{u}_t\right)\right) \text{d} t\right\},
+        \end{equation*}
 
 
-\begin{lemma}
-\label{lem:lqgstandard}
-The optimal control law for the LQG problem is~$\mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t$, where $\hat{\mat{x}}_t$ is the unbiased minimum-variance estimate of $\mat{x}_t$ given previous measurements and $\bar{\mat{S}}\in \posdef$ solves the Riccati equation
-\begin{equation}
-\label{eq:cont_ric_1}
-    \mat{SA}+\mat{A}^*\mat{S}-\mat{SBR}^{-1}\mat{B}^*\mat{S}+\mat{Q}=\mat{0}.
-\end{equation}
-The minimum cost~$J^\star$ achieved by the optimal control is:
+        \begin{lemma}
+            \label{lem:lqgstandard}
+            The optimal control law for the LQG problem is~$\mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t$, where $\hat{\mat{x}}_t$ is the unbiased minimum-variance estimate of $\mat{x}_t$ given previous measurements and $\bar{\mat{S}}\in \posdef$ solves the Riccati equation
+            \begin{equation}
+                \label{eq:cont_ric_1}
+                \mat{SA}+\mat{A}^*\mat{S}-\mat{SBR}^{-1}\mat{B}^*\mat{S}+\mat{Q}=\mat{0}.
+            \end{equation}
+            The minimum cost~$J^\star$ achieved by the optimal control is:
 %\footnote{Note that~\cite{davis1977} contains a typo at p.188 (one extra $\mat{V}^{-1}$ factor). Instead,~\cite{kwakernaak1972} has a cleaner derivation and exposition.}
-\begin{equation*}
-\label{eq:contmincost}
-\begin{aligned}
-J^\star&=\trace{(\bar{\mat{S}}\bar{\mat{\Sigma}}\mat{C}^*\mat{V}^{-1}\mat{C}\bar{\mat{\Sigma}}+\bar{\mat{\Sigma}}\mat{Q})}\\
-&=\trace{(\bar{\mat{\Sigma}}\bar{\mat{S}}\mat{BR}^{-1}\mat{B}^*\bar{\mat{S}}+\bar{\mat{S}}\mat{W})},
-\end{aligned}
-\end{equation*}
-where~$\bar{\mat{\Sigma}}\in \posdef$ is the solution of the Riccati equation
-\begin{equation}
-\label{eq:cont_ric_2}
-    \mat{A\Sigma} + \mat{\Sigma A}^*-\mat{\Sigma C}^*\mat{V}^{-1}\mat{C\Sigma}+\mat{W}=\mat{0}.
-\end{equation}
-\end{lemma}
+            \begin{equation*}
+                \label{eq:contmincost}
+                \begin{aligned}
+                    J^\star&=\trace{(\bar{\mat{S}}\bar{\mat{\Sigma}}\mat{C}^*\mat{V}^{-1}\mat{C}\bar{\mat{\Sigma}}+\bar{\mat{\Sigma}}\mat{Q})}\\
+                    &=\trace{(\bar{\mat{\Sigma}}\bar{\mat{S}}\mat{BR}^{-1}\mat{B}^*\bar{\mat{S}}+\bar{\mat{S}}\mat{W})},
+                \end{aligned}
+            \end{equation*}
+            where~$\bar{\mat{\Sigma}}\in \posdef$ is the solution of the Riccati equation
+            \begin{equation}
+                \label{eq:cont_ric_2}
+                \mat{A\Sigma} + \mat{\Sigma A}^*-\mat{\Sigma C}^*\mat{V}^{-1}\mat{C\Sigma}+\mat{W}=\mat{0}.
+            \end{equation}
+        \end{lemma}
 
 
 
-\begin{equation*}
-\label{eq:ptrack}
-\track=\lim_{t\to \infty}\mathbb{E}\{\mat{x}_t^\intercal \mat{Q}\mat{x}_t\}.
-\end{equation*}
+        \begin{equation*}
+            \label{eq:ptrack}
+            \track=\lim_{t\to \infty}\mathbb{E}\{\mat{x}_t^\intercal \mat{Q}\mat{x}_t\}.
+        \end{equation*}
 
-\begin{equation*}
-\label{eq:peffort}
-\effort=\lim_{t\to \infty}\mathbb{E}\{\mat{u}_t^\intercal \mat{R} \mat{u}_t \}
-\end{equation*}
-
-
-\begin{lemma}
-\label{lem:precision}
-The metrics $\track$ and $\effort$ can be written as
-\begin{equation*}
-\begin{aligned}
-    \lim_{t\to \infty}\mathbb{E}\{ \mat{x}_t^\intercal \mat{Q}_0\mat{x}_t\}&=\trace(\mat{Q}_0\left( \mat{\Sigma} +\mat{F}\right)), \\
-    \lim_{t\to \infty}\mathbb{E}\{ \mat{u}_t^\intercal \mat{R}_0\mat{u}_t\}&=\trace(\mat{S}\mat{B}^*\mat{R}^{-1}\mat{R}_0\mat{R}^{-1}\mat{B}\mat{S}\mat{F}),
-\end{aligned}
-\end{equation*}
-where
-$\mat{\Sigma}$ solves the Riccati equation for estimation,~$\mat{F}$ solves the Lyapunov equation
-\begin{equation}
-\label{eq:lyapct}
-    \left( \mat{A}-\mat{B}\mat{K}\right)\mat{F}+\mat{F}\left(\mat{A}-\mat{B}\mat{K}\right)^*+\mat{L}\mat{V}\mat{L}^*=\mat{0},
-\end{equation}
-$\mat{S}$ solves the Riccati equation for control, and~$\mat{L}=\mat{\Sigma}\mat{C}^*\mat{V}^{-1}$ is the Kalman gain.
-\end{lemma}
+        \begin{equation*}
+            \label{eq:peffort}
+            \effort=\lim_{t\to \infty}\mathbb{E}\{\mat{u}_t^\intercal \mat{R} \mat{u}_t \}
+        \end{equation*}
 
 
-\begin{lemma}
-\label{lem:codesigncnt_1}
-Let~$\mat{Q}(\alpha)=\alpha \mat{Q}_0$ and~$\mat{R}(\alpha)=\frac{1}{\alpha}\mat{R}_0$, $\alpha\in \mathbb{R}_+$. Let~$\mat{u}^\star(\alpha)$ be the solution of the LQG problem with $\mat{Q}(\alpha)$ and $\mat{R}(\alpha)$. Then, under optimal control one has:
-\begin{compactitem}
-    \item $P_\mathrm{track}(\alpha)$ is decreasing with $\alpha$
-    increasing.
-    \item $P_\mathrm{effort}(\alpha)$ is increasing with $\alpha$ increasing.
-\end{compactitem}
-\end{lemma}
+        \begin{lemma}
+            \label{lem:precision}
+            The metrics $\track$ and $\effort$ can be written as
+            \begin{equation*}
+                \begin{aligned}
+                    \lim_{t\to \infty}\mathbb{E}\{ \mat{x}_t^\intercal \mat{Q}_0\mat{x}_t\}&=\trace(\mat{Q}_0\left( \mat{\Sigma} +\mat{F}\right)), \\
+                    \lim_{t\to \infty}\mathbb{E}\{ \mat{u}_t^\intercal \mat{R}_0\mat{u}_t\}&=\trace(\mat{S}\mat{B}^*\mat{R}^{-1}\mat{R}_0\mat{R}^{-1}\mat{B}\mat{S}\mat{F}),
+                \end{aligned}
+            \end{equation*}
+            where
+            $\mat{\Sigma}$ solves the Riccati equation for estimation,~$\mat{F}$ solves the Lyapunov equation
+            \begin{equation}
+                \label{eq:lyapct}
+                \left( \mat{A}-\mat{B}\mat{K}\right)\mat{F}+\mat{F}\left(\mat{A}-\mat{B}\mat{K}\right)^*+\mat{L}\mat{V}\mat{L}^*=\mat{0},
+            \end{equation}
+            $\mat{S}$ solves the Riccati equation for control, and~$\mat{L}=\mat{\Sigma}\mat{C}^*\mat{V}^{-1}$ is the Kalman gain.
+        \end{lemma}
 
 
-\begin{lemma}
-\label{lem:cont_V_W}
-The solution of  \cref{eq:cont_ric_2} is monotonic in $\mat{V}$ and $\mat{W}$, i.e., $\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')$.
-\end{lemma}
-
-\begin{lemma}
-\label{lem:codesigncnt_2}
-Consider the situation of \cref{lemma:codesigncnt_1}:
-\begin{compactitem}
-    \item Fix $P_\mathrm{track}$. $P_\mathrm{effort}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
-    \item Fix $P_\mathrm{effort}$. $P_\mathrm{track}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
-\end{compactitem}
-\end{lemma}
-
-\begin{equation*}
-\label{eq:lqg_simple}
-\begin{tikzpicture}[DP, dp port sep =3]
-            \node(ref) at (0,0){};
-            \node[dp={2}{2},below=0.5cm of ref] (cnt) {LQG};
-            \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
-            \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
-            \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
-            \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
-\end{tikzpicture}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:brown_1}
-\mat{v}_t
-\end{equation*}
-
-\begin{equation*}
-\label{eq:brown_2}
-\mat{w}_t
-\end{equation*}
-
-\begin{equation*}
-\label{eq:cov_1}
-\mat{W}=\mat{EE^*}
-\end{equation*}
-\begin{equation*}
-\label{eq:cov_2}
-\mat{V}=\mat{GG^*}
-\end{equation*}
+        \begin{lemma}
+            \label{lem:codesigncnt_1}
+            Let~$\mat{Q}(\alpha)=\alpha \mat{Q}_0$ and~$\mat{R}(\alpha)=\frac{1}{\alpha}\mat{R}_0$, $\alpha\in \mathbb{R}_+$. Let~$\mat{u}^\star(\alpha)$ be the solution of the LQG problem with $\mat{Q}(\alpha)$ and $\mat{R}(\alpha)$. Then, under optimal control one has:
+            \begin{compactitem}
+                \item $P_\mathrm{track}(\alpha)$ is decreasing with $\alpha$
+                increasing.
+                \item $P_\mathrm{effort}(\alpha)$ is increasing with $\alpha$ increasing.
+            \end{compactitem}
+        \end{lemma}
 
 
-\begin{equation*}
-\label{eq:optimal_control}
-\mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t
-\end{equation*}
+        \begin{lemma}
+            \label{lem:cont_V_W}
+            The solution of  \cref{eq:cont_ric_2} is monotonic in $\mat{V}$ and $\mat{W}$, i.e., $\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')$.
+        \end{lemma}
 
-\begin{equation*}
-\label{eq:x_estimate}
-\hat{\mat{x}}_t
-\end{equation*}
-\begin{equation*}
-\label{eq:x_real}
-\mat{x}_t
-\end{equation*}
+        \begin{lemma}
+            \label{lem:codesigncnt_2}
+            Consider the situation of \cref{lemma:codesigncnt_1}:
+            \begin{compactitem}
+                \item Fix $P_\mathrm{track}$. $P_\mathrm{effort}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
+                \item Fix $P_\mathrm{effort}$. $P_\mathrm{track}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
+            \end{compactitem}
+        \end{lemma}
 
-\begin{equation*}
-\label{eq:ric_1}
-\bar{\mat{S}}
-\end{equation*}
-\begin{equation*}
-\label{eq:ric_2}
-\bar{\mat{\Sigma}}
-\end{equation*}
+        \begin{equation*}
+            \label{eq:lqg_simple}
+            \begin{tikzpicture}[DP, dp port sep =3]
+                \node(ref) at (0,0){};
+                \node[dp={2}{2},below=0.5cm of ref] (cnt) {LQG};
+                \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
+                \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
+                \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
+                \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
+            \end{tikzpicture}
+        \end{equation*}
 
-\begin{equation*}
-\label{eq:mon_est}
-\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')
-\end{equation*}
+        \begin{equation*}
+            \label{eq:brown_1}
+            \mat{v}_t
+        \end{equation*}
 
-\begin{definition}
-\label{def:poset_cont}
-A \emph{poset} is a tuple $\langle P,\preceq_P\rangle$, where $P$ is a set and $\preceq_P$ is a partial order, defined as a reflexive, transitive, and antisymmetric relation.
-\end{definition}
+        \begin{equation*}
+            \label{eq:brown_2}
+            \mat{w}_t
+        \end{equation*}
 
-\begin{equation*}
-\label{eq:posreals}
-\tup{\reals_{\geq 0},\leq}
-\end{equation*}
-\begin{equation*}
-\label{eq:nats}
-\tup{\natnumbers,\leq}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:matrix_poset}
-\mat{A}=\begin{pmatrix}1&0\\0&1\end{pmatrix}, \quad \mat{B}=\begin{pmatrix}2&0\\0&1\end{pmatrix},\quad \mat{C}=\begin{pmatrix}2&0\\0&0.5\end{pmatrix}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:lqg_delay}
-\begin{tikzpicture}[DP, dp port sep =3]
-            \node[dp={3}{2}] (cnt) {LQG};
-            \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
-            \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
-            \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
-            \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
-            \draw[funconn, funame={delay},relfun=above, posfun=1] (cnt_fun3){};
-\end{tikzpicture}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:lqg_disc}
-\begin{tikzpicture}[DP, dp port sep = 1.5]
-            \node[dp={4}{2}] (cnt) {LQG Control};
-            \draw[runconn, runame={tracking error $\track$}, relres=right] (cnt_res1){};
-            \draw[runconn, runame={control effort $\effort$},relres=right] (cnt_res2){};
-            \draw[funconn, funame={observation noise $\mat{V}$},relfun=left] (cnt_fun1){};
-            \draw[funconn, funame={system noise $\mat{W}$},relfun=left] (cnt_fun2){};
-            \draw[funconn, funame={delay $d$},relfun=left] (cnt_fun3){};
-            %\draw[funconn, funame={sampling period $\delta$},relfun=left] (cnt_fun4){};
-            \draw[funconn, funame={dropping probability $p$},relfun=left] (cnt_fun4){};
-\end{tikzpicture}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:poset_order_mat}
-\mat{A}\posleq \mat{B} \Leftrightarrow (\mat{B}-\mat{A})\in \mathcal{P}^n, \quad \mat{A},\mat{B}\in \mathcal{P}^n
-\end{equation*}
+        \begin{equation*}
+            \label{eq:cov_1}
+            \mat{W}=\mat{EE^*}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:cov_2}
+            \mat{V}=\mat{GG^*}
+        \end{equation*}
 
 
-\end{forslides}
+        \begin{equation*}
+            \label{eq:optimal_control}
+            \mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t
+        \end{equation*}
+
+        \begin{equation*}
+            \label{eq:x_estimate}
+            \hat{\mat{x}}_t
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:x_real}
+            \mat{x}_t
+        \end{equation*}
+
+        \begin{equation*}
+            \label{eq:ric_1}
+            \bar{\mat{S}}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:ric_2}
+            \bar{\mat{\Sigma}}
+        \end{equation*}
+
+        \begin{equation*}
+            \label{eq:mon_est}
+            \tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')
+        \end{equation*}
+
+        \begin{definition}
+            \label{def:poset_cont}
+            A \emph{poset} is a tuple $\langle P,\preceq_P\rangle$, where $P$ is a set and $\preceq_P$ is a partial order, defined as a reflexive, transitive, and antisymmetric relation.
+        \end{definition}
+
+        \begin{equation*}
+            \label{eq:posreals}
+            \tup{\reals_{\geq 0},\leq}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:nats}
+            \tup{\natnumbers,\leq}
+        \end{equation*}
+
+        \begin{equation*}
+            \label{eq:matrix_poset}
+            \mat{A}=\begin{pmatrix}
+                        1& 0\\0& 1
+            \end{pmatrix}, \quad \mat{B}=\begin{pmatrix}
+                                             2& 0\\0& 1
+            \end{pmatrix},\quad \mat{C}=\begin{pmatrix}
+                                            2& 0\\0& 0.5
+            \end{pmatrix}
+        \end{equation*}
+
+        \begin{equation*}
+            \label{eq:lqg_delay}
+            \begin{tikzpicture}[DP, dp port sep =3]
+                \node[dp={3}{2}] (cnt) {LQG};
+                \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
+                \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
+                \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
+                \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
+                \draw[funconn, funame={delay},relfun=above, posfun=1] (cnt_fun3){};
+            \end{tikzpicture}
+        \end{equation*}
+
+        \begin{equation*}
+            \label{eq:lqg_disc}
+            \begin{tikzpicture}[DP, dp port sep = 1.5]
+                \node[dp={4}{2}] (cnt) {LQG Control};
+                \draw[runconn, runame={tracking error $\track$}, relres=right] (cnt_res1){};
+                \draw[runconn, runame={control effort $\effort$},relres=right] (cnt_res2){};
+                \draw[funconn, funame={observation noise $\mat{V}$},relfun=left] (cnt_fun1){};
+                \draw[funconn, funame={system noise $\mat{W}$},relfun=left] (cnt_fun2){};
+                \draw[funconn, funame={delay $d$},relfun=left] (cnt_fun3){};
+                %\draw[funconn, funame={sampling period $\delta$},relfun=left] (cnt_fun4){};
+                \draw[funconn, funame={dropping probability $p$},relfun=left] (cnt_fun4){};
+            \end{tikzpicture}
+        \end{equation*}
+
+        \begin{equation*}
+            \label{eq:poset_order_mat}
+            \mat{A}\posleq \mat{B} \Leftrightarrow (\mat{B}-\mat{A})\in \mathcal{P}^n, \quad \mat{A},\mat{B}\in \mathcal{P}^n
+        \end{equation*}
+
+
+    \end{forslides}
 }
 
 \subsubsection{Computation graphs}
@@ -953,7 +962,6 @@ task.
     Missing: Example of Hoare triples.
 \end{publictodo}
 % \begin{example}[Hoare logic]
-
 
 
 % \end{example}
