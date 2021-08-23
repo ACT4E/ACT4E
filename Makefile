@@ -22,7 +22,7 @@ clean:
 
 tikz:
 	touch sag/*pdf
-	make -C sag -j
+	make -C sag -j3
 
 texs=$(wildcard volumes/vol*/*/*/*.tex)
 
