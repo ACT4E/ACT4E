@@ -131,7 +131,7 @@ nomencvol1=volumes/vol1/80_backmatter/96_nomenclature/nomenc-vol1.texi
 
 
 $(nomencvol1): generated/used-vol1.yaml utils/symbols*.tex
-	lsm_nomenc  --only $< --style small utils/symbols*.tex > $@
+	lsm_nomenc  --only $< utils/symbols*.tex > $@
 
 nomenc: $(nomencvol1)
 
