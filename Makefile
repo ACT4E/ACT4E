@@ -99,7 +99,7 @@ makefiles: $(chapters-makefiles) $(parts-makefiles)
 
 recursive: links standalone makefiles
 
-nomencvol1=volumes/vol1/80_backmatter/96_nomenclature/nomenc-vol1.texi
+
 
 
 
@@ -117,12 +117,18 @@ nomenc-%.tex: generated/used-%.yaml utils/symbols*.tex
 
 # lsm_nomenc  utils/symbols*.tex > $@
 
+
+
+nomencvol1=volumes/vol1/80_backmatter/96_nomenclature/nomenc-vol1.texi
+
+
 $(nomencvol1): generated/used-vol1.yaml utils/symbols*.tex
-	lsm_nomenc  --only $< utils/symbols*.tex > $@
+	lsm_nomenc  --only $< --style small utils/symbols*.tex > $@
 
 nomenc: $(nomencvol1)
 
 tablefile=volumes/vol1/00_front/05_developers/table.texi
+
 
 table: $(tablefile)
 
