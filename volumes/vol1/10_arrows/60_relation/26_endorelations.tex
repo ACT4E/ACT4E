@@ -5,17 +5,15 @@
 \label{sec:endorelations}
 
 \linkvideo{spring2021-relations:relations:endorel} % Endorelations
-\todotext{@Gioele:
-    So ugly. Let’s use $\ela\relA\elb$ instead of $\tup{\ela,\ela}\in\relA$ .
-}
+
 \begin{table*}[bp]
     \caption{Summary of endorelation properties.}
     \begin{tabular}{cccc}
         Reflexive & Total & Transitive & Symmetric\\[+10pt]
-        \prftree{\true}{\tup{\ela,\ela}\in \relA} & \prftree{\true}{\tup{\ela,\elb}\in \relA\vee \tup{\elb,\ela}\in \relA}&
-        \prftree{\tup{\ela,\elb}\in \relA}{\tup{\ela,\elb}\in \relA}{\tup{\ela,\elc}\in \relA}& \prftree[double line]{\tup{\ela,\ela'}\in \relA}{\tup{\ela',\ela}\in \relA}\\[+10pt]
+        \prftree{\true}{\inrel{\ela}{\relA}{\ela}} & \prftree{\true}{\inrel{\ela}{\relA}{\elb} \boolor \inrel{\elb}{\relA}{\ela}}&
+        \prftree{\inrel{\ela}{\relA}{\elb}}{\inrel{\ela}{\relA}{\elb}}{\inrel{\ela}{\relA}{\elc}}& \prftree[double line]{\inrel{\ela}{\relA}{\ela'}}{\inrel{\ela'}{\relA}{\ela}}\\[+10pt]
         \multicolumn{2}{c}{Asymmetric} & Irreflexive & Antisymmetric\\[+10pt]
-        \multicolumn{2}{c}{\prftree{\tup{\ela,\elb}\in \relA}{\tup{\elb,\ela}\in \relA}{\false}}& \prftree{\tup{\ela,\ela}\in \relA}{\false}& \prftree{\tup{\ela,\elb}\in \relA}{\tup{\elb,\ela}\in \relA}{\ela=\elb}
+        \multicolumn{2}{c}{\prftree{\inrel{\ela}{\relA}{\elb}}{\inrel{\elb}{\relA}{\ela}}{\false}}& \prftree{\inrel{\ela}{\relA}{\ela}}{\false}& \prftree{\inrel{\ela}{\relA}{\elb}}{\inrel{\elb}{\relA}{\ela}}{\ela=\elb}
     \end{tabular}
     \label{tab:endo_properties}
 \end{table*}
@@ -23,20 +21,21 @@
 
 \begin{definition}[Endorelation]
     \label{def:endorelation}
-    An \emph{\iindex{endorelation}} on a set~$\setA$ is a relation~$\relA\subseteq \setA\times \setA$.
+    An \emph{\iindex{endorelation}} on a set~$\setA$ is a relation~$\relA\subseteq \setA\cartprod \setA$.
 \end{definition}
 
 \begin{example}
-    ``Equality'' on a set $\setA$ is an endorelation $\relstyle{=}_\setA$ of the form
+    ``Equality'' on a set~$\setA$ is an endorelation~$\relstyle{=}_\setA$ of the form
     \begin{equation}
-        \relstyle{=}_\setA \definedas \{\tup{\ela,\elb}\in \setA\times \setA \mid \ela=\elb\}.
+        \relstyle{=}_\setA \definedas \{\tup{\ela,\elb}\in \setA\cartprod \setA \mid \ela=\elb\}.
     \end{equation}
 \end{example}
 
 \begin{example}
-    Take~$\setA=\natnumbers$. The relation ``less than or equal'' is an endorelation of the form
+    Take~$\setA=\natnumbers$.
+    The relation ``less than or equal'' is an endorelation of the form
     \begin{equation}
-        \relstyle{\leq} \definedas  \{\tup{\ela,\elb}\in \natnumbers\times \natnumbers\mid \ela \leq \elb\}.
+        \relstyle{\leq} \definedas  \{\tup{\ela,\elb}\in \natnumbers\cartprod \natnumbers\mid \ela \leq \elb\}.
     \end{equation}
 \end{example}
 
@@ -46,24 +45,25 @@
 
 \begin{definition}[Properties of endorelations]
     \label{def:properties-endorelations}
-    An endorelation~$\relA\subseteq \setA\times \setA$ is:
+    An endorelation~$\relA\subseteq \setA\cartprod \setA$ is:
     \begin{compactitem}
         \item \emph{Symmetric} if for~$\ela, \ela'\in \setA$:
         %~$\forall \ela, \ela'\in \setA$:~$ \tup{\ela,\ela'}\in \relA \Leftrightarrow \tup{\ela',\ela}\in \relA$;
         \begin{equation}
-            \prftree[double line]{\tup{\ela,\ela'}\in \relA}{\tup{\ela',\ela}\in \relA}
+            \prftree[double line]{\inrel{\ela}{\relA}{\ela'}}{\inrel{\ela'}{\relA}{\ela}}
         \end{equation}
-        \item \emph{Reflexive} if~$\forall \ela\in \setA$:~$\tup{\ela,\ela}\in \relA$;
+        \item \emph{Reflexive} if~$\forall \ela\in \setA$:~$\inrel{\ela}{\relA}{\ela}$;
         \item \emph{Transitive} if for~$\ela, \ela', \ela'' \in \setA$:
         %~$\forall \ela, \ela', \ela'' \in \setA$: $\left( \tup{\ela,\ela'}\in \relA \wedge \tup{\ela',\ela''}\in \relA \right)  \Rightarrow \tup{\ela, \ela''}\in \relA$.
         \begin{equation}
-            \prftree{\tup{\ela,\ela'}\in \relA}{\tup{\ela',\ela''}\in \relA}{\tup{\ela, \ela''}\in \relA}
+            \prftree{\inrel{\ela}{\relA}{\ela'}}{\inrel{\ela'}{\relA}{\ela''}}{\inrel{\ela}{\relA}{\ela''}}
         \end{equation}
     \end{compactitem}
 \end{definition}
 
 \begin{example}
-    The relation ``less than or equal'' on~$\natnumbers$ is not symmetric. It is reflexive since~$n\leq n \ \forall n\in \natnumbers$, and it is transitive since~$l\leq m$ and~$m\leq n$ implies~$l\leq m$.
+    The relation ``less than or equal'' on~$\natnumbers$ is not symmetric.
+    It is reflexive since~$n\leq n \ \forall n\in \natnumbers$, and it is transitive since~$l\leq m$ and~$m\leq n$ implies~$l\leq m$.
 \end{example}
 
 \begin{example}
@@ -76,7 +76,7 @@
     \label{fig:ex_sym_rel}
 \end{marginfigure}
 \begin{example}
-    The endorelation depicted in \cref{fig:ex_sym_rel} is a symmetric relation on~$X=\{x_1,x_2\}$.
+    The endorelation depicted in \cref{fig:ex_sym_rel} is a symmetric relation on~$\stylesets{X}=\{\styleelements{x}_1,\styleelements{x}_2\}$.
 \end{example}
 
 \devel{\includepdf[scale=0.8,pages={8},nup=1x3,frame,pagecommand={}]{ACT4E-06-posets.pdf} }% equivalence}
@@ -84,7 +84,8 @@
 \linkvideo{spring2021-relations:relations:equivalence-rel} % Equivalence relations
 \begin{definition}[Equivalence relation]
     \label{def:equivalence-relation}
-    An endorelation~$\relA\subseteq \setA\times \setA$ is an \emph{\iindex{equivalence relation}} if it is symmetric, reflexive, and transitive. We write~$\ela\sim \ela'$ if~$\tup{\ela,\ela'}\in \relA$.
+    An endorelation~$\relA\subseteq \setA\cartprod \setA$ is an \emph{\iindex{equivalence relation}} if it is symmetric, reflexive, and transitive.
+    We write~$\ela\sim \ela'$ if~$\inrel{\ela}{\relA}{\ela'}$.
 \end{definition}
 
 \begin{example}
