@@ -45,7 +45,7 @@ parts-standalones-fast=$(subst part.tex,part-standalone-fast.tex,$(parts))
 parts-standalones-public-fast=$(subst part.tex,part-standalone-public-fast.tex,$(parts))
 parts-pdf        =$(subst part.tex,part-standalone.pdf,$(parts))
 parts-links      =$(subst part.tex,part-link-snippets, $(parts))
-parts-link-minted =$(subst part.tex,part-link-minted, $(parts))
+parts-link-minted=$(subst part.tex,part-link-minted,   $(parts))
 parts-makefiles  =$(subst part.tex,Makefile,           $(parts))
 
 parts-pdf: $(parts-pdf)
@@ -93,7 +93,15 @@ volumes/%/Makefile: templates/template-Makefile.mk
 	make -C $* part-once
 
 
-standalone: $(chapters-standalones) $(parts-standalones) $(chapters-standalones-fast) $(parts-standalones-fast) $(parts-standalones-public-fast) $(chapters-standalones-public-fast) $(chapters-standalones-noslides-fast)
+standalone: \
+	$(parts-standalones) \
+	$(parts-standalones-fast) \
+	$(parts-standalones-public-fast)  \
+	$(chapters-standalones) \
+	$(chapters-standalones-fast) \
+	$(chapters-standalones-public-fast) \
+	$(chapters-standalones-noslides-fast)
+
 links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-minted)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
