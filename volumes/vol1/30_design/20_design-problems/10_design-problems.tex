@@ -280,9 +280,9 @@ We start by defining a ``design problem with implementation'', which is a tuple 
     by considering the units as discussed in \cref{sec:currency_cat}.
     The correspondences are given by the details in \cref{tab:electric_motors_2}.
     For instance, we have
-    \begin{equation}
-        \prov_\mathrm{EM}(1204)=\unit[0.18]{kg\cdot cm}, \quad \req_\mathrm{EM}(1204)=\tup{\unit[60]{g},\unit[2.34]{W},\unit[19.95]{USD}}.
-    \end{equation}
+    \begin{align}
+        \prov_\mathrm{EM}(1204)=\unit[0.18]{kg\cdot cm}, \\ \req_\mathrm{EM}(1204)=\tup{\unit[60]{g},\unit[2.34]{W},\unit[19.95]{USD}}.
+    \end{align}
     
     \begin{comment}
         
@@ -323,7 +323,7 @@ A DPI is represented as a box with~$\dpinumf$ green edges and~$\dpinumr$ red edg
 \begin{figure}[h]
     \centering
     \includesag{520_general_dp}
-    \todographics{There is an extra parenthesis}
+    \todographics{@Gioele: There is an extra parenthesis}
     \caption{}
     \label{fig:dp_graphical}
 \end{figure}
@@ -349,7 +349,7 @@ We now present a list of design problems for different disciplines, to showcase 
 \subsubsection{Mechatronics}
 Many mechanisms can be readily modeled as relations between a provided functionality and required resources.
 
-\todostructure{Yet another different model of a motor.
+\todostructure{@Gioele: Yet another different model of a motor.
 Either harmonize all in one, or explicitly have discussion about how the same thing can have different models}
 \begin{example}
     The \textF{functionality} of a DC motor~(\cref{fig:dc_motor}) is to provide a certain \textF{speed} and \textF{torque}, and the \textR{resources} are \textR{current} and \textR{voltage}.
@@ -547,199 +547,198 @@ In a multi-robot system there is always a trade-off between the number of robots
                 \mat{SA}+\mat{A}^*\mat{S}-\mat{SBR}^{-1}\mat{B}^*\mat{S}+\mat{Q}=\mat{0}.
             \end{equation}
             The minimum cost~$J^\star$ achieved by the optimal control is:
-            %\footnote{Note that~\cite{davis1977} contains a typo at p.188 (one extra $\mat{V}^{-1}$ factor).
-            Instead,~\cite{kwakernaak1972} has a cleaner derivation and exposition.}
-\begin{equation*}
-    \label{eq:contmincost}
-    \begin{aligned}
-        J^\star&=\trace{(\bar{\mat{S}}\bar{\mat{\Sigma}}\mat{C}^*\mat{V}^{-1}\mat{C}\bar{\mat{\Sigma}}+\bar{\mat{\Sigma}}\mat{Q})}\\
-        &=\trace{(\bar{\mat{\Sigma}}\bar{\mat{S}}\mat{BR}^{-1}\mat{B}^*\bar{\mat{S}}+\bar{\mat{S}}\mat{W})},
-    \end{aligned}
-\end{equation*}
-where~$\bar{\mat{\Sigma}}\in \posdef$ is the solution of the Riccati equation
-\begin{equation}
-    \label{eq:cont_ric_2}
-    \mat{A\Sigma} + \mat{\Sigma A}^*-\mat{\Sigma C}^*\mat{V}^{-1}\mat{C\Sigma}+\mat{W}=\mat{0}.
-\end{equation}
-\end{lemma}
-
-
-
-\begin{equation*}
-\label{eq:ptrack}
-\track=\lim_{t\to \infty}\mathbb{E}\{\mat{x}_t^\intercal \mat{Q}\mat{x}_t\}.
-\end{equation*}
-
-\begin{equation*}
-\label{eq:peffort}
-\effort=\lim_{t\to \infty}\mathbb{E}\{\mat{u}_t^\intercal \mat{R} \mat{u}_t \}
-\end{equation*}
-
-
-\begin{lemma}
-\label{lem:precision}
-The metrics $\track$ and $\effort$ can be written as
-\begin{equation*}
-\begin{aligned}
-\lim_{t\to \infty}\mathbb{E}\{ \mat{x}_t^\intercal \mat{Q}_0\mat{x}_t\}&=\trace(\mat{Q}_0\left( \mat{\Sigma} +\mat{F}\right)), \\
-\lim_{t\to \infty}\mathbb{E}\{ \mat{u}_t^\intercal \mat{R}_0\mat{u}_t\}&=\trace(\mat{S}\mat{B}^*\mat{R}^{-1}\mat{R}_0\mat{R}^{-1}\mat{B}\mat{S}\mat{F}),
-\end{aligned}
-\end{equation*}
-where
-$\mat{\Sigma}$ solves the Riccati equation for estimation,~$\mat{F}$ solves the Lyapunov equation
-\begin{equation}
-\label{eq:lyapct}
-\left( \mat{A}-\mat{B}\mat{K}\right)\mat{F}+\mat{F}\left(\mat{A}-\mat{B}\mat{K}\right)^*+\mat{L}\mat{V}\mat{L}^*=\mat{0},
-\end{equation}
-$\mat{S}$ solves the Riccati equation for control, and~$\mat{L}=\mat{\Sigma}\mat{C}^*\mat{V}^{-1}$ is the Kalman gain.
-\end{lemma}
-
-
-\begin{lemma}
-\label{lem:codesigncnt_1}
-Let~$\mat{Q}(\alpha)=\alpha \mat{Q}_0$ and~$\mat{R}(\alpha)=\frac{1}{\alpha}\mat{R}_0$, $\alpha\in \mathbb{R}_+$.
-Let~$\mat{u}^\star(\alpha)$ be the solution of the LQG problem with $\mat{Q}(\alpha)$ and $\mat{R}(\alpha)$.
-Then, under optimal control one has:
-\begin{compactitem}
-\item $P_\mathrm{track}(\alpha)$ is decreasing with $\alpha$
-increasing.
-\item $P_\mathrm{effort}(\alpha)$ is increasing with $\alpha$ increasing.
-\end{compactitem}
-\end{lemma}
-
-
-\begin{lemma}
-\label{lem:cont_V_W}
-The solution of  \cref{eq:cont_ric_2} is monotonic in $\mat{V}$ and $\mat{W}$, i.e., $\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')$.
-\end{lemma}
-
-\begin{lemma}
-\label{lem:codesigncnt_2}
-Consider the situation of \cref{lemma:codesigncnt_1}:
-\begin{compactitem}
-\item Fix $P_\mathrm{track}$. $P_\mathrm{effort}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
-\item Fix $P_\mathrm{effort}$. $P_\mathrm{track}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
-\end{compactitem}
-\end{lemma}
-
-\begin{equation*}
-\label{eq:lqg_simple}
-\begin{tikzpicture}[DP, dp port sep =3]
-\node(ref) at (0,0){};
-\node[dp={2}{2},below=0.5cm of ref] (cnt) {LQG};
-\draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
-\draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
-\draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
-\draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
-\end{tikzpicture}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:brown_1}
-\mat{v}_t
-\end{equation*}
-
-\begin{equation*}
-\label{eq:brown_2}
-\mat{w}_t
-\end{equation*}
-
-\begin{equation*}
-\label{eq:cov_1}
-\mat{W}=\mat{EE^*}
-\end{equation*}
-\begin{equation*}
-\label{eq:cov_2}
-\mat{V}=\mat{GG^*}
-\end{equation*}
-
-
-\begin{equation*}
-\label{eq:optimal_control}
-\mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t
-\end{equation*}
-
-\begin{equation*}
-\label{eq:x_estimate}
-\hat{\mat{x}}_t
-\end{equation*}
-\begin{equation*}
-\label{eq:x_real}
-\mat{x}_t
-\end{equation*}
-
-\begin{equation*}
-\label{eq:ric_1}
-\bar{\mat{S}}
-\end{equation*}
-\begin{equation*}
-\label{eq:ric_2}
-\bar{\mat{\Sigma}}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:mon_est}
-\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')
-\end{equation*}
-
-\begin{definition}
-\label{def:poset_cont}
-A \emph{poset} is a tuple $\tup{P,\preceq_P}$, where $P$ is a set and $\preceq_P$ is a partial order, defined as a reflexive, transitive, and antisymmetric relation.
-\end{definition}
-
-\begin{equation*}
-\label{eq:posreals}
-\tup{\reals_{\geq 0},\leq}
-\end{equation*}
-\begin{equation*}
-\label{eq:nats}
-\tup{\natnumbers,\leq}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:matrix_poset}
-\mat{A}=\begin{pmatrix}
-1& 0\\0& 1
-\end{pmatrix}, \quad \mat{B}=\begin{pmatrix}
-2& 0\\0& 1
-\end{pmatrix},\quad \mat{C}=\begin{pmatrix}
-2& 0\\0& 0.5
-\end{pmatrix}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:lqg_delay}
-\begin{tikzpicture}[DP, dp port sep =3]
-\node[dp={3}{2}] (cnt) {LQG};
-\draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
-\draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
-\draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
-\draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
-\draw[funconn, funame={delay},relfun=above, posfun=1] (cnt_fun3){};
-\end{tikzpicture}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:lqg_disc}
-\begin{tikzpicture}[DP, dp port sep = 1.5]
-\node[dp={4}{2}] (cnt) {LQG Control};
-\draw[runconn, runame={tracking error $\track$}, relres=right] (cnt_res1){};
-\draw[runconn, runame={control effort $\effort$},relres=right] (cnt_res2){};
-\draw[funconn, funame={observation noise $\mat{V}$},relfun=left] (cnt_fun1){};
-\draw[funconn, funame={system noise $\mat{W}$},relfun=left] (cnt_fun2){};
-\draw[funconn, funame={delay $d$},relfun=left] (cnt_fun3){};
-%\draw[funconn, funame={sampling period $\delta$},relfun=left] (cnt_fun4){};
-\draw[funconn, funame={dropping probability $p$},relfun=left] (cnt_fun4){};
-\end{tikzpicture}
-\end{equation*}
-
-\begin{equation*}
-\label{eq:poset_order_mat}
-\mat{A}\posleq \mat{B} \Leftrightarrow (\mat{B}-\mat{A})\in \mathcal{P}^n, \quad \mat{A},\mat{B}\in \mathcal{P}^n
-\end{equation*}
-
-
-\end{forslides}
+            %\footnote{Note that~\cite{davis1977} contains a typo at p.188 (one extra $\mat{V}^{-1}$ factor). Instead,~\cite{kwakernaak1972} has a cleaner derivation and exposition.}
+            \begin{equation*}
+                \label{eq:contmincost}
+                \begin{aligned}
+                    J^\star&=\trace{(\bar{\mat{S}}\bar{\mat{\Sigma}}\mat{C}^*\mat{V}^{-1}\mat{C}\bar{\mat{\Sigma}}+\bar{\mat{\Sigma}}\mat{Q})}\\
+                    &=\trace{(\bar{\mat{\Sigma}}\bar{\mat{S}}\mat{BR}^{-1}\mat{B}^*\bar{\mat{S}}+\bar{\mat{S}}\mat{W})},
+                \end{aligned}
+            \end{equation*}
+            where~$\bar{\mat{\Sigma}}\in \posdef$ is the solution of the Riccati equation
+            \begin{equation}
+                \label{eq:cont_ric_2}
+                \mat{A\Sigma} + \mat{\Sigma A}^*-\mat{\Sigma C}^*\mat{V}^{-1}\mat{C\Sigma}+\mat{W}=\mat{0}.
+            \end{equation}
+        \end{lemma}
+        
+        
+        
+        \begin{equation*}
+            \label{eq:ptrack}
+            \track=\lim_{t\to \infty}\mathbb{E}\{\mat{x}_t^\intercal \mat{Q}\mat{x}_t\}.
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:peffort}
+            \effort=\lim_{t\to \infty}\mathbb{E}\{\mat{u}_t^\intercal \mat{R} \mat{u}_t \}
+        \end{equation*}
+        
+        
+        \begin{lemma}
+            \label{lem:precision}
+            The metrics $\track$ and $\effort$ can be written as
+            \begin{equation*}
+                \begin{aligned}
+                    \lim_{t\to \infty}\mathbb{E}\{ \mat{x}_t^\intercal \mat{Q}_0\mat{x}_t\}&=\trace(\mat{Q}_0\left( \mat{\Sigma} +\mat{F}\right)), \\
+                    \lim_{t\to \infty}\mathbb{E}\{ \mat{u}_t^\intercal \mat{R}_0\mat{u}_t\}&=\trace(\mat{S}\mat{B}^*\mat{R}^{-1}\mat{R}_0\mat{R}^{-1}\mat{B}\mat{S}\mat{F}),
+                \end{aligned}
+            \end{equation*}
+            where
+            $\mat{\Sigma}$ solves the Riccati equation for estimation,~$\mat{F}$ solves the Lyapunov equation
+            \begin{equation}
+                \label{eq:lyapct}
+                \left( \mat{A}-\mat{B}\mat{K}\right)\mat{F}+\mat{F}\left(\mat{A}-\mat{B}\mat{K}\right)^*+\mat{L}\mat{V}\mat{L}^*=\mat{0},
+            \end{equation}
+            $\mat{S}$ solves the Riccati equation for control, and~$\mat{L}=\mat{\Sigma}\mat{C}^*\mat{V}^{-1}$ is the Kalman gain.
+        \end{lemma}
+        
+        
+        \begin{lemma}
+            \label{lem:codesigncnt_1}
+            Let~$\mat{Q}(\alpha)=\alpha \mat{Q}_0$ and~$\mat{R}(\alpha)=\frac{1}{\alpha}\mat{R}_0$, $\alpha\in \mathbb{R}_+$.
+            Let~$\mat{u}^\star(\alpha)$ be the solution of the LQG problem with $\mat{Q}(\alpha)$ and $\mat{R}(\alpha)$.
+            Then, under optimal control one has:
+            \begin{compactitem}
+                \item $P_\mathrm{track}(\alpha)$ is decreasing with $\alpha$
+                increasing.
+                \item $P_\mathrm{effort}(\alpha)$ is increasing with $\alpha$ increasing.
+            \end{compactitem}
+        \end{lemma}
+        
+        
+        \begin{lemma}
+            \label{lem:cont_V_W}
+            The solution of  \cref{eq:cont_ric_2} is monotonic in $\mat{V}$ and $\mat{W}$, i.e., $\tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')$.
+        \end{lemma}
+        
+        \begin{lemma}
+            \label{lem:codesigncnt_2}
+            Consider the situation of \cref{lemma:codesigncnt_1}:
+            \begin{compactitem}
+                \item Fix $P_\mathrm{track}$. $P_\mathrm{effort}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
+                \item Fix $P_\mathrm{effort}$. $P_\mathrm{track}$ is monotonic in $\mat{W}$ and in $\mat{V}$.
+            \end{compactitem}
+        \end{lemma}
+        
+        \begin{equation*}
+            \label{eq:lqg_simple}
+            \begin{tikzpicture}[DP, dp port sep =3]
+                \node(ref) at (0,0){};
+                \node[dp={2}{2},below=0.5cm of ref] (cnt) {LQG};
+                \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
+                \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
+                \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
+                \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
+            \end{tikzpicture}
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:brown_1}
+            \mat{v}_t
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:brown_2}
+            \mat{w}_t
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:cov_1}
+            \mat{W}=\mat{EE^*}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:cov_2}
+            \mat{V}=\mat{GG^*}
+        \end{equation*}
+        
+        
+        \begin{equation*}
+            \label{eq:optimal_control}
+            \mat{u}_t^\star =-\mat{K}\hat{\mat{x}}_t=-\mat{R}^{-1}\mat{B}^*\bar{\mat{S}}\hat{\mat{x}}_t
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:x_estimate}
+            \hat{\mat{x}}_t
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:x_real}
+            \mat{x}_t
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:ric_1}
+            \bar{\mat{S}}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:ric_2}
+            \bar{\mat{\Sigma}}
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:mon_est}
+            \tup{\mat{V},\mat{W}}\preceq \tup{\mat{V}',\mat{W}'} \Rightarrow \mat{\Sigma}(\mat{V},\mat{W})\preceq \mat{\Sigma}(\mat{V}',\mat{W}')
+        \end{equation*}
+        
+        \begin{definition}
+            \label{def:poset_cont}
+            A \emph{poset} is a tuple $\tup{P,\preceq_P}$, where $P$ is a set and $\preceq_P$ is a partial order, defined as a reflexive, transitive, and antisymmetric relation.
+        \end{definition}
+        
+        \begin{equation*}
+            \label{eq:posreals}
+            \tup{\reals_{\geq 0},\leq}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:nats}
+            \tup{\natnumbers,\leq}
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:matrix_poset}
+            \mat{A}=\begin{pmatrix}
+                        1& 0\\0& 1
+            \end{pmatrix}, \quad \mat{B}=\begin{pmatrix}
+                                             2& 0\\0& 1
+            \end{pmatrix},\quad \mat{C}=\begin{pmatrix}
+                                            2& 0\\0& 0.5
+            \end{pmatrix}
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:lqg_delay}
+            \begin{tikzpicture}[DP, dp port sep =3]
+                \node[dp={3}{2}] (cnt) {LQG};
+                \draw[runconn, runame={tracking error $\track$}, relres=above, posres=2.6] (cnt_res1){};
+                \draw[runconn, runame={control effort $\effort$},relres=above,posres=2.6] (cnt_res2){};
+                \draw[funconn, funame={observation noise $\mat{V}$},relfun=above, posfun=2.3] (cnt_fun1){};
+                \draw[funconn, funame={system noise $\mat{W}$},relfun=above, posfun=2.3] (cnt_fun2){};
+                \draw[funconn, funame={delay},relfun=above, posfun=1] (cnt_fun3){};
+            \end{tikzpicture}
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:lqg_disc}
+            \begin{tikzpicture}[DP, dp port sep = 1.5]
+                \node[dp={4}{2}] (cnt) {LQG Control};
+                \draw[runconn, runame={tracking error $\track$}, relres=right] (cnt_res1){};
+                \draw[runconn, runame={control effort $\effort$},relres=right] (cnt_res2){};
+                \draw[funconn, funame={observation noise $\mat{V}$},relfun=left] (cnt_fun1){};
+                \draw[funconn, funame={system noise $\mat{W}$},relfun=left] (cnt_fun2){};
+                \draw[funconn, funame={delay $d$},relfun=left] (cnt_fun3){};
+                %\draw[funconn, funame={sampling period $\delta$},relfun=left] (cnt_fun4){};
+                \draw[funconn, funame={dropping probability $p$},relfun=left] (cnt_fun4){};
+            \end{tikzpicture}
+        \end{equation*}
+        
+        \begin{equation*}
+            \label{eq:poset_order_mat}
+            \mat{A}\posleq \mat{B} \Leftrightarrow (\mat{B}-\mat{A})\in \mathcal{P}^n, \quad \mat{A},\mat{B}\in \mathcal{P}^n
+        \end{equation*}
+    
+    
+    \end{forslides}
 }
 
 \subsubsection{Computation graphs}
@@ -749,9 +748,9 @@ The trivial model of a CPU is as a device that provides \Fcol{computation, measu
 Clearly there is a monotone relation between the two.
 
 \begin{figure}[h]
-\centering
-\includesag{520_dp_cpu}
-\caption{}
+    \centering
+    \includesag{520_dp_cpu}
+    \caption{}
 \end{figure}
 
 A similar monotone relation between application requirements and computation resources holds in a much more general setting, where both application and computation resources are represented by graphs.
@@ -760,17 +759,17 @@ This will be an example of a monotone relation between nontrivial partial orders
 In the Static Data Flow (SDF) model of computation~\cite[Chapter 3]{sriram00,lee10}, the application is represented as a graph of procedures that need to be allocated on a network of processors.
 
 \begin{figure}[h]
-\centering
-\subfloat[]{
-\includegraphics[scale=0.65]{reits2_small_app_graph}
-}
-\subfloat[]{
-\includegraphics[scale=0.65]{reits2_small_res_graph}
-}
-\subfloat[]{
-\includegraphics[scale=0.65]{reits2_small_allocation}
-}
-\caption{}
+    \centering
+    \subfloat[]{
+        \includegraphics[scale=0.65]{reits2_small_app_graph}
+    }
+    \subfloat[]{
+        \includegraphics[scale=0.65]{reits2_small_res_graph}
+    }
+    \subfloat[]{
+        \includegraphics[scale=0.65]{reits2_small_allocation}
+    }
+    \caption{}
 \end{figure}
 
 
@@ -794,47 +793,47 @@ Given an application graph~$A$ and a resource graph~$R$, a typical resource allo
 This is equivalent to the problem of finding a graph homomorphism~$\Psi \colon A \Rightarrow R$.
 Let~$T^{\ast}$ be the optimal throughput, and write it as a function of the two graphs:
 \begin{equation*}
-T^{\ast}=T^{\ast}(A,R).
+    T^{\ast}=T^{\ast}(A,R).
 \end{equation*}
 Then the optimal throughput~$T^{\ast}$ is decreasing in~$A$ (a more computationally demanding application graph decreases the throughput) and increasing in~$R$ (more available computation/bandwidth increase the throughput).
 
 Therefore, we can formalize this as a design problem where the two functionalities are \F{the throughput~$T$ [Hz]} and \F{the application graph~$A$}, and the \R{resource graph~$R$} is the resource.
 
-\begin{figure}[h!]
-\centering
-\includesag{dp_resourcegraph}
-\caption{}
-\end{figure}
+\begin{figure*}[h!]
+    \centering
+    \includesag{dp_resourcegraph}
+    \caption{}
+\end{figure*}
 
 
 \begin{example}
-Svorenova\,\,\etal~\cite{svorenova16resource} consider a joint sensor scheduling and control synthesis problem, in which a robot can decide to not perform sensing to save power, given performance objectives on the probability of reaching the target and the probability of collision.
-The method outputs a Pareto frontier of all possible operating points.
-This can be cast as a design problem with functionality equal to the \F{probability of reaching the target} and (the inverse of) \F{the collision probability}, and with resources equal to the
-\R{actuation power}, \R{sensing power}, and \R{sensor accuracy}.
+    Svorenova\,\,\etal~\cite{svorenova16resource} consider a joint sensor scheduling and control synthesis problem, in which a robot can decide to not perform sensing to save power, given performance objectives on the probability of reaching the target and the probability of collision.
+    The method outputs a Pareto frontier of all possible operating points.
+    This can be cast as a design problem with functionality equal to the \F{probability of reaching the target} and (the inverse of) \F{the collision probability}, and with resources equal to the
+    \R{actuation power}, \R{sensing power}, and \R{sensor accuracy}.
 \end{example}
 
 \begin{figure}[h]
-\centering
-\includesag{520_dp_svorenova}
-\caption{}
-\label{fig:progressive-1-1}
+    \centering
+    \includesag{520_dp_svorenova}
+    \caption{}
+    \label{fig:progressive-1-1}
 \end{figure}
 %\captionsideleft{\label{fig:progressive-1-1}}{\includegraphics[scale=0.33]{batteries_svorenova.pdf}}
 
 
 \begin{example}
-Nardi\,\,\etal~\cite{zia16comparative} describe a benchmarking system for visual SLAM that provides the empirical characterization of the monotone relation between \F{the accuracy} of the visual
-SLAM solution, the \F{throughput {[}frames/s{]}} and \R{the energy for computation {[}J/frame{]}}.
-The implementation space is the product of algorithmic parameters, compiler flags, and architecture choices, such as the number of GPU cores active.
-This is an example of a design problem whose functionality-resources map needs to be experimentally evaluated.
+    Nardi\,\,\etal~\cite{zia16comparative} describe a benchmarking system for visual SLAM that provides the empirical characterization of the monotone relation between \F{the accuracy} of the visual
+    SLAM solution, the \F{throughput {[}frames/s{]}} and \R{the energy for computation {[}J/frame{]}}.
+    The implementation space is the product of algorithmic parameters, compiler flags, and architecture choices, such as the number of GPU cores active.
+    This is an example of a design problem whose functionality-resources map needs to be experimentally evaluated.
 \end{example}
 
 \begin{figure}[h]
-\centering
-\includesag{520_dp_zia}
-\caption{}
-\label{fig:dp_zia}
+    \centering
+    \includesag{520_dp_zia}
+    \caption{}
+    \label{fig:dp_zia}
 \end{figure}
 
 \subsubsection{Other examples in minimal robotics}
@@ -851,11 +850,11 @@ Given a task, there is a minimal antichain in the resources poset that describes
 
 
 \begin{figure}
-\centering
-\includesag{dp_robotics}
-\todojira{156}{finish with axes}
-\caption{}
-\label{fig:robot-generic}
+    \centering
+    \includesag{dp_robotics}
+    \todojira{156}{finish with axes}
+    \caption{}
+    \label{fig:robot-generic}
 \end{figure}
 
 
@@ -877,7 +876,7 @@ studies the relation between the \F{performance of a visual task}, and the \R{mi
 
 \todotextjira{157}{to write}
 \begin{publictodo}
-Missing: Example of Hoare triples.
+    Missing: Example of Hoare triples.
 \end{publictodo}
 % \begin{example}[Hoare logic]
 
