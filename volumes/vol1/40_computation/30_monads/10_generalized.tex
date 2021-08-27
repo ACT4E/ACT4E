@@ -112,7 +112,7 @@ To summarize:
         \item A way to define composition, through a map, traditionally called ``fish'', of type
         \begin{equation}
             \label{eq:monad-fish}
-            \fish_{\Obja, \Objb, \Objc}: (\Obja \to \powerset\Objb) \times (\Objb \to \powerset\Objc)
+            \fish_{\Obja, \Objb, \Objc}: (\Obja \to \powerset\Objb) \cartprod (\Objb \to \powerset\Objc)
             \to (\Obja \to \powerset \Objc)
         \end{equation}
     \end{enumerate}
@@ -305,7 +305,7 @@ In this case, we would like to extend a function
 into a procedure
 \begin{equation}
     \label{eq:monad-resource-1}
-    \mora: \Obja \to (\Objb\times \nonNegReals)
+    \mora: \Obja \to (\Objb\cartprod \nonNegReals)
 \end{equation}
 which gives both the result as well as the execution time.
 
@@ -317,11 +317,11 @@ We can define the $\lift$ map as follows:
     \definemap%
     {\lift_{\Obja, \Objb}}%
     {(\Obja \to \Objb)}%
-    {(\Obja \to \Objb \times \nonNegReals)}%
+    {(\Obja \to \Objb \cartprod \nonNegReals)}%
     {\mora}{%
         \begin{cases}
             \definemap{\lift_{\Obja, \Objb}\mora}%
-            {\Obja}{\Objb\times\nonNegReals}
+            {\Obja}{\Objb\cartprod\nonNegReals}
             {x}{\tup{x, 0}}
         \end{cases}
     }
@@ -346,9 +346,9 @@ As for the fish function we have
 \begin{equation}
     \label{eq:monad-resource-fish}
     \prftree%[l]{\fish\colon}%
-    {\mora: \Obja \to (\Objb \times \nonNegReals)}%
-    {\quad}{\morb: \Objb \to (\Objc \times \nonNegReals)}%
-    {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\times \nonNegReals)}%
+    {\mora: \Obja \to (\Objb \cartprod \nonNegReals)}%
+    {\quad}{\morb: \Objb \to (\Objc \cartprod \nonNegReals)}%
+    {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\cartprod \nonNegReals)}%
     {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) + \mora_2(x) } }}
 \end{equation}
 %
@@ -369,11 +369,11 @@ This can be further generalized from the real numbers to an arbitrary monoid
     \definemap%
     {\lift_{\Obja, \Objb}}%
     {(\Obja \to \Objb)}%
-    {(\Obja \to \Objb \times \monoidAset)}%
+    {(\Obja \to \Objb \cartprod \monoidAset)}%
     {\mora}{%
         \begin{cases}
             \definemap{\lift_{\Obja, \Objb}\mora}%
-            {\Obja}{\Objb\times\monoidAset}
+            {\Obja}{\Objb\cartprod\monoidAset}
             {x}{\tup{x, \idmon_\monoidA}}
         \end{cases}
     }
@@ -385,8 +385,8 @@ As for the fish function we have
 \begin{equation}
     \label{eq:monad-resource-monoid-fish}
     \prftree%[l]{\fish\colon}%
-    {\mora: \Obja \to (\Objb \times \monoidAset)}%
-    {\quad}{\morb: \Objb \to (\Objc \times \monoidAset)}%
-    {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\times \monoidAset)}%
+    {\mora: \Obja \to (\Objb \cartprod \monoidAset)}%
+    {\quad}{\morb: \Objb \to (\Objc \cartprod \monoidAset)}%
+    {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\cartprod \monoidAset)}%
     {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) \mtimes_\monoidA \mora_2(x) } }}
 \end{equation}
