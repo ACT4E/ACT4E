@@ -1,36 +1,47 @@
 \paragraph{Abstract}
 One of the challenges of modern engineering, and robotics in particular,
 is designing complex systems, composed of many subsystems, rigorously
-and with optimality guarantees. This paper introduces a theory of
+and with optimality guarantees.
+This paper introduces a theory of
 co-design that describes ``design problems'', defined as tuples
 of ``functionality space'', ``implementation space'', and ``resources
 space'', together with a feasibility relation that relates the three
-spaces. Design problems can be interconnected together to create ``co-design
+spaces.
+Design problems can be interconnected together to create ``co-design
 problems'', which describe possibly recursive co-design constraints
-among subsystems. A co-design problem induces a family of optimization
+among subsystems.
+A co-design problem induces a family of optimization
 problems of the type ``find the minimal resources needed to implement
 a given functionality''; the solution is an antichain (Pareto front)
-of resources. A special class of co-design problems are Monotone Co-Design
+of resources.
+A special class of co-design problems are Monotone Co-Design
 Problems (MCDPs), for which functionality and resources are complete
 partial orders and the feasibility relation is monotone and Scott
-continuous. The induced optimization problems are multi-objective,
+continuous.
+The induced optimization problems are multi-objective,
 nonconvex, nondifferentiable, noncontinuous, and not even defined
-on continuous spaces; yet, there exists a complete solution. The antichain
+on continuous spaces; yet, there exists a complete solution.
+The antichain
 of minimal resources can be characterized as a least fixed point,
-and it can be computed using Kleene's algorithm. The computation needed
+and it can be computed using Kleene's algorithm.
+The computation needed
 to solve a co-design problem can be bounded by a function of a graph
-property that quantifies the interdependence of the subproblems. These
+property that quantifies the interdependence of the subproblems.
+These
 results make us much more optimistic about the problem of designing
 complex systems in a rigorous way.
 
 
 \section{Introduction}
 One of the great engineering challenge of this
-century is dealing with the design of ``complex'' systems. A complex
+century is dealing with the design of ``complex'' systems.
+A complex
 system is complex because its components cannot be decoupled; otherwise,
-it would be just a (simple) product of simple systems. The \emph{design}
+it would be just a (simple) product of simple systems.
+The \emph{design}
 of a complex system is complicated because of the ``co-design constraints'',
-which are the constraints that one subsystem induces on another. This
+which are the constraints that one subsystem induces on another.
+This
 paper is an attempt towards formalizing and systematically solving
 the problem of ``co-design'' of complex systems with recursive design
 constraints.
@@ -38,27 +49,38 @@ constraints.
 \subsection{Robotic systems as the prototype of complex systems}
 
 Robotics is the prototypical example of a field that includes heterogeneous
-multi-domain co-design constraints. The design of a robotic system
+multi-domain co-design constraints.
+The design of a robotic system
 involves the choice of physical components, such as the actuators,
 the sensors, the power supply, the computing units, the network links,
-\etc. Not less important is the choice of the software components,
-including perception, planning, and control modules. All these components
-induce co-design constraints on each other. Each physical component
+\etc.
+Not less important is the choice of the software components,
+including perception, planning, and control modules.
+All these components
+induce co-design constraints on each other.
+Each physical component
 has SWAP characteristics such as its shape (which must contained somewhere),
 weight (which adds to the payload), power (which needs to be provided
 by something else), excess heat (which must be dissipated somehow),
-\etc. Analogously, the software components have similar co-design constraints.
-For example, a planner needs a state estimate. An estimator provides
+\etc.
+Analogously, the software components have similar co-design constraints.
+For example, a planner needs a state estimate.
+An estimator provides
 a state estimate, and requires the data from a sensor, which requires
-the presence of a sensor, which requires power. Everything costs money
+the presence of a sensor, which requires power.
+Everything costs money
 to buy or develop or license.
 
 What makes system design problems non trivial is that the constraints
-might be recursive. This is a form of \emph{feedback} in the problem
-of design~(\cref{fig:intro}). For example, a battery provides power,
-which is used by actuators to carry the payload. A larger battery
+might be recursive.
+This is a form of \emph{feedback} in the problem
+of design~(\cref{fig:intro}).
+For example, a battery provides power,
+which is used by actuators to carry the payload.
+A larger battery
 provides more power, but it also increases the payload, so more power
-is needed. Extremely interesting trade-offs arise when considering
+is needed.
+Extremely interesting trade-offs arise when considering
 constraints between the mechanical system and the embodied intelligence.
 For control, typically a better state estimate saves energy in the
 execution, but requires better sensors (which increase the cost and
@@ -72,11 +94,14 @@ the payload) or better computation (which increases the power consumption).
     \caption{A \emph{design problem }is a relation that relates
     the implementations available to the \F{functionality provided}
     and the \R{resources required}, both represented as partially ordered
-    sets. A\emph{ co-design problem }is the interconnection of two or
-    more design problems. An edge in a co-design diagram like in the figure
+    sets.
+    A\emph{ co-design problem }is the interconnection of two or
+    more design problems.
+    An edge in a co-design diagram like in the figure
     represent a \emph{co-design constraint}: the resources required by
     the first design problem are a lower bound for the functionality to
-    be provided by the second. The optimization problem to be solved is:
+    be provided by the second.
+    The optimization problem to be solved is:
     find the solutions that are minimal in resources usage, given a lower
     bound on the functionality to be provided. }
     \label{fig:intro}
@@ -84,31 +109,19 @@ the payload) or better computation (which increases the power consumption).
 
 \subsection{Contribution: A Principled Theory of Co-Design}
 
-This paper describes a theory to deal with arbitrarily complex co-design
-problems in a principled way. A~\emph{design problem} is defined
-as a tuple of functionality space, implementation space, and a resources
-space, plus the two maps that relate an implementation to functionality
-provided and resources required. A design problem defines a family
-of optimization problems of the type ``find the minimal resources
-needed to implement a given functionality''. A \emph{co-design problem}
-is an interconnection of design problems according to an arbitrary
-graph structure, including feedback connections. Monotone Co-Design
-Problems (MCDPs) are the composition of design problems for which
-both functionality and resources are complete partial orders, and
-the relation between functionality implemented and resources needed
-is monotone (order-preserving) and \scottcontinuous. The first main
-result in this paper (\cref{thm:CDP-monotone}) is that the
-class of MCDPs is closed with respect to interconnection. The second
-main result (\cref{thm:CDP-solvig}) is that there exists
-a systematic procedure to solve an MCDP, assuming there is a procedure
-to solve the primitive design problems. The solution of an MCDP\textemdash a
-Pareto front, or ``antichain'' of minimal resources\textemdash can
-be found by solving a least fixed point iteration in the space of
-antichains. The complexity of this iteration depends on the structure
-of the co-design diagram.
+This paper describes a theory to deal with arbitrarily complex co-design problems in a principled way.
+A~\emph{design problem} is defined as a tuple of functionality space, implementation space, and a resources space, plus the two maps that relate an implementation to functionality provided and resources required.
+A design problem defines a family of optimization problems of the type ``find the minimal resources
+needed to implement a given functionality''.
+A \emph{co-design problem} is an interconnection of design problems according to an arbitrary graph structure, including feedback connections.
+Monotone Co-Design Problems (MCDPs) are the composition of design problems for which both functionality and resources are complete partial orders, and the relation between functionality implemented and resources needed is monotone (order-preserving) and \scottcontinuous.
+The first main result in this paper (\cref{thm:CDP-monotone}) is that the class of MCDPs is closed with respect to interconnection.
+The second main result (\cref{thm:CDP-solvig}) is that there exists a systematic procedure to solve an MCDP, assuming there is a procedure to solve the primitive design problems.
+The solution of an MCDP\textemdash a Pareto front, or ``antichain'' of minimal resources\textemdash can be found by solving a least fixed point iteration in the space of antichains.
+The complexity of this iteration depends on the structure of the co-design diagram.
 
-This paper is a generalization of previous work~\cite{censi15monotone},
-where the interconnection was limited to one cycle. A conference
+This paper is a generalization of previous work~\cite{censi15monotone}, where the interconnection was limited to one cycle.
+A conference
 version of this work appeared as~\cite{censi15same}.
 
 \subsection{Outline}
@@ -132,8 +145,10 @@ version of this work appeared as~\cite{censi15same}.
 
 
 Uppercase ``$\Min$'' will denote the \emph{minimal} elements of
-a set. The minimal elements are the elements that are not dominated
-by any other in the set. Lowercase ``$\min$'' denotes\emph{ the
+a set.
+The minimal elements are the elements that are not dominated
+by any other in the set.
+Lowercase ``$\min$'' denotes\emph{ the
 least} element, an element that dominates all others, if it exists.
 (If~$\min S$ exists, then~$\Min S=\{\min S\}$.)
 
@@ -199,9 +214,11 @@ the diagram represents an MCDP as well.
 2) An \textbf{algorithmic result }(\cref{thm:CDP-solvig})
 says that the functionality-resources map~$\ftor$ for the entire
 MCDP has an explicit expression in terms of the maps~$\{\ftor_{\cdpin},\,\cdpin\in\cdpiN\}$
-for the subproblems. If there are cycles in the co-design diagram,
+for the subproblems.
+If there are cycles in the co-design diagram,
 the map~$\ftor$ involves the solution of a\emph{ least fixed point}
-equation in the space of antichains. This equation can be solved using
+equation in the space of antichains.
+This equation can be solved using
 Kleene's algorithm to find the antichain containing all minimal solutions
 at the same time.
 %

@@ -5,7 +5,8 @@
 \label{sec:Numerical-examples}
 
 This example considers the choice of different battery technologies
-for a robot. The goals of this example are: 1) to show how design
+for a robot.
+The goals of this example are: 1) to show how design
 problems can be composed; 2) to show how to define hard constraints
 and precedence between resources to be minimized; 3) to show how even
 relatively simple models can give very complex trade-offs surfaces;
@@ -42,10 +43,11 @@ MCDPs.
             \end{centering}
         }
     \end{centering}
-
+    
     \caption{Panel (c) shows the co-design diagram generated from the code in~(b).
     Panel (d) shows a tree representation (series, parallel) for the diagram.
-    The edges show the types of functionality and resources. The leaves
+    The edges show the types of functionality and resources.
+    The leaves
     are labeled with the Python class used internally by the interpreter
     PyMCDP. }
 \end{figure}
@@ -55,9 +57,11 @@ MCDPs.
 MCDPL is a modeling language to describe MCDPs and their compositions.
 It is inspired by CVX and ``disciplined convex programming''~\cite{grant08graph}.
 MCDPL is even more disciplined than CVX; for example, multiplying
-by a negative number is a \emph{syntax} error. The figures are generated
+by a negative number is a \emph{syntax} error.
+The figures are generated
 by PyMCDP, an interpreter and solver for MCDPs, which implements the
-techniques described in this paper. The software and a manual are
+techniques described in this paper.
+The software and a manual are
 available at \url{http://mcdp.mit.edu}.
 
 \subsection{Model of a battery}
@@ -128,9 +132,10 @@ using the MCDPL code in~\cref{fig:batteries_code}.
         \centering
         \includegraphics[scale=0.66]{batteries_batteries_code}
     }
-
+    
     \caption{The co-product of design problems describes
-    the choices among different technologies. The MCDPL keyword for the
+    the choices among different technologies.
+    The MCDPL keyword for the
     co-product is ``choose''.}
     \label{fig:batteriesbig}
 \end{figure}
@@ -139,7 +144,8 @@ using the MCDPL code in~\cref{fig:batteries_code}.
 
 The design problem for the battery has two functionalities (\F{capacity}
 and \F{number of missions}) and three resources (\R{cost}, \R{mass},
-and \R{maintenance}). Thus, it describes a family of multi-objective
+and \R{maintenance}).
+Thus, it describes a family of multi-objective
 optimization problems, of the type ``Given \F{capacity} and \F{missions},
 minimize $\tup{ \R{\text{cost}},\R{\text{mass}},\R{\text{maintenance}}} $''.
 We can further extend the class of optimization problems by introducing
@@ -153,9 +159,12 @@ such that: 1) The mass does not exceed 3 kg; 2) The mass is minimized
 as a primary objective, while cost/maintenance are secondary objectives.
 
 This semantics can be described by the co-design diagram in~\cref{fig:diagram},
-which contains two new symbols. The DP labeled ``3 kg'' implements
-the semantics of hard constraints. It has one functionality ($\funsp=\F{\Rcomp^{\text{kg}}}$)
-and zero resources~($\ressp=\R{\One}$). The poset~$\One=\{\tup{ } \}$
+which contains two new symbols.
+The DP labeled ``3 kg'' implements
+the semantics of hard constraints.
+It has one functionality ($\funsp=\F{\Rcomp^{\text{kg}}}$)
+and zero resources~($\ressp=\R{\One}$).
+The poset~$\One=\{\tup{ } \}$
 has exactly two antichains: $\emptyset$ and $\{\tup{ } \}$.
 These represent ``infeasible'' and ``feasible'', respectively.
 The DP is described by the map
@@ -176,10 +185,12 @@ The DP is described by the map
 
 \noindent The block labeled~``$\postop$'' is similarly defined and
 always returns ``feasible'', so it has the effect of ignoring \R{cost}
-and \R{maintenance} as objectives. The only resource edge is the
+and \R{maintenance} as objectives.
+The only resource edge is the
 one for \R{mass}, which is then the only objective.
 
-The MCDPL code is shown in~\cref{fig:diagram_code}. Note the intuitive
+The MCDPL code is shown in~\cref{fig:diagram_code}.
+Note the intuitive
 interface: the user can directly write ``mass required by battery
 $\leq$ 3 kg'' and ``ignore maintenance required by battery'',
 which is compiled to ``maintenance required by battery $\leq\postop$''.
@@ -192,7 +203,7 @@ which is compiled to ``maintenance required by battery $\leq\postop$''.
             \begin{minipage}[t]{8.6cm}
                 \includegraphics[scale=0.4]{batteries_batteries_constraints}
             \end{minipage}
-
+            
         }
     \end{centering}
     \begin{centering}
@@ -203,9 +214,10 @@ which is compiled to ``maintenance required by battery $\leq\postop$''.
         }
     \end{centering}
     \smallskip{}
-
+    
     \caption{Composition of MCDPs can express hard constraints and precedence of
-    objectives. In this case, there is a hard constraint on the \R{mass}.
+    objectives.
+    In this case, there is a hard constraint on the \R{mass}.
     Because there is only one outgoing edge for \R{mass}, and the \R{cost}
     and \R{maintenance} are terminated by a dummy constraint ($x\posleq\postop$),
         the semantics of the diagram is that the objective is to minimize
@@ -218,11 +230,15 @@ technology as a function of capacity and number of missions, for several
 slight variations of the problem that differ in constraints and objectives.
 For each battery technology, the figures show whether at each operating
 point the technology is the optimal choice, and how many optimal choices
-there are. Some of the results are intuitive. For example, \cref{fig:min_mass}
+there are.
+Some of the results are intuitive.
+For example, \cref{fig:min_mass}
 shows that if the only objective is minimizing \R{mass}, then the
 optimal choice is simply the technology with largest specific energy
-(LiPo). The decision boundaries become complex when considering nonlinear
-objectives. For example, \cref{fig:min_cost} shows the case where the
+(LiPo).
+The decision boundaries become complex when considering nonlinear
+objectives.
+For example, \cref{fig:min_cost} shows the case where the
 objective is to minimize the \R{cost}, which, defined by~\cref{eq:cost},
 is nonlinearly related to both \F{capacity} and \F{number of missions}.
 When considering multi-objective problems, such as minimizing jointly
@@ -234,7 +250,7 @@ or~$\tup{ \R{\text{mass}},\R{\text{cost}},\R{\text{maintenance}}} $
     \begin{centering}
         \subfloat[\label{fig:drone}\label{fig:drone_dia}Co-design diagram corresponding
         to~\crefrange{eq:drone_eq_first}{eq:drone_eq_last}.]{\centering{}\includegraphics[scale=0.38]{batteries_overall}}
-
+    
     \end{centering}
     \begin{centering}
         \subfloat[\label{fig:drone_code}MCDPL code for~\crefrange{eq:drone_eq_first}{eq:drone_eq_last}.
@@ -248,31 +264,34 @@ or~$\tup{ \R{\text{mass}},\R{\text{cost}},\R{\text{maintenance}}} $
             \end{centering}
         }
     \end{centering}
-    \subfloat[\label{fig:drone_tree}Tree representation for the MCDP. Yellow/green
-    rounded ovals are $\dpseries$/$\dppar$ junctions. There is one co-product
+    \subfloat[\label{fig:drone_tree}Tree representation for the MCDP.
+    Yellow/green
+    rounded ovals are $\dpseries$/$\dppar$ junctions.
+    There is one co-product
     junction, signifying the choice between different battery technologies,
     and one~$\dploop$ junction, at the root of the tree.]{
         \begin{centering}
             \includegraphics[width=8.6cm]{batteries_drone_tree}
         \end{centering}
     }
-
+    
     \subfloat[\label{fig:drone-endurance-missions}Relation between \F{endurance}
     and \F{number of missions} and \R{cost} and \R{mass}. ]{
         \begin{centering}
             \includegraphics[width=8.6cm]{batteries_drone_plane1}
         \end{centering}
     }
-
+    
     \subfloat[\label{fig:drone-endurance-payload}Relation between \F{endurance}
     and \F{payload} and \R{cost} and \R{mass}. ]{
         \begin{centering}
             \includegraphics[width=8.6cm]{batteries_drone_plane2}
         \end{centering}
     }
-
+    
     \caption{In panel (c), the \F{payload} is fixed to
-    100 g and \F{extra power} is set to 1~W. In panel (d), the \F{number
+    100 g and \F{extra power} is set to 1~W.
+    In panel (d), the \F{number
     of missions} is fixed to 400 and \F{extra power} is set to 1~W.
     The last two values, marked with ``$\times$'', are not feasible.}
     \label{fig:dronebigfig}
@@ -282,16 +301,19 @@ or~$\tup{ \R{\text{mass}},\R{\text{cost}},\R{\text{maintenance}}} $
 
 The rest of the section reuses the battery DP into a larger co-design
 problem that considers the co-design of actuation together with energetics
-for a drone~(\cref{fig:drone_dia}). We will see that the decision
+for a drone~(\cref{fig:drone_dia}).
+We will see that the decision
 boundaries change dramatically, which shows that the optimal choices
 for a component cannot be made in isolation from the system.
 
 The functionality of the drone's subsystem considered~(\cref{fig:drone})
 are parametrized by \F{endurance}, \F{number of missions}, \F{extra
-power} to be supplied, and \F{payload}. We model ``actuation''
+power} to be supplied, and \F{payload}.
+We model ``actuation''
 as a design problem with functionality \F{lift {[}N{]}} and resources
 \R{cost}, \R{mass} and \R{power}, and we assume that power is
-a quadratic function of lift~(\cref{fig:actuation}). Any other monotone
+a quadratic function of lift~(\cref{fig:actuation}).
+Any other monotone
 map could be used.
 
 \captionsideleft{\label{fig:actuation}}{
@@ -314,7 +336,8 @@ are
 The co-design graph contains recursive constraints: the power for
 actuation depends on the total weight, which depends on the mass of
 the battery, which depends on the capacity to be provided, which depends
-on the power for actuation. The MCDPL code for this model is shown
+on the power for actuation.
+The MCDPL code for this model is shown
 in \cref{fig:drone_code}; it refers to the previously defined models
 for ``batteries'' and ``actuation''.
 
@@ -326,16 +349,21 @@ and \R{cost}, or \F{endurance} and \R{mass}, even without knowing
 exactly what are the models for battery and actuation.
 
 When fully expanded, the co-design graph (too large to display) contains
-110 nodes and 110 edges. It is possible to remove all cycles by removing
+110 nodes and 110 edges.
+It is possible to remove all cycles by removing
 only one edge (\eg , the $\R{\text{energy}}\leq\text{\F{\text{capacity}}}$
 constraint), so the design complexity (\cref{def:design-complexity})
-is equal to~$\posetwidth(\Rcomp)=1$. The
-tree representation is shown in~\cref{fig:drone_tree}. Because the
+is equal to~$\posetwidth(\Rcomp)=1$.
+The
+tree representation is shown in~\cref{fig:drone_tree}.
+Because the
 co-design diagram contains cycles, there is a~$\dploop$ operator
 at the root of the tree, which implies we need to solve a least fixed
-point problem. Because of the scale of the problem, it is not possible
+point problem.
+Because of the scale of the problem, it is not possible
 to show the map~\ftor explicitly, like we did in \cref{eq:expression}
-for the previous example. The least fixed point sequence converges
+for the previous example.
+The least fixed point sequence converges
 to 64 bits machine precision in 50--100 iterations.
 
 To visualize the multidimensional relation
@@ -358,43 +386,43 @@ diagram.
 \begin{figure*}
     \begin{centering}
         \hfill\includegraphics[width=0.8\textwidth]{batteries_legend}\rule{2cm}{0pt}
-
+    
     \end{centering}
     \begin{centering}
         \subfloat[\label{fig:min_joint_dia}]{
             \begin{centering}
                 \includegraphics[scale=0.33]{batteries_min_joint_dia}
-
+            
             \end{centering}
             \vspace{5mm}
-
+            
         }\subfloat[\label{fig:min_joint}]{
             \begin{centering}
                 \includegraphics[scale=0.45]{batteries_min_joint}
-
+            
             \end{centering}
         }
-
+    
     \end{centering}
     \begin{centering}
         \subfloat[\label{fig:min_cost_dia}]{
             \begin{centering}
                 \includegraphics[scale=0.33]{batteries_min_cost_dia}
-
+            
             \end{centering}
         }\subfloat[\label{fig:min_cost}]{
             \begin{centering}
                 \includegraphics[scale=0.45]{batteries_min_cost}
-
+            
             \end{centering}
         }
-
+    
     \end{centering}
     \begin{centering}
         \subfloat[]{
             \begin{centering}
                 \includegraphics[scale=0.33]{batteries_min_mass_dia}
-
+            
             \end{centering}
         }\subfloat[\label{fig:min_mass}]{
             \begin{centering}
@@ -412,21 +440,25 @@ diagram.
                 \includegraphics[scale=0.45]{batteries_min_cost_mass}
             \end{centering}
         }
-
+    
     \end{centering}
     \caption{This figure shows the optimal decision boundaries
     for the different battery technologies for the design problem ``batteries'',
         defined as the co-product of all battery technologies (\cref{fig:batteriesbig}).
-        Each row shows a different variation of the problem. The first row
+        Each row shows a different variation of the problem.
+        The first row
         (panels \emph{a}--\emph{b}) shows the case where the objective
         function is the product of~$\tup{ \R{\text{mass}},\R{\text{cost}},\R{\text{maintenance}}} $.
         The shape of the symbols shows how many minimal solutions exists for
         a particular value of the functionality~$\tup{ \F{\text{capacity}},\F{\text{missions}}} $.
-        In this case, there are always three or more minimal solutions. The
+        In this case, there are always three or more minimal solutions.
+        The
         second row (panels \emph{c}--\emph{d}) shows the decision
         boundaries when minimizing only the scalar objective~$\R{\text{cost}}$,
-        with a hard constraint on \R{mass}. The hard constraints makes some
-        combinations of the functionality infeasible. Note how the decision
+        with a hard constraint on \R{mass}.
+        The hard constraints makes some
+        combinations of the functionality infeasible.
+        Note how the decision
         boundaries are nonconvex, and how the formalisms allows to define
         slight variations of the problem.}
     \label{fig:mainbattery}
@@ -470,9 +502,11 @@ diagram.
     \end{centering}
     \caption{This figure shows the decision boundaries
     for the different values of battery technologies for the integrated
-    actuation-energetics model described in \cref{fig:dronebigfig}. Please
+    actuation-energetics model described in \cref{fig:dronebigfig}.
+    Please
     see the caption of~\cref{fig:mainbattery} for an explanation of the
-    symbols. Notice how in most cases the decision boundaries are different
+    symbols.
+    Notice how in most cases the decision boundaries are different
     than those in~\cref{fig:mainbattery}: this is an example in which
     one component cannot be optimized by itself without taking into account
     the rest of the system.}
