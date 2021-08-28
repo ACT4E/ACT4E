@@ -150,7 +150,7 @@ The idea is to just use lists of sets rather than the cross-product.
 So the joint state is going to be
 \begin{equation}
     \label{eq:moore-comp-good-joint}
-    \prst_{\mora} \setconcat \prst_{\morb}
+    \Tupcat {\prst_{\mora}}   {\prst_{\morb}}
 \end{equation}
 rather than~$\prst_{\mora} \cartprod \prst_{\morb}$.
 
@@ -159,7 +159,7 @@ The joint system has as states:
     \label{eq:moore-comp-good-1}
     \begin{aligned}
         \prin_{\mora\mthen\morb} &= \prin_{\mora},   \\
-        \prst_{\mora\mthen\morb} &= \prst_{\mora} \setconcat \prst_{\morb}, \\
+        \prst_{\mora\mthen\morb} &= \Tupcat {\prst_{\mora}}  {\prst_{\morb}}, \\
         \prstart_{\mora\mthen\morb} &= \tupcat{\prstart_{\mora}}{\prstart_{\morb}}, \\
         \prout_{\mora\mthen\morb} &= \prout_{\morb}.
     \end{aligned}
@@ -172,13 +172,18 @@ We then write the dynamics
     \definemap{
         \prdyn_{\mora\mthen\morb}
     }{
-        (\prin_{\mora}  \setconcat \prst_{\mora} \setconcat \prst_{\morb})
+        \Tupcatt {\prin_{\mora}}  {\prst_{\mora}} {\prst_{\morb}} 
     }{
-        (\prst_{\mora} \setconcat \prst_{\morb}),
+        \Tupcat {\prst_{\mora}} {\prst_{\morb}} ,
     }{
-        \tupp{u, \tupcat{x_{\mora}}{x_{\morb}}}
+        \tupcatt u {x_{\mora}} {x_{\morb}}
     }{
-        \tupcat{ \prdyn_{\mora} (u, x_{\mora})}{\prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}.
+        \tupcat %
+        {%
+            \prdyn_{\mora} (u, x_{\mora})
+        }{%
+            \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})
+        }.
     }
 \end{equation}
 %
@@ -192,11 +197,11 @@ and the readout
     }{
         (\prst_{\mora} \setconcat \prst_{\morb})
     }{
-        \prout_{\morb}
+        \prout_{\morb},
     }{
         \tupcat{x_{\mora}}{x_{\morb}}
     }{
-        \prreadout_{\morb}(x_{\morb})
+        \prreadout_{\morb}(x_{\morb}).
     }
 \end{equation}
 %
@@ -218,8 +223,7 @@ With this definition we can define the semi-category~\Moore of Moore machines.
             \item $ \prreadout \colon \prst  \mto_\SetStar \prout$.
         \end{itemize}
         \item \emph{Composition of morphisms:} Composition is given by
-        % \cref{eq:moore-comp-good1,eq:moore-comp-good2,eq:moore-comp-good3}.
-        \cref{eq:moore-comp-good1}--\cref{eq:moore-comp-good3}.
+        \cref{eq:moore-comp-good-1,eq:moore-comp-good-2,eq:moore-comp-good-3}.
         % \begin{equation}
         %     \begin{aligned}
         %         \prin_{\mora\mthen\morb} &= \prst_{\mora}   \\
@@ -271,12 +275,14 @@ With this definition we can define the semi-category~\Moore of Moore machines.
         \label{eq:moore_assoc_spaces}
         \begin{aligned}
             \prin_{(\mora \mthen \morb)\mthen \morc}&=\prin_{\mora \mthen (\morb \mthen \morc)}=\prin_{\mora},\\
-            \prst_{(\mora \mthen \morb)\mthen \morc}&=\prst_{\mora \mthen (\morb \mthen \morc)}=\prst_{\mora} \setconcat \prst_{\morb} \setconcat \prst_{\morc}\\
+            \prst_{(\mora \mthen \morb)\mthen \morc}&=\prst_{\mora \mthen (\morb \mthen \morc)}= \Tupcatt {\prst_{\mora}} {\prst_{\morb}}  {\prst_{\morc}}\\
             \prstart_{(\mora \mthen \morb)\mthen \morc}&=\prstart_{\mora \mthen (\morb \mthen \morc)}=\tupcatt{\prstart_\mora}{\prstart_\morb}{\prstart_\morc}\\
             \prout_{(\mora \mthen \morb)\mthen \morc}&=\prout_{\mora \mthen (\morb \mthen \morc)}=\prout_\morc
         \end{aligned}
     \end{equation*}
     Starting from \cref{eq:moore_dyn_comp} one can now check associativity of the dynamics:
+    \todo{To adjust given the new signature we gave.}
+    \begin{widepar}
     \begin{equation*}
         \label{eq:assoc_moore_1}
         \begin{aligned}
@@ -285,7 +291,11 @@ With this definition we can define the semi-category~\Moore of Moore machines.
             &=\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
         \end{aligned}
     \end{equation*}
+\end{widepar}
+% 
     On the other hand, one has:
+    % 
+    \begin{widepar}
     \begin{equation*}
         \label{eq:assoc_moore_2}
         \begin{aligned}
@@ -294,6 +304,7 @@ With this definition we can define the semi-category~\Moore of Moore machines.
             &=\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
         \end{aligned}
     \end{equation*}
+    \end{widepar}
     Finally, one can check associativity of the readout:
     \begin{equation*}
         \label{eq:assoc_moore_3}
