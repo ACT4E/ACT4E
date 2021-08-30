@@ -69,43 +69,78 @@
     The relation depicted in \cref{fig:power_internodal} is an endorelation between the set of high voltage nodes.
 \end{example}
 
-\begin{ctdefinition}[Properties of endorelations]
-    \label{def:properties-endorelations}
-    An endorelation~$\relA\colon \setA\mto \setA$ is:
-    \begin{compactitem}
-        \item \emph{Symmetric} if %for~$\ela, \ela'\in \setA$:
-        %~$\forall \ela, \ela'\in \setA$:~$ \tup{\ela,\ela'}\in \relA \Leftrightarrow \tup{\ela',\ela}\in \relA$;
-        \begin{equation}
-            \prftree[double][r]{;}{
+\begin{ctdefinition}[Symmetry, asymmetry, and antisymmetry of endorelations]
+    \label{def:endo_sym_asym_antisym}
+    An endorelation~$\relA\colon \setA\mto \setA$ is \emph{symmetric} if
+    \begin{equation}
+            \prftree[double][r]{,}{
                 \inrel \ela \relA \elb
             }{
                 \inrel \elb \relA \ela
             }
         \end{equation}
-        \item \emph{Reflexive} if%~$\forall \ela\in \setA$:~$\inrel{\ela}{\relA}{\ela}$;
-        \begin{equation}
-            \prftree[r]{;}{
-                \true
-            }{
-                \inrel \ela \relA \ela
-            }
-        \end{equation}
-        \item \emph{Transitive} if %for~$\ela, \ela', \ela'' \in \setA$:
-        %~$\forall \ela, \ela', \ela'' \in \setA$: $\left( \tup{\ela,\ela'}\in \relA \wedge \tup{\ela',\ela''}\in \relA \right)  \Rightarrow \tup{\ela, \ela''}\in \relA$.
-        \begin{equation}
-            \prftree[r]{.}{
+    is \emph{asymmetric} if
+    \begin{equation}
+    \prftree[r]{,}{
+            \inrel \ela \relA \elb
+        }{
+            \inrel \elb \relA \ela
+        }{
+            \false
+        }
+    \end{equation}
+    and is \emph{antisymmetric} if
+    \begin{equation}
+    \prftree[r]{.}{
+            \inrel \ela \relA \elb
+        }{
+            \inrel \elb \relA \ela
+        }{
+            \ela = \elb
+        }
+    \end{equation}
+\end{ctdefinition}
+
+\begin{ctdefinition}[Reflexivity and irreflexivity of endorelations]
+    \label{def:endo_reflexive_irreflexive}
+An endorelation~$\relA\colon \setA\mto \setA$ is \emph{reflexive} if
+\begin{equation}
+\prftree[r]{,}{\true}{\inrel{\ela}{\relA}{\ela}}
+\end{equation}
+and is \emph{irreflexive} if
+\begin{equation}
+\prftree[r]{.}{
+            \inrel \ela \relA \ela
+        }{
+            \false
+        }
+\end{equation}
+\end{ctdefinition}
+
+\begin{ctdefinition}[Totality of endorelations]
+    \label{def:endo_total}
+An endorelation~$\relA\colon \setA\mto \setA$ is \emph{total} if
+\begin{equation}
+\prftree[r]{.}{\true}{\inrel{\ela}{\relA}{\elb} \boolor \inrel{\elb}{\relA}{\ela}}
+\end{equation}
+
+\end{ctdefinition}
+
+
+\begin{ctdefinition}[Transitivity of endorelations]
+    \label{def:endo_transitive}
+An endorelation~$\relA\colon \setA\mto \setA$ is \emph{transitive} if
+\begin{equation}
+\prftree[r]{.}{
                 \inrel \ela \relA \elb
             }{
                 \inrel \elb \relA \elc
             }{
                 \inrel \ela \relA \elc
             }
-        \end{equation}
-    \end{compactitem}
+\end{equation}
 \end{ctdefinition}
 
-\todotext{@Gioele: missing definitions of asymmetric and antisymmetric, total, irreflexive. 
-Perhaps we should split it up in many definitions (one pair each). }
 % \todotext{More examples for all properties}
 \begin{example}
     The relation ``less than or equal'' on~$\natnumbers$ is not symmetric.
@@ -150,7 +185,7 @@ Perhaps we should split it up in many definitions (one pair each). }
     Let~$\mapa\colon \setA\to \setB$ be a function between sets.
     The following defines an equivalence relation:
     \begin{equation*}
-        \prftree[double line]{\ela\sim \elb}{\mapa(\ela)=\mapa(\elb)}
+        \prftree[double line][r]{.}{\ela\sim \elb}{\mapa(\ela)=\mapa(\elb)}
         %\ela\sim \ela'\Leftrightarrow \mapa(\ela)=\mapa(\ela').
     \end{equation*}
 \end{example}
@@ -199,9 +234,12 @@ Perhaps we should split it up in many definitions (one pair each). }
 \solutionof{CountingEquivalenceRelations}
 
 
-\devel {
     \begin{ctdefinition}[Transitive closure]
         \label{def:transitive-closure}
-        \todotext{@Gioele: Write definition of transitive closure}
+        The \emph{transitive closure} of a relation~$\relA$ on a set~$\setA$ is the smallest relation on~$\relA$ that contains~$\relA$ and is transitive.
     \end{ctdefinition}
-}
+
+\begin{example}
+    Consider a relation~$\relA$ on~$\setA=\{\sbretzel,\swine,\sfondue\}$ such that~$\inrel \sbretzel \relA \swine$ and~$\inrel \swine \relA \sfondue$.
+    The transitive closure of~$\relA$ is~$\relA^+$, where~$\inrel \sbretzel \relA^+ \swine$,~$\inrel \swine \relA^+ \sfondue$, and~$\inrel \sbretzel \relA^+ \sfondue$.
+\end{example}
