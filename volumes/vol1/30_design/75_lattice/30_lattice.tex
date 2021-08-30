@@ -1,7 +1,6 @@
 \section{Lattice structure of \DP hom-sets}
 
-Given the definitions of $\vee$ and $\wedge$ in the previous sections, we can prove that
-every \DP homsets have a lattice structure.
+Given the definitions of~$\meet$ and~$\join$ in the previous sections, we can prove that every \DP homsets have a lattice structure.
 
 This lattice is bounded by a "true" and a "false" DP.
 For any functionality-resource pair~$\F{\posgenA},\R{\posgenB}$, we denote by~$\postop_{\F{\posgenA},\R{\posgenB}}$ the design problem which is always feasible.
@@ -9,13 +8,13 @@ We denote by~$\posbot_{\F{\posgenA},\R{\posgenB}}$ the design problem which is n
 
 \begin{lemma}
     \label{lem:dpboundedlattice}
-    $\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a bounded lattice with union~$\vee$ as join, intersection~$\wedge$ as meet, least upper bound~$\top_{\F{\posgenA},\R{\posgenB}}$ and greatest lower bound~$\bot_{\F{\posgenA},\R{\posgenB}}$.
+    $\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a bounded lattice with union~$\join$ as join, intersection~$\meet$ as meet, least upper bound~$\postop_{\F{\posgenA},\R{\posgenB}}$ and greatest lower bound~$\posbot_{\F{\posgenA},\R{\posgenB}}$.
 \end{lemma}
 
 \begin{proof}
     First, we need to prove that~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a poset.
     To prove this, we check the following:
-%
+    \todotextjira{354}{@Gioele: Use sequents}
     \begin{compactitem}
         \item \emph{Reflexivity}: Given~$\adpa\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$,~$\adpa\posDPleq \adpa$ is always true.
         \item \emph{Antisymmetry}: Given~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$, if~$\adpa\posDPleq \adpb$ and~$\adpb\posDPleq \adpa$, then~$\adpa=\adpb$.
@@ -23,10 +22,10 @@ We denote by~$\posbot_{\F{\posgenA},\R{\posgenB}}$ the design problem which is n
     \end{compactitem}
     Therefore,~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a poset.
     Furthermore, consider two design problems~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
-    Their greatest lower bound (meet) is~$\adpa\wedge \adpb$, since it is the greatest design problem implying both~$\adpa$ and~$\adpb$.
-    Their least upper bound (join), instead, is~$\adpa\vee \adpb$, since it is the least design problem implied by both~$\adpa$ and~$\adpb$.
+    Their greatest lower bound (meet) is~$\adpa\meet\adpb$, since it is the greatest design problem implying both~$\adpa$ and~$\adpb$.
+    Their least upper bound (join), instead, is~$\adpa\join \adpb$, since it is the least design problem implied by both~$\adpa$ and~$\adpb$.
     This proves that~$\Hom_\DP$ is a lattice.
-    To prove that it is bounded, we identify the top element as~$\top_{\F{\posgenA},\R{\posgenB}}$ (it is implied by all other design problems) and the bottom element as~$\bot_{\F{\posgenA},\R{\posgenB}}$ (it implies by all the other design problems).
+    To prove that it is bounded, we identify the top element as~$\postop_{\F{\posgenA},\R{\posgenB}}$ (it is implied by all other design problems) and the bottom element as~$\posbot_{\F{\posgenA},\R{\posgenB}}$ (it implies by all the other design problems).
 \end{proof}
 
 We show that a \DP Homset is a \emph{complete lattice}.
@@ -37,7 +36,8 @@ We show that a \DP Homset is a \emph{complete lattice}.
 \end{definition}
 
 \begin{example}
-    Consider the power set of any given set, ordered by inclusion. The supremum of any two subsets is given by their union.
+    Consider the power set of any given set, ordered by inclusion.
+    The supremum of any two subsets is given by their union.
     The infimum of any two subsets is given by their intersection.
 \end{example}
 
@@ -54,35 +54,39 @@ We show that a \DP Homset is a \emph{complete lattice}.
     We define the following two design problems:
     \begin{equation*}
         \begin{aligned}
-            \bigvee_{\adp \in \setB} \adp\colon \F{\posgenA}\op \times \R{\posgenB}&\toinPos \Bool\\
+            \bigvee_{\adp \in \setB} \adp\colon \F{\posgenA}\op \cartprod \R{\posgenB}&\toinPos \Bool\\
             \tup{\F{\posgenAel},\R{\posgenBel}}&\mapsto \exists \adp\in \setB\colon \adp(\F{\posgenAel}^*,\R{\posgenBel}),
         \end{aligned}
     \end{equation*}
     and
     \begin{equation*}
         \begin{aligned}
-            \bigwedge_{\adp \in \setB} \adp\colon \F{\posgenA}\op \times \R{\posgenB}&\toinPos \Bool\\
+            \bigwedge_{\adp \in \setB} \adp\colon \F{\posgenA}\op \cartprod \R{\posgenB}&\toinPos \Bool\\
             \tup{\F{\posgenAel}^*,\R{\posgenBel}}&\mapsto \forall \adp\in \setB\colon \adp(\F{\posgenAel}^*,\R{\posgenBel}),
         \end{aligned}
     \end{equation*}
     These are clearly design problems (given that~$\adp$ is a design problem) and given their signature they belong to~$\setA$.
     We will now argue that~$\bigvee_{\adp \in \setB} \adp$ is the supremum of~$\setB$ and~$\bigwedge_{\adp \in \setB} \adp$ is the infimum of~$\setB$.
     \paragraph*{$\bigvee_{\adp \in \setB} \adp$ is the supremum of~$\setB$:}
-    First of all, for any~$\adpa\in \setB$, we know that~$\adpa\posleq_\DP \adpa \vee \bigvee_{\adp \in \setB \backslash \adpa} \adp= \bigvee_{\adp \in \setB} \adp$, proving that~$\bigvee_{\adp \in \setB} \adp$ is an upper bound of~$\setB$.
+    First of all, for any~$\adpa\in \setB$, we know that~$\adpa\posleq_\DP \adpa \join \bigvee_{\adp \in \setB \backslash \adpa} \adp= \bigvee_{\adp \in \setB} \adp$, proving that~$\bigvee_{\adp \in \setB} \adp$ is an upper bound of~$\setB$.
     We now want to show that~$\bigvee_{\adp \in \setB} \adp$ is the least upper bound of~$\setB$: for any upper bound~$\adpb$ of~$\setB$, we need to show~$\bigvee_{\adp \in \setB} \adp \posleq_\DP\adpb$.
-    In other words, for any pair~$\tup{\F{\posgenAel}^*,\R{\posgenBel}}\in \F{\posgenA}\op\times \R{\posgenB}$, we need to show~$(\bigvee_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})\posleq_\Bool \adpb(\F{\posgenAel}^*,\R{\posgenBel})$.
-    Let's fix any~$\tup{\F{\posgenAel}^*,\R{\posgenBel}}$. If~$(\bigvee_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})=\false$, the condition is trivially satisfied.
+    In other words, for any pair~$\tup{\F{\posgenAel}^*,\R{\posgenBel}}\in \F{\posgenA}\op\cartprod \R{\posgenB}$, we need to show~$(\bigvee_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})\posleq_\Bool \adpb(\F{\posgenAel}^*,\R{\posgenBel})$.
+    Let's fix any~$\tup{\F{\posgenAel}^*,\R{\posgenBel}}$.
+    If~$(\bigvee_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})=\false$, the condition is trivially satisfied.
+    
     If, instead,~$(\bigvee_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})=\true$, there exists a~$\adp\in \setB$ such that~$\adp(\F{\posgenAel}^*,\R{\posgenBel})=\true$.
     Given that~$\adpb$ is an upper bound of~$\setB$, this implies~$\true=\adp(\F{\posgenAel}^*,\R{\posgenBel})\posleq_\Bool \adpb(\F{\posgenAel}^*,\R{\posgenBel})=\true$, proving the condition.
-
+    
     \paragraph*{$\bigwedge_{\adp \in \setB} \adp$ is the infimum of~$\setB$:}
-    First of all, for any~$\adpa\in \setB$, we know that~$\adpa \wedge \bigwedge_{\adp \in \setB \backslash \adpa} \adp= \bigwedge_{\adp \in \setB} \adp \posleq_\DP \adpa$, proving that~$\bigwedge_{\adp \in \setB} \adp$ is a lower bound of~$\setB$.
+    First of all, for any~$\adpa\in \setB$, we know that~$\adpa \meet \bigwedge_{\adp \in \setB \backslash \adpa} \adp= \bigwedge_{\adp \in \setB} \adp \posleq_\DP \adpa$, proving that~$\bigwedge_{\adp \in \setB} \adp$ is a lower bound of~$\setB$.
     We now want to show that~$\bigwedge_{\adp \in \setB} \adp$ is the greatest lower bound of~$\setB$: for any lower bound~$\adpb$ of~$\setB$, we need to show~$\adpb\posleq_\DP\bigwedge_{\adp \in \setB} \adp $.
-    In other words, for any pair~$\tup{\F{\posgenAel}^*,\R{\posgenBel}}\in \F{\posgenA}\op\times \R{\posgenB}$, we need to show~$\adpb(\F{\posgenAel}^*,\R{\posgenBel}) \posleq_\Bool (\bigwedge_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})$.
-    Let's fix any~$\tup{\F{\posgenAel}^*,\R{\posgenBel}}$. If~$(\bigwedge_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})=\true$, the condition is trivially satisfied.
+    In other words, for any pair~$\tup{\F{\posgenAel}^*,\R{\posgenBel}}\in \F{\posgenA}\op\cartprod \R{\posgenB}$, we need to show~$\adpb(\F{\posgenAel}^*,\R{\posgenBel}) \posleq_\Bool (\bigwedge_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})$.
+    Let's fix any~$\tup{\F{\posgenAel}^*,\R{\posgenBel}}$.
+    If~$(\bigwedge_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})=\true$, the condition is trivially satisfied.
     If, instead,~$(\bigwedge_{\adp \in \setB} \adp)(\F{\posgenAel}^*,\R{\posgenBel})=\false$, there is at least one~$\adp\in \setB$ for which~$\adp(\F{\posgenAel}^*,\R{\posgenBel})=\false$.
     Given that~$\adpb$ is a lower bound of~$\setB$, this implies~$\false=\adpb(\F{\posgenAel}^*,\R{\posgenBel})\posleq_\Bool \adp(\F{\posgenAel}^*,\R{\posgenBel})=\false$, proving the condition.
 \end{proof}
+
 
 \section{Interaction with composition}
 
@@ -90,20 +94,21 @@ Furthermore, we show that all composition operations preserve meet and joins.
 
 \begin{lemma}
     \label{lem:series_vee}
-    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$. One has
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$.
+    One has
     \begin{equation*}
-    (\adpa \vee \adpb)
-        \mthen \adpc=(\adpa \mthen \adpc) \vee (\adpb\mthen \adpc).
+    (\adpa \join \adpb)
+        \mthen \adpc=(\adpa \mthen \adpc) \join (\adpb\mthen \adpc).
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \vee \adpb)\mthen \adpc)(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{\posgenBel\in \posgenB} (\adpa \vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
-            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
-            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenBel}^*,\R{\posgenCel})) \vee (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel}))\\
-            &=((\adpa \mthen \adpc) \vee (\adpb\mthen \adpc))(\F{\posgenAel}^*,\R{\posgenCel}).
+            ((\adpa \join \adpb)\mthen \adpc)(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{\posgenBel\in \posgenB} (\adpa \join \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
+            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \boolor \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\booland \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
+            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland  \adpc(\F{\posgenBel}^*,\R{\posgenCel})) \boolor (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenBel}^*,\R{\posgenCel}))\\
+            &=((\adpa \mthen \adpc) \join (\adpb\mthen \adpc))(\F{\posgenAel}^*,\R{\posgenCel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -112,23 +117,23 @@ Furthermore, we show that all composition operations preserve meet and joins.
     Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc,\adpd\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$.
     In general, one has:
     \begin{equation*}
-    (\adpa\vee \adpb)
-        \mthen (\adpc\vee \adpd) \neq (\adpa \mthen \adpc)\vee (\adpb \mthen \adpd).
+    (\adpa\join \adpb)
+        \mthen (\adpc\join \adpd) \neq (\adpa \mthen \adpc)\join (\adpb \mthen \adpd).
     \end{equation*}
-    Indeed, consider~$\adpa=\top_{\F{\posgenA},\R{\posgenB}}$,~$\adpb=\bot_{\F{\posgenA},\R{\posgenB}}$,~$\adpc=\bot_{\F{\posgenB},\R{\posgenC}}$, and~$\adpd=\top_{\F{\posgenB},\R{\posgenC}}$.
+    Indeed, consider~$\adpa=\postop_{\F{\posgenA},\R{\posgenB}}$,~$\adpb=\posbot_{\F{\posgenA},\R{\posgenB}}$,~$\adpc=\posbot_{\F{\posgenB},\R{\posgenC}}$, and~$\adpd=\postop_{\F{\posgenB},\R{\posgenC}}$.
     Clearly:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa\vee \adpb)\mthen (\adpc\vee \adpd))(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{\posgenBel\in \posgenB} (\adpa\vee \adpb)(\F{\posgenAel}^*,\R{\posgenCel})\wedge (\adpc\vee \adpd)(\F{\posgenBel}^*,\R{\posgenCel})\\
+            ((\adpa\join \adpb)\mthen (\adpc\join \adpd))(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{\posgenBel\in \posgenB} (\adpa\join \adpb)(\F{\posgenAel}^*,\R{\posgenCel})\booland (\adpc\join \adpd)(\F{\posgenBel}^*,\R{\posgenCel})\\
             &=\true,
         \end{aligned}
     \end{equation*}
     but
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \mthen \adpc)\vee (\adpb \mthen \adpd))(\F{\posgenAel}^*,\R{\posgenCel})&=\left( \bigvee_{b\in \posgenB} \adpa (\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\right)\vee
-            \left( \bigvee_{\posgenBel\in \posgenB} \adpb (\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpd(\F{\posgenBel}^*,\R{\posgenCel})\right)\\
-            &=\false \vee \false\\
+            ((\adpa \mthen \adpc)\join (\adpb \mthen \adpd))(\F{\posgenAel}^*,\R{\posgenCel})&=\left( \bigvee_{b\in \posgenB} \adpa (\F{\posgenAel}^*,\R{\posgenBel}) \booland \adpc(\F{\posgenBel}^*,\R{\posgenCel})\right)\boolor
+            \left( \bigvee_{\posgenBel\in \posgenB} \adpb (\F{\posgenAel}^*,\R{\posgenBel}) \booland \adpd(\F{\posgenBel}^*,\R{\posgenCel})\right)\\
+            &=\false \boolor \false\\
             &=\false.
         \end{aligned}
     \end{equation*}
@@ -136,62 +141,65 @@ Furthermore, we show that all composition operations preserve meet and joins.
 
 \begin{lemma}
     \label{lem:series_wedge}
-    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$. One has
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$.
+    One has
     \begin{equation*}
-    (\adpa \wedge \adpb)
-        \mthen \adpc=(\adpa \mthen \adpc) \wedge (\adpb\mthen \adpc).
+    (\adpa \meet \adpb)
+        \mthen \adpc=(\adpa \mthen \adpc) \meet (\adpb\mthen \adpc).
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \wedge \adpb)\mthen \adpc)(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{b\in \posgenB} (\adpa \wedge \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
-            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
-            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenBel}^*,\R{\posgenCel})) \wedge (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenBel}^*,\R{\posgenCel}))\\
-            &=((\adpa \mthen \adpc) \wedge (\adpb\mthen \adpc))(\F{\posgenAel}^*,\R{\posgenCel}).
+            ((\adpa \meet \adpb)\mthen \adpc)(\F{\posgenAel}^*,\R{\posgenCel})&=\bigvee_{b\in \posgenB} (\adpa \meet \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
+            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\booland \adpc(\F{\posgenBel}^*,\R{\posgenCel})\\
+            &=\bigvee_{\posgenBel\in \posgenB} (\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland  \adpc(\F{\posgenBel}^*,\R{\posgenCel})) \booland (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenBel}^*,\R{\posgenCel}))\\
+            &=((\adpa \mthen \adpc) \meet (\adpb\mthen \adpc))(\F{\posgenAel}^*,\R{\posgenCel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
 
 \begin{lemma}
     \label{lem:times_vee}
-    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenC}}{\R{\posgenD}}$. One has
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenC}}{\R{\posgenD}}$.
+    One has
     \begin{equation*}
-    (\adpa \vee \adpb)
-        \mtimescat \adpc=(\adpa \mtimescat \adpc) \vee (\adpb\mtimescat \adpc).
+    (\adpa \join \adpb)
+        \mtimescat \adpc=(\adpa \mtimescat \adpc) \join (\adpb\mtimescat \adpc).
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \vee \adpb)\mtimescat \adpc)(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}})&=
-            (\adpa \vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenCel}^*,\R{\posgenDel})) \vee (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel}))\\
-            &=((\adpa \mtimescat \adpc) \vee (\adpb\mtimescat \adpc))(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}}).
+            ((\adpa \join \adpb)\mtimescat \adpc)(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}})&=
+            (\adpa \join \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \boolor \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\booland \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland  \adpc(\F{\posgenCel}^*,\R{\posgenDel})) \boolor (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenCel}^*,\R{\posgenDel}))\\
+            &=((\adpa \mtimescat \adpc) \join (\adpb\mtimescat \adpc))(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}}).
         \end{aligned}
     \end{equation*}
 \end{proof}
 
 \begin{lemma}
     \label{lem:times_wedge}
-    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenC}}{\R{\posgenD}}$. One has
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\in \HomSet{\DP}{\F{\posgenC}}{\R{\posgenD}}$.
+    One has
     \begin{equation*}
-    (\adpa \wedge \adpb)
-        \mtimescat \adpc=(\adpa \mtimescat \adpc) \wedge (\adpb\mtimescat \adpc).
+    (\adpa \meet \adpb)
+        \mtimescat \adpc=(\adpa \mtimescat \adpc) \meet (\adpb\mtimescat \adpc).
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \wedge \adpb)\mtimescat \adpc)(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}})&=
-            (\adpa \wedge \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenCel}^*,\R{\posgenDel})) \wedge (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenCel}^*,\R{\posgenDel}))\\
-            &=((\adpa \mtimescat \adpc) \wedge (\adpb\mtimescat \adpc))(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}}).
+            ((\adpa \meet \adpb)\mtimescat \adpc)(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}})&=
+            (\adpa \meet \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\booland \adpc(\F{\posgenCel}^*,\R{\posgenDel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland  \adpc(\F{\posgenCel}^*,\R{\posgenDel})) \booland (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenCel}^*,\R{\posgenDel}))\\
+            &=((\adpa \mtimescat \adpc) \meet (\adpb\mtimescat \adpc))(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenDel}}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -199,42 +207,44 @@ Furthermore, we show that all composition operations preserve meet and joins.
 
 \begin{lemma}
     \label{lem:vee_vee}
-    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$. One has
+    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    One has
     \begin{equation*}
-    (\adpa \vee \adpb)
-        \vee \adpc=(\adpa \vee \adpc) \vee (\adpb\vee \adpc).
+    (\adpa \join \adpb)
+        \join \adpc=(\adpa \join \adpc) \join (\adpb\join \adpc).
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \vee \adpb)\vee \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
-            (\adpa \vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \vee (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
-            &=((\adpa \vee \adpc) \vee (\adpb\vee \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
+            ((\adpa \join \adpb)\join \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            (\adpa \join \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\boolor \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \boolor \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\boolor \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \boolor  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \boolor (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\boolor \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
+            &=((\adpa \join \adpc) \join (\adpb\join \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
 
 \begin{lemma}
     \label{lem:vee_wedge}
-    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$. One has
+    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    One has
     \begin{equation*}
-    (\adpa \wedge \adpb)
-        \vee \adpc=(\adpa \vee \adpc) \wedge (\adpb\vee \adpc).
+    (\adpa \meet \adpb)
+        \join \adpc=(\adpa \join \adpc) \meet (\adpb\join \adpc).
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \wedge \adpb)\vee \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
-            (\adpa \wedge \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \wedge (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
-            &=((\adpa \vee \adpc) \wedge (\adpb\vee \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
+            ((\adpa \meet \adpb)\join \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            (\adpa \meet \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\boolor \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\boolor \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \boolor  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \booland (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\boolor \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
+            &=((\adpa \join \adpc) \meet (\adpb\join \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -242,70 +252,74 @@ Furthermore, we show that all composition operations preserve meet and joins.
 
 \begin{lemma}
     \label{lem:wedge_vee}
-    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$. One has
+    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    One has
     \begin{equation*}
-    (\adpa \vee \adpb)
-        \wedge \adpc=(\adpa \wedge \adpc) \vee (\adpb\wedge \adpc).
+    (\adpa \join \adpb)
+        \meet \adpc=(\adpa \meet \adpc) \join (\adpb\meet \adpc).
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \vee \adpb)\wedge \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
-            (\adpa \vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \vee \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\vee \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \vee (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
-            &=((\adpa \wedge \adpc) \vee (\adpb\wedge \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
+            ((\adpa \join \adpb)\meet \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            (\adpa \join \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \boolor \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\boolor \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \boolor (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
+            &=((\adpa \meet \adpc) \join (\adpb\meet \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
 
 \begin{lemma}
     \label{lem:wedge_wedge}
-    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$. One has
+    Consider~$\adpa,\adpb,\adpc\in \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    One has
     \begin{equation*}
-    (\adpa \wedge \adpb)
-        \wedge \adpc=(\adpa \wedge \adpc) \wedge (\adpb\wedge \adpc).
+    (\adpa \meet \adpb)
+        \meet \adpc=(\adpa \meet \adpc) \meet (\adpb\meet \adpc).
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            ((\adpa \wedge \adpb)\wedge \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
-            (\adpa \wedge \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
-            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \wedge  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \wedge (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\wedge \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
-            &=((\adpa \wedge \adpc) \wedge (\adpb\wedge \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
+            ((\adpa \meet \adpb)\meet \adpc)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            (\adpa \meet \adpb)(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland \adpb(\F{\posgenAel}^*,\R{\posgenBel}))\booland \adpc(\F{\posgenAel}^*,\R{\posgenBel})\\
+            &=(\adpa(\F{\posgenAel}^*,\R{\posgenBel}) \booland  \adpc(\F{\posgenAel}^*,\R{\posgenBel})) \booland (\adpb(\F{\posgenAel}^*,\R{\posgenBel})\booland \adpc(\F{\posgenAel}^*,\R{\posgenBel}))\\
+            &=((\adpa \meet \adpc) \meet (\adpb\meet \adpc))(\F{\posgenAel}^*,\R{\posgenBel}).
         \end{aligned}
     \end{equation*}
 \end{proof}
 
 \begin{lemma}
     \label{lem:trace_vee}
-    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenC}\times\F{\posgenA}}{\R{\posgenC} \times\R{\posgenB}}$. One has
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenC}\cartprod\F{\posgenA}}{\R{\posgenC} \cartprod\R{\posgenB}}$.
+    One has
+    
     \begin{equation*}
-        \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\vee \adpb)=\Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)\vee  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)
+        \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\join \adpb)=\Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)\join  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)
     \end{equation*}
 \end{lemma}
 \begin{proof}
     One has:
     \begin{equation*}
         \begin{aligned}
-            \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\vee \adpb)(\F{\posgenAel}^*,\R{\posgenBel})&=
-            \bigvee_{\posgenCel\in \posgenC} (\adpa\vee \adpb)(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
-            &=\bigvee_{\posgenCel\in \posgenC} \adpa(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\vee \adpb(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
-            &=\bigvee_{\posgenCel\in \posgenC} \adpa(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\vee \bigvee_{c\in \posgenC} \adpb(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
-            &=\Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)(\F{\posgenAel}^*,\R{\posgenBel})\vee  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)(\F{\posgenAel}^*,\R{\posgenBel})
+            \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\join \adpb)(\F{\posgenAel}^*,\R{\posgenBel})&=
+            \bigvee_{\posgenCel\in \posgenC} (\adpa\join \adpb)(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
+            &=\bigvee_{\posgenCel\in \posgenC} \adpa(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\boolor \adpb(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
+            &=\bigvee_{\posgenCel\in \posgenC} \adpa(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\boolor \bigvee_{c\in \posgenC} \adpb(\tup{\F{\posgenCel},\F{\posgenAel}}^*,\tup{\R{\posgenCel},\R{\posgenBel}})\\
+            &=\Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)(\F{\posgenAel}^*,\R{\posgenBel})\boolor  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)(\F{\posgenAel}^*,\R{\posgenBel})
         \end{aligned}
     \end{equation*}
 \end{proof}
 
 \begin{remark}
-    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenC}\times\F{\posgenA}}{\R{\posgenC} \times\R{\posgenB}}$.
+    Consider~$\adpa,\adpb\in \HomSet{\DP}{\F{\posgenC}\cartprod\F{\posgenA}}{\R{\posgenC} \cartprod\R{\posgenB}}$.
     In general, one has
     \begin{equation*}
-        \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\wedge \adpb)\neq \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)\wedge  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)
+        \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa\meet \adpb)\neq \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpa)\meet  \Tr_{\F{\posgenA},\F{\posgenB}}^{\posgenC}(\adpb)
     \end{equation*}
 \end{remark}

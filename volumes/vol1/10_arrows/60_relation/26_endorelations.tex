@@ -6,61 +6,110 @@
 
 \linkvideo{spring2021-relations:relations:endorel} % Endorelations
 
-\begin{figure}[tbh]
+\begin{table*}[bp]
+    \caption{Summary of endorelation properties.}
     \begin{tabular}{cccc}
-        Reflexive&Total&Transitive&Symmetric\\[+10pt]
-        \prftree{\true}{\tup{\ela,\ela}\in \relA}&\prftree{\true}{\tup{\ela,\elb}\in \relA\vee \tup{\elb,\ela}\in \relA}&
-        \prftree{\tup{\ela,\elb}\in \relA}{\tup{\ela,\elb}\in \relA}{\tup{\ela,\elc}\in \relA}&\prftree[double line]{\tup{\ela,\ela'}\in \relA}{\tup{\ela',\ela}\in \relA}\\[+10pt]
-        \multicolumn{2}{c}{Asymmetric}&Irreflexive&Antisymmetric\\[+10pt]
-        \multicolumn{2}{c}{\prftree{\tup{\ela,\elb}\in \relA}{\tup{\elb,\ela}\in \relA}{\false}}&\prftree{\tup{\ela,\ela}\in \relA}{\false}&\prftree{\tup{\ela,\elb}\in \relA}{\tup{\elb,\ela}\in \relA}{\ela=\elb}
+        Reflexive & Total & Symmetric & Transitive \\[+10pt]
+        \prftree{\true}{\inrel{\ela}{\relA}{\ela}} &
+        \prftree{\true}{\inrel{\ela}{\relA}{\elb} \boolor \inrel{\elb}{\relA}{\ela}}&
+        \prftree[double]{
+            \inrel \ela \relA \elb 
+            }{
+            \inrel \elb \relA \ela
+        }&
+        \prftree{\inrel{\ela}{\relA}{\elb}}{\inrel{\ela}{\relA}{\elb}}{\inrel{\ela}{\relA}{\elc}}
+        \\[+10pt]
+        Irreflexive &  Asymmetric  &    Antisymmetric & \\[+10pt]
+        \prftree{
+            \inrel \ela \relA \ela
+        }{
+            \false
+        } &
+        \prftree{
+            \inrel \ela \relA \elb
+        }{
+            \inrel \elb \relA \ela
+        }{
+            \false
+        } &
+        \prftree{
+            \inrel \ela \relA \elb
+        }{
+            \inrel \elb \relA \ela
+        }{
+            \ela = \elb
+        } &
+        \\
     \end{tabular}
-    \caption{Summary of endorelation properties. \label{tab:endo_properties}}
-\end{figure}
+    \label{tab:endo_properties}
+\end{table*}
 
 
-\begin{definition}[Endorelation]
+\begin{ctdefinition}[Endorelation]
     \label{def:endorelation}
-    An \emph{\iindex{endorelation}} on a set~$\setA$ is a relation~$\relA\subseteq \setA\times \setA$.
-\end{definition}
+    An \emph{\iindex{endorelation}} on a set~$\setA$ is a relation~$\relA\colon \setA \mto \setA$.
+\end{ctdefinition}
 
 \begin{example}
-    ``Equality'' is an endorelation of the form
-    \begin{equation*}
-        \{\tup{\ela_1,\ela_2}\in \setA\times \setA \mid \ela_1=\ela_2\}.
-    \end{equation*}
+    ``Equality'' on a set~$\setA$ is an endorelation~$\relstyle{=}_\setA$ of the form
+    \begin{equation}
+        \relstyle{=}_\setA \definedas \{\tup{\ela,\elb}\in \setA\cartprod \setA \mid \ela=\elb\}.
+    \end{equation}
 \end{example}
 
 \begin{example}
-    Take~$\setA=\natnumbers$. The relation ``less than or equal'' is an endorelation of the form
-    \begin{equation*}
-        \{\tup{\ela,\elb}\in \natnumbers\times \natnumbers\mid \ela \leq \elb\}.
-    \end{equation*}
+    Take~$\setA=\natnumbers$.
+    The relation ``less than or equal'' is an endorelation of the form
+    \begin{equation}
+        \relstyle{\leq} \definedas  \{\tup{\ela,\elb}\in \natnumbers\cartprod \natnumbers\mid \ela \leq \elb\}.
+    \end{equation}
 \end{example}
 
 \begin{example}
     The relation depicted in \cref{fig:power_internodal} is an endorelation between the set of high voltage nodes.
 \end{example}
 
-\begin{definition}[Properties of endorelations]
+\begin{ctdefinition}[Properties of endorelations]
     \label{def:properties-endorelations}
-    An endorelation~$\relA\subseteq \setA\times \setA$ is:
+    An endorelation~$\relA\colon \setA\mto \setA$ is:
     \begin{compactitem}
-        \item \emph{Symmetric} if for~$\ela, \ela'\in \setA$:
+        \item \emph{Symmetric} if %for~$\ela, \ela'\in \setA$:
         %~$\forall \ela, \ela'\in \setA$:~$ \tup{\ela,\ela'}\in \relA \Leftrightarrow \tup{\ela',\ela}\in \relA$;
-        \begin{equation*}
-            \prftree[double line]{\tup{\ela,\ela'}\in \relA}{\tup{\ela',\ela}\in \relA}
-        \end{equation*}
-        \item \emph{Reflexive} if~$\forall \ela\in \setA$:~$\tup{\ela,\ela}\in \relA$;
-        \item \emph{Transitive} if for~$\ela, \ela', \ela'' \in \setA$:
+        \begin{equation}
+            \prftree[double][r]{;}{
+                \inrel \ela \relA \elb
+            }{
+                \inrel \elb \relA \ela
+            }
+        \end{equation}
+        \item \emph{Reflexive} if%~$\forall \ela\in \setA$:~$\inrel{\ela}{\relA}{\ela}$;
+        \begin{equation}
+            \prftree[r]{;}{
+                \true
+            }{
+                \inrel \ela \relA \ela
+            }
+        \end{equation}
+        \item \emph{Transitive} if %for~$\ela, \ela', \ela'' \in \setA$:
         %~$\forall \ela, \ela', \ela'' \in \setA$: $\left( \tup{\ela,\ela'}\in \relA \wedge \tup{\ela',\ela''}\in \relA \right)  \Rightarrow \tup{\ela, \ela''}\in \relA$.
-        \begin{equation*}
-            \prftree{\tup{\ela,\ela'}\in \relA}{\tup{\ela',\ela''}\in \relA}{\tup{\ela, \ela''}\in \relA}
-        \end{equation*}
+        \begin{equation}
+            \prftree[r]{.}{
+                \inrel \ela \relA \elb
+            }{
+                \inrel \elb \relA \elc
+            }{
+                \inrel \ela \relA \elc
+            }
+        \end{equation}
     \end{compactitem}
-\end{definition}
+\end{ctdefinition}
 
+\todotext{@Gioele: missing definitions of asymmetric and antisymmetric, total, irreflexive. 
+Perhaps we should split it up in many definitions (one pair each). }
+% \todotext{More examples for all properties}
 \begin{example}
-    The relation ``less than or equal'' on~$\natnumbers$ is not symmetric. It is reflexive since~$n\leq n \ \forall n\in \natnumbers$, and it is transitive since~$l\leq m$ and~$m\leq n$ implies~$l\leq m$.
+    The relation ``less than or equal'' on~$\natnumbers$ is not symmetric.
+    It is reflexive since~$n\leq n \ \forall n\in \natnumbers$, and it is transitive since~$l\leq m$ and~$m\leq n$ implies~$l\leq m$.
 \end{example}
 
 \begin{example}
@@ -73,16 +122,17 @@
     \label{fig:ex_sym_rel}
 \end{marginfigure}
 \begin{example}
-    The endorelation depicted in \cref{fig:ex_sym_rel} is a symmetric relation on~$X=\{x_1,x_2\}$.
+    The endorelation depicted in \cref{fig:ex_sym_rel} is a symmetric relation on~$\stylesets{X}=\{\styleelements{x}_1,\styleelements{x}_2\}$.
 \end{example}
 
-\devel{\includepdf[scale=0.8,pages={8},nup=1x3,frame,pagecommand={}]{ACT4E-06-posets.pdf} }% equivalence}
+% \devel{\includepdf[scale=0.8,pages={8},nup=1x3,frame,pagecommand={}]{ACT4E-06-posets.pdf} }% equivalence}
 
 \linkvideo{spring2021-relations:relations:equivalence-rel} % Equivalence relations
-\begin{definition}[Equivalence relation]
+\begin{ctdefinition}[Equivalence relation]
     \label{def:equivalence-relation}
-    An endorelation~$\relA\subseteq \setA\times \setA$ is an \emph{\iindex{equivalence relation}} if it is symmetric, reflexive, and transitive. We write~$\ela\sim \ela'$ if~$\tup{\ela,\ela'}\in \relA$.
-\end{definition}
+    An endorelation~$\relA\colon \setA\mto \setA$ is an \emph{\iindex{equivalence relation}} if it is symmetric, reflexive, and transitive.
+    We write~$\ela\sim \elb$ if~$\inrel{\ela}{\relA}{\elb}$.
+\end{ctdefinition}
 
 \begin{example}
     The relation ``equals'' on~$\natnumbers$ is an equivalence relation.
@@ -100,19 +150,19 @@
     Let~$\mapa\colon \setA\to \setB$ be a function between sets.
     The following defines an equivalence relation:
     \begin{equation*}
-        \prftree[double line]{\ela\sim \ela'}{\mapa(\ela)=\mapa(\ela')}
+        \prftree[double line]{\ela\sim \elb}{\mapa(\ela)=\mapa(\elb)}
         %\ela\sim \ela'\Leftrightarrow \mapa(\ela)=\mapa(\ela').
     \end{equation*}
 \end{example}
 
-\begin{definition}[Partition]
+\begin{ctdefinition}[Partition]
     \label{def:partition}
     A \emph{\iindex{partition}} of a set~$\setA$ is a collection~$\{\setA_i\}_{i\in I}$ of subsets~$\setA_i\subseteq \setA$ such that
     \begin{compactenum}
         \item $\setA_i\cap \setA_j=\emptyset \quad \forall i\neq j$;
         \item $\bigcup_{i\in I}\setA_i=\setA$.
     \end{compactenum}
-\end{definition}
+\end{ctdefinition}
 
 \begin{remark}
     Equivalence relations are a way to group together elements of a set which we think of as ``the same'' in some respect.
@@ -137,6 +187,8 @@
 \end{example}
 
 
+
+
 \begin{gradedexercise}[\exname{CountingEquivalenceRelations}]
     \label{ex:CountingEquivalenceRelations}
     Let $\setA = \{ 1, 2, 3, 4 \}$.
@@ -146,3 +198,10 @@
 
 \solutionof{CountingEquivalenceRelations}
 
+
+\devel {
+    \begin{ctdefinition}[Transitive closure]
+        \label{def:transitive-closure}
+        \todotext{@Gioele: Write definition of transitive closure}
+    \end{ctdefinition}
+}

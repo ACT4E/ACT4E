@@ -20,7 +20,30 @@
 %]{remark}
 %\newenvironment{remark}{\textbf{Remark}}{\medskip}
 
+\newlength{\mysep}
+\setlength{\mysep}{2pt}
+
+\newtheoremstyle{break}
+  {\mysep} % space above (empty=default)
+  {\mysep}% space below (empty=default
+  {}% body font
+  {}% Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% Thm head font
+  {}% Punctuation after thm head
+  {\newline}% Space after thm head: \newline = linebreak
+  {}% Thm head spec
+
+% how to remove parentheses
+%\makeatletter
+%\def\thmhead@plain#1#2#3{%
+%  \thmname{#1}\thmnumber{\@ifnotempty{#1}{ }\@upn{#2}}%
+%  \thmnote{ {\the\thm@notefont#3}}}
+%\let\thmhead\thmhead@plain
+%\makeatother
+
 \theoremstyle{definition}
+
+
 \newtheorem{theorem}{Theorem}[chapter]
 \newtheorem*{theorem*}{Theorem}
 
@@ -33,20 +56,49 @@
 \newtheorem*{problem}{Problem}
 \newtheorem{remark}[theorem]{Remark}
 
-\theoremstyle{definition}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{example}[theorem]{Example}
 
-\newtheorem{protodefinition}[theorem]{Definition}
+%\theoremstyle{remark}
+\newtheorem*{warning}{Warning}
+%\newtheorem{remark}[theorem]{Remark}
+%\newtheorem{warning}[theorem]{Warning}
+
+\theoremstyle{break}
+
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+
+
+\surroundwithmdframed[
+  backgroundcolor=LightGray!30,
+  roundcorner=4pt,
+    linewidth=0pt
+]{definition}
+
+
+
+\newtheorem{ctdefinition}[theorem]{Definition}
 
 % \newenvironment{definition}
 %    {\colorlet{shadecolor}{blue!25}\begin{shaded}\begin{protodefinition}} % light blue for lemmas only
 %    {\end{protodefinition}\end{shaded}}
-\newenvironment{ctdefinition}
-{\colorlet{shadecolor}{LightBlue!50}\begin{shaded*}
-                                      \begin{protodefinition}} % light blue for lemmas only
-                                      {\end{protodefinition}
-\end{shaded*}}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem*{definition*}{Definition}
+%\newenvironment{ctdefinition}
+%{\colorlet{shadecolor}{LightBlue!50}\begin{shaded*}
+%                                      \begin{protodefinition}} % light blue for lemmas only
+%                                      {\end{protodefinition}
+%\end{shaded*}}
+%
+
+
+\surroundwithmdframed[
+  backgroundcolor=LightBlue!30,
+  roundcorner=4pt,
+    linewidth=0pt
+]{ctdefinition}
+
+
 % \newtheorem{ctdefinition}[theorem]{Definition}
 
 
@@ -56,13 +108,6 @@
                                       {
 \end{shaded*}}
 
-\newtheorem{construction}[theorem]{Construction}
-\newtheorem{example}[theorem]{Example}
-
-%\theoremstyle{remark}
-\newtheorem*{warning}{Warning}
-%\newtheorem{remark}[theorem]{Remark}
-%\newtheorem{warning}[theorem]{Warning}
 
 
 \newcounter{exercise}[part]
@@ -84,7 +129,7 @@
 \newtheorem{protocodeexercise}[codeexercise]{Code exercise}
 
 \newenvironment{codeexercise}
-{\colorlet{shadecolor}{LightPink!50}\begin{shaded*}
+{\colorlet{shadecolor}{LightGreen!50}\begin{shaded*}
                                       \begin{protocodeexercise}} %
                                       {\end{protocodeexercise}
 \end{shaded*}}
@@ -203,7 +248,7 @@
 \newcommand{\iflabelexists}[2]{
     \ifthenelse{\boolean{devel}}{
         \@ifundefined{r@#1}{
-            \todo{label #1 not defined}
+            \todotext{label #1 not defined}
             #2
         }{#2}
     }{%
@@ -213,5 +258,31 @@
 \makeatother
 
 
-\newcommand{\XXX}{{\color{red}XXX}\xspace}
+
 \newcommand{\citeXXX}{{\color{red}[cite]}\xspace}
+
+
+
+\newenvironment{forslides}{\colorlet{shadecolor}{Pink!50}\begin{shaded*}%
+\textbf{This content was created for slides. Do not erase or change the names}.\\%
+                                      }{\end{shaded*}}
+
+
+\AtBeginDocument{
+    \ifthenelse{\boolean{devel}}{
+        \newcommand{\XXX}{{\color{red}XXX}\xspace}
+    }{
+        \def\XXX{
+        \PackageError{ACT4E}{You have included XXX in a non-devel version.}{We interrupt compilation.}
+        }
+    }
+}
+%(devel = \ifthenelse{\boolean{devel}}{TRUE}{FALSE})
+\AtBeginDocument{
+    \let\oldsection\section
+    \renewcommand\section{\FloatBarrier\clearpage\oldsection}
+}
+
+
+\def\parttoc{{\color{red} disabled because of kaobook}}
+\def\minitoc{{\color{red} disabled because of kaobook}}

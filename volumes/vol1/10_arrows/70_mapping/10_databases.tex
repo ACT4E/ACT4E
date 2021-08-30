@@ -3,48 +3,41 @@
 
 \section{Databases, sets, functions}
 \todojira{52}{Discuss the mess below here, and then act.}
-    \AC{I'm not sure about this example. I feel that if one is happy
-    with relational databases as a trivial example, they already know Intuitively
-    functions as morphisms (maybe because they know types).
-    If you don't know databases, then that topic cannot be used to introduce a simple
-    concept such as databases.
-    }
+\AC{I'm not sure about this example.
+I feel that if one is happy with relational databases as a trivial example, they already know Intuitively functions as morphisms (maybe because they know types).
+If you don't know databases, then that topic cannot be used to introduce a simple concept such as databases.
+}
 
-    \JL{In the second sentence above, is ``that topic'' referring to ``functions as morphisms''? I'm also not sure if I understand the overall comment. In any case, if it's helpful: the original idea behind this database example was to do things in a way that is compatible with how databases are treated in Seven Sketches. (I'm not necessarily attached to keeping this example, this is just to explain the idea/intention.) I don't know anything about databases anyway : ) I just thought it probably works well if it is in line with the FQL way of seeing things.}
+\JL{In the second sentence above, is ``that topic'' referring to ``functions as morphisms''? I'm also not sure if I understand the overall comment.
+In any case, if it's helpful: the original idea behind this database example was to do things in a way that is compatible with how databases are treated in Seven Sketches. (I'm not necessarily attached to keeping this example, this is just to explain the idea/intention.) I don't know anything about databases anyway : ) I just thought it probably works well if it is in line with the FQL way of seeing things.}
 
-    \AC{
-        I propose to have here the \textbf{Spreadsheet} category: objects are cells,
-        morphisms are the formulas. There is an object $1$ that can be the domain
-        for the constant value of cells.
-
-    }
+\AC{
+    I propose to have here the \textbf{Spreadsheet} category: objects are cells, morphisms are the formulas.
+    There is an object $1$ that can be the domain for the constant value of cells.
+}
 
 \iflabelexists{sec:relational-databases}{
-We continue the discussion of \cref{sec:relational-databases}.
+    We continue the discussion of \cref{sec:relational-databases}.
 }{}
 
-In the particular case of tables with primary keys,
-things are easier. In relational databases,
-a table column is a primary key if the values of that column are guaranteed to be unique.
+In the particular case of tables with primary keys, things are easier.
+In relational databases, a table column is a primary key if the values of that column are guaranteed to be unique.
 
-If the values in the column are unique, the column serves as the name of the row. In the table
-above the motor ID serves as the primary key.
+If the values in the column are unique, the column serves as the name of the row.
+In the table above the motor ID serves as the primary key.
 
-Consider a table with columns $P \times X_1 \times X_2 \times \cdots X_n$,
-where $P$ is the primary key column. Then, given a key $p \in P$,
-we can obtain the value in the other columns. We first find the unique
-row with the key $p$, and then we read out the values.
+Consider a table with columns $P \cartprod X_1 \cartprod X_2 \cartprod \cdots X_n$, where $P$ is the primary key column.
+Then, given a key $p \in P$, we can obtain the value in the other columns.
+We first find the unique row with the key $p$, and then we read out the values.
 
 
-Therefore, a table with columns $P \times X_1 \times X_2 \times \cdots X_n$
-can be seen as a tuple $\tup{S, \{f_i\}_i}$:
+Therefore, a table with columns $P \cartprod X_1 \cartprod X_2 \cartprod \cdots X_n$ can be seen as a tuple $\tup{S, \{f_i\}_i}$:
 \begin{itemize}
     \item A subset $A \subseteq P$ that gives us the available keys.
-    \item $n$ read-out functions $f_i\colon P \to X_i$, each giving the
-    corresponding value of the $i$-th attribute.
+    \item $n$ read-out functions $f_i\colon P \to X_i$, each giving the corresponding value of the $i$-th attribute.
 \end{itemize}
 
-\todo{\JL{I don't see yet how the set $A$ comes into play.}}
+\todotext{@Gioele: \JL{I don't see yet how the set $A$ comes into play.}}
 \begin{comment}
     \begin{table*}[h]
         \centering
@@ -68,19 +61,29 @@ In this example, we can consider the primary key to be the set
 \begin{equation*}
     \transmuted{M} \definedas \{ 1204, 1206, 1207, 2267, 2279, 1478, 2299 \},
 \end{equation*}
-of models of motors. The other colums are given by the set
+of models of motors.
+The other colums are given by the set
 \begin{equation*}
     \transmuted{C} \definedas \{ \Soyo,\SanyoDenki\}
 \end{equation*}
-of manufacturing companies, the set~$\transmuted{S}$ of possible motor sizes, the set~$\transmuted{W}$ of possible weights, the set~$\transmuted{J}$ of possible maximal powers, and the set~$\transmuted{P}$ of possible prices. Each attribute of a motor may be thought of as a function from the set~$\transmuted{M}$ to set of possible values for the given attribute. For example, there is a function~$\Company\colon \transmuted{M} \to \transmuted{C}$ which maps each model to the corresponding company that manufactures it. So, according to \cref{tab:electric_motors2}, we have mappings of the kind~$\Company(1204) = \Soyo$, and~$\Company(2279) =\SanyoDenki$, etc.
+of manufacturing companies, the set~$\transmuted{S}$ of possible motor sizes, the set~$\transmuted{W}$ of possible weights, the set~$\transmuted{J}$ of possible maximal powers, and the set~$\transmuted{P}$ of possible prices.
+Each attribute of a motor may be thought of as a function from the set~$\transmuted{M}$ to set of possible values for the given attribute.
+For example, there is a function~$\Company\colon \transmuted{M} \to \transmuted{C}$ which maps each model to the corresponding company that manufactures it.
+So, according to \XXX, we have mappings of the kind~$\Company(1204) = \Soyo$, and~$\Company(2279) =\SanyoDenki$, etc.
 
-Note that in ``real life'', the catalogue of motors might not have seven entries, as in \cref{tab:electric_motors2}, but has in fact hundreds of entries, and is implemented digitally as a database (a collection of interrelated tables). In this case, we will want to be able to search and filter the data based on various criteria. Many natural operations on tables and databases may be described simply in terms of operations with functions. We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases.
+Note that in ``real life'', the catalogue of motors might not have seven entries, as in \XXX, but has in fact hundreds of entries, and is implemented digitally as a database (a collection of interrelated tables).
+In this case, we will want to be able to search and filter the data based on various criteria.
+Many natural operations on tables and databases may be described simply in terms of operations with functions.
+We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases.
 
-Sticking with \cref{tab:electric_motors2}, suppose, for instance, that we want to consider only motors from Company~$\SanyoDenki$. In terms of the function
+Sticking with \cref{tab:electric_motors2}, suppose, for instance, that we want to consider only motors from Company~$\SanyoDenki$.
+In terms of the function
 \begin{equation*}
     \Company\colon \transmuted{M} \to \transmuted{C}
 \end{equation*}
-this corresponds to the preimage~$\Company^{-1}(\{\SanyoDenki \}) = \{2279, 2299\}$, which is a subset of the set~$\transmuted{M}$. Or, we may want to consider only motors which cost between 40 and 200 \USD. In terms of the obvious function
+this corresponds to the preimage~$\Company^{-1}(\{\SanyoDenki \}) = \{2279, 2299\}$, which is a subset of the set~$\transmuted{M}$.
+Or, we may want to consider only motors which cost between 40 and 200 \USD.
+In terms of the obvious function
 \begin{equation*}
     \Price\colon \transmuted{M} \to \transmuted{P},
 \end{equation*}
@@ -88,6 +91,7 @@ this means we wish to restrict ourselves to the preimage
 \begin{equation*}
     \Price^{-1}(\{ 49.95, 59.95, 164.95\}) = \{ 1478, 2299, 2279 \} \subseteq \transmuted{M}.
 \end{equation*}
+%
 
 Now suppose we wish to add a column to our table for ``volume'', because we may want to only consider motors that have, at most, a certain volume.
 For this we define a set~$\transmuted{V}$ of possible volumes (let's take~$\transmuted{V} = \nonNegReals$, the non-negative real numbers), and define a function
@@ -97,7 +101,8 @@ For this we define a set~$\transmuted{V}$ of possible volumes (let's take~$\tran
         \tup{l, w, h} &\mapsto l \cdot w \cdot h,
     \end{aligned}
 \end{equation*}
-which maps any size of motor to its corresponding volume by multiplying together the given numbers for length, width, and heigth. Now we can compose this function with the function
+which maps any size of motor to its corresponding volume by multiplying together the given numbers for length, width, and heigth.
+Now we can compose this function with the function
 \begin{equation*}
     \Size \colon \transmuted{M} \to \transmuted{S}
 \end{equation*}
@@ -114,8 +119,15 @@ which defines a new column in our table.
     \caption{A diagram of functions. }
     \label{fig:diagram_functions}
 \end{marginfigure}
-The composition of functions is usually written as~$\Volume = \Multiply  \after \Size $, however we stick to our convention of writing~$\Volume = \Size  \then \Multiply $. Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
+
+The composition of functions is usually written as~$\Volume = \Multiply  \after \Size $, however we stick to our convention of writing~$\Volume = \Size  \then \Multiply $.
+Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
 
 %We call such a diagram \textbf{commutative}, because the composition $\mathsf{Size} \then \mathsf{Multiply}$ is equal to the function $\mathsf{Volume}$ (in fact, we defined $\textsf{Volume}$ this way).
 
-We can interpret arrows in this diagram as being part of a category, where~$\transmuted{M}$,~$\transmuted{S}$, and~$\transmuted{V}$ are among the objects, and where the functions~$\Size$, $\Multiply$ and~$\Volume$ are morphisms. We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too. One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category, which we call \Database, in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}). This would be an option. However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before. And we might not want to re-think each time precisely which category we are working with.
+We can interpret arrows in this diagram as being part of a category, where~$\transmuted{M}$,~$\transmuted{S}$, and~$\transmuted{V}$ are among the objects, and where the functions~$\Size$, $\Multiply$ and~$\Volume$ are morphisms.
+We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too.
+One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category, which we call \Database, in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}).
+This would be an option.
+However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before.
+And we might not want to re-think each time precisely which category we are working with.

@@ -28,6 +28,14 @@
   style=chapter% no part page
 ]{part}
 
+%
+\RedeclareSectionCommand[
+  beforeskip=10pt,
+  afterskip=5pt,
+%  headings=normal,
+  style=section% no part page
+]{section}
+
 
 %\usepackage{scrpage2}  %<---
 \usepackage{scrlayer-scrpage}
@@ -97,8 +105,10 @@
 \usepackage{prftree}
 
 
-
-
+\setlength{\prflinepadbefore}{0.9ex}
+\setlength{\prflinepadafter}{0.6ex}
+\setlength{\prflinethickness}{1.5pt}
+\setlength{\prfdoublelineinterspace}{0.2pt}
 \usepackage{comment}
 \usepackage{accents}
 \usepackage[style=russian]{csquotes}
@@ -120,6 +130,8 @@
 
 %\usepackage[obeyFinal]{todonotes} % after xcolor
 \presetkeys{todonotes}{inline}{}
+%\presetkeys{todonotes}{noinline}{}
+%\presetkeys{todonotes}{size}{\tiny}
 
 \usepackage[capitalize]{cleveref}
 \usepackage{pgfplots}
@@ -299,17 +311,26 @@
 \vfill\vfill
   % \IfFileExists{\rootdir/pics/#2.tex}{
   \blfootnote{\input{\rootdir/pics/#2.tex}}
-  \etocsetnexttocdepth{section}
+%  \etocsetnexttocdepth{section}
   % }{#3}
 }
+
+\setcounter{margintocdepth}{\sectiontocdepth}
 
 \newlength\tocrulewidth
 \setlength{\tocrulewidth}{1.5pt}
 
 
 \newcommand{\partfirstb}[4]{
-    #1%
-  \includegraphics[width=\textwidth]{#2}
+%\pagelayout{fullwidthpage}
+\part{#1}%
+%\fullwidthpage
+%\includegraphics[width=\paperwidth,height=10cm,keepaspectratio=true]{#2}
+%\includegraphics[width=\paperwidth,height=10cm,keepaspectratio=true]{#2} %viewport=0 0 10cm 15cm]{#2}
+\includegraphics[height=10cm]{#2}
+%\setchapterimage[10cm]{#2}
+%\centering
+%{\begin{minipage}{0.9\textwidth}
   \blfootnote{\input{\rootdir/pics/#2.tex}}
   \smallskip%
   {\small #3}%
@@ -317,6 +338,8 @@
     \etocsettocstyle{\rule{\linewidth}{\tocrulewidth}\vskip0.5\baselineskip}{\rule{\linewidth}{\tocrulewidth}}
  \etocsetnexttocdepth{chapter}
   \localtableofcontents
+%   \end{minipage}}
+%\pagelayout{margin}
 }
 
 \newcommand{\tableColors}{\rowcolors{2}{green!4}{blue!4}}
@@ -445,9 +468,23 @@
 \let\oldlabel\label
 
 \usepackage[outer]{showlabels}
+%
+%\AtBeginDocument{
+%\renewcommand{\showlabels}[1]{}
+%}
 
 \renewcommand{\showlabelfont}{\footnotesize\color{gray}}
 
 \usepackage{ifmtarg}
 
 \allowdisplaybreaks[4]
+
+
+\AtBeginDocument{\etocsetnexttocdepth{section}}
+
+\usepackage{multicol}
+
+
+\newcommand{\punctuate}{
+\todotextjira{381}{@Gioele: punctuate equations}
+}

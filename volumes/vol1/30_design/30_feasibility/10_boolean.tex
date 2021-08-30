@@ -13,11 +13,12 @@ If we are not interested in the implementations, but just in the relation betwee
 Recall how the problem \Feasibility was defined in \cref{prob:Feasibility}.
 Given a particular functionality~$\fun$ and resource~$\res$, we would like to know if they are feasible.
 
-This is a function from~$\funsp \times \ressp$ to~$\Bool$:
+This is a function from~$\funsp \cartprod \ressp$ to~$\Bool$:
+
 \begin{equation}
     \mapb\colon \funsp \cartprod \ressp \sto \Bool.
 \end{equation}
-
+%
 The value~$\mapb(\fun, \res)$ is the answer to the question ``is the functionality~\fun feasible with resources~\res?''.
 Due to how the problem is defined, we know that%
 \begin{compactenum}
@@ -26,8 +27,7 @@ Due to how the problem is defined, we know that%
 \end{compactenum}
 Therefore, we can conclude that~$\mapb$ is monotone in the second argument~\res, and antitone in the first argument~$\fun$.
 
-It is going to be convenient to have functions that are monotone, and not mixed
-monotone/antitone.
+It is going to be convenient to have functions that are monotone, and not mixed monotone/antitone.
 Instead of considering a map from~$\funsp \cartprod \ressp$ to~$\Bool$, we can turn things around and look at a map~$\adp$ from~$\funsp\op \cartprod \ressp$ to~$\Bool$, defined as~$\adp(\F{x},\res) = \mapb(\F{x}^*,\res)$.
 Because we use~$\funsp\op$ rather than \funsp, the map~$\adp$ is monotone.
 
@@ -47,7 +47,8 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
         \label{eq:design_prob_as_monfun}
         \adp \colon  \funsp\op \Ctimes \ressp \toinPos \Bool.
     \end{equation*}
-    We will also use the notation~$\adp \colon \funsp \profto \ressp$ for design problems, in order to emphasize how we think of them as morphisms. This will be explained below.
+    We will also use the notation~$\adp \colon \funsp \profto \ressp$ for design problems, in order to emphasize how we think of them as morphisms.
+    This will be explained below.
 \end{definition}
 
 \begin{remark}
@@ -55,7 +56,7 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
     \begin{equation}
         \label{eq:dpi_to_dp_1}
         \begin{aligned}
-            \adp\colon \funsp\op \times \ressp &\toinPos \Bool\\
+            \adp\colon \funsp\op \cartprod \ressp &\toinPos \Bool\\
             \tup{\fun^*,\res}&\mapsto \exists \imp \in \impsp \colon (\fun \posleq_\funsp \prov(\imp)) \wedge (\req(\imp)\posleq_\ressp \res).
         \end{aligned}
     \end{equation}
@@ -69,7 +70,7 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
 
 \begin{example}
     Recall \cref{exa:dpi_elmotor}, with the catalogue of electric motors in \cref{tab:electric_motors_3}.
-
+    
     \begin{table*}[h]
         \centering
         \adjustbox{max width=\textwidth}{%
@@ -90,7 +91,7 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
         \caption{A simplified catalogue of motors.}
         \label{tab:electric_motors_3}
     \end{table*}
-
+    
     The catalogue induces a design problem~$\adp_\mathrm{EM}$ with diagrammatic form as in \cref{fig:dp_em_2}.
     In particular, we can query the design problem for combinations of \textF{functionalities} and \textR{resources}.
     For instance:
@@ -98,7 +99,7 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
         \adp\left(\unit[0.2]{kg\cdot cm}, \tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}} \right)=\false,
     \end{equation}
     since no listed model can provide~$\unit[0.2]{kg\cdot cm}$ \textF{torque} by requiring the set of \textR{resources}~$\tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}}$ or less.
-
+    
     \begin{figure}[tbh]
         \centering
         \includesag{520_dp_electric_motor}
@@ -129,34 +130,41 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
 %%A design problem~$\adp$ will satisfy these conditions if and only if it is represented by a monotone function.
 %\end{comment}
 
-\todotext{here $K$ does not have a macro}
+\todotext{@Gioele: here $K$ does not have a macro}
 
 \begin{definition}[Feasible set of a design problem]
     \label{def:dp-feasible-set}
     We define the \emph{feasible set}~$K_\adp$ of a design problem~
     \begin{equation}
         \label{eq:generic-design-prob}
-        \adp\colon \funsp\op \times \ressp \toinPos \Bool
+        \adp\colon \funsp\op \cartprod \ressp \toinPos \Bool
     \end{equation}
-    as the subset of~$\funsp \op\times \ressp$ for which~$\adp$ is the \emph{indicator function}, that is%
+    as the subset of~$\funsp \op\cartprod \ressp$ for which~$\adp$ is the \emph{indicator function}, that is%
     \begin{equation}
         \label{eq:design-prob-as-upper-set}
-        K_\adp = \{ \tup{\F{f^*},\res} \in \funsp \op\times \ressp  \mid %
+        K_\adp = \{ \tup{\F{f^*},\res} \in \funsp \op\cartprod \ressp  \mid %
         \adp(\fun^*, \res) = \true %
         \}.
     \end{equation}
 \end{definition}
 
-Note that the feasibility set $K_\adp$ of a design problem $\adp \colon \funsp \op \times \ressp\toinPos \Bool$ is a binary relation $K_\adp \subseteq \funsp\op \times \ressp$. We saw in \cref{re:rel-three-fun-descriptions} that there is a one-to-one correspondence between functions $\mapa : \setA \times \setB \to \Bool$ and binary relations $\relA \subseteq \setA \times \setB$. An analogous correspondence holds in the context of design problems:
+Note that the feasibility set~$K_\adp$ of a design problem~$\adp \colon \funsp \op \cartprod \ressp\toinPos \Bool$ is a binary relation $K_\adp \subseteq \funsp\op \cartprod \ressp$.
+We saw in \cref{re:rel-three-fun-descriptions} that there is a one-to-one correspondence between functions~$\mapa \colon \setA \cartprod \setB \to \Bool$ and binary relations~$\relA \subseteq \setA \cartprod \setB$.
 
-\begin{exercise}\label{ex:adp-uppersets}
-    Prove that there is a one-to-one correspondence between design problems $\adp \colon \funsp \op \times \ressp\toinPos \Bool$ and upper sets $K \subseteq \funsp\op \times \ressp$.
+An analogous correspondence holds in the context of design problems:
+
+\begin{exercise}
+    \label{ex:adp-uppersets}
+    Prove that there is a one-to-one correspondence between design problems~$\adp \colon \funsp \op \cartprod \ressp\toinPos \Bool$ and upper sets~$K \subseteq \funsp\op \cartprod \ressp$.
 \end{exercise}
 \begin{solution}
-    \todotext{Write solution to exercise \cref{ex:adp-uppersets}}
+    \todotext{@J: Write solution to exercise \cref{ex:adp-uppersets}}
 \end{solution}
 
-Recall that when working with a relation $\relA \subseteq \setA \times \setB$ between sets, if the sets in question were finite, then we could conveniently draw the relation $\relA$ using arrows to connect elements of $\setA$ to those elements of $\setB$ to which they are related via $\relA$. Given a design problem $\adp \colon \funsp \op \times \ressp\toinPos \Bool$ involving finite posets, we can visualize it in a similar fashion. We use Hasse diagrams to visualize the posets involved, and we use dashed arrows to connect those elements which are related via the feasibility set $K_\adp$.
+Recall that when working with a relation~$\relA \subseteq \setA \cartprod \setB$ between sets, if the sets in question were finite, then we could conveniently draw the relation~$\relA$ using arrows to connect elements of~$\setA$ to those elements of~$\setB$ to which they are related via~$\relA$.
+Given a design problem~$\adp \colon \funsp \op \cartprod \ressp\toinPos \Bool$ involving finite posets, we can visualize it in a similar fashion.
+We use Hasse diagrams to visualize the posets involved, and we use dashed arrows to connect those elements which are related via the feasibility set $K_\adp$.
+
 
 \begin{marginfigure}
     \centering
@@ -169,7 +177,7 @@ Recall that when working with a relation $\relA \subseteq \setA \times \setB$ be
     \label{exa:visualize-dp}
     In \cref{fig:example_dp_graph_xy} we have illustrated this kind of visualization in the case of a design problem of the type
     \begin{equation*}
-        \adp \colon \F{\posgenA} \op \times  \R{\posgenB} \toinPos \Bool,
+        \adp \colon \F{\posgenA} \op \cartprod  \R{\posgenB} \toinPos \Bool,
     \end{equation*}
     where~$\F{\posgenA} = \tup{\posAset, \posleq}$ and~$ \R{\posgenB} = \tup{\posBset, \posleq}$ are finite posets, with
     \begin{equation}
@@ -178,7 +186,7 @@ Recall that when working with a relation $\relA \subseteq \setA \times \setB$ be
         \posBset =  \{ \setBel_1, \setBel_2\}
     \end{equation}
     and ordered as shown in the figure.
-
+    
     The feasibility set is marked with the dashed arrows; it is the set
     \begin{equation*}
         K_\adp = \{\tup{\setAel_1, \setBel_1}, \tup{\setAel_1, \setBel_2}, \tup{\setAel_2, \setBel_2}, \tup{\setAel_3, \setBel_2} \}.
@@ -190,28 +198,30 @@ Recall that when working with a relation $\relA \subseteq \setA \times \setB$ be
     \label{re:dp-from-monotone}
     Given any monotone map~$\mapb\colon \funsp \toinPos \ressp$, we can turn it into a design problem
     \begin{equation*}
-        \adp_\mapb \colon \funsp\op \times \ressp \toinPos \Bool
+        \adp_\mapb \colon \funsp\op \cartprod \ressp \toinPos \Bool
     \end{equation*}
-    via the following recipe. Set
+    via the following recipe.
+    Set
     \begin{equation*}
         \adp_\mapb (\fun^*, \res) = \true \quad \text{if and only if} \quad \mapb(\fun) \posleq \res.
     \end{equation*}
 \end{remark}
 
-\begin{exercise}\label{ex:adp-monotone}
+\begin{exercise}
+    \label{ex:adp-monotone}
     Prove that $\adp_\mapb$ as defined in \cref{re:dp-from-monotone} is indeed a design problem when $\mapb$ is a monotone map.
 \end{exercise}
 \begin{solution}
-    \todotext{Write solution to exercise \cref{ex:adp-monotone}}
+    \todotext{@J: Write solution to exercise \cref{ex:adp-monotone}}
 \end{solution}
 
-The Boolean-valued design problems we are considering in this section do not distinguish between particular implementations:
-they only tell us if \emph{any} implementation or solution exists for given functionality and resources.
+The Boolean-valued design problems we are considering in this section do not distinguish between particular implementations: they only tell us if \emph{any} implementation or solution exists for given functionality and resources.
 We will define~\Set-enriched design problems, which directly generalize Boolean-valued design problems and do distinguish between particular implementations.
 
 \todotext{JL: move the above paragraph somewhere else? E.g. to the place where we introduce Set-enriched design problems.}
 
-\paragraph{Diagrammatic notation} We represent design problems using a diagrammatic notation. One design problem~$\adp \colon \funsp \profto \ressp$ is represented as a box with functionality~\funsp on the \emph{left} and resources~\ressp on the \emph{right} (\cref{fig:diagrammaticdp}).
+\paragraph{Diagrammatic notation} We represent design problems using a diagrammatic notation.
+One design problem~$\adp \colon \funsp \profto \ressp$ is represented as a box with functionality~\funsp on the \emph{left} and resources~\ressp on the \emph{right} (\cref{fig:diagrammaticdp}).
 \begin{figure}[h!]
     \centering
     \includesag{50_diagrammatic}
@@ -220,24 +230,26 @@ We will define~\Set-enriched design problems, which directly generalize Boolean-
 \end{figure}
 As we did for DPIs, we will connect these diagrams.
 \begin{example}
-    An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100. The engine requires fuel and provides thrust, and so it can be modeled as a design problem where \R{fuel} and \F{thrust} are two totally-ordered sets representing their respective resources.
-
+    An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100.
+    The engine requires fuel and provides thrust, and so it can be modeled as a design problem where \R{fuel} and \F{thrust} are two totally-ordered sets representing their respective resources.
+    
     The corresponding diagram is reported in~\cref{fig:enginedp}.
-
+    
     \begin{marginfigure}
         \centering
         \includesag{50_engine}
         \caption{Diagram of the engine design problem.}
         \label{fig:enginedp}
     \end{marginfigure}
-
+    
     Concretely, ``engine'' is represented as a monotone map%
+    %
     \begin{equation}
-        \text{engine} \colon \Ftext{thrust}\op \times \Rtext{fuel} \toinPos \Bool.
+        \text{engine} \colon \Ftext{thrust}\op \cartprod \Rtext{fuel} \toinPos \Bool.
     \end{equation}
-
+    %
     Assuming that the posets \R{fuel}, \F{thrust}$\op$ are finite, we can think of the ``engine'' design problem as a matrix, where each~$(i,j)$-th entry is the answer to the question, ``is the amount of thrust~$\F{f_i}$ feasible with the amount of fuel~$\R{r_j}$?'':
-
+    
     \begin{equation}
         \begin{blockarray}{ccccccc}
             &&&& \Rtext{Fuel} \\
@@ -251,16 +263,21 @@ As we did for DPIs, we will connect these diagrams.
             \end{block}
         \end{blockarray}
     \end{equation}
-
-    Suppose we have tested or are given the performance data of a few different engines, as possible solutions to the ``engine'' design problem, each with a fixed optimal fuel-thrust value. To illustrate the monotonicity assumption, we can render the data of ``engine'' as a graph, as depicted in~\cref{fig:solenginedp}.
+    %
+    Suppose we have tested or are given the performance data of a few different engines, as possible solutions to the ``engine'' design problem, each with a fixed optimal fuel-thrust value.
+    To illustrate the monotonicity assumption, we can render the data of ``engine'' as a graph, as depicted in~\cref{fig:solenginedp}.
     \begin{figure}[h!]
         \centering
         \includesag{50_engine_graph}
         \caption{Graphical representation of the possible solutions of the engine design problem. }
         \label{fig:solenginedp}
     \end{figure}
+    
+    Note that the shaded regions cover the feasible solution set.
+    This feasible solution set is always an \emph{upper set} (\cref{def:upperset}) in~$\Ftext{thrust}\op \cartprod \Rtext{fuel}$, which is another way of characterizing the monotonicity of the design problem.
+    The optimal solutions, indicated by dots, form an \emph{antichain} of solutions.
+    We will come back to antichains when discussing how to compute optimal solutions of design problems.
 
-    Note that the shaded regions cover the feasible solution set. This feasible solution set is always an \emph{upper set} (\cref{def:upperset}) in~$\Ftext{thrust}\op \times \Rtext{fuel}$, which is another way of characterizing the monotonicity of the design problem. The optimal solutions, indicated by dots, form an \emph{antichain} of solutions. We will come back to antichains when discussing how to compute optimal solutions of design problems.
 \end{example}
 
 
