@@ -1,13 +1,10 @@
 % !TEX root = chapter-standalone.tex
 
-
 The definition of monads is very powerful because it is very abstract and can fit many possible scenarios.
 Before getting to the formal definition, it is useful to build up some intuition using several examples.
 
-
 \section{Generalized objects and operations}
 \linkvideo{spring2021-monads-a:intro-monad} % Introduction to monads
-
 
 Monads are a type of algebraic structure that is well-suited to represent generalized objects and operations.
 We begin by giving several examples.
@@ -60,7 +57,7 @@ So far we know the rules of composition for functions:
     \label{eq:monad-function-composition}
     \prftree{\mora\colon \Obja \to \Objb}{\quad}{\morb\colon \Objb \to \Objc}
     {\definemap{(\mora\mthen\morb)}{\Obja}{\Objc}%
-    {x}{\morb(\mora(x)),}}
+        {x}{\morb(\mora(x)),}}
 \end{equation}
 %
 but this does not help for the generalized functions.
@@ -71,7 +68,7 @@ What to fill in the space below?
     \label{eq:monad-gen-function-composition}
     \prftree{\mora\colon \Obja \to \powerset\Objb}{\quad}{\morb\colon \Objb \to \powerset \Objc}
     {\definemap{(\mora\mthen\morb)}{\Obja}{\powerset\Objc}%
-    {x}{\text{\color{red}?}}}
+        {x}{\text{\color{red}?}}}
 \end{equation}
 %
 There is one natural way to define this operation.
@@ -84,7 +81,7 @@ Did you notice the following?
 
 \begin{proof}
     \todotextjira{226}{@J: We showed this already in a previous chapter.
-    We could include a cross reference and/or also explain how this works again.}
+        We could include a cross reference and/or also explain how this works again.}
 \end{proof}
 
 Therefore, we expect that nondeterministic functions can be composed like relations.
@@ -110,33 +107,33 @@ To summarize:
 \begin{itemize}
     \item We wanted to extend \Set from functions $\Obja \to \Objb$ to nondeterministic functions of type $\Obja \to \powerset\Objb$.
     \item To do this, we needed three things:
-    \begin{enumerate}
-        \item The particular choice of $\powerset$ as what maps a set to another set.
-        \item A way to lift a function of type $\Obja \to \Objb$ to a function of type $\Obja \to \powerset\Objb$, so that we can say that nondeterministic functions are a generalization of deterministic functions.
-        This lifting operation is a family of functions of type
-        \begin{equation}
-            \label{eq:monad-lift}
-            \lift_{\Obja, \Objb}: (\Obja \to \Objb) \to (\Obja \to \powerset\Objb).
-        \end{equation}
-        \item A way to define composition, through a map, traditionally called ``fish'', of type
-        \begin{equation}
-            \label{eq:monad-fish}
-            \fish_{\Obja, \Objb, \Objc}: (\Obja \to \powerset\Objb) \cartprod (\Objb \to \powerset\Objc)
-            \to (\Obja \to \powerset \Objc)
-        \end{equation}
-    \end{enumerate}
+          \begin{enumerate}
+              \item The particular choice of $\powerset$ as what maps a set to another set.
+              \item A way to lift a function of type $\Obja \to \Objb$ to a function of type $\Obja \to \powerset\Objb$, so that we can say that nondeterministic functions are a generalization of deterministic functions.
+                    This lifting operation is a family of functions of type
+                    \begin{equation}
+                        \label{eq:monad-lift}
+                        \lift_{\Obja, \Objb}: (\Obja \to \Objb) \to (\Obja \to \powerset\Objb).
+                    \end{equation}
+              \item A way to define composition, through a map, traditionally called ``fish'', of type
+                    \begin{equation}
+                        \label{eq:monad-fish}
+                        \fish_{\Obja, \Objb, \Objc}: (\Obja \to \powerset\Objb) \cartprod (\Objb \to \powerset\Objc)
+                        \to (\Obja \to \powerset \Objc)
+                    \end{equation}
+          \end{enumerate}
     \item And we needed these pieces to satisfy the conditions:
-    \begin{enumerate}
-        \item $\fish$ is associative.
-        This ensures the generalized functions form a semi-category.
-        \item The composition of the lifted functions are the lifting of the composition:
-        \begin{equation}
-            \label{eq:monad-fish-associative}
-            \prftree{\mora\colon \Obja \to \powerset\Objb}{\quad}{\morb\colon \Objb \to \powerset \Objc}{
-                \lift_{\Obja,\Objb}(\mora)\mthen\lift_{\Objb,\Objc}(\morb) =  \lift_{\Obja,\Objc}(\mora\mthen\morb)}
-        \end{equation}
-        This ensures that inside the generalized functions, the composition of regular functions continues to work as it should.
-    \end{enumerate}
+          \begin{enumerate}
+              \item $\fish$ is associative.
+                    This ensures the generalized functions form a semi-category.
+              \item The composition of the lifted functions are the lifting of the composition:
+                    \begin{equation}
+                        \label{eq:monad-fish-associative}
+                        \prftree{\mora\colon \Obja \to \powerset\Objb}{\quad}{\morb\colon \Objb \to \powerset \Objc}{
+                            \lift_{\Obja,\Objb}(\mora)\mthen\lift_{\Objb,\Objc}(\morb) =  \lift_{\Obja,\Objc}(\mora\mthen\morb)}
+                    \end{equation}
+                    This ensures that inside the generalized functions, the composition of regular functions continues to work as it should.
+          \end{enumerate}
 \end{itemize}
 
 \subsection{Modeling interval uncertainty}
@@ -151,30 +148,29 @@ In this category it is easy to propagate uncertainty if the uncertain sets are r
 Recall that for a poset $\posgenA$, we can define the poset of intervals~$\Arrow\,\posgenA$
 and~$\TwistedArrow\,\posgenA$.
 
-
 Analogously to the previous case, here we want to generalize from monotone functions to nondeterministic monotone functions, where the uncertainty is represented by intervals.
 
 We use the following notation for intervals:
 \begin{itemize}
     \item The interval
-    \begin{equation}
-        \label{eq:interv-1}
-        \{x\colon a \posleq x \posleq b\}
-    \end{equation}
-    is denoted
-    \begin{equation}
-        \label{eq:interv-2}
-        \interv{a}{b}
-    \end{equation}
+          \begin{equation}
+              \label{eq:interv-1}
+              \{x\colon a \posleq x \posleq b\}
+          \end{equation}
+          is denoted
+          \begin{equation}
+              \label{eq:interv-2}
+              \interv{a}{b}
+          \end{equation}
     \item $\udpL\cdot$ and $\udpU\cdot$ extract the lower and upper bound from the interval, so that we have
-    \begin{equation}
-        \label{eq:interv-L}
-        \udpL \interv{a}{b} = a
-    \end{equation}
-    \begin{equation}
-        \label{eq:interv-U}
-        \udpU \interv{a}{b} = b
-    \end{equation}
+          \begin{equation}
+              \label{eq:interv-L}
+              \udpL \interv{a}{b} = a
+          \end{equation}
+          \begin{equation}
+              \label{eq:interv-U}
+              \udpU \interv{a}{b} = b
+          \end{equation}
 \end{itemize}
 %
 \begin{equation}
@@ -245,8 +241,8 @@ Therefore, we obtain for the $\fish$ operation:
     {\mora: \Obja \to \Arrow\,\Objb}%
     {\quad}{\morb: \Objb \to \Arrow\,\Objc}%
     {\definemap{(\mora\mthen\morb)}{\Obja}{\Arrow\,\Objc}%
-    {x}{ \interv{\udpL\morb(\udpL\mora(x))}
-    {\udpU\morb(\udpU\mora(x))}}
+        {x}{ \interv{\udpL\morb(\udpL\mora(x))}
+            {\udpU\morb(\udpU\mora(x))}}
     }
 \end{equation}
 %
@@ -300,7 +296,7 @@ The $\fish$ operation is
     {\mora: \Obja \to \uppersets\Objb}%
     {\quad}{\morb: \Objb \to \uppersets\Objc}%
     {\definemap{(\mora\mthen\morb)}{\Obja}{\uppersets\Objc}%
-    {x}{    \bigcup_{y\in\mora(x)}\morb(y) }}
+        {x}{    \bigcup_{y\in\mora(x)}\morb(y) }}
 \end{equation}
 %
 Note that the expression is the same as in \cref{eq:fish-nondet} - only we are guaranteed to obtain upper sets.
@@ -346,7 +342,6 @@ We can define the $\lift$ map as follows:
 
 % As for the fish function we have
 
-
 % \begin{equation}
 %     \prftree%[l]{\fish\colon}%
 %     {\mora: \Obja \to (\Objb \times \nonNegReals)}%
@@ -354,8 +349,6 @@ We can define the $\lift$ map as follows:
 %     {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\times \nonNegReals)}%
 %     {x}{ \tup{\morb_1(\mora_1(x)), \morb_2(\mora_1(x)) + \mora_2(x) } }}
 %   \end{equation}
-
-
 
 As for the fish function we have
 %
@@ -365,14 +358,13 @@ As for the fish function we have
     {\mora: \Obja \to (\Objb \cartprod \nonNegReals)}%
     {\quad}{\morb: \Objb \to (\Objc \cartprod \nonNegReals)}%
     {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\cartprod \nonNegReals)}%
-    {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) + \mora_2(x) } }}
+        {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) + \mora_2(x) } }}
 \end{equation}
 %
 Note that we can recover the naked function by taking the first component of the tuple.
 
 \subsubsection{Generalization with monoid}
 \linkvideo{spring2021-monads-a:how-to-gen-monads} % How to generalize
-
 
 This can be further generalized from the real numbers to an arbitrary monoid
 \begin{equation}
@@ -403,5 +395,5 @@ As for the fish function we have
     {\mora: \Obja \to (\Objb \cartprod \monoidAset)}%
     {\quad}{\morb: \Objb \to (\Objc \cartprod \monoidAset)}%
     {\definemap{(\mora\mthen\morb)}{\Obja}{(\Objc\cartprod \monoidAset)}%
-    {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) \mtimes_\monoidA \mora_2(x) } }}
+        {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) \mtimes_\monoidA \mora_2(x) } }}
 \end{equation}
