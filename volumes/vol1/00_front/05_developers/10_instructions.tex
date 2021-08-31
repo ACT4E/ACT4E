@@ -1,6 +1,5 @@
 % !TEX root = chapter-standalone.tex
 
-
 \section{Compiling the book using Docker}
 
 \subsection{Setup}
@@ -49,7 +48,6 @@ and from the shell you can run the commands you would usually run.
 
 For example, to compile the book in development mode, use:
 
-
 \begin{console}
     make ACT4E-devel-slow.pdf
 \end{console}
@@ -67,7 +65,6 @@ To compile a chapter:
 
 \subsection{Regenerating nomenclature and other generated tables}
 
-
 Now go to the book repo and type:
 
 \begin{console}
@@ -84,10 +81,8 @@ To compile the standalone equations, you should run (in or outside) Docker,
 
 \subsection{Regenerating snippets for Python code}
 
-
 For the next step you must have checked out in the book root the two repos
 \str{ACT4E-exercises} and \str{ACT4E-private}.
-
 
 If everything is good you should be able to run:
 \begin{console}
@@ -95,29 +90,11 @@ If everything is good you should be able to run:
 \end{console}
 which does fancier things (extracts Python code).
 
-
-%
-%\section{Compiling the book}
-%
-%\subsection{Dependencies}
-%
-%You need to install Pygments.
-%
-%\subsection{Top level compilation}
-%
-%A quick way to start is:
-%
-%\begin{console}
-%    make ACT4E-devel-slow.pdf -B
-%\end{console}
-
-
 \section{Details about compilation process}
 
 \subsection{Partial compilation}
 
 It is possible to do partial compilation of chapters and parts.
-
 
 From a directory containing a file \files{chapter-standalone.tex}, give this command:
 
@@ -178,26 +155,26 @@ Relevant top files with various choices of flags are shown in \cref{tab:top-targ
     \label{tab:top-targets}
     \begin{tabular}{lccccccc}
         filename
-        & \str{instructors}
-        & \str{devel}
-        & \str{statuscolors}
-        & \str{debugimages}
-        & \str{codeexercises}
-        & \str{cachepdf}
-        & \str{showslides}
+                                           & \str{instructors}                                
+                                           & \str{devel}                                      
+                                           & \str{statuscolors}                               
+                                           & \str{debugimages}                                
+                                           & \str{codeexercises}                              
+                                           & \str{cachepdf}                                   
+                                           & \str{showslides}                                 
         \\
-        \files{ACT4E-devel-slow.tex} &
-        yes & yes & yes & yes & yes & no & no \\
-        \files{ACT4E-devel-fast.tex} &
-        yes & yes & yes & yes & yes & yes & no \\
-        \files{ACT4E-public-slow.tex} &
-        no & no & no & no & yes & no & no \\
-        \files{ACT4E-public-fast.tex} &
-        no & no & no & no & yes & yes & no \\
-        \files{ACT4E-instructors-slow.tex} &
-        yes & no & no & no & yes & no & no \\
-        \files{ACT4E-instructors-fast.tex} &
-        yes & no & no & no & yes & yes & no
+        \files{ACT4E-devel-slow.tex}       &                                                  
+        yes                                & yes                 & yes & yes & yes & no  & no \\
+        \files{ACT4E-devel-fast.tex}       &                                                  
+        yes                                & yes                 & yes & yes & yes & yes & no \\
+        \files{ACT4E-public-slow.tex}      &                                                  
+        no                                 & no                  & no  & no  & yes & no  & no \\
+        \files{ACT4E-public-fast.tex}      &                                                  
+        no                                 & no                  & no  & no  & yes & yes & no \\
+        \files{ACT4E-instructors-slow.tex} &                                                  
+        yes                                & no                  & no  & no  & yes & no  & no \\
+        \files{ACT4E-instructors-fast.tex} &                                                  
+        yes                                & no                  & no  & no  & yes & yes & no 
     \end{tabular}
 \end{table*}
 
@@ -243,3 +220,38 @@ These links allow the partial compilation process to access the files in the roo
 
 \todotextjira{286}{@Andrea: document prerender }
 
+\section{Latex autoformatter}
+
+We can set up Git so that the latex code is always reformatted to a canonical form before committing using \str{pre-commit} and \str{latexindent}.
+
+These instructions should work for Mac.
+
+Install \str{pre-commit}:
+%
+\begin{console}
+    pip install pre-commit
+\end{console}
+%
+
+Install \str{latexindent} using Brew - the one in the TeX distribution didn't work well for Andrea.
+%
+\begin{console}
+    brew install latexindent
+\end{console}
+%
+Which latexindent is on the path?
+%
+\begin{console}
+    which latexindent
+\end{console}
+%
+Should be \str{/usr/local/bin/latexindent}
+
+Install \str{pre-commit} in the repo:
+%
+\begin{console}
+    pre-commit install
+\end{console}
+%
+Now every time you commit, \str{latexindent} will reformat the latex files.
+(If so, then you should commit a second time.)
