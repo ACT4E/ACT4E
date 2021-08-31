@@ -1,6 +1,5 @@
 % !TEX root = chapter-standalone.tex
 
-
 \section{Style guide}
 \subsection*{Text}
 
@@ -13,7 +12,6 @@ Better: ``Define the set\dots''
 Bad: ``Let's consider the functor\dots''
 
 Better: ``Consider the functor\dots ''
-
 
 \subsubsection*{No abbreviations}
 Do not use ``\ie '', ``\eg '', ``etc.'', etc.
@@ -57,12 +55,10 @@ The definitions should be semantics: do not define \texttt{darkgreen}, define \t
 
 Note we might do a color-blind version where all the green becomes blue.
 
-
 \subsubsection*{Arrow style}
 
 I am thinking to have the thin arrow $\to$ used only for functions between sets, and use a ticker arrow $\pmb{\to}$ when indicating morphisms.
 (Note: that is poor man's bold command \texttt{pmb}, we should find a better bold arrow.)
-
 
 Also I'm thinking of consistently using colors for morphisms.
 
@@ -76,9 +72,7 @@ There's the argument that they should be the same because the functions are also
 But note that in the definitions themselves we need to distinguish between maps and morphisms.
 For example, a functor $F$ is a map $F: \ObC \to \ObD$ and maps an $\alpha: \Obja \mto_{\CatC} \Objb $ to $F(\alpha): F(\Obja) \mto_{\CatD} F(\Objb) $.
 
-
 If we write for a morphism $f: A \mto B$, then the graphics should also use the same arrow style $\mto$.
-
 
 \subsection*{Latex}
 
@@ -90,52 +84,111 @@ Also it helps a lot to keep text and pics in sync.
 
 DRY: don't repeat yourself.
 
-
-
 \subsubsection*{Define commands in the preamble }
 
 Because the figures must be able to compile by themselves, always define the commands in the preamble, rather than the text.
 
 \subsubsection*{Using cref}
 
-Instead of
-
+If you are citing multiple references, instead of
+%
 \begin{minted}{latex}
 ... this thing is true (\cref{fig:e6},~\cref{fig:e6-together}).
 \end{minted}
-
+%
 use
-
+%
 \begin{minted}{latex}
 ... this thing is true (\cref{fig:e6, fig:e6-together}).
 \end{minted}
-
-At the beginning of a sentence you should use uppercase \texttt{Cref}:
-
+%
+This works also for equations:
+%
 \begin{minted}{latex}
-\Cref{eq:Setoid} shows that...
+Because of \cref{eq:one,eq:two,eq:three}
 \end{minted}
+%
+Latex will do the smart thing and write ``Because of (1) to (3)''.
+
+At the beginning of a sentence you should use uppercase \texttt{Cref}.
+If you write
+%
+\begin{minted}{latex}
+...and so on. \cref{fig:Setoid} shows that...
+\end{minted}
+%
+Latex will produce ``...and so on. fig 3.2 shows that...''.
+
+If instead you use
+\begin{minted}{latex}
+    ...and so on. \Cref{fig:Setoid} shows that...
+\end{minted}
+Latex will produce ``...and so on. Fig 3.2 shows that...''.
 
 \subsubsection*{Conditional inclusion}
 
 You can use \texttt{iflabelexists} to add content conditional on the existence of a label.
 
 \begin{minted}{latex}
-    \iflabelexists{def:Setoid}{
-        You can find a formal definition of setoid at \cref{def:Setoid}
-    }{
-        We do not give a formal definition of setoid.
-    }
+\iflabelexists{def:Setoid}{
+    You can find a formal definition of setoid at \cref{def:Setoid}
+}{
+    We do not give a formal definition of setoid.
+}
 \end{minted}
 
+\subsubsection*{Punctuating equations}
 
+Always punctuate all equations!
+
+For proof trees, you can use the ``right label function'' and add
+\begin{quote}
+    \centering
+    \str{[r]{,}} \qquad or \qquad \str{[r]{,}}
+\end{quote}
+to the \str{prftree} command:
+\begin{minted}{latex}
+If this is true:
+\begin{equation}
+    \prftree[r]{,}{
+        A
+    }{
+        B
+    }
+\end{equation}
+then this might still be not true:
+\begin{equation}
+    \prftree[r]{.}{
+        B
+    }{
+        A
+    }
+\end{equation}
+\end{minted}
+\begin{quote}
+    If this is true:
+    \begin{equation}
+        \prftree[r]{,}{
+            A
+        }{
+            B
+        }
+    \end{equation}
+    then this might still be not true:
+    \begin{equation}
+        \prftree[r]{.}{
+            B
+        }{
+            A
+        }
+    \end{equation}
+\end{quote}
 \subsubsection*{Source formatting}
 
 When you write chunks of text, do not use hard wraps. % <-- period, newline
 Let it flow. % <-- period, newline
 However, put a newline after every sentence, so it is easy to find where sentences start.
 (Look at the source code for this.)
-
 
 \subsection*{Graphics}
 
@@ -144,9 +197,7 @@ However, put a newline after every sentence, so it is easy to find where sentenc
 Have only one tikz picture for file.
 Do not put \texttt{hspace} or \texttt{hfill} commands to separate graphics.
 
-
 If you want to put graphics side by side, you should use subfigures (which come with labels and caption).
-
 
 \subsubsection*{Arrow styles}
 
@@ -158,9 +209,4 @@ For axes in diagrams, use ``-latex`` style.
 For signal flow diagrams, use an arrow with a triangle as the tip (not rounded like the latex style.)
 
 Whatever style we use in the text for the morphisms arrows, it should be the same for the tikz figure.
-
-
-
-
-
 
