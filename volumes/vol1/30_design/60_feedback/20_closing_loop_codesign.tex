@@ -54,26 +54,27 @@ The following is the formal definition of the trace operation for design problem
 \linkvideo{spring2021-functorial-comp-b:solving-queries:solving-loop} % Loop composition
 \begin{definition}[Trace of a design problem]
     \label{def:dp-trace}
-    Given a design problem~$\adpa\colon \funposA \cartprod \funposC \profto \resposB \cartprod \resposC$, its \emph{trace}~$\Tr_{\funposA,\resposB}^\posgenC(\adpa) \colon \funposA \profto \resposB$ is defined as follows:
+    Given a design problem~$\adpa\colon \funposA \cartprod \funposC \profto \resposB \cartprod \resposC$, its \emph{trace}~$\Tr_{\funposA,\resposB}^\posC(\adpa) \colon \funposA \profto \resposB$ is defined as follows:
     %
     \begin{equation}
         \label{eq:tracedef}
         \begin{aligned}
-            \Tr_{\funposA,\resposB}^\posgenC(\adpa) \colon  \funposA\op \cartprod \resposB & \toinPos \Bool,                           \\
-            \tup{\F{\posgenAel}^*, \R{\posgenBel}}                                         & \mapsto \bigvee_{\posgenCel \in \posgenC}
-            \adpa(\tup{\F{\posgenAel}, \F{\posgenCel}}^*,
+            \Tr_{\funposA,\resposB}^\posC(\adpa) \colon  \funposA\op \cartprod \resposB & \toinPos \Bool,                           \\
+            \tup{\funposAopel, \R{\posgenBel}}                                         & \mapsto \bigvee_{\posgenCel \in \posgenC}
+            \adpa(\tup{\F{\posgenAel}, \F{\posgenCel}}^\F{*},
             \tup{\R{\posgenBel}, \R{\posgenCel}}).
         \end{aligned}
     \end{equation}
 \end{definition}
 
-Think of drawing a loop as a way of writing down the following requirement: Something that produces~$\posgenC$ should not use up more of~$\posgenC$ than it produces.
+Think of drawing a loop as a way of writing down the following requirement:
+Something that produces~$\posC$ should not use up more of~$\posC$ than it produces.
 
 \todotextjira{164}{The following section/paragraph on trace axioms needs attention: we don't use quite the same axioms in our definition of traced monoidal category as are used below in the context of DP.
     I suggest we keep the definition of traced monoidal category that we currently have and change/add diagrams below for DP and/or add a remark.}
 
 \paragraph{Trace axioms}
-We will show that the loop operation~$\Tr_{\funposA,\resposB}^\posgenC$ corresponds to the \emph{trace} in~\DP.
+We will show that the loop operation~$\Tr_{\funposA,\resposB}^\posC$ corresponds to the \emph{trace} in~\DP.
 Intuitively, forming a loop models the idea of feedback in a control-theoretic setting--the output of a process influences the choice of input--
 while the idea of ``trace'' of a monoidal category comes from the trace of a square matrix~$(\Tr\mat{A} = \sum_i a_{ii})$, which defines the categorical trace in the (monoidal) category of vector spaces, as previously shown.
 The connection between the two is more apparent if one decomposes the trace of a square matrix as a set of properties that any linear map from a space to itself should satisfy.
@@ -105,40 +106,40 @@ these are equivalent to certain diagrammatic conditions \cite{joyal96}, as in \c
     Given any~$\posgenA,\posgenB\in \Ob_\DP$ and~$\adpa\colon \F{\posgenA}\cartprod \F{\singleton}\profto \R{\posgenB}\cartprod \R{\singleton}$ in~\DP, we have
     \begin{equation}
         \begin{aligned}
-            \Tr_{\F{\posgenA},\R{\posgenB}}^{\singleton}(\adpa)(\F{\posgenAel^*},\R{\posgenBel}) & =\bigvee_{\posgenCel\in \singleton}\adpa(\tup{\F{\posgenAel},\F{\posgenCel}}^*,\tup{\R{\posgenBel},\R{\posgenCel}}) \\
-                                                                                                 & =\adpa(\tup{\F{\posgenAel},\F{\singletonel}}^*,\tup{\R{\posgenBel},\R{\singletonel}})                               \\
-                                                                                                 & =\adpa(\F{\posgenAel}^*,\R{\posgenBel}).
+            \Tr_{\F{\posgenA},\R{\posgenB}}^{\singleton}(\adpa)(\F{\posgenAel^*},\R{\posgenBel}) & =\bigvee_{\posCel\in \singleton}\adpa(\tup{\F{\posgenAel},\F{\posgenCel}}^\F{*},\tup{\R{\posgenBel},\R{\posgenCel}}) \\
+                                                                                                 & =\adpa(\tup{\F{\posgenAel},\F{\singletonel}}^\F{*},\tup{\R{\posgenBel},\R{\singletonel}})                               \\
+                                                                                                 & =\adpa(\F{\posgenAel^*},\R{\posgenBel}).
         \end{aligned}
     \end{equation}
     Furthermore, for any morphism~$\adpa\colon \F{\posgenA}\cartprod \F{\posgenX}\cartprod \F{\posgenY} \profto \R{\posgenB}\cartprod \R{\posgenX} \cartprod \R{\posgenY}$ in \DP, one has
     \begin{equation}
         \begin{aligned}
-            \Tr_{\F{\posgenA},\R{\posgenB}}^{\posgenX\cartprod \posgenY}(\adpa)(\F{\posgenAel}^*,\R{\posgenBel}) & =
-            \bigvee_{\tup{\posgenXel,\posgenYel} \in \posgenX\cartprod \posgenY} \adpa(\tup{\F{\posgenAel},\F{\posgenXel},\F{\posgenYel}}^*,\tup{\R{\posgenBel},\R{\posgenXel},\R{\posgenYel}})                                                                                                                    \\
-                                                                                                                 & =\bigvee_{\posgenXel \in \posgenX}\left(\bigvee_{\posgenYel \in \posgenY} \adpa(\tup{\F{\posgenAel},\F{\posgenXel},\F{\posgenYel}}^*,\tup{\R{\posgenBel},\R{\posgenXel},\R{\posgenYel}})\right) \\
-                                                                                                                 & =\Tr_{\F{\posgenA},\R{\posgenB}}^\posgenX\left(
-            \Tr_{\F{\posgenA}\cartprod \F{\posgenX},\R{\posgenB}\cartprod \R{\posgenX}}^\posgenY(\adpa)(\tup{\F{\posgenAel},\F{\posgenXel}}^*,\tup{\R{\posgenBel},\R{\posgenXel}})\right).
+            \Tr_{\F{\posgenA},\R{\posgenB}}^{\posX\cartprod \posY}(\adpa)(\F{\posgenAel^*},\R{\posgenBel}) & =
+            \bigvee_{\tup{\posXel,\posYel} \in \posX\cartprod \posY} \adpa(\tup{\F{\posgenAel},\F{\posgenXel},\F{\posgenYel}}^\F{*},\tup{\R{\posgenBel},\R{\posgenXel},\R{\posgenYel}})                                                                                                                    \\
+                                                                                                                 & =\bigvee_{\posXel \in \posX}\left(\bigvee_{\posYel \in \posY} \adpa(\tup{\F{\posgenAel},\F{\posgenXel},\F{\posgenYel}}^\F{*},\tup{\R{\posgenBel},\R{\posgenXel},\R{\posgenYel}})\right) \\
+                                                                                                                 & =\Tr_{\F{\posgenA},\R{\posgenB}}^\posX\left(
+            \Tr_{\F{\posgenA}\cartprod \F{\posgenX},\R{\posgenB}\cartprod \R{\posgenX}}^\posY(\adpa)(\tup{\F{\posgenAel},\F{\posgenXel}}^\F{*},\tup{\R{\posgenBel},\R{\posgenXel}})\right).
         \end{aligned}
     \end{equation}
     For the superposing axiom (\cref{eq:superposing}), consider~$\adpa\colon \F{\posgenA}\cartprod \F{\posgenX}\profto \R{\posgenB}\cartprod \R{\posgenX}$ in \DP.
     One has
     \begin{equation}
         \begin{aligned}
-            \Tr_{\R{\posgenC}\cartprod \F{\posgenA},\R{\posgenC}\cartprod \R{\posgenB}}^{\posgenX}(\id_\posgenC\mtimescat \adpa)(\tup{\F{\posgenCel}_1,\F{\posgenAel}}^*,\tup{\R{\posgenCel}_2,\R{\posgenBel}}) & =
-            \bigvee_{\posgenXel \in \posgenX} \id_\posgenC(\F{\posgenCel}_1^*,\R{\posgenCel}_2)\booland \adpa(\tup{\F{\posgenAel},\F{\posgenXel}}^*,\tup{\R{\posgenBel},\R{\posgenXel}})                                                                                                                                                                                                        \\
-                                                                                                                                                                                                                & =\id_\posgenC(\F{\posgenCel}_1^*,\R{\posgenCel}_2) \booland \bigvee_{\posgenCel\in \posgenX} \adpa(\tup{\F{\posgenAel},\F{\posgenXel}}^*,\tup{\R{\posgenBel},\R{\posgenXel}}) \\
-                                                                                                                                                                                                                & =(\id_\posgenC \mtimescat \Tr_{\F{\posgenA},\R{\posgenB}}^\posgenX(\adpa))(\tup{\F{\posgenCel}_1,\F{\posgenAel}}^*,\tup{\R{\posgenCel}_2,\R{\posgenBel}}).
+            \Tr_{\R{\posgenC}\cartprod \F{\posgenA},\R{\posgenC}\cartprod \R{\posgenB}}^{\posX}(\id_\posC\mtimescat \adpa)(\tup{\F{\posgenCel_1},\F{\posgenAel}}^\F{*},\tup{\R{\posgenCel_2},\R{\posgenBel}}) & =
+            \bigvee_{\posXel \in \posX} \id_\posC(\F{\posgenCel_1^*},\R{\posgenCel_2})\booland \adpa(\tup{\F{\posgenAel},\F{\posgenXel}}^\F{*},\tup{\R{\posgenBel},\R{\posgenXel}})                                                                                                                                                                                                        \\
+                                                                                                                                                                                                                & =\id_\posC(\F{\posgenCel_1^*},\R{\posgenCel_2}) \booland \bigvee_{\posXel\in \posX} \adpa(\tup{\F{\posgenAel},\F{\posgenXel}}^\F{*},\tup{\R{\posgenBel},\R{\posgenXel}}) \\
+                                                                                                                                                                                                                & =(\id_\posC \mtimescat \Tr_{\F{\posgenA},\R{\posgenB}}^\posX(\adpa))(\tup{\F{\posgenCel_1},\F{\posgenAel}}^\F{*},\tup{\R{\posgenCel_2},\R{\posgenBel}}).
         \end{aligned}
     \end{equation}
-    Finally, for yanking~\cref{eq:yanking} consider~$\sigma_{\posgenX,\posgenX}$.
+    Finally, for yanking~\cref{eq:yanking} consider~$\sigma_{\posX,\posX}$.
     One has
     \begin{equation}
         \begin{aligned}
-            \Tr_{\posgenX,\posgenX}^{\posgenX}(\sigma_{\posgenX,\posgenX})(\F{\posgenXel}_1^*,\R{\posgenXel}_2) & =
-            \bigvee_{\posgenXel\in \posgenX} \sigma_{\posgenX,\posgenX}(\tup{\F{\posgenXel}_1,\F{\posgenXel}}^*,\tup{\R{\posgenXel},\R{\posgenXel}_2})                                                                                      \\
-                                                                                                                & =\bigvee_{\posgenXel\in \posgenX} \F{\posgenXel}_1 \posleq \R{\posgenXel}_2 \booland \F{\posgenXel}\posleq \R{\posgenXel} \\
-                                                                                                                & =\bigvee_{\posgenXel\in \posgenX} \F{\posgenXel}_1 \posleq \R{\posgenXel}_2                                               \\
-                                                                                                                & =\id_\posgenX(\F{\posgenXel}_1^*,\R{\posgenXel}_2).
+            \Tr_{\posA,\posA}^{\posA}(\sigma_{\posA,\posA})(\F{\posgenAel_1^*},\R{\posgenAel_2}) & =
+            \bigvee_{\posAel\in \posA} \sigma_{\posA,\posA}(\tup{\F{\posgenAel_1},\F{\posgenAel}}^\F{*},\tup{\R{\posgenAel},\R{\posgenAel_2}})                                                                                      \\
+                                                                                                                & =\bigvee_{\posAel\in \posA} \F{\posgenAel_1} \posleq \R{\posgenAel_2} \booland \F{\posgenAel}\posleq \R{\posgenAel} \\
+                                                                                                                & =\bigvee_{\posAel\in \posA} \F{\posgenAel_1} \posleq \R{\posgenAel_2}                                               \\
+                                                                                                                & =\id_\posA(\F{\posgenAel_1^*},\R{\posgenAel_2}).
         \end{aligned}
     \end{equation}
 \end{proof}
