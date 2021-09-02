@@ -8,24 +8,49 @@ The following definition provides a way of turning any graph into a category.
 
 \begin{ctdefinition}[Free category on a graph]
     \label{def:free-category}
-    Let~$G=(V,A,s,t)$ be a graph.
-    The \emph{free category on~$G$}, denoted~$\Free(G)$, has as objects the vertices~$V$ of~$G$, and given vertices~$x\in V$ and~$y\in V$, the morphisms~$\Free(G)(x,y)$ are the paths from~$x$ to~$y$.
+    Let~$\graph=\tup{\vertices,\arcs,\source,\target}$ be a graph.
+    The \emph{free category on~$\graph$}, denoted~$\Free(\graph)$, has as objects the vertices~$\vertices$ of~$\graph$, and given vertices~$\vertexa\in \vertices$ and~$\vertexb\in \vertices$, the morphisms~$\HomSet{\Free(\graph)}{\vertexa}{\vertexb}$ are the paths from~$\vertexa$ to~$\vertexb$.
     %A path is a sequence of ``consecutive'' edges, \text{\ie } the source of a subsequent edge is equal to the target of its predecessor. We also formally allow for ``empty paths'', \text{\ie } a sequence of "zero"-many edges which starts and ends at the same vertex.
-    The composition of morphisms is given by concatenation of paths, and for any object~$x \in V$, the associated identity morphism~$\id_x$ is the trivial path which starts and ends at~$x$.
+    The composition of morphisms is given by concatenation of paths, and for any object~$\vertexa \in \vertices$, the associated identity morphism~$\id_\vertexa$ is the trivial path which starts and ends at~$\vertexa$.
 \end{ctdefinition}
 
 \todographicsjira{107}{Show a picture of a graph and its induced category.}
 
-We leave it to the reader to check that the above definition does indeed define a category.
+Does \cref{def:free-category} define a category?
+Let's check it ourselves.
+For it to define a category, unitality and associativity need to be satisfied.
+In order to prove both of them, we first need to formally define what we mean by ``concatenation''.
+Consider a graph~$\graph=\tup{\vertices,\arcs,\source,\target}$ and denote a path (\cref{def:path}) by~$p=\tup{\arc_1,\ldots, \arc_n}$, where~$n\in \natnumbers$,~$\source(p)\coloneqq\source(\arc_1)=\vertexa$ is the source of the path,~$\target(\arc_i)=\source(\arc_{i+1})$ for all~$i\in \{1,\ldots,n-1\}$, and~$\target(p)=\target(\arc_n)=\vertexb$ which is the target of the path.
+Note that in case the path has 0 length ($n=0$), the target of the path is simply~$\vertexa$.
+Now consider two paths~$p=\tup{\arca_1,\ldots,\arca_n}$ and~$q=\tup{\arcb_1,\ldots,\arcb_m}$, with~$m,n\in \natnumbers$.
+Paths~$p$ and~$q$ can be concatenated if~$\target(p)=\source(q)$.
+In this case, the concatenation reads
+\begin{equation*}
+    p\mthen q\coloneqq \tup{\arca_1,\ldots, \arca_n,\arcb_1,\ldots,\arcb_m}.
+\end{equation*}
+Let's now check unitality.
+A trivial path is a path~$\id_\vertexa$, consisting of a vertex and a trivial arc, starting and ending at~$\vertexa$.
+Such a path can be concatenated with another path~$q=\tup{\arcb_1,\ldots,\arcb_m}$ in case~$\vertexa=\source(q)$.
+In this case, one obtains the path~$\id_\vertexa \mthen q=q$.
+Similarly,~$p$ can be concatenated with~$\id_\vertexa$ if~$\target(p)=\vertexa$, obtaining~$p\mthen \id_\vertexa=p$, and proving unitality.
+For associativity, consider~$p$ and~$q$ as above, and~$r=\tup{\arcc_1,\ldots,\arcc_l}$,~$l\in \natnumbers$.
+Assuming that concatenations~$p\mthen q$ and~$q\mthen r$ are feasible, one has
+\begin{equation*}
+\begin{aligned}
+    (p\mthen q)\mthen r&=(\tup{\arc_1,\ldots, \arc_n}\mthen \tup{\arcb_1,\ldots,\arcb_m})\mthen \tup{\arcc_1,\ldots,\arcc_l}\\
+    &=\tup{\arc_1,\ldots, \arc_n,\arcb_1,\ldots,\arcb_m}\mthen \tup{\arcc_1,\ldots,\arcc_l}\\
+    &= \tup{\arc_1,\ldots, \arc_n,\arcb_1,\ldots,\arcb_m, \arcc_1,\ldots,\arcc_l}\\
+    &=\tup{\arc_1,\ldots, \arc_n} \mthen (\tup{\arcb_1,\ldots,\arcb_m}\mthen \tup{\arcc_1,\ldots,\arcc_l})\\
+    &=p\mthen (q\mthen r),
+\end{aligned}
+\end{equation*}
+proving associativity.
+
 %\text{\ie } to check that the composition of paths is again a path, and that the associative law and the law for identity morphisms hold.
-
-\todojira{109}{@Gioele: Let's do it ourselves}
-
 \begin{gradedexercise}[\exname{HowManyMorphisms}]
     \label{ex:HowManyMorphisms}
     Consider the following five graphs.
-    For each graph $G$, how many morphisms in total are there in the associated category~$\Free(G)$?
-    \todographicsjira{110}{Adjust style of graphs}
+    For each graph~$\graph$, how many morphisms in total are there in the associated category~$\Free(\graph)$?
     %\begin{figure}[h!]
     \begin{center}
         \includesag{20_dpcatfig_example_graphs}
