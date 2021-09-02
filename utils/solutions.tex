@@ -3,14 +3,14 @@
 \usepackage{environ}
 
 \newtheoremstyle{exercise}% name
-  {\topsep}%     Space above
-  {\topsep}%     Space below
-  {\normalfont}% Body font
-  {}%            Indent amount (empty = no indent, \parindent = para indent)
-  {\bfseries}%   Thm head font
-  {.}%           Punctuation after thm head
-  { }%           Space after thm head
-  {\hyperref[dvvv_#2_reverse_label]{\thmname{#1}\thmnumber{ #2}}\thmnote{ (#3)}}% Thm head spec
+{\topsep}%     Space above
+{\topsep}%     Space below
+{\normalfont}% Body font
+{}%            Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}%   Thm head font
+{.}%           Punctuation after thm head
+{ }%           Space after thm head
+{\hyperref[dvvv_#2_reverse_label]{\thmname{#1}\thmnumber{ #2}}\thmnote{ (#3)}}% Thm head spec
 
 \theoremstyle{exercise} % body text is upright
 \newtheorem{innerexercise}{Exercise}
@@ -18,66 +18,67 @@
 
 \ExplSyntaxOn
 \NewDocumentEnvironment{exercise}{}
- {
-  \innerexercise\label{dvvv_ \theinnerexercise _label}
- }
- {
-  \endinnerexercise
-  %
-  \hfill
-  \emph{See~solution~on~page~\pageref{dvvv_ \theinnerexercise _reverse_label}.}
-  \par
- }
+{
+    \innerexercise\label{dvvv_ \theinnerexercise _label}
+}
+{
+    \endinnerexercise
+    %
+    \vspace{-3mm}
+    \hfill
+    \emph{See~solution~on~page~\pageref{dvvv_ \theinnerexercise _reverse_label}.}
+    \par
+}
 \newtheorem*{innersolution}{\dvvv_exercise_ref:}
 
 \NewEnviron{solution}
- {
-  \seq_gput_right:Nx \g_dvvv_solution_group_seq
-   {
-    {\theinnerexercise}{\exp_not:V \BODY}
-   }
- }
+{
+    \seq_gput_right:Nx \g_dvvv_solution_group_seq
+    {
+        {\theinnerexercise}{\exp_not:V \BODY}
+    }
+}
 
 \NewDocumentEnvironment{solution*}{}
- {
-  \phantomsection\label{dvvv_ \theinnerexercise _reverse_label}
-  \cs_set:Npx \dvvv_exercise_ref:
-   {
-    \exp_not:N \hyperref
-     [
-      dvvv_ \theinnerexercise _label
-     ]
-     {
-      Solution~of~\exp_not:N\ref*{dvvv_ \theinnerexercise _label}
-     }
-   }
-  \innersolution
- }
- {
-  \endinnersolution
- }
+{
+    \phantomsection\label{dvvv_ \theinnerexercise _reverse_label}
+    \cs_set:Npx \dvvv_exercise_ref:
+    {
+        \exp_not:N \hyperref
+        [
+            dvvv_ \theinnerexercise _label
+        ]
+        {
+            Solution~of~\exp_not:N\ref*{dvvv_ \theinnerexercise _label}
+        }
+    }
+    \innersolution
+}
+{
+    \endinnersolution
+}
 \NewDocumentCommand{\printsolutions}{}
- {
-  \seq_map_inline:Nn \g_dvvv_solution_group_seq
-   {
-    \dvvv_print_solutions:nn ##1
-   }
-  \seq_gclear:N \g_dvvv_solution_group_seq
- }
+{
+    \seq_map_inline:Nn \g_dvvv_solution_group_seq
+    {
+        \dvvv_print_solutions:nn ##1
+    }
+    \seq_gclear:N \g_dvvv_solution_group_seq
+}
 
 \seq_new:N \g_dvvv_solution_group_seq
 
 \cs_new_protected:Npn \dvvv_print_solutions:nn #1 #2
- {
-  \cs_set:Npn \dvvv_exercise_ref:
-   {
-    \phantomsection\label{dvvv_#1_reverse_label}
-    \hyperref[dvvv_#1_label]{Solution~of~\cref{dvvv_#1_label}}%~\nameref{dvvv_#1_label}}
-%    \namecref{dvvv_#1_label}
-%    \labelcref{dvvv_#1_label}
-   }
-  \begin{innersolution} #2 \end{innersolution}
- }
+{
+    \cs_set:Npn \dvvv_exercise_ref:
+    {
+        \phantomsection\label{dvvv_#1_reverse_label}
+        \hyperref[dvvv_#1_label]{Solution~of~\cref{dvvv_#1_label}}%~\nameref{dvvv_#1_label}}
+        %    \namecref{dvvv_#1_label}
+        %    \labelcref{dvvv_#1_label}
+    }
+    \begin{innersolution} #2 \end{innersolution}
+}
 \ExplSyntaxOff
 
 % TODO: add name of exercise
