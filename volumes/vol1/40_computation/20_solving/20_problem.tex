@@ -6,29 +6,29 @@
 \linkvideo{spring2021-functorial-comp-a:optimization-semantics} % Optimization semantics
 
 \begin{definition}
-    \label{def:ftoR}
-    Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req} $, we denote by~$\ftoR\colon \funsp\toinPos\upperposet{\ressp}$ the monotone map that associates to each functionality~\fun the set of minimal resources sufficient to realize~\fun:
-    \begin{equation*}
-        \begin{aligned}
-            \ftoR\colon \funsp & \toinPos & \Uressp,                                                                                   \\
-            \fun               & \mapsto  & \{\req(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\fun\posleq\prov(\imp)\right)\}.
-        \end{aligned}
-    \end{equation*}
-    If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
+	\label{def:ftoR}
+	Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req} $, we denote by~$\ftoR\colon \funsp\toinPos\upperposet{\ressp}$ the monotone map that associates to each functionality~\fun the set of minimal resources sufficient to realize~\fun:
+	\begin{equation*}
+		\begin{aligned}
+			\ftoR\colon \funsp & \toinPos & \Uressp,                                                                                   \\
+			\fun               & \mapsto  & \{\req(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\fun\posleq\prov(\imp)\right)\}.
+		\end{aligned}
+	\end{equation*}
+	If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
 \end{definition}
 
 Symmetrically, we can define the function $\rtoF$ as the solution of \FixResMaxFun.
 
 \begin{definition}
-    \label{def:rtoF}
-    Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$, define the map~$\rtoF\colon \ressp\toinPos \lowerposet{\funsp}$ that associates to each resource~\res the set of functionalities which can be realized with~$\res$:
-    \begin{equation*}
-        \begin{aligned}
-            \rtoF\colon \ressp & \toinPos & \lowerposet{\funsp},                                                                              \\
-            \res               & \mapsto  & \funMax\{\prov(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\res\posgeq\req(\imp)\right)\}.
-        \end{aligned}
-    \end{equation*}
-    If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
+	\label{def:rtoF}
+	Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$, define the map~$\rtoF\colon \ressp\toinPos \lowerposet{\funsp}$ that associates to each resource~\res the set of functionalities which can be realized with~$\res$:
+	\begin{equation*}
+		\begin{aligned}
+			\rtoF\colon \ressp & \toinPos & \lowerposet{\funsp},                                                                              \\
+			\res               & \mapsto  & \funMax\{\prov(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\res\posgeq\req(\imp)\right)\}.
+		\end{aligned}
+	\end{equation*}
+	If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
 \end{definition}
 
 We can also define these functions directly on \DP.
@@ -36,24 +36,24 @@ We can also define these functions directly on \DP.
 We think intuitively of the minimal resources as a Pareto front.
 This would give a function of type
 \begin{equation}
-    \funsp \to \antichains\ressp.
+	\funsp \to \antichains\ressp.
 \end{equation}
 Alternatively, we can think of the answer to be an upper set of resources, of which the Pareto front is the minimal resources.
 This is more general---not all upper sets are supported by an antichain.
 In this view the function we are looking for has the type
 \begin{equation}
-    \funsp \to \uppersets\ressp.
+	\funsp \to \uppersets\ressp.
 \end{equation}
 For this chapter we use this formalization.
 In the next chapter we will then consider antichains as a computable representation.
 
 For the symmetric problem \FixResMaxFun, the types would be
 \begin{equation}
-    \ressp \to \antichains\funsp
+	\ressp \to \antichains\funsp
 \end{equation}
 and
 \begin{equation}
-    \ressp \to \lowersets\funsp.
+	\ressp \to \lowersets\funsp.
 \end{equation}
 %
 Assuming we know how to solve each problem separately (in other words, we know the map~$\ftor$ defined in \cref{eq:hfromftoupr} for each design problem), we ask whether we can solve the \emph{co-design} problem optimally.
@@ -69,18 +69,18 @@ Given a required functionality~$\fun\in\funsp$, we wish to find the \emph{minima
 In other words, given the maps~$\{\ftor_{\cdpin},\,\cdpin\in\cdpiN\}$ for the subproblems, one needs to evaluate \todotext{evaluate or compute?} the map~$\ftor\colon\funsp \toinPos \uppersets \ressp$ for the entire CDPI (\cref{fig:question}).
 
 \begin{figure}
-    \includegraphics[width=7cm]{gmcdptro_question}
-    \todographicsjira{217}{make this in tikz}
-    \caption{}
-    \label{fig:question}
+	\includegraphics[width=7cm]{gmcdptro_question}
+	\todographicsjira{217}{make this in tikz}
+	\caption{}
+	\label{fig:question}
 \end{figure}
 
 The rest of the chapter will provide a solution to~\cref{prob:MCDP},
 under the following assumptions:
 
 \begin{compactenum}
-    \item The posets~$\funsp,\ressp$ are complete partial orders (\cref{def:cpo}).
-    \item The maps~$\ftor_v$ are \scottcontinuous (\cref{def:scott}).
+	\item The posets~$\funsp,\ressp$ are complete partial orders (\cref{def:cpo}).
+	\item The maps~$\ftor_v$ are \scottcontinuous (\cref{def:scott}).
 \end{compactenum}
 
 \subsection{Expressivity of MCDPs}
@@ -97,45 +97,44 @@ What makes them nonconvex is the possibility of introducing feedback interconnec
 To show this, we will give an example of a 1-dimensional problem with a continuous~\ftor for which the feasible set is disconnected (and in particular non-convex).
 
 \begin{marginfigure}
-    \centering
-    %\subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex1b}}
-    \subfloat[\label{fig:Simple-DP}]{\centering{}\includesag{simple-dp-nonconvex}}
-    \\
-    \subfloat[\label{fig:nonconvex3}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex3}}
-    \caption{One feedback connection and a topologically continuous~\ftor are sufficient to induce a disconnected feasible set.}
-    \label{fig:ceil-1}
+	\centering
+	%\subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex1b}}
+	\subfloat[\label{fig:Simple-DP}]{\centering{}\includesag{simple-dp-nonconvex}}
+	\\
+	\subfloat[\label{fig:nonconvex3}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex3}}
+	\caption{One feedback connection and a topologically continuous~\ftor are sufficient to induce a disconnected feasible set.}
+	\label{fig:ceil-1}
 \end{marginfigure}
 
 \begin{example}[Non-convexity]
-    \label{exa:one}
-    Consider the CDPI in \cref{fig:Simple-DP}.
-    The \uline{m}inimal resources~$M\subseteq\uppersets \ressp$ are the objectives of this optimization problem:
-    \begin{equation*}
-        M\definedas\begin{cases}
-            \with          & \fun,\res\in\funsp=\ressp, \\
-            \Min_{\posleq} & \res,                      \\
-                           & \res\in\ftor(\fun),        \\
-                           & \res\posleq\fun.
-        \end{cases}
-    \end{equation*}
-    \todotext{@Gioele: Need to use macros for $\Phi$ and $P$.}
-    % \todo{why underlined?} fea -> feasible
-    The \uline{fea}sible set~$\Phi\subseteq\funsp\cartprod\ressp$ is the set of functionality and resources that satisfy the constraints~$\res\in\ftor(\fun)$ and~$\res\posleq\fun$:
+	\label{exa:one}
+	Consider the CDPI in \cref{fig:Simple-DP}.
+	The \uline{m}inimal resources~$M\subseteq\uppersets \ressp$ are the objectives of this optimization problem:
+	\begin{equation*}
+		M\definedas\begin{cases}
+			\with          & \fun,\res\in\funsp=\ressp, \\
+			\Min_{\posleq} & \res,                      \\
+			               & \res\in\ftor(\fun),        \\
+			               & \res\posleq\fun.
+		\end{cases}
+	\end{equation*}
+	% \todo{why underlined?} fea -> feasible
+	The \uline{fea}sible set~$\feasibleset{}\subseteq\funsp\cartprod\ressp$ is the set of functionality and resources that satisfy the constraints~$\res\in\ftor(\fun)$ and~$\res\posleq\fun$:
 
-    \begin{equation}
-        \Phi=\left\{ \tup{\fun,\res}\in\funsp\cartprod\ressp\colon (\res\in\ftor(\fun))\wedge(\res\posleq\fun)\right\} .\label{eq:feasible}
-    \end{equation}
-    The \uline{p}rojection~$P$ of~$\Phi$ to the functionality space is:
-    \begin{equation*}
-        P=\left\{ \fun\mid\tup{\fun,\res} \in\Phi\right\}.
-    \end{equation*}
-    In the scalar case ($\funsp=\ressp=\tupp{\nonNegRealsComp,\leq}$), the map~$\ftor\colon\funsp\toinPos\uppersets \ressp$ is simply a map~$\ftor\colon\F{\nonNegRealsComp}\to \uppersets\R{\nonNegRealsComp}$.
-    The set~$P$ of feasible functionality is described by
-    \begin{equation}
-        P=\{\fun\in\nonNegRealsComp\colon \ftor(\fun)\leq\fun\}.\label{eq:Pfeasible}
-    \end{equation}
-    \cref{fig:nonconvex3} shows an example of a continuous map~\ftor that gives a disconnected feasible set~$P$.
-    Moreover,~$P$ is disconnected under any order-preserving nonlinear re-parametrization.
+	\begin{equation}
+		\feasibleset{}=\left\{ \tup{\fun,\res}\in\funsp\cartprod\ressp\colon (\res\in\ftor(\fun))\wedge(\res\posleq\fun)\right\} .\label{eq:feasible}
+	\end{equation}
+	The \uline{p}rojection~$\feasiblesetprojfun$ of~$\feasibleset{}$ to the functionality space is:
+	\begin{equation*}
+		\feasiblesetprojfun=\left\{ \fun\mid\tup{\fun,\res} \in\feasibleset{}\right\}.
+	\end{equation*}
+	In the scalar case ($\funsp=\ressp=\tupp{\nonNegRealsComp,\leq}$), the map~$\ftor\colon\funsp\toinPos\uppersets \ressp$ is simply a map~$\ftor\colon\F{\nonNegRealsComp}\to \uppersets\R{\nonNegRealsComp}$.
+	The set~$\feasiblesetprojfun$ of feasible functionality is described by
+	\begin{equation}
+		\feasiblesetprojfun=\{\fun\in\nonNegRealsComp\colon \ftor(\fun)\leq\fun\}.\label{eq:Pfeasible}
+	\end{equation}
+	\cref{fig:nonconvex3} shows an example of a continuous map~\ftor that gives a disconnected feasible set~$\feasiblesetprojfun$.
+	Moreover,~$\feasiblesetprojfun$ is disconnected under any order-preserving nonlinear re-parametrization.
 
 \end{example}
 
