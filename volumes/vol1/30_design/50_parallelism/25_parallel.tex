@@ -1,0 +1,302 @@
+\section{Parallel stacking}
+
+So far we have seen how we can compose morphisms ``horizontally``:
+%
+\begin{equation}
+    \prftree[r]{.
+    }{
+        \mora \colon \Obja \mto \Objb
+    }{
+        \morb\colon \Objb \mto \Objc
+    }{
+        \mora \mthen \morb \colon \Obja \mto \Objc
+    }
+\end{equation}
+%
+There are other notions of composition that allow us to compose morphisms by ``stacking them vertically``.
+Given two morphisms
+%
+\begin{align}
+    \mora & \colon \Obja \mto \Objb, \\
+    \morb & \colon \Objc \mto \Objd,
+\end{align}
+%
+we obtain by parallel stacking a morphism
+%
+\begin{align}
+    (\mora\mtimescat \morb)
+     & \colon (\Obja \mtimescat \Objc) \mto (\Objb \mtimescat \Objd),
+\end{align}
+%
+where ``$\mtimescat$`` is a stacking operation to be defined.
+Note that while in the case of sequential composition there was a compatibility condition to be defined, as the target of the first morphism must be the source of the secon morphism, here instead we ask that we can stack arbistrary morphisms.
+
+We also expect to be able to stack any number of morphisms.
+Having a collection of morphisms
+%
+\begin{equation}
+    \mora_i \colon \Obja_i \mto \Objb_i, \qquad 1 \leq i \leq n,
+\end{equation}
+%
+we expect to be able to obtain the composed morphism
+%
+\begin{equation}
+    (\mtimescat_{i=1}^n  \mora_i )
+    \colon( \mtimescat_{i=1}^n  \Obja_i )\mto (\mtimescat_{i=1}^n  \Objb_i).
+\end{equation}
+
+\subsection{Types of stacking operations}
+
+There are various properties that one can consider for this stacking operation.
+The ones that that we will consider in this chapter are:
+%
+\begin{enumerate}
+    \item \emph{Stacking semi-category} (\cref{def:stacking-semi-cat}): a semi-category in which the stacking operation is associative and makes objects and morphisms into a semigroup.
+    \item \emph{Functorial stacking semi-category} (\cref{def:functorial-stacking-semi-cat}): a stacking semi-category in which the stacking operation is also a functor.
+    \item \emph{Symmetric stacking semi-category}: a stacking semi-category in which there is a series of symmetry isomorphisms that can permute the objects in a stack.
+\end{enumerate}
+%
+In the next part we will talk about \emph{monoidal categories} (\cref{def:monoidal-category}), which can be seen as a generalization of stacking semi-categories where the stacking operation is not required to be associative ``on the nose'', but rather only up to isomorphism.
+
+\begin{remark}
+    [Choices in definitions $\star$]
+    Of all these definitions, the only classical one is that of \emph{monoidal category}, and its specializations, such as strict monoidal category, braided monoidal category, and symetric monoidal category.
+    We will look at all of those in~\cref{sec:parallelism-mon-cat}.
+
+    We define the three non-classical notions mentioned above for the following reasons:
+    \begin{itemize}
+        \item Using the strictification construction of \SetStar most of the monoidal categories are strict; we can ask that the composition induces semigroups of morphisms.
+              We will not need to define unitors and associators.
+              In fact, we do not need to define natural transformations.
+        \item There are important cases of semi-categories without identities with a stacking operation that do not fit the notion of monoidal category.
+              An example is discrete-time linear systems.
+              For these categories we also want to consider appropriate traces.
+        \item There are important examples in which there is a way to stack morphisms but the stacking is not functorial.
+              For example, we will describe a category of effectful computation with side effects.
+    \end{itemize}
+\end{remark}
+
+\subsection{Stacking semi-categories}
+
+\begin{ctdefinition}[Stacking semi-category]
+    \label{def:stacking-semi-cat}
+    A stacking semi-category is a semi-category with the following additional constituents and properties.
+
+    \constit
+    \begin{itemize}
+        \item A stacking operation $\mtimescatob$ that makes the objects into a semigroup.
+        \item A stacking operation $\mtimescatmor$ that makes the morphisms into a semigroup.
+    \end{itemize}
+
+    \condit
+    \begin{itemize}
+        \item The two operations $\mtimescatob$ and $\mtimescatmor$ are compatible in the sense that
+              %
+              \begin{equation}
+                  \prftree[r]{.}{
+                      \mora_i \colon \Obja_i \mto \Objb_i, \qquad 1 \leq i \leq n,
+                  }{
+                      ( \mtimescatmor_{i=1}^n \mora_i )\colon( \mtimescatob_{i=1}^n \Obja_i) \mto (\mtimescatob_{i=1}^n \Objb_i).
+                  }
+              \end{equation}
+    \end{itemize}
+\end{ctdefinition}
+
+\begin{example}[\SetStar is a stacking semi-category]
+    \SetStar (\cref{def:SetL}) is a stacking semi-category,
+    with list concatenation being the semigroup operation.
+\end{example}
+
+\subsection{The \Effects category}
+
+Let's now construct a non-trivial category that will serve as an example of a stacking semi-category that is not functorial.
+
+There are two types of computation: ``functional'', or ``pure'', or free of side-effects, and \emph{effectful}.
+In functional programming, functions are very much like mathematical functions: they need an input and produce and output.
+They don't interfer with other functions.
+
+Effectful procedurees instead, can ``change the world'': for example, printing a page, sending an email, or placing an order of pizza.
+The order in which effectful procedures are evaluated might change the result.
+For example, the result of the sequence of operations
+%
+\begin{enumerate}
+    \item Order a pizza;
+    \item Cancel the last order.
+\end{enumerate}
+%
+is different than the result of the sequence of operations
+%
+\begin{enumerate}
+    \item Cancel the last order;
+    \item Order a pizza.
+\end{enumerate}
+
+Also side-effects can be treated mathematically.
+A very elegant way is using \emph{linear types}.
+\todotext{Cite Wadler}
+We will mention those in a successive part on linear logic.
+For now, let's have a simple treatment.
+
+\begin{marginfigure}
+    \centering
+    \subfloat[\label{fig:effects1}
+        A morphism in \Effects]{
+        \includegraphics[width=4.5cm]{effects1}
+    }\\
+    \subfloat[\label{fig:effects2} Its representation in \SetStar]{
+        \includegraphics[width=4.5cm]{effects2}
+    }
+    \caption{}
+    \label{fig:effects12}
+\end{marginfigure}
+
+The idea is to add another variable that represents ``the world'' that can be affected.
+An effectful function
+%
+\begin{equation}
+    \mora: \Obja \mto \Objb,
+\end{equation}
+%
+which could have some unknown side-effects on the world, can be represented by a pure function
+%
+\begin{equation}
+    \mora_e:  \Tupcat \Obja   \EfW \mto   \Tupcat  \Objb \EfW,
+\end{equation}
+%
+where $\EfW$ is the set of all possible worlds~(\cref{fig:effects12}).
+
+The second input to $\mora_e$ is the state of the world before the execution of the function.
+The second output of $\mora_e$ is the state of the world after the execution of the function.
+
+We can now interconnect different effectful functions, with some precautions.
+We cannot ``split the world'', by creating a function of type $\EfW \to \Tupcat \EfW \EfW$.
+We will re-state this formally when we get to linear logic.
+
+\begin{marginfigure}
+    \centering
+    \subfloat[\label{fig:effects3}
+        Composition in \Effects]{
+        \includegraphics[width=4.5cm]{effects3}
+    }\\
+    \subfloat[\label{fig:effects3b} Its representation in \SetStar]{
+        \includegraphics[width=4.5cm]{effects3b}
+    }
+    \caption{}
+    \label{fig:effect-composition}
+\end{marginfigure}
+
+We can extend function composition as in~\cref{fig:effect-composition}.
+This makes it clear that the second function operates on the world possibly modified by the first function.
+
+We have all the ingredients to define the category \Effects of effectful computation.
+
+\begin{definition}[Category of effectful procedures \Effects]
+    The \Effects category is defined by the following:
+    \begin{itemize}
+        \item \emph{Objects}: same as the objects of \SetStar;
+        \item \emph{Morphisms}: a morphism $\mora: \Obja \mto_{\Effects} \Objb$ is a function
+              \begin{equation}
+                  \mora_e: \Tupcat \Obja \EfW \mto_{\SetStar} \Tupcat \Objb \EfW,
+              \end{equation}
+              where $\EfW$ is the set of all possible worlds.
+        \item \emph{Composition}: The composition of  $\mora: \Obja \mto_{\Effects} \Objb$ and
+              $\morb: \Objb \mto_{\Effects} \Objc$ is a morphism $\morab: \Obja \mto_{\Effects} \Objb$ with function $(\morab)_e$ given as in \cref{fig:effect-composition}.
+    \end{itemize}
+\end{definition}
+
+We can now make \Effects into a stacking semi-category by deciding how to evaluate a stack of functions.
+We cannot evaluate them in parallel.
+We need to decide on a sequence.
+For example, top to bottom.
+This is shown in~\cref{fig:effect-stacking}.
+
+\begin{lemma}
+    \Effects is a stacking category using the evaluation rule as in~\cref{fig:effect-stacking}.
+\end{lemma}
+
+\begin{figure}[h!]
+    \centering
+    \subfloat[\label{fig:effects4}
+        Composition in \Effects]{
+        \includegraphics[width=4.5cm]{effects4}
+    }
+    \subfloat[\label{fig:effects5} Its representation in \SetStar]{
+        \includegraphics[width=4.5cm]{effects5}
+    }
+    \caption{}
+    \label{fig:effect-stacking}
+\end{figure}
+
+\todotext{proof.
+    Need to show semigroup}
+
+\subsection{Functorial stacking semi-category}
+
+\begin{ctdefinition}[Functorial stacking semi-category]
+    \label{def:functorial-stacking-semi-cat}
+    A functorial stacking semi-category is a stacking semi-category where the two stacking operation $\mtimescatob$ and $\mtimescatmor$ are the two components of a functor $\mtimescat: \CatC \times \CatC \to \CatC$.
+\end{ctdefinition}
+
+More in detail, we have that for any $n \geq 2$, there is a functor
+% 
+\begin{equation}
+    \mtimescat^{(n)}: \underbrace {\CatC \times \CatC \times \cdots \times \CatC}_{\text{$n$ times}} \to \CatC.
+\end{equation}
+% 
+For $n=2$ we obtain that
+% 
+\begin{equation}
+    (\mora \mtimescat \morb )
+    \mthen (\morc \mtimescat \mord )
+    =
+    (\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ).
+\end{equation}
+% 
+This describes a commuting property: we can either first compose horizontally and then vertically, or viceversa, and we obtain the same morphism~(\cref{fig:stacking-functorial}).
+
+\begin{figure*}[h]
+    \centering
+    \subfloat[\label{fig:effects6}$(\mora \mtimescat \morb )
+            \mthen (\morc \mtimescat \mord )$]{
+        \includegraphics[width=6.5cm]{effects6}
+    }
+    \subfloat[\label{fig:effects8}$(\mora \mthen \morc ) \mtimescat (\morb \mthen \mord )$]{
+        \includegraphics[width=6.5cm]{effects8}
+    }
+    \caption{Commutation of stacking and composition}
+    \label{fig:stacking-functorial}
+\end{figure*}
+
+\begin{lemma}
+    \SetStar is  a functorial stacking category.
+\end{lemma}
+
+\Effects is an example of a stacking category that is not functorial.
+
+\begin{lemma}
+    \Effects is \emph{not} a functorial stacking category.
+\end{lemma}
+
+\begin{proof}
+    This is shown graphically in \cref{fig:effects-non-functorial} by showing that, in general,
+    \begin{equation}
+        (\mora \mtimescat \morb )
+        \mthen (\morc \mtimescat \mord )
+        \neq
+        (\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ).
+    \end{equation}
+\end{proof}
+
+\begin{figure*}[b]
+    \centering
+    \subfloat[\label{fig:effects8}$(\mora \mtimescat \morb )
+            \mthen (\morc \mtimescat \mord )$]{
+        \includegraphics[width=6.5cm]{effects7}
+    }
+    \subfloat[\label{fig:effects9} $(\mora \mthen \morc ) \mtimescat (\morb \mthen \mord )$]{
+        \includegraphics[width=6.5cm]{effects9}
+    }
+    \caption{Proof that \Effects is not a functorial stacking category by showing that
+        the two morphisms above have different representations in \SetStar.}
+    \label{fig:effects-not-functorial}
+\end{figure*}

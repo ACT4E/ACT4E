@@ -1,0 +1,114 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Monoidal posets}
+
+%\linkvideo{spring2021-par-feedback:mon-cat} % Monoidal categories
+\linkvideo{spring2021-par-feedback:mon-cat:mon-pos} % Monoidal posets
+
+In order to ``warm up", we first consider the definition of a monoidal structure for a poset.
+Posets are a simpler special case of categories, and the following definition is a special case of the general definition of a monoidal category.
+
+\begin{ctdefinition}[\iindex{Monoidal poset}]
+    \label{def:monoidal-poset}
+    A \emph{monoidal structure} on a poset~$\Cat{P} = \tup{\posAset, \posAleq}$ is specified by:
+
+    \constit
+    \begin{compactenum}
+        \item A monotone map~$\mtimescat \colon \Cat{P} \Ctimes \Cat{P} \fto \Cat{P}$, called the \emph{monoidal product}.
+
+              \noindent
+              Note that here we are implicitly assuming~$\Cat{P} \Ctimes \Cat{P}$ as having the product order.
+              In detail, monotonicity means that, for all~$\posela_1, \posela_2, \poselb_1, \poselb_2 \in \posA$:
+              \begin{equation}
+                  \prftree[r]{.}
+                  {\posela_1 \posAleq \poselb_1}{\posela_2 \posAleq \poselb_2}{ (\posela_1 \mtimescat  \posela_2) \posAleq  (\poselb_1 \mtimescat  \poselb_2)}
+              \end{equation}
+        \item An element~$\idmoncat \in \posA$, called the \emph{monoidal unit}.
+    \end{compactenum}
+
+    \condit
+    \begin{compactenum}
+        \item Associativity: for all~$\posela, \poselb, \poselc \in \posA$:
+              \begin{equation}
+                  (\posela \mtimescat \poselb)
+                  \mtimescat \poselc =  \posela  \mtimescat ( \poselb \mtimescat \poselc).
+              \end{equation}
+        \item Left and right unitality: for all~$\posela \in \posA$:
+              \begin{equation}
+                  \idmoncat \mtimescat \posela = \posela \quad \quad \text{ and } \quad \quad \posela \mtimescat \idmoncat = \posela.
+              \end{equation}
+    \end{compactenum}
+
+    \noindent A poset equipped with a monoidal structure is called a \emph{monoidal poset}.
+\end{ctdefinition}
+
+\begin{ctdefinition}[\iindex{Symmetric monoidal poset}]
+    \label{def:sym-monoidal-poset}
+    A \emph{symmetric monoidal poset} is a monoidal poset~$\posA=\tup{\posAset, \posAleq, \mtimescat, \idmoncat}$ such that, for all~$\posela, \poselb \in \posA$,
+    \begin{equation}
+        \posela \mtimescat \poselb = \poselb \mtimescat \posela.
+    \end{equation}
+\end{ctdefinition}
+
+\begin{example}[Reals with addition]
+    \label{ex:monoidal-pos-reals}
+    Consider the real numbers~\reals with the poset structure given the usual ordering.
+    Consider 0 as the monoidal unit and the operation~$+\colon \reals\cartprod \reals\sto \reals$ as mononidal product.
+    It is easy to see that the conditions of~\cref{def:monoidal-poset} are satisfied:
+    \begin{compactenum}[(a)]
+        \item Given~$p_1,p_2,q_1,q_2\in \reals$, we know:
+              \begin{equation*}
+                  \prftree[r]{.}{p_1\Rleq  p_2}{q_1\Rleq  q_2}{p_1+p_2\Rleq  q_1+q_2}
+              \end{equation*}
+        \item $0+p=p+0=0$,~$\forall p\in \reals$.
+        \item $(p+q)+r=p+(q+r)$,~$\forall p,q,r\in \reals$.
+    \end{compactenum}
+\end{example}
+
+\begin{counterexample}
+    Someone proposes now to substitute the monoidal unit in \cref{ex:monoidal-pos-reals} with 1 and the monoidal product with multiplication ``$\cdot$''.
+    This does not form a monoidal poset anymore.
+    To see a simple counterexample, consider the fact that~$-5\Rleq 0$ and~$-4\Rleq 3$.
+    However,~$(-5)\cdot (-4) \not{\Rleq} 0 \cdot 3$.
+\end{counterexample}
+
+\begin{example}[Boolean monoid]
+    The booleans form a monoidal poset $\tup{\Bool,\posleq_{\Bool},\true,\booland}$
+    with the unit being~$\true$ and the product being $\booland$.
+    The action of the monoidal product ``$\booland$'' can be summarized in a table:
+    \begin{center}
+        \begin{tabular}{c|cc}
+            $\booland$ & $\false$ & $\true$  \\
+            \hline
+            $\false$   & $\false$ & $\false$ \\
+            $\true$    & $\false$ & $\true$
+        \end{tabular}
+    \end{center}
+    From this table, it is clear that given~$\ela_1\posleq_{\Bool}\elb_1$ and~$\ela_2\posleq_{\Bool} \elb_2$, one has~$\ela_1\booland x_2\posleq_{\Bool} \elb_1\booland \elb_2$ (if you do not believe it, try all possible combinations).
+    Furthermore,~$\ela\booland \true=\ela=\true \booland \ela$.
+\end{example}
+
+\devel{\input{60_monoidal_posets_exercises}}
+
+\showslides{
+    \begin{forslides}
+        \begin{equation*}
+            \label{eq:monpos_1}
+            \prftree{p_1\leq p_2}{q_1\leq q_2}{p_1+p_2\leq q_1+q_2}
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:monpos_2}
+            0+p=p+0=0
+        \end{equation*}
+        \begin{equation*}
+            \label{eq:monpos_3}
+            (p+q)+r=p+(q+r)
+        \end{equation*}
+
+        \includesag{scooter}
+        \includesag{av}
+        \includesag{av_scooter}
+        \includesag{av_scooter_bis}
+
+    \end{forslides}
+}
