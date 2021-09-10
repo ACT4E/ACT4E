@@ -277,7 +277,18 @@
 }
 
 
-\newcommand{\codeexercises}[1]{\ifthenelse{\boolean{codeexercises}}{#1}{}}
+\newcommand{\codeexercises}[1]{%
+  \ifthenelse{\boolean{codeexercises}}{%
+  \clearpage
+\pagecolor{blue!7}
+%  \textbf{From here is under development}
+#1
+%\vfill
+%\textbf{To here is under development}%
+  \clearpage
+\pagecolor{white}
+  }{}%
+}
 
 % Typesetting
 
@@ -298,7 +309,8 @@
 }
 
 
-
+\def\currentchapter{}
+\def\currentchaptername{}
 \newcommand{\chaptersecond}[4]{
   \setchapterpreamble[u]{\margintoc}
   \setchapterimage[10cm]{#2} % Optionally specify the height
@@ -308,11 +320,11 @@
     #4%
   \end{quote}%
 \vfill\vfill
-  % \IfFileExists{\rootdir/pics/#2.tex}{
   \blfootnote{\input{\rootdir/pics/#2.tex}}
-%  \etocsetnexttocdepth{section}
-  % }{#3}
+   \def\currentchapter{#3}
+   \def\currentchaptername{\detokenize{#1}}
 }
+
 
 \setcounter{margintocdepth}{\sectiontocdepth}
 
@@ -489,7 +501,65 @@
 % \overfullrule=5pt
 
 % \usepackage{breqn}
-
+%
+% \makeatletter
+% \newcommand*{\currentname}{\@currentlabelname}
+% \makeatother
 
 \setitemize{leftmargin=*}
 \setenumerate{leftmargin=*}
+\def\urlnl{\%0A}
+\def\urlsp{\%20}
+\def\issuecheck{-\urlsp[\urlsp]\urlsp}
+\newsavebox{\urlbox}
+
+%%%%%%%%%%%%%%%%%%%%
+% Add page break before section
+%
+
+\def\tmpname{}
+\def\tmpnameb{}
+\AtBeginDocument{
+    \savebox{\urlbox}{}
+    \let\oldsection\section
+
+    \renewcommand\section[2][]{
+        \FloatBarrier\clearpage\oldsection[#1]{#2}%
+        \savebox{\urlbox}{
+        \footnotesize
+        \def\tmpname{\detokenize{#2}}
+        \def\tmpnameb{\currentchaptername}
+        Something incorrect or unclear or missing?
+        % \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;\urlnl;title=\tmpnameb\urlsp/\urlsp\tmpname\urlsp/\urlsp\today}{Report issues on Github}.
+        \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter:\urlsp\currentchaptername\urlnl Section:\urlsp\tmpname\urlnl Version:\today\urlnl\urlnl Check\urlsp all\urlsp that\urlsp apply:\urlnl\issuecheck Something\urlsp incorrect\urlnl\issuecheck Something\urlsp not\urlsp clear\urlnl\issuecheck Something\urlsp missing\urlnl\urlnl Please\urlsp describe\urlsp more\urlsp in\urlsp detail\urlsp below.\urlsp Feel\urlsp free\urlsp to\urlsp change\urlsp the\urlsp title\urlsp to\urlsp something\urlsp more\urlsp informative.\urlnl;title=\currentchaptername\urlsp/\urlsp\tmpname\urlsp/\urlsp\today}{Report issues on Github}.
+        % }
+        }
+    }
+
+}
+
+
+
+\newcommand{\linkgithub}{
+    % \ifdefempty{\currentchapter}{}{
+        \usebox{\urlbox}
+    % }
+}
+\renewpagestyle{scrheadings}{%
+	{\smash{\hspace{-\headmarginparwidth}\hspace{-\headmarginparsep}\makebox[\headtotal][l]{%
+		\makebox[7\hscale][r]{\thepage}%
+		\makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
+		\makebox[\headtextwidth][l]{\leftmark}}}}%
+	{\smash{\makebox[0pt][l]{\makebox[\headtotal][r]{%
+		\makebox[\headtextwidth][r]{\hfill\rightmark}%
+		\makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
+		\makebox[7\hscale][l]{\thepage}}}}}%
+	{\smash{\makebox[0pt][l]{\makebox[\headtotal][r]{%
+		\makebox[\headtextwidth][r]{\hfill\rightmark}%
+		\makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
+		\makebox[7\hscale][l]{\thepage}}}}}%
+}{%
+	{\hspace{-7cm}\linkgithub}% left page
+	{}% right page
+	{}% not showing up
+}

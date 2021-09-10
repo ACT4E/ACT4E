@@ -18,7 +18,7 @@ ACT%.pdf: ACT%.tex .FORCE
 	texloganalyser -r $*.log > $*.warnings.txt
 
 clean:
-	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw *warnings.txt
+	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg  *.pyg *.ptc* *.mtc* *.gls *.tdo *.mw *warnings.txt
 
 tikz:
 	touch sag/*pdf
