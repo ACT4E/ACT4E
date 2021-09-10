@@ -322,7 +322,7 @@
 \vfill\vfill
   \blfootnote{\input{\rootdir/pics/#2.tex}}
    \def\currentchapter{#3}
-   \def\currentchaptername{#1}
+   \def\currentchaptername{\detokenize{#1}}
 }
 
 
@@ -516,18 +516,23 @@
 %%%%%%%%%%%%%%%%%%%%
 % Add page break before section
 %
+
+\def\tmpname{}
+\def\tmpnameb{}
 \AtBeginDocument{
+    \savebox{\urlbox}{}
     \let\oldsection\section
-    \savebox{\urlbox}{
-        Nothing yet
-    }
+
     \renewcommand\section[2][]{
         \FloatBarrier\clearpage\oldsection[#1]{#2}%
         \savebox{\urlbox}{
         \footnotesize
+        \def\tmpname{\detokenize{#2}}
+        \def\tmpnameb{\currentchaptername}
         Something incorrect or unclear or missing?
-        % add \url or \href below to see it crash
-            \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter:\urlsp\currentchaptername\urlnl Section:\urlsp#2\urlnl Version:\today\urlnl\urlnl Check\urlsp all\urlsp that\urlsp apply:\urlnl\issuecheck Something\urlsp incorrect\urlnl\issuecheck Something\urlsp not\urlsp clear\urlnl\issuecheck Something\urlsp missing\urlnl\urlnl Please\urlsp describe\urlsp more\urlsp in\urlsp detail\urlsp below.\urlsp Feel\urlsp free\urlsp to\urlsp change\urlsp the\urlsp title\urlsp to\urlsp something\urlsp more\urlsp informative.\urlnl;title=\currentchaptername\urlsp/\urlsp#2\urlsp/\urlsp\today}{Report issues on Github}.
+        % \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;\urlnl;title=\tmpnameb\urlsp/\urlsp\tmpname\urlsp/\urlsp\today}{Report issues on Github}.
+        \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter:\urlsp\currentchaptername\urlnl Section:\urlsp\tmpname\urlnl Version:\today\urlnl\urlnl Check\urlsp all\urlsp that\urlsp apply:\urlnl\issuecheck Something\urlsp incorrect\urlnl\issuecheck Something\urlsp not\urlsp clear\urlnl\issuecheck Something\urlsp missing\urlnl\urlnl Please\urlsp describe\urlsp more\urlsp in\urlsp detail\urlsp below.\urlsp Feel\urlsp free\urlsp to\urlsp change\urlsp the\urlsp title\urlsp to\urlsp something\urlsp more\urlsp informative.\urlnl;title=\currentchaptername\urlsp/\urlsp\tmpname\urlsp/\urlsp\today}{Report issues on Github}.
+        % }
         }
     }
 
