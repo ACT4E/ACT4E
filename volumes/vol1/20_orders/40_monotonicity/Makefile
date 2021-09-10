@@ -16,16 +16,16 @@ chapter-continuous-noslides-fast: .FORCE
 	latexmk -r ../../../../latexmkrc -pvc -nobibtex chapter-standalone-noslides-fast.tex
 
 part-once: .FORCE
-	latexmk -r ../../../latexmkrc -g -nobibtex part-standalone.tex
+	latexmk -r ../../../latexmkrc -g  part-standalone.tex
 
 part-continuous: .FORCE
-	latexmk -r ../../../latexmkrc -pvc -nobibtex part-standalone.tex
+	latexmk -r ../../../latexmkrc -pvc   part-standalone.tex
 
 part-continuous-fast: .FORCE
-	latexmk -r ../../../latexmkrc -pvc -nobibtex part-standalone-fast.tex
+	latexmk -r ../../../latexmkrc -pvc  part-standalone-fast.tex
 
 part-continuous-public-fast: .FORCE
-	latexmk -r ../../../latexmkrc -pvc -nobibtex part-standalone-public-fast.tex
+	latexmk -r ../../../latexmkrc -pvc  part-standalone-public-fast.tex
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw
