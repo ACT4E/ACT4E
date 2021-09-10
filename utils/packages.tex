@@ -501,10 +501,10 @@
 % \overfullrule=5pt
 
 % \usepackage{breqn}
-
-\makeatletter
-\newcommand*{\currentname}{\@currentlabelname}
-\makeatother
+%
+% \makeatletter
+% \newcommand*{\currentname}{\@currentlabelname}
+% \makeatother
 
 \setitemize{leftmargin=*}
 \setenumerate{leftmargin=*}
@@ -512,27 +512,29 @@
 \def\urlsp{\%20}
 \def\issuecheck{-\urlsp[\urlsp]\urlsp}
 \newsavebox{\urlbox}
-\def\issueurl{none}
 
 %%%%%%%%%%%%%%%%%%%%
 % Add page break before section
 %
 \AtBeginDocument{
     \let\oldsection\section
+    \savebox{\urlbox}{
+        Nothing yet
+    }
     \renewcommand\section[2][]{
         \FloatBarrier\clearpage\oldsection[#1]{#2}%
-        \def\issueurl{%
-            https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter: \currentchaptername\urlnl Section: \currentname\urlnl Version: \today \urlnl\urlnl Check all that apply:\urlnl\issuecheck Something incorrect\urlnl\issuecheck Something not clear\urlnl\issuecheck Something missing\urlnl\urlnl Please describe more in detail below. Feel free to change the title to something more informative.\urlnl;title=\currentchaptername\urlsp/\urlsp\currentname\urlsp/\urlsp\today}
+        \savebox{\urlbox}{
+            \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter: \currentchaptername\urlnl Section: #2\urlnl Version: \today \urlnl\urlnl Check all that apply:\urlnl\issuecheck Something incorrect\urlnl\issuecheck Something not clear\urlnl\issuecheck Something missing\urlnl\urlnl Please describe more in detail below. Feel free to change the title to something more informative.\urlnl;title=\currentchaptername\urlsp/\urlsp#2\urlsp/\urlsp\today}{Report issues on Github}.
+        }
     }
-        \savebox{\urlbox}{\href{\issueurl}{Report issues on Github}.}
+
 }
 
 
 
 \newcommand{\linkgithub}{
     \ifdefempty{\currentchapter}{}{
-        % \issueurl
-        Something incorrect or unclear or missing? \usebox{\urlbox}% \currentchaptername \currentname
+        Something incorrect or unclear or missing? \usebox{\urlbox}
     }
 }
 \renewpagestyle{scrheadings}{%
