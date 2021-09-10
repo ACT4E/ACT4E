@@ -6,29 +6,29 @@
 \linkvideo{spring2021-functorial-comp-a:optimization-semantics} % Optimization semantics
 
 \begin{definition}
-	\label{def:ftoR}
-	Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req} $, we denote by~$\ftoR\colon \funsp\toinPos\upperposet{\ressp}$ the monotone map that associates to each functionality~\fun the set of minimal resources sufficient to realize~\fun:
-	\begin{equation*}
-		\begin{aligned}
-			\ftoR\colon \funsp & \toinPos & \Uressp,                                                                                   \\
-			\fun               & \mapsto  & \{\req(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\fun\posleq\prov(\imp)\right)\}.
-		\end{aligned}
-	\end{equation*}
-	If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
+    \label{def:ftoR}
+    Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req} $, we denote by~$\ftoR\colon \funsp\toinPos\upperposet{\ressp}$ the monotone map that associates to each functionality~\fun the set of minimal resources sufficient to realize~\fun:
+    \begin{equation*}
+        \begin{aligned}
+            \ftoR\colon \funsp & \toinPos & \Uressp,                                                                                   \\
+            \fun               & \mapsto  & \{\req(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\fun\posleq\prov(\imp)\right)\}.
+        \end{aligned}
+    \end{equation*}
+    If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
 \end{definition}
 
 Symmetrically, we can define the function $\rtoF$ as the solution of \FixResMaxFun.
 
 \begin{definition}
-	\label{def:rtoF}
-	Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$, define the map~$\rtoF\colon \ressp\toinPos \lowerposet{\funsp}$ that associates to each resource~\res the set of functionalities which can be realized with~$\res$:
-	\begin{equation*}
-		\begin{aligned}
-			\rtoF\colon \ressp & \toinPos & \lowerposet{\funsp},                                                                              \\
-			\res               & \mapsto  & \funMax\{\prov(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\res\posgeq\req(\imp)\right)\}.
-		\end{aligned}
-	\end{equation*}
-	If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
+    \label{def:rtoF}
+    Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$, define the map~$\rtoF\colon \ressp\toinPos \lowerposet{\funsp}$ that associates to each resource~\res the set of functionalities which can be realized with~$\res$:
+    \begin{equation*}
+        \begin{aligned}
+            \rtoF\colon \ressp & \toinPos & \lowerposet{\funsp},                                                                              \\
+            \res               & \mapsto  & \funMax\{\prov(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\res\posgeq\req(\imp)\right)\}.
+        \end{aligned}
+    \end{equation*}
+    If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
 \end{definition}
 
 We can also define these functions directly on \DP.
@@ -36,24 +36,24 @@ We can also define these functions directly on \DP.
 We think intuitively of the minimal resources as a Pareto front.
 This would give a function of type
 \begin{equation}
-	\funsp \to \antichains\ressp.
+    \funsp \to \antichains\ressp.
 \end{equation}
 Alternatively, we can think of the answer to be an upper set of resources, of which the Pareto front is the minimal resources.
 This is more general---not all upper sets are supported by an antichain.
 In this view the function we are looking for has the type
 \begin{equation}
-	\funsp \to \uppersets\ressp.
+    \funsp \to \uppersets\ressp.
 \end{equation}
 For this chapter we use this formalization.
 In the next chapter we will then consider antichains as a computable representation.
 
 For the symmetric problem \FixResMaxFun, the types would be
 \begin{equation}
-	\ressp \to \antichains\funsp
+    \ressp \to \antichains\funsp
 \end{equation}
 and
 \begin{equation}
-	\ressp \to \lowersets\funsp.
+    \ressp \to \lowersets\funsp.
 \end{equation}
 %
 Assuming we know how to solve each problem separately (in other words, we know the map~$\ftor$ defined in \cref{eq:hfromftoupr} for each design problem), we ask whether we can solve the \emph{co-design} problem optimally.
@@ -66,22 +66,23 @@ Suppose that we are given a CDPI~$\tup{ \funsp,\ressp,\tup{ \cdpiN,\cdpiE} }$, a
 
 Given a required functionality~$\fun\in\funsp$, we wish to find the \emph{minimal} resources in~\ressp for which there exists a \emph{feasible} implementation vector that makes all sub-problems feasible at the same time and all co-design constraints satisfied; or, if none exist, provide a certificate of infeasibility.
 \end{problem}
-In other words, given the maps~$\{\ftor_{\cdpin},\,\cdpin\in\cdpiN\}$ for the subproblems, one needs to evaluate \todotext{evaluate or compute?} the map~$\ftor\colon\funsp \toinPos \uppersets \ressp$ for the entire CDPI (\cref{fig:question}).
+In other words, given the maps~$\{\ftor_{\cdpin},\,\cdpin\in\cdpiN\}$ for the subproblems, one needs to evaluate \todotext{evaluate or compute?
+} the map~$\ftor\colon\funsp \toinPos \uppersets \ressp$ for the entire CDPI (\cref{fig:question}).
 
 \begin{figure}
-	\includegraphics[width=7cm]{gmcdptro_question}
-	\todographicsjira{217}{make this in tikz}
-	\caption{}
-	\label{fig:question}
+    \includegraphics[width=7cm]{gmcdptro_question}
+    \todographicsjira{217}{make this in tikz}
+    \caption{}
+    \label{fig:question}
 \end{figure}
 
 The rest of the chapter will provide a solution to~\cref{prob:MCDP},
 under the following assumptions:
 
-\begin{compactenum}
-	\item The posets~$\funsp,\ressp$ are complete partial orders (\cref{def:cpo}).
-	\item The maps~$\ftor_v$ are \scottcontinuous (\cref{def:scott}).
-\end{compactenum}
+\begin{enumerate}
+    \item The posets~$\funsp,\ressp$ are complete partial orders (\cref{def:cpo}).
+    \item The maps~$\ftor_v$ are \scottcontinuous (\cref{def:scott}).
+\end{enumerate}
 
 \subsection{Expressivity of MCDPs}
 The results are significant because MCDPs induce a rich family of optimization problems.
@@ -97,13 +98,13 @@ What makes them nonconvex is the possibility of introducing feedback interconnec
 To show this, we will give an example of a 1-dimensional problem with a continuous~\ftor for which the feasible set is disconnected (and in particular non-convex).
 
 \begin{marginfigure}
-	\centering
-	%\subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex1b}}
-	\subfloat[\label{fig:Simple-DP}]{\centering{}\includesag{simple-dp-nonconvex}}
-	\\
-	\subfloat[\label{fig:nonconvex3}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex3}}
-	\caption{One feedback connection and a topologically continuous~\ftor are sufficient to induce a disconnected feasible set.}
-	\label{fig:ceil-1}
+    \centering
+    %\subfloat[\label{fig:Simple-DP}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex1b}}
+    \subfloat[\label{fig:Simple-DP}]{\centering{}\includesag{simple-dp-nonconvex}}
+    \\
+    \subfloat[\label{fig:nonconvex3}]{\centering{}\includegraphics[scale=0.43]{gmcdptro_nonconvex3}}
+    \caption{One feedback connection and a topologically continuous~\ftor are sufficient to induce a disconnected feasible set.}
+    \label{fig:ceil-1}
 \end{marginfigure}
 
 \begin{example}[Non-convexity]
@@ -139,7 +140,8 @@ To show this, we will give an example of a 1-dimensional problem with a continuo
 
 \subsection{Approach}
 
-The strategy to obtain these results \todotext{which results?} consists in reducing an arbitrary interconnection of design problems to considering only a finite number of composition operators (series, parallel, and feedback).
+The strategy to obtain these results \todotext{which results?
+} consists in reducing an arbitrary interconnection of design problems to considering only a finite number of composition operators (series, parallel, and feedback).
 \Cref{sec:threeoperators} defines these composition operators.
 \Cref{sec:Decomposition}~shows how to turn a graph into a tree, where each junction is one of the three operators.
 Given the tree representation of an MCDPs, we will be able to give inductive arguments to prove the results.
