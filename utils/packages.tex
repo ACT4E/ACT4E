@@ -511,12 +511,28 @@
 \def\urlnl{\%0A}
 \def\urlsp{\%20}
 \def\issuecheck{-\urlsp[\urlsp]\urlsp}
-\def\issueurl{Unset}
-\newcommand{\linkgithub}{
-    \ifdefempty{\currentchapter}{}{
+\newsavebox{\urlbox}
+\def\issueurl{none}
+
+%%%%%%%%%%%%%%%%%%%%
+% Add page break before section
+%
+\AtBeginDocument{
+    \let\oldsection\section
+    \renewcommand\section[2][]{
+        \FloatBarrier\clearpage\oldsection[#1]{#2}%
         \def\issueurl{%
             https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter: \currentchaptername\urlnl Section: \currentname\urlnl Version: \today \urlnl\urlnl Check all that apply:\urlnl\issuecheck Something incorrect\urlnl\issuecheck Something not clear\urlnl\issuecheck Something missing\urlnl\urlnl Please describe more in detail below. Feel free to change the title to something more informative.\urlnl;title=\currentchaptername\urlsp/\urlsp\currentname\urlsp/\urlsp\today}
-        Something incorrect or unclear or missing? \href{\issueurl}{Report issues on Github}.% \currentchaptername \currentname
+    }
+        \savebox{\urlbox}{\href{\issueurl}{Report issues on Github}.}
+}
+
+
+
+\newcommand{\linkgithub}{
+    \ifdefempty{\currentchapter}{}{
+        % \issueurl
+        Something incorrect or unclear or missing? \usebox{\urlbox}% \currentchaptername \currentname
     }
 }
 \renewpagestyle{scrheadings}{%
