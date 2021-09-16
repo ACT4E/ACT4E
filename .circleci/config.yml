@@ -16,9 +16,9 @@ workflows:
         - build-devel
         - build-public
         - build-instructors
-        filters:
-          branches:
-            only: publish
+        # filters:
+        #   branches:
+        #     only: publish
 jobs:
   build-devel:
     docker:
@@ -198,9 +198,10 @@ jobs:
     - run:
         name: Install and configure dependencies
         command: |
-          npm install -g --silent gh-pages@2.0.1
-          git config --global user.email "acensi@ethz.ch"
-          git config --global  user.name "ci-build"
+          #
+          # npm install -g --silent gh-pages@2.0.1
+          # git config --global user.email "acensi@ethz.ch"
+          # git config --global user.name "ci-build"
     - run:
         name: git lfs
         command: |
@@ -212,7 +213,7 @@ jobs:
         name: Deploy docs to gh-pages branch
         command: |
           git clone --depth 1 -b gh-pages git@github.com:ACT4E/ACT4E.git docs
-          cp pages-index.html docs
+          cp templates/pages-index.html docs
           cp tmp/workspace/_build/* docs
           git -C docs add .
           git -C docs commit -a -m "update [ci skip]"
