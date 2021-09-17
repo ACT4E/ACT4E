@@ -127,13 +127,19 @@ nomenc-%.tex: generated/used-%.yaml utils/symbols*.tex
 
 
 
-nomencvol1=volumes/vol1/80_backmatter/96_nomenclature/nomenc-vol1.texi
+nomencvol1_final=volumes/vol1/80_backmatter/96_nomenclature/nomenc-vol1.texi
+nomencvol1_devel=volumes/vol1/80_backmatter/96_nomenclature/nomenc-vol1-devel.texi
 
 
-$(nomencvol1): generated/used-vol1.yaml utils/symbols*.tex
-	lsm_nomenc  --only $< utils/symbols*.tex > $@
+$(nomencvol1_final): generated/used-vol1.yaml utils/symbols*.tex
+	lsm_nomenc               --style medium  --only $< utils/symbols*.tex > $@.tmp
+	mv $@.tmp $@
 
-nomenc: $(nomencvol1)
+$(nomencvol1_devel): generated/used-vol1.yaml utils/symbols*.tex
+	lsm_nomenc --allow-empty --style medium  --only $< utils/symbols*.tex > $@.tmp
+	mv $@.tmp $@
+
+nomenc: $(nomencvol1_final)  $(nomencvol1_devel)
 
 tablefile=volumes/vol1/00_front/05_developers/table.texi
 
