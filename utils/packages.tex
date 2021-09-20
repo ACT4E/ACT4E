@@ -320,16 +320,15 @@
         \PackageError{ACT4E}{Empty label argument}{You passed empty label}
     }{}
     \setchapterpreamble[u]{\margintoc}
-    \setchapterimage[12cm]{#2.cropped} % Optionally specify the height
+    \setchapterimage[12cm]{#2.cropped}
     \chapter{#1}
-    % \vfill
     \begin{quote}
         #4%
     \end{quote}%
     \vfill
     \begin{widepar}
         \footnotesize
-    \input{\rootdir/pics/#2.tex}
+        \input{\rootdir/pics/#2.tex}
     \end{widepar}
     \def\currentchapter{#3}
     \def\currentchaptername{\detokenize{#1}}
@@ -341,17 +340,6 @@
 \newlength\tocrulewidth
 \setlength{\tocrulewidth}{1.5pt}
 % \usepackage{eso-pic}
-
-
-\newcommand{\partfirstb}[4]{
-%\pagelayout{fullwidthpage}
-
-    \part{#1}%
-    \ifemptyarg{#3}{
-        \PackageError{ACT4E}{Empty label argument}{You passed empty label}
-    }{
-        \label{#3}
-    }
 % \AddToShipoutPictureFG{
 %   \AtPageUpperLeft{%
 %     \raisebox{-\height}{%
@@ -359,34 +347,30 @@
 %     }%
 %   }%
 % }
+\newcommand{\partfirstb}[4]{
+    \part{#1}%
+    \ifemptyarg{#3}{
+        \PackageError{ACT4E}{Empty label argument}{You passed empty label}%
+    }{
+        \label{#3}%
+    }
     \begin{tikzpicture}[remember picture,overlay,shift={(current page.north east)}]
 	\node[anchor=north east,xshift=5mm,yshift=-3.4cm]{
-		\includegraphics[width=\paperwidth+5mm,keepaspectratio=true]{#2}%
+		\includegraphics[width=\paperwidth+5mm,keepaspectratio=true]{#2.cropped}%
 		};
 	\end{tikzpicture}
     \vspace{12.4cm}
-    %\fullwidthpage
-    %\includegraphics[width=\paperwidth,height=10cm,keepaspectratio=true]{#2}
-    %\includegraphics[width=\paperwidth,height=10cm,keepaspectratio=true]{#2} %viewport=0 0 10cm 15cm]{#2}
-    %\setchapterimage[10cm]{#2}
-    %\centering
-    %{\begin{minipage}{0.9\textwidth}
-
-    % \smallskip%
-    % {\small #3}%
     #4
     \etocsettocstyle{\rule{\linewidth}{\tocrulewidth}\vskip0.2\baselineskip}{\rule{\linewidth}{\tocrulewidth}}
     \etocsetnexttocdepth{chapter}
-\vfill
+    \vfill
     \begin{widepar}
         \localtableofcontents
     \end{widepar}
-\vfill
+    \vfill
     \begin{widepar}\footnotesize
     \input{\rootdir/pics/#2.tex}
     \end{widepar}
-%   \end{minipage}}
-%\pagelayout{margin}
 }
 
 \newcommand{\tableColors}{\rowcolors{2}{green!4}{blue!4}}
@@ -397,16 +381,6 @@
 \newcommand{\nomencsectionname}[1]{\rule{0pt}{4mm}\textbf{#1}}
 \newcommand{\nomencsubsectionname}[1]{\rule{0pt}{4mm}\emph{#1}}
 \newcommand{\unused}{{\color{red}unused}~}
-
-
-%\captionsetup[subtable]{font={rm,md,sc,footnotesize},position=top}
-%\captionsetup[figure]{font=small,position=bottom}
-%\setlength{\abovecaptionskip}{0pt}
-%\setlength{\belowcaptionskip}{0pt}
-%
-%\setlength{\columnsep}{10pt}
-%\setlength{\intextsep}{2pt}
-%
 
 
 % just to quiet a warning
@@ -426,63 +400,7 @@
 \makeatother
 
 
-%\setlength{\textwidth}{12.5cm}
 
-%
-%\usepackage{nameref}
-%\usepackage[amsmath]{ntheorem}
-%\usepackage{thmtools}
-%
-%\makeatletter
-%\newcommand{\nref}[1]{\cref{#1}\mynameref{#1}{\csname r@#1\endcsname}}
-%\newcommand{\Nref}[1]{\Cref{#1}\mynameref{#1}{\csname r@#1\endcsname}}
-%
-%\def\mynameref#1#2{%
-%  \begingroup
-%    \edef\@mytxt{#2}%
-%    \edef\@mytst{\expandafter\@thirdoffive\@mytxt}%
-%    \ifx\@mytst\empty\else
-%    \space(\nameref{#1})\fi
-%  \endgroup
-%}
-%\makeatother
-
-%
-%\usepackage[
-%  % set width and height to a4 width and height + 6mm
-%  width=9in, height=11in,
-%  % use any combination of these options to add different cut markings
-%  cam, axes, frame, cross,
-%  % set the type of TeX renderer you use
-%  pdftex,
-%  % center the contents
-%  center
-%]{crop}
-%
-
-
-%\usepackage{pgf}
-%\usepackage{pgfpages}
-%
-%\pgfpagesdeclarelayout{boxed}
-%{
-%  \edef\pgfpageoptionborder{3pt}
-%}
-%{
-%  \pgfpagesphysicalpageoptions
-%  {%
-%    logical pages=1,%
-%  }
-%  \pgfpageslogicalpageoptions{1}
-%  {
-%    border code=\pgfsetlinewidth{0.5pt}\pgfstroke,%
-%    border shrink=0pt,%
-%    resized width=8in,%
-%    resized height=10in,%
-%    center=\pgfpoint{.5\pgfphysicalwidth}{.5\pgfphysicalheight}%
-%  }%
-%}
-%\pgfpagesuselayout{boxed}
 
 
 
@@ -490,7 +408,6 @@
 \newcommand{\partended}{
     \cleardoublepage
     \oldsection*{Solutions to selected exercises}
-    % \chapter*{}
     \printsolutions}
 
 \newenvironment{longcode}{\captionsetup{type=listing,justification=centering}}{}
@@ -521,7 +438,6 @@
     \todotextjira{381}{@Gioele: punctuate equations}
 }
 
-% \usepackage{arabtex}
 
 
 % \usepackage[color=blue,
