@@ -8,24 +8,25 @@ Procedures need both computation (time) and memory (space).
 \todographics{Simple graphics to accompany explanation.}
 Time and space are somehow orthogonal.
 %
-Informally, consider two procedures that need time and memory given by $\tupp{t_1,m_1}$ and $\tupp{t_2, m_2}$. If we compose them in series, we need to sum the times, but we can re-use the same memory. We can bound the resources consumption  by $\tupp{t_1+t_2,\max(m_1, m_2)}$.
+Informally, consider two procedures that need time and memory given by $\tupp{t_1,m_1}$ and $\tupp{t_2, m_2}$.
+If we compose them in series, we need to sum the times, but we can re-use the same memory.
+We can bound the resources consumption  by $\tupp{t_1+t_2,\max(m_1, m_2)}$.
 If instead we run them in parallel, we can save on the time, but we need separate memories, so that the consumption is $\tupp{\max(t_1,t_2), m_1 + m_2}$.
 
-We capture this more generally as follows. We require both time and space to be monoidal lattices $\tupp{\TimeMonoidal, \mtimescat_{\TimeMonoidal}, \join_{\TimeMonoidal}}$ and
+We capture this more generally as follows.
+We require both time and space to be monoidal lattices $\tupp{\TimeMonoidal, \mtimescat_{\TimeMonoidal}, \join_{\TimeMonoidal}}$ and
 $\tupp{\SpaceMonoidal, \mtimescat_{\SpaceMonoidal}, \join_{\SpaceMonoidal}}$.
 %
 We will define series and parallel composition as follows:
 \begin{equation}
     \begin{aligned}
-        \tupp{t_1,m_1} \mthen_{\SpaceTime}  \tupp{t_2,m_2} &= \tupp{t_1 \mtimescat_{\TimeMonoidal} t_2, m_1 \join_{\SpaceMonoidal} m_2}, \\
-        \tupp{t_1,m_1} \mtimescat_{\SpaceTime}  \tupp{t_2,m_2} &= \tupp{t_1 \join_{\TimeMonoidal} t_2, m_1 \mtimescat_{\SpaceMonoidal} m_2}.
+        \tupp{t_1,m_1} \mthen_{\SpaceTime}  \tupp{t_2,m_2}     & = \tupp{t_1 \mtimescat_{\TimeMonoidal} t_2, m_1 \join_{\SpaceMonoidal} m_2}, \\
+        \tupp{t_1,m_1} \mtimescat_{\SpaceTime}  \tupp{t_2,m_2} & = \tupp{t_1 \join_{\TimeMonoidal} t_2, m_1 \mtimescat_{\SpaceMonoidal} m_2}.
     \end{aligned}
 \end{equation}
 We use the join operation $\join$ to model the idea of $\max$.
 
 We now generalize the definition of $\ProcMod$ into $\ProcSTMod$.
-
-
 
 \begin{definition}[Semicategory $\ProcSTMod$]
     \label{def:ProcSTMod}
@@ -33,75 +34,75 @@ We now generalize the definition of $\ProcMod$ into $\ProcSTMod$.
     \begin{enumerate}
         \item \emph{Objects}: The objects are poset-sized sets.
         \item \emph{Morphisms}: A morphism
-        \begin{equation}
-            \mora \colon \Obja \mtoin\ProcSTMod \Obja
-        \end{equation}
-        between the two objects
-        \begin{equation}
-            \Obja = \tupp{\setA, \Sigma_{\setA}, \sizefun_{\setA}}
-            \qqand
-            \Objb = \tupp{\setB, \Sigma_{\setA}, \sizefun_{\setB}}
-        \end{equation}
-        is a tuple
-        \begin{equation}
-            \tupp{\mora_e, \sizetran, \timefun, \spacefun },
-        \end{equation}
-        where:
-        \begin{enumerate}
-            \item $\mora_e : \setA \sto \setB$ is the function computed;
-            \item $\sizetran: \Sigma_{\setA} \toinPos \Sigma_{\setB}$ is a monotone function that keeps track of how the size changes.
-            \item $\timefun: \Sigma_{\setA} \toinPos \TimeMonoidal$ is a monotone function that gives computation time as a function of instance size;
-            \item $\spacefun: \Sigma_{\setA} \toinPos \SpaceMonoidal$ is a monotone function that gives memory needed as a function of instance size.
-        \end{enumerate}
+              \begin{equation}
+                  \mora \colon \Obja \mtoin\ProcSTMod \Obja
+              \end{equation}
+              between the two objects
+              \begin{equation}
+                  \Obja = \tupp{\setA, \Sigma_{\setA}, \sizefun_{\setA}}
+                  \qqand
+                  \Objb = \tupp{\setB, \Sigma_{\setA}, \sizefun_{\setB}}
+              \end{equation}
+              is a tuple
+              \begin{equation}
+                  \tupp{\mora_e, \sizetran, \timefun, \spacefun },
+              \end{equation}
+              where:
+              \begin{enumerate}
+                  \item $\mora_e : \setA \sto \setB$ is the function computed;
+                  \item $\sizetran: \Sigma_{\setA} \toinPos \Sigma_{\setB}$ is a monotone function that keeps track of how the size changes.
+                  \item $\timefun: \Sigma_{\setA} \toinPos \TimeMonoidal$ is a monotone function that gives computation time as a function of instance size;
+                  \item $\spacefun: \Sigma_{\setA} \toinPos \SpaceMonoidal$ is a monotone function that gives memory needed as a function of instance size.
+              \end{enumerate}
 
         \item \emph{Composition}: The composition of
-        \begin{equation}
-            \tupp{\mora_1, \sizetran_1,  \timefun_1 , \spacefun_1 }
-            \qqand
-            \tupp{\morb_2, \sizetran_2,  \timefun_2 , \spacefun_2 }
-        \end{equation}
-        is given by
-        \begin{equation}
-            \tupp{
-                \mora_{1;2},
-                \sizetran_{1;2},
-                \timefun_{1,2},
-                \spacefun_{1,2}
-            }.
-        \end{equation}
-        where
-        \begin{equation}
-            \mora_{1;2} = \mora_1 \mthen \morb_2,
-        \end{equation}
-        \begin{equation}
-            \sizetran_{1;2} = \sizetran_1 \mthen \sizetran_2,
-        \end{equation}
-        \begin{equation}
-            \definemapperiod{
-                \timefun_{1,2}
-            }{
-                \Sigma_{\setA}
-            }{
-                \TimeMonoidal
-            }{
-                \sigma_{\setA}
-            }{
-                \timefun_1(\sigma_{\setA}) \mtimescat_{\TimeMonoidal} \timefun_2(\sizetran_1(\sigma_{\setA}))
-            }
-        \end{equation}
-        \begin{equation}
-            \definemapperiod{
-                \spacefun_{1,2}
-            }{
-                \Sigma_{\setA}
-            }{
-                \SpaceMonoidal
-            }{
-                \sigma_{\setA}
-            }{
-                \spacefun_1(\sigma_{\setA}) \join_{\SpaceMonoidal} \spacefun_2(\sigma_{\setA})
-            }
-        \end{equation}
+              \begin{equation}
+                  \tupp{\mora_1, \sizetran_1,  \timefun_1 , \spacefun_1 }
+                  \qqand
+                  \tupp{\morb_2, \sizetran_2,  \timefun_2 , \spacefun_2 }
+              \end{equation}
+              is given by
+              \begin{equation}
+                  \tupp{
+                      \mora_{1;2},
+                      \sizetran_{1;2},
+                      \timefun_{1,2},
+                      \spacefun_{1,2}
+                  }.
+              \end{equation}
+              where
+              \begin{equation}
+                  \mora_{1;2} = \mora_1 \mthen \morb_2,
+              \end{equation}
+              \begin{equation}
+                  \sizetran_{1;2} = \sizetran_1 \mthen \sizetran_2,
+              \end{equation}
+              \begin{equation}
+                  \definemapperiod{
+                      \timefun_{1,2}
+                  }{
+                      \Sigma_{\setA}
+                  }{
+                      \TimeMonoidal
+                  }{
+                      \sigma_{\setA}
+                  }{
+                      \timefun_1(\sigma_{\setA}) \mtimescat_{\TimeMonoidal} \timefun_2(\sizetran_1(\sigma_{\setA}))
+                  }
+              \end{equation}
+              \begin{equation}
+                  \definemapperiod{
+                      \spacefun_{1,2}
+                  }{
+                      \Sigma_{\setA}
+                  }{
+                      \SpaceMonoidal
+                  }{
+                      \sigma_{\setA}
+                  }{
+                      \spacefun_1(\sigma_{\setA}) \join_{\SpaceMonoidal} \spacefun_2(\sigma_{\setA})
+                  }
+              \end{equation}
     \end{enumerate}
 \end{definition}
 
@@ -121,7 +122,7 @@ We can also give $\ProcSTMod$ the structure of a stacking category as follows:
             \Tupcat \setA \setB,
             \Tupcat {\Sigma_{\setA}} {\Sigma_{\setA}},
             \sizefun_{\setA\setB}
-            },
+        },
     \end{equation}
     where
     \begin{equation}
@@ -156,17 +157,17 @@ We can also give $\ProcSTMod$ the structure of a stacking category as follows:
     % \end{align}
     represented as follows:
     \begin{align}
-        \mora_1    &= \tupp{\mora^e_1, \sizetran_1,  \timefun_1,
-        \spacefun_{1}  } \\
-        \mora_2   &= \tupp{\mora^e_2, \sizetran_2,  \timefun_2, \spacefun_{2} }
+        \mora_1 & = \tupp{\mora^e_1, \sizetran_1,  \timefun_1,
+        \spacefun_{1}  }                                                       \\
+        \mora_2 & = \tupp{\mora^e_2, \sizetran_2,  \timefun_2, \spacefun_{2} }
     \end{align}
     we define the parallel stack as
     \begin{equation}
         \mora_1 \mtimescatmor \mora_2 = \tupp{
-            \mora^e_{1\otimes2},
-            \sizetran_{1\otimes2},
-             \timefun_{1\otimes2},
-             \spacefun_{1\otimes2}
+        \mora^e_{1\otimes2},
+        \sizetran_{1\otimes2},
+        \timefun_{1\otimes2},
+        \spacefun_{1\otimes2}
         },
     \end{equation}
     where
@@ -203,7 +204,6 @@ We can also give $\ProcSTMod$ the structure of a stacking category as follows:
         }
     \end{equation}
 \end{lemma}
-
 
 \begin{lemma}
     For generic monoidal lattices $\tupp{\TimeMonoidal, \mtimescat_{\TimeMonoidal}, \join_{\TimeMonoidal}}$ and $\tupp{\SpaceMonoidal, \mtimescat_{\SpaceMonoidal}, \join_{\SpaceMonoidal}}$, the semicategory $\ProcSTMod$  is \emph{not} a functorial stacking category.
