@@ -15,7 +15,9 @@ all:
 
 convert: $(targets)
 
+# there are 8.2 inches on the page. 300 ppi target 
+# 300 * 8.2 = 2460
 %.cropped.jpeg: %.jpg
-	magick convert $< -gravity center -crop 210:120 $@
+	magick convert $< -gravity center -crop 210:120 -resize 2500x -quality 85% $@
 
 
