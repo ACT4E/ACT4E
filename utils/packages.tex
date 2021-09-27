@@ -244,6 +244,7 @@
 \newboolean{devel} % print devel stuff
 
 \newboolean{codeexercises}
+\newboolean{githublink}
 
 
 %% Formatting operations %%
@@ -500,10 +501,16 @@
 
 
 \newcommand{\linkgithub}{
-% \ifdefempty{\currentchapter}{}{
-    \usebox{\urlbox}
-% }
+    \ifthenelse{\boolean{githublink}}{%
+        \usebox{\urlbox}%
+    }{}
 }
+\newcommand{\draftnotice}{
+    \ifthenelse{\boolean{githublink}}{%
+        \footnotesize You are reading a draft compiled on \DTMnow%
+    }{}%
+}
+
 \renewpagestyle{scrheadings}{%
         {\smash{\hspace{-\headmarginparwidth}\hspace{-\headmarginparsep}\makebox[\headtotal][l]{%
         \makebox[7\hscale][r]{\thepage}%
@@ -518,7 +525,7 @@
         \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
         \makebox[7\hscale][l]{\thepage}}}}}%
 }{%
-        {\hspace{-5cm}\footnotesize You are reading a draft compiled on \DTMnow}% left page
+        {\hspace{-5cm}\draftnotice}% left page
         {\linkgithub}% right page
         {}% not showing up
 }
