@@ -1,6 +1,6 @@
 % !TEX root = chapter-standalone.tex
 
-\section[Antichains]{From antichains to uppersets, and viceversa}
+\section[Antichains]{Upper and lower closure}
 
 \linkvideo{spring2021-design:up-low-closure} % Upper and lower closure
 \begin{definition}[Upper closure operator]
@@ -8,7 +8,7 @@
     The \emph{upper closure operator}~$\upit $ maps a subset to the smallest upper set that includes it:
     \begin{equation}
         \begin{aligned}
-            \upit  \colon \posPA & \to \posUA,                                                                                                                                \\
+            \upit  \colon \posPA & \to \setOfUppersets\posA,                                                                                                                                \\
             S                    & \mapsto \{\styleelements{y}\in \posA \mid \exists \styleelements{x}\in \stylesets{S} \colon \styleelements{x}\posAleq \styleelements{y}\}.
         \end{aligned}
     \end{equation}
@@ -25,17 +25,72 @@
     Thus,~$\styleelements{z}\in \upit  \stylesets{S}$, as was to be shown.
 \end{proof}
 
-\begin{lemma}
-    The upper closure operator~$\upit$ is an antitone map.
-\end{lemma}
-\begin{proof}
-    Consider the posets~$\tupp{\posPA,\subseteq}$ and $\tupp{\setOfUppersets \posA,\supseteq}$, and two sets of sets $\stylesets{S_1}\com \stylesets{S_2}\in \linebreak[1] \posPA$.
-    It is clear that given~$\stylesets{S_1}\subseteq \stylesets{S_2}$, one has
+
+In the example of battery choices, \todotext{Which example?} first, consider the upper closure of a single element of the poset, for instance~$\posAel_1=\tupp{\unit[10]{USD},\unit[500]{g}}$ (\cref{fig:upperclosure_1}, left).
+Second, we can look at the upper closure when we add the choice~$\posAel_2=\tupp{\unit[20]{USD},\unit[250]{g}}$ (\cref{fig:upperclosure_1}, center).
+
+% \begin{figure*}
+%     \begin{center}
+%         \includesag{70_upper_closure_2}
+%         \hspace{0.1cm}
+%         \includesag{70_upper_closure_2_bis}
+%     \end{center}
+%     \caption{The upper closure of a set of pizza recipes.}
+%     \todotext{@Gioele: still pizza?}
+%     \label{fig:upperclosure_2}
+% \end{figure*}
+
+Note that the upper set of the subset formed by the two elements is the union of the upper sets of the single elements.
+%
+Finally, we can also define the set
+%
+\begin{equation}
+    \setA=\{
+    \tupp{\text{cost},\text{mass}}\mid \text{mass}=750-25\cdot \text{cost},
+    \forall \text{cost} \in [0,20]
+    \},
+\end{equation}
+%
+and find its upper closure (\cref{fig:upperclosure_1}, right).
+%
+\begin{figure*}[h!]
+    \centering
+    \includesag{70_uc_1_1} \hspace{0.1cm}
+    \includesag{70_uc_1_2} \hspace{0.1cm}
+    \includesag{70_uc_1_3}
+    \caption{Example of uppler closure for different sets of battery choices. }
+    \label{fig:upperclosure_1}
+    \todographics{In the panel right, highlight the set $\setA$ (actually use $\subA$ as symbol)}
+\end{figure*}
+
+\begin{definition}[Lower closure operator]
+    \label{def:lowerclosure}
+    The \emph{lower closure operator}~$\downit$ maps a subset to the smallest lower set that includes it:
     \begin{equation*}
-        \{\styleelements{y}\in \posA\mid \exists \styleelements{x}\in \stylesets{S_1}\colon \styleelements{x}\posAleq \styleelements{y}\} \subseteq \{\styleelements{y}\in \posA\mid \exists \styleelements{x}\in \stylesets{S_2}\colon \styleelements{x}\posAleq \styleelements{y}\}.
+        \begin{aligned}
+            \downit \colon \posPA & \to \setOfLowersets   \posA                                                                                                                               \\
+            \stylesets{S}         & \mapsto \{ \styleelements{y}\in \posA \mid \exists \styleelements{x}\in \stylesets{S} \colon \styleelements{y}\posAleq \styleelements{x}\}.
+        \end{aligned}
     \end{equation*}
-    Therefore,~$\upit  \stylesets{S_1}\subseteq \ \upit  \stylesets{S_2}$, satisfing the antitone map property for~$\upit $.
-\end{proof}
+\end{definition}
+
+Consider the battery example, and the antichain given by the battery models~$\posAel_1=\tupp{\unit[10]{USD},\unit[1000]{g}}$, $\posAel_2=\tupp{\unit[20]{USD},\unit[500]{g}}$, and $\posAel_3=\tupp{\unit[30]{USD},\unit[250]{g}}$ (\cref{fig:examplebatt}, left).
+The lower closure operator~$\downit\makeset{\posAel_1,\posAel_2,\posAel_3}$ represents all the battery models which, if existing, would dominate~$\makeset{\posAel_1,\posAel_2,\posAel_3}$.
+One could instead consider linear maps between the points getting a poset~$\posA$, and obtain the lower closure depicted in \cref{fig:examplebatt} on the right.
+
+\begin{figure*}[h!]
+    \centering 
+    \includesag{70_battery_1}
+    \hspace{0.1cm}
+    \includesag{70_battery_1_bis}
+    \todographics{@Gioele: Make figure with 3 panels - same a upper closure}
+    \todographics{@Gioele: In the panel right, highlight the set $\setA$ (actually use $\subA$ as symbol)}
+    \caption{Example of lower closures.}
+    
+    \label{fig:examplebatt}
+\end{figure*}
+
+\subsection{Antichains and upper sets}
 
 \begin{lemma}
     \label{lem:up-cl-inj-antichains}
@@ -60,118 +115,6 @@
     To show~$\setB \subseteq \setA$, we can fix any~$\setBel \in \setB$ and repeat the above argumentation, now with the roles of~$\setA$ and~$\setB$ exchanged.
 \end{proof}
 
-In the example of battery choices, first, consider the upper closure of a single element of the poset, for instance~$\posAel_1=\tupp{\unit[10]{USD},\unit[500]{g}}$ (\cref{fig:upperclosure_1}, left).
-Second, we can look at the upper closure when we add the choice~$\posAel_2=\tupp{\unit[20]{USD},\unit[250]{g}}$ (\cref{fig:upperclosure_2}, center).
-
-\begin{figure*}
-    \begin{center}
-        \includesag{70_upper_closure_2}
-        \hspace{0.1cm}
-        \includesag{70_upper_closure_2_bis}
-    \end{center}
-    \caption{The upper closure of a set of pizza recipes.}
-    \label{fig:upperclosure_2}
-\end{figure*}
-
-Note that the upper set of the subset formed by the two elements is the union of the upper sets of the single elements.
-%
-Finally, we can also define the set
-%
-\begin{equation}
-    \setA=\{
-    \tupp{\text{cost},\text{mass}}\mid \text{mass}=750-25\cdot \text{cost},
-    \forall \text{cost} \in [0,20]
-    \},
-\end{equation}
-%
-and find its upper closure (\cref{fig:upperclosure_1}, right).
-%
-\begin{figure*}[h!]
-    \centering
-    \includesag{70_uc_1_1} \hspace{0.1cm}
-    \includesag{70_uc_1_2} \hspace{0.1cm}
-    \includesag{70_uc_1_3}
-    \caption{Example of uppler closure for different sets of battery choices. }
-    \label{fig:upperclosure_1}
-\end{figure*}
-
-\begin{definition}[Lower closure operator]
-    \label{def:lowerclosure}
-    The \emph{lower closure operator}~$\downit$ maps a subset to the smallest lower set that includes it:
-    \begin{equation*}
-        \begin{aligned}
-            \downit \colon \posPA & \to \posLA                                                                                                                                  \\
-            \stylesets{S}         & \mapsto \{ \styleelements{y}\in \posA \mid \exists \styleelements{x}\in \stylesets{S} \colon \styleelements{y}\posAleq \styleelements{x}\}.
-        \end{aligned}
-    \end{equation*}
-\end{definition}
-
-\begin{lemma}
-    \label{lem:lower_closure_monotone}
-    The lower closure operator~$\downit$ is a monotone map.
-\end{lemma}
-
-\begin{exercise}
-    Prove \cref{lem:lower_closure_monotone}.
-\end{exercise}
-\begin{solution}
-    Consider the posets~$\tup{\posPA,\subseteq}$ and~$\tup{\setOfLowersets \posA,\subseteq}$, and let~$\stylesets{S_1},\stylesets{S_2}\in \posPA$.
-    It is clear that given~$\stylesets{S_1}\subseteq \stylesets{S_2}$, one has
-    \begin{equation}
-        \{\styleelements{y}\in \posA\mid \exists \styleelements{x}\in \stylesets{S_1}\colon \styleelements{y}\posAleq \styleelements{x}\} \subseteq \{\styleelements{y}\in \posA\mid \exists \styleelements{x}\in \stylesets{S_2}\colon \styleelements{y}\posAleq \styleelements{x}\}.
-    \end{equation}
-    Therefore,~$\downit \stylesets{S_1}\subseteq \ \downit \stylesets{S_2}$, satisfing the monotonicity property for~$\downit$.
-\end{solution}
-
-Consider the battery example, and the antichain given by the battery models~$\posAel_1=\tupp{\unit[10]{USD},\unit[1000]{g}}$, $\posAel_2=\tupp{\unit[20]{USD},\unit[500]{g}}$, and $\posAel_3=\tupp{\unit[30]{USD},\unit[250]{g}}$ (\cref{fig:examplebatt}, left).
-The lower closure operator~$\downit\makeset{\posAel_1,\posAel_2,\posAel_3}$ represents all the battery models which, if existing, would dominate~$\makeset{\posAel_1,\posAel_2,\posAel_3}$.
-One could instead consider linear maps between the points getting a poset~$\posA$, and obtain the lower closure depicted in \cref{fig:examplebatt} on the right.
-
-\begin{figure*}[h!]
-    \begin{center}
-        \includesag{70_battery_1}
-        \hspace{0.1cm}
-        \includesag{70_battery_1_bis}
-    \end{center}
-    \caption{Example of lower closures.}
-    \label{fig:examplebatt}
-\end{figure*}
-
-\begin{definition}[Min]
-    \label{def:Min}
-    $\Min \colon \posPA \to \posAA$ is the map that sends a subset~$\setA$ of a poset to the minimal elements of that subset (those elements~$\setAel \in S$ such that~$\setAel \posAleq \setBel$ for all~$\setBel \in \setA$).
-    In formulas:
-    \begin{equation*}
-        \begin{aligned}
-            \Min \colon \posPA & \to \posAA      \\
-            \setA              & \mapsto \bigg\{
-            \setCel\in \setA\colon
-            \vmiddle{\prftree{
-                    \setDel\in \setA
-                }{
-                    \setDel\posAleq \setCel
-                }{
-                    \setCel=\setDel
-                }}
-            \bigg\}
-        \end{aligned}
-    \end{equation*}
-    Note that~$\Min(\setA)$ could be empty.
-\end{definition}
-
-\begin{definition}[Max]
-    \label{def:Max}
-    $\Max \colon \posPA \to \posAA$ is the map that sends a subset~$\setA$ of a poset to the maximal elements of that subset (those elements~$\setAel \in \setA$ such that~$\setAel \posgeq_\posA \setBel$ for all~$\setBel \in \setA$).
-    In formulas:
-    \begin{equation*}
-        \begin{aligned}
-            \Max \colon \posPA & \to \posAA                                                                                                        \\
-            \setA              & \mapsto \{ \setCel\in \setA\colon (\setDel\in \setA)\wedge(\setDel\posgeq_\posA \setCel)\Imp (\setCel=\setDel)\}.
-        \end{aligned}
-    \end{equation*}
-    Note that~$\Max(\setA)$ could be empty.
-\end{definition}
-
 \begin{definition}[Downward closed set]
     \label{def:downward-closed-upperset}
     An upper set~$\setA$ is \emph{downward-closed} in a poset~$\posA$ if
@@ -191,67 +134,3 @@ One could instead consider linear maps between the points getting a poset~$\posA
     The set of upward-closed lower sets of~$\posA$ is denoted~$\setOfUCLowersets \posA$.
 
 \end{definition}
-
-\subsection{Measuring posets}
-\begin{definition}[Width of a poset]
-    \label{def:poset-width}
-    The \emph{width} of a poset, denoted~$\posetwidth(\posA)$, is the maximum cardinality of an antichain in~$\posA$.
-\end{definition}
-
-\begin{definition}[Height of a poset]
-    \label{def:poset-height}
-    The \emph{height} of a poset, denoted~$\posetheight(\posA)$, is the maximum cardinality of a chain in~$\posA$.
-\end{definition}
-
-\begin{marginfigure}
-    \centering
-    \includesag{height_width_posets}
-    \caption{Example for height and width of a poset.}
-    \label{fig:poset-height-width}
-\end{marginfigure}
-
-\begin{example}
-    Consider the poset~$\posA$ reported in \cref{fig:poset-height-width}.
-    The longest antichains of~$\posA$ are~$\makeset{\sapple, \schoco, \scheese}$,~$\makeset{\sbretzel, \schoco, \scheese}$,~$\makeset{\sapple, \schoco, \sgrapes}$,~$\makeset{\sbretzel, \schoco, \sgrapes}$, and~$\makeset{\sbretzel, \sburger, \scheese}$.
-    Therefore,~$\posetwidth(\posA)=3$.
-    The longest chain in the poset is given by~$\makeset{\scarrot,\schoco,\sburger,\sfondue}$, and therefore~$\posetheight(\posA)=4$.
-\end{example}
-
-\begin{exercise}
-    \label{ex:width}
-    If you know the width of the posets~$\posA$ and~$\posB$, can you compute the width of~$\posA\cartprod\posB$?
-\end{exercise}
-\begin{solution}
-    From~\cite{bezrukovantichains}, we know
-    \begin{equation*}
-        \posetwidth(\posA)\cartprod \posetwidth(\posB)\leq \posetwidth(\posA\cartprod \posB)\leq \min \{ \vert \posA\vert \cdot \posetwidth(\posB),\vert \posB \vert \cdot \posetwidth(\posA)\}.
-    \end{equation*}
-\end{solution}
-
-\begin{exercise}
-    \label{ex:height}
-    If you know the height of the posets~$\posA$ and~$\posB$, can you compute the height of~$\posA\cartprod\posB$?
-\end{exercise}
-%
-\begin{solution}
-    Yes.
-    First of all, one can construct the longest chain in~$\posA$:
-    \begin{equation*}
-        A=\{\posAel_1,\ldots, \posAel_{\posetheight(\posA)}\}.
-    \end{equation*}
-    Furthermore, one can construct the longest chain in~$\posB$:
-    \begin{equation*}
-        B=\{\posBel_1,\ldots, \posBel_{\posetheight(\posB)}\}.
-    \end{equation*}
-    Out of them, one can construct the chain
-    \begin{equation*}
-        C=\{ \tup{\posAel_1,\posBel_1},\tup{\posAel_2,\posBel_1},\ldots, \tup{\posAel_{\posetheight(\posA)}, \posBel_1}, \tup{\posAel_{\posetheight(\posA)}, \posBel_2},\ldots\},
-    \end{equation*}
-    which has height~$\posetheight(\posA)+\posetheight(\posB)-1$.
-    So we know that at least~$\posetheight(\posA\cartprod \posB)\geq \posetheight(\posA)+\posetheight(\posB)-1$.
-    Now, consider a chain~$\{\tup{\posAel_1,\posBel_1},\ldots, \tup{\posAel_n,\posBel_n}\}$ in~$\posA\cartprod \posB$.
-    In general, this means that at least a coordinate of~$\tup{\posAel_{i},\posBel_{i}}$ must increase in$\tup{\posAel_{i+1},\posBel_{i+1}}$.
-    The first coordinate can only increase~$\posetheight(\posA)-1$ times, and the second one~$\posetheight(\posB)-1$ times.
-    Summing up, the total number of elements in the chain is \emph{at most}~$\posetheight(\posA)+\posetheight(\posB)-1$.
-    Note that this result holds only assuming that~$\posA$ and~$\posB$ are not empty (for that case,~$\posetheight(\posA\cartprod \posB)=0$).
-\end{solution}
