@@ -10,9 +10,13 @@
 
 \begin{definition}[Monotone map]
     \label{def:monotone}
-    A \emph{\iindex{monotone map}} between two posets~$\posA=\tup{\posAset, \posAleq}$ and~$\posB=\tup{\posBset, \posBleq}$ is a map~$\mapa$ that preserves the ordering, in the sense that
+    A \emph{\iindex{monotone map}} between two posets~$\posA=\tupp{\posAset, \posAleq}$ and~$\posB=\tupp{\posBset, \posBleq}$ is a map~$\mapa$ that preserves the ordering, in the sense that
     \begin{equation}
-        \prfperiod{\posAel_1 \posAleq \posAel_2 }{\mapa(\posAel_1) \posBleq \mapa(\posAel_2)}
+        \prfperiod{
+            \posela \posAleq \poselb
+        }{
+            \mapa(\posela) \posBleq \mapa(\poselb)
+        }
         %\posAel_1 \posAleq \posAel_2 \quad \Imp \quad \mapa(\posAel_1) \posBleq \mapa(\posAel_2).
     \end{equation}
 \end{definition}
@@ -24,9 +28,13 @@
 
 \begin{definition}[Antitone map]
     \label{def:antitone}
-    An \emph{\iindex{antitone map}} between two posets~$\posA=\tup{\posAset, \posAleq}$ and~$\posB=\tup{\posBset, \posBleq}$ is a map~$\mapa$ that reverses the ordering, in the sense that
+    An \emph{\iindex{antitone map}} between two posets~$\posA=\tupp{\posAset, \posAleq}$ and~$\posB=\tupp{\posBset, \posBleq}$ is a map~$\mapa$ that reverses the ordering, in the sense that
     \begin{equation}
-        \prfperiod{\posAel_1 \posAleq \posAel_2}{\mapa(\posAel_1) \posgeq_\posB \mapa(\posAel_2)}
+        \prfperiod{
+            \posela \posAleq \poselb
+        }{
+            \mapa(\posela) \posgeq_\posB \mapa(\poselb)
+        }
         %\posAel_1 \posAleq \posAel_2 \quad \Imp \quad \mapa(\posAel_1) \posBleq \mapa(\posAel_2).
     \end{equation}
 \end{definition}
@@ -55,7 +63,7 @@
 
 \begin{example}[Rounding functions]
     \label{ex:rounding-functions}
-    In this example we look at three rounding functions: \funceil~(\cref{fig:ceil}), \funfloor~(\cref{fig:floor}), and \rtntte~(\cref{fig:rtntte}).
+    In this example we look at three rounding functions: \funceil~(\cref{fig:ceil}), \funfloor~(\cref{fig:floor}), and $\rtntte$~(\cref{fig:rtntte}).
     Both the maps
     \begin{equation*}
         \begin{aligned}
@@ -71,6 +79,7 @@
         \end{aligned}
     \end{equation*}
     are monotone, since~$x\leq y$ implies both~$\funceil(x)\leq \funceil(y)$ and~$\funfloor(x)\leq\funfloor(y)$.
+    \todotext{Function $\rtntte$ not defined.}
     \todojira{83}{@Andrea: Define IEEE754 formally}
     \begin{figure*}[h!]
         \begin{center}
@@ -95,6 +104,7 @@
         \includesag{40_dpcatfig_exmonotone}
         \caption{The cardinality map is a monotone map. }
         \label{fig:cardinality}
+        \todographics{There is no poset background in this picture.}
     \end{figure}
 \end{example}
 
@@ -129,38 +139,6 @@
 Unless indicated otherwise, in this book all maps between posets are assumed to be monotone or will turn out to be monotone.
 In a similar way, one can define antitone maps.
 
-\linkvideo{spring2021-tradeoffs:tradeoffs:orders:set-based-filtering} % Set-based filtering
-\begin{example}
-    \todojira{458}{Expand}
-    We now look at an example of \textbf{set-based filtering}, where filtering refers to online inference.
-    Suppose that we want to track the value of a quantity~$x\in [0,100]$, without having a priory information about~$x$.
-    We are equipped with sensors, which periodically measure the quantity~$x$ with some variable precision.
-    At time~$t\in \nonNegReals $ they produce an \emph{observation}~$y_t\colon x_t\in [l_t,u_t]$.
-    Also, note that the quantity fluctuates randomly, and we bound its ``velocity'' to be~$\dot{x}_t\in [-1,1]$ (except at boundaries).
-    At the beginning, our information state~$\bar{i}_0$ could be that~$x\in [0,100]$.
-    At time 0, we get an observation~$y_0$, that says~$x\in [21,24]$.
-    The new information state can be obtained by ``fusing'' the two inputs we have received about~$x$.
-    This corresponds to the intersection
-    \begin{equation*}
-        x\in \left( [0,100] \setintersection [21,24]\right)\equiv x\in [21,24].
-    \end{equation*}
-    Let's now say we get an observation~$y_1$ which says~$x\in [19,22]$.
-    We now need to take into account the evolution/dynamics of the quantity we are tracking.
-    From the interval~$[21,24]$ we know that the variable could have evolved in~$[20,25]$ (dynamics are bounded with a unit increase/decrease).
-    Therefore, the new information state is given by
-    \begin{equation*}
-        x\in \left( [20,25] \setintersection [21,24]\right)\equiv x\in [21,24].
-    \end{equation*}
-    One of the structures which could sustain this kind of inference, is the of \emph{posets of intervals} (\cref{def:poset_intervals}).
-    The Hasse diagram representing a situation related to this diagram could be as reported in \cref{fig:hasse_filtering}.
-    \begin{figure}[h!]
-        \centering
-        \includesag{080_hasse_filtering}
-        \caption{}
-        \label{fig:hasse_filtering}
-    \end{figure}
-\end{example}
-
 \devel{
     A monotone map is an \emph{order isomorphism} if the other direction of the implication holds as well:
     \begin{equation*}
@@ -168,3 +146,36 @@ In a similar way, one can define antitone maps.
         \posAel \posleqof\posA \posBel \quad \Leftrightarrow \quad \mapa(\posAel) \posleqof\posB \mapa(\posBel).
     \end{equation*}
 }
+
+\subsection{Other examples}
+
+\todostructure{We haven't introduced monotone maps yet}
+
+\begin{lemma}
+    The upper closure operator~$\upit$ is an antitone map.
+\end{lemma}
+\begin{proof}
+    Consider the posets~$\tupp{\posPA,\subseteq}$ and $\tupp{\setOfUppersets \posA,\supseteq}$, and two sets of sets $\stylesets{S_1}\com \stylesets{S_2}\in \linebreak[1] \posPA$.
+    It is clear that given~$\stylesets{S_1}\subseteq \stylesets{S_2}$, one has
+    \begin{equation*}
+        \{\styleelements{y}\in \posA\mid \exists \styleelements{x}\in \stylesets{S_1}\colon \styleelements{x}\posAleq \styleelements{y}\} \subseteq \{\styleelements{y}\in \posA\mid \exists \styleelements{x}\in \stylesets{S_2}\colon \styleelements{x}\posAleq \styleelements{y}\}.
+    \end{equation*}
+    Therefore,~$\upit \stylesets{S_1} \subseteq \upit  \stylesets{S_2}$, satisfing the antitone map property for~$\upit$.
+\end{proof}
+
+\begin{lemma}
+    \label{lem:lower_closure_monotone}
+    The lower closure operator~$\downit$ is a monotone map.
+\end{lemma}
+
+\begin{exercise}
+    Prove \cref{lem:lower_closure_monotone}.
+\end{exercise}
+\begin{solution}
+    Consider the posets~$\tup{\posPA,\subseteq}$ and~$\tup{\setOfLowersets \posA,\subseteq}$, and let~$\stylesets{S_1},\stylesets{S_2}\in \posPA$.
+    It is clear that given~$\stylesets{S_1}\subseteq \stylesets{S_2}$, one has
+    \begin{equation}
+        \{\styleelements{y}\in \posA\mid \exists \styleelements{x}\in \stylesets{S_1}\colon \styleelements{y}\posAleq \styleelements{x}\} \subseteq \{\styleelements{y}\in \posA\mid \exists \styleelements{x}\in \stylesets{S_2}\colon \styleelements{y}\posAleq \styleelements{x}\}.
+    \end{equation}
+    Therefore,~$\downit \stylesets{S_1}\subseteq \ \downit \stylesets{S_2}$, satisfing the monotonicity property for~$\downit$.
+\end{solution}
