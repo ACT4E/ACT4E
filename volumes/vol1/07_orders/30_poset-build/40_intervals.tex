@@ -2,23 +2,54 @@
 
 \section{Poset of intervals}
 \linkvideo{spring2021-tradeoffs:tradeoffs:orders:interval-poset} % Poset of intervals
-\begin{definition}[Poset of intervals]
-    \label{def:poset_intervals}
-    An interval is an ordered pair of elements~$\tup{\posAel,\posBel}$ of~$\posA$, such that~$\posAel \posAleq \posBel$.
-    Given a poset~$\posA$, one can define a \emph{poset of intervals} on~$\posA$.
-    Intervals can be ordered by inclusion:
-    %
+\begin{definition}[Interval]
+    \label{def:interval}
+    An \emph{interval} of a poset $\posA$ is a subset of $\posA$ bounded above and below by two elements.
+    We write
     \begin{equation}
-        \prfdoubleperiod{
-            \tup{\posAel_1,\posBel_1}
-            \posleqof{\posint{\posA}}
-            \tup{\posAel_2,\posBel_2}
-        }{
-            (\posAel_1\posAleq \posAel_2)\wedge (\posBel_2\posAleq \posBel_1)
-        }
+        \interv \posela \poselb 
+        \definedas 
+        \makeset{
+             \poselc \in \posAset : 
+            \posela \posAleq \poselc \posAleq \poselb  
+            }.
     \end{equation}
 \end{definition}
 
+
+\begin{definition}[Poset of intervals $\posint\posA$]
+    \label{def:poset_intervals}
+    Given a poset~$\posA$, one can define a \emph{poset of intervals}~$\posint\posA$
+    by ordering the intervals by reverse inclusion:
+    %
+    \begin{equation}
+        \prfdoubleperiod{
+            \interv \posela \poselb 
+            \posleqof{\posint{\posA}}
+            \interv \poselc \poseld
+        }{
+            \interv \posela \poselb 
+            \supseteq  
+            \interv \poselc \poseld
+        }
+    \end{equation}
+    Equivalently we only need check the bounds:
+    \begin{equation}
+        \prfdoubleperiod{
+            \interv \posela \poselb 
+            \posleqof{\posint{\posA}}
+            \interv \poselc \poseld
+        }{
+            (\posela \posAleq \poselc ) \booland (\poseld \posAleq \poselb)
+        }
+    \end{equation}
+    Note that 
+    \begin{align}
+        \top_{\posint \posA} & = \emptyset, \\
+        \bot_{\posint \posA} & = \posAset.
+    \end{align}
+\end{definition}
+\todotext{Check that the order is consistent with the categorical construction.}
 \begin{exercise}
     Check that the relation defined in \cref{def:poset_intervals} is indeed a poset.
 \end{exercise}
@@ -28,8 +59,8 @@
         \item First, we know that~$\tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_1,\posBel_1}$, since $\posAel_1\posAleq \posAel_1$ and $\posBel_1\posAleq \posBel_1$.
         \item Second,~$\tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_2,\posBel_2}$ and $\tup{\posAel_2,\posBel_2}\posleqof{\posint{\posA}}\tup{\posAel_3,\posBel_3}$ imply
               \begin{equation}
-                  \tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_3,\posBel_3}
-              \end{equation}.
+                  \tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_3,\posBel_3}.
+              \end{equation}
         \item Third, if~$\tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_2,\posBel_2}$ and $\tup{\posAel_2,\posBel_2}\posleqof{\posint{\posA}}\tup{\posAel_1,\posBel_1}$, then~$\posAel_1=\posAel_2$ and~$\posBel_1=\posBel_2$.
     \end{itemize}
 \end{solution}
@@ -47,6 +78,7 @@
     At time 0, we get an observation~$y_0$, that says~$x\in [21,24]$.
     The new information state can be obtained by ``fusing'' the two inputs we have received about~$x$.
     This corresponds to the intersection
+    \todotext{We have macros for intervals: $\interv{0}{100}$ rather than $[0,100]$}
     \begin{equation*}
         x\in \left( [0,100] \setintersection [21,24]\right)\equiv x\in [21,24].
     \end{equation*}
@@ -63,6 +95,7 @@
         \centering
         \includesag{080_hasse_filtering}
         \caption{}
+        \todographics{That is not the poset $\posA$ but the poset of intervals.}
         \label{fig:hasse_filtering}
     \end{figure}
 \end{example}
