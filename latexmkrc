@@ -7,3 +7,8 @@ $max_repeat=20;
 
 # add this to your ~/.latexmkrc
 # $pdf_previewer = 'open -a Skim'
+
+print("Using configuration $0\n");
+print("pdflatex = $pdflatex \n");
+print("pdfmode = $pdf_mode \n");
+print("pdf_previewer = $pdf_previewer \n");
