@@ -7,3 +7,10 @@ $max_repeat=20;
 
 # add this to your ~/.latexmkrc
 # $pdf_previewer = 'open -a Skim'
+
+use File::Spec;
+$thisfile= File::Spec->rel2abs(__FILE__);
+print("Using configuration $thisfile\n");
+print("pdflatex = $pdflatex \n");
+print("pdfmode = $pdf_mode \n");
+print("pdf_previewer = $pdf_previewer \n");
