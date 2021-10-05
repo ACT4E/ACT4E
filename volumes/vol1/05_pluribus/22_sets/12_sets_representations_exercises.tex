@@ -1,0 +1,265 @@
+
+\sectionexercises{Representing sets}
+
+As a first step, we are going to build together the support for sets.
+
+
+Let's define three interfaces:
+\begin{itemize}
+    \item \Setoid, for a generic set;
+    \item \EnumerableSet, for a set that can enumerate its elements;
+    \item \FiniteSet, for a set that has a finite set of elements.
+\end{itemize}
+
+They are defined in the package \str{act4e_interfaces} which is in the repository \str{ACT4E/ACT4E-interfaces}.
+
+\Cref{fig:Setoid-inheritance} shows their relation in an UML diagram.
+The arrow means ``inherits from''.
+
+\begin{marginfigure}
+    \includesag{setoid-finiteset}
+
+    \caption{UML inheritance diagram}
+    \label{fig:Setoid-inheritance}
+\end{marginfigure}
+
+\Cref{lst:Setoid} shows the interface for \Setoid.
+
+\classlisting{Setoid}
+
+The class \Setoid  derives from \ABC, which means \emph{abstract base class}; it tells the interpreter that some of the methods of the class will have to be implemented by the subclasses.
+This is the equivalent of the ``virtual'' methods in C++.
+The methods that need to be implemented are marked by a decorator \pystr|@abstractmethod|.
+For \Setoid, we ask that the implementer implements the \funcname{contains} function, and they can optionally implement \funcname{equal}.
+
+This is the semantics of the first three methods:
+
+\begin{itemize}
+    \item The method \funcname{contains} checks if an element is part of this set.
+    \item The method \funcname{equal} checks if two elements are the same.
+          The default way to do this is to use Python's equality operator (which calls the \pystr|__equal__| method of the class of the first object); later we will see cases in which we might want to choose something different.
+    \item The method \funcname{apart} checks that two elements are ``apart''.
+          You can ignore this for the entire first volume, but it will become more relevant later when we talk more in detail about constructivism.
+          \footnote{%
+              See \href{https://en.wikipedia.org/wiki/Apartness_relation}{Apartness relation} on Wikipedia.
+          }
+\end{itemize}
+
+There are other methods that have to do with serializing/deserializing the data:
+
+\begin{itemize}
+    \item The method \funcname{save} saves an object into a ``concrete representation'' \ConcreteRepr.
+          By that we mean something that can be serialized to YAML.
+    \item The method \funcname{load} does the inverse.
+\end{itemize}
+
+Note that YAML supports the following types: \pystr{int}, \pystr{bool}, \pystr{float}, \pystr{datetime},
+, \pystr{dict}, \pystr{list}.
+Most of Python values are representable in YAML.
+The exception is class instances.
+For that you need to come up with a way to represent the data.
+For example, you might have the class \classname{Vector}:
+
+\begin{minted}{python}
+@dataclass
+class Vector:
+    x: int
+    y: int
+    z: int
+
+a = V(1,2,3)
+\end{minted}
+
+You might choose one of these possible variations for serialization:
+
+\begin{tabular}{ll}
+    Serialize as array      &
+    \begin{minipage}{4cm}
+        \begin{minted}{python}
+[1, 2, 3]
+        \end{minted}
+    \end{minipage}
+    \\
+    Serialize as dictionary &
+    \begin{minipage}{4cm}
+        \begin{minted}{python}
+{'x': 1, 'y': 2, 'z': 3}
+        \end{minted}
+    \end{minipage}
+\end{tabular}
+
+The \Setoid is the one that knows how to serialize its elements.
+
+The code contains also typing annotations.
+The symbol \Element, like the others we will see later, such as \Object and \Morphism, are simple aliases to Python's \classname{object} class; which means that they are not specifying the type at all.
+However, they are useful for intuition.
+The latest versions of Python have supported typing annotations with generics, so we could have chosen to use those and have more accurate typing, however we want these exercises to be accessible to all.
+
+\Cref{lst:EnumerableSet} shows the interface for \EnumerableSet:
+
+\classlisting{EnumerableSet}
+
+The class inherits from \Setoid and adds one methods:
+\begin{itemize}
+    \item The method \funcname{elements} returns a Python \Iterator: this is something that you can iterate.
+\end{itemize}
+\Cref{lst:FiniteSet} shows the interface for \FiniteSet.
+
+\classlisting{FiniteSet}
+
+The additional method:
+\begin{itemize}
+    \item The method \funcname{size} returns the size of the set.
+\end{itemize}
+
+\begin{marginfigure}
+    \begin{minted}{yaml}
+elements: [a, b, c]
+    \end{minted}
+    \caption{Example shown in YAML format.}
+    \label{fig:set1}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \begin{minted}{python}
+{ "elements": ["a", "b", "c"] }
+    \end{minted}
+    \caption{We show data formats in YAML because it is terse, but in the exercises you will receive the Python data structure directly.}
+    \label{fig:as-python}
+\end{marginfigure}
+
+You will have to implement the \FiniteSet class as part of the exercise.
+
+%\subsection*{Representation}
+
+We have defined formats for all the structures to be used in the exercises.
+The file format for \FiniteSet is shown in \cref{fig:set1}.
+The file represents a dictionary with only one field called \fieldname{elements}, which contains a list of elements.
+YAML can represent most primitive data format of Python, as well as lists and dictionaries.
+We visualize the data samples in the book using YAML, but you never have to deal with YAML yourself.
+You can expect to receive a Python data structure as in~\cref{fig:as-python}.
+
+\begin{codeexercise}[\exname{TestFiniteSetRepresentation}]
+    \label{ex:setrepr}
+    The first exercise is to implement the methods that read and write from this file format.
+    You have to implement the interface \FiniteSetRepresentation shown in \cref{lst:FiniteSetRepresentation}.
+    As part of the exercise, you will also have to implement a concrete subclass of \FiniteSet.
+\end{codeexercise}
+
+\begin{longcode}
+    \centering
+    \caption{}\label{lst:FiniteSetRepresentation}
+    \classsource{FiniteSetRepresentation}{remove_comments=True}
+\end{longcode}
+
+For now, you can ignore the argument \pystr{h: IOHelper}.
+That is an interface we will need later when serializing large objects.
+
+%
+\begin{marginfigure}
+    \includesag{dirtree-relevant}
+    \caption{Relevant files for the moment}
+    \label{fig:dirtree-relevant}
+\end{marginfigure}
+
+\subsection{Walk-through for first exercise}
+
+We are going to solve this exercise together.
+
+We assume that you have checked out the repository as explained in the setup section.
+
+Of all the files in the repository, we only need the ones displayed in \cref{fig:dirtree-relevant}.
+
+We can start by checking if this is a valid solution.
+There is a recipe for this in the \files{Makefile}.
+Type this:
+
+\begin{console}
+    make check-TestFiniteSetRepresentation
+\end{console}
+
+Here \exname{TestFiniteSetRepresentation} is the code name for the exercise.
+You can check other exercises by changing the name.
+
+This will fail; it will complain saying that it didn't even find any code implementing the exercise.
+
+Create a file called \files{first.py} in the \files|src/act4e_solutions| directory.
+This file will contain the implementation of the classes.
+
+For now we are just going to add non-functional code for the classes,
+as in \cref{lst:act4e_book_examples.empty}.
+
+\begin{longcode}
+    \caption{}
+    \visualizemodule{act4e_book_examples.empty}{}
+
+    \label{lst:act4e_book_examples.empty}
+\end{longcode}
+
+Now modify \files|__init__.py| to import all the symbols from the \files{first} module.
+
+\begin{minted}{python}
+from .first import *
+\end{minted}
+
+At this point you can check again by typing:
+
+\begin{console}
+    make check-TestFiniteSetRepresentation
+\end{console}
+
+The program will tell you that it found the code supposedly implementing the function,
+but that the tests failed.
+All of our functions returned \pystr{None}.
+
+At this point we need to implement the rest of the code.
+
+For example, \cref{lst:act4e_book_examples.f1} is a valid implementation of \FiniteSet.
+
+\begin{longcode}
+    \caption{}
+    \visualizemodule{act4e_book_examples.f1}{}
+    \label{lst:act4e_book_examples.f1}
+\end{longcode}
+
+The loading and saving of the data is very simple.
+To load just take the \fieldname{elements} field of the data structure and give it to \classname{MyFiniteSet}.
+To save, reconstruct the list elements from the \classname{MyFiniteSet} instance by using the method \funcname{elements}, which returns an iterator.
+Note that the \funcname{save} function you have to implement must work for all \FiniteSet instances, not just your particular implementation of \FiniteSet; therefore, you cannot access the \pystr{_elements} field directly.
+An example of this is shown in \cref{lst:act4e_book_examples.f2}.
+
+\begin{longcode}
+    \caption{}
+    \visualizemodule{act4e_book_examples.f2}{}
+    \label{lst:act4e_book_examples.f2}
+\end{longcode}
+
+With this code, the tests should pass.
+Try again to run:
+
+\begin{console}
+    make check-TestFiniteSetRepresentation
+\end{console}
+
+Note that the types used by the function \funcname{save} of \classname{MyFiniteSetRepresentation} is \FiniteSet,
+not \classname{MyFiniteSet}.
+The method must be able to work for \emph{any} implementation of  \FiniteSet,
+not just yours.
+In fact, the tester will try to call that function with a different implementation.
+
+Note that the implementation above uses this line to get the elements:
+
+\begin{minted}{python}
+all_elements = sorted(f.elements())
+\end{minted}
+
+This is correct because it is using the method \funcname{elements} that all implementations of \FiniteSet need to have.
+What could be wrong is using code like the following:
+
+\begin{minted}{python}
+all_elements = sorted(f._elements)
+\end{minted}
+
+This code accesses the attribute \pystr|_elements| of the class \classname{MyFiniteSet}.
+It will not work with other implementations.
+In fact, the tests will fail.
