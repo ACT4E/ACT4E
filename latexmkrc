@@ -1,5 +1,5 @@
 $pdflatex='pdflatex --shell-escape -synctex=1 -halt-on-error -file-line-error %A ';
-$pdflatex .= ' && cp %A.pdf %A-tmp.pdf && cp %A.synctex.gz %A-tmp.synctex.gz  ';
+$pdflatex .= ' && cp %A.pdf %A-tmp.pdf. && mv %A-tmp.pdf. %A-tmp.pdf && cp %A.synctex.gz %A-tmp.synctex.gz  ';
 
 $pdf_mode = 1;
 $max_repeat=20;
