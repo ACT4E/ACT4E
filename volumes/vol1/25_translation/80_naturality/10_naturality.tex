@@ -5,9 +5,25 @@
 \linkvideo{spring2021-nat-trafos:diagrams} % Diagrams
 %\linkvideo{spring2021-nat-trafos:natural-trafos} % Natural transformations
 
-The name ``natural transformation'' has historical roots -- do not worry if the concept itself does not seem natural to you at first! We will try to explain it in a way that is hopefully at least clear. 
+The name ``natural transformation'' has historical roots -- do not worry if the concept itself does not seem natural to you at first! We will try to explain it in a way that is hopefully at least clear. To give motivation and a concrete illustration, we'll start with an example. 
 
-The situation we will start from is when we have two functors $\funa : \CatC \fto \CatD$  and $\funb : \CatC \fto \CatD$, sharing the same source and target, respectively. A natural transformation from $\funa$ to $\funb$ is a kind of ``map'' that relates the two functors. How might one define such a thing? 
+\subsection{Updating databases}
+
+Suppose a university is keeping a database of its alumni. The database contains a list of all the students that ever attended the university (each of them has a unique student ID number), as well as for example information about students' names, discipline of study, date of graduation, etc. 
+
+We have seen that an instance of a database can be modeled as a functor whose target is the category of sets, and whose source is a category encoding the abstract architecture of the database. 
+
+The architecture of the database in our example might be encoded by a category with four objects and three non-identity morphisms, as depicted in [REF]. The object $\styleobj{S}$ stands for $\emph{Student}$, $\styleobj{D}$ stands for $\emph{Discipline}$, $\styleobj{N}$ stands for $\emph{Name}$, and $\styleobj{Y}$ stands for $\emph{Year}$. Call this category $\CatC$. A database instance $\funa : \CatC \fto \Set$ entails specifying a set $\funa(\styleobj{S})$ of student IDs, a set $\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, etc. ... and so on. It also entails defining functions for each of the arrows in $\CatC$. For example, $\funa(\stylemorph{studied}) : \funa(\styleobj{S}) \mto \funa(\styleobj{D})$ is the function that assigns to each student ID the name of the discipline that that student studied. 
+
+
+For simplicity, we'll just focus on two aspects of the data: student ID numbers and the disciplines of study. 
+Let's assume the university updates its database once a year. This means, for example, adding the graduates of that year to the total list of graduates. 
+
+\todo{@J: continue writing here}
+
+\subsection{The formal definition}
+
+The general situation we will start from is when we have two functors $\funa : \CatC \fto \CatD$  and $\funb : \CatC \fto \CatD$, sharing the same source and target, respectively. A natural transformation from $\funa$ to $\funb$ is a kind of ``map'' that relates the two functors. How might one define such a thing? 
 
 Consider a morphism $\mora : \Obja \mto \Objb$ in the category $\CatC$. Under the functor $\funa$ it will be mapped to some morphism $\funa(\mora): \funa(\Obja) \mto \funb(\Objb)$ in $\CatD$, and under the functor $\funb$ it will be mapped to some other morphism $\funb(\mora): \funb(\Obja) \mto \funb(\Objb)$, also in $\CatD$. 
 
@@ -36,7 +52,7 @@ As an additional condition, we'll require that  $\ntrafoa_\Obja$ and $\ntrafoa_\
 \begin{equation}
 \funa(\mora) \mthen \ntrafoa_\Objb = \ntrafoa_\Obja \mthen \funb(\mora).
 \end{equation}
-
+\todo{@J: ideally say more here to motivate or explain this. Perhaps include somewhere this perspective: Natural transformations are meant to capture the idea that a transformation is natural in the sense of not depending on any arbitrary choices. If a transformation does depend on arbitrary choices, the arrows alpha X and alpha Y would not be reusable but would have to change when f changes.}
 
 %
 \begin{marginfigure}
@@ -47,8 +63,10 @@ As an additional condition, we'll require that  $\ntrafoa_\Obja$ and $\ntrafoa_\
 \end{marginfigure}
 %
 
-Now consider not only a single morphism $\mora : \Obja \mto \Objb$ in $\CatC$ being mapped by $\funa$ and $\funb$, respectively, but \emph{all} of the category $\CatC$. Under $\funa$, the category $\CatC$ is mapped to a -- possibly very complicated --  diagram in $\CatD$ (a directed graph of objects and morphism comprising the image of $\funa$), and similarly, under $\funb$, the category $\CatC$ is mapped to another diagram in $\CatD$ (the image of $\funb$). To relate the image of $\funa$ to the image of $\funb$ we can proceed in the same way as above: for each object $\Obja$ in $\CatC$, we choose a morphism $\ntrafoa_\Obja : \funa(\Obja) \mto \funb(\Objb)$ in $\CatD$. In other words, we have a collection of morphisms $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$ indexed by the objects of $\CatC$. 
-This gives rise to lots of squares of the kind in \cref{fig:naturality-square}, which we will require to be commutative (this amounts to a condition on the collection $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$).  
+Now consider not only a single morphism $\mora : \Obja \mto \Objb$ in $\CatC$ being mapped by $\funa$ and $\funb$, respectively, but \emph{all} of the category $\CatC$. Under $\funa$, the category $\CatC$ is mapped to a -- possibly very complicated --  diagram in $\CatD$ (a directed graph of objects and morphism comprising the image of $\funa$), and similarly, under $\funb$, the category $\CatC$ is mapped to another diagram in $\CatD$ (the image of $\funb$). 
+
+To relate the image of $\funa$ to the image of $\funb$ we can proceed in the same way as above: for each object $\Obja$ in $\CatC$, we choose a morphism $\ntrafoa_\Obja : \funa(\Obja) \mto \funb(\Objb)$ in $\CatD$. In other words, we have a collection of morphisms $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$ indexed by the objects of $\CatC$. 
+This gives rise to lots of squares of the kind in \cref{fig:naturality-square}, which we will require to be commutative. It is because of this commutativity condition, which is a condition on the collection $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$, that some mathematicians would say that the collection $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$ is a ``coherent'' or ``natural'' way to relate the image of $\funa$ to the image of $\funb$. (This does not mean, however, that there is at most one natural transformation between any two given functors - on the contrary, there might be many!)
 
 
 In \cref{fig:two-naturality-squares} we have illustrated a situation involving three objects and two morphisms in $\CatC$, giving rise to two squares. We have ``glued'' the two squares together since they share an edge (this a more compact way of drawing them). Note that because each of the two component squares in the diagram commute, so does the entire diagram. 
@@ -91,11 +109,19 @@ In \cref{fig:two-naturality-squares} we have illustrated a situation involving t
     \end{enumerate}
 \end{ctdefinition}
 
-The diagrams \cref{fig:def-naturality-square} are often called \emph{naturality squares}, and a natural transformation~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely as follows:
+To reiterate: a natural transformation $\ntrafoa$ is a \emph{collection} $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$, satisfying the naturality conditions, and the individual morphisms $\ntrafoa_\Obja$ are its \emph{components}. This is analogous to how  a sequence $a = (a_n)_{n \in \natnumbers}$ has terms or a vector $v = (v_1, ... , v_n)$ has components. 
 
-\begin{equation}
-    \middlesag{55_natural_1}
-\end{equation}
+The diagrams \cref{fig:def-naturality-square} are often called \emph{naturality squares}, and a natural transformation~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely as in \cref{fig:nat_trans_globular}. 
+
+\begin{marginfigure}
+    \centering
+        \includesag{55_natural_1}
+    \caption{}
+    \label{fig:nat_trans_globular}
+\end{marginfigure}
+%\begin{equation}
+%    \middlesag{55_natural_1}
+%\end{equation}
 \begin{figure}[h!]
     \centering
     \begin{ctdefinitionshade}
@@ -104,6 +130,8 @@ The diagrams \cref{fig:def-naturality-square} are often called \emph{naturality 
     \caption{}
     \label{fig:nat_trans_graphically}
 \end{figure}
+
+\subsection{Natural isomorphisms}
 
 
 \begin{ctdefinition}[Natural isomorphism]
