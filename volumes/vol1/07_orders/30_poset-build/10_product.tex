@@ -7,21 +7,16 @@ We can think of the product of posets.
 
 \begin{definition}[Product of posets]
     \label{def:productposet}
-    Given two posets~$\posA=\tupp{\posAset, \posAleq}$
-    and~$\posB=\tupp{\posBset, \posBleq}$, the \emph{product poset} is~$\posA\times \posB=\tup{\posAset \times \posBset, \ordleq_{\posA\times \posB}}$, where~$\posAset \times \posBset$ is the Cartesian product of the sets~$\posAset$ and $\posBset$ (\cref{def:cartesian-product}), and the order~$\posleqof{\posA \times \posB}$ is given by:
+    Given two posets~$\posA=\tupp{\posAset, \posAleq}$ and~$\posB=\tupp{\posBset, \posBleq}$, the \emph{product poset} is
+    \begin{equation}
+        \posA\Ctimes \posB=\tup{\posAset \cartprod \posBset, \ordleq_{\posA\Ctimes \posB}},
+    \end{equation}
+    where~$\posAset \cartprod \posBset$ is the Cartesian product of the sets~$\posAset$ and $\posBset$ (\cref{def:cartesian-product}), and the order~$\posleqof{\posA \Ctimes \posB}$ is given by:
     \begin{equation}
         \prfdoubleperiod{\tup{\posAel_1, \posBel_1}
-            \posleqof{\posA\times \posB}
+            \posleqof{\posA\Ctimes \posB}
             \tup{\posAel_2, \posBel_2}}{(\posAel_1 \posAleq \posAel_2) \wedge
             (\posBel_1 \posBleq \posBel_2)}
-        %\tup{\posAel_1, \posBel_1}
-        %\posleqof{\posA\times \posB}
-        %\tup{\posAel_2, \posBel_2}
-        %\quad
-        %\Leftrightarrow
-        %\quad
-        %(\posAel_1 \posAleq \posAel_2) \wedge
-        %(\posBel_1 \posBleq \posBel_2).
     \end{equation}
 \end{definition}
 Recalling the pizza recipes example, we have the two posets representing time and money.
@@ -53,24 +48,30 @@ Given that we want to minimize both time and costs, by considering the money pos
     Put in text.
 }
 
-\begin{exercise}
-    \label{ex:width}
-    If you know the width of the posets~$\posA$ and~$\posB$, can you compute the width of~$\posA\cartprod\posB$?
-\end{exercise}
-\begin{solution}
-    From~\cite{bezrukovantichains}, we know
-    \begin{equation*}
-        \posetwidth(\posA)\cartprod \posetwidth(\posB)\leq \posetwidth(\posA\cartprod \posB)\leq \min \{ \vert \posA\vert \cdot \posetwidth(\posB),\vert \posB \vert \cdot \posetwidth(\posA)\}.
-    \end{equation*}
-\end{solution}
+\subsection{Measuring the product}
+If we know the height/width of the posets~$\posA$ and~$\posB$, it is not possible to know exactly the height/width of~$\posA\Ctimes\posB$.
+However, we can find some bounds.
+\begin{widepar}
+    \begin{lemma}
+        If $\posA,\posB$ are non-empty posets, then
+        \begin{align}
+            \posetwidth(\posA) \cdot \posetwidth(\posB)
+             & \leq \posetwidth(\posA\Ctimes \posB)
+            \leq \min \{
+            \vert \posAset \vert \cdot \posetwidth(\posB),\vert \posBset \vert \cdot \posetwidth(\posA)
+            \}, \label{eq:bound-width} \\
+            \posetheight(\posA)+\posetheight(\posB)-1
+             & \leq
+            \posetheight(\posA\Ctimes \posB).
+            \label{eq:bound-height}
+        \end{align}
+        Moreover, these bounds are tight.
+    \end{lemma}
+\end{widepar}
 
-\begin{exercise}
-    \label{ex:height}
-    If you know the height of the posets~$\posA$ and~$\posB$, can you compute the height of~$\posA\cartprod\posB$?
-\end{exercise}
-%
-\begin{solution}
-    Yes.
+\begin{proof}
+    The bound \cref{eq:bound-width} can be found in ~\cite{bezrukovantichains}.
+    As for \cref{eq:bound-height}, we have the following proof.
     First of all, one can construct the longest chain in~$\posA$:
     \begin{equation*}
         A=\{\posAel_1,\ldots, \posAel_{\posetheight(\posA)}\}.
@@ -84,10 +85,10 @@ Given that we want to minimize both time and costs, by considering the money pos
         C=\{ \tup{\posAel_1,\posBel_1},\tup{\posAel_2,\posBel_1},\ldots, \tup{\posAel_{\posetheight(\posA)}, \posBel_1}, \tup{\posAel_{\posetheight(\posA)}, \posBel_2},\ldots\},
     \end{equation*}
     which has height~$\posetheight(\posA)+\posetheight(\posB)-1$.
-    So we know that at least~$\posetheight(\posA\cartprod \posB)\geq \posetheight(\posA)+\posetheight(\posB)-1$.
-    Now, consider a chain~$\{\tup{\posAel_1,\posBel_1},\ldots, \tup{\posAel_n,\posBel_n}\}$ in~$\posA\cartprod \posB$.
-    In general, this means that at least a coordinate of~$\tup{\posAel_{i},\posBel_{i}}$ must increase in$\tup{\posAel_{i+1},\posBel_{i+1}}$.
+    So we know that at least~$\posetheight(\posA\Ctimes \posB)\geq \posetheight(\posA)+\posetheight(\posB)-1$.
+    Now, consider a chain~$\{\tup{\posAel_1,\posBel_1},\ldots, \tup{\posAel_n,\posBel_n}\}$ in~$\posA\Ctimes \posB$.
+    In general, this means that at least a coordinate of~$\tup{\posAel_{i},\posBel_{i}}$ must increase in~$\tup{\posAel_{i+1},\posBel_{i+1}}$.
     The first coordinate can only increase~$\posetheight(\posA)-1$ times, and the second one~$\posetheight(\posB)-1$ times.
     Summing up, the total number of elements in the chain is \emph{at most}~$\posetheight(\posA)+\posetheight(\posB)-1$.
-    Note that this result holds only assuming that~$\posA$ and~$\posB$ are not empty (for that case,~$\posetheight(\posA\cartprod \posB)=0$).
-\end{solution}
+    Note that this result holds only assuming that~$\posA$ and~$\posB$ are not empty (for that case,~$\posetheight(\posA\Ctimes \posB)=0$).
+\end{proof}
