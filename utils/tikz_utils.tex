@@ -203,15 +203,20 @@ backgrounds}
 }
 
 \newcommand{\saginclude}[1]{%
-\def\pdffile{\sagdir/\detokenize{#1}.pdf}
-  \def\srcfile{\sagdir/\detokenize{#1}.tikz}
-  \ifthenelse{\boolean{cachepdf}}{%
-    \IfFileExists{\pdffile}{%
-      \includegraphics[scale=1]{\pdffile}
-    }{\input{\srcfile}}
-  }{%
-    \input{\srcfile}%
-  }%
+    \def\pdffile{\sagdir/\detokenize{#1}.pdf}
+    \def\srcfile{\sagdir/\detokenize{#1}.tikz}
+    \ifthenelse{\boolean{cachepdf}}{%
+        \IfFileExists{\pdffile}{%
+            \Filemodcmp{\srcfile}{\pdffile}{
+                \input{\srcfile}
+                {\color{red}\bfseries PDF cache is outdated; using tikz.}
+            }{
+                \includegraphics[scale=1]{\pdffile}
+            }
+        }{\input{\srcfile}}
+    }{%
+        \input{\srcfile}%
+    }%
 }
 
 \newcommand{\equationsag}[2]{%
@@ -668,4 +673,8 @@ minimum width =2cm,
             #1
         },
     },
+}
+
+\newcommand{\labelob}[2]{
+    \node[left=0mm of #1.south west, anchor=south east] {#2};
 }
