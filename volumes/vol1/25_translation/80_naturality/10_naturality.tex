@@ -10,7 +10,7 @@ We will try to explain it in a way that is hopefully at least clear.
 To give motivation and a concrete illustration, we'll start with an example.
 
 \devel{
-\subsection{Updating databases}
+\subsection{An alumni database}
 
 Suppose a university is keeping a database of its alumni.
 The database contains a list of all the students that ever attended the university (each of them has a unique student ID number), as well as for example information about students' names, discipline of study, date of graduation, etc.
@@ -29,17 +29,37 @@ We have seen that an instance of a database can be modeled as a functor whose ta
 The architecture of the database in our example might be encoded by a category with four objects and three non-identity morphisms, as depicted in \cref{fig:student_database_schema}.
 The object $\styleobj{S}$ stands for $\emph{Student}$, $\styleobj{D}$ stands for $\emph{Discipline}$, $\styleobj{N}$ stands for $\emph{Name}$, and $\styleobj{Y}$ stands for $\emph{Year}$.
 Call this category $\CatC$.
-A database instance $\funa : \CatC \fto \Set$ entails specifying a set $\funa(\styleobj{S})$ of student IDs, a set $\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, etc. .
-.. and so on.
+A database instance $\funa : \CatC \fto \Set$ entails specifying a set $\funa(\styleobj{S})$ of all student IDs, a set $\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, etc. .
+... and so on.
 It also entails defining functions for each of the arrows in $\CatC$.
 For example, $\funa(\stylemorph{studied}) : \funa(\styleobj{S}) \mto \funa(\styleobj{D})$ is the function that assigns to each student ID the name of the discipline that that student studied.
 
+\subsection{Updating the database}
+
 For simplicity, we'll just focus on two aspects of the data: student ID numbers and the disciplines of study.
 Let's assume that the university updates its alumni database once a year.
-This means, for example, adding the graduates of that year to the total list of graduates. One year (say, 2022) the university also decides to simplify the way it attributes disciplines to students in the database.
+This means, for example, adding the graduates of that year to the total list of graduates. 
 
-To model the situation, let $\funa : \CatC \fto \Set$ be the database instance for the year 2021, and let $\funb : \CatC \fto \Set$ be the database instance for the year 2022. Suppose the student IDs are in some standardized format, for example a code of the kind $17-371-802$, where each of the three parts of the code are calculated/assigned by some rule (\text{e.g.} the ``17'' here stands for 2017, the year the student registered with the university, etc.). 
+To model the situation, let $\funa : \CatC \fto \Set$ be the database instance for the year 2021, and let $\funb : \CatC \fto \Set$ be the database instance for the year 2022. For concreteness, let's suppose the student IDs are in some standardized format, for example a code of the kind 17-371-802, where each of the three parts of the code are calculated/assigned by some rule (\text{e.g.} the ``17'' here stands for 2017, the year the student registered with the university, etc.). 
 
+Since new students register to the university each year, the set $\funa(\styleobj{S})$ of all student IDs registered up to the end of 2020 is a subset of the set $\funb(\styleobj{S})$ of student IDs up to the end of 2022. This means there is an inclusion function $\ntrafoa_{\styleobj{S}} :  \funa(\styleobj{S}) \mto \funb(\styleobj{S})$. 
+
+Now suppose that in 2022 the university decides to simplify the way it attributes disciplines to students in the database. For instance, instead of the discipline names 
+\begin{equation}
+\funa(\styleobj{D}) = \makeset{ \text{mechanical engineering},  \text{civil engineering}, \text{applied physics}, \text{theoretical physics}, \text{pure mathematics}, \text{applied mathematics} }, 
+\end{equation}
+the new discipline names are just
+\begin{equation}
+\funb(\styleobj{D}) = \makeset{ \text{engineering}, \text{physics}, \text{mathematics} }.
+\end{equation}
+In order to implement these changes, we use a function $\ntrafoa_{\styleobj{D}}: \funa(\styleobj{D}) \mto \funb(\styleobj{D})$ which maps the old discipline names to the corresponding new ones in the obvious way. For instance, 
+\begin{equation*}
+\ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
+\end{equation*}
+
+The functions $\ntrafoa_\styleobj{S}$ and $\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance $\funb$ relates coherently with the older database instance $\funa$. Concretely, we want that if a student ID in $ \funb(\styleobj{S})$ is inherited from $\funa(\styleobj{S})$ -- in other words, if it is in the image of $\ntrafoa_{\styleobj{S}}$ --  then we want that its associated discipline in the database instance $\funb$ is the same as if we first computed the student's discipline in the older database instance $\funa$, and then mapped it to $\funb$ using the function $\ntrafoa_{\styleobj{D}}$. 
+
+This can be formulated succinctly by saying that we want the diagram in figure [REF] to commute!
 
 
 \todo{@J: continue writing here}
