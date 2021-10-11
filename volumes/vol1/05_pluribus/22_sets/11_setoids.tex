@@ -1,5 +1,95 @@
-\section{Set theory vs type theory}
-\begin{publictodo}
-    Short introduction to types for what is needed by the exercises.
-\end{publictodo}
+\sectionexercises{Type theory}
+
+\begin{remark}
+    You can skip this section until you want to get started on the exercises.
+\end{remark}
+
+At a basic level, the notion of set seems uncontroversial.
+However, there are some difficulties that led to the development of \emph{type theory},
+which can be used as an alternative foundation to mathematics.
+Type theory is also used as the foundation for computing; the exercises utilize the type theory nomenclature.
+
+\todotext{Find a basic reference to give there}
+
+In type theory there are two basic kinds: \emph{terms} and \emph{types}.
+A term is a formal expression built from the constructions in a language.
+A term might have a type.
+We write $a : T$ to say that $a$ has type $T$.
+For example, one could say $42 : \aword{int}$ where $\aword{int}$ is the type of integers.
+
+In set theory there are elements and sets.
+It is assumed that elements have ``an identity'': each element is equal to itself and different from the other elements.
+Furthermore, elements might \emph{belong} to sets.
+
+In type theory the concepts of \emph{sets} and \emph{belonging} are not primitive and one needs to build them from scratch.
+For example, one can define a \emph{setoid} as a set-like structure in type theory.
+
+\begin{ctdefinition}[Setoid]
+    A setoid is a tuple $S = \tup{T, \aword{contains}, \aword{equal}}$ where
+    \begin{itemize}
+        \item $T$ is a type;
+        \item $\aword{contains}:T\to\Bool$ is a function that tells use whether an element belongs to the setoid;
+        \item $\aword{equal}:T\times T\to\Bool$ is the equality;
+              % \item $\aword{apart}:T\times T\to\Bool$ is the apartness function.
+    \end{itemize}
+\end{ctdefinition}
+
+% Ignore for now why we need $\aword{apart}$ in addition to $\aword{equal}$; we will return to this topic much later in the exposition.
+
+Here is an example that shows the advantages of such construction.
+Imagine we want to represent rational numbers with two numbers, nominator and denominator, using arbitrary integers.
+We want to define a setoid for which the element $\tup{2, -4}$ is equal to $\tup{-1, 2}$.
+Assume that we already have a setoid for integers defined, so that we have a function $\aword{equal}_{\aword{int}}$
+
+We can do it as follows:
+\begin{equation}
+    S_1 =
+    \begin{cases}
+        \begin{aligned}
+            T                & =
+            \aword{Tuple}[\aword{int}, \aword{int}]
+            \\
+            \aword{contains} & = \tup{a,b} \mapsto \aword{contains}_{\aword{int}}(a)  \wedge \aword{contains}_{\aword{int}}(b)
+            \\
+            \aword{equal}    & = \tup{\tup{a,b}, \tup{c,d}}
+            \mapsto \aword{equal}_{\aword{int}} (a\cdot c, b\cdot d)
+        \end{aligned}
+    \end{cases}
+\end{equation}
+
+One can define a different setoid with the same underlying type $\aword{Tuple}[\aword{int}, \aword{int}]$ where a pair of elements is interpreted as an interval:
+\begin{equation}
+    S_2 =
+    \begin{cases}
+        \begin{aligned}
+            T                & = \aword{Tuple}[\aword{int}, \aword{int}] \\
+            \aword{contains} & = \tup{a,b} \mapsto
+            \aword{contains}_{\aword{int}}(a)
+            \booland
+            \aword{contains}_{\aword{int}}(b)
+            \booland
+            (a\leq b) \\
+            \aword{equal}    & = \tup{\tup{a,b}, \tup{c,d}}
+            \mapsto
+            \aword{equal}_{\aword{int}}(a,c)
+            \booland
+            \aword{equal}_{\aword{int}}(b,d)
+        \end{aligned}
+    \end{cases}
+\end{equation}
+
+The elements $\tup{1,4}$ and $\tup{-2, 8}$ are in both setoids.
+However, we have that
+\begin{equation}
+    \aword{equal}_{S_1} (\tup{1,4}, \tup{-2, 8}) = \true
+    \qqand
+    \aword{equal}_{S_2} (\tup{1,4}, \tup{-2, 8}) = \false .
+\end{equation}
+Every time we have an equality we should think about in which setoid the equality is understood.
+We would rewrite the above as
+\begin{equation}
+    \tup{1,4} =_{S_1} \tup{-2, 8}
+    \qqand
+    \tup{1,4} \neq_{S_2} \tup{-2, 8}.
+\end{equation}
 
