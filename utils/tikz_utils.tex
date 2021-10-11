@@ -26,7 +26,7 @@ backgrounds}
 
 
 
-\tikzstyle{block} = [draw, rectangle, minimum height=2em, minimum width=3em,thick]
+\tikzstyle{block} = [draw=morphisms, rectangle, minimum height=2em, minimum width=3em, thick]
 
 %\tikzcdset{every label/.append style = {font = \footnotesize}}
 
@@ -203,15 +203,20 @@ backgrounds}
 }
 
 \newcommand{\saginclude}[1]{%
-\def\pdffile{\sagdir/\detokenize{#1}.pdf}
-  \def\srcfile{\sagdir/\detokenize{#1}.tikz}
-  \ifthenelse{\boolean{cachepdf}}{%
-    \IfFileExists{\pdffile}{%
-      \includegraphics[scale=1]{\pdffile}
-    }{\input{\srcfile}}
-  }{%
-    \input{\srcfile}%
-  }%
+    \def\pdffile{\sagdir/\detokenize{#1}.pdf}%
+    \def\srcfile{\sagdir/\detokenize{#1}.tikz}%
+    \ifthenelse{\boolean{cachepdf}}{%
+        \IfFileExists{\pdffile}{%
+            \Filemodcmp{\pdffile}{\srcfile}{%
+                \includegraphics[scale=1]{\pdffile}%
+            }{%
+                \PackageWarning{ACT4E}{TikZ file is more recent than outdated pdf cache \pdffile}%
+                \input{\srcfile}%
+            }%
+        }{\input{\srcfile}}%
+    }{%
+        \input{\srcfile}%
+    }%
 }
 
 \newcommand{\equationsag}[2]{%
@@ -409,13 +414,16 @@ backgrounds}
 \newcommand{\stain}[1]{
 \scalebox{0.08}{
 \begin{tikzpicture}[use Hobby shortcut,closed=true]
-      \draw[fill=#1,thick, rounded corners=0](-2.5,-0.5).. (-3.5,0).. (-2.5,0.5).. (-3,1).. (-2,1.5).. (-2,3).. (-1,2.5).. (1,4.5).. (2.5,3).. (3,3.5).. (3.5,3).. (3,2).. (4.5,2).. (4.5,0).. (3,1).. (2.5,-0.5).. (3.5,-1.5).. (1.5,-1).. (0.5,-2).. (-2,-2.5).. (-1.5,-1).. (-2.5,-1.5).. (-2.5,-0.5);
+      % \draw[fill=#1,thick,rounded corners=0]
+      % especially when scaled, the border is too thin
+        % 0.5pt/0.08 = 6
+      \draw[fill=#1,line width=6,rounded corners=0](-2.5,-0.5).. (-3.5,0).. (-2.5,0.5).. (-3,1).. (-2,1.5).. (-2,3).. (-1,2.5).. (1,4.5).. (2.5,3).. (3,3.5).. (3.5,3).. (3,2).. (4.5,2).. (4.5,0).. (3,1).. (2.5,-0.5).. (3.5,-1.5).. (1.5,-1).. (0.5,-2).. (-2,-2.5).. (-1.5,-1).. (-2.5,-1.5).. (-2.5,-0.5);
 \end{tikzpicture}}}
 
 \newcommand{\stainfilled}{
 \scalebox{0.08}{
 \begin{tikzpicture}[use Hobby shortcut,closed=true]
-      \draw[pattern=custom north west lines,hatchspread=3pt,hatchthickness=1pt,thick, draw=black, rounded corners=0](-2.5,-0.5).. (-3.5,0).. (-2.5,0.5).. (-3,1).. (-2,1.5).. (-2,3).. (-1,2.5).. (1,4.5).. (2.5,3).. (3,3.5).. (3.5,3).. (3,2).. (4.5,2).. (4.5,0).. (3,1).. (2.5,-0.5).. (3.5,-1.5).. (1.5,-1).. (0.5,-2).. (-2,-2.5).. (-1.5,-1).. (-2.5,-1.5).. (-2.5,-0.5);
+      \draw[pattern=custom north west lines,line width=6,hatchspread=3pt,hatchthickness=1pt,draw=black, rounded corners=0](-2.5,-0.5).. (-3.5,0).. (-2.5,0.5).. (-3,1).. (-2,1.5).. (-2,3).. (-1,2.5).. (1,4.5).. (2.5,3).. (3,3.5).. (3.5,3).. (3,2).. (4.5,2).. (4.5,0).. (3,1).. (2.5,-0.5).. (3.5,-1.5).. (1.5,-1).. (0.5,-2).. (-2,-2.5).. (-1.5,-1).. (-2.5,-1.5).. (-2.5,-0.5);
 \end{tikzpicture}
 }
 }
@@ -668,4 +676,13 @@ minimum width =2cm,
             #1
         },
     },
+}
+
+% label bottom right
+\newcommand{\labelobleft}[2]{
+    \node[left=0mm of #1.south west, anchor=south east] {#2};
+}
+% label above
+\newcommand{\labelobtop}[2]{
+    \node[above left=0mm of #1.north west, anchor=south west] {#2};
 }
