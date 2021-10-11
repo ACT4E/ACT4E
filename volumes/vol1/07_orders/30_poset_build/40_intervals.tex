@@ -1,0 +1,101 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Poset of intervals}
+\linkvideo{spring2021-tradeoffs:tradeoffs:orders:interval-poset} % Poset of intervals
+\begin{definition}[Interval]
+    \label{def:interval}
+    An \emph{interval} of a poset~$\posA$ is a subset of~$\posA$ bounded above and below by two elements.
+    We write
+    \begin{equation}
+        \interv \posela \poselb
+        \definedas
+        \makeset{
+            \poselc \in \posAset :
+            \posela \posAleq \poselc \posAleq \poselb
+        }.
+    \end{equation}
+\end{definition}
+
+\begin{definition}
+    [Poset of intervals $\posint\posA$]
+    \label{def:poset_intervals}
+    Given a poset~$\posA$, one can define a \emph{poset of intervals}~$\posint\posA$
+    by ordering the intervals by reverse inclusion:
+    %
+    \begin{equation}
+        \prfdoubleperiod{
+            \interv \posela \poselb
+            \posleqof{\posint{\posA}}
+            \interv \poselc \poseld
+        }{
+            \interv \posela \poselb
+            \supseteq
+            \interv \poselc \poseld
+        }
+    \end{equation}
+    Equivalently we only need check the bounds:
+    \begin{equation}
+        \prfdoubleperiod{
+            \interv \posela \poselb
+            \posleqof{\posint{\posA}}
+            \interv \poselc \poseld
+        }{
+            (\posela \posAleq \poselc ) \booland (\poseld \posAleq \poselb)
+        }
+    \end{equation}
+    Note that
+    \begin{align}
+        \top_{\posint \posA} & = \emptyset, \\
+        \bot_{\posint \posA} & = \posAset.
+    \end{align}
+\end{definition}
+\todotextjira{510}{Check that the order is consistent with the categorical construction.}
+\begin{exercise}
+    Check that the relation defined in \cref{def:poset_intervals} is indeed a poset.
+\end{exercise}
+\begin{solution}
+    We check the three conditions.
+    \begin{itemize}
+        \item First, we know that~$\tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_1,\posBel_1}$, since $\posAel_1\posAleq \posAel_1$ and $\posBel_1\posAleq \posBel_1$.
+        \item Second,~$\tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_2,\posBel_2}$ and $\tup{\posAel_2,\posBel_2}\posleqof{\posint{\posA}}\tup{\posAel_3,\posBel_3}$ imply
+              \begin{equation}
+                  \tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_3,\posBel_3}.
+              \end{equation}
+        \item Third, if~$\tup{\posAel_1,\posBel_1}\posleqof{\posint{\posA}}\tup{\posAel_2,\posBel_2}$ and $\tup{\posAel_2,\posBel_2}\posleqof{\posint{\posA}}\tup{\posAel_1,\posBel_1}$, then~$\posAel_1=\posAel_2$ and~$\posBel_1=\posBel_2$.
+    \end{itemize}
+\end{solution}
+\vfill
+\clearpage
+\subsection{Set-based filtering}
+\linkvideo{spring2021-tradeoffs:tradeoffs:orders:set-based-filtering} % Set-based filtering
+\todojira{458}{Expand.
+    Need cute pictures of dynamics.
+}
+We now look at an example of \textbf{set-based filtering}, where filtering refers to online inference.
+Suppose that we want to track the value of a quantity~$x\in [0,100]$, without having \emph{a priori} information about~$x$.
+We are equipped with sensors, which periodically measure the quantity~$x$ with some variable precision.
+At time~$t\in \nonNegReals $ they produce an \emph{observation}~$y_t\colon x_t\in [l_t,u_t]$.
+Also, note that the quantity fluctuates randomly, and we bound its ``velocity'' to be~$\dot{x}_t\in [-1,1]$ (except at boundaries).
+At the beginning, our information state~$\bar{i}_0$ could be that~$x\in [0,100]$.
+At time 0, we get an observation~$y_0$, that says~$x\in [21,24]$.
+The new information state can be obtained by ``fusing'' the two inputs we have received about~$x$.
+This corresponds to the intersection
+\begin{equation*}
+    x\in \left( \interv{0}{100} \setintersection \interv{21}{24}\right)\equiv x\in \interv{21}{24}.
+\end{equation*}
+Let's now say we get an observation~$y_1$ which says~$x\in \interv{19}{22}$.
+We now need to take into account the evolution/dynamics of the quantity we are tracking.
+From the interval~$\interv{21}{24}$ we know that the variable could have evolved in~$\interv{20}{25}$ (dynamics are bounded with a unit increase/decrease).
+Therefore, the new information state is given by
+\begin{equation*}
+    x\in \left( \interv{20}{25} \setintersection \interv{21}{24}\right)\equiv x\in \interv{21}{24}.
+\end{equation*}
+One of the structures which could sustain this kind of inference, is the of \emph{posets of intervals} (\cref{def:poset_intervals}).
+
+The Hasse diagram representing a situation related to this diagram could be as reported in \cref{fig:hasse_filtering}.
+\begin{figure}[h!]
+    \centering
+    \includesag{080_hasse_filtering}
+    \caption{}
+    \label{fig:hasse_filtering}
+\end{figure}
