@@ -15,10 +15,11 @@ TikFiles = $(wildcard *.tikz)
 
 PDFGraphics = $(patsubst %.tikz,%.pdf,$(TikFiles))
 Pages = $(patsubst %.tikz,%-page.tex,$(TikFiles))
+PagesPDF = $(patsubst %.tikz,%-page.pdf,$(TikFiles))
 # InputTeXFiles = $(wildcard *_input.tex)
 
 
-all: $(PDFGraphics) $(Pages)
+all: $(PDFGraphics) $(PagesPDF) $(Pages)
 
 pages:  $(Pages)
 
