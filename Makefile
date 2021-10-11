@@ -225,7 +225,7 @@ docker-%:
 		$(tag) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make *'
 
-pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E/sp21
+pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
 
 generate-videos:
 	 python3 -m act4e_videos.parsing \
