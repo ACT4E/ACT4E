@@ -1,0 +1,175 @@
+% !TEX root = chapter-standalone.tex
+
+\section[The categories \Pos and \Lat]{The categories~\Pos~and~\Lat}
+\label{sec:category-Pos}
+In this section, we want to abstract the concept of poset and describe a category in which the objects are posets themselves, and the morphisms are monotone functions between them.
+We call this category~\Pos.
+
+\begin{ctdefinition}[Category \Pos]
+    \label{def:Pos}
+    The category~\iindex{\Pos} is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: The objects of this category are all posets.
+        \item \emph{Morphisms}: The morphisms from a poset~$\Obja$ to a poset~$\Objb$ are the monotone maps from~$\Obja$ to~$\Objb$.
+        \item \emph{Identity morphism}: The identity morphism for the poset~$\Obja$
+              is the identity map~$\catid_\Obja$.
+        \item \emph{Composition operation}: The composition operation is composition of maps.
+    \end{enumerate}
+\end{ctdefinition}
+
+Occasionally we will write~$\mapa \colon \Obja \toinPos \Objb$ to emphasize that a monotone map between posets is a morphism in \Pos.
+
+\devel{
+    \subsection{Why~\Pos is not sufficient for design theory}
+
+    \todojira{85}{@Andrea: Rewrite this without assuming we know what is a design problem.}
+    The category \Pos of posets and monotone maps that we have described can model many facts that are useful for design theory.
+    However, there are also limitations which motivate us to describe a more general category.
+    This section describes the usefulness and the limitations of~\Pos.
+
+    \begin{example}[Battery]
+        Consider a model of a battery where the capacity is the functionality and the mass of the battery is the resource.
+        %(\cref{fig:battery-example}).
+        There is certainly a monotone map from capacity to mass.
+        This map answers the question: ``Given a value of the capacity, what is the minimum mass needed?
+        ''.
+        Conversely, in the other direction, the map that answers the question: ``Given a certain mass, what is the maximum capacity that can be provided?
+        '' is also a monotone map.
+    \end{example}
+
+    Therefore, at first sight it might seem that posets and monotone maps would be sufficient to describe a quantitative theory of design.
+    However, there are more general relations to be modeled.
+    It is easy enough to describe examples in which having a simple monotone map from functionality to resources is not sufficient.
+
+    \begin{example}[Delivery drone]
+        Consider the design of a delivery drone, in which the functional requirement is that the drone should be able to make a delivery at a distance~$d$ and we need to reason about how powerful to make the drone.
+        In particular, we need to choose at what (average) \emph{velocity}~$v$ the drone should travel and what is the optimal \emph{mission duration}.
+        The relation between distance~$d$, velocity~$v$, and mission duration~$T$ is given by~$d=v\cdot T$.
+        We can choose to have either a fast drone and short missions, or a slow drone and long missions.
+        This is an interesting trade-off.
+        Flying fast takes more energy, both for propulsion as well as for computation (more objects to be observed and processed).
+        Flying too slow will also be excessively energy-consuming because of the long mission duration.
+
+        If we consider~$v$ and~$T$ as given, then the map~$\tup{v,T} \mapsto v\cdot T$ is clearly a monotone function that gives the distance which the drone can cover.
+        However, in the other direction, we do not have a simple map, but rather a 1-to-many relation $\mathrm{distance}\to \mathrm{velocity}\times \mathrm{time}$.
+        For each fixed value of the distance, there is an entire continuum of values of~$v$ and~$T$ which we can choose, as it can be seen in~\cref{fig:drone-example-antichain}.
+
+        \begin{marginfigure}
+            \centering
+            \includesag{drone_example_antichain}
+            \caption{Antichains in~$\tup{v,T}$ for different values of~$d$.}
+            \label{fig:drone-example-antichain}
+        \end{marginfigure}
+
+    \end{example}
+
+    In other words, using~\Pos it is not possible to make a theory of \emph{trade-offs}.
+    We will introduce a more general category, called the category~\DP of \emph{design problems} (\cref{sec:dpdefinition}), which will allow to describe such a theory.
+
+}
+
+
+\
+
+\
+
+\
+
+\begin{ctdefinition}[Category \Lat]
+    \label{def:Lat}
+    The category~\iindex{\Lat} is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: The objects of this category are all lattices.
+        \item \emph{Morphisms}: The morphisms from a lattice~$\Obja$ to a lattice~$\Objb$ are the lattice homomorphisms maps from~$\Obja$ to~$\Objb$.
+        \item \emph{Identity morphism}: The identity morphism for the lattice~$\Obja$
+              is the identity map~$\catid_\Obja$.
+        \item \emph{Composition operation}: The composition operation is composition of maps.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{ctdefinition}[Category \BoundedLat]
+    \label{def:BoundedLat}
+    The category~\iindex{\BoundedLat} is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: The objects of this category are all bounded lattices.
+        \item \emph{Morphisms}: The morphisms from a lattice~$\Obja$ to a lattice~$\Objb$ are the bounded lattice homomorphisms maps from~$\Obja$ to~$\Objb$.
+        \item \emph{Identity morphism}: The identity morphism for the bounded lattice~$\Obja$
+              is the identity map~$\catid_\Obja$.
+        \item \emph{Composition operation}: The composition operation is composition of maps.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{exercise}
+    \label{ex:lat_is_cat}
+    Show that \Lat is a category.
+\end{exercise}
+\begin{solution}
+    Clearly, given any lattice~$\Obja$, the identity map~$\catid_\Obja$ is a lattice homomorphism, since
+    \begin{equation*}
+        \begin{aligned}
+            \catid_\Obja(\Objaela \meet_\Obja \Objaelb) & =\Objaela \meet_\Obja \Objaelb \\
+            \catid_\Obja(\Objaela \join_\Obja \Objaelb) & =\Objaela \join_\Obja \Objaelb.
+        \end{aligned}
+    \end{equation*}
+    This said, the identity map satisfies unitality.
+    Now, given lattice homomorphisms
+    \begin{equation}
+        \mora\colon \Obja \mto \Objb
+        \qqand
+        \morb\colon \Objb\mto \Objc,
+    \end{equation}
+    their composition is a lattice homomorphism, since
+    \begin{equation*}
+        \begin{aligned}
+            (\mora \mthen \morb)(\Objaela \meet_\Obja \Objaelb)
+             & = \mora(\Objaela \meet_\Obja \Objaelb) \mthen \morb \\
+             & = \morb(\mora(\Objaela) \meet_\Objb \mora(\Objaelb)) \\
+             & =(\mora \mthen \morb)(\Objaela) \meet_\Objc (\mora \mthen \morb)(\Objaelb),
+        \end{aligned}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{aligned}
+            (\mora \mthen \morb)(\Objaela \join_\Obja \Objaelb)
+             & = \mora(\Objaela \join_\Obja \Objaelb) \mthen \morb \\
+             & = \morb(\mora(\Objaela) \join_\Objb \mora(\Objaelb)) \\
+             & =(\mora \mthen \morb)(\Objaela) \join_\Objc (\mora \mthen \morb)(\Objaelb),
+        \end{aligned}
+    \end{equation*}
+    We have already checked in the past the map composition is associative (\eg when checking that \Set and \Pos are categories).
+\end{solution}
+
+\begin{exercise}
+    \label{ex:boundlat_is_cat}
+    Show that \BoundedLat is a category.
+\end{exercise}
+
+\begin{solution}
+    Consider the solution of \cref{ex:lat_is_cat} as a starting point.
+    Clearly, given any lattice~$\Obja$, the identity map~$\catid_\Obja$ is also a bounded lattice homomorphism, since
+    \begin{equation*}
+        \begin{aligned}
+            \catid_\Obja(\bot_\Obja) & =\bot_\Obja \\
+            \catid_\Obja(\top_\Obja) & =\top_\Obja.
+        \end{aligned}
+    \end{equation*}
+    This said, the identity map satisfies unitality.
+    Now, given lattice homomorphisms $\mora\colon \Obja \mto \Objb$ and  $\morb\colon \Objb\mto \Objc$, their composition is also a bounded lattice homomorphism, since
+    \begin{equation*}
+        \begin{aligned}
+            (\mora \mthen \morb)(\bot_\Obja)
+             & = \morb(\bot_\Objb) \\
+             & = \bot_\Objc,
+        \end{aligned}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{aligned}
+            (\mora \mthen \morb)(\top_\Obja)
+             & = \morb(\top_\Objb) \\
+             & = \top_\Objc.
+        \end{aligned}
+    \end{equation*}
+    We have already checked in the past the map composition is associative (\eg when checking that \Set and \Pos are categories).
+\end{solution}
+
