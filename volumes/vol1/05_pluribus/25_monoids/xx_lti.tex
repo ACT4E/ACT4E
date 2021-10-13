@@ -1,0 +1,194 @@
+\section{Discrete-time linear systems}
+\begin{definition}[Discrete-time linear systems]
+    \label{def:discrete-time-linear-system}
+    A \emph{discrete-time linear time-invariant proper open system} is defined by three matrices~$\mat{A},\mat{B},\mat{C}$.
+    Together they give a recurrence of the type
+    \begin{equation}
+        \label{eq:discrete-time-dynamics}
+        \begin{aligned}
+            \mat{x}_{k+1} & =  \mat{A} \mat{x}_k  + \mat{B} \mat{u}_k, \\
+            \mat{y}_{k}   & =  \mat{C} \mat{x}_k.
+        \end{aligned}
+    \end{equation}
+    If~$\mat{x}$ has dimension~$n\geq1$,~$\mat{u}$ dimension~$m\geq1$ and~$\mat{y}$ dimension~$p\geq1$, then~$\mat{A}$ has dimension~$n \times n$,~$\mat{B}$ has dimension~$n \times m$, and~$\mat{C}$ has dimension~$p \times n$.
+\end{definition}
+
+\begin{marginfigure}
+    \centering
+    \prftree{\includesag{20_dyn_1}}{\includesag{20_dyn_2}}{\includesag{20_dyn_1_2}}
+    \caption{Composition of discrete-time linear systems.}
+    \label{fig:comp_dyn_syst}
+\end{marginfigure}
+\todo{J: Is it intentional that there is no mention of a start state in the above?
+    These systems are special cases of Moore machines, but for the latter we define them as coming equipped with a start state.
+}
+Consider now the systems where~$m=p$ (but possibly different~$n$):
+these are systems with input and output of the same size.
+Hence, we can compose them in series.
+Series composition is the composition in which the output of a system is the input of another system (\cref{fig:comp_dyn_syst}).
+The composition forms a new discrete-time linear system, which has the input of the first system and the output of the second system.
+Let's consider the first system~$\dtsysa$:
+%
+\begin{equation*}
+    \label{eq:dlin-1}
+    \begin{aligned}
+        \mat{x}_{k+1} & = \mat{A} \mat{x}_k + \mat{B} u_k, \\
+        \mat{y}_{k}   & = \mat{C} \mat{x}_k,
+    \end{aligned}
+\end{equation*}
+%
+and the second system (which has~$\mat{y}$ as input)~$\dtsysb$:
+%
+\begin{equation*}
+    \label{eq:dlin-2}
+    \begin{aligned}
+        \mat{z}_{k+1} & = \mat{E} \mat{z}_k + \mat{F} \mat{y}_k, \\
+        \mat{v}_{k}   & = \mat{G} \mat{z}_k.
+    \end{aligned}
+\end{equation*}
+
+We can write their composition~$\dtsysa\mtimes \dtsysb$ compactly as a discrete linear system with input~$\mat{u}$ and output~$\mat{v}$:
+%
+\begin{equation*}
+    \label{eq:dlin-3}
+    \begin{aligned}
+        \begin{pmatrix}
+            \mat{x}_{k+1} \\
+            \mat{z}_{k+1}
+        \end{pmatrix} & =
+        \begin{pmatrix}
+            \mat{A}  & 0       \\
+            \mat{FC} & \mat{E}
+        \end{pmatrix}
+        \begin{pmatrix}
+            \mat{x}_k \\ \mat{z}_k
+        \end{pmatrix}
+        +
+        \begin{pmatrix}
+            \mat{B} \\ 0
+        \end{pmatrix}\mat{u}_k, \\
+        \mat{v}_k        & =
+        \begin{pmatrix}
+            0 & \mat{G}
+        \end{pmatrix}
+        \begin{pmatrix}
+            \mat{x}_k \\ \mat{z}_k
+        \end{pmatrix}.
+    \end{aligned}
+\end{equation*}
+
+We now want to show that the composition of discrete linear systems is associative (graphically reported in \cref{fig:ass_dyn_syst}).
+To do so, we need a third system,~$\dtsysc$, with input~$\mat{v}$ and output~$\mat{w}$:
+\begin{equation*}
+    \label{eq:dlin-4}
+    \begin{aligned}
+        \mat{s}_{k+1} & = \mat{H} \mat{s}_k + \mat{I} \mat{v}_k, \\
+        \mat{w}_{k}   & = \mat{J} \mat{s}_k.
+    \end{aligned}
+\end{equation*}
+
+Furthermore, we want to show that~$(\dtsysa\mtimes \dtsysb)\mtimes \dtsysc=\dtsysa\mtimes (\dtsysb\mtimes \dtsysc)$.
+\todo{J: This equality is maybe not formally true on the nose... but maybe yes... i guess we should try to make a more precise definition?
+    If we want to see these as a special case of Moore machines (which seems desireable), then we won't have equality on the nose unless we use the trick AC suggested, using \textbf{SetL}.
+}
+Proceeding as we did before, we can write the composition~$(\dtsysa\mtimes \dtsysb)\mtimes \dtsysc$ as:
+\todotextjira{553}{@Giole: Below there should be "fat zeros".
+}
+\begin{equation*}
+    \label{eq:dlin-5}
+    \begin{aligned}
+        \begin{pmatrix}
+            \mat{x}_{k+1} \\
+            \mat{z}_{k+1} \\
+            \mat{s}_{k+1}
+        \end{pmatrix} & =
+        \begin{pmatrix}
+            \mat{A}  & 0        & 0       \\
+            \mat{FC} & \mat{E}  & 0       \\
+            0        & \mat{IG} & \mat{H}
+        \end{pmatrix}
+        \begin{pmatrix}
+            \mat{x}_k \\ \mat{z}_k\\ \mat{s}_k
+        \end{pmatrix}+
+        \begin{pmatrix}
+            \mat{B} \\ 0\\ 0
+        \end{pmatrix}\mat{u}_k, \\
+        \mat{w}_k                         & =
+        \begin{pmatrix}
+            0 & 0 & \mat{J}
+        \end{pmatrix}
+        \begin{pmatrix}
+            \mat{x}_k \\ \mat{z}_k\\ \mat{s}_k
+        \end{pmatrix}.
+    \end{aligned}
+\end{equation*}
+We now want to write the composition~$\dtsysa\mtimes (\dtsysb\mtimes \dtsysc)$.
+To do so, we start by writing~$(\dtsysb\mtimes \dtsysc)$ as:
+\begin{equation*}
+    \label{eq:dlin-6}
+    \begin{aligned}
+        \begin{pmatrix}
+            \mat{z}_{k+1} \\
+            \mat{s}_{k+1}
+        \end{pmatrix} & =
+        \begin{pmatrix}
+            \mat{E}  & 0       \\
+            \mat{IG} & \mat{H}
+        \end{pmatrix}
+        \begin{pmatrix}
+            \mat{z}_k \\ \mat{s}_k
+        \end{pmatrix}+
+        \begin{pmatrix}
+            \mat{F} \\ 0
+        \end{pmatrix}\mat{y}_k, \\
+        \mat{w}_k        & =
+        \begin{pmatrix}
+            0 & \mat{J}
+        \end{pmatrix}
+        \begin{pmatrix}
+            \mat{z}_k \\ \mat{s}_k
+        \end{pmatrix}.
+    \end{aligned}
+\end{equation*}
+From this we can write~$\dtsysa\mtimes (\dtsysb\mtimes \dtsysc)$ as:
+\begin{equation*}
+    \label{eq:dlin-7}
+    \begin{aligned}
+        \begin{pmatrix}
+            \mat{x}_{k+1} \\
+            \mat{z}_{k+1} \\
+            \mat{s}_{k+1}
+        \end{pmatrix} & =
+        \begin{pmatrix}
+            \mat{A}  & 0        & 0       \\
+            \mat{FC} & \mat{E}  & 0       \\
+            0        & \mat{IG} & \mat{H}
+        \end{pmatrix}
+        \begin{pmatrix}
+            \mat{x}_k \\ \mat{z}_k\\ \mat{s}_k
+        \end{pmatrix}+
+        \begin{pmatrix}
+            \mat{B} \\ 0\\ 0
+        \end{pmatrix}\mat{u}_k, \\
+        \mat{w}_k                         & =
+        \begin{pmatrix}
+            0 & 0 & \mat{J}
+        \end{pmatrix}
+        \begin{pmatrix}
+            \mat{x}_k \\ \mat{z}_k\\ \mat{s}_k
+        \end{pmatrix},
+    \end{aligned}
+\end{equation*}
+showing associativity.
+
+\begin{figure}[tbh]
+    \centering
+    \prflinepadbefore=5pt
+    \prflinepadafter=5pt
+    \prfdouble{\prftree{\prftree{\includesag{20_dyn_1}}{\includesag{20_dyn_2}}{\includesag{20_dyn_1_2}}}{\prftree{\includesag{20_dyn_3}}{\includesag{20_dyn_3}}}{\includesag{20_dyn_12_3}}
+    }
+    {\prftree{\prftree{\includesag{20_dyn_1}}{\includesag{20_dyn_1}}}{\prftree{\includesag{20_dyn_2}}{\includesag{20_dyn_3}}{\includesag{20_dyn_2_3}}}{\includesag{20_dyn_1_23}}
+    }
+    \caption{Associativity law for the composition of discrete-time linear systems. }
+    \label{fig:ass_dyn_syst}
+\end{figure}
