@@ -9,12 +9,12 @@ all:
 tmpdir=tmp
 
 ACT%.pdf: ACT%.tex .FORCE
-	max_print_line=1000 nice -n 20 latexmk -synctex=1 -pdf -shell-escape  -f $<
+	max_print_line=10000 nice -n 20 latexmk -synctex=1 -pdf -shell-escape  -f $<
 	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
 	cp ACT$*.aux ACT$*-refs.aux
 
 %.pdf: %.tex .FORCE
-	max_print_line=1000  nice -n 19 latexmk -synctex=1 -pdf -shell-escape  -f $<
+	max_print_line=10000  nice -n 19 latexmk -synctex=1 -pdf -shell-escape  -f $<
 	texloganalyser -r $*.log > $*.warnings.txt
 
 clean:
