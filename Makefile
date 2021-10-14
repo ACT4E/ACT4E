@@ -227,6 +227,9 @@ docker-%:
 
 pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
 
+latexindent:
+	bash -c 'for a in volumes/*/*/*/*.tex; do echo $$a; ./latexindent.sh $$a; done'
+	bash -c 'for a in sag/*.tikz; do echo $$a; ./latexindent.sh $$a; done'
 generate-videos:
 	 python3 -m act4e_videos.parsing \
 	 	--config videos/videos.yaml \
