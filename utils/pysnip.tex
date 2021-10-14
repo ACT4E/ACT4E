@@ -10,7 +10,7 @@
 %\RequirePackage{color}
 
 % Directory containing the snippets
-\providecommand{\snippetsdir}{snippets}
+% \providecommand{\snippetsdir}{snippets}
 
 \makeatletter
 \newwrite\@out
@@ -34,13 +34,17 @@
   \immediate\openout\@out=\pyfile%
   \immediate\write\@out{\pycode}%
   \immediate\closeout\@out
+  \typeout{PySnip: texfile: \texfile}
   \IfFileExists{\pdffile}{%
-    \includegraphics{\pdffile}
-  }
-  {%
+    % \typeout{PySnip: existing pdffile: \pdffile}
+    \includegraphics{\pdffile}%! suppress = FileNotFound
+  }{%
+    \typeout{PySnip: NOT existing pdffile: \pdffile}
     \IfFileExists{\texfile}{%
+    \typeout{PySnip: existing texfile: \texfile}
       \immediate\input\texfile%
     }{
+      \typeout{PySnip: NOT existing texfile: \texfile}
       \IfFileExists{\errfile}{%
         \IfFileExists{\rcfile}{%
         % Read the return code of the executed Python script.
@@ -52,7 +56,6 @@
           \pyfailed{#1}{}{?}{\errfile}%
         }
       % Some problems
-
       }{\pynotready{#1}}%
     }
   }
