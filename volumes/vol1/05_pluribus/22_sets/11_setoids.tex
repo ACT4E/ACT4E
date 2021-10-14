@@ -9,7 +9,17 @@ However, there are some difficulties that led to the development of \emph{type t
 which can be used as an alternative foundation to mathematics.
 Type theory is also used as the foundation for computing; the exercises utilize the type theory nomenclature.
 
-\todotext{Find a basic reference to give there}
+If you are an experienced programmer, you likely already have some informal knowledge of type theory which will be sufficient to carry you through these exercises.
+
+If you would like to know about type theory in a more formal way, our suggestion is to read the wonderfully entertaining \emph{Little Typer}~\cite{friedman2018little}.
+
+IF you are more theoretical inclined, a proper comprehensive introduction to type theory is in Pierce's book~\cite{pierce02types}.
+
+\subsection{Sets/elements \vs types/terms}
+We do not give here a complete introduction to type theory.
+In fact, there are different type systems.
+For now, what is important to understand is the diference between set theory and type theory.
+This will allow to translate between the theory parts of this book, which use set theory, and the programming exercises.
 
 In type theory there are two basic kinds: \emph{terms} and \emph{types}.
 A term is a formal expression built from the constructions in a language.
@@ -33,13 +43,14 @@ For example, one can define a \emph{setoid} as a set-like structure in type theo
               % \item $\aword{apart}:T\times T\to\Bool$ is the apartness function.
     \end{itemize}
 \end{ctdefinition}
-
+The function $\aword{equal}$ should have the properties of an \emph{equivalence relation},
+which will be discussed in \cref{def:equivalence-relation}.
 % Ignore for now why we need $\aword{apart}$ in addition to $\aword{equal}$; we will return to this topic much later in the exposition.
 
 Here is an example that shows the advantages of such construction.
 Imagine we want to represent rational numbers with two numbers, nominator and denominator, using arbitrary integers.
 We want to define a setoid for which the element $\tup{2, -4}$ is equal to $\tup{-1, 2}$.
-Assume that we already have a setoid for integers defined, so that we have a function $\aword{equal}_{\aword{int}}$
+Assume that we already have a setoid for integers defined, so that we have a function $\aword{equal}_{\aword{int}}$.
 
 We can do it as follows:
 \begin{equation}
@@ -92,4 +103,26 @@ We would rewrite the above as
     \qqand
     \tup{1,4} \neq_{S_2} \tup{-2, 8}.
 \end{equation}
+
+\subsection{Python and other design choices}
+
+We chose to use Python as the language for the exercises because, as of 2021, it is the most used language in the world, according to the TIOBE index.
+
+We should also note that, fixed the language, there is considerable freedom in defining the interfaces and the class hierarchy.
+We tried to follow these principles:
+\begin{itemize}
+    \item \emph{Elements are opaque}: We never specify any interface for elements.
+          It is the \emph{structure} that ``owns'' the elements that knows how to operate on them.
+          For example, we define a \classname{SetProduct} which is a set whose elements are a tuple of elements.
+          Rather than defining a class \classname{ElementTuple} that can tell us its \funcname{elements}, there is a  function \classname{unpack} in \classname{SetProduct} that tells us the content of the opaque element.
+
+          This works very well and gives the implementer (you) total freedom to choose the internal representation.
+
+          However, this is for a beginner i counter-intuitive, and goes against to beginner's advice in object-oriented languages, where a \classname{Dog} is an \classname{Animal} that \funcname{barks}.
+
+    \item \emph{Composition over inheritance}: An example use of inheritance would be saying: ``a poset is a set which also has an order relation''; composition would be saying ``a poset is a tuple of a set and an order relation''.
+          We adopt composition, which is also the way we define mathematical objects.
+          The over-use of inheritance is another beginner mistake in object-oriented programming.
+
+\end{itemize}
 

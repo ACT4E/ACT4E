@@ -2,7 +2,7 @@
 % bounds: min_size = 0 max_size = 120 min_lines = 0
 % transformed to maxlen = 72
 \begin{minted}[mathescape, breaklines]{python}
-class Setoid(ABC):
+class Setoid(Generic[E], ABC):
   """
   A setoid is something to which elements may belong,
   has a way of distinguishing elements,
@@ -10,21 +10,21 @@ class Setoid(ABC):
   """
 
   @abstractmethod
-  def contains(self, x: Element) -> bool:
+  def contains(self, x: E) -> bool:
     """ Returns true if the element is in the set. """
 
-  def equal(self, x: Element, y: Element) -> bool:
+  def equal(self, x: E, y: E) -> bool:
     """ Returns True if the two elements are to be considered equal. """
     return x == y  # default is to use the Python equality
 
-  def apart(self, x: Element, y: Element) -> bool:
+  def apart(self, x: E, y: E) -> bool:
     return not self.equal(x, y)
 
   @abstractmethod
-  def save(self, h: IOHelper, x: Element) -> ConcreteRepr:
+  def save(self, h: IOHelper, x: E) -> ConcreteRepr:
     ...
 
   @abstractmethod
-  def load(self, h: IOHelper, o: ConcreteRepr) -> Element:
+  def load(self, h: IOHelper, o: ConcreteRepr) -> E:
     ...
 \end{minted}
