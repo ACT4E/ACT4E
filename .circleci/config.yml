@@ -21,6 +21,10 @@ workflows:
             only: publish
 jobs:
   build-devel:
+    environment: &environment
+      max_print_line: "1000"
+      error_line: "254"
+      half_error_line: "238"
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
       auth:
@@ -56,7 +60,12 @@ jobs:
         root: .
         paths:
         - _build
+    - run: &check_no_missing_refs
+        name: Check no missing references
+        command: |
+          ./check_no_undefined_refs.py *warnings.txt
   build-instructors:
+    environment: *environment
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
       auth:
@@ -92,7 +101,10 @@ jobs:
         root: .
         paths:
         - _build
+    - run: *check_no_missing_refs
   build-devel-slides:
+    environment: *environment
+
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
       auth:
@@ -127,9 +139,10 @@ jobs:
         root: .
         paths:
         - _build
-
+    - run: *check_no_missing_refs
 
   build-public:
+    environment: *environment
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
       auth:
@@ -155,6 +168,7 @@ jobs:
         root: .
         paths:
         - _build
+    - run: *check_no_missing_refs
 
   docs-deploy:
     docker:

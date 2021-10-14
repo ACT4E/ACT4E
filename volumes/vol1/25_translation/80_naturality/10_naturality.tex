@@ -9,7 +9,6 @@ The name ``natural transformation'' has historical roots -- do not worry if the 
 We will try to explain it in a way that is hopefully at least clear.
 To give motivation and a concrete illustration, we'll start with an example.
 
-
 \subsection{An alumni database}
 
 Suppose a university is keeping a database of its alumni.
@@ -38,26 +37,31 @@ For example, $\funa(\stylemorph{studied}) : \funa(\styleobj{S}) \mto \funa(\styl
 
 For simplicity, we'll just focus on two aspects of the data: student ID numbers and the disciplines of study.
 Let's assume that the university updates its alumni database once a year.
-This means, for example, adding the graduates of that year to the total list of graduates. 
+This means, for example, adding the graduates of that year to the total list of graduates.
 
-To model the situation, let $\funa : \CatC \fto \Set$ be the database instance for the year 2021, and let $\funb : \CatC \fto \Set$ be the database instance for the year 2022. For concreteness, let's suppose the student IDs are in some standardized format, for example a code of the kind 17-371-802, where each of the three parts of the code are calculated/assigned by some rule (\text{e.g.} the ``17'' here stands for 2017, the year the student registered with the university, etc.). 
+To model the situation, let $\funa : \CatC \fto \Set$ be the database instance for the year 2021, and let $\funb : \CatC \fto \Set$ be the database instance for the year 2022.
+For concreteness, let's suppose the student IDs are in some standardized format, for example a code of the kind 17-371-802, where each of the three parts of the code are calculated/assigned by some rule (\text{e.g.} the ``17'' here stands for 2017, the year the student registered with the university, etc.)
+.
 
-Since new students register to the university each year, the set $\funa(\styleobj{S})$ of all student IDs registered up to the end of 2020 is a subset of the set $\funb(\styleobj{S})$ of student IDs up to the end of 2022. This means there is an inclusion function $\ntrafoa_{\styleobj{S}} :  \funa(\styleobj{S}) \mto \funb(\styleobj{S})$. 
+Since new students register to the university each year, the set $\funa(\styleobj{S})$ of all student IDs registered up to the end of 2020 is a subset of the set $\funb(\styleobj{S})$ of student IDs up to the end of 2022.
+This means there is an inclusion function $\ntrafoa_{\styleobj{S}} :  \funa(\styleobj{S}) \mto \funb(\styleobj{S})$.
 
-Now suppose that in 2022 the university decides to simplify the way it attributes disciplines to students in the database. For instance, instead of the discipline names 
+Now suppose that in 2022 the university decides to simplify the way it attributes disciplines to students in the database.
+For instance, instead of the discipline names
 \begin{equation}
-\funa(\styleobj{D}) = \makeset{ \text{mechanical engineering},  \text{civil engineering}, \text{applied physics}, \text{theoretical physics}, \text{pure mathematics}, \text{applied mathematics} }, 
+    \funa(\styleobj{D}) = \makeset{ \text{mechanical engineering},  \text{civil engineering}, \text{applied physics}, \text{theoretical physics}, \text{pure mathematics}, \text{applied mathematics} },
 \end{equation}
 the new discipline names are just
 \begin{equation}
-\funb(\styleobj{D}) = \makeset{ \text{engineering}, \text{physics}, \text{mathematics} }.
+    \funb(\styleobj{D}) = \makeset{ \text{engineering}, \text{physics}, \text{mathematics} }.
 \end{equation}
-In order to implement these changes, we use a function $\ntrafoa_{\styleobj{D}}: \funa(\styleobj{D}) \mto \funb(\styleobj{D})$ which maps the old discipline names to the corresponding new ones in an obvious way: 
+In order to implement these changes, we use a function $\ntrafoa_{\styleobj{D}}: \funa(\styleobj{D}) \mto \funb(\styleobj{D})$ which maps the old discipline names to the corresponding new ones in an obvious way:
 \begin{equation*}
-\ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
+    \ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
 \end{equation*}
 
-The functions $\ntrafoa_\styleobj{S}$ and $\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance $\funb$ relates coherently with the older database instance $\funa$. Concretely, we want that if a student ID in $ \funb(\styleobj{S})$ is inherited from $\funa(\styleobj{S})$ -- in other words, if it is in the image of $\ntrafoa_{\styleobj{S}}$ --  then we want that its associated discipline in the database instance $\funb$ is the same as if we first computed the student's discipline in the older database instance $\funa$, and then mapped it to $\funb$ using the function $\ntrafoa_{\styleobj{D}}$. 
+The functions $\ntrafoa_\styleobj{S}$ and $\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance $\funb$ relates coherently with the older database instance $\funa$.
+Concretely, we want that if a student ID in $ \funb(\styleobj{S})$ is inherited from $\funa(\styleobj{S})$ -- in other words, if it is in the image of $\ntrafoa_{\styleobj{S}}$ --  then we want that its associated discipline in the database instance $\funb$ is the same as if we first computed the student's discipline in the older database instance $\funa$, and then mapped it to $\funb$ using the function $\ntrafoa_{\styleobj{D}}$.
 
 %
 \begin{marginfigure}
@@ -70,16 +74,19 @@ The functions $\ntrafoa_\styleobj{S}$ and $\ntrafoa_\styleobj{D}$ allow us to ch
 
 This can be formulated succinctly by saying that we want the diagram in figure \cref{fig:student_database_square} to commute!
 
-
-
 \subsection{The general situation}
 
-To define natural transformations, the general situation we will start from is when we have two functors $\funa : \CatC \fto \CatD$  and $\funb : \CatC \fto \CatD$, sharing the same source and target, respectively. In the previous example above, $\funa$ and $\funb$ were database instances. 
+To define natural transformations, the general situation we will start from is when we have two functors $\funa : \CatC \fto \CatD$  and $\funb : \CatC \fto \CatD$, sharing the same source and target, respectively.
+In the previous example above, $\funa$ and $\funb$ were database instances.
 
 A natural transformation from $\funa$ to $\funb$ is then a kind of ``map'' that relates the two functors.
 How might one define such a thing?
 
-First, let's look at the situation only on the level of objects. Each object $\Obja$ of $\CatC$ is mapped by $\funa$ and $\funb$ to an object $\funa(\Obja)$ and $\funb(\Obja)$ of $\CatD$, respectively. One straightforward way to relate $\funa(\Obja)$ to $\funb(\Obja)$ is to choose a morphism $\funa(\Obja) \mto \funb(\Obja)$ in $\CatD$. Let's call this morphism $\ntrafoa_{\Obja}$, using the subscript $\Obja$ since $\ntrafoa_{\Obja}$ relates the respective images of the object $\Obja$ under $\funa$ and $\funb$. If we choose such a morphism for each object in $\CatC$, then we'll have collection $\{ \ntrafoa_\Obja \}_{\Obja \in \Ob_\CatC}$ of morphisms in $\CatD$, indexed by the objects of $\CatC$. 
+First, let's look at the situation only on the level of objects.
+Each object $\Obja$ of $\CatC$ is mapped by $\funa$ and $\funb$ to an object $\funa(\Obja)$ and $\funb(\Obja)$ of $\CatD$, respectively.
+One straightforward way to relate $\funa(\Obja)$ to $\funb(\Obja)$ is to choose a morphism $\funa(\Obja) \mto \funb(\Obja)$ in $\CatD$.
+Let's call this morphism $\ntrafoa_{\Obja}$, using the subscript $\Obja$ since $\ntrafoa_{\Obja}$ relates the respective images of the object $\Obja$ under $\funa$ and $\funb$.
+If we choose such a morphism for each object in $\CatC$, then we'll have collection $\{ \ntrafoa_\Obja \}_{\Obja \in \Ob_\CatC}$ of morphisms in $\CatD$, indexed by the objects of $\CatC$.
 
 Next, let's consider a morphism $\mora : \Obja \mto \Objb$ in the category $\CatC$.
 Under the functor $\funa$ it will be mapped to some morphism $\funa(\mora): \funa(\Obja) \mto \funb(\Objb)$ in $\CatD$, and under the functor $\funb$ it will be mapped to some other morphism $\funb(\mora): \funb(\Obja) \mto \funb(\Objb)$, also in $\CatD$.
@@ -95,7 +102,6 @@ Under the functor $\funa$ it will be mapped to some morphism $\funa(\mora): \fun
 We can think of $\funa(\mora): \funa(\Obja) \mto \funb(\Objb)$ and $\funb(\mora): \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in $\CatD$.
 If we have already chosen morphisms $\ntrafoa_\Obja: \funa(\Obja) \mto \funb(\Obja)$ and $\ntrafoa_\Objb: \funa(\Objb) \mto \funb(\Objb)$ in $\CatD$, then these will connect the two diagrams, as depicted in \cref{fig:two-functors-connected-diagram}.
 
-
 %
 \begin{figure}[h!]
     \includegraphics[width=.6\linewidth]{two_functors_connected_diagram}
@@ -109,7 +115,9 @@ We'll require, as a condition on the morphisms $\ntrafoa_\Obja$ and $\ntrafoa_\O
 \begin{equation}
     \funa(\mora) \mthen \ntrafoa_\Objb = \ntrafoa_\Obja \mthen \funb(\mora).
 \end{equation}
-\todo{@J: ideally say more here to motivate or explain this. Perhaps include somewhere this perspective: Natural transformations are meant to capture the idea that a transformation is natural in the sense of not depending on any arbitrary choices. If a transformation does depend on arbitrary choices, the arrows alpha X and alpha Y would not be reusable but would have to change when f changes.
+\todo{@J: ideally say more here to motivate or explain this.
+    Perhaps include somewhere this perspective: Natural transformations are meant to capture the idea that a transformation is natural in the sense of not depending on any arbitrary choices.
+    If a transformation does depend on arbitrary choices, the arrows alpha X and alpha Y would not be reusable but would have to change when f changes.
 }
 
 %
@@ -165,7 +173,7 @@ Note that because each of the two component squares in the diagram commute, so d
               \end{equation}
               In other words, the following diagram must commute:
               \begin{equation}
-                  \label{fig:def-naturality-square}
+                  \label{eq:def-naturality-square}
                   \middlesag{55_natural_2}
               \end{equation}
     \end{enumerate}
@@ -175,7 +183,7 @@ To reiterate: a natural transformation $\ntrafoa$ is a \emph{collection} $(\ntra
 This is analogous to how a sequence $a = (a_n)_{n \in \natnumbers}$ has terms or a vector $v = (v_1, .
     .. , v_n)$ has components.
 
-The diagrams \cref{fig:def-naturality-square} are often called \emph{naturality squares}, and a natural transformation~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely as in \cref{fig:nat_trans_globular}.
+The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality squares}, and a natural transformation~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely as in \cref{fig:nat_trans_globular}.
 
 \begin{marginfigure}
     \centering
@@ -306,9 +314,9 @@ The diagrams \cref{fig:def-naturality-square} are often called \emph{naturality 
 
 \devel{
 
-	\section{Horizontal composition}
-	
-	\todo{@J: write this up}
+    \section{Horizontal composition}
+
+    \todo{@J: write this up}
 
     \section{To add}
     \todojira{141}{Add parts corresponding to listed videos.}

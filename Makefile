@@ -9,12 +9,12 @@ all:
 tmpdir=tmp
 
 ACT%.pdf: ACT%.tex .FORCE
-	nice -n 20 latexmk -synctex=1 -pdf -shell-escape  -f $<
+	max_print_line=10000 nice -n 20 latexmk -synctex=1 -pdf -shell-escape  -f $<
 	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
 	cp ACT$*.aux ACT$*-refs.aux
 
 %.pdf: %.tex .FORCE
-	nice -n 19 latexmk -synctex=1 -pdf -shell-escape  -f $<
+	max_print_line=10000  nice -n 19 latexmk -synctex=1 -pdf -shell-escape  -f $<
 	texloganalyser -r $*.log > $*.warnings.txt
 
 clean:
@@ -227,6 +227,9 @@ docker-%:
 
 pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
 
+latexindent:
+	bash -c 'for a in volumes/*/*/*/*.tex; do echo $$a; ./latexindent.sh $$a; done'
+	bash -c 'for a in sag/*.tikz; do echo $$a; ./latexindent.sh $$a; done'
 generate-videos:
 	 python3 -m act4e_videos.parsing \
 	 	--config videos/videos.yaml \
