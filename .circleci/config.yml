@@ -21,6 +21,10 @@ workflows:
             only: publish
 jobs:
   build-devel:
+    environment: &environment
+      max_print_line: "1000"
+      error_line: "254"
+      half_error_line: "238"
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
       auth:
@@ -61,6 +65,7 @@ jobs:
         command: |
           ./check_no_undefined_refs.py *warnings.txt || true 
   build-instructors:
+    environment: *environment
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
       auth:
@@ -101,6 +106,8 @@ jobs:
         command: |
           ./check_no_undefined_refs.py *warnings.txt || true 
   build-devel-slides:
+    environment: *environment
+
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
       auth:
@@ -141,6 +148,7 @@ jobs:
           ./check_no_undefined_refs.py *warnings.txt || true 
 
   build-public:
+    environment: *environment
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:z7
       auth:
