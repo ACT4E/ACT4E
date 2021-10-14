@@ -60,10 +60,10 @@ jobs:
         root: .
         paths:
         - _build
-    - run:
+    - run: &check_no_missing_refs
         name: Check no missing references
         command: |
-          ./check_no_undefined_refs.py *warnings.txt || true 
+          ./check_no_undefined_refs.py *warnings.txt
   build-instructors:
     environment: *environment
     docker:
@@ -101,10 +101,7 @@ jobs:
         root: .
         paths:
         - _build
-    - run:
-        name: Check no missing references
-        command: |
-          ./check_no_undefined_refs.py *warnings.txt || true 
+    - run: *check_no_missing_refs
   build-devel-slides:
     environment: *environment
 
@@ -142,10 +139,7 @@ jobs:
         root: .
         paths:
         - _build
-    - run:
-        name: Check no missing references
-        command: |
-          ./check_no_undefined_refs.py *warnings.txt || true 
+    - run: *check_no_missing_refs
 
   build-public:
     environment: *environment
@@ -174,10 +168,8 @@ jobs:
         root: .
         paths:
         - _build
-    - run:
-        name: Check no missing references
-        command: |
-          ./check_no_undefined_refs.py *warnings.txt || true 
+    - run: *check_no_missing_refs
+
   docs-deploy:
     docker:
     - image: node:8.10.0
