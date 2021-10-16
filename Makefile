@@ -186,44 +186,41 @@ compile-equations:
 .FORCE:
 .PHONY: .FORCE
 
-tag=reg-stage.zuper.ai/act4e/act4e-build:z7
+BUILD_IMAGE ?= reg-stage.zuper.ai/act4e/act4e-build:z7
 pull:
-	docker pull $(tag)
+	docker pull $(BUILD_IMAGE)
 
 as_user=-u $(shell id -u ${USER}):$(shell id -g ${USER})  -e USER=$(shell whoami) -e HOME=/tmp/home
 # as_user=
 magic:
 	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		$(tag) \
+		$(BUILD_IMAGE) \
 		make nomenc table find-equations
 
 magic-table:
 	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		$(tag) \
+		$(BUILD_IMAGE) \
 		make nomenc table
 
 magic-equations:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		$(tag) \
+		$(BUILD_IMAGE) \
 		make find-equations
-	#docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-#		$(tag) \
-#		make find-equations-vol2
-
+ 
 ultramagic:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		$(tag) \
+		$(BUILD_IMAGE) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make remake'
 
 shell:
 	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		$(tag) \
+		$(BUILD_IMAGE) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: bash'
 
 docker-%:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
-		$(tag) \
-		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make *'
+		$(BUILD_IMAGE) \
+		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make $*'
 
 pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
 
