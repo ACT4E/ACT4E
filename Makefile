@@ -5,7 +5,6 @@ all:
 	@echo 	make -B ACT4E-vol2.pdf
 	@echo Create the chached tikz using \"make tikz\".
 
-
 tmpdir=tmp
 
 ACT%.pdf: ACT%.tex .FORCE
@@ -208,7 +207,7 @@ magic-equations:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(BUILD_IMAGE) \
 		make find-equations
- 
+
 ultramagic:
 	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
 		$(BUILD_IMAGE) \
@@ -249,3 +248,7 @@ generate-videos-novideo:
 find-unused:
 	python -m act4e_videos.check_used --config videos/videos.yaml --tex-src volumes > unused.txt
 	cat unused.txt
+
+
+check-no-tabs:
+	./check_no_tabs.py .
