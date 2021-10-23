@@ -39,7 +39,10 @@ jobs:
         name: download-solutions
         command: |
           git clone -b alphubel-stage git@github.com:ACT4E/ACT4E-solutions.git
-
+    - run: &check_no_tabs
+        name: Check no tabs
+        command: |
+          ./check_no_tabs.py .
     - run:
         name: Latex
         command: |
@@ -80,7 +83,7 @@ jobs:
         name: instructors
         command: |
           git clone -b alphubel-stage git@github.com:ACT4E/ACT4E-solutions.git
-
+    - run: *check_no_tabs
     - run:
         name: Latex
         command: |
@@ -104,7 +107,6 @@ jobs:
     - run: *check_no_missing_refs
   build-devel-slides:
     environment: *environment
-
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
       auth:
@@ -116,8 +118,7 @@ jobs:
         name: instructors
         command: |
           git clone -b alphubel-stage git@github.com:ACT4E/ACT4E-solutions.git
-
-
+    - run: *check_no_tabs
     - run:
         name: Latex
         command: |
@@ -150,6 +151,7 @@ jobs:
         password: $DOCKER_PASSWORD
     steps:
     - checkout
+    - run: *check_no_tabs
     - run:
         name: Latex
         command: |
