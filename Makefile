@@ -5,7 +5,6 @@ all:
 	@echo 	make -B ACT4E-vol2.pdf
 	@echo Create the chached tikz using \"make tikz\".
 
-
 tmpdir=tmp
 
 ACT%.pdf: ACT%.tex .FORCE
