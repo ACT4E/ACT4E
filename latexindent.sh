@@ -1,2 +1,2 @@
 #!/bin/bash
-latexindent -w -m -l -s -c .backups $1 
+latexindent -w -m -l -s -c .backups "$@"
