@@ -15,18 +15,18 @@ In this section we will introduce a different intuition for monads: that they ca
 Let us explain what we mean using an example.
 Given a set $\setA$, say
 \begin{equation}
-    \setA = \{ \sapple, \sbanana, \scarrot \},
+	\setA = \{ \sapple, \sbanana, \scarrot \},
 \end{equation}
 let's define a certain type of ``formal expressions'', using elements of $\setA$ and using a ``formal composition symbol'', which we choose to be `` $*$ ''.
 Now, the ``formal expressions'' we'll consider are all finite expressions which have a form such as
 \begin{equation}
-    \label{eq:formal-composition-1}
-    \sbanana * \sbanana * \sapple,
+	\label{eq:formal-composition-1}
+	\sbanana * \sbanana * \sapple,
 \end{equation}
 or
 \begin{equation}
-    \label{eq:formal-composition-2}
-    \sapple * \sbanana * \sapple * \sapple * \sbanana * \sapple,
+	\label{eq:formal-composition-2}
+	\sapple * \sbanana * \sapple * \sapple * \sbanana * \sapple,
 \end{equation}
 and so on.
 These expressions are ``formal'' (or ``purely symbolic'') in the sense that, a priori, the symbol `` $*$ '' does not have any \emph{meaning} beyond simply being a symbol, a ``marking''.
@@ -40,8 +40,8 @@ And we'll say that formal expressions can be combined, using $*$, to larger form
 So, following this convention, $[\sapple] * [\sbanana]$ is also a formal expression.
 And in particular, instead of \cref{eq:formal-composition-2}, we'll write
 \begin{equation}
-    \label{eq:formal-composition-bracketed}
-    [\sapple] * [\sbanana] * [\sapple] * [\sapple] * [\sbanana] * [\sapple].
+	\label{eq:formal-composition-bracketed}
+	[\sapple] * [\sbanana] * [\sapple] * [\sapple] * [\sbanana] * [\sapple].
 \end{equation}
 %
 In an expression such as \cref{eq:formal-composition-bracketed} we'll think of the components $[\sapple]$ and $[\sbanana]$ as if they are ``letters'' (but we won't count ``$*$'' as a letter) and we'll think of the whole expression \cref{eq:formal-composition-bracketed} like a ``word''.
@@ -52,13 +52,13 @@ In our notion of formal expression, we'll choose to include a unique special wor
 Using square brackets we can also build ``formal expressions of formal expressions'' or ``second-order formal expressions''.
 For example, given the formal expression $[\sapple] * [\sbanana]$, we can turn it into a second-order formal expression by putting brackets around it:
 \begin{equation}
-    \label{eq:double-formal-expression}
-    [[\sapple] * [\sbanana]].
+	\label{eq:double-formal-expression}
+	[[\sapple] * [\sbanana]].
 \end{equation}
 And given another second-order formal expression, say $[[\sbanana] * [\sbanana] * [\sapple]]$, we can ``compose'' it with the one in \cref{eq:double-formal-expression} like so:
 \begin{equation}
-    \label{eq:double-formal-expression-comp}
-    [[\sapple] * [\sbanana]] * [[\sbanana] * [\sbanana] * [\sapple]].
+	\label{eq:double-formal-expression-comp}
+	[[\sapple] * [\sbanana]] * [[\sbanana] * [\sbanana] * [\sapple]].
 \end{equation}
 The notion of length will also apply to second-order expressions.
 For instance, the second-order expression \cref{eq:double-formal-expression-comp} has length 2, and is composed of one first-order expression of length 2 and one first-order expression of length 3.
@@ -74,50 +74,50 @@ What might this functor do on the level of morphisms?
 For concreteness, let $\setA = \{ \sapple, \sbanana, \scarrot \} $ and $\setB = \{ \swater, \stea \}$.
 Given a function $\mora: \setA \to \setB$, we define
 \begin{equation}
-    \funa(\mora) : \funa(\setA) \to \funa(\setA)
+	\funa(\mora) : \funa(\setA) \to \funa(\setA)
 \end{equation}
 to act on (first-order) expressions like so
 \begin{equation}
-    \funa(\mora)([\sapple]*[\sbanana]) = [\mora(\sapple)]*[\mora(\sbanana)].
+	\funa(\mora)([\sapple]*[\sbanana]) = [\mora(\sapple)]*[\mora(\sbanana)].
 \end{equation}
 It turns out that this functor $\funa: \Set \to \Set$ can be made into a monad!
 
 Let us explain how the unit and multiplication for this monad are defined.
 For any set $\setA$, the component of the unit at $\setA$ is
 \begin{equation}
-    \monunit_\setA : \setA \to \funa \setA, \ela \mapsto [\ela].
+	\monunit_\setA : \setA \to \funa \setA, \ela \mapsto [\ela].
 \end{equation}
 The multiplication is a bit more of a mouthful.
 It's component at $\setA$,
 \begin{equation}
-    \moncomp_\setA : (\funa \then \funa)\setA \to \funa \setA,
+	\moncomp_\setA : (\funa \then \funa)\setA \to \funa \setA,
 \end{equation}
 is the function which takes a second-order formal exression
 \begin{equation}
-    [[\ela_{11}]* [\ela_{12}] * \cdots * [\ela_{1k_1}]] * \cdots * [[\ela_{n1}]* [\ela_{n2}] * \cdots * [\ela_{nk_n}]]
+	[[\ela_{11}]* [\ela_{12}] * \cdots * [\ela_{1k_1}]] * \cdots * [[\ela_{n1}]* [\ela_{n2}] * \cdots * [\ela_{nk_n}]]
 \end{equation}
 and ``collapses'' it to the first-order expression
 \begin{equation}
-    [\ela_{11}]
-    * [\ela_{12}] * \cdots * [\ela_{1k_1}] * \cdots * [\ela_{n1}]* [\ela_{n2}] * \cdots * [\ela_{nk_n}].
+	[\ela_{11}]
+	* [\ela_{12}] * \cdots * [\ela_{1k_1}] * \cdots * [\ela_{n1}]* [\ela_{n2}] * \cdots * [\ela_{nk_n}].
 \end{equation}
 In other words, this operation simply ``removes the outer brackets'' from a second-order formal expression.
 
 \begin{gradedexercise}[\exname{ListMonad}]
-    \label{ex:ListMonad}
-    Let $\funa : \Set \fto \Set$ be the functor above that sends any set $\setA$ to the set of first-order formal expressions of the form
-    \begin{equation*}
-        [\ela_1]
-        * [\ela_2] * \cdots * [\ela_n] \quad \quad \ela_i \in \setA, n \in \wnumbers_{\geq 0},
-    \end{equation*}
-    and let $\moncomp_\setA$ and $\monunit_\setA$ be defined as above.
+	\label{ex:ListMonad}
+	Let $\funa : \Set \fto \Set$ be the functor above that sends any set $\setA$ to the set of first-order formal expressions of the form
+	\begin{equation*}
+		[\ela_1]
+		* [\ela_2] * \cdots * [\ela_n] \quad \quad \ela_i \in \setA, n \in \wnumbers_{\geq 0},
+	\end{equation*}
+	and let $\moncomp_\setA$ and $\monunit_\setA$ be defined as above.
 
-    Show that:
-    \begin{enumerate}
-        \item the components $\moncomp_\setA$ define a natural transformation $\moncomp : \funa \then \funa \nto \funa$;
-        \item the components $\monunit_\setA$ define a natural transformation $\monunit : \stylefunctors{\text{Id}}_{\Set} \fto \funa$;
-        \item $\moncomp$ and $\monunit$ satisfy the conditions for $\tup{\funa, \moncomp, \monunit}$ to be a monad.
-    \end{enumerate}
+	Show that:
+	\begin{enumerate}
+		\item the components $\moncomp_\setA$ define a natural transformation $\moncomp : \funa \then \funa \nto \funa$;
+		\item the components $\monunit_\setA$ define a natural transformation $\monunit : \stylefunctors{\text{Id}}_{\Set} \fto \funa$;
+		\item $\moncomp$ and $\monunit$ satisfy the conditions for $\tup{\funa, \moncomp, \monunit}$ to be a monad.
+	\end{enumerate}
 \end{gradedexercise}
 
 \solutionof{ListMonad}
@@ -130,28 +130,28 @@ We will require such evaluation maps to additionaly satisfy two coherence condit
 
 \linkvideo{spring2021-monads-b:algebra-monad} % Algebras for a monad
 \begin{ctdefinition}[Algebra of a monad]
-    \label{def:algebramon}
-    Let~$\tup{\monA, \moncomp, \monunit}$ be a monad on a category~$\CatC$.
-    An algebra of~$\monA$ (also called an $\monA$-algebra) is specified by: \
+	\label{def:algebramon}
+	Let~$\tup{\monA, \moncomp, \monunit}$ be a monad on a category~$\CatC$.
+	An algebra of~$\monA$ (also called an $\monA$-algebra) is specified by: \
 
-    \constit
-    \begin{enumerate}
-        \item an object $\Obja$ of~$\CatC$;
-        \item a morphism $\monact\colon \monA(\Obja) \mto \Obja$ of $\CatC$.
-    \end{enumerate}
-    \condit
-    \begin{enumerate}
-        \item \emph{Composition}: the diagram
-              \begin{center}
-                  \includesag{monalg-composition}
-              \end{center}
-              commutes.
-        \item \emph{Unit}: the diagram
-              \begin{center}
-                  \includesag{monalg-unit}
-              \end{center}
-              commutes.
-    \end{enumerate}
+	\constit
+	\begin{enumerate}
+		\item an object $\Obja$ of~$\CatC$;
+		\item a morphism $\monact\colon \monA(\Obja) \mto \Obja$ of $\CatC$.
+	\end{enumerate}
+	\condit
+	\begin{enumerate}
+		\item \emph{Composition}: the diagram
+		      \begin{center}
+			      \includesag{monalg-composition}
+		      \end{center}
+		      commutes.
+		\item \emph{Unit}: the diagram
+		      \begin{center}
+			      \includesag{monalg-unit}
+		      \end{center}
+		      commutes.
+	\end{enumerate}
 \end{ctdefinition}
 
 \linkvideo{spring2021-monads-b:actions-as-algebras} % Actions as M-algebras
@@ -160,36 +160,36 @@ We will require such evaluation maps to additionaly satisfy two coherence condit
 
 \linkvideo{spring2021-monads-b:morph-algebras} % Morphisms of M-algebras
 \begin{ctdefinition}[$\monA$-algebra morphism]
-    \label{def:algebramorphism}
-    Let~$\tup{\monA, \monunit, \moncomp}$ be a monad on a category~$\CatC$, and let~$\tup{\Obja_1, \monact_1}$ and~$\tup{\Obja_2, \monact_2}$ be algebras of $\monA$.
-    A morphism $\tup{\Obja_1, \monact_1} \mto \tup{\Obja_2, \monact_2}$ of $\monA$-algebras is specified by: \
+	\label{def:algebramorphism}
+	Let~$\tup{\monA, \monunit, \moncomp}$ be a monad on a category~$\CatC$, and let~$\tup{\Obja_1, \monact_1}$ and~$\tup{\Obja_2, \monact_2}$ be algebras of $\monA$.
+	A morphism $\tup{\Obja_1, \monact_1} \mto \tup{\Obja_2, \monact_2}$ of $\monA$-algebras is specified by: \
 
-    \constit
-    \begin{enumerate}
-        \item A morphism $\mora : \Obja_1 \mto \Obja_2$ in $\CatC$.
-    \end{enumerate}
-    \condit
-    \begin{enumerate}
-        \item The diagram
-              \begin{center}
-                  \includesag{monalg-morph-compat}
-              \end{center}
-              commutes.
-    \end{enumerate}
+	\constit
+	\begin{enumerate}
+		\item A morphism $\mora : \Obja_1 \mto \Obja_2$ in $\CatC$.
+	\end{enumerate}
+	\condit
+	\begin{enumerate}
+		\item The diagram
+		      \begin{center}
+			      \includesag{monalg-morph-compat}
+		      \end{center}
+		      commutes.
+	\end{enumerate}
 \end{ctdefinition}
 
 \linkvideo{spring2021-monads-b:cat-algebras} % Category of M-algebras
 \begin{ctdefinition}
-    [Category of $\monA$-algebras]
-    \label{def:catofmonadalgebras}
-    Let $\tup{\monA, \monunit, \moncomp}$ be a monad on a category $\CatC$.
-    The \emph{category of $\monA$-algebras} $\CatC^\monA$ of the monad $\monA$ is specified by:
-    \begin{enumerate}
-        \item \emph{Objects}: $\monA$-algebras;
-        \item \emph{Morphisms:} $\monA$-algebra morphisms;
-        \item \emph{Identities}: given an $\monA$-algebra $\tup{\Obja, \monact}$, its identity morphism is $\catid_\Obja$;
-        \item \emph{Composition}: is induced by the composition of morphisms in $\CatC$.
-    \end{enumerate}
+	[Category of $\monA$-algebras]
+	\label{def:catofmonadalgebras}
+	Let $\tup{\monA, \monunit, \moncomp}$ be a monad on a category $\CatC$.
+	The \emph{category of $\monA$-algebras} $\CatC^\monA$ of the monad $\monA$ is specified by:
+	\begin{enumerate}
+		\item \emph{Objects}: $\monA$-algebras;
+		\item \emph{Morphisms:} $\monA$-algebra morphisms;
+		\item \emph{Identities}: given an $\monA$-algebra $\tup{\Obja, \monact}$, its identity morphism is $\catid_\Obja$;
+		\item \emph{Composition}: is induced by the composition of morphisms in $\CatC$.
+	\end{enumerate}
 \end{ctdefinition}
 
 \subsection{Comparing the two perspectives}

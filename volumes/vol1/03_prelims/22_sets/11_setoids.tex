@@ -1,7 +1,7 @@
 \sectionexercises{Type theory}
 
 \begin{remark}
-    You can skip this section until you want to get started on the exercises.
+	You can skip this section until you want to get started on the exercises.
 \end{remark}
 
 At a basic level, the notion of set seems uncontroversial.
@@ -35,13 +35,13 @@ In type theory the concepts of \emph{sets} and \emph{belonging} are not primitiv
 For example, one can define a \emph{setoid} as a set-like structure in type theory.
 
 \begin{ctdefinition}[Setoid]
-    A setoid is a tuple $S = \tup{T, \aword{contains}, \aword{equal}}$ where
-    \begin{itemize}
-        \item $T$ is a type;
-        \item $\aword{contains}:T\to\Bool$ is a function that tells use whether an element belongs to the setoid;
-        \item $\aword{equal}:T\times T\to\Bool$ is the equality;
-              % \item $\aword{apart}:T\times T\to\Bool$ is the apartness function.
-    \end{itemize}
+	A setoid is a tuple $S = \tup{T, \aword{contains}, \aword{equal}}$ where
+	\begin{itemize}
+		\item $T$ is a type;
+		\item $\aword{contains}:T\to\Bool$ is a function that tells use whether an element belongs to the setoid;
+		\item $\aword{equal}:T\times T\to\Bool$ is the equality;
+		      % \item $\aword{apart}:T\times T\to\Bool$ is the apartness function.
+	\end{itemize}
 \end{ctdefinition}
 The function $\aword{equal}$ should have the properties of an \emph{equivalence relation},
 which will be discussed in \cref{def:equivalence-relation}.
@@ -54,54 +54,54 @@ Assume that we already have a setoid for integers defined, so that we have a fun
 
 We can do it as follows:
 \begin{equation}
-    S_1 =
-    \begin{cases}
-        \begin{aligned}
-            T                & =
-            \aword{Tuple}[\aword{int}, \aword{int}]
-            \\
-            \aword{contains} & = \tup{a,b} \mapsto \aword{contains}_{\aword{int}}(a)  \wedge \aword{contains}_{\aword{int}}(b)
-            \\
-            \aword{equal}    & = \tup{\tup{a,b}, \tup{c,d}}
-            \mapsto \aword{equal}_{\aword{int}} (a\cdot c, b\cdot d)
-        \end{aligned}
-    \end{cases}
+	S_1 =
+	\begin{cases}
+		\begin{aligned}
+			T                & =
+			\aword{Tuple}[\aword{int}, \aword{int}]
+			\\
+			\aword{contains} & = \tup{a,b} \mapsto \aword{contains}_{\aword{int}}(a)  \wedge \aword{contains}_{\aword{int}}(b)
+			\\
+			\aword{equal}    & = \tup{\tup{a,b}, \tup{c,d}}
+			\mapsto \aword{equal}_{\aword{int}} (a\cdot c, b\cdot d)
+		\end{aligned}
+	\end{cases}
 \end{equation}
 
 One can define a different setoid with the same underlying type $\aword{Tuple}[\aword{int}, \aword{int}]$ where a pair of elements is interpreted as an interval:
 \begin{equation}
-    S_2 =
-    \begin{cases}
-        \begin{aligned}
-            T                & = \aword{Tuple}[\aword{int}, \aword{int}] \\
-            \aword{contains} & = \tup{a,b} \mapsto
-            \aword{contains}_{\aword{int}}(a)
-            \booland
-            \aword{contains}_{\aword{int}}(b)
-            \booland
-            (a\leq b) \\
-            \aword{equal}    & = \tup{\tup{a,b}, \tup{c,d}}
-            \mapsto
-            \aword{equal}_{\aword{int}}(a,c)
-            \booland
-            \aword{equal}_{\aword{int}}(b,d)
-        \end{aligned}
-    \end{cases}
+	S_2 =
+	\begin{cases}
+		\begin{aligned}
+			T                & = \aword{Tuple}[\aword{int}, \aword{int}] \\
+			\aword{contains} & = \tup{a,b} \mapsto
+			\aword{contains}_{\aword{int}}(a)
+			\booland
+			\aword{contains}_{\aword{int}}(b)
+			\booland
+			(a\leq b)                                                    \\
+			\aword{equal}    & = \tup{\tup{a,b}, \tup{c,d}}
+			\mapsto
+			\aword{equal}_{\aword{int}}(a,c)
+			\booland
+			\aword{equal}_{\aword{int}}(b,d)
+		\end{aligned}
+	\end{cases}
 \end{equation}
 
 The elements $\tup{1,4}$ and $\tup{-2, 8}$ are in both setoids.
 However, we have that
 \begin{equation}
-    \aword{equal}_{S_1} (\tup{1,4}, \tup{-2, 8}) = \true
-    \qqand
-    \aword{equal}_{S_2} (\tup{1,4}, \tup{-2, 8}) = \false .
+	\aword{equal}_{S_1} (\tup{1,4}, \tup{-2, 8}) = \true
+	\qqand
+	\aword{equal}_{S_2} (\tup{1,4}, \tup{-2, 8}) = \false .
 \end{equation}
 Every time we have an equality we should think about in which setoid the equality is understood.
 We would rewrite the above as
 \begin{equation}
-    \tup{1,4} =_{S_1} \tup{-2, 8}
-    \qqand
-    \tup{1,4} \neq_{S_2} \tup{-2, 8}.
+	\tup{1,4} =_{S_1} \tup{-2, 8}
+	\qqand
+	\tup{1,4} \neq_{S_2} \tup{-2, 8}.
 \end{equation}
 
 \subsection{Python and other design choices}
@@ -111,18 +111,18 @@ We chose to use Python as the language for the exercises because, as of 2021, it
 We should also note that, fixed the language, there is considerable freedom in defining the interfaces and the class hierarchy.
 We tried to follow these principles:
 \begin{itemize}
-    \item \emph{Elements are opaque}: We never specify any interface for elements.
-          It is the \emph{structure} that ``owns'' the elements that knows how to operate on them.
-          For example, we define a \classname{SetProduct} which is a set whose elements are a tuple of elements.
-          Rather than defining a class \classname{ElementTuple} that can tell us its \funcname{elements}, there is a  function \classname{unpack} in \classname{SetProduct} that tells us the content of the opaque element.
+	\item \emph{Elements are opaque}: We never specify any interface for elements.
+	      It is the \emph{structure} that ``owns'' the elements that knows how to operate on them.
+	      For example, we define a \classname{SetProduct} which is a set whose elements are a tuple of elements.
+	      Rather than defining a class \classname{ElementTuple} that can tell us its \funcname{elements}, there is a  function \classname{unpack} in \classname{SetProduct} that tells us the content of the opaque element.
 
-          This works very well and gives the implementer (you) total freedom to choose the internal representation.
+	      This works very well and gives the implementer (you) total freedom to choose the internal representation.
 
-          However, this is for a beginner i counter-intuitive, and goes against to beginner's advice in object-oriented languages, where a \classname{Dog} is an \classname{Animal} that \funcname{barks}.
+	      However, this is for a beginner i counter-intuitive, and goes against to beginner's advice in object-oriented languages, where a \classname{Dog} is an \classname{Animal} that \funcname{barks}.
 
-    \item \emph{Composition over inheritance}: An example use of inheritance would be saying: ``a poset is a set which also has an order relation''; composition would be saying ``a poset is a tuple of a set and an order relation''.
-          We adopt composition, which is also the way we define mathematical objects.
-          The over-use of inheritance is another beginner mistake in object-oriented programming.
+	\item \emph{Composition over inheritance}: An example use of inheritance would be saying: ``a poset is a set which also has an order relation''; composition would be saying ``a poset is a tuple of a set and an order relation''.
+	      We adopt composition, which is also the way we define mathematical objects.
+	      The over-use of inheritance is another beginner mistake in object-oriented programming.
 
 \end{itemize}
 

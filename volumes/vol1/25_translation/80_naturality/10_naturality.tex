@@ -18,20 +18,20 @@ We have seen that an instance of a database can be modeled as a functor whose ta
 
 %
 \begin{marginfigure}
-    \centering
-    \includesag{student_database_schema}
-    \caption{}
-    \label{fig:student_database_schema}
+	\centering
+	\includesag{student_database_schema}
+	\caption{}
+	\label{fig:student_database_schema}
 \end{marginfigure}
 %
 
 The architecture of the database in our example might be encoded by a category with four objects and three non-identity morphisms, as depicted in \cref{fig:student_database_schema}.
-The object $\styleobj{S}$ stands for $\emph{Student}$, $\styleobj{D}$ stands for $\emph{Discipline}$, $\styleobj{N}$ stands for $\emph{Name}$, and $\styleobj{Y}$ stands for $\emph{Year}$.
-Call this category $\CatC$.
-A database instance $\funa : \CatC \fto \Set$ entails specifying a set $\funa(\styleobj{S})$ of all student IDs, a set $\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, etc. .
+The object~$\styleobj{S}$ stands for \emph{Student},~$\styleobj{D}$ stands for \emph{Discipline},~$\styleobj{N}$ stands for \emph{Name}, and~$\styleobj{Y}$ stands for \emph{Year}.
+Call this category~$\CatC$.
+A database instance~$\funa \colon \CatC \fto \Set$ entails specifying a set~$\funa(\styleobj{S})$ of all student IDs, a set~$\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, etc.
 ... and so on.
-It also entails defining functions for each of the arrows in $\CatC$.
-For example, $\funa(\stylemorph{studied}) : \funa(\styleobj{S}) \mto \funa(\styleobj{D})$ is the function that assigns to each student ID the name of the discipline that that student studied.
+It also entails defining functions for each of the arrows in~$\CatC$.
+For example,~$\funa(\stylemorph{\text{studied}}) \colon \funa(\styleobj{S}) \mto \funa(\styleobj{D})$ is the function that assigns to each student ID the name of the discipline that that student studied.
 
 \subsection{Updating the database}
 
@@ -39,36 +39,31 @@ For simplicity, we'll just focus on two aspects of the data: student ID numbers 
 Let's assume that the university updates its alumni database once a year.
 This means, for example, adding the graduates of that year to the total list of graduates.
 
-To model the situation, let $\funa : \CatC \fto \Set$ be the database instance for the year 2021, and let $\funb : \CatC \fto \Set$ be the database instance for the year 2022.
-For concreteness, let's suppose the student IDs are in some standardized format, for example a code of the kind 17-371-802, where each of the three parts of the code are calculated/assigned by some rule (\text{e.g.} the ``17'' here stands for 2017, the year the student registered with the university, etc.)
+To model the situation, let~$\funa \colon \CatC \fto \Set$ be the database instance for the year 2021, and let~$\funb \colon \CatC \fto \Set$ be the database instance for the year 2022.
+For concreteness, let's suppose the student IDs are in some standardized format, for example a code of the kind 17-371-802, where each of the three parts of the code are calculated/assigned by some rule (\text{e.g.}, the ``17'' here stands for 2017, the year the student registered with the university, etc.)
 .
 
-Since new students register to the university each year, the set $\funa(\styleobj{S})$ of all student IDs registered up to the end of 2020 is a subset of the set $\funb(\styleobj{S})$ of student IDs up to the end of 2022.
-This means there is an inclusion function $\ntrafoa_{\styleobj{S}} :  \funa(\styleobj{S}) \mto \funb(\styleobj{S})$.
+Since new students register to the university each year, the set~$\funa(\styleobj{S})$ of all student IDs registered up to the end of 2020 is a subset of the set~$\funb(\styleobj{S})$ of student IDs up to the end of 2022.
+This means there is an inclusion function~$\ntrafoa_{\styleobj{S}} \colon  \funa(\styleobj{S}) \mto \funb(\styleobj{S})$.
 
 Now suppose that in 2022 the university decides to simplify the way it attributes disciplines to students in the database.
-For instance, instead of the discipline names
-\begin{equation}
-    \funa(\styleobj{D}) = \makeset{ \text{mechanical engineering},  \text{civil engineering}, \text{applied physics}, \text{theoretical physics}, \text{pure mathematics}, \text{applied mathematics} },
-\end{equation}
-the new discipline names are just
-\begin{equation}
-    \funb(\styleobj{D}) = \makeset{ \text{engineering}, \text{physics}, \text{mathematics} }.
-\end{equation}
-In order to implement these changes, we use a function $\ntrafoa_{\styleobj{D}}: \funa(\styleobj{D}) \mto \funb(\styleobj{D})$ which maps the old discipline names to the corresponding new ones in an obvious way:
+For instance, instead of the discipline names~$\funa(\styleobj{D}) = \makeset{ \text{mechanical engineering},  \text{civil engineering}, \text{applied physics}, \text{theoretical physics}, \text{pure mathematics}, \text{applied mathematics} }$,
+the new discipline names are just~$\funb(\styleobj{D}) = \makeset{ \text{engineering}, \text{physics}, \text{mathematics} }$.
+
+In order to implement these changes, we use a function~$\ntrafoa_{\styleobj{D}}\colon \funa(\styleobj{D}) \mto \funb(\styleobj{D})$ which maps the old discipline names to the corresponding new ones in an obvious way:
 \begin{equation*}
-    \ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
+	\ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
 \end{equation*}
 
-The functions $\ntrafoa_\styleobj{S}$ and $\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance $\funb$ relates coherently with the older database instance $\funa$.
-Concretely, we want that if a student ID in $ \funb(\styleobj{S})$ is inherited from $\funa(\styleobj{S})$ -- in other words, if it is in the image of $\ntrafoa_{\styleobj{S}}$ --  then we want that its associated discipline in the database instance $\funb$ is the same as if we first computed the student's discipline in the older database instance $\funa$, and then mapped it to $\funb$ using the function $\ntrafoa_{\styleobj{D}}$.
+The functions~$\ntrafoa_\styleobj{S}$ and~$\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance~$\funb$ relates coherently with the older database instance~$\funa$.
+Concretely, we want that if a student ID in~$\funb(\styleobj{S})$ is inherited from~$\funa(\styleobj{S})$ -- in other words, if it is in the image of~$\ntrafoa_{\styleobj{S}}$ --  then we want that its associated discipline in the database instance~$\funb$ is the same as if we first computed the student's discipline in the older database instance~$\funa$, and then mapped it to~$\funb$ using the function~$\ntrafoa_{\styleobj{D}}$.
 
 %
 \begin{marginfigure}
-    \centering
-    \includesag{student_database_square}
-    \caption{}
-    \label{fig:student_database_square}
+	\centering
+	\includesag{student_database_square}
+	\caption{}
+	\label{fig:student_database_square}
 \end{marginfigure}
 %
 
@@ -76,78 +71,86 @@ This can be formulated succinctly by saying that we want the diagram in figure \
 
 \subsection{The general situation}
 
-To define natural transformations, the general situation we will start from is when we have two functors $\funa : \CatC \fto \CatD$  and $\funb : \CatC \fto \CatD$, sharing the same source and target, respectively.
-In the previous example above, $\funa$ and $\funb$ were database instances.
+To define natural transformations, the general situation we will start from is when we have two functors~$\funa \colon \CatC \fto \CatD$  and~$\funb \colon \CatC \fto \CatD$, sharing the same source and target, respectively.
+In the previous example above,~$\funa$ and~$\funb$ were database instances.
 
-A natural transformation from $\funa$ to $\funb$ is then a kind of ``map'' that relates the two functors.
+A natural transformation from~$\funa$ to~$\funb$ is then a kind of ``map'' that relates the two functors.
 How might one define such a thing?
 
 First, let's look at the situation only on the level of objects.
-Each object $\Obja$ of $\CatC$ is mapped by $\funa$ and $\funb$ to an object $\funa(\Obja)$ and $\funb(\Obja)$ of $\CatD$, respectively.
-One straightforward way to relate $\funa(\Obja)$ to $\funb(\Obja)$ is to choose a morphism $\funa(\Obja) \mto \funb(\Obja)$ in $\CatD$.
-Let's call this morphism $\ntrafoa_{\Obja}$, using the subscript $\Obja$ since $\ntrafoa_{\Obja}$ relates the respective images of the object $\Obja$ under $\funa$ and $\funb$.
-If we choose such a morphism for each object in $\CatC$, then we'll have collection $\{ \ntrafoa_\Obja \}_{\Obja \in \Ob_\CatC}$ of morphisms in $\CatD$, indexed by the objects of $\CatC$.
+Each object~$\Obja$ of~$\CatC$ is mapped by~$\funa$ and~$\funb$ to an object~$\funa(\Obja)$ and~$\funb(\Obja)$ of~$\CatD$, respectively.
+One straightforward way to relate~$\funa(\Obja)$ to~$\funb(\Obja)$ is to choose a morphism~$\funa(\Obja) \mto \funb(\Obja)$ in~$\CatD$.
+Let's call this morphism~$\ntrafoa_{\Obja}$, using the subscript~$\Obja$ since~$\ntrafoa_{\Obja}$ relates the respective images of the object~$\Obja$ under~$\funa$ and~$\funb$.
+If we choose such a morphism for each object in~$\CatC$, then we'll have collection~$\{ \ntrafoa_\Obja \}_{\Obja \in \Ob_\CatC}$ of morphisms in~$\CatD$, indexed by the objects of~$\CatC$.
 
-Next, let's consider a morphism $\mora : \Obja \mto \Objb$ in the category $\CatC$.
-Under the functor $\funa$ it will be mapped to some morphism $\funa(\mora): \funa(\Obja) \mto \funb(\Objb)$ in $\CatD$, and under the functor $\funb$ it will be mapped to some other morphism $\funb(\mora): \funb(\Obja) \mto \funb(\Objb)$, also in $\CatD$.
-
-%
-\begin{figure}[h!]
-    \includegraphics[width=.6\linewidth]{two_functors_diagram}
-    \caption{}
-    \label{fig:two-functors-diagram}
-\end{figure}
-%
-
-We can think of $\funa(\mora): \funa(\Obja) \mto \funb(\Objb)$ and $\funb(\mora): \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in $\CatD$.
-If we have already chosen morphisms $\ntrafoa_\Obja: \funa(\Obja) \mto \funb(\Obja)$ and $\ntrafoa_\Objb: \funa(\Objb) \mto \funb(\Objb)$ in $\CatD$, then these will connect the two diagrams, as depicted in \cref{fig:two-functors-connected-diagram}.
+Next, let's consider a morphism~$\mora \colon \Obja \mto \Objb$ in the category~$\CatC$.
+Under the functor~$\funa$ it will be mapped to some morphism~$\funa(\mora)\colon \funa(\Obja) \mto \funb(\Objb)$ in~$\CatD$, and under the functor~$\funb$ it will be mapped to some other morphism~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$, also in~$\CatD$.
 
 %
 \begin{figure}[h!]
-    \includegraphics[width=.6\linewidth]{two_functors_connected_diagram}
-    \caption{}
-    \label{fig:two-functors-connected-diagram}
+	\begin{center}
+		\includesag{diagram_two_functors}
+		\caption{
+			\label{fig:two-functors-diagram}}
+	\end{center}
 \end{figure}
 %
 
-In $\CatD$, this gives rise to the square diagram shown in \cref{fig:naturality-square}.
-We'll require, as a condition on the morphisms $\ntrafoa_\Obja$ and $\ntrafoa_\Objb$, that they make the diagram in \cref{fig:naturality-square} commutative:
+We can think of~$\funa(\mora)\colon \funa(\Obja) \mto \funb(\Objb)$ and~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in~$\CatD$.
+If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \funb(\Obja)$ and~$\ntrafoa_\Objb\colon \funa(\Objb) \mto \funb(\Objb)$ in~$\CatD$, then these will connect the two diagrams, as depicted in \cref{fig:two-functors-connected-diagram}.
+
+%
+\begin{figure}[h!]
+	\begin{center}
+		\includesag{diagram_two_functors_conn}
+	\end{center}
+	\caption{
+		\label{fig:two-functors-connected-diagram}}
+\end{figure}
+%
+
+\begin{center}
+
+\end{center}
+
+In~$\CatD$, this gives rise to the square diagram shown in \cref{fig:naturality-square}.
+We'll require, as a condition on the morphisms~$\ntrafoa_\Obja$ and~$\ntrafoa_\Objb$, that they make the diagram in \cref{fig:naturality-square} commutative:
 \begin{equation}
-    \funa(\mora) \mthen \ntrafoa_\Objb = \ntrafoa_\Obja \mthen \funb(\mora).
+	\funa(\mora) \mthen \ntrafoa_\Objb = \ntrafoa_\Obja \mthen \funb(\mora).
 \end{equation}
 \todo{@J: ideally say more here to motivate or explain this.
-    Perhaps include somewhere this perspective: Natural transformations are meant to capture the idea that a transformation is natural in the sense of not depending on any arbitrary choices.
-    If a transformation does depend on arbitrary choices, the arrows alpha X and alpha Y would not be reusable but would have to change when f changes.
+	Perhaps include somewhere this perspective: Natural transformations are meant to capture the idea that a transformation is natural in the sense of not depending on any arbitrary choices.
+	If a transformation does depend on arbitrary choices, the arrows alpha X and alpha Y would not be reusable but would have to change when f changes.
 }
 
 %
 \begin{marginfigure}
-    \centering
-    \includesag{naturality_square}
-    \caption{}
-    \label{fig:naturality-square}
+	\centering
+	\includesag{naturality_square}
+	\caption{}
+	\label{fig:naturality-square}
 \end{marginfigure}
 %
 
-Now consider not only a single morphism $\mora : \Obja \mto \Objb$ in $\CatC$ being mapped by $\funa$ and $\funb$, respectively, but \emph{all} of the category $\CatC$.
-Under $\funa$, the category $\CatC$ is mapped to a -- possibly very complicated --  diagram in $\CatD$ (a directed graph of objects and morphism comprising the image of $\funa$), and similarly, under $\funb$, the category $\CatC$ is mapped to another diagram in $\CatD$ (the image of $\funb$).
+Now consider not only a single morphism~$\mora \colon \Obja \mto \Objb$ in~$\CatC$ being mapped by~$\funa$ and~$\funb$, respectively, but \emph{all} of the category~$\CatC$.
+Under~$\funa$, the category~$\CatC$ is mapped to a -- possibly very complicated --  diagram in~$\CatD$ (a directed graph of objects and morphism comprising the image of~$\funa$), and similarly, under~$\funb$, the category~$\CatC$ is mapped to another diagram in~$\CatD$ (the image of~$\funb$).
 
-To relate the image of $\funa$ to the image of $\funb$ we can proceed in the same way as above: for each object $\Obja$ in $\CatC$, we choose a morphism $\ntrafoa_\Obja : \funa(\Obja) \mto \funb(\Objb)$ in $\CatD$.
-In other words, we have a collection of morphisms $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$ indexed by the objects of $\CatC$.
+To relate the image of~$\funa$ to the image of~$\funb$ we can proceed in the same way as above: for each object~$\Obja$ in~$\CatC$, we choose a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Objb)$ in~$\CatD$.
+In other words, we have a collection of morphisms~$(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$ indexed by the objects of~$\CatC$.
 This gives rise to lots of squares of the kind in \cref{fig:naturality-square}, which we will require to be commutative.
-It is because of this commutativity condition, which is a condition on the collection $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$, that some mathematicians would say that the collection $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$ is a ``coherent'' or ``natural'' way to relate the image of $\funa$ to the image of $\funb$.
+It is because of this commutativity condition, which is a condition on the collection~$(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$, that some mathematicians would say that the collection~$(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$ is a ``coherent'' or ``natural'' way to relate the image of~$\funa$ to the image of~$\funb$.
 (This does not mean, however, that there is at most one natural transformation between any two given functors - on the contrary, there might be many!)
 
-In \cref{fig:two-naturality-squares} we have illustrated a situation involving three objects and two morphisms in $\CatC$, giving rise to two squares.
+In \cref{fig:two-naturality-squares} we have illustrated a situation involving three objects and two morphisms in~$\CatC$, giving rise to two squares.
 We have ``glued'' the two squares together since they share an edge (this a more compact way of drawing them).
 Note that because each of the two component squares in the diagram commute, so does the entire diagram.
 
 %
 \begin{marginfigure}
-    \centering
-    \includesag{two_naturality_squares}
-    \caption{}
-    \label{fig:two-naturality-squares}
+	\centering
+	\includesag{two_naturality_squares}
+	\caption{}
+	\label{fig:two-naturality-squares}
 \end{marginfigure}
 %
 
@@ -157,57 +160,57 @@ Note that because each of the two component squares in the diagram commute, so d
 \linkvideo{spring2021-nat-trafos:natural-trafos:nattrafos-as-mor} % Natural transformations are morphisms between functors
 
 \begin{ctdefinition}[Natural transformation]
-    \label{def:natural-transformation}
-    Let \CatC and \CatD be categories, and let~$\funa,\funb\colon \CatC\fto \CatD$ be functors.
-    A \emph{\iindex{natural transformation}}~$\ntrafoa \colon \funa\nto \funb$ is specified by:
+	\label{def:natural-transformation}
+	Let \CatC and \CatD be categories, and let~$\funa,\funb\colon \CatC\fto \CatD$ be functors.
+	A \emph{\iindex{natural transformation}}~$\ntrafoa \colon \funa\nto \funb$ is specified by:
 
-    \constit
-    \begin{enumerate}
-        \item For each object~$\Obja\in \CatC$, a morphism $\ntrafoa_\Obja \colon \funa(\Obja)\mto \funb(\Obja)$ in \CatD, called the $\Obja$\emph{-component} of $\ntrafoa$.
-    \end{enumerate}
-    \condit
-    \begin{enumerate}
-        \item For every morphism~$\mora\colon \Obja\mto \Objb$ in \CatC, the components of $\ntrafoa$ must satisfy the \emph{naturality condition}
-              \begin{equation}
-                  \funa(\mora)\mthen \ntrafoa_\Objb = \ntrafoa_\Obja\mthen \funb(\mora).
-              \end{equation}
-              In other words, the following diagram must commute:
-              \begin{equation}
-                  \label{eq:def-naturality-square}
-                  \middlesag{55_natural_2}
-              \end{equation}
-    \end{enumerate}
+	\constit
+	\begin{enumerate}
+		\item For each object~$\Obja\in \CatC$, a morphism $\ntrafoa_\Obja \colon \funa(\Obja)\mto \funb(\Obja)$ in \CatD, called the $\Obja$\emph{-component} of $\ntrafoa$.
+	\end{enumerate}
+	\condit
+	\begin{enumerate}
+		\item For every morphism~$\mora\colon \Obja\mto \Objb$ in \CatC, the components of $\ntrafoa$ must satisfy the \emph{naturality condition}
+		      \begin{equation}
+			      \funa(\mora)\mthen \ntrafoa_\Objb = \ntrafoa_\Obja\mthen \funb(\mora).
+		      \end{equation}
+		      In other words, the following diagram must commute:
+		      \begin{equation}
+			      \label{eq:def-naturality-square}
+			      \middlesag{55_natural_2}
+		      \end{equation}
+	\end{enumerate}
 \end{ctdefinition}
 
 To reiterate: a natural transformation $\ntrafoa$ is a \emph{collection} $(\ntrafoa_\Obja)_{\Obja \in \Ob_\CatC}$, satisfying the naturality conditions, and the individual morphisms $\ntrafoa_\Obja$ are its \emph{components}.
 This is analogous to how a sequence $a = (a_n)_{n \in \natnumbers}$ has terms or a vector $v = (v_1, .
-    .. , v_n)$ has components.
+	.. , v_n)$ has components.
 
 The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality squares}, and a natural transformation~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely as in \cref{fig:nat_trans_globular}.
 
 \begin{marginfigure}
-    \centering
-    \includesag{55_natural_1}
-    \caption{}
-    \label{fig:nat_trans_globular}
+	\centering
+	\includesag{55_natural_1}
+	\caption{}
+	\label{fig:nat_trans_globular}
 \end{marginfigure}
 %\begin{equation}
 %    \middlesag{55_natural_1}
 %\end{equation}
 \begin{figure}[h!]
-    \centering
-    \begin{ctdefinitionshade}
-        \includesag{096_natural_graphically}
-    \end{ctdefinitionshade}
-    \caption{}
-    \label{fig:nat_trans_graphically}
+	\centering
+	\begin{ctdefinitionshade}
+		\includesag{096_natural_graphically}
+	\end{ctdefinitionshade}
+	\caption{}
+	\label{fig:nat_trans_graphically}
 \end{figure}
 
 \subsection{Natural isomorphisms}
 
 \begin{ctdefinition}[Natural isomorphism]
-    \label{def:nat_iso}
-    A natural transformation~$\ntrafoa \colon \funa \nto \funb $ is called a \emph{\iindex{natural isomorphism}} if each component morphism ~$\ntrafoa_\Obja$ in \CatD is an isomorphism.
+	\label{def:nat_iso}
+	A natural transformation~$\ntrafoa \colon \funa \nto \funb $ is called a \emph{\iindex{natural isomorphism}} if each component morphism ~$\ntrafoa_\Obja$ in \CatD is an isomorphism.
 \end{ctdefinition}
 \todotextjira{473}{@J: seems like a lot of things are missing here.}
 \clearpage
@@ -220,92 +223,92 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
 \todo{@J: write up example here about natural trafos between monotone maps}
 
 \begin{example}
-    \label{ex:Vect}
-    Consider the category~$\Vect_{\reals}$ whose objects are real vector spaces and whose morphisms are linear maps.
-    (For convenience, in the following we sometimes omit reference to the ground field.)
-    Recall that the \emph{dual} of a vector space~$V$ is the vector space describing all linear maps from~$V$ to~\reals:
-    \begin{equation}
-        \label{eq:dual-vector-space}
-        V^* \definedas \HomSet{\Vect}{V}{\reals},
-    \end{equation}
-    Also, recall that if~$\mapa\colon V \mto W$ is a linear map, then its dual is a linear map~$\mapa^* \lb  \colon W^* \mto V^*$.
+	\label{ex:Vect}
+	Consider the category~$\Vect_{\reals}$ whose objects are real vector spaces and whose morphisms are linear maps.
+	(For convenience, in the following we sometimes omit reference to the ground field.)
+	Recall that the \emph{dual} of a vector space~$V$ is the vector space describing all linear maps from~$V$ to~\reals:
+	\begin{equation}
+		\label{eq:dual-vector-space}
+		V^* \definedas \HomSet{\Vect}{V}{\reals},
+	\end{equation}
+	Also, recall that if~$\mapa\colon V \mto W$ is a linear map, then its dual is a linear map~$\mapa^* \lb  \colon W^* \mto V^*$.
 
-    Applying the above duality construction twice to a vector space or a linear map gives their double dual.
-    It turns out that this is a functorial operation.
-    That is, there is a functor
-    \begin{equation}
-        \label{eq:double-dual-functor}
-        \text{\stylefunctors{Double dual}}\colon \Vect \fto \Vect
-    \end{equation}
-    that maps every vector space and every linear map to its double dual.
+	Applying the above duality construction twice to a vector space or a linear map gives their double dual.
+	It turns out that this is a functorial operation.
+	That is, there is a functor
+	\begin{equation}
+		\label{eq:double-dual-functor}
+		\text{\stylefunctors{Double dual}}\colon \Vect \fto \Vect
+	\end{equation}
+	that maps every vector space and every linear map to its double dual.
 
-    Furthermore, for any vector space~$V$, there is a ``canonical'' or ``natural'' map~
-    \begin{equation}
-        \ntrafoa_V \colon V \nto V^{**}
-    \end{equation}
-    defined by
-    \begin{equation}
-        \label{eq:natural-trafo-to-double-dual}
-        \ntrafoa_V(v)(l) = l(v), \quad  v \in V, l \in V^*.
-    \end{equation}
-    These form the components of a natural transformation from the identity functor on \Vect to the double dual functor.
-    \begin{center}
-        \includesag{nat-trafo-ddual}
-    \end{center}
+	Furthermore, for any vector space~$V$, there is a ``canonical'' or ``natural'' map~
+	\begin{equation}
+		\ntrafoa_V \colon V \nto V^{**}
+	\end{equation}
+	defined by
+	\begin{equation}
+		\label{eq:natural-trafo-to-double-dual}
+		\ntrafoa_V(v)(l) = l(v), \quad  v \in V, l \in V^*.
+	\end{equation}
+	These form the components of a natural transformation from the identity functor on \Vect to the double dual functor.
+	\begin{center}
+		\includesag{nat-trafo-ddual}
+	\end{center}
 \end{example}
 
 \begin{example}
-    Consider the powerset functor from \cref{ex:powerset_functor}, and denote it~$\funa$.
-    As a reminder, the functor maps each set to its powerset, and each map to a map distributed over subsets of the powerset.
-    We now look at a natural transformation~$\ntrafoa\colon \funid_\Set \nto \funa$, specified by
-    \begin{equation*}
-        \begin{aligned}
-            \ntrafoa_\setA\colon \funid_\Set(\setA) & \mto \funa(\setA) \\
-            \setA                                   & \mto \powerset(\setA) \\
-            \setAel                                 & \mapsto \{\setAel\}.
-        \end{aligned}
-    \end{equation*}
-    In other words, the natural transformation embeds each element of~$\setA$ into the power set~$\powerset(\setA)$.
-    To check that this is a valid natural transformation, consider $\mora\colon \setA\mto \setB$.
-    One has
-    \begin{equation*}
-        \begin{aligned}
-            (\ntrafoa_\setA \mthen \funa(\mora))(\setAel)
-             & =\{\setAel\} \mthen \funa(\mora) \\
-             & =\{\mora(\setAel)\} \\
-             & =\mora(\setAel)\mthen \ntrafoa_\setB \\
-             & =(\mora \mthen \ntrafoa_\setB)(\setAel).
-        \end{aligned}
-    \end{equation*}
+	Consider the powerset functor from \cref{ex:powerset_functor}, and denote it~$\funa$.
+	As a reminder, the functor maps each set to its powerset, and each map to a map distributed over subsets of the powerset.
+	We now look at a natural transformation~$\ntrafoa\colon \funid_\Set \nto \funa$, specified by
+	\begin{equation*}
+		\begin{aligned}
+			\ntrafoa_\setA\colon \funid_\Set(\setA) & \mto \funa(\setA)     \\
+			\setA                                   & \mto \powerset(\setA) \\
+			\setAel                                 & \mapsto \{\setAel\}.
+		\end{aligned}
+	\end{equation*}
+	In other words, the natural transformation embeds each element of~$\setA$ into the power set~$\powerset(\setA)$.
+	To check that this is a valid natural transformation, consider $\mora\colon \setA\mto \setB$.
+	One has
+	\begin{equation*}
+		\begin{aligned}
+			(\ntrafoa_\setA \mthen \funa(\mora))(\setAel)
+			 & =\{\setAel\} \mthen \funa(\mora)         \\
+			 & =\{\mora(\setAel)\}                      \\
+			 & =\mora(\setAel)\mthen \ntrafoa_\setB     \\
+			 & =(\mora \mthen \ntrafoa_\setB)(\setAel).
+		\end{aligned}
+	\end{equation*}
 \end{example}
 
 \vfill
 
 \begin{marginfigure}
-    \centering
-    \includesag{graph-cat}
-    \caption{}
-    \label{fig:graph-cat-again}
+	\centering
+	\includesag{graph-cat}
+	\caption{}
+	\label{fig:graph-cat-again}
 \end{marginfigure}
 \begin{gradedexercise}[\exname{NatTrafosGraphs}]
-    \label{ex:NatTrafosGraphs}
-    This exercise builds on \cref{ex:GraphsViaFunctors}.
-    There, we defined a category~$\Cat{G}$ which has precisely two objects and four morphisms, see \cref{fig:graph-cat-again} (the two identity morphisms are not drawn).
-    The task there was to understand how specifying a functor from this category $G$ into the category of sets is `the same thing' as specifying a directed graph.
+	\label{ex:NatTrafosGraphs}
+	This exercise builds on \cref{ex:GraphsViaFunctors}.
+	There, we defined a category~$\Cat{G}$ which has precisely two objects and four morphisms, see \cref{fig:graph-cat-again} (the two identity morphisms are not drawn).
+	The task there was to understand how specifying a functor from this category $G$ into the category of sets is `the same thing' as specifying a directed graph.
 
-    Now consider two functors~$\funaA, \funaB \colon \Cat{G} \fto \Set$.
-    Spell out what it means to have a natural transformation~$\ntrafoa\colon \funaA \nto \funaB$.
-    What does this correspond to in the language of directed graphs?
+	Now consider two functors~$\funaA, \funaB \colon \Cat{G} \fto \Set$.
+	Spell out what it means to have a natural transformation~$\ntrafoa\colon \funaA \nto \funaB$.
+	What does this correspond to in the language of directed graphs?
 \end{gradedexercise}
 
 \solutionof{NatTrafosGraphs}
 
 \begin{gradedexercise}[\exname{UpperSetsNatTrafos}]
-    \label{ex:UpperSetsNatTrafos}
-    This exercise builds on \cref{ex:UpperSetsViaFunctors}.
-    There we fixed a poset~$\posA$, viewed it as a category~$\Cat{P}$, and saw that functors~$\Cat{P} \fto \Bool$ encode upper sets in~$\posA$.
-    Suppose we have two functors~$\funaA, \funaB \colon \Cat{P} \fto \Bool$.
-    What does a natural transformation~$\ntrafoa \colon \funaA \nto \funaB$ correspond to in terms of the upper sets encoded by~$\funaA$ and~$\funaB$, respectively?
+	\label{ex:UpperSetsNatTrafos}
+	This exercise builds on \cref{ex:UpperSetsViaFunctors}.
+	There we fixed a poset~$\posA$, viewed it as a category~$\Cat{P}$, and saw that functors~$\Cat{P} \fto \Bool$ encode upper sets in~$\posA$.
+	Suppose we have two functors~$\funaA, \funaB \colon \Cat{P} \fto \Bool$.
+	What does a natural transformation~$\ntrafoa \colon \funaA \nto \funaB$ correspond to in terms of the upper sets encoded by~$\funaA$ and~$\funaB$, respectively?
 \end{gradedexercise}
 
 \solutionof{UpperSetsNatTrafos}
@@ -314,30 +317,30 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
 
 \devel{
 
-    \section{Horizontal composition}
+	\section{Horizontal composition}
 
-    \todo{@J: write this up}
+	\todo{@J: write this up}
 
-    \section{To add}
-    \todojira{141}{Add parts corresponding to listed videos.}
-    \linkvideo{spring2021-nat-trafos:natural-trafos:horizontal-composition} % Horizontal composition
-    \linkvideo{spring2021-nat-trafos:natural-trafos:interchange-law} % Interchange law
-    \linkvideo{spring2021-nat-trafos:natural-trafos:rel-mon-maps} % Relating monotone maps
-    \linkvideo{spring2021-nat-trafos:natural-trafos:eq-maps-gr-actions} % Equivariant maps between group actions
+	\section{To add}
+	\todojira{141}{Add parts corresponding to listed videos.}
+	\linkvideo{spring2021-nat-trafos:natural-trafos:horizontal-composition} % Horizontal composition
+	\linkvideo{spring2021-nat-trafos:natural-trafos:interchange-law} % Interchange law
+	\linkvideo{spring2021-nat-trafos:natural-trafos:rel-mon-maps} % Relating monotone maps
+	\linkvideo{spring2021-nat-trafos:natural-trafos:eq-maps-gr-actions} % Equivariant maps between group actions
 }
 
 \showslides{
-    \begin{forslides}
-        \begin{equation}
-            \label{eq:ex_nt_1}
-            \ntrafoa \colon \funid_\Set \nto \funa
-        \end{equation}
-        \begin{equation}
-            \label{eq:ex_nt_2}
-            \begin{aligned}
-                \ntrafoa_\setA \colon \funid_\Set(\setA) & \mto \funa(\setA) \\
-                \setAel                                  & \mapsto \{\setAel\}
-            \end{aligned}
-        \end{equation}
-    \end{forslides}
+	\begin{forslides}
+		\begin{equation}
+			\label{eq:ex_nt_1}
+			\ntrafoa \colon \funid_\Set \nto \funa
+		\end{equation}
+		\begin{equation}
+			\label{eq:ex_nt_2}
+			\begin{aligned}
+				\ntrafoa_\setA \colon \funid_\Set(\setA) & \mto \funa(\setA)   \\
+				\setAel                                  & \mapsto \{\setAel\}
+			\end{aligned}
+		\end{equation}
+	\end{forslides}
 }
