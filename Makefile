@@ -231,6 +231,10 @@ latexindent-version:
 latexindent:
 	bash -c 'for a in volumes/*/*/*/*.tex; do echo $$a; ./latexindent.sh $$a; done'
 	bash -c 'for a in sag/*.tikz; do echo $$a; ./latexindent.sh $$a; done'
+
+latexindent-quick:
+	zsh latexindent-all.sh
+
 generate-videos:
 	 python3 -m act4e_videos.parsing \
 	 	--config videos/videos.yaml \
