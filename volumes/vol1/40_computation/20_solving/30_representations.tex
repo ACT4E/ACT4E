@@ -10,57 +10,57 @@ It is useful to also describe a design problem as a map from functionality to re
 A useful analogy is the state space representation \emph{vs} the transfer function representation of a linear time-invariant system: the state space representation is richer, but we only need the transfer function to characterize the input-output response.
 
 \begin{definition}
-	\label{def:ftor}
-	Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req} $,
-	we denote by~$\ftor\colon \funsp\toinPos\Aressp$ the monotone map that associates
-	to each functionality~\fun  the set of minimal resources necessary to realize~\fun:
-	\begin{eqnarray*}
-		\ftor\colon \funsp & \toinPos & \Aressp,\\
-		\fun& \mapsto & \resMin\{\req(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\fun\posleq\prov(\imp)\right)\}.
-	\end{eqnarray*}
-	If a certain functionality~\fun is infeasible, then~$\ftor(\fun)=\emptyset$.
+    \label{def:ftor}
+    Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req} $,
+    we denote by~$\ftor\colon \funsp\toinPos\Aressp$ the monotone map that associates
+    to each functionality~\fun  the set of minimal resources necessary to realize~\fun:
+    \begin{eqnarray*}
+        \ftor\colon \funsp & \toinPos & \Aressp,\\
+        \fun& \mapsto & \resMin\{\req(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\fun\posleq\prov(\imp)\right)\}.
+    \end{eqnarray*}
+    If a certain functionality~\fun is infeasible, then~$\ftor(\fun)=\emptyset$.
 \end{definition}
 
 \begin{figure}
-	\centering
-	\includegraphics[scale=0.33]{gmcdp_setup_h}
-	\caption{}
-	\label{fig:setup_h-1}
+    \centering
+    \includegraphics[scale=0.33]{gmcdp_setup_h}
+    \caption{}
+    \label{fig:setup_h-1}
 \end{figure}
 
 \todotext{Say somewhere in the above how we are ordering antichains.
-	Also, is "objective function" above a technical term?
-	Is it clear what is meant?
+    Also, is "objective function" above a technical term?
+    Is it clear what is meant?
 }
 
 \begin{remark}
-	The minimal elements of any upper set form an antichain, and one might be tempted to represent upper sets via antichains.
-	However, one does not always have a one-to-one correspondence between antichains and upper sets.
-	Particularly, the correspondence exists for partial orders satisfying the \emph{descending chain condition}, and does not hold in general.
-	In short, the condition is satisfied if in the poset \todotext{In the poset or resources or in the poset of upper subsets of the poset or resources?
-		And/or this equivalent?
-	} no \emph{infinite descending chain} exists.
-	For instance, consider~$\tup{\mathbb{Z},\leq}$.
-	The chain $-1, -2, -3, \ldots$ is an infinite descending chain.
+    The minimal elements of any upper set form an antichain, and one might be tempted to represent upper sets via antichains.
+    However, one does not always have a one-to-one correspondence between antichains and upper sets.
+    Particularly, the correspondence exists for partial orders satisfying the \emph{descending chain condition}, and does not hold in general.
+    In short, the condition is satisfied if in the poset \todotext{In the poset or resources or in the poset of upper subsets of the poset or resources?
+        And/or this equivalent?
+    } no \emph{infinite descending chain} exists.
+    For instance, consider~$\tup{\mathbb{Z},\leq}$.
+    The chain $-1, -2, -3, \ldots$ is an infinite descending chain.
 \end{remark}
 
 \begin{example}
-	In the case of the motor design problem, the map~\ftor assigns
-	to each pair of~$\tup{\F{\text{speed}},\F{\text{torque}}}$
-	the achievable trade-off of \R{cost}, \R{mass}, and other resources~(\cref{fig:motor-trade-offs}).
-	The antichains are depicted as continuous curves, but they could also
-	be composed of a finite set of points.
+    In the case of the motor design problem, the map~\ftor assigns
+    to each pair of~$\tup{\F{\text{speed}},\F{\text{torque}}}$
+    the achievable trade-off of \R{cost}, \R{mass}, and other resources~(\cref{fig:motor-trade-offs}).
+    The antichains are depicted as continuous curves, but they could also
+    be composed of a finite set of points.
 
 \end{example}
 \begin{figure}
-	\includegraphics[scale=0.33]{gmcdp_motor_tradeoffs}
-	\caption{}
-	\label{fig:motor-trade-offs}
+    \includegraphics[scale=0.33]{gmcdp_motor_tradeoffs}
+    \caption{}
+    \label{fig:motor-trade-offs}
 \end{figure}
 
 By construction, \ftor is monotone (\cref{def:monotone}), which means that
 \begin{equation*}
-	\fun_{1}\funleq\fun_{2}\quad\Imp\quad\ftor(\fun_{1})\posleqof{\Aressp}\ftor(\fun_{2}),
+    \fun_{1}\funleq\fun_{2}\quad\Imp\quad\ftor(\fun_{1})\posleqof{\Aressp}\ftor(\fun_{2}),
 \end{equation*}.
 
 \todotextjira{299}{@Andrea: I commented out the below because the lemma is not included in public. }
@@ -70,20 +70,20 @@ Monotonicity of~\ftor means that if the functionality~\fun is increased the anti
 and at some point it might reach the top of~$\Aressp$, which is the empty set, meaning that the problem is not feasible.
 
 \begin{definition}
-	\label{def:rtof}
-	Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$,
-	define the map~$\rtof\colon \ressp\toinPos \Afunsp$ that associates
-	to each resource~\res the set of maximal functionalities which can be realized with~$\res$:
-	\begin{eqnarray*}
-		\rtof\colon \ressp & \toinPos & \Afunsp,\\
-		\res& \mapsto & \funMax\{\prov(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\res\posgeq\req(\imp)\right)\}.
-	\end{eqnarray*}
-	If a certain resource~\res only leads to infeasible functionalities, then~$\rtof(\res)=\emptyset$.
+    \label{def:rtof}
+    Given a DPI~$\tup{ \funsp,\ressp,\impsp,\prov,\req}$,
+    define the map~$\rtof\colon \ressp\toinPos \Afunsp$ that associates
+    to each resource~\res the set of maximal functionalities which can be realized with~$\res$:
+    \begin{eqnarray*}
+        \rtof\colon \ressp & \toinPos & \Afunsp,\\
+        \res& \mapsto & \funMax\{\prov(\imp)\mid\left(\imp\in\impsp\right)\,\wedge\,\left(\res\posgeq\req(\imp)\right)\}.
+    \end{eqnarray*}
+    If a certain resource~\res only leads to infeasible functionalities, then~$\rtof(\res)=\emptyset$.
 \end{definition}
 
 \todotext{J: Is $\varphi$ a good choice of notation here?
-	It seems better to choose a notation that is more similar to $h$.
-	The distance/clash between latin and greek seems too large to me.
+    It seems better to choose a notation that is more similar to $h$.
+    The distance/clash between latin and greek seems too large to me.
 }
 
 \todojira{254}{Do example as for ftor.}

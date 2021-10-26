@@ -16,51 +16,51 @@ For the engineer, one intuitive scenario where generalization is necessary is ha
 We have seen the category  \Set of sets and functions between sets.
 A function
 \begin{equation}
-	\label{eq:monad-simple}
-	\mora\colon\Obja\to\Objb
+    \label{eq:monad-simple}
+    \mora\colon\Obja\to\Objb
 \end{equation}
 between sets is ``deterministic'', in the sense that, given as input an element of~$\Obja$, it always produces the same output in~$\Objb$.
 
 Suppose now we want to deal with nondeterministic functions: functions that return, for each input, a \emph{set} of possible values.
 We can model nondeterministic functions from $\Obja$ to $\Objb$ as functions of the type
 \begin{equation}
-	\label{eq:monad-generalized}
-	\mora\colon\Obja\to\powerset\Objb.
+    \label{eq:monad-generalized}
+    \mora\colon\Obja\to\powerset\Objb.
 \end{equation}
 %
 Note that this is a generalization, in the sense that any deterministic function is a special nondeterministic function.
 For example, the function
 %
 \begin{equation}
-	\label{eq:monad-alpha-example1}
-	\defmapcommaset{
-		\alpha
-	}{
-		\natnumbers
-	}{
-		\natnumbers
-	}{
-		x
-	}{
-		x^2
-	}
+    \label{eq:monad-alpha-example1}
+    \defmapcommaset{
+        \alpha
+    }{
+        \natnumbers
+    }{
+        \natnumbers
+    }{
+        x
+    }{
+        x^2
+    }
 \end{equation}
 %
 can be rewritten as the function
 %
 \begin{equation}
-	\label{eq:monad-alpha-example2}
-	\defmapcommaset{
-		\alpha'
-	}{
-		\natnumbers
-	}{
-		\powerset\natnumbers
-	}{
-		x
-	}{
-		\{x^2\}
-	}
+    \label{eq:monad-alpha-example2}
+    \defmapcommaset{
+        \alpha'
+    }{
+        \natnumbers
+    }{
+        \powerset\natnumbers
+    }{
+        x
+    }{
+        \{x^2\}
+    }
 \end{equation}
 %
 which maps each element to a singleton set.
@@ -72,21 +72,21 @@ To do this, we need extra information: additional structure.
 So far we know the rules of composition for functions:
 %
 \begin{equation}
-	\label{eq:monad-function-composition}
-	\prftree{\mora\colon \Obja \to \Objb}{\quad}{\morb\colon \Objb \to \Objc}
-	{
-		\defmapcommaset{
-			(\mora\mthen\morb)
-		}{
-			\Obja
-		}{
-			\Objc
-		}{
-			x
-		}{
-			\morb(\mora(x))
-		}
-	}
+    \label{eq:monad-function-composition}
+    \prftree{\mora\colon \Obja \to \Objb}{\quad}{\morb\colon \Objb \to \Objc}
+    {
+        \defmapcommaset{
+            (\mora\mthen\morb)
+        }{
+            \Obja
+        }{
+            \Objc
+        }{
+            x
+        }{
+            \morb(\mora(x))
+        }
+    }
 \end{equation}
 %
 but this does not help for the generalized functions.
@@ -94,77 +94,77 @@ How can we compose nondeterministic function?
 What to fill in the space below?
 %
 \begin{equation}
-	\label{eq:monad-gen-function-composition}
-	\prftree{\mora\colon \Obja \to \powerset\Objb}{\quad}{\morb\colon \Objb \to \powerset \Objc}
-	{
-		\defmapset{(\mora\mthen\morb)}{\Obja}{\powerset\Objc}%
-		{x}{\text{\color{red}?}}}
+    \label{eq:monad-gen-function-composition}
+    \prftree{\mora\colon \Obja \to \powerset\Objb}{\quad}{\morb\colon \Objb \to \powerset \Objc}
+    {
+        \defmapset{(\mora\mthen\morb)}{\Obja}{\powerset\Objc}%
+        {x}{\text{\color{red}?}}}
 \end{equation}
 %
 There is one natural way to define this operation.
 Did you notice the following?
 
 \begin{lemma}
-	\label{lem:powersets-relations}
-	Functions from~$\Obja$ to~$\powerset{\Objb}$ are in one-to-one correspondence with relations from~$\Obja$ to~$\Objb$.
+    \label{lem:powersets-relations}
+    Functions from~$\Obja$ to~$\powerset{\Objb}$ are in one-to-one correspondence with relations from~$\Obja$ to~$\Objb$.
 \end{lemma}
 
 \begin{proof}
-	\todotextjira{226}{@J: We showed this already in a previous chapter.
-		We could include a cross reference and/or also explain how this works again.
-	}
+    \todotextjira{226}{@J: We showed this already in a previous chapter.
+        We could include a cross reference and/or also explain how this works again.
+    }
 \end{proof}
 
 Therefore, we expect that nondeterministic functions can be composed like relations.
 If we have~$\mora\colon \Obja \to \powerset\Objb$ and~$\morb\colon \Objb \to \powerset \Objc$ then we define the composite non-deterministic function to be
 %
 \begin{equation}
-	\label{eq:fish-nondet}
-	\defmapperiodset{(\mora\mthen\morb)}{\Obja}{\powerset\Objc}%
-	{x}{ \displaystyle \bigcup_{y\in \mora(x)}\morb(y)}
+    \label{eq:fish-nondet}
+    \defmapperiodset{(\mora\mthen\morb)}{\Obja}{\powerset\Objc}%
+    {x}{ \displaystyle \bigcup_{y\in \mora(x)}\morb(y)}
 \end{equation}
 %
 One can convince oneself that this is correct by looking at~\cref{fig:mapping-nondeterministic}.
 
 \begin{figure}[h]
-	\todographicsjira{227}{@Gioele: Put here the same figure for composition of relation; however now making it clear that it's not x in relation with many ys, but rather x maps to a subset of ys.}
-	\caption{}
-	\label{fig:mapping-nondeterministic}
+    \todographicsjira{227}{@Gioele: Put here the same figure for composition of relation; however now making it clear that it's not x in relation with many ys, but rather x maps to a subset of ys.}
+    \caption{}
+    \label{fig:mapping-nondeterministic}
 \end{figure}
 
 We should also check that this composition is associative; however, this comes automatically from the fact that we already know that \Rel is a category.
 
 To summarize:
 \begin{itemize}
-	\item We wanted to extend \Set from functions $\Obja \to \Objb$ to nondeterministic functions of type $\Obja \to \powerset\Objb$.
-	\item To do this, we needed three things:
-	      \begin{enumerate}
-		      \item The particular choice of $\powerset$ as what maps a set to another set.
-		      \item A way to lift a function of type $\Obja \to \Objb$ to a function of type $\Obja \to \powerset\Objb$, so that we can say that nondeterministic functions are a generalization of deterministic functions.
-		            This lifting operation is a family of functions of type
-		            \begin{equation}
-			            \label{eq:monad-lift}
-			            \lift_{\Obja, \Objb}: (\Obja \to \Objb) \to (\Obja \to \powerset\Objb).
-		            \end{equation}
-		      \item A way to define composition, through a map, traditionally called ``fish'', of type
-		            \begin{equation}
-			            \label{eq:monad-fish}
-			            \fish_{\Obja, \Objb, \Objc}: (\Obja \to \powerset\Objb) \cartprod (\Objb \to \powerset\Objc)
-			            \to (\Obja \to \powerset \Objc)
-		            \end{equation}
-	      \end{enumerate}
-	\item And we needed these pieces to satisfy the conditions:
-	      \begin{enumerate}
-		      \item $\fish$ is associative.
-		            This ensures the generalized functions form a semicategory.
-		      \item The composition of the lifted functions are the lifting of the composition:
-		            \begin{equation}
-			            \label{eq:monad-fish-associative}
-			            \prftree{\mora\colon \Obja \to \powerset\Objb}{\quad}{\morb\colon \Objb \to \powerset \Objc}{
-				            \lift_{\Obja,\Objb}(\mora)\mthen\lift_{\Objb,\Objc}(\morb) =  \lift_{\Obja,\Objc}(\mora\mthen\morb)}
-		            \end{equation}
-		            This ensures that inside the generalized functions, the composition of regular functions continues to work as it should.
-	      \end{enumerate}
+    \item We wanted to extend \Set from functions $\Obja \to \Objb$ to nondeterministic functions of type $\Obja \to \powerset\Objb$.
+    \item To do this, we needed three things:
+          \begin{enumerate}
+              \item The particular choice of $\powerset$ as what maps a set to another set.
+              \item A way to lift a function of type $\Obja \to \Objb$ to a function of type $\Obja \to \powerset\Objb$, so that we can say that nondeterministic functions are a generalization of deterministic functions.
+                    This lifting operation is a family of functions of type
+                    \begin{equation}
+                        \label{eq:monad-lift}
+                        \lift_{\Obja, \Objb}: (\Obja \to \Objb) \to (\Obja \to \powerset\Objb).
+                    \end{equation}
+              \item A way to define composition, through a map, traditionally called ``fish'', of type
+                    \begin{equation}
+                        \label{eq:monad-fish}
+                        \fish_{\Obja, \Objb, \Objc}: (\Obja \to \powerset\Objb) \cartprod (\Objb \to \powerset\Objc)
+                        \to (\Obja \to \powerset \Objc)
+                    \end{equation}
+          \end{enumerate}
+    \item And we needed these pieces to satisfy the conditions:
+          \begin{enumerate}
+              \item $\fish$ is associative.
+                    This ensures the generalized functions form a semicategory.
+              \item The composition of the lifted functions are the lifting of the composition:
+                    \begin{equation}
+                        \label{eq:monad-fish-associative}
+                        \prftree{\mora\colon \Obja \to \powerset\Objb}{\quad}{\morb\colon \Objb \to \powerset \Objc}{
+                            \lift_{\Obja,\Objb}(\mora)\mthen\lift_{\Objb,\Objc}(\morb) =  \lift_{\Obja,\Objc}(\mora\mthen\morb)}
+                    \end{equation}
+                    This ensures that inside the generalized functions, the composition of regular functions continues to work as it should.
+          \end{enumerate}
 \end{itemize}
 
 \subsection{Modeling interval uncertainty}
@@ -183,46 +183,46 @@ Analogously to the previous case, here we want to generalize from monotone funct
 
 We use the following notation for intervals:
 \begin{itemize}
-	\item The interval
-	      \begin{equation}
-		      \label{eq:interv-1}
-		      \{x\colon a \posleq x \posleq b\}
-	      \end{equation}
-	      is denoted
-	      \begin{equation}
-		      \label{eq:interv-2}
-		      \interv{a}{b}
-	      \end{equation}
-	\item $\udpL\cdot$ and $\udpU\cdot$ extract the lower and upper bound from the interval, so that we have
-	      \begin{equation}
-		      \label{eq:interv-L}
-		      \udpL \interv{a}{b} = a
-	      \end{equation}
-	      \begin{equation}
-		      \label{eq:interv-U}
-		      \udpU \interv{a}{b} = b
-	      \end{equation}
+    \item The interval
+          \begin{equation}
+              \label{eq:interv-1}
+              \{x\colon a \posleq x \posleq b\}
+          \end{equation}
+          is denoted
+          \begin{equation}
+              \label{eq:interv-2}
+              \interv{a}{b}
+          \end{equation}
+    \item $\udpL\cdot$ and $\udpU\cdot$ extract the lower and upper bound from the interval, so that we have
+          \begin{equation}
+              \label{eq:interv-L}
+              \udpL \interv{a}{b} = a
+          \end{equation}
+          \begin{equation}
+              \label{eq:interv-U}
+              \udpU \interv{a}{b} = b
+          \end{equation}
 \end{itemize}
 %
 \begin{equation}
-	\label{eq:interv-L-def}
-	\defmapperiodset{\udpL_{\posgenA}}{\Arrow\,\posgenA}{\posgenA}%
-	{\interv{a}{b}}{ a }
+    \label{eq:interv-L-def}
+    \defmapperiodset{\udpL_{\posgenA}}{\Arrow\,\posgenA}{\posgenA}%
+    {\interv{a}{b}}{ a }
 \end{equation}
 %
 \begin{equation}
-	\label{eq:interv-U-def}
-	\defmapperiodset{\udpU_{\posgenA}}{\Arrow\,\posgenA^{\op}}{\posgenA}%
-	{\interv{a}{b}}{ b }
+    \label{eq:interv-U-def}
+    \defmapperiodset{\udpU_{\posgenA}}{\Arrow\,\posgenA^{\op}}{\posgenA}%
+    {\interv{a}{b}}{ b }
 \end{equation}
 %
 For example, one such function is
 %
 \begin{equation}
-	\label{eq:interval-func-example}
-	\defmapperiodset{\mora}{\reals}{\Arrow\,\reals}%
-	{x}{ \interv{x-1}{x+1}
-	}
+    \label{eq:interval-func-example}
+    \defmapperiodset{\mora}{\reals}{\Arrow\,\reals}%
+    {x}{ \interv{x-1}{x+1}
+    }
 \end{equation}
 Because an interval is defined by two values, a function that returns an interval is a pair of functions, whose results are constrained to be ordered.
 In the example above, we always have $x-1\leq x+1$.
@@ -233,55 +233,55 @@ First, we need to ensure that we can see regular monotone functions as special c
 For example, we want a function
 %
 \begin{equation}
-	\label{eq:monotone-simple}
-	\defmapcommaset{
-		\alpha
-	}{
-		\tup{\natnumbers,\leq}
-	}{
-		\tup{\natnumbers,\leq}
-	}{
-		x
-	}{
-		x^2
-	}
+    \label{eq:monotone-simple}
+    \defmapcommaset{
+        \alpha
+    }{
+        \tup{\natnumbers,\leq}
+    }{
+        \tup{\natnumbers,\leq}
+    }{
+        x
+    }{
+        x^2
+    }
 \end{equation}
 %
 can be rewritten as the function
 %
 \begin{equation}
-	\label{eq:monotone-simple-as-interval}
-	\defmapcommaset{
-		\alpha'
-	}{
-		\tup{\natnumbers,\leq}
-	}{
-		\Arrow\,\tup{\natnumbers,\leq}
-	}{
-		x
-	}{
-		\interv{x^2}{x^2}
-	}
+    \label{eq:monotone-simple-as-interval}
+    \defmapcommaset{
+        \alpha'
+    }{
+        \tup{\natnumbers,\leq}
+    }{
+        \Arrow\,\tup{\natnumbers,\leq}
+    }{
+        x
+    }{
+        \interv{x^2}{x^2}
+    }
 \end{equation}
 %
 Generically, this is the definition of the $\lift$ function
 \begin{equation}
-	\label{eq:monotone-lift}
-	\defmapperiodset{
-		\lift_{\Obja, \Objb}
-	}{
-		(\Obja \to_{\Pos} \Objb)
-	}{
-		(\Obja \to_{\Pos} \Arrow\,\Objb)
-	}{
-		\mora
-	}{
-		\begin{cases}
-			\defmapset{\lift_{\Obja, \Objb}\mora}%
-			{\Obja}{\Arrow\,\Objb}
-			{x}{\interv{\mora(x)}{\mora(x)}}
-		\end{cases}
-	}
+    \label{eq:monotone-lift}
+    \defmapperiodset{
+        \lift_{\Obja, \Objb}
+    }{
+        (\Obja \to_{\Pos} \Objb)
+    }{
+        (\Obja \to_{\Pos} \Arrow\,\Objb)
+    }{
+        \mora
+    }{
+        \begin{cases}
+            \defmapset{\lift_{\Obja, \Objb}\mora}%
+            {\Obja}{\Arrow\,\Objb}
+            {x}{\interv{\mora(x)}{\mora(x)}}
+        \end{cases}
+    }
 \end{equation}
 %
 What is the "fish" function?
@@ -290,14 +290,14 @@ Therefore, we want that composition continues to work in the same manner.
 
 Therefore, we obtain for the $\fish$ operation:
 \begin{equation}
-	\label{eq:monotone-fish}
-	\prftree%[l]{\fish\colon}%
-	{\mora: \Obja \to \Arrow\,\Objb}%
-	{\quad}{\morb: \Objb \to \Arrow\,\Objc}%
-	{\defmapset{(\mora\mthen\morb)}{\Obja}{\Arrow\,\Objc}%
-		{x}{ \interv{\udpL\morb(\udpL\mora(x))}
-			{\udpU\morb(\udpU\mora(x))}}
-	}
+    \label{eq:monotone-fish}
+    \prftree%[l]{\fish\colon}%
+    {\mora: \Obja \to \Arrow\,\Objb}%
+    {\quad}{\morb: \Objb \to \Arrow\,\Objc}%
+    {\defmapset{(\mora\mthen\morb)}{\Obja}{\Arrow\,\Objc}%
+        {x}{ \interv{\udpL\morb(\udpL\mora(x))}
+            {\udpU\morb(\udpU\mora(x))}}
+    }
 \end{equation}
 %
 
@@ -306,21 +306,21 @@ Therefore, we obtain for the $\fish$ operation:
 We have seen that to solve DPs we encountered functions of type
 %
 \begin{equation}
-	\label{eq:monad-up-example1}
-	f: \funsp \mtoin\Pos \uppersets \ressp
+    \label{eq:monad-up-example1}
+    f: \funsp \mtoin\Pos \uppersets \ressp
 \end{equation}
 %
 We can see this as another example of generalization from a functions
 \begin{equation}
-	\label{eq:monad-up-gen0}
-	f: \Obja \mtoin\Pos \Objb
+    \label{eq:monad-up-gen0}
+    f: \Obja \mtoin\Pos \Objb
 \end{equation}
 %
 to functions
 %
 \begin{equation}
-	\label{eq:monad-up-gen1}
-	f: \Obja \mtoin\Pos \uppersets \Objb
+    \label{eq:monad-up-gen1}
+    f: \Obja \mtoin\Pos \uppersets \Objb
 \end{equation}
 %
 Once again we see these as particular types of relations.
@@ -328,29 +328,29 @@ Once again we see these as particular types of relations.
 The $\lift$ operation is
 %
 \begin{equation}
-	\label{eq:monad-up-lift}
-	\defmapset%
-	{\lift_{\Obja, \Objb}}%
-	{(\Obja \to_{\Pos} \Objb)}%
-	{(\Obja \to_{\Pos} \uppersets\Objb)}%
-	{\mora}{%
-		\begin{cases}
-			\defmapset{\lift_{\Obja, \Objb}\mora}%
-			{\Obja}{\uppersets\Objb}
-			{x}{\upit \mora(x)}
-		\end{cases}
-	}
+    \label{eq:monad-up-lift}
+    \defmapset%
+    {\lift_{\Obja, \Objb}}%
+    {(\Obja \to_{\Pos} \Objb)}%
+    {(\Obja \to_{\Pos} \uppersets\Objb)}%
+    {\mora}{%
+        \begin{cases}
+            \defmapset{\lift_{\Obja, \Objb}\mora}%
+            {\Obja}{\uppersets\Objb}
+            {x}{\upit \mora(x)}
+        \end{cases}
+    }
 \end{equation}
 %
 The $\fish$ operation is
 %
 \begin{equation}
-	\label{eq:monad-up-fish}
-	\prftree%[l]{\fish\colon}%
-	{\mora: \Obja \to \uppersets\Objb}%
-	{\quad}{\morb: \Objb \to \uppersets\Objc}%
-	{\defmapset{(\mora\mthen\morb)}{\Obja}{\uppersets\Objc}%
-		{x}{    \bigcup_{y\in\mora(x)}\morb(y) }}
+    \label{eq:monad-up-fish}
+    \prftree%[l]{\fish\colon}%
+    {\mora: \Obja \to \uppersets\Objb}%
+    {\quad}{\morb: \Objb \to \uppersets\Objc}%
+    {\defmapset{(\mora\mthen\morb)}{\Obja}{\uppersets\Objc}%
+        {x}{    \bigcup_{y\in\mora(x)}\morb(y) }}
 \end{equation}
 %
 Note that the expression is the same as in \cref{eq:fish-nondet} - only we are guaranteed to obtain upper sets.
@@ -365,13 +365,13 @@ Suppose we want to model execution time - and, that execution time might depend 
 
 In this case, we would like to extend a function
 \begin{equation}
-	\label{eq:monad-resource-0}
-	\mora: \Obja \to \Objb
+    \label{eq:monad-resource-0}
+    \mora: \Obja \to \Objb
 \end{equation}
 into a procedure
 \begin{equation}
-	\label{eq:monad-resource-1}
-	\mora: \Obja \to (\Objb\cartprod \nonNegReals)
+    \label{eq:monad-resource-1}
+    \mora: \Obja \to (\Objb\cartprod \nonNegReals)
 \end{equation}
 which gives both the result as well as the execution time.
 
@@ -379,18 +379,18 @@ We consider the ideal functions to be procedures that have zero execution time.
 
 We can define the $\lift$ map as follows:
 \begin{equation}
-	\label{eq:monad-resource-lift}
-	\defmapset%
-	{\lift_{\Obja, \Objb}}%
-	{(\Obja \to \Objb)}%
-	{(\Obja \to \Objb \cartprod \nonNegReals)}%
-	{\mora}{%
-		\begin{cases}
-			\defmapset{\lift_{\Obja, \Objb}\mora}%
-			{\Obja}{\Objb\cartprod\nonNegReals}
-			{x}{\tup{x, 0}}
-		\end{cases}
-	}
+    \label{eq:monad-resource-lift}
+    \defmapset%
+    {\lift_{\Obja, \Objb}}%
+    {(\Obja \to \Objb)}%
+    {(\Obja \to \Objb \cartprod \nonNegReals)}%
+    {\mora}{%
+        \begin{cases}
+            \defmapset{\lift_{\Obja, \Objb}\mora}%
+            {\Obja}{\Objb\cartprod\nonNegReals}
+            {x}{\tup{x, 0}}
+        \end{cases}
+    }
 \end{equation}
 %
 
@@ -407,12 +407,12 @@ We can define the $\lift$ map as follows:
 As for the fish function we have
 %
 \begin{equation}
-	\label{eq:monad-resource-fish}
-	\prftree%[l]{\fish\colon}%
-	{\mora: \Obja \to (\Objb \cartprod \nonNegReals)}%
-	{\quad}{\morb: \Objb \to (\Objc \cartprod \nonNegReals)}%
-	{\defmapset{(\mora\mthen\morb)}{\Obja}{(\Objc\cartprod \nonNegReals)}%
-		{x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) + \mora_2(x) } }}
+    \label{eq:monad-resource-fish}
+    \prftree%[l]{\fish\colon}%
+    {\mora: \Obja \to (\Objb \cartprod \nonNegReals)}%
+    {\quad}{\morb: \Objb \to (\Objc \cartprod \nonNegReals)}%
+    {\defmapset{(\mora\mthen\morb)}{\Obja}{(\Objc\cartprod \nonNegReals)}%
+        {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) + \mora_2(x) } }}
 \end{equation}
 %
 Note that we can recover the naked function by taking the first component of the tuple.
@@ -422,32 +422,32 @@ Note that we can recover the naked function by taking the first component of the
 
 This can be further generalized from the real numbers to an arbitrary monoid
 \begin{equation}
-	\label{eq:monad-resource-monoid}
-	\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}
+    \label{eq:monad-resource-monoid}
+    \monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}
 \end{equation} structure.
 %
 \begin{equation}
-	\label{eq:monad-resource-monoid-lift}
-	\defmapset%
-	{\lift_{\Obja, \Objb}}%
-	{(\Obja \to \Objb)}%
-	{(\Obja \to \Objb \cartprod \monoidAset)}%
-	{\mora}{%
-		\begin{cases}
-			\defmapset{\lift_{\Obja, \Objb}\mora}%
-			{\Obja}{\Objb\cartprod\monoidAset}
-			{x}{\tup{x, \idmon_\monoidA}}
-		\end{cases}
-	}
+    \label{eq:monad-resource-monoid-lift}
+    \defmapset%
+    {\lift_{\Obja, \Objb}}%
+    {(\Obja \to \Objb)}%
+    {(\Obja \to \Objb \cartprod \monoidAset)}%
+    {\mora}{%
+        \begin{cases}
+            \defmapset{\lift_{\Obja, \Objb}\mora}%
+            {\Obja}{\Objb\cartprod\monoidAset}
+            {x}{\tup{x, \idmon_\monoidA}}
+        \end{cases}
+    }
 \end{equation}
 %
 As for the fish function we have
 %
 \begin{equation}
-	\label{eq:monad-resource-monoid-fish}
-	\prftree%[l]{\fish\colon}%
-	{\mora: \Obja \to (\Objb \cartprod \monoidAset)}%
-	{\quad}{\morb: \Objb \to (\Objc \cartprod \monoidAset)}%
-	{\defmapset{(\mora\mthen\morb)}{\Obja}{(\Objc\cartprod \monoidAset)}%
-		{x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) \mtimesof\monoidA \mora_2(x) } }}
+    \label{eq:monad-resource-monoid-fish}
+    \prftree%[l]{\fish\colon}%
+    {\mora: \Obja \to (\Objb \cartprod \monoidAset)}%
+    {\quad}{\morb: \Objb \to (\Objc \cartprod \monoidAset)}%
+    {\defmapset{(\mora\mthen\morb)}{\Obja}{(\Objc\cartprod \monoidAset)}%
+        {x}{ \tup{\morb_1(\mora_1(x))\ ,\  \morb_2(\mora_1(x)) \mtimesof\monoidA \mora_2(x) } }}
 \end{equation}

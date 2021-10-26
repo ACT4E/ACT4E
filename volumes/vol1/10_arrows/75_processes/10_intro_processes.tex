@@ -13,34 +13,34 @@ We can generalize them by allowing non-linear functions.
 We call these \textbf{Moore} machines, and describe them as:
 %
 \begin{equation}
-	\label{eq:moore-1}
-	\begin{cases}
-		\prdyn \colon \prin \cartprod \prst \sto \prst, \\
-		\prreadout \colon \prst \sto \prout,
-	\end{cases}
+    \label{eq:moore-1}
+    \begin{cases}
+        \prdyn \colon \prin \cartprod \prst \sto \prst, \\
+        \prreadout \colon \prst \sto \prout,
+    \end{cases}
 \end{equation}
 %
 where~$\prin$ represents inputs,~$\prst$ states,~$\prout$ outputs,~$\prdyn$ the dynamics, and~$\prreadout$ the readout.
 As introduced in \cref{sec:actions}, we can apply currying to~$\prdyn$, to obtain a map from inputs to endomorphisms on the states:
 %
 \begin{equation}
-	\label{eq:moore-1-endo}
-	\begin{cases}
-		\prdyn \colon \prin \sto \Endof \prst, \\
-		\prreadout \colon \prst \sto \prout.
-	\end{cases}
+    \label{eq:moore-1-endo}
+    \begin{cases}
+        \prdyn \colon \prin \sto \Endof \prst, \\
+        \prreadout \colon \prst \sto \prout.
+    \end{cases}
 \end{equation}
 %
 \showslides{
-	\begin{forslides}
-		\includesag{10_moore_1}\\
-		\includesag{10_moore_comp_seq}
-		\begin{equation}
-			\label{eq:cond_moore_comp}
-			\prout_{\mora} \subseteq \prin_{\morb}
-		\end{equation}
-		\includesag{10_moore_comp_seq_bis}
-	\end{forslides}
+    \begin{forslides}
+        \includesag{10_moore_1}\\
+        \includesag{10_moore_comp_seq}
+        \begin{equation}
+            \label{eq:cond_moore_comp}
+            \prout_{\mora} \subseteq \prin_{\morb}
+        \end{equation}
+        \includesag{10_moore_comp_seq_bis}
+    \end{forslides}
 }
 
 We also need to have an~$\prstart \in \prst$ to act as the initial state.
@@ -48,74 +48,74 @@ We also need to have an~$\prstart \in \prst$ to act as the initial state.
 Suppose we have two morphisms
 %
 \begin{equation}
-	\label{eq:moore-mora}
-	\mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
+    \label{eq:moore-mora}
+    \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
 \end{equation}
 %
 and
 %
 \begin{equation}
-	\label{eq:moore-morb}
-	\morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
+    \label{eq:moore-morb}
+    \morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
 \end{equation}
 such that~$\prout_{\mora} \subseteq \prin_{\morb}$.
 \todo{J: this subset business here is not a good idea I would say.
-	We want our morphisms to have clearly specified sources and targets, and for composition we want things to match up.
+    We want our morphisms to have clearly specified sources and targets, and for composition we want things to match up.
 }
 The composition of these two systems should have a joint state that is the product of the states.
 
 \begin{marginfigure}
-	\centering
-	\includesag{10_moore_comp_seq}
-	\caption{Composition of Moore machines (first version).}
-	\label{fig:comp_moore_1}
+    \centering
+    \includesag{10_moore_comp_seq}
+    \caption{Composition of Moore machines (first version).}
+    \label{fig:comp_moore_1}
 \end{marginfigure}
 
 Here is one way to do it.
 We specify the spaces:
 %
 \begin{equation}
-	\label{eq:moore-comp-naive-1}
-	\begin{aligned}
-		\prin_{\mora\mthen\morb}    & = \prin_{\mora},                             \\
-		\prst_{\mora\mthen\morb}    & = \prst_{\mora} \cartprod \prst_{\morb},     \\
-		\prstart_{\mora\mthen\morb} & = \tupp{\prstart_{\mora}, \prstart_{\morb}}, \\
-		\prout_{\mora\mthen\morb}   & = \prout_{\morb}.
-	\end{aligned}
+    \label{eq:moore-comp-naive-1}
+    \begin{aligned}
+        \prin_{\mora\mthen\morb}    & = \prin_{\mora}, \\
+        \prst_{\mora\mthen\morb}    & = \prst_{\mora} \cartprod \prst_{\morb}, \\
+        \prstart_{\mora\mthen\morb} & = \tupp{\prstart_{\mora}, \prstart_{\morb}}, \\
+        \prout_{\mora\mthen\morb}   & = \prout_{\morb}.
+    \end{aligned}
 \end{equation}
 %
 Furthermore, we specify the dynamics
 %
 \begin{equation}
-	\label{eq:moore-comp-naive-2}
-	\defmapset{
-		\prdyn_{\mora\mthen\morb}
-	}{
-		\prin_{\mora} \cartprod (\prst_{\mora} \cartprod \prst_{\morb})
-	}{
-		(\prst_{\mora} \cartprod \prst_{\morb})
-	}{
-		\tupp{u, \tupp{x_{\mora}, x_{\morb}}}
-	}{
-		\tupp{ \prdyn_{\mora} (u, x_{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}
-	}
+    \label{eq:moore-comp-naive-2}
+    \defmapset{
+        \prdyn_{\mora\mthen\morb}
+    }{
+        \prin_{\mora} \cartprod (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        \tupp{u, \tupp{x_{\mora}, x_{\morb}}}
+    }{
+        \tupp{ \prdyn_{\mora} (u, x_{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}
+    }
 \end{equation}
 %
 and the ``readout'':
 %
 \begin{equation}
-	\label{eq:moore-comp-naive-3}
-	\defmapperiodset{
-		\prreadout_{\mora\mthen\morb}
-	}{
-		(\prst_{\mora} \cartprod \prst_{\morb})
-	}{
-		\prout_{\morb}
-	}{
-		\tupp{x_{\mora}, x_{\morb}}
-	}{
-		\prreadout_{\morb}(x_{\morb})
-	}
+    \label{eq:moore-comp-naive-3}
+    \defmapperiodset{
+        \prreadout_{\mora\mthen\morb}
+    }{
+        (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        \prout_{\morb}
+    }{
+        \tupp{x_{\mora}, x_{\morb}}
+    }{
+        \prreadout_{\morb}(x_{\morb})
+    }
 \end{equation}
 %
 We represent the composition graphically as in \cref{fig:comp_moore_1}.
@@ -124,8 +124,8 @@ However, if we define these using the Cartesian product~$\prst_{\mora} \cartprod
 When we have three systems, composing in the two ways would bring to~$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and~$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$, which are \emph{isomorphic} sets but not equal.
 %
 \begin{equation}
-	\label{eq:assoc-fails1}
-	(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} \neq \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})
+    \label{eq:assoc-fails1}
+    (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} \neq \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})
 \end{equation}
 %
 Elements of these sets are of the form~$\tup{\tup{a,b},c}$ and~$\tup{a, \tup{b,c}}$.
@@ -133,16 +133,16 @@ Elements of these sets are of the form~$\tup{\tup{a,b},c}$ and~$\tup{a, \tup{b,c
 You can clearly spot the isomorphism:
 %
 \begin{equation}
-	\label{eq:assoc-fails2}
-	(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} \simeq \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}).
+    \label{eq:assoc-fails2}
+    (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} \simeq \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}).
 \end{equation}
 %
 
 \begin{marginfigure}
-	\centering
-	\includesag{10_moore_comp_seq_bis}
-	\caption{Composition of Moore machines (second version).}
-	\label{fig:comp_moore_2}
+    \centering
+    \includesag{10_moore_comp_seq_bis}
+    \caption{Composition of Moore machines (second version).}
+    \label{fig:comp_moore_2}
 \end{marginfigure}
 
 We can avoid lengthy book-keeping by using a slightly different construction (\cref{fig:comp_moore_2}) using the \SetL category (\cref{sec:SetL}).
@@ -150,153 +150,153 @@ We can avoid lengthy book-keeping by using a slightly different construction (\c
 The idea is to just use lists of sets rather than the cartesian product.
 So the joint state is going to be
 \begin{equation}
-	\label{eq:moore-comp-good-joint}
-	\Tupcat {\prst_{\mora}}   {\prst_{\morb}}
+    \label{eq:moore-comp-good-joint}
+    \Tupcat {\prst_{\mora}}   {\prst_{\morb}}
 \end{equation}
 rather than~$\prst_{\mora} \cartprod \prst_{\morb}$.
 
 The joint system has as states:
 \begin{equation}
-	\label{eq:moore-comp-good-1}
-	\begin{aligned}
-		\prin_{\mora\mthen\morb}    & = \prin_{\mora},                               \\
-		\prst_{\mora\mthen\morb}    & = \Tupcat {\prst_{\mora}}  {\prst_{\morb}},    \\
-		\prstart_{\mora\mthen\morb} & = \tupcat{\prstart_{\mora}}{\prstart_{\morb}}, \\
-		\prout_{\mora\mthen\morb}   & = \prout_{\morb}.
-	\end{aligned}
+    \label{eq:moore-comp-good-1}
+    \begin{aligned}
+        \prin_{\mora\mthen\morb}    & = \prin_{\mora}, \\
+        \prst_{\mora\mthen\morb}    & = \Tupcat {\prst_{\mora}}  {\prst_{\morb}}, \\
+        \prstart_{\mora\mthen\morb} & = \tupcat{\prstart_{\mora}}{\prstart_{\morb}}, \\
+        \prout_{\mora\mthen\morb}   & = \prout_{\morb}.
+    \end{aligned}
 \end{equation}
 %
 We then write the dynamics
 %
 \begin{equation}
-	\label{eq:moore-comp-good-2}
-	\defmapperiodset{
-		\prdyn_{\mora\mthen\morb}
-	}{
-		\Tupcatt {\prin_{\mora}}  {\prst_{\mora}} {\prst_{\morb}}
-	}{
-		\Tupcat {\prst_{\mora}} {\prst_{\morb}}
-	}{
-		\tupcatt u {x_{\mora}} {x_{\morb}}
-	}{
-		\tupcat %
-		{%
-			\prdyn_{\mora} (u, x_{\mora})
-		}{%
-			\prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})
-		}
-	}
+    \label{eq:moore-comp-good-2}
+    \defmapperiodset{
+        \prdyn_{\mora\mthen\morb}
+    }{
+        \Tupcatt {\prin_{\mora}}  {\prst_{\mora}} {\prst_{\morb}}
+    }{
+        \Tupcat {\prst_{\mora}} {\prst_{\morb}}
+    }{
+        \tupcatt u {x_{\mora}} {x_{\morb}}
+    }{
+        \tupcat %
+        {%
+            \prdyn_{\mora} (u, x_{\mora})
+        }{%
+            \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})
+        }
+    }
 \end{equation}
 %
 %
 and the readout
 %
 \begin{equation}
-	\label{eq:moore-comp-good-3}
-	\defmapperiodset{
-		\prreadout_{\mora\mthen\morb}
-	}{
-		\Tupcat {\prst_{\mora}} {\prst_{\morb}}
-	}{
-		\prout_{\morb}
-	}{
-		\tupcat {x_{\mora}} {x_{\morb}}
-	}{
-		\prreadout_{\morb}(x_{\morb})
-	}
+    \label{eq:moore-comp-good-3}
+    \defmapperiodset{
+        \prreadout_{\mora\mthen\morb}
+    }{
+        \Tupcat {\prst_{\mora}} {\prst_{\morb}}
+    }{
+        \prout_{\morb}
+    }{
+        \tupcat {x_{\mora}} {x_{\morb}}
+    }{
+        \prreadout_{\morb}(x_{\morb})
+    }
 \end{equation}
 %
 With this definition we can define the semicategory~\Moore of Moore machines.
 
 \begin{definition}[\Moore]
-	\label{def:Moore}
-	The \emph{semicategory of Moore machines} \Moore is given by:
-	\begin{enumerate}
-		\item \emph{Objects:} objects of \SetL.
-		\item \emph{Morphisms:}
-		      A morphism is a tuple
-		      \begin{equation}
-			      \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}},
-		      \end{equation}
-		      where:
-		      \begin{itemize}
-			      \item $\prin$,~$\prst$,~$\prout$ are objects of \SetL;
-			      \item $ \prdyn \colon \prin \mtoin\SetL  \Endof \prst$;
-			      \item $ \prreadout \colon \prst  \mtoin\SetL \prout$.
-		      \end{itemize}
-		\item \emph{Composition of morphisms:}
-		      Composition is given by \cref{eq:moore-comp-good-1,eq:moore-comp-good-2,eq:moore-comp-good-3}.
-	\end{enumerate}
+    \label{def:Moore}
+    The \emph{semicategory of Moore machines} \Moore is given by:
+    \begin{enumerate}
+        \item \emph{Objects:} objects of \SetL.
+        \item \emph{Morphisms:}
+              A morphism is a tuple
+              \begin{equation}
+                  \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}},
+              \end{equation}
+              where:
+              \begin{itemize}
+                  \item $\prin$,~$\prst$,~$\prout$ are objects of \SetL;
+                  \item $ \prdyn \colon \prin \mtoin\SetL  \Endof \prst$;
+                  \item $ \prreadout \colon \prst  \mtoin\SetL \prout$.
+              \end{itemize}
+        \item \emph{Composition of morphisms:}
+              Composition is given by \cref{eq:moore-comp-good-1,eq:moore-comp-good-2,eq:moore-comp-good-3}.
+    \end{enumerate}
 \end{definition}
 
 \begin{exercise}
-	Show that indeed \Moore is a semicategory.
+    Show that indeed \Moore is a semicategory.
 \end{exercise}
 \begin{solution}
-	Given valid, composable machines~$\mora$,~$\morb$,~$\morc$, we can specify the spaces and initial conditions:
-	\begin{equation*}
-		\label{eq:moore_assoc_spaces}
-		\begin{aligned}
-			\prin_{(\mora \mthen \morb)\mthen \morc}    & =\prin_{\mora \mthen (\morb \mthen \morc)}=\prin_{\mora},                                              \\
-			\prst_{(\mora \mthen \morb)\mthen \morc}    & =\prst_{\mora \mthen (\morb \mthen \morc)}= \Tupcatt {\prst_{\mora}} {\prst_{\morb}}  {\prst_{\morc}}  \\
-			\prstart_{(\mora \mthen \morb)\mthen \morc} & =\prstart_{\mora \mthen (\morb \mthen \morc)}=\tupcatt{\prstart_\mora}{\prstart_\morb}{\prstart_\morc} \\
-			\prout_{(\mora \mthen \morb)\mthen \morc}   & =\prout_{\mora \mthen (\morb \mthen \morc)}=\prout_\morc
-		\end{aligned}
-	\end{equation*}
-	Starting from \cref{eq:moore-comp-good-2} one can now check associativity of the dynamics:
-	\begin{widepar}
-		\begin{equation*}
-			\label{eq:assoc_moore_1}
-			\begin{aligned}
-				\prdyn_{(\mora\mthen\morb)\mthen \morc}\colon \Tupcatt{\prin_{\mora}}{\Tupcat{\prst_{\mora}}{\prst_{\morb}}}{\prst_{\morc}} & \to \Tupcat{\Tupcat{\prst_{\mora}}{\prst_{\morb}}}{\prst_{\morc}}                                                                                             \\
-				\tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}                                                                            & \mapsto \tupcat{\prdyn_{\mora \mthen \morb}(u,\tupcat{x_\mora}{x_\morb})}{\prdyn_{\morc}(\prreadout_{\mora \mthen \morb}(\tupcat{x_\mora}{x_\morb}),x_\morc)} \\
-				                                                                                                                            & =\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
-			\end{aligned}
-		\end{equation*}
-	\end{widepar}
-	%
-	On the other hand, one has:
-	%
-	\begin{widepar}
-		\begin{equation*}
-			\label{eq:assoc_moore_2}
-			\begin{aligned}
-				\prdyn_{\mora\mthen(\morb\mthen \morc)}\colon \Tupcatt{\prin_{\mora}}{\prst_{\mora}}{\Tupcat{\prst_{\morb}}{\prst_{\morc}}} & \to \Tupcat{\prst_{\mora}}{\Tupcat{\prst_{\morb}}{\prst_{\morc}}}                                                               \\
-				\tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}                                                                            & \mapsto \tupcat{\prdyn_{\mora}(u,x_\mora)}{\prdyn_{\morb\mthen \morc}(\prreadout_{\mora}(x_\mora),\tupcat{x_\morb}{x_\morc})}   \\
-				                                                                                                                            & =\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
-			\end{aligned}
-		\end{equation*}
-	\end{widepar}
-	Finally, one can check associativity of the readout:
-	\begin{equation*}
-		\label{eq:assoc_moore_3}
-		\defmapcommaset{
-			\prreadout_{(\mora \mthen \morb)\mthen \morc}
-		}{
-			\sto
-		}{
-			\Tupcat{\Tupcat{\prst_\mora}{\prst_\morb}
-			}{
-				\prst_\morc}}{\prout_\morc}{\tupcatt{x_\mora}{x_\morb}{x_\morc}
-		}{
-			\prreadout_\morc(x_\morc)
-		}
-	\end{equation*}
-	and
-	\begin{equation*}
-		\label{eq:assoc_moore_4}
-		\defmapperiodset{
-			\prreadout_{\mora \mthen (\morb\mthen \morc)}
-		}{
-			\Tupcat{\prst_\mora}{\Tupcat{\prst_\morb}{\prst_\morc}}
-		}{
-			\prout_\morc
-		}{
-			\tupcatt{x_\mora}{x_\morb}{x_\morc}
-		}{
-			\prreadout_\morc(x_\morc)
-		}
-	\end{equation*}
+    Given valid, composable machines~$\mora$,~$\morb$,~$\morc$, we can specify the spaces and initial conditions:
+    \begin{equation*}
+        \label{eq:moore_assoc_spaces}
+        \begin{aligned}
+            \prin_{(\mora \mthen \morb)\mthen \morc}    & =\prin_{\mora \mthen (\morb \mthen \morc)}=\prin_{\mora}, \\
+            \prst_{(\mora \mthen \morb)\mthen \morc}    & =\prst_{\mora \mthen (\morb \mthen \morc)}= \Tupcatt {\prst_{\mora}} {\prst_{\morb}}  {\prst_{\morc}} \\
+            \prstart_{(\mora \mthen \morb)\mthen \morc} & =\prstart_{\mora \mthen (\morb \mthen \morc)}=\tupcatt{\prstart_\mora}{\prstart_\morb}{\prstart_\morc} \\
+            \prout_{(\mora \mthen \morb)\mthen \morc}   & =\prout_{\mora \mthen (\morb \mthen \morc)}=\prout_\morc
+        \end{aligned}
+    \end{equation*}
+    Starting from \cref{eq:moore-comp-good-2} one can now check associativity of the dynamics:
+    \begin{widepar}
+        \begin{equation*}
+            \label{eq:assoc_moore_1}
+            \begin{aligned}
+                \prdyn_{(\mora\mthen\morb)\mthen \morc}\colon \Tupcatt{\prin_{\mora}}{\Tupcat{\prst_{\mora}}{\prst_{\morb}}}{\prst_{\morc}} & \to \Tupcat{\Tupcat{\prst_{\mora}}{\prst_{\morb}}}{\prst_{\morc}} \\
+                \tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}                                                                            & \mapsto \tupcat{\prdyn_{\mora \mthen \morb}(u,\tupcat{x_\mora}{x_\morb})}{\prdyn_{\morc}(\prreadout_{\mora \mthen \morb}(\tupcat{x_\mora}{x_\morb}),x_\morc)} \\
+                                                                                                                                            & =\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
+            \end{aligned}
+        \end{equation*}
+    \end{widepar}
+    %
+    On the other hand, one has:
+    %
+    \begin{widepar}
+        \begin{equation*}
+            \label{eq:assoc_moore_2}
+            \begin{aligned}
+                \prdyn_{\mora\mthen(\morb\mthen \morc)}\colon \Tupcatt{\prin_{\mora}}{\prst_{\mora}}{\Tupcat{\prst_{\morb}}{\prst_{\morc}}} & \to \Tupcat{\prst_{\mora}}{\Tupcat{\prst_{\morb}}{\prst_{\morc}}} \\
+                \tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}                                                                            & \mapsto \tupcat{\prdyn_{\mora}(u,x_\mora)}{\prdyn_{\morb\mthen \morc}(\prreadout_{\mora}(x_\mora),\tupcat{x_\morb}{x_\morc})} \\
+                                                                                                                                            & =\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
+            \end{aligned}
+        \end{equation*}
+    \end{widepar}
+    Finally, one can check associativity of the readout:
+    \begin{equation*}
+        \label{eq:assoc_moore_3}
+        \defmapcommaset{
+            \prreadout_{(\mora \mthen \morb)\mthen \morc}
+        }{
+            \sto
+        }{
+            \Tupcat{\Tupcat{\prst_\mora}{\prst_\morb}
+            }{
+                \prst_\morc}}{\prout_\morc}{\tupcatt{x_\mora}{x_\morb}{x_\morc}
+        }{
+            \prreadout_\morc(x_\morc)
+        }
+    \end{equation*}
+    and
+    \begin{equation*}
+        \label{eq:assoc_moore_4}
+        \defmapperiodset{
+            \prreadout_{\mora \mthen (\morb\mthen \morc)}
+        }{
+            \Tupcat{\prst_\mora}{\Tupcat{\prst_\morb}{\prst_\morc}}
+        }{
+            \prout_\morc
+        }{
+            \tupcatt{x_\mora}{x_\morb}{x_\morc}
+        }{
+            \prreadout_\morc(x_\morc)
+        }
+    \end{equation*}
 \end{solution}
 
 \section{Action on sequences}
@@ -309,26 +309,26 @@ Let's consider the set of machines systems with~$\prin = \prout = \prgen$; this 
 Given a finite input sequence~$u\colon \natnumbers \to \prgen$ of length~$n$, the output is an instantaneous transformation of the state:
 %
 \begin{equation}
-	\label{eq:actions-on-sequences-y}
-	\begin{aligned}
-		y_0   & = \prreadout(x_0),     \\
-		y_1   & = \prreadout(x_1),     \\
-		y_2   & = \prreadout(x_2),     \\
-		\dots & = \dots                \\
-		y_{k} & = \prreadout(x_{k-1}).
-	\end{aligned}
+    \label{eq:actions-on-sequences-y}
+    \begin{aligned}
+        y_0   & = \prreadout(x_0), \\
+        y_1   & = \prreadout(x_1), \\
+        y_2   & = \prreadout(x_2), \\
+        \dots & = \dots \\
+        y_{k} & = \prreadout(x_{k-1}).
+    \end{aligned}
 \end{equation}
 %
 The state is computed recursively as follows:
 \begin{equation}
-	\label{eq:actions-on-sequences-x}
-	\begin{aligned}
-		x_0   & = \prdyn(u_0, \prstart),  \\
-		x_1   & = \prdyn(u_1, x_0),       \\
-		x_2   & = \prdyn(u_2, x_1),       \\
-		\dots & = \dots                   \\
-		x_{k} & = \prdyn(u_{k}, x_{k-1}).
-	\end{aligned}
+    \label{eq:actions-on-sequences-x}
+    \begin{aligned}
+        x_0   & = \prdyn(u_0, \prstart), \\
+        x_1   & = \prdyn(u_1, x_0), \\
+        x_2   & = \prdyn(u_2, x_1), \\
+        \dots & = \dots \\
+        x_{k} & = \prdyn(u_{k}, x_{k-1}).
+    \end{aligned}
 \end{equation}
 %
 Therefore, given a machine~$\mora \colon \prgen \mtoin{\Moore} \prgen$ we have defined a map from $\natnumbers \to \prgen$ to itself.
@@ -336,15 +336,15 @@ Let's call it $\act$.
 It is defined as a map of the form
 %
 \begin{equation}
-	\label{eq:actions-on-sequences-1}
-	\act_{\mora}\colon  (\natnumbers \to \prgen)  \sto  (\natnumbers \to \prgen),
+    \label{eq:actions-on-sequences-1}
+    \act_{\mora}\colon  (\natnumbers \to \prgen)  \sto  (\natnumbers \to \prgen),
 \end{equation}
 %
 or, more formally,
 %
 \begin{equation}
-	\label{eq:actions-on-sequences-2}
-	\act: \HomSet\Moore\prgen\prgen \sto \Endof {\natnumbers \to \prgen}.
+    \label{eq:actions-on-sequences-2}
+    \act: \HomSet\Moore\prgen\prgen \sto \Endof {\natnumbers \to \prgen}.
 \end{equation}
 %
 Note that both~$\HomSet\Moore\prgen\prgen$ and $\Endof {\natnumbers \to \prgen}$ are semigroups.
@@ -354,28 +354,28 @@ And, consequently, is~$\act$ a covariant semigroup action or a contravariant sem
 Let's check the condition for it being a morphism (\cref{eq:sgrp-mor-comp}):
 %
 \begin{align}
-	\act ( \mora \mthenof{\Moore} \morb) & \mathrel{\stackrel{?
-	}{=} } \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-left}                                                             \\
-	\act ( \morb \mthenof{\Moore} \mora) & \mathrel{\stackrel{?}{=}}  \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-right}
+    \act ( \mora \mthenof{\Moore} \morb) & \mathrel{\stackrel{?
+    }{=} } \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-left} \\
+    \act ( \morb \mthenof{\Moore} \mora) & \mathrel{\stackrel{?}{=}}  \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-right}
 \end{align}
 
 We can check this graphically.
 First, one has
 %
 \begin{equation*}
-	\prfperiod{\prftree{\includesag{moore_right_s_f}}{\includesag{moore_right_s_f_conn}}}{\prftree{\includesag{moore_right_b}}{\includesag{moore_right_b_space}}}{\includesag{moore_right_comp_1}}
+    \prfperiod{\prftree{\includesag{moore_right_s_f}}{\includesag{moore_right_s_f_conn}}}{\prftree{\includesag{moore_right_b}}{\includesag{moore_right_b_space}}}{\includesag{moore_right_comp_1}}
 \end{equation*}
 %
 Second, one has
 %
 \begin{equation*}
-	\prfperiod{\prftree{\includesag{moore_right_s}}{\includesag{moore_right_s_space}}}{\prftree{\includesag{moore_right_1}}{\includesag{moore_right_2}}}{\includesag{moore_right_5}}
+    \prfperiod{\prftree{\includesag{moore_right_s}}{\includesag{moore_right_s_space}}}{\prftree{\includesag{moore_right_1}}{\includesag{moore_right_2}}}{\includesag{moore_right_5}}
 \end{equation*}
 %
 Therefore, we have a \emph{covariant} semigroup action.
 
 \begin{publictodo}
-	The rest of the section is missing.
+    The rest of the section is missing.
 \end{publictodo}
 
 \section{More machines}
@@ -389,11 +389,11 @@ A Moore machine outputs 1 element at each time step; what if the machine was abl
 The signature of this machine would be this:
 %
 \begin{equation}
-	\label{eq:more-signature}
-	\begin{cases}
-		\prdyn \colon  \prin \sto \Endof \prst, \\
-		\prreadout \colon \prst \sto \seqsof \prout,
-	\end{cases}
+    \label{eq:more-signature}
+    \begin{cases}
+        \prdyn \colon  \prin \sto \Endof \prst, \\
+        \prreadout \colon \prst \sto \seqsof \prout,
+    \end{cases}
 \end{equation}
 %
 where the output is not just~$\prout$ but~$\seqsof \prout$: the machine can produce zero or more outputs.
@@ -402,6 +402,6 @@ We call these \emph{More} machines.
 \todotextjira{60}{@Gioele: write definition of More Machines.}
 
 \begin{publictodo}
-	The rest of this section is missing.
+    The rest of this section is missing.
 \end{publictodo}
 
