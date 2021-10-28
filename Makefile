@@ -191,7 +191,7 @@ BUILD_IMAGE ?= reg-stage.zuper.ai/act4e/act4e-build:alphubel
 pull:
 	docker pull $(BUILD_IMAGE)
 
-as_user=-u $(shell id -u ${USER}):$(shell id -g ${USER})  -e USER=$(shell whoami) -e HOME=/tmp/home
+as_user=-u $(shell id -u ${USER}):$(shell id -g ${USER})  -e USER=$(shell whoami) -e HOME=/tmp
 # as_user=
 magic:
 	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
@@ -225,9 +225,16 @@ docker-%:
 
 pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
 
+latexindent-version:
+	latexindent -v 
+	
 latexindent:
 	bash -c 'for a in volumes/*/*/*/*.tex; do echo $$a; ./latexindent.sh $$a; done'
 	bash -c 'for a in sag/*.tikz; do echo $$a; ./latexindent.sh $$a; done'
+
+latexindent-quick:
+	zsh latexindent-all.sh
+
 generate-videos:
 	 python3 -m act4e_videos.parsing \
 	 	--config videos/videos.yaml \
