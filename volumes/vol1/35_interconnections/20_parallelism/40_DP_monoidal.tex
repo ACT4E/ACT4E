@@ -1,0 +1,153 @@
+% !TEX root = chapter-standalone.tex
+
+\section[\DP is (strictly) symmetric monoidal]{\DP is a symmetric monoidal category}
+\label{sec:parallelism-DP-monoidal}
+
+\linkvideo{spring2021-functorial-comp-b:solving-queries:solving-parallel} % Parallel composition
+%
+%
+\begin{example}
+    After the X101 spontaneously combusted in low Earth orbit, the astronauts at Jeb's Spaceship Parts go on strike.
+    They demand that the engineers take into account safety and living conditions on the future X102.
+    As long as the propulsion and life support systems of the X102 do not interact, we can simply tensor the two design problems representing these systems into one, big co-design problem (\cref{fig:examplemonoidal}).
+    \begin{figure}[h!]
+        \centering
+        \includesag{50_engine_tensor_1_2}
+        \caption{Example of tensor of design problems. }
+        \label{fig:examplemonoidal}
+    \end{figure}
+\end{example}
+In~\DP, putting two design problems in parallel corresponds to their \emph{monoidal product}.
+
+\begin{definition}[Monoidal product in~\DP]
+    \label{def:monoidalproduct}
+    Given two design problems~$\adpa \colon \funposA \profto \resposB$ and~$\adpb \colon \funposC \profto \resposD$, their \emph{monoidal product}~$\adpa \mtimescat \adpb \colon \funposA \cartprod \funposC \profto \resposB\cartprod \resposD$ is their conjunction:
+    \begin{equation}
+        \label{eq:monoidalprod_dp}
+        \begin{aligned}
+            \adpa \mtimescat \adpb \colon (\funposA \cartprod \funposC)\op \cartprod (\resposB \cartprod \resposD) & \toinPos \Bool, \\
+            \tup{\tup{\funposAel,\funposCel}\Fop,\tup{\resposBel,\resposDel}}                                      & \mapsto \adpa(\funposAopel,\resposBel) \booland \adpb(\funposCopel,\resposDel).
+        \end{aligned}
+    \end{equation}
+\end{definition}
+The diagrammatic representation of the monoidal product is reported in~\cref{fig:dpmonoidal}.
+
+\begin{figure}[h!]
+    \centering
+    \includesag{50_monoidal}
+    \caption{Monoidal product of design problems.}
+    \label{fig:dpmonoidal}
+\end{figure}
+
+\begin{remark}
+    For~$\adpa \colon \funposA\profto \resposB$ and~$\adpb \colon \funposC \profto \resposD$, the monoidal product
+    \begin{equation}
+        \left(\adpa \mtimescat \adpb\right)(\tup{\funposAopel, \funposCopel}, \tup{\resposBel,\resposDel})
+    \end{equation}
+    is true if \emph{both}~$\adpa(\funposAopel,\resposBel)$ and~$\adpb(\funposCopel,\resposDel)$ are true, and false otherwise.
+\end{remark}
+
+\begin{lemma}
+    \label{lem:monoidal_functorial}
+    The monoidal product~$\mtimescat$ is functorial (\cref{def:functor}) in~\DP.
+\end{lemma}
+\begin{proof}
+    First, consider posets~$\posA,\posB\in \Ob_\DP$.
+    We show that~$\catid_\posA\mtimescat \catid_\posB = \catid_{\posA\cartprod \posB}$
+    It holds that
+    \begin{equation}
+        \begin{aligned}
+            ~ & \left( \catid_{\posA}\mtimescat \catid_{\posB}\right)
+            \left( \tup{\F{\posgenAel_1},\F{\posgenBel_1}}\Fop,\tup{\R{\posgenAel_2},\R{\posgenBel_2}}\right) \\
+              & =
+            \catid_\posgenA(\F{\posgenAel_1^*},\R{\posgenAel_2})\booland \catid_\posgenB(\F{\posgenBel_1^*},\R{\posgenBel_2}) \\
+              & =\left( \F{\posgenAel_1}\posleqof\posA \R{\posgenAel_2}\right)\booland \left( \F{\posgenBel_1}\posleqof\posB \R{\posgenBel_2}\right) \\
+              & =\tup{\F{\posgenAel_1},\F{\posgenBel_1}}\posleqof{\posA\cartprod \posB}\tup{\R{\posgenAel_2},\R{\posgenBel_2}} \\
+              & =\catid_{\posA\cartprod \posB}\left( \tup{\F{\posgenAel_1},\F{\posgenBel_1}}^*,\tup{\R{\posgenAel_2},\R{\posgenBel_2}}\right).
+        \end{aligned}
+    \end{equation}
+    Furthermore, consider the design problems
+    \begin{equation*}
+        \adpa\colon \funposA_1 \profto \resposB_1,\quad \adpb\colon \funposA_2\profto \resposB_2, \quad \adpc\colon \funposB_1\profto \resposC_1,\quad \adpd\colon \funposB_2\profto \resposC_2.
+    \end{equation*}
+    We need to show that
+    \begin{equation}
+        \underbrace{\left( (\adpa\fthen \adpc) \mtimescat (\adpb\fthen \adpd)\right)}_{\star}=\left( (\adpa\mtimescat \adpb)\fthen (\adpc\mtimescat \adpd)\right).
+    \end{equation}
+    It holds that
+    \begin{equation}
+        \begin{aligned}
+            ~ & \star \left( \tup{\F{\posgenAel_1},\F{\posgenAel_2}}\Fop,\tup{\R{\posgenCel_1},\R{\posgenCel_2}}\right) \\
+              & = (\adpa\fthen \adpc)(\F{\posgenAel_1}\Fop,\R{\posgenCel_1})\booland (\adpa\fthen \adpd)(\F{\posgenAel_2}\Fop,\R{\posgenCel_2}) \\
+              & =\left(\bigvee_{\posBel_\styleelements{1}\in \posB_\stylepos{1}}\left( \adpa(\F{\posgenAel_1^*},\R{\posgenBel_1})\booland \adpc(\F{\posgenBel_1^*},\R{\posgenCel_1})\right)\right) \booland\left(\bigvee_{\posBel_\styleelements{2}\in \posB_\stylepos{2}}\left( \adpb(\F{\posgenAel_2^*},\R{\posgenBel_2})\booland \adpd(\F{\posgenBel_2^*},\R{\posgenCel_2})\right)\right) \\
+              & =\bigvee_{\posBel_\styleelements{1}\in \posB_\stylepos{1}}\bigvee_{\posBel_\styleelements{2}\in \posB_\stylepos{2}} \left(\adpa(\F{\posgenAel_1^*},\R{\posgenBel_1})\booland \adpc(\F{\posgenBel_1^*},\R{\posgenCel_1})\booland \adpa(\F{\posgenAel_2^*},\R{\posgenBel_2})\booland \adpd(\F{\posgenBel_2^*},\R{\posgenCel_2}) \right) \\
+              & =\bigvee_{\tup{\posBel_\styleelements{1},\posBel_\stylepos{2}}\in \posB_\stylepos{1}\cartprod \posB_\stylepos{2}} \left(\adpa(\F{\posgenAel_1^*},\R{\posgenBel_1})\booland \adpb(\F{\posgenAel_2^*},\R{\posgenBel_2})\booland \adpc(\F{\posgenBel_1^*},\R{\posgenCel_1})\booland \adpd(\F{\posgenBel_2^*},\R{\posgenCel_2}) \right) \\
+              & =\left( (\adpa\mtimescat \adpb)\fthen (\adpc\mtimescat \adpd)\right)\left(\tup{\F{\posgenAel_1},\F{\posgenAel_2}}\Fop,\tup{\R{\posgenCel_1},\R{\posgenCel_2}} \right).
+        \end{aligned}
+    \end{equation}
+    Therefore,~$\mtimescat$ is functorial in~\DP.
+\end{proof}
+
+\begin{lemma}
+    $\tup{\DP,\mtimescat, \singleton}$ is a monoidal category.
+\end{lemma}
+\begin{proof}
+    To show that~\DP is a monoidal category, we have to first identify the constituents presented in \cref{def:monoidal-cat}.
+    First, recall~$\singleton$ to be singleton: this is the monoidal unit.
+    In \cref{lem:monoidal_functorial} we have shown that~$\mtimescat$ is a functor.
+    Furthermore, we identify
+    \begin{itemize}
+        \item $\leftunitor_\posA \colon \F{\singleton} \cartprod \funposA \profto \resposA$, for all~$\posA\in \Ob_\DP$, is the left unitor.
+              This is given by
+              \begin{equation}
+                  \leftunitor_\posA\left( \disunionA{\F{\posgenAel_1}}\Fop,\R{\posgenAel_2}\right)\definedas \F{\posgenAel_1}\posleqof\posA \R{\posgenAel_2}.
+              \end{equation}
+              To prove that this is an isomorphism, we define its inverse~$\leftunitor_\posA^{-1}\colon \funposA\profto \R{\singleton} \cartprod \resposA$ and show that~$\leftunitor_\posA\fthen \leftunitor_\posA^{-1}=\id_{\singleton\cartprod \posA}$ and~$\leftunitor_\posA^{-1}\then \leftunitor_\posA=\catid_{\posA}$.
+              One has
+              \begin{equation}
+                  \begin{aligned}
+                      ~ & \left( \leftunitor_\posA^{-1}\fthen \leftunitor_\posA\right)(\tup{\F{\posgenAel_1^*},\R{\posgenAel_2}}) \\
+                        & =
+                      \bigvee_{\tup{\singletonel,\posAel}\in  \singleton\cartprod \posA} \leftunitor_\posA^{-1}(\F{\posgenAel_1^*},\tup{\R{\singletonel},\R{\posgenAel}})\booland \leftunitor_\posA(\tup{\F{\singletonel},\FposgenAel}\Fop,\R{\posgenAel_2}) \\
+                        & = \bigvee_{\tup{\singletonel,\posAel}\in  \singleton\cartprod \posA}(\F{\posgenAel_1}\posleq \R{\posgenAel}) \booland \FposgenAel\posleq \R{\posgenAel_2} \\
+                        & =\F{\posgenAel_1}\posleq \R{\posgenAel_2} \\
+                        & =\id_\posA(\F{\posgenAel_1^*},\R{\posgenAel_2}).
+                  \end{aligned}
+              \end{equation}
+              Similarly, one can show that~$\leftunitor_\posA\fthen \leftunitor_\posA^{-1}=\id_{\singleton \cartprod \posA}$.
+        \item $\rightunitor_\posA\colon \funposA \cartprod \R{\singleton} \profto \resposA$, for all~$\posA\in \Ob_\DP$, is the right unitor.
+              This is given by
+              \begin{equation}
+                  \rightunitor\left( \tup{\F{\posgenAel_1},\F{\singletonel}}\Fop,\R{\posgenAel_2}\right)\definedas \F{\posgenAel_1}\posleqof\posgenA \R{\posgenAel_2}.
+              \end{equation}
+              The proof that~$\rightunitor_\posgenA$ is an isomorphism is analogous to the one for~$\leftunitor_\posgenA$.
+        \item $\associator_{\posgenA,\posgenB,\posgenC}\colon (\funposA\cartprod \funposB)\cartprod \funposC \profto \resposA\cartprod (\resposB\cartprod \resposC)$ for all~$\posgenA,\posgenB,\posgenC \in \Ob_\DP$, is the associator.
+              It is given by
+              \begin{equation}
+                  \begin{aligned}
+                      \associator_{\posA,\posB,\posC} & (\tup{\tup{\F{\posgenAel_1},\F{\posgenBel_1}},\F{\posgenCel_1}}\Fop,\tup{\R{\posgenAel_2},\tup{\R{\posgenBel_2},\R{\posgenCel_2}}}) \\
+                                                      & \definedas (\F{\posgenAel_1}\posleqof\posA \R{\posgenAel_2}) \booland (\F{\posgenBel_1} \posleqof\posB \R{\posgenBel_2})\booland (\F{\posgenCel_1}\posleqof\posC \R{\posgenCel_2}).
+                  \end{aligned}
+              \end{equation}
+              To prove that~$\associator_{\posA,\posB,\posC}$ is an isomorphism, we first define its inverse
+              \begin{equation}
+                  \associator_{\posA,\posB,\posC}^{-1}\colon \funposA\cartprod (\funposB\cartprod \funposC) \profto (\resposA\cartprod \resposB)\cartprod \resposC
+              \end{equation}
+              and show~$\associator_{\posA,\posB,\posC}^{-1}\fthen \associator_{\posA,\posB,\posC}=\associator_{\posA,\posB,\posC}\fthen \associator_{\posA,\posB,\posC}^{-1}= \catid_{\posA\cartprod \posB\cartprod \posC}$.
+              One has
+              \begin{equation}
+                  \begin{aligned}
+                       & \left( \associator_{\posA,\posB,\posC}^{-1}\fthen \associator_{\posA,\posB,\posC} \right)(\tup{\F{\posgenAel_1},\tup{\F{\posgenBel_1},\F{\posgenCel_1}}}\Fop,\tup{\R{\posgenAel_2},\tup{\R{\posgenBel_2},\R{\posgenCel_2}}}) \\
+                       & =\bigvee_{\tup{\tup{\posAel,\posBel},\posCel}\in (\posA\cartprod \posB)\cartprod \posC}
+                      \associator_{\posA,\posB,\posC}^{-1}(\tup{\F{\posgenAel_1},\tup{\F{\posgenBel_1},\F{\posgenCel_1}}}\Fop,\tup{\tup{\R{\posgenAel},\RposgenBel},\R{\posgenCel}})\booland \\
+                       & \associator_{\posA,\posB,\posC}(\tup{\tup{\FposgenAel,\FposgenBel},\F{\posgenCel}}\Fop,\tup{\R{\posgenAel_2},\tup{\R{\posgenBel_2},\R{\posgenCel_2}}}) \\
+                       & =\bigvee_{\tup{\tup{\posAel,\posBel},\posCel}\in (\posA\cartprod \posB)\cartprod \posC}\left( (\F{\posgenAel_1}\posleq \R{\posgenAel}) \booland (\F{\posgenBel_1}\posleq \RposgenBel) \booland (\F{\posgenCel_1}\posleq \R{\posgenCel})\right)\booland \\
+                       & \left((\FposgenAel\posleq \R{\posgenAel_2})\booland (\FposgenBel\posleq \R{\posgenBel_2}) \booland (\F{\posgenCel}\posleq \R{\posgenCel_2}\right) \\
+                       & =(\F{\posgenAel_1}\posleq \R{\posgenAel_2}) \booland (\F{\posgenBel_1}\posleq \R{\posgenBel_2}) \booland (\F{\posgenCel_1}\posleq \R{\posgenCel_2}) \\
+                       & =\catid_{\posA\cartprod \posB\cartprod \posC}(\tup{\F{\posgenAel_1},\F{\posgenBel_1},\F{\posgenCel_1}}\Fop,\tup{\R{\posgenAel_2},\R{\posgenBel_2},\R{b_3}}).
+                  \end{aligned}
+              \end{equation}
+              The proof for~$\associator_{\posA,\posB,\posC}\fthen \associator_{\posA,\posB,\posC}^{-1}$ is analogous.
+    \end{itemize}
+    Therefore,~$\tup{\DP,\mtimescat, \singleton}$ is a monoidal category.
+\end{proof}
