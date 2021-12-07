@@ -140,7 +140,152 @@ In an associative stacking semicategory it follows that we can stack any number 
 An associative stacking semicategory is called \emph{commutative} if its two stacking operations makes the collections of objects and morphisms, respectively, into commutative semigroups. 
 \end{definition}
 
-\subsection{The \Effects category}
+\subsection{The category $\seqsof\Set$}
+
+We are going to define a category similar to \Set, but that has as objects sequences of sets.
+
+Consider the monoid of sequences of sets:
+%
+\begin{equation}
+    \label{eq:sets-monoid}
+    \Tupcatt \setA  \setB  \setC \in \seqsof\Set.
+\end{equation}
+%
+We consider each element of~$\seqsof\Set$ as the name for a set.
+
+The elements of this set are \emph{tuples} of elements.
+
+If~$\ela$ is in~$\setA$ and~$\elb$ is in~$\setB$, the tuple~$\tupcat \ela \elb$ is in~$\Tupcat \setA \setB$:
+%
+\begin{equation}
+    \label{eq:sets-monoid-axiom1}
+    \prfperiod{
+        \ela \in \setA
+    }{
+        \elb \in \setB
+    }{
+        \tupcat \ela \elb \in \Tupcat \setA \setB
+    }
+\end{equation}
+%
+Conversely, if~$\ela \in \setA$ and~$\tupcat \ela \elb \in \Tupcat \setA \setB$, we can conclude that~$\elb \in \setB$:
+%
+\begin{equation}
+    \label{eq:sets-monoid-axiom2}
+    \prfcomma{
+        \ela \in \setA
+    }{
+        \tupcat \ela \elb \in \Tupcat \setA  \setB
+    }{
+        \phantom{\elb \in \setB}
+    }{
+        \rule{39mm}{0pt} \elb \in  \setB
+    }
+\end{equation}
+%
+and, symmetrically,
+%
+\begin{equation}
+    \label{eq:sets-monoid-axiom3}
+    \prfcomma{
+        \phantom{\ela \in \setA}
+    }{
+        \tupcat \ela \elb \in \Tupcat \setA \setB
+    }{
+        \elb \in \setB
+    }{
+        \ela \in  \setA \rule{39mm}{0pt}
+    }
+\end{equation}
+%
+or, more compactly,
+%
+\begin{equation}
+    \label{eq:sets-monoid-axiom3bis}
+    \prfperiod{
+        \tupcat \ela \elb \in \Tupcat \setA \setB
+    }{
+        \prfdouble{
+            \ela \in \setA
+        }{
+            \elb \in \setB
+        }
+    }
+\end{equation}
+%
+% Because monoid composition~$\setconcat$ is associative, we have
+% %
+% \begin{equation}
+%     \label{eq:sets-monoid-comp}
+%     \Tupcat {\Tupcat \setA  \setB}  \setC  =
+%     \Tupcatt \setA    \setB \setC  =
+%     \Tupcat   \setA  {\Tupcat \setB  \setC}.
+% \end{equation}
+% %
+% Therefore, this works as a cross product that is associative.
+
+The objects of $\SetL$ are lists of sets.
+We can also define morphisms as lists of functions.
+We construct them as follows:
+%
+\begin{equation}
+    \label{eq:sets-monoid-maps2}
+    \prfperiod{
+        \mora \colon \setA \to \setB
+    }{
+        \morb \colon \setC \to \setD
+    }{
+        \tupmorcat \mora \morb \colon \Tupcat \setA   \setC \to \Tupcat \setB  \setD
+    }
+\end{equation}
+%
+%\begin{definition}[The category \SetL]
+%    \label{def:SetL}
+%    The category \SetL is defined as follows:
+%    \begin{enumerate}
+%        \item \emph{Objects:} lists of sets.
+%        \item \emph{Morphisms:}
+%              A morphism from~$\setA$ to~$\setB$ is a list of~$n$ functions~$\mora_i\colon \setA_i \mto \setB_i$ such that~$\setA = \Tupcatt {\setA_1}  \dots {\setA_n}$ and~$\setB = \Tupcatt {\setB_1} \dots {\setB_m}$.
+%        \item \emph{Composition of morphisms:}
+%              Composition is given by function composition.
+%        \item \emph{Identities:}
+%              The identity on an object~$\Tupcatt {\setA_1} \dots {\setA_n}$ is given by~$\tupmorcatt {\catid_{\setA_1}} \dots  {\catid_{\setA_n}} $.
+%    \end{enumerate}
+%\end{definition}
+
+\begin{definition}[The category~$\SetL$]
+    \label{def:SetL}
+    The category~$\SetL$ is defined as follows:
+    \begin{enumerate}
+        \item \emph{Objects:} lists of sets.
+        \item \emph{Morphisms:}
+              A morphism from~$\setA =\Tupcatt {\setA_1}  \dots {\setA_n}$ to~$\setB = \Tupcatt {\setB_1} \dots {\setB_m}$ is a function:
+              \begin{equation*}
+                  \mapa\colon {\setA_1} \cartprod (\ldots \cartprod {\setA_n}) \sto {\setB_1} \cartprod (\ldots \cartprod {\setB_m})
+              \end{equation*}
+        \item \emph{Composition of morphisms:}
+              Composition is given by function composition.
+        \item \emph{Identities:}
+              The identity morphism on an object~$\Tupcatt {\setA_1} \dots {\setA_n}$ is given by the identity map~$\catid_{\setA_1\times \ldots \times \setA_n}$.
+    \end{enumerate}
+\end{definition}
+
+\todotextjira{396}{@Andrea: later, mention that $\SetL$ is a subcategory of \Set.}
+\todojira{584}{Adjust all signatures in the subsequent sections based on the functor definition}
+
+One of the objects of $\SetL$ is the empty list of sets, the monoid unit~$\Tupca{ }$.
+This set contains only one element: the empty tuple~$\tupca{ }.
+$
+It is not the empty set.
+
+The empty set can be represented as any list sets of which at least a set is empty, for example~$\Tupcat \emptyset \natnumbers$.
+
+The monoid unit~$\Tupca{ }$ is not the only singleton.
+In fact, one may create many singletons by collating zero or more singletons, for example~$\Tupcat \singleton \singleton$.
+
+
+
+\subsection{The semicategory \Effects}
 
 Let's now construct a non-trivial semicategory that will serve as an example of a stacking semicategory that is not functorial.
 
@@ -376,7 +521,7 @@ Let $\CatC$ be an associative stacking category, and consider morphisms
 \end{equation*}
 and~
 \begin{equation*}
-\morc \mtimescatmor \mord \colon \Objd \mtimescatob \Objc \mto \Objf \mtimescatob \Obje
+\morc \mtimescatmor \mord \colon \Objd \mtimescatob \Objc \mto \Objf \mtimescatob \Obje.
 \end{equation*}
 If $\Objc \mtimescatob \Objd \neq \Objd \mtimescatob \Objc$, then the morphisms $\mora \mtimescatmor \morb$ and $\morc \mtimescatmor \mord$ are, in our model, technically not composable. However, in some examples, we will in fact want to be able to compose such morphisms, because in those cases $\Objc \mtimescatob \Objd$ and $\Objd \mtimescatob \Objc$ are essentially equal, even if they aren't equal on the nose. 
 
