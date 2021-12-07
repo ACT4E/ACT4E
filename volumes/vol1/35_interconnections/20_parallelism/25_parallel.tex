@@ -136,6 +136,10 @@ In an associative stacking semicategory it follows that we can stack any number 
     \todotext{@J: this example needs to be clarified/expanded}
 \end{example}
 
+\begin{definition}
+An associative stacking semicategory is called \emph{commutative} if its two stacking operations makes the collections of objects and morphisms, respectively, into commutative semigroups. 
+\end{definition}
+
 \subsection{The \Effects category}
 
 Let's now construct a non-trivial semicategory that will serve as an example of a stacking semicategory that is not functorial.
@@ -192,7 +196,10 @@ An effectful function
 \end{equation}
 %
 which could have some unknown side-effects on the world, can be represented by a pure function
-%
+\begin{equation}
+  \mora_e\colon  \Obja  \times \EfW \mtoin{\Set}   \Objb \times \EfW,
+\end{equation}
+or, in other words, as a morphism
 \begin{equation}
     \mora_e\colon  \Tupcat \Obja   \EfW \mtoin{\SetL}   \Tupcat  \Objb \EfW,
 \end{equation}
@@ -203,7 +210,7 @@ The second input to~$\mora_e$ is the state of the world before the execution of 
 The second output of~$\mora_e$ is the state of the world after the execution of the function.
 
 We can now interconnect different effectful functions, with some precautions.
-We cannot ``split the world'', by creating a function of type~$\EfW \to \Tupcat \EfW \EfW$.
+We cannot ``split the world'', by creating a function of type~$\EfW \to  \EfW \times \EfW$.
 We will re-state this formally when we get to linear logic.
 
 \begin{marginfigure}
@@ -224,8 +231,8 @@ We will re-state this formally when we get to linear logic.
     \label{fig:effect-composition}
 \end{marginfigure}
 
-We can extend function composition as in~\cref{fig:effect-composition}.
-This makes it clear that the second function operates on the world possibly modified by the first function.
+We can extend usual function composition to composition of effectful functions as in~\cref{fig:effect-composition}.
+The second effectful function operates on the world after it was possibly modified by the first effectful function.
 
 We have all the ingredients to define the category \Effects of effectful computation.
 
@@ -272,6 +279,8 @@ This is shown in~\cref{fig:effect-stacking}.
     \label{fig:effect-stacking}
 \end{figure}
 
+\todotextjira{639}{the representation in (b) in the figure above is incorrect I believe -- W on the left-hand side should be at the bottom}
+
 \todotextjira{415}{proof.
     Need to show semigroup.
 }
@@ -280,28 +289,27 @@ This is shown in~\cref{fig:effect-stacking}.
 
 \begin{ctdefinition}[Functorial stacking semicategory]
     \label{def:functorial-stacking-semi-cat}
-    A functorial stacking semicategory is a stacking semicategory where the two stacking operations~$\mtimescatob$ and~$\mtimescatmor$ are the two components of a functor
+    A functorial stacking semicategory is a stacking semicategory where the two stacking operations~$\mtimescatob$ and~$\mtimescatmor$ are the two components of a semifunctor
     \begin{equation}
         \mtimescat\colon \CatC \times \CatC \to \CatC.
     \end{equation}
-\end{ctdefinition}
-
-More in detail, we have that for any~$n \geq 2$, there is a functor
-%
+Concretely, and in infix notation, this means that 
 \begin{equation}
-    \mtimescat^{(n)}\colon \underbrace {\CatC \times \CatC \times \cdots \times \CatC}_{\text{$n$ times}} \to \CatC.
-\end{equation}
-%
-For~$n=2$ we obtain that
-%
-\begin{equation}
+(\mora \mthen \morc ) \mtimescat (\morb \mthen \mord )
+    =
     (\mora \mtimescat \morb )
     \mthen (\morc \mtimescat \mord )
-    =
-    (\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ).
 \end{equation}
+for all morphisms $\mora, \morb, \morc$, and $\mord$ where respectively $\mora$ and $\morc$, and $\morb$ and $\mord$ are composable. 
+\end{ctdefinition}
+
+%More in detail, we have that for any~$n \geq 2$, there is a semifunctor
+%%
+%\begin{equation}
+%    \mtimescat^{(n)}\colon \underbrace {\CatC \times \CatC \times \cdots \times \CatC}_{\text{$n$ times}} \to \CatC.
+%\end{equation}
 %
-This describes a commuting property: we can either first compose horizontally and then vertically, or viceversa, and we obtain the same morphism~(\cref{fig:stacking-functorial}).
+This describes a sort of commutivity property: we can either first compose horizontally and then vertically, or viceversa, and we obtain the same morphism~(\cref{fig:stacking-functorial}).
 
 \begin{figure*}[h]
     \centering
@@ -318,14 +326,18 @@ This describes a commuting property: we can either first compose horizontally an
     \label{fig:stacking-functorial}
 \end{figure*}
 
+\todotext{J: in the figure (a) above, I think we should have boxes around the stacked morphisms before the are composed serially}
+
 \begin{lemma}
-    \SetL is a functorial stacking category.
+    \SetL is a functorial stacking semicategory.
 \end{lemma}
+
+\todotext{J: for the above lemma, one first needs to discuss/say explicitly what the stacking operation is.}
 
 \Effects is an example of a stacking category that is not functorial.
 
 \begin{lemma}
-    \Effects is \emph{not} a functorial stacking category.
+    \Effects is \emph{not} a functorial stacking semicategory.
 \end{lemma}
 
 \begin{proof}
@@ -354,43 +366,27 @@ This describes a commuting property: we can either first compose horizontally an
     \label{fig:effects-non-functorial}
 \end{figure*}
 
+\todotextjira{640}{the representations in \cref{fig:effects7} and \cref{fig:effects9} are incorrect -- W on the left-hand sides should be at the bottom}
+
 \section{Symmetric stacking}
 
-Another property that a stacking category might possess is that of \emph{symmetry}.
-This property captures the idea that the order in which morphisms are stacked does not matter.
+Let $\CatC$ be a stacking category, and consider morphisms 
+\begin{equation*}
+\mora \mtimescatmor \morb \colon \Obja \mtimescatob \Objb \mto \Objc \mtimescatob \Objd
+\end{equation*}
+and~
+\begin{equation*}
+\morc \mtimescatmor \mord \colon \Objd \mtimescatob \Objc \mto \Objf \mtimescatob \Obje
+\end{equation*}
+If $\Objc \mtimescatob \Objd \neq \Objd \mtimescatob \Objc$, then the morphisms $\mora \mtimescatmor \morb$ and $\morc \mtimescatmor \mord$ are, in our model, technically not composable. However, in some examples, we will in fact want to be able to compose such morphisms, because in those cases $\Objc \mtimescatob \Objd$ and $\Objd \mtimescatob \Objc$ are essentially equal, even if they aren't equal on the nose. 
+
+For example, $\mora, \morb, \morc, \mord$ might be systems, represented graphically by boxes with wires for input and output. The stacked system $\mora \mtimescatmor \morb$ will have output wires for $\Objc$ and $\Objd$, and the stacked system $\morc \mtimescatmor \mord$ will have input wires for $\Objd$ and $\Objc$. In some applications we are often indeed able to connect the one output wire labeled with $\Objc$ to the input wire also labeled with $\Objc$, and similarly for $\Objd$.  
+
+To model this for stacking semicategories, we introduce operations that correspond to switching (or permuting) input and output wires. Recall that, for each $n \in \natnumbers$, the symmetric group $S_n$ is the group of bijections of the set $\{1, 2, ..., n \}$ with itself. 
 
 \begin{ctdefinition}[Symmetric stacking category]
     \label{def:symmetric-stacking-category}
-    Consider a stacking category~$\CatC$.
-    Let~$\Obja = \{\Obja_i\}_{i=1}^n$ and~$\Objb = \{\Objb_i\}_{i=1}^n$ be sequences of~$n$ objects.
-    Let~$\stylemorph{F} = \{\mora_i \colon \Obja_i \mto  \Objb_i   \}_{i=1}^n$ be a sequence of~$n$ morphisms.
-    Let~$\mtimescat \stylemorph{F}\colon \Obja \mto \Objb$ denote the stacking of the morphisms.
-    Let~$\perm\in\Perms(n)$ be any permutation of~$n$ elements.
-    We ask that for every sequence of objects~$\Obja$ and for every permutation~$\perm$ there exists a morphism
-    %
-    \begin{equation}
-        \stylemorph{S}^{\Obja}_\perm \colon \Obja \mto \perm  \Obja,
-    \end{equation}
-    %
-    and that it holds that
-    \begin{equation}
-        \stylemorph{S}_{\perm_1 \then \perm_2}^{\Obja}
-        =
-        \stylemorph{S}_{\perm_1}^{\Obja} \mthen
-        \stylemorph{S}_{\perm_2}^{\perm_1 \Obja} .
-    \end{equation}
-    Then we ask that
-    \begin{equation}
-        \label{eq:symmetric-condition}
-        \mtimescat \stylemorph{F}  =
-        \stylemorph{S}^{\Obja}_{\perm}
-        \mthen
-        (\mtimescat
-        \perm \stylemorph{F} )
-        \mthen
-        \stylemorph{S}^{\perm \Objb}_{\perm^{-1}}.
-    \end{equation}
-    This means that stacking is equivariant to permutation~(\cref{fig:stacking-symmetric}).
+    Let~$\CatC$ be a stacking semicategory. For each natural number $n \geq 2$ and each permutation $\sigma \in S_n$, we define operations
 \end{ctdefinition}
 
 \begin{figure*}[b]
