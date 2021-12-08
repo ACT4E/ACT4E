@@ -16,43 +16,42 @@ Sometimes we will think of systems as if they are ``black boxes": that is, as if
 No matter whether we are looking `inside' of systems or are just considering their external behavior, a key feature of our understanding of the term system is that systems make be composed together. First of all, for serial composition, this means that the output of one system is taken as the input for the next systems. Furthermore, we will also formalize notions of parallel composition of systems, and of feedback.
 
 
-\section{Specifying systems}
+\section{System behaviors}
 
+\todotext{Talk here briefly about the distinction between formal specifications or parametrizations of systems versus behaviors of systems; perhaps use Moore machines as an example}
 
-
-Let's consider some different examples of systems and ways of specifying them.
-
-\subsection{Moore machines}
-
-Recall from \cref{sec:moore-machines} that a Moore machine with input set $\prin$ and output set $\prout$ is given by additionally specifying a state space set $\prst$ and two functions
-\begin{equation}
+Recall from \cref{sec:moore-machines} that a Moore machine is specified by an input set $\prin$, an output set $\prout$, a state space set $\prst$, and two functions
+\begin{equation}\label{eq:moore-specification}
     \begin{cases}
         \prdyn \colon \prin \cartprod \prst \sto \prst, \\
         \prreadout \colon \prst \sto \prout.
     \end{cases}
 \end{equation}
 
+In \cref{sec:action-of-a-category} we saw how, given an initial state $x_0 \in \prst$, a Moore machine acts on sequences of inputs, mapping these to sequences of outputs. 
 
-\subsection{Linear time-invariant dynamical systems}
+For example, if $u_0, u_1, u_2, ... $ is a sequence of inputs, then the corresponding sequence of outputs $y_0, y_1, y_2, ... $ of \cref{eq:moore-specification} is dictated by the recursion relations
+\begin{align}
+x_{k+1} &= \prdyn(x_k, u_k) \\
+y_{k+1} &= \prreadout(x_{k+1}),
+\end{align}
+with $k \in \natnumbers$. 
 
-
-Typical a linear time-invariant dynamical system is typically specified by an input vector space $\prin$ and output set $\prout$
-
-\section{System behaviors}
-
-\todotext{Talk here briefly about the distinction between formal specifications or parametrizations of systems versus behaviors of systems; perhaps use Moore machines as an example}
-
+In other words, given $x_0 \in \prst$, we can map the Moore machine \label{eq:moore-again} to a function $\prin^\natnumbers \to \prout^\natnumbers$. We will think of this function as the `external behavior' of the Moore machine, because it encodes what is externally observable to us in terms of how the Moore machine related inputs to outputs. In other words, in a concrete application we might not know a precise model of a Moore machine of the form \cref{eq:moore-specification}, but we can still observe what it does when we feed it inputs. And sometimes this external behavior is all we care about, in which case we treat the Moore machine as a black box. 
 
 \subsection{Modeling behavior}
 
-Let $\Time = \tup{\Time, \leq}$ be a totally ordered set (a model of time).
-Given a set $\Obja$, we will think here of the set $\Obja^\Time$ of functions $\Time \to \Obja$ as the set of time-dependent signals taking values in the signal space $\Obja$.
+We will now make a general-purpose formalization of system behaviors. 
 
-When want to talk about discrete-time signals, natural choices for $\Time$ might be $\Time = \natnumbers$ or $\Time = \wnumbers$.
-When we want to talk about continuous time systems, we might choose $\Time = \reals$.
+In the example above with Moore machines, we said its behavior was a function $\prin^\natnumbers \to \prout^\natnumbers$. Here the set $\natnumbers$ played the role of time: each $k \in \natnumbers$ corresponded to a time step. In the following, we allow any model of time which is a totally ordered set: $\Time = \tup{\Time, \leq}$. 
+
+Then, when want to talk about discrete-time signals, natural choices for $\Time$ might be $\Time = \natnumbers$ or $\Time = \wnumbers$. Similarly, if we want to talk about continuous time systems, we might choose $\Time = \reals$.
 And when we want to talk about event-based systems, we can choose $\Time$ to consist of a set of possible events, ordered by their sequence of occurence.
 
-The externally observable behavior of an input-output system is nothing else than a relation between input signals and output signals.
+
+Given a set $\Obja$, we will consider the set $\Obja^\Time$ of functions $\Time \to \Obja$ as the set of time-dependent signals taking values in the signal space $\Obja$. Then a system behavior is, for example, a function $\styleobj{U}^\Time \to \styleobj{Y}^\Time$. For more flexibility in our formalism, we will also allow behaviors which are \emph{relations} $\styleobj{U}^\Time \to \styleobj{Y}^\Time$. 
+
+In other words, in general, the externally observable behavior of a system is a relation between input signals and output signals.
 
 \begin{definition}
     Let $\Obja$ and $\Objb$ be sets.
@@ -134,3 +133,24 @@ For any signal space $\Obja$, we define a shift function $\delta_s: \Obja^\Time 
     What if only one of them is causal?
     And various other related questions.
     .. }
+
+
+\section{Specifying systems}
+
+Let's consider some different examples of systems and ways of specifying them.
+
+\subsection{Moore machines}
+
+
+
+\subsection{Linear time-invariant dynamical systems}
+
+
+\subsection{Linear time-invariant dynamical systems}
+
+
+Typical a linear time-invariant dynamical system is typically specified by an input vector space $\prin$ and output set $\prout$
+
+
+\subsection{Descriptor systems}
+
