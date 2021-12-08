@@ -56,15 +56,15 @@ A linear time-invariant dynamical system (LTI system), in a so-called state-spac
         \dot x(t) &= Ax(t) + Bu(t) \label{eq:LTI-system-dyn} \\
         y(t) &= Cx(t) + Du(t) \label{eq:LTI-system-ro}
 \end{align}
-where $t \in \reals$, $u(t) \in \prin$, $y(t) \in \prout^\reals$, $x(t) \in \prst$, and where $A: \prst \to \prst$, $B: \prin \to \prst$, $C: \prst \to \prout$, $D: \prin \to \prout$ are $\reals$-linear maps (we are identifying the tangent space of $\prst$ with $\prst$ itself). 
+where $t \in \reals$, $u(t) \in \prin$, $y(t) \in \prout$, $x(t) \in \prst$, and where $A: \prst \to \prst$, $B: \prin \to \prst$, $C: \prst \to \prout$, $D: \prin \to \prout$ are $\reals$-linear maps (we are identifying the tangent space of $\prst$ with $\prst$ itself). 
 
-We may associate the equation \cref{eq:LTI-system-dyn} with a function 
+We may associate the equation \cref{eq:LTI-system-dyn} with the function 
 \begin{equation}
-\prdyn \colon  \prin \cartprod \prst \sto \prst, \ \tup{x(t), u(t)} \mapsto \dot x(t)
+\prdyn \colon  \prin \cartprod \prst \sto \prst, \ \tup{u, x} \mapsto Ax + Bu
 \end{equation}
-and the equation \cref{eq:LTI-system-ro} with a function 
+and the equation \cref{eq:LTI-system-ro} with the function 
 \begin{equation}
-\prreadout \colon \prin \cartprod \prst \sto \prout, \ \tup{x(t), u(t)} \mapsto y(t).
+\prreadout \colon \prin \cartprod \prst \sto \prout, \ \tup{u,x} \mapsto Cx + Du.
 \end{equation}
 
 We will call an LTI system \emph{proper} if in \cref{eq:LTI-system-ro}, the map $D$ sends any vector to zero. 
@@ -85,7 +85,7 @@ We associate the equation \cref{eq:DLTI-system-dyn} now with the relation
 \end{equation}
 given by 
 \begin{equation}
-\prdyn = \{ \tup{ \tup{u(t), x(t)} \dot x(t)} \mid E \dot x(t) = Ax(t) + Bu(t) \}.
+\prdyn = \{ \tup{ \tup{u, x} v} \mid E v = Ax + Bu \}.
 \end{equation}
 
 
@@ -95,30 +95,56 @@ given by
 \todotext{Talk here briefly about the distinction between formal specifications or parametrizations of systems versus behaviors of systems; perhaps use Moore machines as an example}
 
 Consider a Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$. 
-In \cref{sec:action-of-a-category} we saw how, given an initial state $x_0 \in \prst$, a Moore machine acts on sequences of inputs, mapping these to sequences of outputs. 
+In \cref{sec:action-of-a-category} we saw how, given an initial state $x_0 \in \prst$, a Moore machine may act on sequences of inputs, mapping these to sequences of outputs. 
 
-For example, if $u_0, u_1, u_2, ... $ is a sequence of inputs, then the corresponding sequence of outputs $y_0, y_1, y_2, ... $ of \cref{eq:moore-specification} is dictated by the recursion relations
+For example, given a sequence of inputs $u_0, u_1, u_2, ... $, we may map this to a sequence of outputs $y_0, y_1, y_2, ... $ \cref{eq:moore-specification} using the following recursion relations
 \begin{align}
-x_{k+1} &= \prdyn(x_k, u_k) \label{eq:state-recursion} \\
-y_{k} &= \prreadout(x_{k}),
+x_{k+1} &= \prdyn(x_k, u_k) \label{eq:state-recursion-1} \\
+y_{k} &= \prreadout(x_{k}), \label{eq:state-recursion-2}
 \end{align}
 with $k \in \natnumbers$. 
 
-In other words, given $x_0 \in \prst$, we can map the Moore machine \label{eq:moore-again} to a function $\prin^\natnumbers \to \prout^\natnumbers$. We will think of this function as the `external behavior' of the Moore machine, because it encodes what is externally observable to us in terms of how the Moore machine related inputs to outputs. In other words, in a concrete application we might not know a precise model of a Moore machine of the form \cref{eq:moore-specification}, but we can still observe what it does when we feed it inputs. And sometimes this external behavior is all we care about, in which case we treat the Moore machine as a black box. 
+In other words, given $x_0 \in \prst$, we may map the Moore machine \label{eq:moore-again} to a function 
+\begin{equation}
+\prin^\natnumbers \to \prout^\natnumbers,  \quad (u_k)_{k \in \natnumbers} \mapsto (y_k)_{k \in \natnumbers}. 
+\end{equation}
+We will think of this function as an `external behavior' of the Moore machine, because it encodes what is externally observable to us in terms of how the Moore machine is used to relate inputs to outputs. 
+
+
+Note that in concrete application we might not actually know a precise model of the Moore machine in the form \cref{eq:moore-specification}. But we can still observe what it does when we feed it inputs. And in some cases this external behavior is in fact all we really care about. 
+
+\subsection{Many behaviors from one machine}
+
+Other kinds of behavior may be generated with the same Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ as above (and using the same initial state). For example, instead of \cref{eq:state-recursion-1} and \cref{eq:state-recursion-2} we may use the set of equations
+\begin{align}
+\tilde x_{k} &= \prdyn(x_k, u_k) \\
+x_{k+1} &= \prdyn(\tilde x_{k}, u_k) \\
+y_{k} &= \prreadout(x_{k}),
+\end{align}
+where $\tilde x$ is a new `latent' variable that we've introduced. This illustrates that the recursion equations are part of what generates a behavior of the Moore machine; they are not part of the specification $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ of the Moore machine itself. 
+
+
+
 
 \subsection{Modeling behavior}
 
-We will now make a general-purpose formalization of system behaviors. 
+We will now develop a general-purpose formalization of system behaviors. 
+
 
 In the example above with Moore machines, we said its behavior was a function $\prin^\natnumbers \to \prout^\natnumbers$. Here the set $\natnumbers$ played the role of time: each $k \in \natnumbers$ corresponded to a time step. In the following, we allow as a model of time any totally ordered set $\Time = \tup{\Time, \leq}$. 
 
 When we want to talk about discrete-time signals, natural choices for $\Time$ might be $\Time = \natnumbers$ or $\Time = \wnumbers$. Similarly, if we want to talk about continuous time systems, we might choose $\Time = \reals$.
-And when we want to talk about event-based systems, we can choose $\Time$ to consist of a set of possible events, ordered by their sequence of occurence.
+%And when we want to talk about event-based systems, we can choose $\Time$ to consist of a set of possible events, ordered by their sequence of occurence.
 
 
 Given a set $\Obja$, we consider the set $\Obja^\Time$ of functions $\Time \to \Obja$ as the set of time-dependent signals taking values in the set $\Obja$. Then a system behavior is, for example, a function $\styleobj{U}^\Time \to \styleobj{Y}^\Time$. For more flexibility in our formalism, we will also allow behaviors which are \emph{relations} $\styleobj{U}^\Time \to \styleobj{Y}^\Time$. 
 In other words, in general, the externally observable behavior of a system is a relation between input signals and output signals.
 
+
+
+\subsection{Categories of behaviors}
+
+ 
 \begin{definition}
     Let $\Obja$ and $\Objb$ be sets.
     An \emph{input-output behavior}, with input space $\Obja$ and output space $\Objb$, is a relation
@@ -158,6 +184,31 @@ which are $\field$-linear relations.
         \item Composition is the usual composition of relations.
     \end{enumerate}
 \end{definition}
+
+
+
+\section{From specifications to behaviors}
+
+\todotext{write some intro lines to this section}
+
+\subsection{Moore machines}
+
+We have seen that given a Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ and an initial state $x_0$, we obtain an associated behavior $\prin^\natnumbers \to  \prout^\natnumbers$ given by 
+\begin{equation}
+u_k \mapsto \prreadout(\prdyn(x_k, u_k)), 
+\end{equation}
+using the equations
+\begin{align}
+x_{k+1} &= \prdyn(x_k, u_k) \\
+y_{k} &= \prreadout(x_{k}).
+\end{align}
+
+
+
+\subsection{More machines}
+
+
+\section{Properties of behaviors}
 
 \subsection{Causal behaviors}
 
@@ -201,34 +252,6 @@ For any signal space $\Obja$, we define a shift function $\delta_s: \Obja^\Time 
     .. }
 
 
-
-\section{From specifications to behaviors}
-
-\todotext{write some intro lines to this section}
-
-\subsection{Moore machines}
-
-We have seen that given a Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ and an initial state $x_0$, we obtain an associated behavior $\prin^\natnumbers \to  \prout^\natnumbers$ given by 
-\begin{equation}
-u_k \mapsto \prreadout(\prdyn(x_k, u_k)), 
-\end{equation}
-using the equations
-\begin{align}
-x_{k+1} &= \prdyn(x_k, u_k) \\
-y_{k} &= \prreadout(x_{k}).
-\end{align}
-
-\begin{remark}
-Another kind of behavior may be generated with the same Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ if instead we use the set of equations
-\begin{align}
-\tilde x_{k} &= \prdyn(x_k, u_k) \\
-x_{k+1} &= \prdyn(\tilde x_{k}, u_k) \\
-y_{k} &= \prreadout(x_{k}),
-\end{align}
-where $\tilde x$ is a new `latent' variable that we've introduced. This illustrates that the recursion equations are associated to a behavior that the Moore machine generates, and not directly to the specification $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ of the Moore machine itself. 
-\end{remark}
-
-\subsection{More machines}
 
 
 
