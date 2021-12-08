@@ -16,24 +16,91 @@ Sometimes we will think of systems as if they are ``black boxes": that is, as if
 No matter whether we are looking `inside' of systems or are just considering their external behavior, a key feature of our understanding of the term system is that systems make be composed together. First of all, for serial composition, this means that the output of one system is taken as the input for the next systems. Furthermore, we will also formalize notions of parallel composition of systems, and of feedback.
 
 
-\section{System behaviors}
 
-\todotext{Talk here briefly about the distinction between formal specifications or parametrizations of systems versus behaviors of systems; perhaps use Moore machines as an example}
+\section{Specifying systems}
 
-Recall from \cref{sec:moore-machines} that a Moore machine is specified by an input set $\prin$, an output set $\prout$, a state space set $\prst$, and two functions
-\begin{equation}\label{eq:moore-specification}
+Let's consider some different examples of systems and ways of specifying them.
+
+\subsection{Moore machines}
+
+We have seen in \cref{sec:moore-machines}  that a Moore machine is specified by the data
+\begin{equation}
+\tup{\prin, \prout, \prst, \prdyn, \prreadout}
+\end{equation}
+where 
+\begin{equation}\label{eq:moore-specification-again}
     \begin{cases}
         \prdyn \colon \prin \cartprod \prst \sto \prst, \\
         \prreadout \colon \prst \sto \prout.
     \end{cases}
 \end{equation}
 
+\subsection{More machines}
+
+A More machine is specified by
+\begin{equation}
+\tup{\prin, \prout, \prst, \prdyn, \prreadout}
+\end{equation}
+where now the read-out function takes values in lists of elements of $\prout$: 
+\begin{equation}\label{eq:moore-specification-again}
+    \begin{cases}
+        \prdyn \colon \prin \cartprod \prst \sto \prst, \\
+        \prreadout \colon \prst \sto \seqsof{\prout}.
+    \end{cases}
+\end{equation}
+
+\subsection{LTI systems}
+
+A linear time-invariant dynamical system (LTI system), in a so-called state-space description, is specified by real vector spaces $\prin$ (input space), $\prout$ (output space), and $\prst$ (state space), along with a system of equations of the form
+\begin{align}
+        \dot x(t) &= Ax(t) + Bu(t) \label{eq:LTI-system-dyn} \\
+        y(t) &= Cx(t) + Du(t) \label{eq:LTI-system-ro}
+\end{align}
+where $t \in \reals$, $u(t) \in \prin$, $y(t) \in \prout^\reals$, $x(t) \in \prst$, and where $A: \prst \to \prst$, $B: \prin \to \prst$, $C: \prst \to \prout$, $D: \prin \to \prout$ are $\reals$-linear maps (we are identifying the tangent space of $\prst$ with $\prst$ itself). 
+
+We may associate the equation \cref{eq:LTI-system-dyn} with a function 
+\begin{equation}
+\prdyn \colon  \prin \cartprod \prst \sto \prst, \ \tup{x(t), u(t)} \mapsto \dot x(t)
+\end{equation}
+and the equation \cref{eq:LTI-system-ro} with a function 
+\begin{equation}
+\prreadout \colon \prin \cartprod \prst \sto \prout, \ \tup{x(t), u(t)} \mapsto y(t).
+\end{equation}
+
+We will call an LTI system \emph{proper} if in \cref{eq:LTI-system-ro}, the map $D$ sends any vector to zero. 
+
+
+\subsection{Descriptor systems}
+
+Descriptor systems (DLTI systems) are a generalization of LTI systems which differ only in that the defining system of equations has the form
+\begin{align}
+        E \dot x(t) &= Ax(t) + Bu(t) \label{eq:DLTI-system-dyn} \\
+        y(t) &= Cx(t) + Du(t) \label{eq:DLTI-system-ro}
+\end{align}
+where $E: \prst \to \prst$ is a linear map (again identifying the tangent space of $\prst$ with $\prst$). Clearly a DLTI system is an LTI system when $E$ is the identity map. 
+
+We associate the equation \cref{eq:DLTI-system-dyn} now with the relation 
+\begin{equation}
+\prdyn \subseteq  (\prin \cartprod \prst) \cartprod \prst
+\end{equation}
+given by 
+\begin{equation}
+\prdyn = \{ \tup{ \tup{u(t), x(t)} \dot x(t)} \mid E \dot x(t) = Ax(t) + Bu(t) \}.
+\end{equation}
+
+
+
+\section{System behaviors}
+
+\todotext{Talk here briefly about the distinction between formal specifications or parametrizations of systems versus behaviors of systems; perhaps use Moore machines as an example}
+
+Consider a Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$. 
 In \cref{sec:action-of-a-category} we saw how, given an initial state $x_0 \in \prst$, a Moore machine acts on sequences of inputs, mapping these to sequences of outputs. 
 
 For example, if $u_0, u_1, u_2, ... $ is a sequence of inputs, then the corresponding sequence of outputs $y_0, y_1, y_2, ... $ of \cref{eq:moore-specification} is dictated by the recursion relations
 \begin{align}
-x_{k+1} &= \prdyn(x_k, u_k) \\
-y_{k+1} &= \prreadout(x_{k+1}),
+x_{k+1} &= \prdyn(x_k, u_k) \label{eq:state-recursion} \\
+y_{k} &= \prreadout(x_{k}),
 \end{align}
 with $k \in \natnumbers$. 
 
@@ -49,13 +116,12 @@ When we want to talk about discrete-time signals, natural choices for $\Time$ mi
 And when we want to talk about event-based systems, we can choose $\Time$ to consist of a set of possible events, ordered by their sequence of occurence.
 
 
-Given a set $\Obja$, we will consider the set $\Obja^\Time$ of functions $\Time \to \Obja$ as the set of time-dependent signals taking values in the signal space $\Obja$. Then a system behavior is, for example, a function $\styleobj{U}^\Time \to \styleobj{Y}^\Time$. For more flexibility in our formalism, we will also allow behaviors which are \emph{relations} $\styleobj{U}^\Time \to \styleobj{Y}^\Time$. 
-
+Given a set $\Obja$, we consider the set $\Obja^\Time$ of functions $\Time \to \Obja$ as the set of time-dependent signals taking values in the set $\Obja$. Then a system behavior is, for example, a function $\styleobj{U}^\Time \to \styleobj{Y}^\Time$. For more flexibility in our formalism, we will also allow behaviors which are \emph{relations} $\styleobj{U}^\Time \to \styleobj{Y}^\Time$. 
 In other words, in general, the externally observable behavior of a system is a relation between input signals and output signals.
 
 \begin{definition}
     Let $\Obja$ and $\Objb$ be sets.
-    An \emph{input-output behavior}, with input signal space $\Obja$ and output signal space $\Objb$, is a relation
+    An \emph{input-output behavior}, with input space $\Obja$ and output space $\Objb$, is a relation
     \begin{equation}
         \relA \subseteq \Obja^\Time \times \Objb^\Time.
     \end{equation}
@@ -65,7 +131,7 @@ In other words, in general, the externally observable behavior of a system is a 
     Fix a totally ordered set $\Time = \tup{\Time, \leq}$.
     The category $\textbf{Bh}_\Time$ of input-output behaviors is the category where:
     \begin{enumerate}
-        \item Objects consist of all sets of the form $\Obja^\Time$, ranging over all sets $\Obja$.
+        \item Objects consist of all sets of the form $\Obja^\Time$, with $\Obja$ ranging over all sets .
         \item Morphisms from $\Obja^\Time$ to $\Objb^\Time$ are relations from $\Obja^\Time$ to $\Objb^\Time$:
               \begin{equation}
                   \HomSet{\textbf{Bh}_\Time}{\Obja^\Time}{\Objb^\Time} = \powerset (\Obja^\Time \times \Objb^\Time).
@@ -135,39 +201,34 @@ For any signal space $\Obja$, we define a shift function $\delta_s: \Obja^\Time 
     .. }
 
 
-\section{Specifying systems}
 
-Let's consider some different examples of systems and ways of specifying them.
+\section{From specifications to behaviors}
+
+\todotext{write some intro lines to this section}
 
 \subsection{Moore machines}
 
-We have already seen that a Moore machine is specified by the data
+We have seen that given a Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ and an initial state $x_0$, we obtain an associated behavior $\prin^\natnumbers \to  \prout^\natnumbers$ given by 
 \begin{equation}
-\tup{\prin, \prout, \prst, \prdyn, \prreadout}
+u_k \mapsto \prreadout(\prdyn(x_k, u_k)), 
 \end{equation}
-where 
-\begin{equation}\label{eq:moore-specification-again}
-    \begin{cases}
-        \prdyn \colon \prin \cartprod \prst \sto \prst, \\
-        \prreadout \colon \prst \sto \prout.
-    \end{cases}
-\end{equation}
-
-\subsection{LTI systems}
-
-A linear time-invariant dynamical system (LTI system), in a so-called state-space description, is specified by real vector spaces $\prin$ (input space), $\prout$ (output space), and $\prst$ (state space), along with a system of equations of the form
+using the equations
 \begin{align}
-        \dot x(t) &= Ax(t) + Bu(t) \label{eq:LTI-system-dyn} \\
-        y(t) &= Cx(t) + Du(t) \label{eq:LTI-system-ro}
+x_{k+1} &= \prdyn(x_k, u_k) \\
+y_{k} &= \prreadout(x_{k}).
 \end{align}
-where $t \in \reals$, $u(t) \in \prin$, $y(t) \in \prout^\reals$, $x(t) \in \prst$, and where $A: \prst \to \prst$, $B: \prin \to \prst$, $C: \prst \to \prout$, $D: \prin \to \prout$ are $\reals$-linear maps. 
 
-We can think of the equation \cref{eq:LTI-system-dyn} as determined by the function 
-\begin{equation}
-\prdyn \colon \prin \cartprod \prst \sto \stylefunctors{T} \prst
-\end{equation}
+\begin{remark}
+Another kind of behavior may be generated with the same Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ if instead we use the set of equations
+\begin{align}
+\tilde x_{k} &= \prdyn(x_k, u_k) \\
+x_{k+1} &= \prdyn(\tilde x_{k}, u_k) \\
+y_{k} &= \prreadout(x_{k}),
+\end{align}
+where $\tilde x$ is a new `latent' variable that we've introduced. This illustrates that the recursion equations are associated to a behavior that the Moore machine generates, and not directly to the specification $\tup{\prin, \prout, \prst, \prdyn, \prreadout}$ of the Moore machine itself. 
+\end{remark}
+
+\subsection{More machines}
 
 
-
-\subsection{Descriptor systems}
 
