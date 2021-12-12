@@ -31,17 +31,6 @@ As introduced in \cref{sec:actions}, we can apply currying to~$\prdyn$, to obtai
     \end{cases}
 \end{equation}
 %
-\showslides{
-    \begin{forslides}
-        \includesag{10_moore_1}\\
-        \includesag{10_moore_comp_seq}
-        \begin{equation}
-            \label{eq:cond_moore_comp}
-            \prout_{\mora} \subseteq \prin_{\morb}
-        \end{equation}
-        \includesag{10_moore_comp_seq_bis}
-    \end{forslides}
-}
 
 We also need to have an~$\prstart \in \prst$ to act as the initial state.
 
@@ -145,7 +134,7 @@ You can clearly spot the isomorphism:
     \label{fig:comp_moore_2}
 \end{marginfigure}
 
-We can avoid lengthy book-keeping by using a slightly different construction (\cref{fig:comp_moore_2}) using the \SetL category (\cref{sec:SetL}).
+We can avoid lengthy book-keeping by using a slightly different construction (\cref{fig:comp_moore_2}) using the \SetL category (\cref{sec:SetL}) and the functor~$\tupset$ introduced in \cref{sec:funsetstarset}.
 %
 The idea is to just use lists of sets rather than the cartesian product.
 So the joint state is going to be
@@ -183,7 +172,7 @@ We then write the dynamics
         {%
             \prdyn_{\mora} (u, x_{\mora})
         }{%
-            \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})
+            \prdyn_{\morb}(\prreadout_{\mora}(\tupset(x_{\mora})), x_{\morb})
         }
     }
 \end{equation}
@@ -202,7 +191,7 @@ and the readout
     }{
         \tupcat {x_{\mora}} {x_{\morb}}
     }{
-        \prreadout_{\morb}(x_{\morb})
+        \prreadout_{\morb}(\tupset(x_{\morb}))
     }
 \end{equation}
 %
@@ -220,9 +209,10 @@ With this definition we can define the semicategory~\Moore of Moore machines.
               \end{equation}
               where:
               \begin{itemize}
-                  \item $\prin_{\mora}$,~$\prst_{\mora}$,~$\prout_{\mora}$ are objects of \SetL;
-                  \item $ \prdyn_{\mora} \colon \prin_{\mora} \mtoin\SetL  \Endof{\prst_{\mora}}$;
-                  \item $ \prreadout_{\mora} \colon \prst_{\mora}  \mtoin\SetL \prout_{\mora}$.
+                  \item $\prst_{\mora}$ is object of \SetL;
+                  \item $\prin_{\mora}$ and~$\prout_{\mora}$ are sets (objects of \Set);
+                  \item $ \prdyn_{\mora} \colon \prin_{\mora} \mtoin\Set  \Endof{\prst_{\mora}}$;
+                  \item $ \prreadout_{\mora} \colon \tupset(\prst_{\mora})  \mtoin\Set \prout_{\mora}$.
               \end{itemize}
         \item \emph{Composition of morphisms:}
               Composition is given by \cref{eq:moore-comp-good-1,eq:moore-comp-good-2,eq:moore-comp-good-3}.
@@ -247,8 +237,8 @@ With this definition we can define the semicategory~\Moore of Moore machines.
             \label{eq:assoc_moore_1}
             \begin{aligned}
                 \prdyn_{(\mora\mthen\morb)\mthen \morc}\colon \Tupcatt{\prin_{\mora}}{\Tupcat{\prst_{\mora}}{\prst_{\morb}}}{\prst_{\morc}} & \to \Tupcat{\Tupcat{\prst_{\mora}}{\prst_{\morb}}}{\prst_{\morc}} \\
-                \tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}                                                                            & \mapsto \tupcat{\prdyn_{\mora \mthen \morb}(u,\tupcat{x_\mora}{x_\morb})}{\prdyn_{\morc}(\prreadout_{\mora \mthen \morb}(\tupcat{x_\mora}{x_\morb}),x_\morc)} \\
-                                                                                                                                            & =\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
+                \tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}                                                                            & \mapsto \tupcat{\prdyn_{\mora \mthen \morb}(u,\tupcat{x_\mora}{x_\morb})}{\prdyn_{\morc}(\prreadout_{\mora \mthen \morb}(\tupset(\tupcat{x_\mora}{x_\morb})),x_\morc)} \\
+                                                                                                                                            & =\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout_\mora(\tupset(x_\mora)),x_\morb)}{\prdyn_\morc(\prreadout_\morb(\tupset(x_\morb)),x_\morc)}.
             \end{aligned}
         \end{equation*}
     \end{widepar}
@@ -260,8 +250,8 @@ With this definition we can define the semicategory~\Moore of Moore machines.
             \label{eq:assoc_moore_2}
             \begin{aligned}
                 \prdyn_{\mora\mthen(\morb\mthen \morc)}\colon \Tupcatt{\prin_{\mora}}{\prst_{\mora}}{\Tupcat{\prst_{\morb}}{\prst_{\morc}}} & \to \Tupcat{\prst_{\mora}}{\Tupcat{\prst_{\morb}}{\prst_{\morc}}} \\
-                \tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}                                                                            & \mapsto \tupcat{\prdyn_{\mora}(u,x_\mora)}{\prdyn_{\morb\mthen \morc}(\prreadout_{\mora}(x_\mora),\tupcat{x_\morb}{x_\morc})} \\
-                                                                                                                                            & =\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout(x_\mora),x_\morb)}{\prdyn_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
+                \tup{u, \tupcatt{x_{\mora}}{x_{\morb}}{x_\morc}}                                                                            & \mapsto \tupcat{\prdyn_{\mora}(u,x_\mora)}{\prdyn_{\morb\mthen \morc}(\prreadout_{\mora}(\tupcat{x_\mora}),\tupcat{x_\morb}{x_\morc})} \\
+                                                                                                                                            & =\tupcatt{\prdyn_\mora(u,x_\mora)}{\prdyn_\morb(\prreadout_\mora(\tupset(x_\mora)),x_\morb)}{\prdyn_\morc(\prreadout_\morb(\tupset(x_\morb)),x_\morc)}.
             \end{aligned}
         \end{equation*}
     \end{widepar}
@@ -269,16 +259,11 @@ With this definition we can define the semicategory~\Moore of Moore machines.
     \begin{equation*}
         \label{eq:assoc_moore_3}
         \defmapcommaset{
-            \prreadout_{(\mora \mthen \morb)\mthen \morc}
-        }{
-            \sto
-        }{
-            \Tupcat{\Tupcat{\prst_\mora}{\prst_\morb}
-            }{
-                \prst_\morc}}{\prout_\morc}{\tupcatt{x_\mora}{x_\morb}{x_\morc}
-        }{
-            \prreadout_\morc(x_\morc)
-        }
+            \prreadout_{(\mora \mthen \morb)\mthen \morc}}
+        {\Tupcat{\Tupcat{\prst_\mora}{\prst_\morb}}{\prst_\morc}}
+        {\prout_\morc}
+        {\tupcatt{x_\mora}{x_\morb}{x_\morc}}
+        { \prreadout_\morc(\tupset(x_\morc))}
     \end{equation*}
     and
     \begin{equation*}
@@ -292,7 +277,7 @@ With this definition we can define the semicategory~\Moore of Moore machines.
         }{
             \tupcatt{x_\mora}{x_\morb}{x_\morc}
         }{
-            \prreadout_\morc(x_\morc)
+            \prreadout_\morc(\tupset(x_\morc))
         }
     \end{equation*}
 \end{example}
@@ -309,11 +294,11 @@ Given a finite input sequence~$u\colon \natnumbers \to \prgen$ of length~$n$, th
 \begin{equation}
     \label{eq:actions-on-sequences-y}
     \begin{aligned}
-        y_0   & = \prreadout(x_0), \\
-        y_1   & = \prreadout(x_1), \\
-        y_2   & = \prreadout(x_2), \\
+        y_0   & = \prreadout(\tupset(x_0)), \\
+        y_1   & = \prreadout(\tupset(x_1)), \\
+        y_2   & = \prreadout(\tupset(x_2)), \\
         \dots & = \dots \\
-        y_{k} & = \prreadout(x_{k-1}).
+        y_{k} & = \prreadout(\tupset(x_{k-1})).
     \end{aligned}
 \end{equation}
 %
@@ -390,39 +375,177 @@ The signature of this machine would be this:
     \label{eq:more-signature}
     \begin{cases}
         \prdyn \colon  \prin \sto \Endof \prst, \\
-        \prreadout \colon \prst \sto \seqsof \prout,
+        \prreadout \colon \tupset(\prst) \sto \seqsof \prout,
     \end{cases}
 \end{equation}
 %
 where the output is not just~$\prout$ but~$\seqsof \prout$: the machine can produce zero or more outputs.
 We call these \emph{More} machines.
 
-\todotextjira{60}{@Gioele: write definition of More Machines.}
+The composition of two More machines is a More machine with:
+\begin{equation}
+    \label{eq:more-comp-good-1}
+    \begin{aligned}
+        \prin_{\mora\mthen\morb}           & = \prin_{\mora}, \\
+        \prst_{\mora\mthen\morb}           & = \Tupcat {\prst_{\mora}}  {\prst_{\morb}}, \\
+        \prstart_{\mora\mthen\morb}        & = \tupcat{\prstart_{\mora}}{\prstart_{\morb}}, \\
+        \seqsof{\prout_{\mora\mthen\morb}} & = \seqsof{\prout_{\morb}}.
+    \end{aligned}
+\end{equation}
+%
+We then write the dynamics
+%
+\begin{equation}
+    \label{eq:more-comp-good-2}
+    \defmapperiodset{
+        \prdyn_{\mora\mthen\morb}
+    }{
+        \Tupcatt {\prin_{\mora}}  {\prst_{\mora}} {\prst_{\morb}}
+    }{
+        \Tupcat {\prst_{\mora}} {\prst_{\morb}}
+    }{
+        \tupcatt u {x_{\mora}} {x_{\morb}}
+    }{
+        \tupcat %
+        {%
+            \prdyn_{\mora} (u, x_{\mora})
+        }{%
+            \prdyn_{\morb}(\prreadout_{\mora}(\tupset(x_{\mora})), x_{\morb})
+        }
+    }
+\end{equation}
+%
+%
+and the readout
+%
+\begin{equation}
+    \label{eq:more-comp-good-3}
+    \defmapperiodset{
+        \prreadout_{\mora\mthen\morb}
+    }{
+        \Tupcat {\prst_{\mora}} {\prst_{\morb}}
+    }{
+        \seqsof{\prout_{\morb}}
+    }{
+        \tupcat {x_{\mora}} {x_{\morb}}
+    }{
+        \prreadout_{\morb}(\tupset(x_{\morb}))
+    }
+\end{equation}
+
+\begin{definition}[\More]
+    \label{def:More}
+    The \emph{semicategory of More machines} \More is given by:
+    \begin{enumerate}
+        \item \emph{Objects:} objects of \SetL.
+        \item \emph{Morphisms:}
+              A morphism is a tuple
+              \begin{equation}
+                  \mora = \tupp{\prin_{\mora},\prst_{\mora},\seqsof{\prout_{\mora}},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}},
+              \end{equation}
+              where:
+              \begin{itemize}
+                  \item $\prst_{\mora}$ is an object of \SetL;
+                  \item $\prin_{\mora}$ and~$\seqsof{\prout_{\mora}}$ are sets (objects of \Set);
+                  \item $ \prdyn_{\mora} \colon \prin_{\mora} \mtoin\Set \Endof{\prst_{\mora}}$;
+                  \item $ \prreadout_{\mora} \colon \tupset(\prst_{\mora})  \mtoin\Set \seqsof{\prout_{\mora}}$.
+              \end{itemize}
+        \item \emph{Composition of morphisms:}
+              Composition is given by \cref{eq:more-comp-good-1,eq:more-comp-good-2,eq:more-comp-good-3}.
+    \end{enumerate}
+\end{definition}
 
 \devel{
-    \begin{definition}[\More]
-        \label{def:More}
-        The \emph{semicategory of More machines} \More is given by:
-        \begin{enumerate}
-            \item \emph{Objects:} objects of \SetL.
-            \item \emph{Morphisms:}
-                  A morphism is a tuple
-                  \begin{equation}
-                      \mora = \tupp{\prin_{\mora},\prst_{\mora},\seqsof{\prout_{\mora}},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}},
-                  \end{equation}
-                  where:
-                  \begin{itemize}
-                      \item $\prin_{\mora}$,~$\prst_{\mora}$,~$\seqsof{\prout_{\mora}}$ are objects of \SetL;
-                      \item $ \prdyn_{\mora} \colon \prin_{\mora} \mtoin\SetL  \Endof{\prst_{\mora}}$;
-                      \item $ \prreadout_{\mora} \colon \prst_{\mora}  \mtoin\SetL \seqsof{\prout_{\mora}}$.
-                  \end{itemize}
-            \item \emph{Composition of morphisms:}
-                  Composition is given by .
-                  ...
-        \end{enumerate}
-    \end{definition}}
+    \begin{example}[Duplicator]
+        We consider the example of a More machine~$\duplicator$, which we call \emph{duplicator}.
+        Practically, this machine takes an input, and duplicates it.
+        The machine is written as
+        \begin{equation*}
+            \tupp{\prin_{\duplicator},\prst_{\duplicator},\seqsof{\prout_{\duplicator}},\prdyn_{\duplicator},\prreadout_{\duplicator},\prstart_{\duplicator}},
+        \end{equation*}
+        where~$\prin_{\duplicator}=\prst_{\duplicator}=\prout_\duplicator$, and
+        \begin{equation*}
+            \defmapcomma{\prdyn_\duplicator}
+            {\Tupcat{\prin_\duplicator}{\prst_\duplicator}}
+            {\sto}
+            {\prst_\duplicator}
+            {\tupcat{u}{x_\duplicator}}
+            {\tupca{u}}
+        \end{equation*}
+        %
+        \begin{equation*}
+            \defmapcomma{\prreadout_\duplicator}
+            {\prst_\duplicator}
+            {\sto}
+            {\seqsof{\prout_\duplicator}}
+            {x_\duplicator}
+            {\tupcat{x_\duplicator}{x_\duplicator}}
+        \end{equation*}
+        and~$\prstart=\tupca{}$.
+    \end{example}
 
-\todojira{587}{Example of More: each input is duplicated}
-\todojira{588}{Example of More: discard every other input}
+    \begin{example}[Discarder]
+        We consider the example of a More machine~$\discarder$, which we call \emph{discarder}.
+        Practically, this machine discards every other input.
+        The machine is written as:
+        \begin{equation*}
+            \tupp{\prin_{\discarder},\prst_{\discarder},\seqsof{\prout_{\discarder}},\prdyn_{\discarder},\prreadout_{\discarder},\prstart_{\discarder}},
+        \end{equation*}
+        where~$\prst_{\discarder}=\Tupcat{\{0,1\}}{\prin_\discarder}$, and
+        \begin{equation*}
+            \defmapcomma{\prdyn_\discarder}
+            {\Tupcat{\prin_\discarder}{\prst_\discarder}}
+            {\sto}
+            {\prst_\discarder}
+            {\tupcat{u}{x_\discarder}}
+            {\tupcat{(1-x_\discarder)}{u}}
+        \end{equation*}
+        %
+        \begin{equation*}
+            \defmapcomma{\prreadout_\discarder}
+            {\prst_\discarder}
+            {\sto}
+            {\seqsof{\prout_\discarder}}
+            {\tupcat{x_{1,\discarder}}{x_{2,\discarder}}}
+            {
+                \begin{cases}
+                    \tupca{x_{2,\discarder}}, & x_\discarder\neq 0, \\
+                    \tupca{},                 & \text{ else}.
+                \end{cases}
+            }
+        \end{equation*}
+        and~$\prstart=0$.
+    \end{example}
+
+    \begin{example}[Terminator]
+        Consider a More machine~$\terminator$, which we call \emph{terminator}.
+        Practically, this machine terminates any input, outputting an empty list.
+        The machine is written as
+        \begin{equation*}
+            \tupp{\prin_{\terminator},\prst_{\terminator},\seqsof{\prout_{\terminator}},\prdyn_{\terminator},\prreadout_{\terminator},\prstart_{\terminator}},
+        \end{equation*}
+        where:
+        \begin{equation*}
+            \defmapcomma{\prdyn_\terminator}
+            {\Tupcat{\prin_\terminator}{\prst_\terminator}}
+            {\sto}
+            {\prst_\terminator}
+            {\tupcat{u}{x_\terminator}}
+            {\tupca{x_\terminator}}
+        \end{equation*}
+        %
+        \begin{equation*}
+            \defmapcomma{\prreadout_\terminator}
+            {\prst_\terminator}
+            {\sto}
+            {\seqsof{\prout_\terminator}}
+            {\prst_\terminator}
+            {
+                \tupca{}
+            }
+        \end{equation*}
+        and any~$\prstart_\terminator$.
+    \end{example}
+}
+
 \todojira{589}{Example of More: Composition of duplicator and discarder gives identity}
-\todojira{591}{Define the terminator}
