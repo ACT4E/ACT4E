@@ -3,62 +3,63 @@
 \section{Relational Databases}
 \label{sec:relational-databases}
 
-    \todotextjira{50}{@Andrea: After watching Johnson's lecture, I would write this differently.}
+\todotextjira{50}{@Andrea: After watching Johnson's lecture, I would write this differently.}
 
-    A \emph{relational database} like PostgreSQL, MySQL, \etc presents the data to the user as relations.
-    This does not necessarily mean that the data is stored as tuples, as in the mathematical model, but rather that what the user can do is query and manipulate relations.
-    This conceptual model is now 50 years old.
+A \emph{relational database} like PostgreSQL, MySQL, \etc presents the data to the user as relations.
+This does not necessarily mean that the data is stored as tuples, as in the mathematical model, but rather that what the user can do is query and manipulate relations.
+This conceptual model is now 50 years old.
 
-    Can we use the category \Rel to represent databases~\cite{codd2002relational}?
+Can we use the category \Rel to represent databases~\cite{codd2002relational}?
 
-    Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.
-    }.
+Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.
+}.
 
-    The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model ID), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, \etc.
-    A simple illustration is provided in \cref{tab:electric_motors}.
+The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model ID), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, \etc.
+A simple illustration is provided in \cref{tab:electric_motors_old_one}.
 
-    \begin{table*}[h]
-        \centering
-        \begin{tabular}{c|c|c|c|c|c}
-            Motor ID      & Company              & $\unit[\text{Size}]{[mm^3]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
-                          & \unit[Cost]{[USD]} \\
-            \hline
-            \textsf{1204} & \textsf{SOYO}        & 20 x 20 x 30                 & 60.0               & 2.34                  & 19.95 \\
-            \textsf{1206} & \textsf{SOYO}        & 28 x 28 x 45                 & 140.0              & 3.00                  & 19.95 \\
-            \textsf{1207} & \textsf{SOYO}        & 35 x 35 x 26                 & 130.0              & 2.07                  & 12.95 \\
-            \textsf{2267} & \textsf{SOYO}        & 42 x 42 x 38                 & 285.0              & 4.76                  & 16.95 \\
-            \textsf{2279} & \textsf{Sanyo Denki} & 42 x 42 x 31.5               & 165.0              & 5.40                  & 164.95 \\
-            \textsf{1478} & \textsf{SOYO}        & 56.4 x 56.4 x 76             & 1,000              & 8.96                  & 49.95 \\
-            \textsf{2299} & \textsf{Sanyo Denki} & 50 x 50 x 16                 & 150.0              & 5.90                  & 59.95
-        \end{tabular}
+\begin{table*}[h]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c}
+        Motor ID      & Company              & $\unit[\text{Size}]{[mm^3]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
+                      & \unit[Cost]{[USD]} \\
+        \hline
+        \textsf{1204} & \textsf{SOYO}        & 20 x 20 x 30                 & 60.0               & 2.34                  & 19.95 \\
+        \textsf{1206} & \textsf{SOYO}        & 28 x 28 x 45                 & 140.0              & 3.00                  & 19.95 \\
+        \textsf{1207} & \textsf{SOYO}        & 35 x 35 x 26                 & 130.0              & 2.07                  & 12.95 \\
+        \textsf{2267} & \textsf{SOYO}        & 42 x 42 x 38                 & 285.0              & 4.76                  & 16.95 \\
+        \textsf{2279} & \textsf{Sanyo Denki} & 42 x 42 x 31.5               & 165.0              & 5.40                  & 164.95 \\
+        \textsf{1478} & \textsf{SOYO}        & 56.4 x 56.4 x 76             & 1,000              & 8.96                  & 49.95 \\
+        \textsf{2299} & \textsf{Sanyo Denki} & 50 x 50 x 16                 & 150.0              & 5.90                  & 59.95
+    \end{tabular}
 
-        \caption{
-            A simplified catalogue of motors.
-        }
-    \end{table*}
+    \caption{
+        \label{tab:electric_motors_old_one}
+        A simplified catalogue of motors.
+    }
+\end{table*}
 
-    % \subsubsection{Can we use $\Rel$ for relational databases?}
+% \subsubsection{Can we use $\Rel$ for relational databases?}
 
-    Such database table can be seen as representing an $n$-ary relation with $n = 7$, as we are expressing a relation over the sets
-    \begin{equation*}
-        \stylesets{M}\cartprod \stylesets{C}\cartprod \stylesets{S}\cartprod \stylesets{W}\cartprod \stylesets{J}\cartprod \stylesets{P},
-    \end{equation*}
+Such database table can be seen as representing an $n$-ary relation with $n = 7$, as we are expressing a relation over the sets
+\begin{equation*}
+    \stylesets{M}\cartprod \stylesets{C}\cartprod \stylesets{S}\cartprod \stylesets{W}\cartprod \stylesets{J}\cartprod \stylesets{P},
+\end{equation*}
 
-    where~$\stylesets{M}$ represents the set of motor IDs,~$\stylesets{C}$ the set of companies producing motors,~$\stylesets{S}$ the set of motor sizes,~$\stylesets{W}$ the set of motor weights,~$\stylesets{J}$ the set of possible maximal powers, and~$\stylesets{P}$ the set of possible prices.
-    An $n$-ary relation is a relation over $n$ sets, just like a binary relation is a relation over $2$ sets.
+where~$\stylesets{M}$ represents the set of motor IDs,~$\stylesets{C}$ the set of companies producing motors,~$\stylesets{S}$ the set of motor sizes,~$\stylesets{W}$ the set of motor weights,~$\stylesets{J}$ the set of possible maximal powers, and~$\stylesets{P}$ the set of possible prices.
+An $n$-ary relation is a relation over $n$ sets, just like a binary relation is a relation over $2$ sets.
 
-    \begin{definition}[$n$-ary relation]
-        \label{def:n-ary-relation}
-        An $n$-ary relation on $n$ sets $\tup{\setA_1, \setA_2, \dots, \setA_n}$ is a subset of the product set
-        \begin{equation}
-            \setA_1 \cartprod \setA_2 \cartprod \cdots \cartprod \setA_n.
-        \end{equation}
-    \end{definition}
+\begin{definition}[$n$-ary relation]
+    \label{def:n-ary-relation}
+    An $n$-ary relation on $n$ sets $\tup{\setA_1, \setA_2, \dots, \setA_n}$ is a subset of the product set
+    \begin{equation}
+        \setA_1 \cartprod \setA_2 \cartprod \cdots \cartprod \setA_n.
+    \end{equation}
+\end{definition}
 
-    \Rel only allows binary relations.
-    Morphisms in \Rel have 1 source and 1 target.
-    There is no immediate and natural way to represent $n$-ary relations using \Rel,
-    or we don't know it yet.
+\Rel only allows binary relations.
+Morphisms in \Rel have 1 source and 1 target.
+There is no immediate and natural way to represent $n$-ary relations using \Rel,
+or we don't know it yet.
 
 % To represent relational databases categorically, there are at least 3 options.
 %

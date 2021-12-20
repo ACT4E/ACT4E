@@ -12,6 +12,11 @@ ACT%.pdf: ACT%.tex .FORCE
 	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
 	cp ACT$*.aux ACT$*-refs.aux
 
+	# make copy of files - open PDF viewer on these
+	cp ACT$*.log ACT$*-stable.log
+	cp ACT$*.pdf ACT$*-stable.pdf
+	cp ACT$*.synctex.gz ACT$*-stable.synctex.gz
+
 %.pdf: %.tex .FORCE
 	max_print_line=10000  nice -n 19 latexmk -synctex=1 -pdf -shell-escape  -f $<
 	texloganalyser -r $*.log > $*.warnings.txt
