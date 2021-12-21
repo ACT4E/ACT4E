@@ -12,7 +12,7 @@ We think of the components as primitive blocks, because they are given in a cata
 Given the solution for the primitive blocks, we want to know what is the solution for \FixFunMinRes for the entire diagram.
 
 What is the form of the solution that we expect?
-Given a DP~$\adp\colon \funsp \profto \ressp$ we expect the solution to \FixFunMinRes to be a function that, given a fixed functionality~$\fun\in\funsp$, returns the minimal resources, which form an upper set.
+Given a DP~$\adp\colon \funsp \profto \ressp$ we expect the solution to \FixFunMinRes to be a function that, given a fixed functionality~$\fun\setin\funsp$, returns the minimal resources, which form an upper set.
 We call this function~$\ftoR_\adp$.
 
 \begin{definition}
@@ -21,7 +21,7 @@ We call this function~$\ftoR_\adp$.
     \begin{equation*}
         \begin{aligned}
             \ftoR_{\adp}\colon \funsp & \toinPos \uppersets{\ressp}, \\
-            \fun                      & \mapsto \{ \res \in \ressp \colon \adp(\fun\Fop, \res)\}.
+            \fun                      & \mapsto \{ \res \setin \ressp \colon \adp(\fun\Fop, \res)\}.
         \end{aligned}
     \end{equation*}
     If a certain functionality~\fun is infeasible, then~$\ftoR(\fun)=\emptyset$.
@@ -32,8 +32,8 @@ We call this function~$\ftoR_\adp$.
     We know
     \begin{equation*}
         \begin{aligned}
-            \ftoR_\adpa(\fun) & =\{ \res \in \ressp \colon \adp(\fun\Fop, \res)\} \\
-                              & \supseteq \{ \res \in \ressp \colon \adp(\fun\F{'^*}, \res)\} \\
+            \ftoR_\adpa(\fun) & =\{ \res \setin \ressp \colon \adp(\fun\Fop, \res)\} \\
+                              & \supseteq \{ \res \setin \ressp \colon \adp(\fun\F{'^*}, \res)\} \\
                               & =\ftoR_\adpa(\fun\F{'}),
         \end{aligned}
     \end{equation*}
@@ -48,7 +48,7 @@ Symmetrically, the solution to \FixResMaxFun is given by a function that we call
     \begin{equation*}
         \begin{aligned}
             \rtoF_{\adp}\colon \ressp & \toinPos \lowersets{\funsp}, \\
-            \res                      & \mapsto \{ \fun \in \funsp \colon \adp(\fun\Fop, \res)\}.
+            \res                      & \mapsto \{ \fun \setin \funsp \colon \adp(\fun\Fop, \res)\}.
         \end{aligned}
     \end{equation*}
     If a certain resource~\res only leads to infeasible functionalities, then~$\rtoF(\res)=\emptyset$.
@@ -59,8 +59,8 @@ Symmetrically, the solution to \FixResMaxFun is given by a function that we call
     We know
     \begin{equation*}
         \begin{aligned}
-            \rtoF_\adpa(\res) & =\{ \fun \in \funsp \colon \adp(\fun\Fop, \res)\} \\
-                              & \subseteq \{ \fun \in \funsp \colon \adp(\fun\Fop, \res\R{'})\} \\
+            \rtoF_\adpa(\res) & =\{ \fun \setin \funsp \colon \adp(\fun\Fop, \res)\} \\
+                              & \subseteq \{ \fun \setin \funsp \colon \adp(\fun\Fop, \res\R{'})\} \\
                               & =\rtoF_\adpa(\res\R{'}),
         \end{aligned}
     \end{equation*}
@@ -80,15 +80,15 @@ Symmetrically,~$\rtoF_\adp$ is a morphism in a category \LPos equivalent to \DP 
     The category \UPos consists of:
     \begin{enumerate}
         \item \emph{Objects}: objects are posets;
-        \item \emph{Morphisms}: given objects~$\Obja,\Objb\in \Ob_{\UPos}$, morphisms from~$\mora\colon \Obja \mto \Objb$ are monotone maps of the form~$\ulposmap{\mapa} \colon \Obja \toinPos \uppersets{\Objb}$.
+        \item \emph{Morphisms}: given objects~$\Obja,\Objb\setin \Ob_{\UPos}$, morphisms from~$\mora\colon \Obja \mto \Objb$ are monotone maps of the form~$\ulposmap{\mapa} \colon \Obja \toinPos \uppersets{\Objb}$.
         \item \emph{Composition of morphisms}: Given morphisms~$\mora\colon \Obja \mto \Objb$,~$\morb\colon \Objb\mto \Objc$, their composition~$\mora\mthen \morb\colon \Obja\mto \Objc$ is given by
               \begin{equation}
                   \begin{aligned}
                       \ulposmap{(\mapa \mthen \mapb)} \colon \Obja & \toinPos \uppersets{\Objc} \\
-                      \Objael                                      & \mapsto \bigcup_{\Objbel\in \ulposmap{\mapa}(\Objael)}\ulposmap{\mapb}(\Objbel);
+                      \Objael                                      & \mapsto \bigsetunion_{\Objbel\setin \ulposmap{\mapa}(\Objael)}\ulposmap{\mapb}(\Objbel);
                   \end{aligned}
               \end{equation}
-        \item \emph{Identity morphism}: given an object~$\Obja\in \Ob_{\UPos}$, the identity morphism $\catid_\Obja \colon \Obja \mto \Obja$ is given by the application of the upper closure operator:
+        \item \emph{Identity morphism}: given an object~$\Obja\setin \Ob_{\UPos}$, the identity morphism $\catid_\Obja \colon \Obja \mto \Obja$ is given by the application of the upper closure operator:
               \begin{equation}
                   \ulposmap{\catid}_\Obja(\Objael)\definedas \upit\{\Objael\}.
               \end{equation}
@@ -105,15 +105,15 @@ Analogously, we can define the \LPos category.
     The category \LPos consists of:
     \begin{enumerate}
         \item \emph{Objects}: objects are posets;
-        \item \emph{Morphisms}: given objects~$\Obja,\Objb\in \Ob_{\LPos}$, morphisms~$\mora\colon \Obja\mto \Objb$ are monotone maps of the form~$\ulposmap{\mora} \colon \Obja \toinPos \lowersets{\Objb}$.
+        \item \emph{Morphisms}: given objects~$\Obja,\Objb\setin \Ob_{\LPos}$, morphisms~$\mora\colon \Obja\mto \Objb$ are monotone maps of the form~$\ulposmap{\mora} \colon \Obja \toinPos \lowersets{\Objb}$.
         \item \emph{Composition of morphisms}: Given morphisms~$\mora \colon \Obja \mto \Objb$,~$\morb \colon \Objb\mto \Objc$, their composition~$\mora\mthen \morb\colon \Obja\mto \Objc$ is given by
               \begin{equation}
                   \begin{aligned}
                       \ulposmap{(\mapa \mthen \mapb)} \colon \Obja & \toinPos \lowersets{\Objc} \\
-                      \Objael                                      & \mapsto \bigcup_{\Objbel\in \ulposmap{\mora} (\Objael)}\ulposmap{\morb}(\Objbel);
+                      \Objael                                      & \mapsto \bigsetunion_{\Objbel\setin \ulposmap{\mora} (\Objael)}\ulposmap{\morb}(\Objbel);
                   \end{aligned}
               \end{equation}
-        \item \emph{Identity morphism}: given an object $\Obja\in \Ob_{\LPos}$, the identity morphism~$\catid_\Obja \colon \Obja \mto \Obja$ is given by the application of the lower closure operator:
+        \item \emph{Identity morphism}: given an object $\Obja\setin \Ob_{\LPos}$, the identity morphism~$\catid_\Obja \colon \Obja \mto \Obja$ is given by the application of the lower closure operator:
               \begin{equation}
                   \ulposmap{\catid}_\Obja(\Objael)\definedas \downit\{\Objael\}.
               \end{equation}
@@ -136,28 +136,28 @@ We now show that \UPos and \LPos are indeed categories.
     Given~$\mora\colon \Obja \mto \Objb$, we have:
     \begin{equation*}
         \begin{aligned}
-            \ulposmap{\left( \mora \mthen \catid_\Objb\right)}(\Objael) & =\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\ulposmap{\catid_\Objb}(\Objbel) \\
-                                                                        & =\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\upit\{\Objbel\} \\
-                                                                        & =\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\{\Objbel'\in \Objb \colon \Objbel\posleqof\Objb \Objbel' \}.
+            \ulposmap{\left( \mora \mthen \catid_\Objb\right)}(\Objael) & =\bigsetunion_{\Objbel\setin \ulposmap{\mora}(\Objael)}\ulposmap{\catid_\Objb}(\Objbel) \\
+                                                                        & =\bigsetunion_{\Objbel\setin \ulposmap{\mora}(\Objael)}\upit\{\Objbel\} \\
+                                                                        & =\bigsetunion_{\Objbel\setin \ulposmap{\mora}(\Objael)}\{\Objbel'\setin \Objb \colon \Objbel\posleqof\Objb \Objbel' \}.
         \end{aligned}
     \end{equation*}
     We know that~$\ulposmap{\mora}(\Objael)$ is an upperset:
     \begin{equation*}
         \begin{aligned}
-            \ulposmap{\mora}(\Objael) & =\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\{\Objbel\} \\
-                                      & =\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\{ \Objbel'\in \Objb \colon \Objbel\posleqof\Objb \Objbel'\}.
+            \ulposmap{\mora}(\Objael) & =\bigsetunion_{\Objbel\setin \ulposmap{\mora}(\Objael)}\{\Objbel\} \\
+                                      & =\bigsetunion_{\Objbel\setin \ulposmap{\mora}(\Objael)}\{ \Objbel'\setin \Objb \colon \Objbel\posleqof\Objb \Objbel'\}.
         \end{aligned}
     \end{equation*}
-    Therefore,~$\ulposmap{\left( \mora \mthen \catid_\Objb\right)}(\Objael)=\ulposmap{\mora}(\Objael)$ for all~$\Objael\in \Obja$.
+    Therefore,~$\ulposmap{\left( \mora \mthen \catid_\Objb\right)}(\Objael)=\ulposmap{\mora}(\Objael)$ for all~$\Objael\setin \Obja$.
     Similarly, we have:
     \begin{equation*}
         \begin{aligned}
-            \ulposmap{(\catid_\Obja \mthen \mora)}(\Objael) & =\bigcup_{\Objael'\in \ulposmap{\catid_\Obja}(\Objael)}\ulposmap{\mora}(\Objael') \\
-                                                            & =\bigcup_{\Objael'\in \upit \{\Objael\}}\ulposmap{\mora}(\Objael') \\
+            \ulposmap{(\catid_\Obja \mthen \mora)}(\Objael) & =\bigsetunion_{\Objael'\setin \ulposmap{\catid_\Obja}(\Objael)}\ulposmap{\mora}(\Objael') \\
+                                                            & =\bigsetunion_{\Objael'\setin \upit \{\Objael\}}\ulposmap{\mora}(\Objael') \\
                                                             & =\ulposmap{\mora}(\Objael),
         \end{aligned}
     \end{equation*}
-    where the last equality holds since~$\ulposmap{\mora}$ is a monotone function and~$\ulposmap{\mora}(\Objael')\subseteq \ulposmap{\mora}(\Objael)$ for all~$\Objael'\in \upit \{\Objael\}$.
+    where the last equality holds since~$\ulposmap{\mora}$ is a monotone function and~$\ulposmap{\mora}(\Objael')\subseteq \ulposmap{\mora}(\Objael)$ for all~$\Objael'\setin \upit \{\Objael\}$.
 
     \textbf{Associativity}:
     Let's consider three morphisms~$\mora\colon \Obja \mto \Objb$,~$\morb\colon \Objb\mto \Objc$, and~$\morc\colon \Objc\mto \Objd$.
@@ -165,8 +165,8 @@ We now show that \UPos and \LPos are indeed categories.
     \begin{equation*}
         \begin{aligned}
             \ulposmap{\left( (\mora \mthen \morb) \mthen \morc\right)}(\Objael) & =
-            \bigcup_{\Objcel \in \left( \bigcup_{\Objbel \in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel)\right)}\ulposmap{\morc}(\Objcel) \\
-                                                                                & =\bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\bigcup_{\Objcel\in \ulposmap{\morb}(\Objbel)}\ulposmap{\morc}(\Objcel) \\
+            \bigsetunion_{\Objcel \setin \left( \bigsetunion_{\Objbel \setin \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel)\right)}\ulposmap{\morc}(\Objcel) \\
+                                                                                & =\bigsetunion_{\Objbel\setin \ulposmap{\mora}(\Objael)}\bigsetunion_{\Objcel\setin \ulposmap{\morb}(\Objbel)}\ulposmap{\morc}(\Objcel) \\
                                                                                 & =\ulposmap{\left( \mora \mthen \left( \morb\mthen \morc\right)\right)}(\Objael).
         \end{aligned}
     \end{equation*}
@@ -207,7 +207,7 @@ We can show that \UPos and \LPos are equivalent categories (\cref{def:cat-equiva
 
     \textbf{$\funeqa$ and~$\funeqb$ are functors}:
     \begin{itemize}
-        \item \emph{Preservation of identites}: Given~$\Obja\in \Ob_{\UPos}$, we have:
+        \item \emph{Preservation of identites}: Given~$\Obja\setin \Ob_{\UPos}$, we have:
               \begin{equation*}
                   \begin{aligned}
                       \ulposmap{(\funeqa(\catid_\Obja))} & =\upit_\Obja\{\Objael\} \\
@@ -216,7 +216,7 @@ We can show that \UPos and \LPos are equivalent categories (\cref{def:cat-equiva
                   \end{aligned}
               \end{equation*}
               where~$\catid_\Obja$ is an identity morphism in \UPos, and~$\catid_{\Obja\op}$ is an identity morphism in \LPos.
-              Similarly, given~$\Obja\in \Ob_{\LPos}$ we have:
+              Similarly, given~$\Obja\setin \Ob_{\LPos}$ we have:
               \begin{equation*}
                   \begin{aligned}
                       \ulposmap{(\funeqb(\catid_\Obja))} & =\downit_\Obja\{\Objael\} \\
@@ -225,14 +225,14 @@ We can show that \UPos and \LPos are equivalent categories (\cref{def:cat-equiva
                   \end{aligned}
               \end{equation*}
         \item \emph{Preservation of composition}: This can be easily seen as follows.
-              Given any~$\mora\in \HomSet{\UPos}{\Obja}{\Objb}$,~$\morb\in \HomSet{\UPos}{\Objb}{\Objc}$:
+              Given any~$\mora\setin \HomSet{\UPos}{\Obja}{\Objb}$,~$\morb\setin \HomSet{\UPos}{\Objb}{\Objc}$:
               \begin{equation*}
                   \begin{aligned}
                       \ulposmap{(\funeqa(\mora \mthen \morb))} & =\ulposmap{(\mora\mthen \morb)} \\
                                                                & =\ulposmap{(\funeqa(\mora)\mthen \funeqa(\morb))}.
                   \end{aligned}
               \end{equation*}
-              Similarly, given any~$\mora\in \HomSet{\LPos}{\Obja}{\Objb}$,~$\morb\in \HomSet{\LPos}{\Objb}{\Objc}$:
+              Similarly, given any~$\mora\setin \HomSet{\LPos}{\Obja}{\Objb}$,~$\morb\setin \HomSet{\LPos}{\Objb}{\Objc}$:
               \begin{equation*}
                   \begin{aligned}
                       \ulposmap{(\funeqb(\mora \mthen \morb))} & =\ulposmap{(\mora \mthen \morb)} \\
@@ -320,10 +320,10 @@ To do so, we first need the following two facts.
 
 \begin{lemma}
     \label{lem:unpack_u_functor}
-    Given posets~$\posA,\posB$, a monotone map~$\mora \colon \posA \to \posB$, and a family of singleton sets~$\{S_i\}_{i\in I}$, with~$S_i=\{s_i\}$,~$s_i\in \posA$, the following equality holds:
+    Given posets~$\posA,\posB$, a monotone map~$\mora \colon \posA \to \posB$, and a family of singleton sets~$\{S_i\}_{i\setin I}$, with~$S_i=\{s_i\}$,~$s_i\setin \posA$, the following equality holds:
     \begin{equation}
         \label{eq:lemma_unpack}
-        \upit \left( \bigcup_{\posAel \in \upit \bigcup_{i\in I}S_i}\{\mora(\posAel)\}\right)= \upit \left( \bigcup_{i\in I} \{\mora(s_i)\}\right).
+        \upit \left( \bigsetunion_{\posAel \setin \upit \bigsetunion_{i\setin I}S_i}\{\mora(\posAel)\}\right)= \upit \left( \bigsetunion_{i\setin I} \{\mora(s_i)\}\right).
     \end{equation}
 \end{lemma}
 
@@ -333,37 +333,37 @@ To do so, we first need the following two facts.
     We first want to show that:
     \begin{equation}
         \label{eq:unpack_1}
-        \underbrace{\upit \left(\bigcup_{\posAel \in \upit \bigcup_{i\in I}S_i}\{\mora(\posAel)\} \right)}_{\star}\subseteq \upit \underbrace{\left( \bigcup_{i\in I}\{\mora(s_i)\}\right)}_{\diamond}.
+        \underbrace{\upit \left(\bigsetunion_{\posAel \setin \upit \bigsetunion_{i\setin I}S_i}\{\mora(\posAel)\} \right)}_{\star}\subseteq \upit \underbrace{\left( \bigsetunion_{i\setin I}\{\mora(s_i)\}\right)}_{\diamond}.
     \end{equation}
     Let's take a
     \begin{equation}
-        \posBel \in \upit\left( \bigcup_{\posAel \in \upit \bigcup_{i\in I}S_i}\{\mora(\posAel)\}\right).
+        \posBel \setin \upit\left( \bigsetunion_{\posAel \setin \upit \bigsetunion_{i\setin I}S_i}\{\mora(\posAel)\}\right).
     \end{equation}
     If we have such a~$\posBel$, it means that there exists a
     \begin{equation}
-        \posBel'\in \bigcup_{\posAel\in \upit\bigcup_{i\in I}S_i}\{\mora(\posAel)\}
+        \posBel'\setin \bigsetunion_{\posAel\setin \upit\bigsetunion_{i\setin I}S_i}\{\mora(\posAel)\}
     \end{equation}
-    such that~$\posBel'\posleqof\posB \posBel$, and hence there is a~$\posAel'\in \upit \bigcup_{i\in I} S_i$ such that~$\posBel'=\mora(\posAel')$.
-    Consequently, there must exist an~$i'\in I$ such that~$s_{i'}\posleqof\posA \posAel'$.
+    such that~$\posBel'\posleqof\posB \posBel$, and hence there is a~$\posAel'\setin \upit \bigsetunion_{i\setin I} S_i$ such that~$\posBel'=\mora(\posAel')$.
+    Consequently, there must exist an~$i'\setin I$ such that~$s_{i'}\posleqof\posA \posAel'$.
     The monotonicity of~$\mapa$ implies:
     \begin{equation}
         \mora(s_{i'})\posleqof\posA \mora(\posAel')=\posBel'\posleqof\posB \posBel.
     \end{equation}
-    We know that~$s_{i'}\in \diamond$ and any~$\posBel^*\in \posB$ satisfying~$\mora(s_{i'})\posleqof\posB \posBel^*$ belongs to~$\upit \diamond$.
+    We know that~$s_{i'}\setin \diamond$ and any~$\posBel^*\setin \posB$ satisfying~$\mora(s_{i'})\posleqof\posB \posBel^*$ belongs to~$\upit \diamond$.
     Therefore,~$\star\subseteq \upit \diamond$, which proves the validity of \cref{eq:unpack_1}.
 
     We now want to show that:
     \begin{equation}
         \label{eq:unpack_2}
-        \upit \left(\bigcup_{\posAel \in \upit \bigcup_{i\in I}S_i}\{\mora(\posAel)\} \right)\supseteq \upit \left( \bigcup_{i\in I}\{\mora(s_i)\}\right).
+        \upit \left(\bigsetunion_{\posAel \setin \upit \bigsetunion_{i\setin I}S_i}\{\mora(\posAel)\} \right)\supseteq \upit \left( \bigsetunion_{i\setin I}\{\mora(s_i)\}\right).
     \end{equation}
     By now taking a
     \begin{equation}
-        \posBel\in \upit \left( \bigcup_{i\in I}\{\mora(s_i)\}\right),
+        \posBel\setin \upit \left( \bigsetunion_{i\setin I}\{\mora(s_i)\}\right),
     \end{equation}
-    we know that there is a~$i'\in I$ such that~$\mora(s_{i'})\posleqof\posB \posBel$.
-    Furthermore, we know that~$\mora(s_{i'})\in \diamond$.
-    Therefore, any~$\posBel^*\posleqof\posB \mora(s_{i'})$ must be in~$\upit \diamond$, meaning that~$\posBel\in \star$, and proving the validity of \cref{eq:unpack_2}.
+    we know that there is a~$i'\setin I$ such that~$\mora(s_{i'})\posleqof\posB \posBel$.
+    Furthermore, we know that~$\mora(s_{i'})\setin \diamond$.
+    Therefore, any~$\posBel^*\posleqof\posB \mora(s_{i'})$ must be in~$\upit \diamond$, meaning that~$\posBel\setin \star$, and proving the validity of \cref{eq:unpack_2}.
 
     The validity of \cref{eq:unpack_1} and \cref{eq:unpack_2} implies \cref{eq:lemma_unpack}.
 \end{proof}
@@ -372,7 +372,7 @@ To do so, we first need the following two facts.
     \label{rem:unpack_u_functor_bis}
     Given posets~$\posA,\posB$ and a monotone map~$\mora\colon \posA\to \posB$, we have:
     \begin{equation}
-        \upit \left( \bigcup_{\posAel'\in \upit \{\posAel\}} \{\mora(\posAel')\}\right)=\upit \{\mora(\posAel)\}.
+        \upit \left( \bigsetunion_{\posAel'\setin \upit \{\posAel\}} \{\mora(\posAel')\}\right)=\upit \{\mora(\posAel)\}.
     \end{equation}
     This follows from \cref{lem:unpack_u_functor}, by considering a family of singleton sets consisting solely of the set~$\{\posAel\}$.
 \end{remark}
@@ -385,20 +385,20 @@ To do so, we first need the following two facts.
     Consider two posets~$\posA,\posB$ and two respective upper sets~$\setA,\setB$.
     One has
     \begin{equation*}
-        \prfcomma{\setAel \in \setA}{\setAel \posleqof\posA \setAel'}{\setAel'\in \setA}
+        \prfcomma{\setAel \setin \setA}{\setAel \posleqof\posA \setAel'}{\setAel'\setin \setA}
     \end{equation*}
     and
     \begin{equation*}
-        \prfperiod{\setBel \in \setB}{\setBel \posleqof\posB \setBel'}{\setBel'\in \setB}
+        \prfperiod{\setBel \setin \setB}{\setBel \posleqof\posB \setBel'}{\setBel'\setin \setB}
     \end{equation*}
     Therefore:
     \begin{equation*}
         \prfcomma{
-            \tup{\setAel,\setBel} \in \setA\cartprod \setB
+            \tup{\setAel,\setBel} \setin \setA\cartprod \setB
         }{
             \tup{\setAel,\setBel} \posleqof{\posA \cartprod \posB} \tup{\setAel',\setBel'}
         }{
-            \tup{\setAel',\setBel'}\in \setA \cartprod \setB
+            \tup{\setAel',\setBel'}\setin \setA \cartprod \setB
         }
     \end{equation*}
     which proves that~$\setA\cartprod \setB$ is an upper set.
@@ -414,7 +414,7 @@ To do so, we first need the following two facts.
             \tup{\Objael,\Objbel}                                          & \mapsto \upit\{\Objbel\} \cartprod \upit\{\Objael\},
         \end{aligned}
     \end{equation}
-    defined for all~$\Obja,\Objb\in \Ob_{\UPos}$, forms a symmetric monoidal category.
+    defined for all~$\Obja,\Objb\setin \Ob_{\UPos}$, forms a symmetric monoidal category.
 \end{lemma}
 \begin{proof}
     We first show that the braiding defines an isomorphism.
@@ -426,8 +426,8 @@ To do so, we first need the following two facts.
     \begin{equation*}
         \begin{aligned}
             ~ & \ulposmap{(\braiding_{\Obja,\Objb}\mthen \braiding_{\Objb,\Obja})}(\Objael,\Objbel) \\
-              & =\bigcup_{\tup{\Objael',\Objbel'}\in \ulposmap{\braiding_{\Obja,\Objb}}(\Objael,\Objbel)}\ulposmap{\braiding_{\Objb,\Obja}}(\Objael',\Objbel') \\
-              & =\bigcup_{\tup{\Objbel',\Objael'}\in \upit\{\Objbel\}\cartprod \upit\{\Objael\}}\upit\{ \Objael'\}\cartprod \upit\{ \Objbel'\} \\
+              & =\bigsetunion_{\tup{\Objael',\Objbel'}\setin \ulposmap{\braiding_{\Obja,\Objb}}(\Objael,\Objbel)}\ulposmap{\braiding_{\Objb,\Obja}}(\Objael',\Objbel') \\
+              & =\bigsetunion_{\tup{\Objbel',\Objael'}\setin \upit\{\Objbel\}\cartprod \upit\{\Objael\}}\upit\{ \Objael'\}\cartprod \upit\{ \Objbel'\} \\
               & =\upit\{\Objael\} \cartprod \upit\{\Objbel\} \\
               & =\ulposmap{\catid_{\Obja\cartprod \Objb}}(\Objael,\Objbel).
         \end{aligned}
@@ -442,7 +442,7 @@ To do so, we first need the following two facts.
         \begin{aligned}
             ~ & \ulposmap{\left(\left( \mora \mtimescat \morb\right)\mthen \braiding_{ \Objb, \Objd}\right)}(\Objael,\Objcel) \\
               & = \tup{\ulposmap{\mora}(\Objael),\ulposmap{\morb}(\Objcel)}\mthen \braiding_{ \Objb, \Objd} \\
-              & =\tup{\bigcup_{\Objcel'\in \ulposmap{\morb}(\Objcel)}\upit \Objcel',\bigcup_{\Objael'\in \ulposmap{\mora}(\Objael)}\upit \Objael'}.
+              & =\tup{\bigsetunion_{\Objcel'\setin \ulposmap{\morb}(\Objcel)}\upit \Objcel',\bigsetunion_{\Objael'\setin \ulposmap{\mora}(\Objael)}\upit \Objael'}.
         \end{aligned}
     \end{equation}
     On the other hand:
@@ -452,7 +452,7 @@ To do so, we first need the following two facts.
             ~ & \ulposmap{\left(\braiding_{ \Objd, \Objb}\mthen \left( \mora \mtimescat \morb\right)\right)}(\Objael,\Objcel) \\
               & =
             \tup{\upit\{\Objcel\},\upit\{\Objael\}}\mthen \ulposmap{\left( \mora \mtimescat \morb\right)} \\
-              & =\tup{\bigcup_{\Objcel'\in \upit\{\Objcel\}} \ulposmap{\morb}(\Objcel'),\bigcup_{\Objael'\in \upit\{\Objael\}}\ulposmap{\mora}(\Objael')}.
+              & =\tup{\bigsetunion_{\Objcel'\setin \upit\{\Objcel\}} \ulposmap{\morb}(\Objcel'),\bigsetunion_{\Objael'\setin \upit\{\Objael\}}\ulposmap{\mora}(\Objael')}.
         \end{aligned}
     \end{equation}
     Clearly, from \cref{lem:unpack_u_functor} and \cref{rem:unpack_u_functor_bis} we know that \cref{eq:braid-upos-natural-a} and \cref{eq:braid-upos-natural-b} are equivalent, proving naturality.
@@ -468,8 +468,8 @@ To do so, we first need the following two facts.
     \begin{equation*}
         \begin{aligned}
              & \ulposmap{((\braiding_{\Obja,\Objb}\mtimescat \catid_\Objc) \mthen \associator_{\Objb,\Obja,\Objc})}(\tup{\Objael,\Objbel},\Objcel) \\
-             & =\bigcup_{\tup{\tup{\Objbel',\Objael'},\Objcel'}\in \ulposmap{(\braiding_{\Obja,\Objb}\mtimescat \catid_\Objc)}(\tup{\Objael,\Objbel},\Objcel)}\ulposmap{\associator}_{\Objb,\Obja,\Objc}(\Objbel',\Objael',\Objcel') \\
-             & =\bigcup_{\tup{\tup{\Objbel',\Objael'},\Objcel'}\in(\upit \{\Objbel\} \cartprod \upit\{ \Objael\})\cartprod \upit \{\Objcel\}}\upit\{\Objbel'\} \cartprod (\upit \{\Objael'\}\cartprod \upit\{ \Objcel'\}) \\
+             & =\bigsetunion_{\tup{\tup{\Objbel',\Objael'},\Objcel'}\setin \ulposmap{(\braiding_{\Obja,\Objb}\mtimescat \catid_\Objc)}(\tup{\Objael,\Objbel},\Objcel)}\ulposmap{\associator}_{\Objb,\Obja,\Objc}(\Objbel',\Objael',\Objcel') \\
+             & =\bigsetunion_{\tup{\tup{\Objbel',\Objael'},\Objcel'}\in(\upit \{\Objbel\} \cartprod \upit\{ \Objael\})\cartprod \upit \{\Objcel\}}\upit\{\Objbel'\} \cartprod (\upit \{\Objael'\}\cartprod \upit\{ \Objcel'\}) \\
              & =\upit\{\Objbel\} \cartprod (\upit \{\Objael\}\cartprod \upit\{ \Objcel\}).
         \end{aligned}
     \end{equation*}
@@ -478,8 +478,8 @@ To do so, we first need the following two facts.
         \label{eq:upos_hexagon_2}
         \begin{aligned}
              & \ulposmap{((\braiding_{\Obja,\Objb}\mtimescat \catid_\Objc) \mthen \associator_{\Objb,\Obja,\Objc}\mthen (\catid_{\Objb}\mtimescat \braiding_{\Obja,\Objc}))}(\tup{\Objael,\Objbel},\Objcel) \\
-             & =\bigcup_{\tup{\Objbel',\tup{\Objael',\Objcel'}}\in \upit\{\Objbel\} \cartprod (\upit \{\Objael\}\cartprod \upit\{ \Objcel\})} \ulposmap{(\catid_{\Objb}\mtimescat \braiding_{\Obja,\Objc})}(\Objbel',\tup{\Objael',\Objcel'}) \\
-             & =\bigcup_{\tup{\Objbel',\tup{\Objael',\Objcel'}}\in \upit\{\Objbel\} \cartprod (\upit \{\Objael\}\cartprod \upit\{ \Objcel\})} \upit\{\Objbel'\}\cartprod (\upit\{\Objcel'\}\cartprod \upit\{\Objael'\}) \\
+             & =\bigsetunion_{\tup{\Objbel',\tup{\Objael',\Objcel'}}\setin \upit\{\Objbel\} \cartprod (\upit \{\Objael\}\cartprod \upit\{ \Objcel\})} \ulposmap{(\catid_{\Objb}\mtimescat \braiding_{\Obja,\Objc})}(\Objbel',\tup{\Objael',\Objcel'}) \\
+             & =\bigsetunion_{\tup{\Objbel',\tup{\Objael',\Objcel'}}\setin \upit\{\Objbel\} \cartprod (\upit \{\Objael\}\cartprod \upit\{ \Objcel\})} \upit\{\Objbel'\}\cartprod (\upit\{\Objcel'\}\cartprod \upit\{\Objael'\}) \\
              & =\upit\{\Objbel\} \cartprod (\upit \{\Objcel\}\cartprod \upit\{ \Objael\}).
         \end{aligned}
     \end{equation}
@@ -488,8 +488,8 @@ To do so, we first need the following two facts.
     \begin{equation*}
         \begin{aligned}
              & \ulposmap{\associator_{\Obja,\Objb,\Objc} \mthen \braiding_{\Obja,\Objb\mtimescat \Objc}}(\tup{\Objael,\Objbel},\Objcel) \\
-             & =\bigcup_{\tup{\Objael',\tup{\Objbel',\Objcel'}}\in \ulposmap{\associator}_{\Obja,\Objb,\Objc}(\tup{\Objael,\Objbel},\Objcel)}\ulposmap{\braiding}_{\Obja,\Objb\mtimescat\Objc}(\Objael',\tup{\Objbel',\Objcel'}) \\
-             & =\bigcup_{\tup{\Objael',\tup{\Objbel',\Objcel'}}\in \upit\{\Objael\} \cartprod (\upit \{ \Objbel\}\cartprod \upit\{ \Objcel\})} (\upit\{\Objbel'\} \cartprod \upit \{ \Objcel'\})\cartprod \upit\{ \Objael'\} \\
+             & =\bigsetunion_{\tup{\Objael',\tup{\Objbel',\Objcel'}}\setin \ulposmap{\associator}_{\Obja,\Objb,\Objc}(\tup{\Objael,\Objbel},\Objcel)}\ulposmap{\braiding}_{\Obja,\Objb\mtimescat\Objc}(\Objael',\tup{\Objbel',\Objcel'}) \\
+             & =\bigsetunion_{\tup{\Objael',\tup{\Objbel',\Objcel'}}\setin \upit\{\Objael\} \cartprod (\upit \{ \Objbel\}\cartprod \upit\{ \Objcel\})} (\upit\{\Objbel'\} \cartprod \upit \{ \Objcel'\})\cartprod \upit\{ \Objael'\} \\
              & =(\upit\{\Objbel\} \cartprod \upit \{ \Objcel\})\cartprod \upit\{ \Objael\}.
         \end{aligned}
     \end{equation*}
@@ -498,8 +498,8 @@ To do so, we first need the following two facts.
         \label{eq:upos_hexagon_3}
         \begin{aligned}
              & \ulposmap{(\associator_{\Obja,\Objb,\Objc} \mthen \braiding_{\Obja,\Objb\mtimescat \Objc}\mthen \associator_{\Objb,\Objc,\Obja})}(\tup{\Objael,\Objbel},\Objcel) \\
-             & =\bigcup_{\tup{\tup{\Objbel',\Objcel'},\Objael'}\in (\upit\{\Objbel\} \cartprod \upit \{ \Objcel\})\cartprod \upit\{ \Objael\}}\ulposmap{\associator}_{\Objb,\Objc,\Obja}(\tup{\Objbel',\Objcel'},\Objael') \\
-             & =\bigcup_{\tup{\tup{\Objbel',\Objcel'},\Objael'}\in (\upit\{\Objbel\} \cartprod \upit \{ \Objcel\})\cartprod \upit\{ \Objael\}}\upit\{\Objbel'\}\cartprod (\upit\{\Objcel'\}\cartprod \upit\{\Objael'\}) \\
+             & =\bigsetunion_{\tup{\tup{\Objbel',\Objcel'},\Objael'}\setin (\upit\{\Objbel\} \cartprod \upit \{ \Objcel\})\cartprod \upit\{ \Objael\}}\ulposmap{\associator}_{\Objb,\Objc,\Obja}(\tup{\Objbel',\Objcel'},\Objael') \\
+             & =\bigsetunion_{\tup{\tup{\Objbel',\Objcel'},\Objael'}\setin (\upit\{\Objbel\} \cartprod \upit \{ \Objcel\})\cartprod \upit\{ \Objael\}}\upit\{\Objbel'\}\cartprod (\upit\{\Objcel'\}\cartprod \upit\{\Objael'\}) \\
              & =\upit\{\Objbel\} \cartprod (\upit \{\Objcel\}\cartprod \upit\{ \Objael\}).
         \end{aligned}
     \end{equation}
@@ -513,7 +513,7 @@ To do so, we first need the following two facts.
     \begin{equation}
         \begin{aligned}
             \ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\mora)}\colon \Obja & \mto \uppersets \Objb \\
-            \Objael                                                 & \mapsto \{\Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc}\tup{\Objbel, \Objcel}\in \ulposmap{\mora}(\Objael,\Objcel)\}.
+            \Objael                                                 & \mapsto \{\Objbel \setin \Objb \mid \bigvee_{\Objcel \setin \Objc}\tup{\Objbel, \Objcel}\setin \ulposmap{\mora}(\Objael,\Objcel)\}.
         \end{aligned}
     \end{equation}
 \end{definition}
@@ -524,36 +524,36 @@ To do so, we first need the following two facts.
 \begin{proof}
     We have already checked that~$\tup{\UPos,\mtimescat, \idmoncat,\braiding}$ forms a symmetric monoidal category.
     First, we check that the trace indeed returns a valid morphism in \UPos.
-    Given any~$\Obja,\Objb,\Objc\in \Ob_{\UPos}$ and~$\mora\colon \Obja\cartprod \Objc \mto \Objb\cartprod \Objc$,
-    and any~$\Objael\posleq \Objael'\in \Obja$, we need to prove that
+    Given any~$\Obja,\Objb,\Objc\setin \Ob_{\UPos}$ and~$\mora\colon \Obja\cartprod \Objc \mto \Objb\cartprod \Objc$,
+    and any~$\Objael\posleq \Objael'\setin \Obja$, we need to prove that
     \begin{equation*}
         \prfdouble{ \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael) \posleqof{\UPos}  \Tr_{\Obja,\Objb}^{\Objc}(\mora)(\Objael')}{\ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\mora)}(\Objael) \supseteq \ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\mora)}(\Objael')}
     \end{equation*}
     We know that~$\ulposmap{\mora}$ is a monotone map, meaning that
     \begin{equation*}
-        \prftree{\tup{\Objbel,\Objcel} \in \ulposmap{\mora}(\Objael',\Objcel)}{\tup{\Objbel,\Objcel}\in \ulposmap{\mora}(\Objael,\Objcel)}
+        \prftree{\tup{\Objbel,\Objcel} \setin \ulposmap{\mora}(\Objael',\Objcel)}{\tup{\Objbel,\Objcel}\setin \ulposmap{\mora}(\Objael,\Objcel)}
     \end{equation*}
     Therefore:
     \begin{equation*}
-        \prftree{\Objbel \in \ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\mora)}(\Objael')}{\Objbel \in \ulposmap{\Tr_{\Obja,\Objb}^{\Objc}}(\mora)(\Objael)}
+        \prftree{\Objbel \setin \ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\mora)}(\Objael')}{\Objbel \setin \ulposmap{\Tr_{\Obja,\Objb}^{\Objc}}(\mora)(\Objael)}
     \end{equation*}
     proving that~$\ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\mora)}$ is a monotone function.
-    Furthermore, due to the monotonicity of~$\ulposmap{\mora}$, for any~$\Objbel\posleq \Objbel'\in \Objb$,~$\Objael\in \Obja$,~$\Objcel \in \Objc$, one has:
+    Furthermore, due to the monotonicity of~$\ulposmap{\mora}$, for any~$\Objbel\posleq \Objbel'\setin \Objb$,~$\Objael\setin \Obja$,~$\Objcel \setin \Objc$, one has:
     \begin{equation*}
-        \prftree{\tup{\Objbel,\Objcel}\in \ulposmap{\mora}(\Objael,\Objcel)}{\tup{\Objbel',\Objcel}\in \ulposmap{\mora}(\Objael,\Objcel)}
+        \prftree{\tup{\Objbel,\Objcel}\setin \ulposmap{\mora}(\Objael,\Objcel)}{\tup{\Objbel',\Objcel}\setin \ulposmap{\mora}(\Objael,\Objcel)}
     \end{equation*}
-    proving that~$\ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\mora)}(\Objael)$ is an upper set for all~$\Objael\in \Obja$.
+    proving that~$\ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\mora)}(\Objael)$ is an upper set for all~$\Objael\setin \Obja$.
     We now check the trace axioms one by one.
 
     \textbf{Naturality I}:
-    Given any~$\Obja,\Obja',\Objb,\Objc \in \Ob_{\UPos}$,~$\mora\colon \Obja\cartprod \Objc \mto \Objb\cartprod \Objc$, and~$\morb\colon \Obja'\mto \Obja$, one has:
+    Given any~$\Obja,\Obja',\Objb,\Objc \setin \Ob_{\UPos}$,~$\mora\colon \Obja\cartprod \Objc \mto \Objb\cartprod \Objc$, and~$\morb\colon \Obja'\mto \Obja$, one has:
     \begin{equation}
         \label{eq:natu-1-upos-a}
         \begin{aligned}
             \ulposmap{\Tr_{\Obja',\Objb}^{\Objc}((\morb\mtimescat \catid_\Objc)\mthen \mora)}(\Objael') & =
-            \left\{ \Objbel \in \Objb \mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel,\Objcel}\in (\ulposmap{(\morb \mtimescat \catid_\Objc)\mthen \mora)}(\Objael',\Objcel)\right\} \\
-                                                                                                        & =\left\{ \Objbel \in \Objb \mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel,\Objcel}\in \bigcup_{\tup{\Objael,\Objcel'}\in \ulposmap{\morb}(\Objael')\cartprod\upit\{\Objcel\}}\ulposmap{\mora}(\Objael,\Objcel')\right\} \\
-                                                                                                        & =\left\{\Objbel \in \Objb\mid \bigvee_{\Objcel\in \Objc}\tup{\Objbel,\Objcel}\in \bigcup_{\Objael\in \ulposmap{\morb}(\Objael')} \ulposmap{\mora}(\Objael,\Objcel)\right\}.
+            \left\{ \Objbel \setin \Objb \mid \bigvee_{\Objcel\setin \Objc} \tup{\Objbel,\Objcel}\setin (\ulposmap{(\morb \mtimescat \catid_\Objc)\mthen \mora)}(\Objael',\Objcel)\right\} \\
+                                                                                                        & =\left\{ \Objbel \setin \Objb \mid \bigvee_{\Objcel\setin \Objc} \tup{\Objbel,\Objcel}\setin \bigsetunion_{\tup{\Objael,\Objcel'}\setin \ulposmap{\morb}(\Objael')\cartprod\upit\{\Objcel\}}\ulposmap{\mora}(\Objael,\Objcel')\right\} \\
+                                                                                                        & =\left\{\Objbel \setin \Objb\mid \bigvee_{\Objcel\setin \Objc}\tup{\Objbel,\Objcel}\setin \bigsetunion_{\Objael\setin \ulposmap{\morb}(\Objael')} \ulposmap{\mora}(\Objael,\Objcel)\right\}.
         \end{aligned}
     \end{equation}
     On the other hand, one has
@@ -561,54 +561,54 @@ To do so, we first need the following two facts.
         \label{eq:natu-1-upos-b}
         \begin{aligned}
             \ulposmap{(\morb\mthen \Tr_{\Obja,\Objc}^{\Objc}(\mora))}(\Objael') & =
-            \bigcup_{\Objael\in \ulposmap{\morb}(\Objael')}\ulposmap{\Tr_{\Obja,\Objc}^{\Objc}(\mora)}(\Objael) \\
-                                                                                & =\bigcup_{\Objael\in \ulposmap{\morb}(\Objael')}\left\{\Objbel \in \Objb\mid \bigvee_{\Objcel\in \Objc}\tup{\Objbel,\Objcel}\in \ulposmap{\mora}(\Objael,\Objcel)\right\} \\
-                                                                                & =\left\{\Objbel \in \Objb\mid \bigvee_{\Objcel\in \Objc}\tup{\Objbel,\Objcel}\in \bigcup_{\Objael\in \ulposmap{\morb}(\Objael')} \ulposmap{\mora}(\Objael,\Objcel)\right\}.
+            \bigsetunion_{\Objael\setin \ulposmap{\morb}(\Objael')}\ulposmap{\Tr_{\Obja,\Objc}^{\Objc}(\mora)}(\Objael) \\
+                                                                                & =\bigsetunion_{\Objael\setin \ulposmap{\morb}(\Objael')}\left\{\Objbel \setin \Objb\mid \bigvee_{\Objcel\setin \Objc}\tup{\Objbel,\Objcel}\setin \ulposmap{\mora}(\Objael,\Objcel)\right\} \\
+                                                                                & =\left\{\Objbel \setin \Objb\mid \bigvee_{\Objcel\setin \Objc}\tup{\Objbel,\Objcel}\setin \bigsetunion_{\Objael\setin \ulposmap{\morb}(\Objael')} \ulposmap{\mora}(\Objael,\Objcel)\right\}.
         \end{aligned}
     \end{equation}
     Clearly \cref{eq:natu-1-upos-a} and \cref{eq:natu-1-upos-b} are equivalent, proving the first naturality condition.
 
     \textbf{Naturality II}:
-    Given any~$\Obja,\Objb,\Objb',\Objc \in \Ob_{\UPos}$,~$\mora\colon \Obja\cartprod \Objc \mto \Objb\cartprod \Objc$, and~$\morb\colon \Objb\mto \Objb'$, one has:
+    Given any~$\Obja,\Objb,\Objb',\Objc \setin \Ob_{\UPos}$,~$\mora\colon \Obja\cartprod \Objc \mto \Objb\cartprod \Objc$, and~$\morb\colon \Objb\mto \Objb'$, one has:
     \begin{equation*}
         \begin{aligned}
             ~ & \ulposmap{\Tr_{\Obja,\Objb'}^{\Objc}(\mora \mthen (\morb \mtimescat \catid_\Objc))}(\Objael) \\
               & =
-            \left \{\Objbel'\in \Objb' \mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel',\Objcel}\in \ulposmap{(\mora \mthen (\morb \mtimescat \catid_\Objc))}(\Objael,\Objcel)\right\} \\
-              & =\left\{ \Objbel'\in \Objb'\mid \bigvee_{\Objcel\in \Objc} \tup{\Objbel',\Objcel}\in \bigcup_{\tup{\Objbel,\Objcel}\in \ulposmap{\mapa}(\Objael,\Objcel)} \ulposmap{\morb}(\Objbel) \cartprod \upit\{ \Objcel\}\right\}
+            \left \{\Objbel'\setin \Objb' \mid \bigvee_{\Objcel\setin \Objc} \tup{\Objbel',\Objcel}\setin \ulposmap{(\mora \mthen (\morb \mtimescat \catid_\Objc))}(\Objael,\Objcel)\right\} \\
+              & =\left\{ \Objbel'\setin \Objb'\mid \bigvee_{\Objcel\setin \Objc} \tup{\Objbel',\Objcel}\setin \bigsetunion_{\tup{\Objbel,\Objcel}\setin \ulposmap{\mapa}(\Objael,\Objcel)} \ulposmap{\morb}(\Objbel) \cartprod \upit\{ \Objcel\}\right\}
         \end{aligned}
     \end{equation*}
     On the other hand
     \begin{equation*}
         \begin{aligned}
             \ulposmap{(\Tr_{\Obja,\Objb}^{\Objc}(\mora)\mthen \morb)}(\Objael) & =
-            \bigcup_{\Objbel \in \{ \Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc}\tup{\Objbel,\Objcel}\in \ulposmap{\mora}(\Objael,\Objcel)\}}\ulposmap{\morb}(\Objbel)
+            \bigsetunion_{\Objbel \setin \{ \Objbel \setin \Objb \mid \bigvee_{\Objcel \setin \Objc}\tup{\Objbel,\Objcel}\setin \ulposmap{\mora}(\Objael,\Objcel)\}}\ulposmap{\morb}(\Objbel)
         \end{aligned}
     \end{equation*}
     \todotext{Not clear yet how to massage to show equivalence.
         Talk with J}
     \textbf{Vanishing}:
-    Given any~$\Obja,\Objb\in \Ob_{\UPos}$ and~$\mora\colon \Obja \mto \Objb$ in \UPos, one has
+    Given any~$\Obja,\Objb\setin \Ob_{\UPos}$ and~$\mora\colon \Obja \mto \Objb$ in \UPos, one has
     \begin{equation*}
         \begin{aligned}
             ~ & \ulposmap{\Tr_{\Obja,\Objb}^{\singleton}(\mora)}(\Objael) \\
-              & =\{\Objbel \in \Objb \mid \tup{\Objbel,\singletonel}\in \ulposmap{(\mora\mtimescat \catid_{\singleton})}(\Objael,\singletonel)\} \\
+              & =\{\Objbel \setin \Objb \mid \tup{\Objbel,\singletonel}\setin \ulposmap{(\mora\mtimescat \catid_{\singleton})}(\Objael,\singletonel)\} \\
               & =\ulposmap{\mora}(\Objael).
         \end{aligned}
     \end{equation*}
-    Furthermore, given any~$\Obja,\Objb,\Objc,\Objd \in \Ob_{\UPos}$ and~$\mora\colon \Obja \cartprod \Objc \cartprod \Objd\mto \Objb \cartprod \Objc \cartprod \Objd$, one has
+    Furthermore, given any~$\Obja,\Objb,\Objc,\Objd \setin \Ob_{\UPos}$ and~$\mora\colon \Obja \cartprod \Objc \cartprod \Objd\mto \Objb \cartprod \Objc \cartprod \Objd$, one has
     \begin{equation}
         \label{eq:vanish-upos-a}
         \begin{aligned}
             ~ & \ulposmap{\Tr_{\Obja,\Objb}^{\Objc\cartprod \Objd}(\mora)}(\Objael) \\
-              & =\left\{\Objbel \in \Objb \mid \bigvee_{\tup{\Objcel,\Objdel}\in \Objc\cartprod \Objd} \tup{\Objbel,\Objcel,\Objdel}\in \ulposmap{\mora}(\Objael,\Objcel,\Objdel) \right\}
+              & =\left\{\Objbel \setin \Objb \mid \bigvee_{\tup{\Objcel,\Objdel}\setin \Objc\cartprod \Objd} \tup{\Objbel,\Objcel,\Objdel}\setin \ulposmap{\mora}(\Objael,\Objcel,\Objdel) \right\}
         \end{aligned}
     \end{equation}
     To check the second vanishing axiom, we also write:
     \begin{equation*}
         \begin{aligned}
             ~ & \ulposmap{\Tr_{\Obja\cartprod \Objc,\Objb\cartprod \Objc}^{\Objd}(\mora)}(\Objael,\Objcel) \\
-              & =\left\{\tup{\Objbel,\Objcel}\in \Objb\cartprod \Objc \mid \bigvee_{\Objdel\in \Objd} \tup{\Objbel,\Objcel,\Objdel} \in \ulposmap{\mora}(\Objael,\Objcel,\Objdel) \right\}.
+              & =\left\{\tup{\Objbel,\Objcel}\setin \Objb\cartprod \Objc \mid \bigvee_{\Objdel\setin \Objd} \tup{\Objbel,\Objcel,\Objdel} \setin \ulposmap{\mora}(\Objael,\Objcel,\Objdel) \right\}.
         \end{aligned}
     \end{equation*}
     Therefore, we can write:
@@ -618,24 +618,24 @@ To do so, we first need the following two facts.
             ~ &
             \ulposmap{\left(\Tr_{\Obja,\Objb}^{\Objc}\left(\Tr_{\Obja\cartprod \Objc,\Objb\cartprod \Objc}^{\Objd}(\mora)\right)\right)}(\Objael) \\
               & =
-            \left\{\Objbel \in \Objb\mid \bigvee_{\Objcel \in \Objc}\tup{\Objbel, \Objcel}\in \ulposmap{\Tr_{\Obja\cartprod \Objc,\Objb\cartprod \Objc}^{\Objd}(\mora)}(\Objael,\Objcel)\right\} \\
-              & =\left\{ \Objbel \in \Objb\mid \bigvee_{\Objcel \in \Objc}\tup{\Objbel, \Objcel}\in \left\{ \tup{\Objbel',\Objcel'}\in \Objb\cartprod \Objc \mid \bigvee_{\Objdel\in \Objd}\tup{\Objbel',\Objcel',\Objd}\in \ulposmap{\mora}(\Objael,\Objcel',\Objdel)\right\}\right\} \\
-              & =\left\{ \Objbel \in \Objb\mid \bigvee{\Objcel\in \Objc}\left(\bigvee_{\Objdel \in \Objd} \tup{\Objbel,\Objcel,\Objdel}\in \ulposmap{\mora}(\Objael,\Objcel,\Objdel) \right)\right\} \\
-              & =\left\{\Objbel \in \Objb \mid \bigvee_{\tup{\Objcel,\Objdel}\in \Objc\cartprod \Objd} \tup{\Objbel,\Objcel,\Objdel}\in \ulposmap{\mora}(\Objael,\Objcel,\Objdel) \right\}.
+            \left\{\Objbel \setin \Objb\mid \bigvee_{\Objcel \setin \Objc}\tup{\Objbel, \Objcel}\setin \ulposmap{\Tr_{\Obja\cartprod \Objc,\Objb\cartprod \Objc}^{\Objd}(\mora)}(\Objael,\Objcel)\right\} \\
+              & =\left\{ \Objbel \setin \Objb\mid \bigvee_{\Objcel \setin \Objc}\tup{\Objbel, \Objcel}\setin \left\{ \tup{\Objbel',\Objcel'}\setin \Objb\cartprod \Objc \mid \bigvee_{\Objdel\setin \Objd}\tup{\Objbel',\Objcel',\Objd}\setin \ulposmap{\mora}(\Objael,\Objcel',\Objdel)\right\}\right\} \\
+              & =\left\{ \Objbel \setin \Objb\mid \bigvee{\Objcel\setin \Objc}\left(\bigvee_{\Objdel \setin \Objd} \tup{\Objbel,\Objcel,\Objdel}\setin \ulposmap{\mora}(\Objael,\Objcel,\Objdel) \right)\right\} \\
+              & =\left\{\Objbel \setin \Objb \mid \bigvee_{\tup{\Objcel,\Objdel}\setin \Objc\cartprod \Objd} \tup{\Objbel,\Objcel,\Objdel}\setin \ulposmap{\mora}(\Objael,\Objcel,\Objdel) \right\}.
         \end{aligned}
     \end{equation}
     Clearly, \cref{eq:vanish-upos-a} and \cref{eq:vanish-upos-b} are equivalent, proving the second vanishing axiom.
     \textbf{Superposing}:
-    Given any~$\Obja,\Objb,\Objc\in \Ob_{\UPos}$ and~$\mora\colon \Obja\cartprod \Objc \mto \Objb \cartprod \Objc$, one has:
+    Given any~$\Obja,\Objb,\Objc\setin \Ob_{\UPos}$ and~$\mora\colon \Obja\cartprod \Objc \mto \Objb \cartprod \Objc$, one has:
     \begin{equation}
         \label{eq:superposing-upos-a}
         \begin{aligned}
              & \ulposmap{\Tr_{\Objd\cartprod \Obja, \Objd\cartprod \Objb}^{\Objc}(\catid_\Objd \mtimescat \mora)}(\Objdel,\Objael) \\
-             & =\left\{ \tup{\Objdel, \Objbel}\in \Objd \cartprod \Objb \mid \bigvee_{\Objcel \in \Objc}\tup{\Objdel,\Objbel, \Objcel}\in \ulposmap{(\catid_\Objd \mtimescat \mora)}(\Objdel,\Objael, \Objcel)\right\} \\
-             & =\left\{ \tup{\Objdel, \Objbel}\in \Objd \cartprod \Objb \mid \bigvee_{\Objcel \in \Objc} (\Objdel \in \ulposmap{\catid_\Objd}(\Objdel))\booland (\tup{\Objbel, \Objcel}\in \ulposmap{\mora}(\Objael, \Objcel))\right\} \\
-             & =\left\{ \tup{\Objdel, \Objbel}\in \Objd \cartprod \Objb \mid \bigvee_{\Objcel \in \Objc} (\Objdel \in \upit \{\Objdel\})\booland (\tup{\Objbel, \Objcel}\in \ulposmap{\mora}(\Objael, \Objcel))\right\} \\
-             & =\left\{ \tup{\Objdel, \Objbel}\in \upit\{\Objdel\} \cartprod \Objb \mid \bigvee_{\Objcel \in \Objc}  \tup{\Objbel, \Objcel}\in \ulposmap{\mora}(\Objael, \Objcel)\right\} \\
-             & =\upit\{\Objdel\}\cartprod \left\{\Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc}  \tup{\Objbel, \Objcel}\in \ulposmap{\mora}(\Objael, \Objcel)\right\} \\
+             & =\left\{ \tup{\Objdel, \Objbel}\setin \Objd \cartprod \Objb \mid \bigvee_{\Objcel \setin \Objc}\tup{\Objdel,\Objbel, \Objcel}\setin \ulposmap{(\catid_\Objd \mtimescat \mora)}(\Objdel,\Objael, \Objcel)\right\} \\
+             & =\left\{ \tup{\Objdel, \Objbel}\setin \Objd \cartprod \Objb \mid \bigvee_{\Objcel \setin \Objc} (\Objdel \setin \ulposmap{\catid_\Objd}(\Objdel))\booland (\tup{\Objbel, \Objcel}\setin \ulposmap{\mora}(\Objael, \Objcel))\right\} \\
+             & =\left\{ \tup{\Objdel, \Objbel}\setin \Objd \cartprod \Objb \mid \bigvee_{\Objcel \setin \Objc} (\Objdel \setin \upit \{\Objdel\})\booland (\tup{\Objbel, \Objcel}\setin \ulposmap{\mora}(\Objael, \Objcel))\right\} \\
+             & =\left\{ \tup{\Objdel, \Objbel}\setin \upit\{\Objdel\} \cartprod \Objb \mid \bigvee_{\Objcel \setin \Objc}  \tup{\Objbel, \Objcel}\setin \ulposmap{\mora}(\Objael, \Objcel)\right\} \\
+             & =\upit\{\Objdel\}\cartprod \left\{\Objbel \setin \Objb \mid \bigvee_{\Objcel \setin \Objc}  \tup{\Objbel, \Objcel}\setin \ulposmap{\mora}(\Objael, \Objcel)\right\} \\
         \end{aligned}
     \end{equation}
     On the other hand, one has:
@@ -643,21 +643,21 @@ To do so, we first need the following two facts.
         \label{eq:superposing-upos-b}
         \begin{aligned}
             \ulposmap{(\catid_\Objd \mtimescat \Tr_{\Obja,\Objb}^{\Objc}(\mora))}(\Objdel,\Objael) & =
-            \upit\{\Objdel\}\cartprod\left\{ \Objbel \in \Objb \mid \bigvee_{\Objcel\in \Objc}\tup{\Objbel,\Objcel}\in \ulposmap{\mora}(\Objael,\Objcel)\right\}.
+            \upit\{\Objdel\}\cartprod\left\{ \Objbel \setin \Objb \mid \bigvee_{\Objcel\setin \Objc}\tup{\Objbel,\Objcel}\setin \ulposmap{\mora}(\Objael,\Objcel)\right\}.
         \end{aligned}
     \end{equation}
     Clearly, \cref{eq:superposing-upos-a} and \cref{eq:superposing-upos-b} are equivalent, proving the superposing axiom.
 
     \textbf{Yanking}:
-    Consider~$\Obja\in \Ob_{\UPos}$.
+    Consider~$\Obja\setin \Ob_{\UPos}$.
     One has
     \begin{equation*}
         \begin{aligned}
             ~ & \ulposmap{\Tr_{\Obja,\Obja}^{\Obja}(\braiding_{\Obja,\Obja})}(\Objael) \\
-              & =\{ \Objael'\in \Obja \mid \bigvee_{\Objael''\in \Obja}\tup{\Objael',\Objael''}\in \ulposmap{\braiding}_{\Obja,\Obja}(\Objael,\Objael'')\} \\
-              & =\{ \Objael'\in \Obja \mid \bigvee_{\Objael''\in \Obja}\tup{\Objael',\Objael''}\in \upit\{\Objael''\}\cartprod \upit\{ \Objael\}\} \\
-              & =\{ \Objael'\in \Obja \mid \bigvee_{\Objael''\in \Obja} (\Objael'\in \upit\{\Objael''\}) \booland(\Objael'' \in \upit\{ \Objael\})\} \\
-              & =\{ \Objael'\in \Obja \mid \Objael'\in \upit\{\Objael\}\} \\
+              & =\{ \Objael'\setin \Obja \mid \bigvee_{\Objael''\setin \Obja}\tup{\Objael',\Objael''}\setin \ulposmap{\braiding}_{\Obja,\Obja}(\Objael,\Objael'')\} \\
+              & =\{ \Objael'\setin \Obja \mid \bigvee_{\Objael''\setin \Obja}\tup{\Objael',\Objael''}\setin \upit\{\Objael''\}\cartprod \upit\{ \Objael\}\} \\
+              & =\{ \Objael'\setin \Obja \mid \bigvee_{\Objael''\setin \Obja} (\Objael'\setin \upit\{\Objael''\}) \booland(\Objael'' \setin \upit\{ \Objael\})\} \\
+              & =\{ \Objael'\setin \Obja \mid \Objael'\setin \upit\{\Objael\}\} \\
               & =\upit \{\Objael\} \\
               & =\ulposmap{\catid}_\Obja(\Objael),
         \end{aligned}
@@ -671,7 +671,7 @@ To do so, we first need the following two facts.
     \label{def:upos_order}
     Given any two morphisms~$\mora,\morb\colon \Obja \mto \Objb$ in~$\UPos$, we define an order between them as
     \begin{equation*}
-        \prfperiod{\mora \posleqof\UPos \morb}{\ulposmap{\mora}(\Objael)\posleqof{\uppersets \Objb} \ulposmap{\morb}(\Objael), \quad \forall \Objael \in \Obja}
+        \prfperiod{\mora \posleqof\UPos \morb}{\ulposmap{\mora}(\Objael)\posleqof{\uppersets \Objb} \ulposmap{\morb}(\Objael), \quad \forall \Objael \setin \Obja}
     \end{equation*}
 \end{definition}
 
@@ -680,7 +680,7 @@ To do so, we first need the following two facts.
     \label{def:lpos_order}
     Given any two morphisms~$\mora,\morb\colon \Obja \mto \Objb$ in~$\LPos$, we define an order between them as
     \begin{equation*}
-        \prfperiod{\mora \posleqof\LPos \morb}{\ulposmap{\mora}(\Objael)\posleqof{\lowersets \Objb} \ulposmap{\morb}(\Objael), \quad \forall \Objael \in \Obja}
+        \prfperiod{\mora \posleqof\LPos \morb}{\ulposmap{\mora}(\Objael)\posleqof{\lowersets \Objb} \ulposmap{\morb}(\Objael), \quad \forall \Objael \setin \Obja}
     \end{equation*}
 \end{definition}
 
@@ -730,7 +730,7 @@ To do so, we first need the following two facts.
 
 \begin{lemma}
     \label{lem:UPos-is-bounded-lattice}
-    Given any~$\Obja,\Objb\in \Ob_\UPos$,~$\HomSet{\UPos}{\Obja}{\Objb}$ is a bounded lattice with union~$\join$ of morphisms in~$\UPos$ as join, intersection~$\meet$ of morphisms in \UPos as meet, least upper bound~$\postop_{\HomSet{\UPos}{\Obja}{\Objb}}\colon \Obja \mto \Objb$ given by
+    Given any~$\Obja,\Objb\setin \Ob_\UPos$,~$\HomSet{\UPos}{\Obja}{\Objb}$ is a bounded lattice with union~$\join$ of morphisms in~$\UPos$ as join, intersection~$\meet$ of morphisms in \UPos as meet, least upper bound~$\postop_{\HomSet{\UPos}{\Obja}{\Objb}}\colon \Obja \mto \Objb$ given by
     \begin{equation*}
         \begin{aligned}
             \ulposmap{\postop_{\HomSet{\UPos}{\Obja}{\Objb}}}\colon \Obja & \mto \uppersets \Objb \\
@@ -749,34 +749,34 @@ To do so, we first need the following two facts.
     First, we need to prove that~$\HomSet{\UPos}{\Obja}{\Objb}$ forms a poset.
     To prove this, we check the following, using the order defined in \cref{def:upos_order}
     \begin{itemize}
-        \item \emph{Reflexivity:} Given~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$, one can write
+        \item \emph{Reflexivity:} Given~$\mora \setin \HomSet{\UPos}{\Obja}{\Objb}$, one can write
               \begin{equation*}
-                  \ulposmap{\mora}(\Objael) \supseteq \ulposmap{\mora}(\Objael), \quad \forall \Objael \in \Obja,
+                  \ulposmap{\mora}(\Objael) \supseteq \ulposmap{\mora}(\Objael), \quad \forall \Objael \setin \Obja,
               \end{equation*}
               which implies~$\mora \posleqof{\UPos} \mora$.
         \item \emph{Antisymmetry:}
               Consider
               \begin{equation}
-                  \mora,\morb \in \HomSet{\UPos}{\Obja}{\Objb}
+                  \mora,\morb \setin \HomSet{\UPos}{\Obja}{\Objb}
               \end{equation} with~$\mora \posleqof\UPos \morb$ and~$\morb \posleqof\UPos \mora$.
               We know
               \begin{equation*}
                   (\mora \posleqof\UPos \morb)
-                  \implies \ulposmap{\mora}(\Objael) \supseteq \ulposmap{\morb}(\Objael), \quad \forall \Objael \in \Obja,
+                  \implies \ulposmap{\mora}(\Objael) \supseteq \ulposmap{\morb}(\Objael), \quad \forall \Objael \setin \Obja,
               \end{equation*}
               but also
               \begin{equation*}
                   (\morb \posleqof\UPos \mora)
-                  \implies \ulposmap{\morb}(\Objael) \supseteq \ulposmap{\mora}(\Objael), \quad \forall \Objael \in \Obja,
+                  \implies \ulposmap{\morb}(\Objael) \supseteq \ulposmap{\mora}(\Objael), \quad \forall \Objael \setin \Obja,
               \end{equation*}
               implying~$\mora=\morb$.
         \item \emph{Transitivity:}
               Consider
               \begin{equation}
-                  \mora,\morb,\morc \in \HomSet{\UPos}{\Obja}{\Objb}
+                  \mora,\morb,\morc \setin \HomSet{\UPos}{\Obja}{\Objb}
               \end{equation}
               with~$\mora \posleqof\UPos \morb$ and~$\morb \posleqof\UPos \morc$.
-              One has, for all~$\Objael\in \Obja$,
+              One has, for all~$\Objael\setin \Obja$,
               \begin{equation*}
                   \begin{aligned}
                       (\ulposmap{\mora}(\Objael) \supseteq \ulposmap{\morb}(\Objael))
@@ -789,25 +789,25 @@ To do so, we first need the following two facts.
     \todotext{Here, meet and join are swapped (wr.t. to symbols), because of the inverse order.
         Should we define them oppositely for UPos?
     }
-    Consider now~$\mora,\morb \in \HomSet{\UPos}{\Obja}{\Objb}$.
+    Consider now~$\mora,\morb \setin \HomSet{\UPos}{\Obja}{\Objb}$.
     Their least upper bound (join) is~$\mora \meet \morb$, since it is the least morphism such that~$\mora \posleqof\UPos (\mora \meet \morb)$ and~$\morb \posleqof\UPos (\mora \meet \morb)$.
     Their greatest lower bound (meet) is~$\mora \join \morb$, since it is the greatest morphism such that~$(\mora \join \morb)\posleqof\UPos \mora $ and~$(\mora \join \morb)\posleqof\UPos \morb$.
     \todotext{Discuss with J if we actually want to show explicitly ``greatest'' and ``lowest''}
-    Furthermore, for any~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$, one will have, for all~$\Objael \in \Obja$
+    Furthermore, for any~$\mora \setin \HomSet{\UPos}{\Obja}{\Objb}$, one will have, for all~$\Objael \setin \Obja$
     \begin{equation*}
         \ulposmap{\mora}(\Objael) \supseteq \emptyset=\ulposmap{\postop_{\HomSet{\UPos}{\Obja}{\Objb}}}(\Objael),
     \end{equation*}
-    implying that for all~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$ one has~$\mora \posleqof\UPos \postop_{\HomSet{\UPos}{\Obja}{\Objb}}$.
-    Finally, for any~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$, one will have, for all~$\Objael \in \Obja$
+    implying that for all~$\mora \setin \HomSet{\UPos}{\Obja}{\Objb}$ one has~$\mora \posleqof\UPos \postop_{\HomSet{\UPos}{\Obja}{\Objb}}$.
+    Finally, for any~$\mora \setin \HomSet{\UPos}{\Obja}{\Objb}$, one will have, for all~$\Objael \setin \Obja$
     \begin{equation*}
         \ulposmap{\posbot_{\HomSet{\UPos}{\Obja}{\Objb}}}(\Objael)=\Objb \supseteq \ulposmap{\mora}(\Objael)
     \end{equation*}
-    implying that for all~$\mora \in \HomSet{\UPos}{\Obja}{\Objb}$ one has~$\posbot_{\HomSet{\UPos}{\Obja}{\Objb}}\posleqof\UPos \mora$.
+    implying that for all~$\mora \setin \HomSet{\UPos}{\Obja}{\Objb}$ one has~$\posbot_{\HomSet{\UPos}{\Obja}{\Objb}}\posleqof\UPos \mora$.
 \end{proof}
 
 \begin{lemma}
     \label{lem:LPos-is-bounded-lattice}
-    Given any~$\Obja,\Objb\in \Ob_\UPos$,~$\HomSet{\LPos}{\Obja}{\Objb}$ is a bounded lattice with intersection~$\wedge$ of morphisms in~$\LPos$ as meet, union~$\vee$ of morphisms in \LPos as join, least upper bound~$\postop_{\HomSet{\LPos}{\Obja}{\Objb}}\colon \Obja \mto \Objb$ given by
+    Given any~$\Obja,\Objb\setin \Ob_\UPos$,~$\HomSet{\LPos}{\Obja}{\Objb}$ is a bounded lattice with intersection~$\wedge$ of morphisms in~$\LPos$ as meet, union~$\vee$ of morphisms in \LPos as join, least upper bound~$\postop_{\HomSet{\LPos}{\Obja}{\Objb}}\colon \Obja \mto \Objb$ given by
     \begin{equation*}
         \begin{aligned}
             \ulposmap{\postop_{\HomSet{\LPos}{\Obja}{\Objb}}}\colon \Obja & \mto \lowersets \Objb \\
@@ -835,11 +835,11 @@ To do so, we first need the following two facts.
     There is a functor~$\FixFunMinRes\colon \DP \fto \UPos$ which maps:
     \begin{enumerate}
         \item An object (poset) in \DP to the same object (poset) in \UPos.
-        \item A morphism~$\adpb\in \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\ftoR_{\adpb}\in \HomSet{\UPos}{\funsp}{\ressp}$, where:
+        \item A morphism~$\adpb\setin \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\ftoR_{\adpb}\setin \HomSet{\UPos}{\funsp}{\ressp}$, where:
               \begin{equation}
                   \begin{aligned}
                       \ulposmap{\ftoR}_{\adpb}\colon \funsp & \toinPos \uppersets{\ressp} \\
-                      \fun                                  & \mapsto \{\res \in \ressp\mid \adpb(\fun\Fop,\res)\}.
+                      \fun                                  & \mapsto \{\res \setin \ressp\mid \adpb(\fun\Fop,\res)\}.
                   \end{aligned}
               \end{equation}
     \end{enumerate}
@@ -854,8 +854,8 @@ To do so, we first need the following two facts.
     }
     \begin{equation*}
         \begin{aligned}
-            \ulposmap{\FixFunMinRes(\catid_{\Obja}^{\DP})}(\Objael) & =\{ \Objbel\in \Objb\mid \catid_{\Obja}^{\DP}(\F{\Objael^*},\R{\Objbel})\} \\
-                                                                    & =\{ \Objbel \in \Objb\mid \F{\Objael}\posleq\R{\Objbel}\} \\
+            \ulposmap{\FixFunMinRes(\catid_{\Obja}^{\DP})}(\Objael) & =\{ \Objbel\setin \Objb\mid \catid_{\Obja}^{\DP}(\F{\Objael^*},\R{\Objbel})\} \\
+                                                                    & =\{ \Objbel \setin \Objb\mid \F{\Objael}\posleq\R{\Objbel}\} \\
                                                                     & =\upit \{ \Objael\} \\
                                                                     & =\ulposmap{\catid_{\Obja}^{\UPos}}(\Objael).
         \end{aligned}
@@ -867,8 +867,8 @@ To do so, we first need the following two facts.
         \label{eq:fixfunminres_a}
         \begin{aligned}
             ~ & \ulposmap{\FixFunMinRes(\adpa\mthenof\DP \adpb)}(\Objael) \\
-              & =\{ \Objbel\in \Objb\mid (\adpa\mthen \adpb)(\F{\Objael^*},\R{\Objcel})\} \\
-              & =\{ \Objbel\in \Objb\mid \bigvee_{\Objbel \in \Objb}\adpa(\F{\Objael^*},\R{\Objbel})\booland \adpb(\F{\Objbel^*},\R{\Objcel})\}.
+              & =\{ \Objbel\setin \Objb\mid (\adpa\mthen \adpb)(\F{\Objael^*},\R{\Objcel})\} \\
+              & =\{ \Objbel\setin \Objb\mid \bigvee_{\Objbel \setin \Objb}\adpa(\F{\Objael^*},\R{\Objbel})\booland \adpb(\F{\Objbel^*},\R{\Objcel})\}.
         \end{aligned}
     \end{equation}
     On the other hand:
@@ -876,10 +876,10 @@ To do so, we first need the following two facts.
         \label{eq:fixfunminres_b}
         \begin{aligned}
              & \ulposmap{(\FixFunMinRes(\adpa)\mthenof\UPos \FixFunMinRes(\adpb))}(\Objael) \\
-             & =\bigcup_{\Objbel \in \ulposmap{\FixFunMinRes(\adpa)}(\Objael)}\ulposmap{\FixFunMinRes(\adpb)}(\Objbel) \\
-             & =\bigcup_{\Objbel \in \{ \Objbel \in \Objb \mid \adpa(\F{\Objael}^*,\R{\Objbel})\}} \{\Objcel \in \Objc \mid \adpb(\F{\Objbel}^*,\R{\Objcel})\} \\
-             & =\{\Objcel\in \Objc \mid (\Objbel \in \Objb)\booland \adpa(\F{\Objael}^*,\R{\Objbel})\booland \adpb(\F{\Objbel}^*,\R{\Objcel})\} \\
-             & =\{ \Objbel\in \Objb\mid \bigvee_{\Objbel \in \Objb}\adpa(\F{\Objael}^*,\R{\Objbel})\booland \adpb(\F{\Objbel}^*,\R{\Objcel})\}.
+             & =\bigsetunion_{\Objbel \setin \ulposmap{\FixFunMinRes(\adpa)}(\Objael)}\ulposmap{\FixFunMinRes(\adpb)}(\Objbel) \\
+             & =\bigsetunion_{\Objbel \setin \{ \Objbel \setin \Objb \mid \adpa(\F{\Objael}^*,\R{\Objbel})\}} \{\Objcel \setin \Objc \mid \adpb(\F{\Objbel}^*,\R{\Objcel})\} \\
+             & =\{\Objcel\setin \Objc \mid (\Objbel \setin \Objb)\booland \adpa(\F{\Objael}^*,\R{\Objbel})\booland \adpb(\F{\Objbel}^*,\R{\Objcel})\} \\
+             & =\{ \Objbel\setin \Objb\mid \bigvee_{\Objbel \setin \Objb}\adpa(\F{\Objael}^*,\R{\Objbel})\booland \adpb(\F{\Objbel}^*,\R{\Objcel})\}.
         \end{aligned}
     \end{equation}
     Clearly, \cref{eq:fixfunminres_a} and \cref{eq:fixfunminres_b} concide.
@@ -890,11 +890,11 @@ To do so, we first need the following two facts.
     There is a functor~$\FixResMaxFun\colon \DP \fto \LPos$ which maps:
     \begin{enumerate}
         \item An object (poset) of \DP to the same object (poset) in \LPos.
-        \item A morphism $\adpb \in \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\rtoF_\adpb\in \HomSet{\LPos}{\ressp}{\funsp}$, where:
+        \item A morphism $\adpb \setin \HomSet{\DP}{\funsp}{\ressp}$ to the morphism~$\rtoF_\adpb\setin \HomSet{\LPos}{\ressp}{\funsp}$, where:
               \begin{equation*}
                   \begin{aligned}
                       \ulposmap{\rtoF}_\adpb\colon \ressp & \toinPos \lowersets{\funsp} \\
-                      \res                                & \mapsto \{ \fun \in \funsp \mid \adpb(\fun^*,\res)\}.
+                      \res                                & \mapsto \{ \fun \setin \funsp \mid \adpb(\fun^*,\res)\}.
                   \end{aligned}
               \end{equation*}
     \end{enumerate}
@@ -909,11 +909,11 @@ To do so, we first need the following two facts.
     There is a functor~$\FixFunMinResBack\colon \UPos \fto \DP$ which maps:
     \begin{enumerate}
         \item An object (poset) in \UPos to the same object (poset) in \DP.
-        \item A morphism~$\morb\in \HomSet{\UPos}{\funsp}{\ressp}$ to the morphism~$\adp_\morb \in \HomSet{\DP}{\funsp}{\ressp}$, where:
+        \item A morphism~$\morb\setin \HomSet{\UPos}{\funsp}{\ressp}$ to the morphism~$\adp_\morb \setin \HomSet{\DP}{\funsp}{\ressp}$, where:
               \begin{equation}
                   \begin{aligned}
                       \adp_\morb\colon \funsp\op \cartprod \ressp & \toinPos \Bool \\
-                      \tup{\fun^*,\res}                           & \mapsto \res \in \ulposmap{\morb}(\fun).
+                      \tup{\fun^*,\res}                           & \mapsto \res \setin \ulposmap{\morb}(\fun).
                   \end{aligned}
               \end{equation}
     \end{enumerate}
@@ -928,8 +928,8 @@ To do so, we first need the following two facts.
         \begin{aligned}
             \FixFunMinResBack(\catid_{\Obja}^{\UPos})(\F{\Objael}^*,\R{\Objbel}) \\
              & =
-            \Objbel \in \ulposmap{\catid_{\Objb}^{\UPos}} \\
-             & =\Objbel \in \upit \{ \Objael\} \\
+            \Objbel \setin \ulposmap{\catid_{\Objb}^{\UPos}} \\
+             & =\Objbel \setin \upit \{ \Objael\} \\
              & =\catid_{\Obja}^{\DP}(\Objael^*,\Objbel).
         \end{aligned}
     \end{equation*}
@@ -940,8 +940,8 @@ To do so, we first need the following two facts.
         \label{eq:fixfunminresback_a}
         \begin{aligned}
             \FixFunMinResBack(\mora\mthenof\UPos \morb)(\Objael^*,\Objcel) & =
-            \Objcel \in \ulposmap{(\mora \mthenof\UPos \morb)}(\Objael) \\
-                                                                           & =\Objcel \in \bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel).
+            \Objcel \setin \ulposmap{(\mora \mthenof\UPos \morb)}(\Objael) \\
+                                                                           & =\Objcel \setin \bigsetunion_{\Objbel\setin \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel).
         \end{aligned}
     \end{equation}
     On the other hand:
@@ -950,8 +950,8 @@ To do so, we first need the following two facts.
         \begin{aligned}
             (\FixFunMinResBack(\mora)\mthenof\DP \FixFunMinResBack(\morb))(\Objael^*,\Objcel)
              & =
-            \bigvee_{\Objbel \in \Objb}(\Objbel \in \ulposmap{\mora}(\Objael))\wedge (\Objcel\in \ulposmap{\morb}(\Objbel)) \\
-             & =\Objcel \in \bigcup_{\Objbel\in \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel).
+            \bigvee_{\Objbel \setin \Objb}(\Objbel \setin \ulposmap{\mora}(\Objael))\wedge (\Objcel\setin \ulposmap{\morb}(\Objbel)) \\
+             & =\Objcel \setin \bigsetunion_{\Objbel\setin \ulposmap{\mora}(\Objael)}\ulposmap{\morb}(\Objbel).
         \end{aligned}
     \end{equation}
     Clearly, \cref{eq:fixfunminresback_a} and \cref{eq:fixfunminresback_b} concide.
@@ -962,11 +962,11 @@ To do so, we first need the following two facts.
     There is a functor~$\FixResMaxFunBack\colon \LPos \fto \DP$ which maps:
     \begin{enumerate}
         \item An object (poset) in \UPos to the same object (poset) in \DP.
-        \item A morphism~$\morb\in \HomSet{\LPos}{\funsp}{\ressp}$ to the morphism~$\adp_\morb \in \HomSet{\DP}{\funsp}{\ressp}$, where:
+        \item A morphism~$\morb\setin \HomSet{\LPos}{\funsp}{\ressp}$ to the morphism~$\adp_\morb \setin \HomSet{\DP}{\funsp}{\ressp}$, where:
               \begin{equation}
                   \begin{aligned}
                       \adp_\morb\colon \funsp\op \cartprod \ressp & \toinPos \Bool \\
-                      \tup{\fun^*,\res}                           & \mapsto \fun \in \ulposmap{\morb}(\res).
+                      \tup{\fun^*,\res}                           & \mapsto \fun \setin \ulposmap{\morb}(\res).
                   \end{aligned}
               \end{equation}
     \end{enumerate}
@@ -1002,19 +1002,19 @@ To do so, we first need the following two facts.
     \begin{equation*}
         \begin{aligned}
             (\FixFunMinRes \fthen \FixFunMinResBack)(\adpa)(\F{\Objael}^*,\R{\Objbel})
-             & = \Objbel \in \ulposmap{\FixFunMinRes(\adpa)}(\Objael) \\
-             & =\Objbel \in \{ \Objbel' \in \Objb \mid \adpa(\F{\Objael^*,\Objbel})\} \\
+             & = \Objbel \setin \ulposmap{\FixFunMinRes(\adpa)}(\Objael) \\
+             & =\Objbel \setin \{ \Objbel' \setin \Objb \mid \adpa(\F{\Objael^*,\Objbel})\} \\
              & =\adpa(\F{\Objael^*,\Objbel}) \\
              & =\funid_\DP(\adpa)(\F{\Objael^*,\Objbel}).
         \end{aligned}
     \end{equation*}
-    Now consider any morphism~$\ftoR_\adpa \in \HomSet{\UPos}{\Obja}{\Objb}$.
+    Now consider any morphism~$\ftoR_\adpa \setin \HomSet{\UPos}{\Obja}{\Objb}$.
     One has
     \begin{equation*}
         \begin{aligned}
             (\FixFunMinResBack \fthen \FixFunMinRes)(\ftoR_\adpa)(\Objael)
-             & =\{ \Objbel \in \Objb\mid \Objbel \in \ulposmap{\ftoR_\adpa}(\Objael)\} \\
-             & =\{ \Objbel \in \Objb\mid \adpa(\Objael^*,\Objbel)\} \\
+             & =\{ \Objbel \setin \Objb\mid \Objbel \setin \ulposmap{\ftoR_\adpa}(\Objael)\} \\
+             & =\{ \Objbel \setin \Objb\mid \adpa(\Objael^*,\Objbel)\} \\
              & =\funid_\UPos(\ftoR_\adpa)(\Objael).
         \end{aligned}
     \end{equation*}
@@ -1026,7 +1026,7 @@ To do so, we first need the following two facts.
     \todotext{Actually, preserves the complete one?}
 \end{lemma}
 \begin{proof}
-    Given~$\Obja,\Objb \in \Ob_\DP$ and~$\adpa,\adpb \in \HomSet{\DP}{\Obja}{\Objb}$, we want to check the following properties.
+    Given~$\Obja,\Objb \setin \Ob_\DP$ and~$\adpa,\adpb \setin \HomSet{\DP}{\Obja}{\Objb}$, we want to check the following properties.
 
     \textbf{Order reversing}:
     We want to check
@@ -1036,8 +1036,8 @@ To do so, we first need the following two facts.
     One has:
     \begin{equation*}
         \begin{aligned}
-            \ulposmap{\FixFunMinRes(\adpa)}(\Objael) & =\{\F{\Objbel} \in \F{\Objb} \mid \adpa(\F{\Objael}^*, \R{\Objbel})\} \\
-                                                     & \subseteq \{\F{\Objbel} \in \F{\Objb} \mid \adpb(\F{\Objael}^*, \R{\Objbel})\} \\
+            \ulposmap{\FixFunMinRes(\adpa)}(\Objael) & =\{\F{\Objbel} \setin \F{\Objb} \mid \adpa(\F{\Objael}^*, \R{\Objbel})\} \\
+                                                     & \subseteq \{\F{\Objbel} \setin \F{\Objb} \mid \adpb(\F{\Objael}^*, \R{\Objbel})\} \\
                                                      & = \ulposmap{\FixFunMinRes(\adpb)}(\Objael),
         \end{aligned}
     \end{equation*}
@@ -1057,9 +1057,9 @@ To do so, we first need the following two facts.
         \begin{aligned}
             ~ &
             \ulposmap{\FixFunMinRes(\adpa \meet_\DP \adpb)}(\Objael) \\
-              & =\{ \R{\Objbel} \in \R{\Objb} \mid (\adpa \meet_\DP \adpb)(\F{\Objael}^*,\R{\Objbel})\} \\
-              & =\{ \R{\Objbel} \in \R{\Objb} \mid (\adpa(\F{\Objael}^*,\R{\Objbel})\meet_\DP \adpb(\F{\Objael}^*,\R{\Objbel}))\} \\
-              & =\{ \R{\Objbel} \in \R{\Objb} \mid \adpa(\F{\Objael}^*,\R{\Objbel})\} \setintersection \{ \R{\Objbel} \in \R{\Objb} \mid  \adpb(\F{\Objael}^*,\R{\Objbel})\} \\
+              & =\{ \R{\Objbel} \setin \R{\Objb} \mid (\adpa \meet_\DP \adpb)(\F{\Objael}^*,\R{\Objbel})\} \\
+              & =\{ \R{\Objbel} \setin \R{\Objb} \mid (\adpa(\F{\Objael}^*,\R{\Objbel})\meet_\DP \adpb(\F{\Objael}^*,\R{\Objbel}))\} \\
+              & =\{ \R{\Objbel} \setin \R{\Objb} \mid \adpa(\F{\Objael}^*,\R{\Objbel})\} \setintersection \{ \R{\Objbel} \setin \R{\Objb} \mid  \adpb(\F{\Objael}^*,\R{\Objbel})\} \\
               & =\ulposmap{\FixFunMinRes(\adpa)}(\Objael) \meet_\UPos \ulposmap{\FixFunMinRes(\adpb)}(\Objael).
         \end{aligned}
     \end{equation*}
@@ -1067,9 +1067,9 @@ To do so, we first need the following two facts.
     \begin{equation*}
         \begin{aligned}
             ~ & \ulposmap{\FixFunMinRes(\adpa \join_\DP \adpb)}(\Objael) \\
-              & =\{ \R{\Objbel} \in \R{\Objb} \mid (\adpa \join_\DP \adpb)(\F{\Objael}^*,\R{\Objbel})\} \\
-              & =\{ \R{\Objbel} \in \R{\Objb} \mid (\adpa(\F{\Objael}^*,\R{\Objbel})\join_\DP \adpb(\F{\Objael}^*,\R{\Objbel}))\} \\
-              & =\{ \R{\Objbel} \in \R{\Objb} \mid \adpa(\F{\Objael}^*,\R{\Objbel})\} \setunion \{ \R{\Objbel} \in \R{\Objb} \mid  \adpb(\F{\Objael}^*,\R{\Objbel})\} \\
+              & =\{ \R{\Objbel} \setin \R{\Objb} \mid (\adpa \join_\DP \adpb)(\F{\Objael}^*,\R{\Objbel})\} \\
+              & =\{ \R{\Objbel} \setin \R{\Objb} \mid (\adpa(\F{\Objael}^*,\R{\Objbel})\join_\DP \adpb(\F{\Objael}^*,\R{\Objbel}))\} \\
+              & =\{ \R{\Objbel} \setin \R{\Objb} \mid \adpa(\F{\Objael}^*,\R{\Objbel})\} \setunion \{ \R{\Objbel} \setin \R{\Objb} \mid  \adpb(\F{\Objael}^*,\R{\Objbel})\} \\
               & =\ulposmap{\FixFunMinRes(\adpa)}(\Objael) \join_\UPos \ulposmap{\FixFunMinRes(\adpb)}(\Objael).
         \end{aligned}
     \end{equation*}
@@ -1108,21 +1108,21 @@ To do so, we first need the following two facts.
     \begin{equation*}
         \FixFunMinRes(\Tr_{\Obja,\Objb}^{\Objc}(\adpa))=\Tr_{\Obja,\Objb}^{\Objc}(\FixFunMinRes(\adpa)),
     \end{equation*}
-    for all~$\adpa\in \HomSet{\DP}{\Obja\cartprod \Objc}{\Objb\cartprod \Objc}$, and~$\Obja,\Objb,\Objc\in \Ob_\DP$.
+    for all~$\adpa\setin \HomSet{\DP}{\Obja\cartprod \Objc}{\Objb\cartprod \Objc}$, and~$\Obja,\Objb,\Objc\setin \Ob_\DP$.
     On one hand, one has
     \begin{equation*}
         \begin{aligned}
-            \ulposmap{\FixFunMinRes(\Tr_{\Obja,\Objb}^{\Objc}(\adpa))}(\Objael) & =\{\Objbel \in \Objb \mid \Tr_{\Obja,\Objb}^{\Objc}(\adpa)(\F{\Objael}^*,\R{\Objbel}) \} \\
-                                                                                & =\{\Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc} \adpa(\tup{\F{\Objael},\F{\Objcel}}^* ,\tup{\R{\Objbel},\R{\Objcel}}) \}
+            \ulposmap{\FixFunMinRes(\Tr_{\Obja,\Objb}^{\Objc}(\adpa))}(\Objael) & =\{\Objbel \setin \Objb \mid \Tr_{\Obja,\Objb}^{\Objc}(\adpa)(\F{\Objael}^*,\R{\Objbel}) \} \\
+                                                                                & =\{\Objbel \setin \Objb \mid \bigvee_{\Objcel \setin \Objc} \adpa(\tup{\F{\Objael},\F{\Objcel}}^* ,\tup{\R{\Objbel},\R{\Objcel}}) \}
         \end{aligned}
     \end{equation*}
     On the other hand, one has
     \begin{equation*}
         \begin{aligned}
              & \ulposmap{\Tr_{\Obja,\Objb}^{\Objc}(\FixFunMinRes(\adpa))}(\Objael) \\
-             & =\{ \Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc} \tup{\Objbel,\Objcel}\in \ulposmap{\FixFunMinRes(\adpa)}(\Objael,\Objcel)\} \\
-             & =\{ \Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc} \tup{\Objbel,\Objcel}\in \{ \tup{\Objbel,\Objcel}\in \Objb\cartprod \Objc \mid \adpa(\tup{\F{\Objael},\F{\Objcel}}^* ,\tup{\R{\Objbel},\R{\Objcel}}\}\} \\
-             & =\{\Objbel \in \Objb \mid \bigvee_{\Objcel \in \Objc} \adpa(\tup{\F{\Objael},\F{\Objcel}}^* ,\tup{\R{\Objbel},\R{\Objcel}}) \}.
+             & =\{ \Objbel \setin \Objb \mid \bigvee_{\Objcel \setin \Objc} \tup{\Objbel,\Objcel}\setin \ulposmap{\FixFunMinRes(\adpa)}(\Objael,\Objcel)\} \\
+             & =\{ \Objbel \setin \Objb \mid \bigvee_{\Objcel \setin \Objc} \tup{\Objbel,\Objcel}\setin \{ \tup{\Objbel,\Objcel}\setin \Objb\cartprod \Objc \mid \adpa(\tup{\F{\Objael},\F{\Objcel}}^* ,\tup{\R{\Objbel},\R{\Objcel}}\}\} \\
+             & =\{\Objbel \setin \Objb \mid \bigvee_{\Objcel \setin \Objc} \adpa(\tup{\F{\Objael},\F{\Objcel}}^* ,\tup{\R{\Objbel},\R{\Objcel}}) \}.
         \end{aligned}
     \end{equation*}
 \end{proof}
