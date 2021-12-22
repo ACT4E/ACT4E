@@ -4,17 +4,18 @@
 \label{sec:groups}
 \linkvideo{spring2021-semi-mon-gro:groups}
 
-Groups in many areas of mathematics, both pure and applied.
+Groups appear in many areas of mathematics, both pure and applied.
 
 One important use of groups is to describe symmetries.
 Roughly speaking, a symmetry is an invertible transformation or reconfiguration of a figure (or object) that leaves the essential features of that figure invariant.
+
 For example, consider a perfectly square sheet of monochrome paper lying on a table top.
 If we rotate the piece of paper by 90 degrees around its center, how it appears to us after this rotation will be essentially indistinguishable from before it was rotated.
 Thus this rotation is a symmetry.
 
-\todotextjira{392}{POST-ALPHUBEL @J: Add more to intro}
+Groups of symmetries play an important role in physics and chemistry, for example when studying the repeating patterns of lattices of atoms or molecules in materials, or when studying the geometric patterns of atoms and molecules themselves.
 
-\todojira{454}{POST-ALPHUBEL: Do subgroups}
+For engineering, a particularly important class of groups are matrix groups, in particular those that describe various types of motion in space. These are discussed in \cref{sec:matrix-grps}.
 
 \begin{ctdefinition}[Group]
     \label{def:group}
@@ -40,6 +41,13 @@ Thus this rotation is a symmetry.
         \end{enumerate}
     \end{body}
 \end{ctdefinition}
+
+\begin{remark}
+A group is called \emph{commutative} (or: \emph{abelian}) if its underlying semigroup is commutative.
+\end{remark}
+
+\subsection{Some examples}
+
 \begin{example}
     The following is a group: the set~$\wnumbers$, together with addition as the composition operation, the element $0$ as neutral element, and ``taking the negative'' as the inverse operation:
     \begin{equation}
@@ -68,22 +76,101 @@ Thus this rotation is a symmetry.
 \end{solution}
 
 \begin{example}
-    The monoid~$\tup{\stylesets{B},\wedge, \true}$ from \cref{ex:bool_monoid} cannot become a group, because there cannot by an inverse for~$\false$.
-    In other words, there is no inverse for which~$\ginv(\false)\wedge \false=\true$.
+    The monoid~$\tup{\stylesets{B},\booland, \true}$ from \cref{ex:bool_monoid} cannot become a group, because there cannot by an inverse for~$\false$: there is no possible choice for $\ginv(\false)$ such that $\ginv(\false)\wedge \false=\true$.
 \end{example}
+
+\begin{example}
+Given a set $\setA$, an invertible function $\setA \to \setA$ is called an \emph{automorphism} of $\setA$. There is a `naturally given' group structure on the set $\Autof\setA$ of automorphisms of $\setA$: we can take the composition operation to be the composition of functions, the neutral element is the identity function on $\setA$, and inverses are given by the inverses of functions.
+\end{example}
+
+\begin{example}\label{exa:grp-order-two}
+    Consider the set $\makeset{ 0, 1 }$, equipped with the composition operation $\gtimes$ defined to be `addition modulo 2'. The composition table for this is \cref{tab:comp-table-add-mod-2}
+    \begin{margintable}
+    \caption{Addition modulo 2 on the set $\{ 0, 1 \}$.}
+    \label{tab:comp-table-add-mod-2}
+    \centering
+    \begin{tabular}{c|cc}
+        $+$ & $0$ & $1$ \\
+        \hline
+        $0$   & $0$ & $1$ \\
+        $1$    & $1$ & $0$
+    \end{tabular}
+\end{margintable}
+
+Let's choose $0$ as the neutral element, and let $\ginv(0) = 0$ and $\ginv(1) = 1$. Then $\tup{\{ 0, 1 \}, \gtimes, \idgrp, \ginv}$ is a group.
+\end{example}
+
+
 \begin{example}
     \label{grp-order-three}
-    Consider the set of imaginary numbers
+    Consider the following set of complex numbers
     \begin{equation*}
-        \grpAset \definedas \Big\{ 1, e^{\frac{1}{3}2\pi i}, e^{\frac{2 }{3}2\pi i}  \Big\} \subseteq \cnumbers.
+        \Big\{ 1, e^{\frac{1}{3}2\pi i}, e^{\frac{2 }{3}2\pi i}  \Big\} \subseteq \cnumbers.
     \end{equation*}
-    Taking the usual multiplication of complex numbers as the composition operation, these three elements from a group.
+    Taking the usual multiplication of complex numbers as the composition operation, these three numbers form a group.
 \end{example}
 
-\todotext{@J: as an example, define AUT(A) and say that it is a group}
+\begin{margintable}
+    \caption{The Klein four group}
+    \label{tab:comp-table-Klein4}
+    \centering
+    \begin{tabular}{c|cccc}
+        $+$ & $I$ & $V$ & $H$ & $R$ \\
+        \hline
+        $I$ & $I$ & $V$ & $H$ & $R$ \\
+        $V$ & $V$ & $I$ & $R$ & $H$ \\
+        $H$ & $H$ & $R$ & $I$ & $V$ \\
+        $R$ & $R$ & $H$ & $V$ & $I$
+    \end{tabular}
+\end{margintable}
 
-\todotextjira{12}{POST-ALPHUBEL @J: Insert examples of groups of order 1, 2, and 3 respectively}
-\todotextjira{13}{POST-ALPHUBEL @J: insert example showing multiplication tables of the two possible group structures on a set of four elements}
+\begin{example}
+\label{exa:grp-Klein4}
+Consider the shape of a rectangle in the plane, oriented vertically, and let's assume the rectangle is not a square. Then there are four symmetries of this shape:
+\begin{enumerate}
+\item doing nothing (leaving everything in place);
+\item reflecting the shape along the vertical axis;
+\item reflecting the shape along the horizontal axis;
+\item rotating the shape by 180 degrees.
+\end{enumerate}
+Let us call these symmetries $I$, $V$, $H$, and $R$, respectively. We can model these for instance using bijective functions of the plane $\reals^2$. The set $\makeset{I, V, H, R}$ can be given the structure of a group, with $I$ being its neutral element, and with composition and inverses given as in \cref{tab:comp-table-Klein4}. We think of composition meaning that we perform one symmetry transformation and then the other (function composition), and inverses correspond to taking the inverse transformation. This group is known as the Klein four group, named after the mathematician Felix Klein.
+\end{example}
+
+
+\begin{example}
+    \label{exa:grp-Z4}
+The set $\makeset{0, 1, 2, 3 }$ may be equipped with a group structure whose composition operation is addition modulo 4, and where $0$ is the neutral element. The composition table is $\cref{tab:comp-table-Z4}$.
+    \begin{margintable}
+    \caption{Cyclic group of order 4.}
+    \label{tab:comp-table-Z4}
+    \centering
+    \begin{tabular}{c|cccc}
+        $+$ & $0$ & $1$ & $2$ & $3$ \\
+        \hline
+        $0$ & $0$ & $1$ & $2$ & $3$ \\
+        $1$ & $1$ & $2$ & $3$ & $0$ \\
+        $2$ & $2$ & $3$ & $0$ & $1$ \\
+        $3$ & $3$ & $0$ & $1$ & $2$
+    \end{tabular}
+\end{margintable}
+
+\end{example}
+
+
+
+\subsection{Properties of groups}
+
+
+\begin{lemma}
+    \label{lem:inv-op-properties}
+    Let~$\tup{\grpAset, \gtimes, \idgrp, \ginv}$ be a group.
+    Then
+    \begin{enumerate}
+        \item\label{eq:group-neutral-invariant}~$\ginv(\idgrp) = \idgrp$;
+        \item\label{eq:group-inverse-inverse}~$ \ginv(\ginv(\grpela)) = \grpela, \quad \forall \grpela \in \grpAset$;
+        \item\label{eq:group-inverse-of-composition}~$\ginv(\grpela \gtimes \grpelb ) = \ginv(\grpelb) \gtimes \ginv(\grpela), \quad \forall \grpela, \grpelb \in \grpAset$.
+    \end{enumerate}
+\end{lemma}
 
 \begin{lemma}
     \label{lem:inv-op-unique}
@@ -115,16 +202,9 @@ Thus this rotation is a symmetry.
     Since~$\grpela \setin \monoidAset$ was arbitrary,~$\ginv_2 = \ginv_1$ as functions on~$\monoidAset$.
 \end{proof}
 
-\begin{lemma}
-    \label{lem:inv-op-properties}
-    Let~$\tup{\grpAset, \gtimes, \idgrp, \ginv}$ be a group.
-    Then
-    \begin{enumerate}
-        \item\label{eq:group-neutral-invariant}~$\ginv(\idgrp) = \idgrp$;
-        \item\label{eq:group-inverse-inverse}~$ \ginv(\ginv(\grpela)) = \grpela, \quad \forall \grpela \setin \grpAset$;
-        \item\label{eq:group-inverse-of-composition}~$\ginv(\grpela \gtimes \grpelb ) = \ginv(\grpelb) \gtimes \ginv(\grpela), \quad \forall \grpela, \grpelb \setin \grpAset$.
-    \end{enumerate}
-\end{lemma}
+\todotext{@J: make comment about common other definition of a group}
+
+
 
 \showslides{
     \begin{forslides}
@@ -161,9 +241,9 @@ Thus this rotation is a symmetry.
 
 \begin{example}[Orthogonal matrices]
 
-    Fix an integer~$n\geq 1$ and consider the set of \emph{orthogonal} matrices~$\mat{A}\setin \reals^{n\cartprod n}$.
-    Orthogonal matrices are real, square matrices with orthonormal columns and rows.
-    One was to express orthogonality of a matrix is:
+    Fix an integer~$n\geq 1$ and consider the set of real \emph{orthogonal} matrices~$\mat{A}\in \reals^{n\cartprod n}$:
+   real, square matrices with orthonormal columns and rows.
+    One way to express orthogonality of a matrix is:
     \begin{equation*}
         \mat{A}^\intercal \mat{A}=\mat{A}\mat{A}^\intercal = \idmat,
     \end{equation*}
@@ -189,3 +269,36 @@ Thus this rotation is a symmetry.
 \end{gradedexercise}
 
 \solutionof{GroupInverseProperties}
+
+
+\subsection{Subgroups}
+
+\todotext{ Add some text and some examples to this subsection}
+\todojira{454}{POST-ALPHUBEL: Add more to subgroups subsection}
+
+
+\begin{definition}
+Let $\grpA = \tup{\grpAset, \gtimes, \idgrp, \ginv}$ be a group. A \emph{subgroup} of $\grpA$ is:
+
+\constit
+
+\begin{enumerate}
+\item A subset $\grpBset \subseteq \grpAset$.
+\end{enumerate}
+
+\condit
+
+\begin{enumerate}
+\item The set $\grpBset$ is closed under the composition operation $\gtimes$ from $\grpA$:
+\begin{equation}
+\prfsemi{\grpela \in \grpBset \quad \grpelb \in \grpBset}{\grpela \gtimes \grpelb \in \grpBset}
+\end{equation}
+
+\item The neutral element $\idgrp \in \grpAset$ is an element of $\grpBset$.
+
+\item The set $\grpBset$ is closed under the inverse operation $\ginv$ from $\grpA$:
+\begin{equation}
+\prfperiod{\grpela \in \grpBset}{\ginv(\grpela) \in \grpBset}
+\end{equation}
+\end{enumerate}
+\end{definition}
