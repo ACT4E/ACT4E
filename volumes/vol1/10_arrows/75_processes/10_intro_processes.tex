@@ -1,7 +1,8 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Moore machines}
+\section{Moore machines, first attempt}
 \label{sec:moore-machines}
+
 
 \todojira{673}{Restructure the chapter as disccused}
 %\linkvideo{spring2021-actions:semi-actions:processes} % Signals and processes
@@ -127,6 +128,9 @@
     \end{equation}
     %
 
+\section{Moore machines, semicategorically}
+\label{sec:moore-semicategorically}
+
     \begin{marginfigure}
         \centering
         \includesag{10_moore_comp_seq_bis}
@@ -157,29 +161,31 @@
     \end{equation}
     %
     We can now use the \emph{coherence morphism} introduced in \cref{sec:SetL}, to compactly define the dynamics and the readout maps as morphisms in \Set.
-    We represent the machinery through the following commutative diagrams:
+    We represent the machinery through the following composition:
 
+    \begin{widepar}
     \equationsag{commutative_moore}{eq:commutative_moore}
+    \end{widepar}
 
     \equationsag{commutative_moore_ro}{eq:commutative_moore_ro}
 
     where
     %
     \begin{equation}
-        \label{eq:moore-comp-good-2}
-        \defmapcommaset{
-        \prdyn'_{\mora\mthen\morb}
+    \label{eq:moore-comp-good-2}
+    \defmapcommaset{
+        \mord_{\mora\mthen\morb}
         }{
         \prin_{\mora} \cartprod (\tupset(\prstL_\mora)\cartprod \tupset(\prstL_\morb))
         }{
         \tupset(\prstL_\mora)\cartprod \tupset(\prstL_\morb)
         }{
-        \tup{u,{x_{\mora}},{x_{\morb}}}
+        \tup{u,\tup{x_{\mora},{x_{\morb}}}}
         }{
-        \tup %
-        {%
+        \tup
+        {
             \prdyn_{\mora} (u, x_{\mora}),
-            {%
+            {
                     \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})
                 }}
         }
@@ -191,7 +197,7 @@
     \begin{equation}
         \label{eq:moore-comp-good-3}
         \defmapperiodset{
-        \prreadout'_{\mora\mthen\morb}
+        \more_{\mora\mthen\morb}
         }{
         \tupset(\prstL_\mora)\cartprod \tupset(\prstL_\morb)
         }{
@@ -297,84 +303,6 @@
         }
     \end{equation*}
 
-    \section{Action on sequences}
-
-    Let's now look at how machines like the above act on sequences.
-
-    For now we only have defined semi-group, monoid, and group actions, and have not talked yet about (semi)category actions.
-    Let's consider the set of machines systems with~$\prin = \prout = \prgen$; this is the homset~$\HomSet\Moore\prgen\prgen$.
-
-    Given a finite input sequence~$u\colon \natnumbers \to \prgen$ of length~$n$, the output is an instantaneous transformation of the state:
-    %
-    \begin{equation}
-        \label{eq:actions-on-sequences-y}
-        \begin{aligned}
-            y_0   & = \prreadout(\tupset(x_0)), \\
-            y_1   & = \prreadout(\tupset(x_1)), \\
-            y_2   & = \prreadout(\tupset(x_2)), \\
-            \dots & = \dots \\
-            y_{k} & = \prreadout(\tupset(x_{k-1})).
-        \end{aligned}
-    \end{equation}
-    %
-    The state is computed recursively as follows:
-    \begin{equation}
-        \label{eq:actions-on-sequences-x}
-        \begin{aligned}
-            x_0   & = \prdyn(u_0, \prstart), \\
-            x_1   & = \prdyn(u_1, x_0), \\
-            x_2   & = \prdyn(u_2, x_1), \\
-            \dots & = \dots \\
-            x_{k} & = \prdyn(u_{k}, x_{k-1}).
-        \end{aligned}
-    \end{equation}
-    %
-    Therefore, given a machine~$\mora \colon \prgen \mtoin{\Moore} \prgen$ we have defined a map from $\natnumbers \to \prgen$ to itself.
-    Let's call it $\act$.
-    It is defined as a map of the form
-    %
-    \begin{equation}
-        \label{eq:actions-on-sequences-1}
-        \act_{\mora}\colon  (\natnumbers \to \prgen)  \sto  (\natnumbers \to \prgen),
-    \end{equation}
-    %
-    or, more formally,
-    %
-    \begin{equation}
-        \label{eq:actions-on-sequences-2}
-        \act: \HomSet\Moore\prgen\prgen \sto \Endof {\natnumbers \to \prgen}.
-    \end{equation}
-    %
-    Note that both~$\HomSet\Moore\prgen\prgen$ and $\Endof {\natnumbers \to \prgen}$ are semigroups.
-    Could it be that~$\act$ is a semigroup morphism?
-    And, consequently, is~$\act$ a covariant semigroup action or a contravariant semigroup action?
-
-    Let's check the condition for it being a morphism (\cref{eq:sgrp-mor-comp}):
-    %
-    \begin{align}
-        \act ( \mora \mthenof{\Moore} \morb) & \mathrel{\stackrel{?
-        }{=} } \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-left} \\
-        \act ( \morb \mthenof{\Moore} \mora) & \mathrel{\stackrel{?}{=}}  \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-right}
-    \end{align}
-
-    We can check this graphically.
-    First, one has
-    %
-    \begin{equation*}
-        \prfperiod{\prftree{\includesag{moore_right_s_f}}{\includesag{moore_right_s_f_conn}}}{\prftree{\includesag{moore_right_b}}{\includesag{moore_right_b_space}}}{\includesag{moore_right_comp_1}}
-    \end{equation*}
-    %
-    Second, one has
-    %
-    \begin{equation*}
-        \prfperiod{\prftree{\includesag{moore_right_s}}{\includesag{moore_right_s_space}}}{\prftree{\includesag{moore_right_1}}{\includesag{moore_right_2}}}{\includesag{moore_right_5}}
-    \end{equation*}
-    %
-    Therefore, we have a \emph{covariant} semigroup action.
-
-    \begin{publictodo}
-        The rest of the section is missing.
-    \end{publictodo}
 
     \section{More machines}
     \label{sec:more-machines}
@@ -564,3 +492,83 @@
     }
 
     \todojira{589}{Example of More: Composition of duplicator and discarder gives identity}}
+
+
+    \section{Action on sequences}
+
+    Let's now look at how machines like the above act on sequences.
+
+    For now we only have defined semi-group, monoid, and group actions, and have not talked yet about (semi)category actions.
+    Let's consider the set of machines systems with~$\prin = \prout = \prgen$; this is the homset~$\HomSet\Moore\prgen\prgen$.
+
+    Given a finite input sequence~$u\colon \natnumbers \to \prgen$ of length~$n$, the output is an instantaneous transformation of the state:
+    %
+    \begin{equation}
+        \label{eq:actions-on-sequences-y}
+        \begin{aligned}
+            y_0   & = \prreadout(\tupset(x_0)), \\
+            y_1   & = \prreadout(\tupset(x_1)), \\
+            y_2   & = \prreadout(\tupset(x_2)), \\
+            \dots & = \dots \\
+            y_{k} & = \prreadout(\tupset(x_{k-1})).
+        \end{aligned}
+    \end{equation}
+    %
+    The state is computed recursively as follows:
+    \begin{equation}
+        \label{eq:actions-on-sequences-x}
+        \begin{aligned}
+            x_0   & = \prdyn(u_0, \prstart), \\
+            x_1   & = \prdyn(u_1, x_0), \\
+            x_2   & = \prdyn(u_2, x_1), \\
+            \dots & = \dots \\
+            x_{k} & = \prdyn(u_{k}, x_{k-1}).
+        \end{aligned}
+    \end{equation}
+    %
+    Therefore, given a machine~$\mora \colon \prgen \mtoin{\Moore} \prgen$ we have defined a map from $\natnumbers \to \prgen$ to itself.
+    Let's call it $\act$.
+    It is defined as a map of the form
+    %
+    \begin{equation}
+        \label{eq:actions-on-sequences-1}
+        \act_{\mora}\colon  (\natnumbers \to \prgen)  \sto  (\natnumbers \to \prgen),
+    \end{equation}
+    %
+    or, more formally,
+    %
+    \begin{equation}
+        \label{eq:actions-on-sequences-2}
+        \act: \HomSet\Moore\prgen\prgen \sto \Endof {\natnumbers \to \prgen}.
+    \end{equation}
+    %
+    Note that both~$\HomSet\Moore\prgen\prgen$ and $\Endof {\natnumbers \to \prgen}$ are semigroups.
+    Could it be that~$\act$ is a semigroup morphism?
+    And, consequently, is~$\act$ a covariant semigroup action or a contravariant semigroup action?
+
+    Let's check the condition for it being a morphism (\cref{eq:sgrp-mor-comp}):
+    %
+    \begin{align}
+        \act ( \mora \mthenof{\Moore} \morb) & \mathrel{\stackrel{?
+        }{=} } \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-left} \\
+        \act ( \morb \mthenof{\Moore} \mora) & \mathrel{\stackrel{?}{=}}  \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-right}
+    \end{align}
+
+    We can check this graphically.
+    First, one has
+    %
+    \begin{equation*}
+        \prfperiod{\prftree{\includesag{moore_right_s_f}}{\includesag{moore_right_s_f_conn}}}{\prftree{\includesag{moore_right_b}}{\includesag{moore_right_b_space}}}{\includesag{moore_right_comp_1}}
+    \end{equation*}
+    %
+    Second, one has
+    %
+    \begin{equation*}
+        \prfperiod{\prftree{\includesag{moore_right_s}}{\includesag{moore_right_s_space}}}{\prftree{\includesag{moore_right_1}}{\includesag{moore_right_2}}}{\includesag{moore_right_5}}
+    \end{equation*}
+    %
+    Therefore, we have a \emph{covariant} semigroup action.
+
+    \begin{publictodo}
+        The rest of the section is missing.
+    \end{publictodo}
