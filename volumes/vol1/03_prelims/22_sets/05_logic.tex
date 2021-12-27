@@ -3,83 +3,33 @@
 \section{Logical preliminaries}
 \label{sec:logical-prelim}
 
-We assume the reader to have some familiarity with elementary logical concepts and notation, in the way that they are typically used for reasoning and writing proofs in undergraduate mathematics.
-We recall the most basic notions, giving a `naive' treatment  intended as a rudimentary foundation and to fix our notation.
-A more formal treatment is outside the scope of this text.
+We assume the reader to have some familiarity with elementary logical concepts and notation, in the way that they are typically used for reasoning and writing proofs in undergraduate mathematics. We recall some basic notions, giving a `naive' treatment intended as a rudimentary foundation and to fix our notation. A more formal treatment is outside the scope of this text.
 
-\subsection{Basic connectives}
+\todotext{POST-ALPHUBEL add somewhere in this section comments about non-classical logic and/or the fact that there are other logics}
+
+\subsection{Deduction}
 
 The building blocks for reasoning mathematically are logical statements (sometimes called propositions, assertions, logical formulae, etc) which, in principle, may be evaluated to be either true or false, depending on the situation and the assumptions made.
 In particular, a statement might depend on variables, and the truth or falsity of the statement might vary depending on how these variables are evaluated.
 
-Two familiar logical \emph{operations} (also called \emph{connectives}) are ``and'' and ``or'', usually denoted in infix notation by the symbols~$\booland$ and~$\boolor$, respectively.
-We think of each of these as a function that takes two logical statements as its arguments, and returns back a new logical statement.
-If~$P$ and~$Q$ are logical statements, then~$P \booland Q$ is the new logical statement which is true precisely when both $P$ and $Q$ are true, and otherwise is false.
-And~$P \boolor Q$ is the logical statement that is true precisely when either~$P$ or~$Q$, or both, are true.
+To make mathematical proofs, we start with some assumptions (statements which we take, for the sake of our argument, to be true), and then we apply rules of reasoning, often called inference rules, which allow us to deduce new statements from these. These new statements are the `conclusions'. This process is often iterated many times in order to arrive at a statement that we seek to prove. 
 
-Another important logical connective is implication.
-Given statements~$P$ and~$Q$, we can can form the statement ``if statement~$P$ is true, then statement $Q$ is true" or, synonymously, ``$P$ implies $Q$''.
-Our symbolic notation for this new statement (which itself may be true or false) is~$P \Imp Q$.
-
-\todotext{Not really - we actively try  we use a different notation.
-    Remove the mentions of $\imp$ and $\Leftrightarrow$ as ``the notations we use''.
-    Say that ``instead of the common notation .
-    .. that you know from high school, we use this notation that we like better''}
-
-A logical operation that only takes on argument is \emph{negation}: if~$P$ is a statement, its negation~$\lnot P$ is the statement that is true if and only if~$P$ is false.
-
-It is useful to also include in our logical language the symbols~$\true$ and~$\false$ for ``true'' and ``false'', respectively.
-
-Beyond connectives, our logical language also includes \emph{variables}, as well as the so-called \emph{quantifier} symbols~$\exists$ and~$\forall$, read ``exists'' and ``for all'', respectively.
-
-The quantifiers may be viewed as operations that have two arguments: the first argument is a variable, say $x$, and the second argument is a logical statement that might depend on~$x$.
-The result is again a logical statement.
-For example, given a statement~$P(x)$ possibly depending on~$x$,~$\exists x \ P(x)$ denotes the statement ``there exists an~$x$ such that the statement~$P(x)$ is true''.
-Similarly,~$\forall x \ P(x)$ is the statement ``for all~$x$, the statement~$P(x)$ is true''.
-
-We will use the notation~$\exists!
-    x \ P(x)$ to say ``there exists precisely one~$x$ such that~$P(x)$ is true''.
-
-\subsection{Logical calculus}
-
-Various rules, for example expressed using equations, relate the different logical operations to each other and dictate how to calculate with them.
-For instance, rules such as
+If we can infer a statement $Q$ when given a statement $P$, we will write 
 \begin{equation*}
-    \lnot (\lnot P) = P
+    \prfperiod
+    {P}{Q}
 \end{equation*}
-or
-\begin{equation*}
-    P \Imp Q = \lnot P \boolor Q
-\end{equation*}
-or
-\begin{equation*}
-    (P \booland Q) \boolor R = (P \boolor R) \booland (Q \boolor R)
-\end{equation*}
+Other common ways of phrasing this are `$P$ implies $Q$' or `$Q$ follows from $P$'. 
 
-Note that we use parentheses above to make clear in which order to evaluate a compound logical formula.
-Conventions about how strongly different logical operations ``bind'' allow us to use less parentheses.
-For example, logical negation is taken to bind at the strongest level, so we can write~$\lnot P \Imp Q$ instead of~$(\lnot P) \Imp Q$, without any ambiguity.
-
-It is a matter of convention which connectives and rules are taken as primitive, and which are then derived from the primitive ones.
-For example, we may define \emph{logical equivalence} using the operations introduced so far.
-Our notation for it is ``$P \Eqv Q$''.
-We define this by ``$P \Eqv Q := (P \Imp Q) \wedge (Q \Imp P)$''.
-(The symbol ``$\definedas$'' means that the expression on the left-hand side is being defined by the expression on the right-hand side.)
-When the statement~$P \Eqv Q$ is true, we say that~$P$ and~$Q$ are \emph{equivalent} or that~$P$ is true \emph{if and only if}~$Q$ is true.
-
-Beyond using equations such as~$\lnot (\lnot P) = P$, when we `calculate' a proof we use \emph{inference rules} which allow us to make deductions, starting from a set of statements that we assume as being true.
-An example of a basic inference rule is this: ``if~$P$ is true and~$P \Imp Q$ is true, then~$Q$ is true''.
-Here~$P$ and~$P \Imp Q$ are the premises, and~$Q$ is the conclusion.
-
-In this text will often use the following notation to indicate an inference rule of the form ``if~$P_1$ and~$P_2$ are true, then~$Q$ is true'':
-\begin{equation*}
-    \prfperiod{
-        P_1}{P_2}{Q}
-\end{equation*}
-More generally, we might include any finite number of premises:
+If $Q$ can be inferred from statements $P_1, \dots, P_n$, then we write
 \begin{equation*}
     \prfperiod{
         P_1}{P_2}{\dots}{P_n}{Q}
+\end{equation*}
+This notation also allows for combining multiple steps of inference, leading to a `proof tree' such as 
+\begin{equation*}
+    \prfperiod
+    {\prf{P_1}{Q_1}}{\prf{P_2}{P_3}{Q_2}}{R}
 \end{equation*}
 
 When we write
@@ -90,4 +40,111 @@ When we write
         Q
     }
 \end{equation*}
-this means ``$P$ is true if and only if~$Q$ is true''.
+this means that $Q$ may be inferred from $P$ and vice versa. If we want to say that a statement $Q$ is simply true -- that it can be deduced from zero assumptions -- then we write 
+\begin{equation*}
+    \prfperiod{
+        \ 
+    }{
+        Q
+    }
+\end{equation*}
+
+\subsection{Connectives}
+
+Logical connectives are operations that allow us to construct new logical statements from given ones. 
+
+Two familiar logical connectives are ``and'' and ``or'', usually denoted in infix notation by the symbols~$\booland$ and~$\boolor$, respectively. We think of each of these as a function that takes two logical statements as its arguments, and returns back a new logical statement. If~$P$ and~$Q$ are logical statements, then~
+\begin{equation*}
+P \booland Q
+\end{equation*}
+is the new logical statement which is true precisely when both $P$ and $Q$ are true, and otherwise is false.
+And
+\begin{equation*}
+P \boolor Q
+\end{equation*}
+is the logical statement that is true precisely when either~$P$ or~$Q$, or both, are true.
+
+A logical operation that only takes on argument is \emph{negation}: if~$P$ is a statement, its negation
+\begin{equation*}
+\lnot P
+\end{equation*}
+is the statement that is true if and only if~$P$ is false.
+
+Furthermore, it is useful to include in our logical language the symbols~
+\begin{equation}
+\true \quad \text{and}  \quad \false
+\end{equation}
+for ``true'' and ``false'', respectively, which we think of as connectives taking zero arguments.
+
+\subsection{Logical calculus}
+
+Various rules, for example expressed using equations, relate the different logical connectives to each other and dictate how to calculate with them.
+For instance, rules such as
+\begin{equation*}
+    (P \booland Q) \boolor R = (P \boolor R) \booland (Q \boolor R)
+\end{equation*}
+or 
+\begin{equation*}
+     \lnot (P \booland Q)  = (\lnot P \boolor \lnot Q)
+\end{equation*}
+or 
+\begin{equation*}
+    \lnot (\lnot P) = P.
+\end{equation*}
+
+Note that we use parentheses above to make clear in which order to evaluate a compound logical formula.
+Conventions about how strongly different logical operations ``bind'' allow us to use less parentheses.
+For example, logical negation is taken to bind at the strongest level, so we can write~$\lnot P$ instead of~$\lnot (P)$ in logical formulas, without introducing ambiguity.
+
+\subsection{Variables and quantifiers}
+
+Beyond connectives, our logical language also includes \emph{variables}, as well as the so-called \emph{quantifier} symbols~$\exists$ and~$\forall$, read ``exists'' and ``for all'', respectively.
+
+The quantifiers may be viewed as operations that have two arguments: the first argument is a variable, say $x$, and the second argument is a logical statement that might depend on~$x$.
+The result is again a logical statement.
+For example, given a statement~$P(x)$ possibly depending on~$x$,
+\begin{equation*}
+\exists x \ P(x)
+\end{equation*}
+denotes the statement ``there exists an~$x$ such that the statement~$P(x)$ is true''.
+Similarly,
+\begin{equation*}
+\forall x \ P(x)
+\end{equation*}
+is the statement ``for all~$x$, the statement~$P(x)$ is true''.
+
+We will use the notation~$\exists!
+    x \ P(x)$ to say ``there exists precisely one~$x$ such that~$P(x)$ is true''.
+
+
+\subsection{Implication as a connective}
+
+In addition to expressing the fact that `$P$ implies $Q$' using the notation
+\begin{equation}\label{eq:P-implies-Q}
+    \prfcomma
+    {P}{Q}
+\end{equation}
+we can also express the statement `$P$ implies $Q$' using implication as a logical connective. We use the notation `$\Imp$' for this connective and we think of it as a function of two variables: given statements $P$ and $Q$, it spits out the new statement $P \Imp Q$. It may be expressed (or defined) as 
+\begin{equation}\label{eq:imp-formula}
+(P \Imp Q) = (\lnot P \boolor Q),
+\end{equation}
+depending on whether one wishes to take $\Imp$ as a primitive connective or define it as a compound connective via \cref{eq:imp-formula}. This is a matter of convention. 
+
+The relationship between \cref{eq:P-implies-Q} and `$P \Imp Q$' is that  \cref{eq:P-implies-Q} says `the statement $P \Imp Q$ is true'; or, in other words, its says
+\begin{equation}
+    \prfperiod
+    {\ }{P \Imp Q}
+\end{equation}
+
+Another connective that is useful (and commonly used) is called \emph{equivalence}. We use the symbol `$\Eqv$' for it, and define it by
+\begin{equation}
+P \Eqv Q \definedas (P \Imp Q) \wedge (Q \Imp P).
+\end{equation}
+When the statement $P \Eqv Q$ is true we say `$P$ and~$Q$ are \emph{equivalent}' or that~`$P$ is true \emph{if and only if}~$Q$ is true'. Also, this is the same as saying 
+\begin{equation*}
+    \prfdoublecomma{
+        P
+    }{
+        Q
+    }
+\end{equation*}
