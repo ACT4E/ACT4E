@@ -1,0 +1,176 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Moore machines, semicategorically}
+\label{sec:moore-semicategorically}
+
+    \begin{marginfigure}
+        \centering
+        \includesag{10_moore_comp_seq_bis}
+        \caption{Composition of Moore machines (second version).}
+        \label{fig:comp_moore_2}
+    \end{marginfigure}
+
+    We can avoid lengthy book-keeping by using a slightly different construction (\cref{fig:comp_moore_2}) using the \SetL category (\cref{sec:SetL}).
+    %
+    The idea is to just use lists of sets rather than the cartesian product.
+    In other words,~$\prstL_\mora, \prstL_\morb\setin \Ob_{\SetL}$.
+    So the joint state is going to be~
+    \begin{equation}
+        \label{eq:moore-comp-good-joint}
+        \prstL_{\mora} \listconcat   \prstL_{\morb}
+    \end{equation}
+    rather than~$\prst_{\mora} \cartprod \prst_{\morb}$.
+
+    The joint system has as states:
+    \begin{equation}
+        \label{eq:moore-comp-good-1}
+        \begin{aligned}
+            \prin_{\mora\mthen\morb}    & = \prin_{\mora}, \\
+            \prstL_{\mora\mthen\morb}   & = \prstL_{\mora}\listconcat  \prstL_{\morb}, \\
+            \prstart_{\mora\mthen\morb} & = \tup{\prstart_{\mora},\prstart_{\morb}}, \\
+            \prout_{\mora\mthen\morb}   & = \prout_{\morb}.
+        \end{aligned}
+    \end{equation}
+    %
+    We can now use the \emph{coherence morphism} introduced in \cref{sec:SetL}, to compactly define the dynamics and the readout maps as morphisms in \Set.
+    We represent the machinery through the following composition:
+
+    \begin{widepar}
+    \equationsag{commutative_moore}{eq:commutative_moore}
+    \end{widepar}
+
+    \equationsag{commutative_moore_ro}{eq:commutative_moore_ro}
+
+    where
+    %
+    \begin{equation}
+    \label{eq:moore-comp-good-2}
+    \defmapcommaset{
+        \mord_{\mora\mthen\morb}
+        }{
+        \prin_{\mora} \cartprod (\tupset(\prstL_\mora)\cartprod \tupset(\prstL_\morb))
+        }{
+        \tupset(\prstL_\mora)\cartprod \tupset(\prstL_\morb)
+        }{
+        \tup{u,\tup{x_{\mora},{x_{\morb}}}}
+        }{
+        \tup
+        {
+            \prdyn_{\mora} (u, x_{\mora}),
+            {
+                    \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})
+                }}
+        }
+    \end{equation}
+    %
+    %
+    and
+    %
+    \begin{equation}
+        \label{eq:moore-comp-good-3}
+        \defmapperiodset{
+        \more_{\mora\mthen\morb}
+        }{
+        \tupset(\prstL_\mora)\cartprod \tupset(\prstL_\morb)
+        }{
+        \prout_{\morb}
+        }{
+        \tup{{x_{\mora}}, {x_{\morb}}}
+        }{
+        \prreadout_{\morb}(x_{\morb})
+        }
+    \end{equation}
+    %
+    With this definition we can define the semicategory~\Moore of Moore machines.
+    %
+    \begin{definition}[\Moore]
+        \label{def:Moore}
+        The \emph{semicategory of Moore machines} \Moore is given by:
+        \begin{enumerate}
+            \item \emph{Objects:} objects of \Set.
+            \item \emph{Morphisms:}
+                  A morphism is a tuple
+                  \begin{equation}
+                      \mora = \tupp{\prin_{\mora},\prstL_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}},
+                  \end{equation}
+                  where:
+                  \begin{itemize}
+                      \item $\prstL_{\mora}$ is object of \SetL;
+                      \item $\prin_{\mora}$ and~$\prout_{\mora}$ are sets (objects of \Set);
+                      \item $ \prdyn_{\mora} \colon \prin_{\mora}\cartprod \tupset(\prstL_\mora) \mtoin\Set  \tupset(\prstL_\mora)$;
+                      \item $ \prreadout_{\mora} \colon \tupset(\prstL_{\mora})  \mtoin\Set \prout_{\mora}$.
+                  \end{itemize}
+            \item \emph{Composition:}
+                  Composition is given by \cref{eq:moore-comp-good-1,eq:moore-comp-good-2,eq:moore-comp-good-3}.
+        \end{enumerate}
+    \end{definition}
+    %
+    We can show that \Moore is indeed a semicategory.
+    Given valid, composable machines~$\mora$,~$\morb$,~$\morc$, we can specify the spaces and initial conditions:
+    \begin{equation*}
+        \label{eq:moore_assoc_spaces}
+        \begin{aligned}
+            \prin_{(\mora \mthen \morb)\mthen \morc}    & =\prin_{\mora \mthen (\morb \mthen \morc)}=\prin_{\mora}, \\
+            \prstL_{(\mora \mthen \morb)\mthen \morc}   & =\prstL_{\mora \mthen (\morb \mthen \morc)}=  \prstL_{\mora} \listconcat \prstL_{\morb} \listconcat  \prstL_{\morc} \\
+            \prstart_{(\mora \mthen \morb)\mthen \morc} & =\prstart_{\mora \mthen (\morb \mthen \morc)}=\tup{\prstart_\mora,\prstart_\morb,\prstart_\morc} \\
+            \prout_{(\mora \mthen \morb)\mthen \morc}   & =\prout_{\mora \mthen (\morb \mthen \morc)}=\prout_\morc
+        \end{aligned}
+    \end{equation*}
+
+    We first check associativity for the dynamics.
+    First, we represent the situation graphically via a commutative diagram:
+    %
+    \equationsag{commutative_moore_assoc_1}{eq:commutative_moore_assoc_1}
+    where
+    \begin{widepar}
+        \begin{equation*}
+            \label{eq:assoc_moore_1}
+            \begin{aligned}
+                \prdyn'_{(\mora\mthen\morb)\mthen \morc}\colon \prin_{\mora}\cartprod ((\tupset(\prstL_{\mora}) \cartprod \tupset(\prstL_{\morb}))\cartprod \tupset(\prstL_{\morc})) & \to (\tupset(\prstL_{\mora}) \cartprod \tupset(\prstL_{\morb}))\cartprod \tupset(\prstL_{\morc}) \\
+                \tup{u, \tup{\tup{x_{\mora},x_{\morb}},x_\morc}}                                                                                                                     & \mapsto \tup{\prdyn'_{\mora \mthen \morb}(u,\tup{x_\mora, x_\morb}),\prdyn'_{\morc}(\prreadout_{\mora \mthen \morb}(\tup{x_\mora,x_\morb}),x_\morc)} \\
+                                                                                                                                                                                     & =\tup{\prdyn'_\mora(u,x_\mora), \prdyn'_\morb(\prreadout_\mora(x_\mora),x_\morb), \prdyn'_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
+            \end{aligned}
+        \end{equation*}
+    \end{widepar}
+    %
+    On the other hand, one has:
+    \equationsag{commutative_moore_assoc_2}{eq:commutative_moore_assoc_2}
+    %
+    where
+    \begin{widepar}
+        \begin{equation*}
+            \label{eq:assoc_moore_2}
+            \begin{aligned}
+                \prdyn'_{\mora\mthen(\morb\mthen \morc)}\colon \prin_{\mora}\cartprod (\tupset(\prstL_{\mora}) \cartprod (\tupset(\prstL_{\morb})\cartprod \tupset(\prstL_{\morc}))) & \to \tupset(\prstL_{\mora}) \cartprod (\tupset(\prstL_{\morb})\cartprod \tupset(\prstL_{\morc})) \\
+                \tup{u, \tup{x_{\mora},\tup{x_{\morb},x_\morc}}}                                                                                                                     & \mapsto \tup{\prdyn'_{\mora}(u,x_\mora),\prdyn'_{\morb\mthen \morc}(\prreadout_{\mora}({x_\mora}),\tup{x_\morb,x_\morc})} \\
+                                                                                                                                                                                     & =\tup{\prdyn'_\mora(u,x_\mora), \prdyn'_\morb(\prreadout_\mora(x_\mora),x_\morb), \prdyn'_\morc(\prreadout_\morb(x_\morb),x_\morc)}.
+            \end{aligned}
+        \end{equation*}
+    \end{widepar}
+    %
+    \todo{do diagrams for readout}
+    Finally, one can check associativity of the readout:
+    \begin{equation*}
+        \label{eq:assoc_moore_3}
+        \defmapcommaset{
+        \prreadout'_{(\mora \mthen \morb)\mthen \morc}}
+        {(\tupset(\prstL_{\mora}) \cartprod \tupset(\prstL_{\morb}))\cartprod \tupset(\prstL_{\morc})}
+        {\prout_\morc}
+        {\tup{\tup{x_\mora,x_\morb},x_\morc}}
+        { \prreadout_\morc(x_\morc)}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \label{eq:assoc_moore_4}
+        \defmapperiodset{
+        \prreadout'_{\mora \mthen (\morb\mthen \morc)}
+        }{
+        \tupset(\prstL_{\mora}) \cartprod (\tupset(\prstL_{\morb})\cartprod \tupset(\prstL_{\morc}))
+        }{
+        \prout_\morc
+        }{
+        \tup{x_\mora,\tup{x_\morb,x_\morc}}
+        }{
+        \prreadout_\morc(x_\morc)
+        }
+    \end{equation*}
