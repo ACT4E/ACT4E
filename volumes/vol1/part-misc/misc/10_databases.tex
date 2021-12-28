@@ -1,139 +1,94 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Databases, sets, functions}
+\section{Relational Databases}
+\label{sec:relational-databases}
 
-%
-% \AC{I'm not sure about this example.
-%     I feel that if one is happy with relational databases as a trivial example, they already know Intuitively functions as morphisms (maybe because they know types).
-%     If you don't know databases, then that topic cannot be used to introduce a simple concept such as databases.
-% }
-%
-% \JL{In the second sentence above, is ``that topic'' referring to ``functions as morphisms''?
-%     I'm also not sure if I understand the overall comment.
-%     In any case, if it's helpful: the original idea behind this database example was to do things in a way that is compatible with how databases are treated in Seven Sketches.
-%     (I'm not necessarily attached to keeping this example, this is just to explain the idea/intention.) I don't know anything about databases anyway : ) I just thought it probably works well if it is in line with the FQL way of seeing things.}
-%
-% \AC{
-%     I propose to have here the \textbf{Spreadsheet} category: objects are cells, morphisms are the formulas.
-%     There is an object $1$ that can be the domain for the constant value of cells.
-% }
+\todotextjira{50}{@Andrea: After watching Johnson's lecture, I would write this differently.}
 
-\iflabelexists{sec:relational-databases}{
-    We continue the discussion of \cref{sec:relational-databases}.
-}{}
+A \emph{relational database} like PostgreSQL, MySQL, \etc presents the data to the user as relations.
+This does not necessarily mean that the data is stored as tuples, as in the mathematical model, but rather that what the user can do is query and manipulate relations.
+This conceptual model is now 50 years old.
 
-In the particular case of tables with primary keys, things are easier.
-In relational databases, a table column is a primary key if the values of that column are guaranteed to be unique.
+Can we use the category \Rel to represent databases~\cite{codd2002relational}?
 
-If the values in the column are unique, the column serves as the name of the row.
-In the table above the motor ID serves as the primary key.
+Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.
+}.
 
-Consider a table with columns $P \cartprod X_1 \cartprod X_2 \cartprod \cdots X_n$, where $P$ is the primary key column.
-Then, given a key $p \in P$, we can obtain the value in the other columns.
-We first find the unique row with the key $p$, and then we read out the values.
+The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model ID), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, \etc.
+A simple illustration is provided in \cref{tab:electric_motors_old_one}.
 
-Therefore, a table with columns $P \cartprod X_1 \cartprod X_2 \cartprod \cdots X_n$ can be seen as a tuple $\tup{S, \{f_i\}_i}$:
-\begin{itemize}
-    \item A subset $A \subseteq P$ that gives us the available keys.
-    \item $n$ read-out functions $f_i\colon P \to X_i$, each giving the corresponding value of the $i$-th attribute.
-\end{itemize}
-
-\todotext{%discussion
-    @Gioele: \JL{I don't see yet how the set $A$ comes into play.}}
-% \begin{comment}
-% \begin{table*}[h]
-%     \centering
-%     \begin{tabular}{c|c|c|c|c|c}
-%         Motor ID          & Company              & Size      & \unit[Weight]{[g]} & \unit[Max Power]{[W]} & \unit[price]{[USD]} \\
-%         \hline
-%         $\textsf{Model1}$ & Company $\textsf{B}$ & 2 x 3 x 4 & 10                 &                       & 259 \\
-%         $\textsf{Model2}$ & Company $\textsf{A}$ & 2 x 3 x 4 & 20                 &                       & 109 \\
-%         $\textsf{Model3}$ & Company $\textsf{B}$ & 2 x 3 x 4 & 5                  &                       & 124 \\
-%         $\textsf{Model4}$ & Company $\textsf{C}$ & 2 x 3 x 4 & 30                 &                       & 399 \\
-%         $\textsf{Model5}$ & Company $\textsf{A}$ & 2 x 3 x 4 & 45                 &                       & 245 \\
-%         $\textsf{Model6}$ & Company $\textsf{D}$ & 2 x 3 x 4 & 20                 &                       & 89 \\
-%         $\textsf{Model7}$ & Company $\textsf{B}$ & 2 x 3 x 4 & 15                 &                       & 130
-%     \end{tabular}
-%     \caption{A simplified catalogue of motors.
-%     }
-%     \label{tab:electric_motors2}
-% \end{table*}
-% \end{comment}
-
-In this example, we can consider the primary key to be the set
-\begin{equation*}
-    \transmuted{M} \definedas \{ 1204, 1206, 1207, 2267, 2279, 1478, 2299 \},
-\end{equation*}
-of models of motors.
-The other colums are given by the set
-\begin{equation*}
-    \transmuted{C} \definedas \{ \Soyo,\SanyoDenki\}
-\end{equation*}
-of manufacturing companies, the set~$\transmuted{S}$ of possible motor sizes, the set~$\transmuted{W}$ of possible weights, the set~$\transmuted{J}$ of possible maximal powers, and the set~$\transmuted{P}$ of possible prices.
-Each attribute of a motor may be thought of as a function from the set~$\transmuted{M}$ to set of possible values for the given attribute.
-For example, there is a function~$\Company\colon \transmuted{M} \to \transmuted{C}$ which maps each model to the corresponding company that manufactures it.
-So, according to \XXX, we have mappings of the kind~$\Company(1204) = \Soyo$, and~$\Company(2279) =\SanyoDenki$, etc.
-
-Note that in ``real life'', the catalogue of motors might not have seven entries, as in \XXX, but has in fact hundreds of entries, and is implemented digitally as a database (a collection of interrelated tables).
-In this case, we will want to be able to search and filter the data based on various criteria.
-Many natural operations on tables and databases may be described simply in terms of operations with functions.
-We will use this setting as a way to introduce compositional aspects of working with sets and functions, and a preview of how this might be useful for thinking, in particular, about databases.
-Sticking with \cref{tab:electric_motors}, suppose, for instance, that we want to consider only motors from Company~$\SanyoDenki$.
-In terms of the function
-\begin{equation*}
-    \Company\colon \transmuted{M} \to \transmuted{C}
-\end{equation*}
-this corresponds to the preimage~$\Company^{-1}(\{\SanyoDenki \}) = \{2279, 2299\}$, which is a subset of the set~$\transmuted{M}$.
-Or, we may want to consider only motors which cost between 40 and 200 \USD.
-In terms of the obvious function
-\begin{equation*}
-    \Price\colon \transmuted{M} \to \transmuted{P},
-\end{equation*}
-this means we wish to restrict ourselves to the preimage
-\begin{equation*}
-    \Price^{-1}(\{ 49.95, 59.95, 164.95\}) = \{ 1478, 2299, 2279 \} \subseteq \transmuted{M}.
-\end{equation*}
-%
-
-Now suppose we wish to add a column to our table for ``volume'', because we may want to only consider motors that have, at most, a certain volume.
-For this we define a set~$\transmuted{V}$ of possible volumes (let's take~$\transmuted{V} = \nonNegReals$, the non-negative real numbers), and define a function
-\begin{equation*}
-    \begin{aligned}
-        \Multiply \colon \transmuted{S} & \to \transmuted{V} \\
-        \tup{l, w, h}                   & \mapsto l \cdot w \cdot h,
-    \end{aligned}
-\end{equation*}
-%
-which maps any size of motor to its corresponding volume by multiplying together the given numbers for length, width, and heigth.
-Now we can compose this function with the function
-%
-\begin{equation*}
-    \Size \colon \transmuted{M} \to \transmuted{S}
-\end{equation*}
-%
-to obtain a function
-%
-\begin{equation*}
-    \Volume\colon \transmuted{M} \to \transmuted{V},
-\end{equation*}
-%
-which defines a new column in our table.
-
-\begin{marginfigure}
+\begin{table*}[h]
     \centering
-    \includesag{40_dpcatfig_data_comm_diag}
-    \caption{A diagram of functions. }
-    \label{fig:diagram_functions}
-\end{marginfigure}
+    \begin{tabular}{c|c|c|c|c|c}
+        Motor ID      & Company              & $\unit[\text{Size}]{[mm^3]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
+                      & \unit[Cost]{[USD]} \\
+        \hline
+        \textsf{1204} & \textsf{SOYO}        & 20 x 20 x 30                 & 60.0               & 2.34                  & 19.95 \\
+        \textsf{1206} & \textsf{SOYO}        & 28 x 28 x 45                 & 140.0              & 3.00                  & 19.95 \\
+        \textsf{1207} & \textsf{SOYO}        & 35 x 35 x 26                 & 130.0              & 2.07                  & 12.95 \\
+        \textsf{2267} & \textsf{SOYO}        & 42 x 42 x 38                 & 285.0              & 4.76                  & 16.95 \\
+        \textsf{2279} & \textsf{Sanyo Denki} & 42 x 42 x 31.5               & 165.0              & 5.40                  & 164.95 \\
+        \textsf{1478} & \textsf{SOYO}        & 56.4 x 56.4 x 76             & 1,000              & 8.96                  & 49.95 \\
+        \textsf{2299} & \textsf{Sanyo Denki} & 50 x 50 x 16                 & 150.0              & 5.90                  & 59.95
+    \end{tabular}
 
-The composition of functions is usually written as~$\Volume = \Multiply  \after \Size $, however we stick to our convention of writing~$\Volume = \Size  \then \Multiply $.
-Schematically, we can represent what we did as a diagram (\cref{fig:diagram_functions}).
+    \caption{
+        \label{tab:electric_motors_old_one}
+        A simplified catalogue of motors.
+    }
+\end{table*}
 
-%We call such a diagram \textbf{commutative}, because the composition $\mathsf{Size} \then \mathsf{Multiply}$ is equal to the function $\mathsf{Volume}$ (in fact, we defined $\textsf{Volume}$ this way).
+% \subsubsection{Can we use $\Rel$ for relational databases?}
 
-We can interpret arrows in this diagram as being part of a category, where~$\transmuted{M}$,~$\transmuted{S}$, and~$\transmuted{V}$ are among the objects, and where the functions~$\Size$, $\Multiply$ and~$\Volume$ are morphisms.
-We probably want to consider the other sets associated with our database as also part of this category, and the other functions which we defined so far, too.
-One idea might be to just include all the sets and functions that we've defined so far, as well as all possible compositions of those functions, and obtain a category, which we call \Database, in a way that is similar to how one can build a category from a graph (\cref{sec:catsfromgraphs}).
-This would be an option.
-However, we may want soon to add new sets and functions to our database framework, or think about new kinds of functions between them that we had not considered before.
-And we might not want to re-think each time precisely which category we are working with.
+Such database table can be seen as representing an $n$-ary relation with $n = 7$, as we are expressing a relation over the sets
+\begin{equation*}
+    \stylesets{M}\cartprod \stylesets{C}\cartprod \stylesets{S}\cartprod \stylesets{W}\cartprod \stylesets{J}\cartprod \stylesets{P},
+\end{equation*}
+
+where~$\stylesets{M}$ represents the set of motor IDs,~$\stylesets{C}$ the set of companies producing motors,~$\stylesets{S}$ the set of motor sizes,~$\stylesets{W}$ the set of motor weights,~$\stylesets{J}$ the set of possible maximal powers, and~$\stylesets{P}$ the set of possible prices.
+An $n$-ary relation is a relation over $n$ sets, just like a binary relation is a relation over $2$ sets.
+
+\begin{definition}[$n$-ary relation]
+    \label{def:n-ary-relation}
+    An $n$-ary relation on $n$ sets $\tup{\setA_1, \setA_2, \dots, \setA_n}$ is a subset of the product set
+    \begin{equation}
+        \setA_1 \cartprod \setA_2 \cartprod \cdots \cartprod \setA_n.
+    \end{equation}
+\end{definition}
+
+\Rel only allows binary relations.
+Morphisms in \Rel have 1 source and 1 target.
+There is no immediate and natural way to represent $n$-ary relations using \Rel,
+or we don't know it yet.
+
+% To represent relational databases categorically, there are at least 3 options.
+%
+% \paragraph{Option 1: Hack it}
+% We will introduce the notion of \emph{products} and \emph{isomorphisms}.
+% This will allow us to say that because
+% \begin{equation*}
+%     X_1 \cartprod X_2 \cartprod X_3 \cartprod \cdots \cartprod X_n,
+% \end{equation*}
+% is isomorphic to
+% \begin{equation*}
+%     X_1 \cartprod ( X_2 \cartprod X_3 \cdots \cartprod X_n)
+% \end{equation*}
+% we can talk about $n$-ary relations in terms of binary relations.
+% This is not really a natural way to do it.
+%
+% \paragraph{Option 2: Mutant Morphisms}
+% What if morphisms could have more than ``two legs''?
+% There are indeed theories that work with more complicated arrows.
+% For example: \href{https://ncatlab.org/nlab/show/multicategory}{multicategories}, \href{https://ncatlab.org/nlab/show/polycategory}{polycategories}, \href{https://ncatlab.org/nlab/show/operad}{operads}.
+%
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=7cm]{mutants}
+%     \caption{Can you imagine how to define composition with mutant morphisms with more than two legs?}
+% \end{figure}
+%
+% \paragraph{Option 3: Categorical databases}
+%
+% A different perspective is that of \emph{categorical databases}~\cite{spivak2019categorical}.
+% In this modeling framework one does not model the data tables as relations directly.
+% Rather the data is described as a functor from a category representing the schema to \Set.}

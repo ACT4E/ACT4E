@@ -58,7 +58,7 @@ Yet, with few assumptions, it is possible to obtain a systematic solution proced
 
 This paper describes how to add a notion of \emph{uncertainty} in the MCDP framework.
 The model of uncertainty considered is interval uncertainty on arbitrary partial orders.
-For a poset~$\left\langle \posA,\posleq\right\rangle $, these are sets of the type~$\{x\in\posA\colon a\posleq x\posleq b\}$.
+For a poset~$\left\langle \posA,\posleq\right\rangle $, these are sets of the type~$\{x\setin\posA\colon a\posleq x\posleq b\}$.
 I will show how one can introduce this type of uncertainty in the MCDP framework by considering ordered pairs of design problems.
 Each pair describes lower and upper bounds for resources usage.
 These \emph{uncertain design problems} (UDPs) can be composed using series, parallel, and feedback interconnection, just like their non-uncertain counterparts.
@@ -101,7 +101,7 @@ uses nodes for DPs and green (red) edges for \F{functionality} and
 \end{example}
 \captionsideleft{\label{fig:battery1}}{\includegraphics[scale=0.33]{unc_battery_masscost}}
 
-\noindent In general, fixed a functionality~$\fun\in\funsp$, there
+\noindent In general, fixed a functionality~$\fun\setin\funsp$, there
 will be multiple resources in~$\ressp$ sufficient to perform the
 functionality that are uncomparable with respect to~$\posleqof{\ressp}$.
 For example, in the case of a battery one might consider different
@@ -118,7 +118,7 @@ informally called a ``Pareto front''.
 %\begin{definition}\label{def:antichain-paper2}
 %  An \emph{antichain}~$S$ in a poset~$\left\langle \posA,\posleq\right\rangle $
 %  is a subset of~$\posA$ such that no element of~$S$ dominates another
-%  element: if~$x,y\in S$ and~$x\posleq y$, then~$x=y$.
+%  element: if~$x,y\setin S$ and~$x\posleq y$, then~$x=y$.
 %\end{definition}
 %\begin{lemma}\label{lem:orderantichains}
 %  Let~$\antichains\posA$ be the set of antichains of~$\posA$. $\antichains\posA$
@@ -138,7 +138,7 @@ informally called a ``Pareto front''.
 \captionsideleft{}{\includegraphics[scale=0.33]{unc_ftor}}
 
 \noindent Each functionality~\fun corresponds to an antichain
-of resources~$\ftor(\fun)\in\Aressp$~(\cref{fig:ftorgraph}).
+of resources~$\ftor(\fun)\setin\Aressp$~(\cref{fig:ftorgraph}).
 
 \captionsideleft{\label{fig:ftorgraph}}{\includegraphics[scale=0.33]{unc_ftorgraph}}
 
@@ -222,7 +222,7 @@ $
         \item The term~$\atree$ in the $\{\dpseries,\dppar,\dploop\}$ algebra
               describes the structure of the graph:
               \[
-                  \atree\in\terms(\{\dpseries,\dppar,\dploop\},\atoms).
+                  \atree\setin\terms(\{\dpseries,\dppar,\dploop\},\atoms).
               \]
         \item The \emph{valuation} $\val$ is a map $\val:\atoms\rightarrow\dpsp$
               that assigns a DP to each atom.
@@ -262,12 +262,12 @@ $\dpseries,\dppar,\dploop$ (\crefrange{eq:series}{eq:loop}).
     Given an MCDP in algebraic form~$\left\langle \atoms,\atree,\val\right\rangle $,
     the semantics
     \[
-        \dpsem\llbracket\left\langle \atoms,\atree,\val\right\rangle \rrbracket\in\dpsp
+        \dpsem\llbracket\left\langle \atoms,\atree,\val\right\rangle \rrbracket\setin\dpsp
     \]
     is defined as follows:
     %
     \begin{align}
-        \dpsem\llbracket\left\langle \atoms,a,\val\right\rangle \rrbracket                                & \definedas\val(a),\qquad\text{for all}\ a\in\atoms,\label{eq:base} \\
+        \dpsem\llbracket\left\langle \atoms,a,\val\right\rangle \rrbracket                                & \definedas\val(a),\qquad\text{for all}\ a\setin\atoms,\label{eq:base} \\
         \dpsem\llbracket\left\langle \atoms,\dpseries(\atree_{1},\atree_{2}),\val\right\rangle \rrbracket & \definedas\dpsem\llbracket\left\langle \atoms,\atree_{1},\val\right\rangle \rrbracket\,\opseries\,\dpsem\llbracket\left\langle \atoms,\atree_{2},\val\right\rangle \rrbracket,\label{eq:series} \\
         \dpsem\llbracket\left\langle \atoms,\dppar(\atree_{1},\atree_{2}),\val\right\rangle \rrbracket    & \definedas\dpsem\llbracket\left\langle \atoms,\atree_{1},\val\right\rangle \rrbracket\,\oppar\,\dpsem\llbracket\left\langle \atoms,\atree_{2},\val\right\rangle \rrbracket,\label{eq:par} \\
         \dpsem\llbracket\left\langle \atoms,\dploop(\atree),\val\right\rangle \rrbracket                  & \definedas\dpsem\llbracket\left\langle \atoms,\atree,\val\right\rangle \rrbracket^{\oploop}.
@@ -293,7 +293,7 @@ and~$\ftor_{2}$.
     where $\acprod$ is the product of two antichains.
 \end{definition}
 The $\opseries$ operator is similar to a convolution: fixed $\fun_{1}$,
-one evaluates the resources $\res_{1}\in\ftor_{1}(\fun)$, and for
+one evaluates the resources $\res_{1}\setin\ftor_{1}(\fun)$, and for
 each~$\res_{1}$, $\ftor_{2}(\res_{1})$ is evaluated.
 The $\Min$
 operator then chooses the minimal elements.
@@ -306,7 +306,7 @@ operator then chooses the minimal elements.
     \begin{align*}
         {\displaystyle \ftor_{1}\opseries\ftor_{2}\colon\funsp_{1}}
                   & \rightarrow\Aressp_{2}, \\
-        \ftor_{1} & \mapsto\Min_{\posleqof{\ressp_{2}}}\bigcup_{\res_{1}\in\ftor_{1}(\fun)}\ftor_{2}(\res_{1}).
+        \ftor_{1} & \mapsto\Min_{\posleqof{\ressp_{2}}}\bigsetunion_{\res_{1}\setin\ftor_{1}(\fun)}\ftor_{2}(\res_{1}).
     \end{align*}
 
 \end{definition}
@@ -326,14 +326,14 @@ in domain theory (see, \eg ,~\cite[II-2.29]{gierz03continuous}).
     is defined as
     \begin{align*}
         \Psi_{\fun_{1}}^{\ftor}:\Aressp & \rightarrow\Aressp, \\
-        {\colR R}                       & \mapsto\Min_{\posleqof{\ressp}}\bigcup_{\res\in{\colR R}}\ftor(\fun_{1},\res)\ \setintersection\uparrow\res.
+        {\colR R}                       & \mapsto\Min_{\posleqof{\ressp}}\bigsetunion_{\res\in{\colR R}}\ftor(\fun_{1},\res)\ \setintersection\uparrow\res.
     \end{align*}
 \end{definition}
 
 \section{Solution of MCDPs}
 
 \Cref{def:dpsem} gives a way to evaluate the map~$\ftor$ for
-the graph, given the maps~$\{\ftor{}_{a}\mid a\in\atoms\}$ for the
+the graph, given the maps~$\{\ftor{}_{a}\mid a\setin\atoms\}$ for the
 leaves.
 Following those instructions, we can compute~$\ftor(\fun)$,
 and thus find the minimal resources needed for the entire MCDP.
@@ -351,7 +351,7 @@ and thus find the minimal resources needed for the entire MCDP.
     with
     \begin{align*}
         \Psi_{\fun}:\Aressp & \rightarrow\Aressp, \\
-        {\colR R}           & \mapsto\bigcup_{\res\in{\colR R}}\Big[\Min_{\posleq}\uparrow\bigcup_{s\in\ftor_{a}(\fun_{1},\res)}\ftor_{b}(s)\acprod\ftor_{c}(s)\Big]\ \setintersection\uparrow\res.
+        {\colR R}           & \mapsto\bigsetunion_{\res\in{\colR R}}\Big[\Min_{\posleq}\uparrow\bigsetunion_{s\setin\ftor_{a}(\fun_{1},\res)}\ftor_{b}(s)\acprod\ftor_{c}(s)\Big]\ \setintersection\uparrow\res.
     \end{align*}
     The least fixed point equation can be solved using Kleene's algorithm~\cite[CPO Fixpoint theorem I, 8.15]{davey02}.
     A dynamical system that computes the set of solutions is given by
@@ -411,7 +411,7 @@ The first step is defining a partial order~$\dpleq$ on~$\dpsp$.
     The DP~$\ftor_{1}$ precedes~$\ftor_{2}$ if it requires fewer resources
     for all functionality~\fun:
     \[
-        \ftor_{1}\dpleq\ftor_{2}\quad\equiv\quad\ftor_{1}(\fun)\posleqof{\Aressp}\ftor_{2}(\fun),\ \text{for all }\fun\in\funsp.
+        \ftor_{1}\dpleq\ftor_{2}\quad\equiv\quad\ftor_{1}(\fun)\posleqof{\Aressp}\ftor_{2}(\fun),\ \text{for all }\fun\setin\funsp.
     \]
 \end{definition}
 \captionsideleft{}{\includegraphics[scale=0.33]{unc_dporder}\includegraphics[scale=0.33]{unc_dpleq2}}
@@ -495,7 +495,7 @@ each atom an UDP, rather than a~DP.
 \begin{definition}[Algebraic definition of UMCDPs]
     \label{def:umcdp}
     An Uncertain MCDP (UMCDP) is a tuple~$\left\langle \atoms,\atree,\val\right\rangle $,
-    where~$\atoms$ is a set of atoms,~$\atree\in\terms(\{\dpseries,\dppar,\dploop\},\atoms)$
+    where~$\atoms$ is a set of atoms,~$\atree\setin\terms(\{\dpseries,\dppar,\dploop\},\atoms)$
     is the algebraic representation of the graph, and~$\val:\atoms\rightarrow\udpsp$
     is a valuation that assigns to each atom a UDP.
 \end{definition}
@@ -509,11 +509,11 @@ to~\cref{def:dpsem}.
     Given an UMCDP~$\left\langle \atoms,\atree,\val\right\rangle $,
     the semantics function~$\udpsem$ computes a UDP
     \[
-        \udpsem\llbracket\left\langle \atoms,\atree,\val\right\rangle \rrbracket\in\udpsp,
+        \udpsem\llbracket\left\langle \atoms,\atree,\val\right\rangle \rrbracket\setin\udpsp,
     \]
     and it is recursively defined as follows:
     \[
-        \udpsem\llbracket\left\langle \atoms,a,\val\right\rangle \rrbracket=\val(a),\qquad\text{for all}\ a\in\atoms.
+        \udpsem\llbracket\left\langle \atoms,a,\val\right\rangle \rrbracket=\val(a),\qquad\text{for all}\ a\setin\atoms.
     \]
     \begin{align*}
         \udpL\udpsem\llbracket\left\langle \atoms,\dpseries(\atree_{1},\atree_{2}),\val\right\rangle \rrbracket & =(\udpL\udpsem\llbracket\left\langle \atoms,\atree_{1},\val\right\rangle \rrbracket)\,\opseries\,(\udpL\udpsem\llbracket\left\langle \atoms,\atree_{2},\val\right\rangle \rrbracket), \\
@@ -583,7 +583,7 @@ another if it gives more information on each DP.
     [Partial order $\posleqof{V}$ on valuations]
     For two valuations~$\val_{1},\val_{2}:\atoms\rightarrow\udpsp$,
     say that~$\val_{1}\posleqof{V}\val_{2}$ if~$\val_{1}(a)\udpleq\val_{2}(a)$
-    for all~$a\in\atoms$.
+    for all~$a\setin\atoms$.
 \end{definition}
 At this point, we have enough machinery in place that we can simply
 state the result as ``the semantics is monotone in the valuation''.
@@ -721,7 +721,7 @@ we first introduce an identity~$\mathsf{Id}$ and then relax it using~$\UId_{\alp
 Mathematically, given an MCDP~$\left\langle \atoms,\atree,\val\right\rangle $,
 we generate a UMCDP~$\left\langle \atoms,\atree,\val_{\alpha}\right\rangle $,
 where the new valuation~$\val_{\alpha}$ agrees with~$\val$ except
-on a particular atom~$a\in\atoms$, which is replaced by the series
+on a particular atom~$a\setin\atoms$, which is replaced by the series
 of the original~$\val(a)$ and the approximation~$\text{UId}_{\alpha}$:
 \begin{align*}
     \val_{\alpha}(a) & \definedas\dpseries(\UId_{\alpha},\val(a))
@@ -805,8 +805,8 @@ uncertain DPs that use finite and prescribed computation.
 
 \subsubsection{Relaxations for addition}
 
-Consider a monotone relation between some functionality~$\fun_{1}\in\nonNegReals$
-and resources~$\res_{1},\res_{2}\in\nonNegReals$ described by
+Consider a monotone relation between some functionality~$\fun_{1}\setin\nonNegReals$
+and resources~$\res_{1},\res_{2}\setin\nonNegReals$ described by
 the constraint that~$\fun_{1}\leq\res_{1}+\res_{2}$ (\cref{fig:example-invplus}).
 For example, this could represent the case where there are two batteries
 providing the power~$\fun_{1}$, and we need to decide how much to
@@ -817,7 +817,7 @@ allocate to the first~($\res_{1}$) or the second~($\res_{2}$).
 The formal definition of this constraint as an DP is
 \begin{align*}
     \overline{+}:{\colF\nonNegReals} & \rightarrow{\colR\antichains(\nonNegReals\times\nonNegReals)}, \\
-    \fun_{1}                         & \mapsto\{\left\langle x,\fun_{1}-x\right\rangle \mid x\in\nonNegReals\}.
+    \fun_{1}                         & \mapsto\{\left\langle x,\fun_{1}-x\right\rangle \mid x\setin\nonNegReals\}.
 \end{align*}
 Note that, for each value~$\fun_{1}$, $\overline{+}(\fun_{1})$
 is a set of infinite cardinality.
@@ -874,7 +874,7 @@ The upper bound~$\udpU V_{n}$
 is defined as sampling the segment with extrema~$\left\langle 0,\fun_{1}\right\rangle $
 and~$\left\langle \fun_{1},0\right\rangle $ using the VDC sequence:
 \[
-    \udpU V_{n}\colon\fun_{1}\mapsto\{\left\langle \fun_{1}x,\fun_{1}(1-x)\right\rangle \mid x\in\vdc(n)\}.
+    \udpU V_{n}\colon\fun_{1}\mapsto\{\left\langle \fun_{1}x,\fun_{1}(1-x)\right\rangle \mid x\setin\vdc(n)\}.
 \]
 The lower bound~$\udpL V_{n}$ is defined by taking meets of successive
 points, according to the procedure in~\cref{fig:make_lower}.
@@ -1014,7 +1014,7 @@ The following lemma provides the proof for that.
 \end{lemma}
 \begin{proof}
     Proving \cref{eq:wf1}\textemdash \cref{eq:wf3} can be
-    reduced to proving the following three results, for any $x,y\in\udpsp$:
+    reduced to proving the following three results, for any $x,y\setin\udpsp$:
     \begin{align*}
         \left(\udpL x\opseries\udpL y\right) & \dpleq\left(\udpU x\opseries\udpU y\right), \\
         \left(\udpL x\oppar\udpL y\right)    & \dpleq\left(\udpU x\oppar\udpU y\right), \\
@@ -1064,7 +1064,7 @@ These lemmas are used in the proofs above.
     In~\cref{def:opseries}, $\opseries$ is defined as follows
     for two maps~$\ftor_{1}\colon\funsp_{1}\toinPos\Aressp_{1}$ and~$\ftor_{2}\colon\funsp_{2}\toinPos\Aressp_{2}$:
     \[
-        {\displaystyle \ftor_{1}\opseries\ftor_{2}=\Min_{\posleqof{\ressp_{2}}}\uparrow\bigcup_{s\in\ftor_{1}(\fun)}\ftor_{2}(s)}.
+        {\displaystyle \ftor_{1}\opseries\ftor_{2}=\Min_{\posleqof{\ressp_{2}}}\uparrow\bigsetunion_{s\setin\ftor_{1}(\fun)}\ftor_{2}(s)}.
     \]
     It is useful to decompose this expression as the composition of three
     maps:
@@ -1075,7 +1075,7 @@ These lemmas are used in the proofs above.
     are defined as follows:
     \begin{align*}
         g[\ftor_{2}]:\Aressp_{1} & \rightarrow\Uressp_{2}, \\
-        R                        & \mapsto\uparrow\bigcup_{s\in R}\ftor_{2}(s),
+        R                        & \mapsto\uparrow\bigsetunion_{s\setin R}\ftor_{2}(s),
     \end{align*}
     and
     \begin{align*}
@@ -1153,7 +1153,7 @@ These lemmas are used in the proofs above.
     with~$\Psi_{\fun_{1}}^{\ftor}$ defined as
     \begin{align*}
         \Psi_{\fun_{1}}^{\ftor}:\Aressp & \rightarrow\Aressp, \\
-        {\colR R}                       & \mapsto\Min_{\posleqof{\ressp}}\bigcup_{\res\in{\colR R}}\ftor(\fun_{1},\res)\ \setintersection\uparrow\res.
+        {\colR R}                       & \mapsto\Min_{\posleqof{\ressp}}\bigsetunion_{\res\in{\colR R}}\ftor(\fun_{1},\res)\ \setintersection\uparrow\res.
     \end{align*}
     The least fixed point operator $\lfp$ is monotone, so we are left
     to check that the map
@@ -1164,7 +1164,7 @@ These lemmas are used in the proofs above.
     That is the case, because if $\ftor_{1}\dpleq\ftor_{2}$
     then
     \[
-        \left[\bigcup_{\res\in{\colR R}}\ftor_{1}(\fun_{1},\res)\ \setintersection\uparrow\res\right]\posleqof{\Aressp}\left[\bigcup_{\res\in{\colR R}}\ftor_{2}(\fun_{1},\res)\ \setintersection\uparrow\res\right].
+        \left[\bigsetunion_{\res\in{\colR R}}\ftor_{1}(\fun_{1},\res)\ \setintersection\uparrow\res\right]\posleqof{\Aressp}\left[\bigsetunion_{\res\in{\colR R}}\ftor_{2}(\fun_{1},\res)\ \setintersection\uparrow\res\right].
     \]
 \end{proof}
 
@@ -1182,7 +1182,7 @@ These lemmas are used in the proofs above.
 
     The base case, given in \cref{eq:base}, is
     \[
-        \dpsem\llbracket\left\langle \atoms,a,\val\right\rangle \rrbracket\definedas\val(a),\qquad\text{for all}\ a\in\atoms.
+        \dpsem\llbracket\left\langle \atoms,a,\val\right\rangle \rrbracket\definedas\val(a),\qquad\text{for all}\ a\setin\atoms.
     \]
     We have
     \begin{align*}
@@ -1330,7 +1330,7 @@ We restate the theorem.
         \end{equation*}
         \begin{equation*}
             \label{eq:upos_dp_def_4}
-            \prfdouble{d_1\posleqof\DP d_2}{h_{d_1}(\fun)\subseteq h_{d_2}(\fun), \quad \forall \fun \in \funsp}
+            \prfdouble{d_1\posleqof\DP d_2}{h_{d_1}(\fun)\subseteq h_{d_2}(\fun), \quad \forall \fun \setin \funsp}
         \end{equation*}
         \begin{equation*}
             \label{eq:order_udp_5}

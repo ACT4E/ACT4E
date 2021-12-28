@@ -10,8 +10,6 @@ We start with a set~$\setC$ of labels for all the currencies we wish to consider
 \begin{equation*}
     \setC = \{ \EUR, \USD, \CHF, \SGD, \dots \}.
 \end{equation*}
-For each currency~$\transmuted{c} \in \setC$ we define an object~$x\in \reals$ which represents possible amounts of the given currency~$\transmuted{c}$ (we will ignore the issue of rounding currencies to an accuracy of two decimals places, and we allow negative amounts).
-%The currency label keeps track of which ``units'' we are using.
 
 \showslides{
     \begin{forslides}
@@ -30,17 +28,12 @@ For each currency~$\transmuted{c} \in \setC$ we define an object~$x\in \reals$ w
 Now consider two currencies, say~$\USD$ and~$\EUR$.
 How can we describe the process of changing an amount of \USD to an amount of \EUR?
 We model this using two numbers: an exchange rate~$a$ and a commission~$d$ for the transaction.
-Given an amount~$x \in \reals$ of \USD, we define a morphism (a currency exchanger) as:
-%\begin{equation*}
-%    \label{eq:def_curr_ex}
-%    \begin{aligned}
-%        E_{a,b} \colon \reals \times \{\USD\} &\rightarrow \reals \times \{\EUR\}\\
-%        \tup{x, \USD} &\longmapsto \tup{ax - b, \EUR}.
-%    \end{aligned}
-%\end{equation*}
+A morphism from one currency to another is given by this pair of numbers~$\tup{a,b}$.
+Now, for each morphism, there is a function which takes an amount of the source currency and transforms it into an amount of the target currency.
+Given an amount~$x \setin \reals$ of \USD, this function is:
 \begin{equation*}
     \label{eq:def_curr_ex}
-    \defmapperiodset{\tup{a,d}}{\reals}{\reals}{x}{ax-d}
+    \defmapperiodset{\mapa_{\tup{a,d}}}{\reals}{\reals}{x}{ax-d}
 \end{equation*}
 Note that that the commission~$d$ is to be indended in the target currency.
 Of course, for changing \USD to \EUR, there may be various different banks or agencies which each offer different exchange rates and/or different commissions.
@@ -48,10 +41,10 @@ Each of these corresponds to a different morphism from~$\USD$ to~$\EUR$.
 
 To build our category, we also need to specify how currency exchangers compose.
 Given currencies~$\Obja, \Objb, \Objc$, and given currency exchangers~$\tup{a,d}$ from~$\Obja$ to~$\Objb$ and~$\tup{b,e}$ from~$\Objb$ to~$\Objc$,
-we define the composition~$\tup{a,d} \mthen \tup{b,e}$ to be the currency exchanger from~$\Obja$ to~$\Objc$
+we define the composition~$\tup{a,d} \mthen \tup{b,e}$ to be the currency exchanger from~$\Obja$ to~$\Objc$ given by the pair of numbers
 \begin{equation}
     \label{eq:comp-law-curr}
-    \tup{ab,bd+e} \colon \reals \to \reals.
+    \tup{ab,bd+e}
 \end{equation}
 In other words, we compose currency exchangers as one would expect: we multiply the first and the second exchange rates together, and we add the commissions (paying attention to first transform the first commission into the units of the final target currency).
 
@@ -59,14 +52,13 @@ Finally, we also need to specify unit morphisms for our category.
 These are currency exchangers which ``do nothing''.
 For any object~$\Obja$, its identity morphism is
 \begin{equation*}
-    %E_{1,0}^{\Obja,\Obja} \colon \reals \to \reals,
-    \tup{1,0} \colon \reals \to \reals,
+    \tup{1,0}
 \end{equation*}
 the currency exchanger from~$\Obja$ to~$\Obja$ with exchange rate ``1'' and commission ``0''.
 
 We now want to check that the composition of currency exchangers as defined above obeys unitality and associativity.
 
-Given~$\tup{a,d}$ we have:
+Given~$\tup{1,0}$ from~$\Obja$ to~$\Obja$,~$\tup{1,0}$ from~$\Objb$ to~$\Objb$, and~$\tup{a,d}$ from~$\Obja$ to~$\Objb$ we have:
 \begin{equation*}
     \begin{aligned}
         \tup{1,0}\mthen\tup{a,d} & =\tup{1\cdot a, a\cdot 0+d} \\
@@ -81,7 +73,7 @@ and
     \end{aligned}
 \end{equation*}
 This is unitality.
-Furthermore, given~$\tup{b,e}\colon \reals \mto \reals$, and~$\tup{c,f}\colon \reals \mto \reals$ we have:
+Furthermore, given~$\tup{b,e}$ from~$\Objb$ to~$\Objc$, and~$\tup{c,f}$ from~$\Objc$ to~$\Objd$ we have:
 \begin{equation*}
     \begin{aligned}
         \left( \tup{a,d}\mthen \tup{b,e}\right)\mthen \tup{c,f} & =\tup{ab,bd+e}\mthen \tup{c,f} \\
@@ -91,20 +83,7 @@ Furthermore, given~$\tup{b,e}\colon \reals \mto \reals$, and~$\tup{c,f}\colon \r
     \end{aligned}
 \end{equation*}
 This is associativity.
-Thus we indeed have a category!
-
-%\begin{remark}
-%    In the above specification of our category of currency exchangers, we can actually just work with the set of currency labels~$\setC$ as our objects, instead of using ``amounts'' of the form~$\reals \times \{\transmuted{c}\}$ as our objects.
-%    Indeed, on a mathematical level, the definition of currency exchangers and their composition law \cref{eq:comp-law-curr} do not depend on using amounts!
-%    Namely, a currency exchanger~$E_{a,b}$ is specified by the pair of numbers~$\tup{a, b}$, and the composition law \cref{eq:comp-law-curr} may then, in this notation, be written as
-%    \begin{equation}
-%        \begin{aligned}
-%            \label{eq:currencycomp}
-%            \tup{a,b}\mthen \tupp{a',b'}&=\tupp{a' a, a' b + b'}.
-%        \end{aligned}
-%    \end{equation}
-%    The interpretation is still that currency exchangers change amounts of one currency to amounts in an another currency, but for this we do not need to carry around copies of~$\reals$ in our notation.
-%\end{remark}
+Thus we indeed have a category.
 
 We can formally define the category of currencies \Curr.
 
@@ -128,13 +107,13 @@ As an illustration, consider three currency exchange companies ExchATM, MoneyLah
         \textbf{Company name} & \textbf{Exchanger label}      & \textbf{Direction} & \textbf{Exchange rate} $a$
                               & \textbf{Fixed commission} $b$ \\
         \hline
-        ExchATM               & $\transmuter{A}$              & \USD to \CHF       & \unitfrac[0.95]{\chf}{\usd} & \unit[2.0]{\chf} \\
-        ExchATM               & $\transmuter{B}$              & \CHF to \USD       & \unitfrac[1.05]{\usd}{\chf} & \unit[1.5]{\usd} \\
-        ExchATM               & $\transmuter{C}$              & \USD to \SGD       & \unitfrac[1.40]{\sgd}{\usd} & \unit[1.0]{\sgd} \\
-        MoneyLah              & $\transmuter{D}$              & \USD to \CHF       & \unitfrac[1.00]{\chf}{\usd} & \unit[1.0]{\chf} \\
-        MoneyLah              & $\transmuter{E}$              & \SGD to \USD       & \unitfrac[0.72]{\usd}{\sgd} & \unit[3.0]{\usd} \\
-        Frankurrencies        & $\transmuter{F}$              & \EUR to \CHF       & \unitfrac[1.20]{\chf}{\eur} & \unit[0.0]{\chf} \\
-        Frankurrencies        & $\transmuter{G}$              & \CHF to \EUR       & \unitfrac[1.00]{\eur}{\chf} & \unit[1.0]{\eur}
+        ExchATM               & $\transmuter{A}$              & \USD $\mto$ \CHF   & 0.95 (in \unitfrac[]{\chf}{\usd}) & 2.0 (in \unit[]{\chf}) \\
+        ExchATM               & $\transmuter{B}$              & \CHF $\mto$ \USD   & 1.05 (in \unitfrac[]{\usd}{\chf}) & 1.5 (in \unit[]{\usd}) \\
+        ExchATM               & $\transmuter{C}$              & \USD $\mto$ \SGD   & 1.40 (in \unitfrac[]{\sgd}{\usd}) & 1.0 (in \unit[]{\sgd}) \\
+        MoneyLah              & $\transmuter{D}$              & \USD $\mto$ \CHF   & 1.00 (in \unitfrac[]{\chf}{\usd}) & 1.0 (in \unit[]{\chf}) \\
+        MoneyLah              & $\transmuter{E}$              & \SGD $\mto$ \USD   & 0.72 (in \unitfrac[]{\usd}{\sgd}) & 3.0 (in \unit[]{\usd}) \\
+        Frankurrencies        & $\transmuter{F}$              & \EUR $\mto$ \CHF   & 1.20 (in \unitfrac[]{\chf}{\eur}) & 0.0 (in \unit[]{\chf}) \\
+        Frankurrencies        & $\transmuter{G}$              & \CHF $\mto$ \EUR   & 1.00 (in \unitfrac[]{\eur}{\chf}) & 1.0 (in \unit[]{\eur})
     \end{tabular}
     \caption{Three currency exchange companies operating different currencies.
     }
@@ -151,7 +130,7 @@ We can represent this information as a graph, where the nodes are the currencies
 \end{figure}
 
 There is a currency category built from the information in \cref{tab:currencycompanies} and the graph in \cref{fig:currencygraph}.
-Its collection of objects is the set $\{  \EUR, \USD, \CHF, \SGD \}$, and it morphisms are, in total:
+Its collection of objects is the set~$\makeset{\EUR, \USD, \CHF, \SGD}$, and it morphisms are, in total:
 \begin{itemize}
     \item the trivial currency exchanger (identity morphism)~$\disunionA{0}$ for each of the four currencies (which are the objects),
     \item the currency exchangers corresponding to each item in \cref{tab:currencycompanies},
@@ -172,17 +151,18 @@ It corresponds to a general recipe for starting with a graph~$G$, such as in \cr
 \end{exercise}
 \begin{solution}
     The concept of this exercise is very similar to the one of \Curr.
-    In general, we can write a temperature converter from \transmuted{c} to \transmuted{d} as
+    In general, we can write a temperature converter (morphism) from \transmuted{e} to \transmuted{f} as a pair of numbers~$\tup{a,d}$,~$a,d\setin \reals$.
+    For each morphism we have a map which actually transform an amount of the first temperature into an amount of the second temperature.
     \begin{equation*}
         \begin{aligned}
-            \tup{a,d}\colon \reals & \to \reals \\
-            x                      & \mapsto ax+d.
+            \mapa_{\tup{a,d}}\colon \reals & \to \reals \\
+            x                              & \mapsto ax+d.
         \end{aligned}
     \end{equation*}
     Now, all the possible conversions between the three temperature conventions feature specific values for~$a,d$, listed in \cref{tab:temperature_conversions} (rows are to be intended as the source, and columns as the target convention).
 
     \begin{table*}[tbh]
-        \begin{tabular}{cccc}
+        \begin{tabular}{llll}
                                     & \transmuted{Celsius}     & \transmuted{Kelvin}      & \transmuted{Fahrenheit} \\
             \transmuted{Celsius}    & $a=1$, $d=0$             & $a=1$, $d=273$           & $a=9/5$, $d=32$ \\
             \transmuted{Kelvin}     & $a=1$, $d=-273$          & $a=1$, $d=0$             & $a=9/5$, $d=-459.4$ \\
@@ -192,8 +172,8 @@ It corresponds to a general recipe for starting with a graph~$G$, such as in \cr
     \end{table*}
     We now define the category \Temp as being constituted of:
     \begin{itemize}
-        \item \emph{Objects:} $\Ob_\Temp=\{\transmuted{Celsius}, \transmuted{Kelvin}, \transmuted{Fahrenheit}\}$;
-        \item \emph{Morphisms:} There is a single morphism from \transmuted{c} to \transmuted{d} for any~$\transmuted{c},\transmuted{d}\in \Ob_\Temp$, given by~$\tup{a,d}$, with~$a,d$ as in \cref{tab:temperature_conversions};
+        \item \emph{Objects:}~$\Ob_\Temp=\{\transmuted{Celsius}, \transmuted{Kelvin}, \transmuted{Fahrenheit}\}$;
+        \item \emph{Morphisms:} There is a single morphism from \transmuted{e} to \transmuted{f} for any~$\transmuted{e},\transmuted{f}\setin \Ob_\Temp$, given by~$\tup{a,d}$, with~$a,d$ as in \cref{tab:temperature_conversions};
         \item \emph{Composition of morphisms}: Analogous to the one in \Curr;
         \item \emph{Identity morphisms}: Analogous to the ones in \Curr.
     \end{itemize}
@@ -228,8 +208,8 @@ It corresponds to a general recipe for starting with a graph~$G$, such as in \cr
 %    The \emph{category of currencies} $\mathbf{Curr}$ is specified by:
 %    \begin{enumerate}
 %        \item \emph{Objects:} $\Ob_\mathbf{Curr}$ is a collection of currencies.
-%        \item \emph{Morphisms:} Given two currencies $\mathsf{C},\mathsf{D}\in \Ob_{\mathbf{Curr}}$, morphisms between them are currency exchangers $\tup{a,b}$ from $\mathsf{C}$ to $\mathsf{D}$.
-%        \item \emph{Identity morphism:} Given an object $C\in \Ob_\mathbf{Curr}$, the identity morphism is given by the currency exchanger $\tup{1,0}$.
+%        \item \emph{Morphisms:} Given two currencies $\mathsf{C},\mathsf{D}\setin \Ob_{\mathbf{Curr}}$, morphisms between them are currency exchangers $\tup{a,b}$ from $\mathsf{C}$ to $\mathsf{D}$.
+%        \item \emph{Identity morphism:} Given an object $C\setin \Ob_\mathbf{Curr}$, the identity morphism is given by the currency exchanger $\tup{1,0}$.
 %        \item \emph{Composition of morphisms:} The composition of morphisms is given by composition of currency exchangers.
 %    \end{enumerate}
 %\end{definition}
