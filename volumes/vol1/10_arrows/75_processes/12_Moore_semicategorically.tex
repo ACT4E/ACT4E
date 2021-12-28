@@ -10,42 +10,70 @@
         \label{fig:comp_moore_2}
     \end{marginfigure}
 
-    We can avoid lengthy book-keeping by using a slightly different construction (\cref{fig:comp_moore_2}) using the \SetL category (\cref{sec:SetL}).
-    %
-    The idea is to just use lists of sets rather than the cartesian product.
-    In other words,~$\prstL_\mora, \prstL_\morb\setin \Ob_{\SetL}$.
-    So the joint state is going to be~
-    \begin{equation}
-        \label{eq:moore-comp-good-joint}
-        \prstL_{\mora} \listconcat   \prstL_{\morb}
-    \end{equation}
-    rather than~$\prst_{\mora} \cartprod \prst_{\morb}$.
+    We will now make a new definition of Moore machines in such a way that these Moore machines form a semicategory.  For this we use the category $\SetL$ and the auxiliary structures discussed in \cref{sec:SetL}. 
 
-    The joint system has as states:
+Concretely, we say now that a Moore machine is a tuple
+        \begin{equation}
+        \label{eq:moore-tuple-improved}
+        \tupp{\prin,\prstL,\prout,\prdyn,\prreadout,\prstart},
+    \end{equation}
+where the state space $\prstL$ is now an object of $\SetL$ (rather than just a set), $\prdyn$ is a function of the type
+\begin{equation}
+\prdyn \colon \prin \cartprod \tupset(\prstL) \mto \tupset(\prstL),
+\end{equation}
+$\prreadout$ is a function
+\begin{equation}
+\prreadout \colon \tupset(\prstL) \mto \prout, 
+\end{equation}
+and $\prstart \setin \tupset(\prstL)$. 
+
+
+\subsection{Composing Moore machines}
+ 
+How do our new Moore machines compose? 
+
+Suppose we are given Moore machines 
+\begin{equation}
+        \label{eq:moore-mora}
+        \mora = \tupp{\prin_{\mora},\prstL_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
+    \end{equation}
+    %
+    and
+    %
     \begin{equation}
-        \label{eq:moore-comp-good-1}
+        \label{eq:moore-morb}
+        \morb = \tupp{\prin_{\morb},\prstL_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
+    \end{equation}
+    such that~$\prout_{\mora} = \prin_{\morb}$.
+We define their composition to be
+\begin{equation}
+\mora \mthen \morb = \tupp{\prin_{\mora \mthen \morb},\prstL_{\mora \mthen \morb},\prout_{\mora \mthen \morb},\prdyn_{\mora \mthen \morb},\prreadout_{\mora \mthen \morb},\prstart_{\mora \mthen \morb}}
+\end{equation}
+where
+    %
+    \begin{equation}
+        \label{eq:moore-comp-naive-1}
         \begin{aligned}
-            \prin_{\mora\mthen\morb}    & = \prin_{\mora}, \\
-            \prstL_{\mora\mthen\morb}   & = \prstL_{\mora}\listconcat  \prstL_{\morb}, \\
-            \prstart_{\mora\mthen\morb} & = \tup{\prstart_{\mora},\prstart_{\morb}}, \\
-            \prout_{\mora\mthen\morb}   & = \prout_{\morb}.
+            \prin_{\mora\mthen\morb}    & \definedas \prin_{\mora}, \\
+            \prstL_{\mora\mthen\morb}    & \definedas \prstL_{\mora} \listconcat  \prstL_{\morb}, \\
+             \prout_{\mora\mthen\morb}   & \definedas \prout_{\morb} \\
+            \prstart_{\mora\mthen\morb} & \definedas \cohm_{\prstL_{\mora}, \prstL_{\morb}}( \tupp{\prstart_{\mora}, \prstart_{\morb}}),
         \end{aligned}
     \end{equation}
-    %
-    We can now use the \emph{coherence morphism} introduced in \cref{sec:SetL}, to compactly define the dynamics and the readout maps as morphisms in \Set.
-    We represent the machinery through the following composition:
+and $\prdyn_{\mora \mthen \morb}$ and $\prreadout_{\mora \mthen \morb}$ are defined as follows.    
+ 
+For readability, set $\cohm_{{\mora}, {\morb}} \definedas \cohm_{\prstL_{\mora}, \prstL_{\morb}}$. 
+We define $\prdyn_{\mora \mthen \morb}$ to be the composite
 
-    \begin{widepar}
+ \begin{widepar}
     \equationsag{commutative_moore}{eq:commutative_moore}
-    \end{widepar}
-
-    \equationsag{commutative_moore_ro}{eq:commutative_moore_ro}
-
-    where
+ \end{widepar}
+ 
+ where
     %
     \begin{equation}
     \label{eq:moore-comp-good-2}
-    \defmapcommaset{
+    \defmapperiodset{
         \mord_{\mora\mthen\morb}
         }{
         \prin_{\mora} \cartprod (\tupset(\prstL_\mora)\cartprod \tupset(\prstL_\morb))
@@ -62,10 +90,16 @@
                 }}
         }
     \end{equation}
-    %
-    %
-    and
-    %
+
+   \
+   
+   \
+   
+And we define $\prreadout_{\mora \mthen \morb}$ as the composite 
+   
+\equationsag{commutative_moore_ro}{eq:commutative_moore_ro}
+
+where
     \begin{equation}
         \label{eq:moore-comp-good-3}
         \defmapperiodset{
@@ -80,6 +114,48 @@
         \prreadout_{\morb}(x_{\morb})
         }
     \end{equation}
+    
+    
+  \subsection{Composition is associative}
+  
+  We show now that the above-defined composition does in fact obey the associative law. 
+  Let three composable Moore machines $\mora$, $\morb$, and $\morc$ be given. We check that each of the six entries in the definition \cref{eq:moore-tuple-improved} coincide for  $(\mora \mthen \morb) \mthen \morc$ and $\mora \mthen (\morb \mthen \morc)$. 
+  
+First off, we clearly have 
+\begin{equation}
+\prin_{(\mora \mthen \morb)\mthen \morc}  = \prin_{\mora} =\prin_{\mora \mthen (\morb \mthen \morc)}
+\end{equation}
+and 
+\begin{equation}
+\prout_{(\mora \mthen \morb)\mthen \morc}  =\prout_\morc = \prout_{\mora \mthen (\morb \mthen \morc)}.
+\end{equation}
+Furthermore, 
+\begin{equation}
+\prstL_{(\mora \mthen \morb)\mthen \morc} =  (\prstL_{\mora} \listconcat \prstL_{\morb}) \listconcat  \prstL_{\morc}  =  \prstL_{\mora} \listconcat (\prstL_{\morb} \listconcat  \prstL_{\morc}) =\prstL_{\mora \mthen (\morb \mthen \morc)}
+\end{equation}
+since concatenation of lists is associative. 
+
+Next we check that 
+\begin{equation}
+\prstart_{(\mora \mthen \morb)\mthen \morc}  =\prstart_{\mora \mthen (\morb \mthen \morc)}.
+\end{equation}
+One the one hand
+\begin{align*}
+\prstart_{(\mora \mthen \morb)\mthen \morc} &= \cohm_{\mora \mthen \morb, \morc}( \tupp{\prstart_{\mora \mthen \morb}, \prstart_{\morc}}) \\
+& = \cohm_{\mora \mthen \morb, \morc}( \tupp{ \cohm_{\mora, \morb}( \tupp{\prstart_{\mora}, \prstart_{\morb}}), \prstart_{\morc}})
+\end{align*}
+while on the other hand 
+\begin{align*}
+\prstart_{\mora \mthen (\morb \mthen \morc)} &= \cohm_{\mora,\morb \mthen \morc}( \tupp{\prstart_{\mora}, \prstart_{\morb \mthen \morc}}) \\
+& = \cohm_{\mora,\morb \mthen \morc}( \tupp{\prstart_{\mora}, \cohm_{\morb, \morc}( \tupp{\prstart_{\morb}, \prstart_{\morc}})}).
+\end{align*}
+
+
+\todotext{CONTINUE WRITING HERE}
+\
+  
+  \
+  
     %
     With this definition we can define the semicategory~\Moore of Moore machines.
     %
@@ -105,17 +181,7 @@
         \end{enumerate}
     \end{definition}
     %
-    We can show that \Moore is indeed a semicategory.
-    Given composable machines~$\mora$,~$\morb$,~$\morc$, we can specify the spaces and initial conditions:
-    \begin{equation*}
-        \label{eq:moore_assoc_spaces}
-        \begin{aligned}
-            \prin_{(\mora \mthen \morb)\mthen \morc}    & =\prin_{\mora \mthen (\morb \mthen \morc)}=\prin_{\mora}, \\
-            \prstL_{(\mora \mthen \morb)\mthen \morc}   & =\prstL_{\mora \mthen (\morb \mthen \morc)}=  \prstL_{\mora} \listconcat \prstL_{\morb} \listconcat  \prstL_{\morc} \\
-            \prstart_{(\mora \mthen \morb)\mthen \morc} & =\prstart_{\mora \mthen (\morb \mthen \morc)}=\tup{\prstart_\mora,\prstart_\morb,\prstart_\morc} \\
-            \prout_{(\mora \mthen \morb)\mthen \morc}   & =\prout_{\mora \mthen (\morb \mthen \morc)}=\prout_\morc
-        \end{aligned}
-    \end{equation*}
+ 
 
     We first check associativity for the dynamics.
     First, we represent the situation graphically via a commutative diagram:

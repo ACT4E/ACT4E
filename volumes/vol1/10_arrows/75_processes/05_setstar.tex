@@ -29,23 +29,48 @@ As an auxiliary tool, let us define a function $\tupset$ that, given a list of s
 \begin{equation}
 \tupset (\Tupcatt {\setA_1}  \dots {\setA_n}) \definedas {\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n})).
 \end{equation}
-Using this notation, a morphism $\setLA \mto \setLB$ in $\SetL$ is, by definition, a function $\tupset(\setLA) \mto \tupset(\setLB)$. 
+For the special case of the empty list, we choose a one-element set $\{*\}$ and define
+\begin{equation}
+\tupset (\makelist{}) \definedas \{*\}.
+\end{equation}
+Incorporating $\tupset$ in our notation, a morphism $\setLA \mto \setLB$ in $\SetL$ is, by definition, a function $\tupset(\setLA) \mto \tupset(\setLB)$. 
 
 We also equip the category $\SetL$ with an operation of \emph{concatenation} of lists. Given lists $\setLA =\Tupcatt {\setA_1}  \dots {\setA_n}$ and~$\setLB = \Tupcatt {\setB_1} \dots {\setB_m}$, their concatenation is
 \begin{equation}
 \setLA  \listconcat  \setLB := \Tupcattt {\setA_1}{\dots}{\setA_n}{\setB_1}{\dots}{\setB_m}.
 \end{equation}
+Empty lists act neutrally for concatenation.
 
 The operation $\tupset$ of turning lists into sets works coherently with concatenation, in that there is a `coherence' isomorphism
-\begin{equation*}
-\cohm_{\setLA, \setLB} \colon \tupset(\setLA  \listconcat  \setLB) \to \tupset( \setLA) \cartprod \tupset(\setLB);
-\end{equation*}
+\begin{equation}\label{def:coherence-iso-lists}
+\cohm_{\setLA, \setLB} \colon \tupset( \setLA) \cartprod \tupset(\setLB) \to \tupset(\setLA  \listconcat  \setLB);
+\end{equation}
 namely, $\cohm_{\setLA, \setLB}$ denotes for us the function 
 \begin{equation*}
-{\setA_1} \cartprod (\setA_2 \cartprod (\ldots \setB_{m-1} \cartprod {\setB_m})) \to ({\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n}))) \cartprod ({\setB_1} \cartprod (\setB_2 \cartprod (\ldots \cartprod {\setB_m})))
+({\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n}))) \cartprod ({\setB_1} \cartprod (\setB_2 \cartprod (\ldots \cartprod {\setB_m}))) \to  {\setA_1} \cartprod (\setA_2 \cartprod (\ldots \setB_{m-1} \cartprod {\setB_m}))
 \end{equation*}
-that just reorders the bracketing of elements as needed.
+that reorders the bracketing of elements so that they are all nested `to the right'. 
 
+For example, if $\setLA = \makelist{\setA_1, \setA_2, \setA_3}$ and $\setLB = \makelist{\setB_1, \setB_2}$, then 
+\begin{equation*}
+\defmapperiodset{ \cohm_{\setLA, \setLB}
+}{
+(\setA_1 \cartprod ( \setA_2 \cartprod  \setA_3)) \cartprod (\setB_1 \cartprod  \setB_2 )
+}{
+\setA_1 \cartprod ( \setA_2 \cartprod ( \setA_3 \cartprod (\setB_1 \cartprod  \setB_2 )))
+}{
+\tup{\tup{\ela_1, \tup{\ela_2, \ela_3}}, \tup{\elb_1, \elb_2}}
+}{
+\tup{\ela_1, \tup{\ela_2, \tup{\ela_3, \tup{\elb_1, \elb_2}}}}
+}
+\end{equation*}
+(Can you convince yourself that this function is indeed invertible?)
+
+When the empty list is involved, we also have a special rule for \cref{def:coherence-iso-lists}. If $\setLA = \makelist{}$, we set 
+\begin{equation}
+\cohm_{\setLA, \setLB} \colon \{*\} \cartprod \tupset(\setLB) \to \tupset(\setLA  \listconcat  \setLB) = \tupset(\setLB), \tup{*, \elb} \mapsto \elb.
+\end{equation}
+An analogous isomorphism is used if instead $\setLB = \makelist{}$, and the two cases coincide if $\setLA = \setLB = \makelist{}$.
 
 
 \devel{
@@ -81,6 +106,8 @@ one has
                                                       & =\funmor{\tupset}(\mora)\mthenof{\Set} \funmor{\tupset}(\morb).
     \end{aligned}
 \end{equation*}
+
+
 
 \showslides{
     \begin{forslides}
