@@ -3,27 +3,26 @@
 \section{Moore machines, first attempt}
 \label{sec:moore-machines}
 
-
 %\linkvideo{spring2021-actions:semi-actions:processes} % Signals and processes
 
-    \linkvideo{spring2021-actions:semi-actions:processes:moore} % Moore machines
-    We now look at processes, especially dynamical systems, and see them as (semi)\-categories that act on sequences.
+\linkvideo{spring2021-actions:semi-actions:processes:moore} % Moore machines
+We now look at processes, especially dynamical systems, and see them as (semi)\-categories that act on sequences.
 
-    We have already seen linear discrete time systems.
+We have already seen linear discrete time systems.
 
-    We can generalize them by allowing non-linear functions.
-    We call these \textbf{Moore} machines, and describe them as a pair of functions
-    %
-    \begin{equation}
-        \label{eq:moore-1}
-        \begin{cases}
-            \prdyn \colon \prin \cartprod \prst \sto \prst, \\
-            \prreadout \colon \prst \sto \prout,
-        \end{cases}
-    \end{equation}
-    %
-    where~$\prin$ represents inputs,~$\prst$ states,~$\prout$ outputs,~$\prdyn$ the dynamics, and~$\prreadout$ the readout.
-    
+We can generalize them by allowing non-linear functions.
+We call these \textbf{Moore} machines, and describe them as a pair of functions
+%
+\begin{equation}
+    \label{eq:moore-1}
+    \begin{cases}
+        \prdyn \colon \prin \cartprod \prst \sto \prst, \\
+        \prreadout \colon \prst \sto \prout,
+    \end{cases}
+\end{equation}
+%
+where~$\prin$ represents inputs,~$\prst$ states,~$\prout$ outputs,~$\prdyn$ the dynamics, and~$\prreadout$ the readout.
+
 %    As introduced in \cref{sec:actions}, we can apply currying to~$\prdyn$, to obtain a map from inputs to endomorphisms on the states:
 %    %
 %    \begin{equation}
@@ -35,105 +34,106 @@
 %    \end{equation}
 %    %
 
-    We will also choose an~$\prstart \setin \prst$ to act as the initial state. Thus, in total, a Moore machine is specified by a tuple of the following type: 
-    \begin{equation}
-        \label{eq:moore-tuple}
-        \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}.
-    \end{equation}
-    
+We will also choose an~$\prstart \setin \prst$ to act as the initial state.
+Thus, in total, a Moore machine is specified by a tuple of the following type:
+\begin{equation}
+    \label{eq:moore-tuple}
+    \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}.
+\end{equation}
 
-    Suppose now that we have two Moore machines
-    %
-    \begin{equation}
-        \label{eq:moore-mora}
-        \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
-    \end{equation}
-    %
-    and
-    %
-    \begin{equation}
-        \label{eq:moore-morb}
-        \morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
-    \end{equation}
-    such that~$\prout_{\mora} = \prin_{\morb}$.
-    \begin{marginfigure}
-        \centering
-        \includesag{10_moore_comp_seq}
-        \caption{Composition of Moore machines (first version).}
-        \label{fig:comp_moore_1}
-    \end{marginfigure}
+Suppose now that we have two Moore machines
+%
+\begin{equation}
+    \label{eq:moore-mora}
+    \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
+\end{equation}
+%
+and
+%
+\begin{equation}
+    \label{eq:moore-morb}
+    \morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
+\end{equation}
+such that~$\prout_{\mora} = \prin_{\morb}$.
+\begin{marginfigure}
+    \centering
+    \includesag{10_moore_comp_seq}
+    \caption{Composition of Moore machines (first version).}
+    \label{fig:comp_moore_1}
+\end{marginfigure}
 
 We would like to compose them serially, such that the output of the one machine is the input of the next, and such that the result is again a Moore machine:
 \begin{equation}
-\mora \mthen \morb = \tupp{\prin_{\mora \mthen \morb},\prst_{\mora \mthen \morb},\prout_{\mora \mthen \morb},\prdyn_{\mora \mthen \morb},\prreadout_{\mora \mthen \morb},\prstart_{\mora \mthen \morb}}.
+    \mora \mthen \morb = \tupp{\prin_{\mora \mthen \morb},\prst_{\mora \mthen \morb},\prout_{\mora \mthen \morb},\prdyn_{\mora \mthen \morb},\prreadout_{\mora \mthen \morb},\prstart_{\mora \mthen \morb}}.
 \end{equation}
 
-    Here is one way to do it. We set
-    %
-    \begin{equation}
-        \label{eq:moore-comp-naive-1}
-        \begin{aligned}
-            \prin_{\mora\mthen\morb}    & \definedas \prin_{\mora}, \\
-            \prst_{\mora\mthen\morb}    & \definedas \prst_{\mora} \cartprod \prst_{\morb}, \\
-             \prout_{\mora\mthen\morb}   & \definedas \prout_{\morb} \\
-            \prstart_{\mora\mthen\morb} & \definedas \tupp{\prstart_{\mora}, \prstart_{\morb}}.
-        \end{aligned}
-    \end{equation}
-    %
-    Furthermore, we define the composite dynamics
-    %
-    \begin{equation}
-        \label{eq:moore-comp-naive-2}
-        \defmapset{
-            \prdyn_{\mora\mthen\morb}
-        }{
-            \prin_{\mora} \cartprod (\prst_{\mora} \cartprod \prst_{\morb})
-        }{
-            (\prst_{\mora} \cartprod \prst_{\morb})
-        }{
-            \tupp{u, \tupp{x_{\mora}, x_{\morb}}}
-        }{
-            \tupp{ \prdyn_{\mora} (u, x_{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}
-        }
-    \end{equation}
-    %
-    and the composite readout
-    %
-    \begin{equation}
-        \label{eq:moore-comp-naive-3}
-        \defmapperiodset{
-            \prreadout_{\mora\mthen\morb}
-        }{
-            (\prst_{\mora} \cartprod \prst_{\morb})
-        }{
-            \prout_{\morb}
-        }{
-            \tupp{x_{\mora}, x_{\morb}}
-        }{
-            \prreadout_{\morb}(x_{\morb})
-        }
-    \end{equation}
-    %
-    The situation is illustrated in \cref{fig:comp_moore_1}.
+Here is one way to do it.
+We set
+%
+\begin{equation}
+    \label{eq:moore-comp-naive-1}
+    \begin{aligned}
+        \prin_{\mora\mthen\morb}    & \definedas \prin_{\mora}, \\
+        \prst_{\mora\mthen\morb}    & \definedas \prst_{\mora} \cartprod \prst_{\morb}, \\
+        \prout_{\mora\mthen\morb}   & \definedas \prout_{\morb} \\
+        \prstart_{\mora\mthen\morb} & \definedas \tupp{\prstart_{\mora}, \prstart_{\morb}}.
+    \end{aligned}
+\end{equation}
+%
+Furthermore, we define the composite dynamics
+%
+\begin{equation}
+    \label{eq:moore-comp-naive-2}
+    \defmapset{
+        \prdyn_{\mora\mthen\morb}
+    }{
+        \prin_{\mora} \cartprod (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        \tupp{u, \tupp{x_{\mora}, x_{\morb}}}
+    }{
+        \tupp{ \prdyn_{\mora} (u, x_{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}
+    }
+\end{equation}
+%
+and the composite readout
+%
+\begin{equation}
+    \label{eq:moore-comp-naive-3}
+    \defmapperiodset{
+        \prreadout_{\mora\mthen\morb}
+    }{
+        (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        \prout_{\morb}
+    }{
+        \tupp{x_{\mora}, x_{\morb}}
+    }{
+        \prreadout_{\morb}(x_{\morb})
+    }
+\end{equation}
+%
+The situation is illustrated in \cref{fig:comp_moore_1}.
 
-It would be convenient if this composition of Moore machines were such that Moore machines form a semicategory. 
+It would be convenient if this composition of Moore machines were such that Moore machines form a semicategory.
 However, it turns out that the composition that we defined above is not associative.
-It \emph{almost} is, but not quite. 
-The issue lies essentially with the Cartesian product of state spaces~$\prst_{\mora} \cartprod \prst_{\morb}$. 
-     
+It \emph{almost} is, but not quite.
+The issue lies essentially with the Cartesian product of state spaces~$\prst_{\mora} \cartprod \prst_{\morb}$.
+
 Given three composable systems~$\mora$,~$\morb$, and~$\morc$, if we compose them in the two ways~$(\mora \mthen \morb) \mthen \morc$ and~$\mora \mthen (\morb \mthen \morc)$, then their respective state spaces are~$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and~$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$.
 These sets are \emph{isomorphic}, but they are not equal on the nose:
-    %
-    \begin{equation}
-        \label{eq:assoc-fails1}
-        (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} \neq \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}).
-    \end{equation}
-    %
+%
+\begin{equation}
+    \label{eq:assoc-fails1}
+    (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} \neq \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}).
+\end{equation}
+%
 The isomorphism between the two sets is
 \begin{equation}
-\label{eq:assoc-fails2}
-\begin{aligned}
-(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} &\to \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})\\
-\tupp{ \tupp{x_{\mora}, x_{\morb}}, x_{\morc} }  &\mapsto \tupp{x_{\mora}, \tupp{x_{\morb}, x_{\morc}} }.
-\end{aligned}
+    \label{eq:assoc-fails2}
+    \begin{aligned}
+        (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} & \to \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}) \\
+        \tupp{ \tupp{x_{\mora}, x_{\morb}}, x_{\morc} }                 & \mapsto \tupp{x_{\mora}, \tupp{x_{\morb}, x_{\morc}} }.
+    \end{aligned}
 \end{equation}
