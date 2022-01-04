@@ -55,40 +55,224 @@ where now the read-out function takes values in lists of elements of $\prout$:
 
 A linear time-invariant dynamical system (LTI system), in a so-called state-space description, is specified by real vector spaces $\prin$ (input space), $\prout$ (output space), and $\prst$ (state space), along with a system of equations of the form
 \begin{align}
-    \dot x(t) & = Ax(t) + Bu(t) \label{eq:LTI-system-dyn} \\
-    y(t)      & = Cx(t) + Du(t) \label{eq:LTI-system-ro}
+    \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn} \\
+    \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:LTI-system-ro}
 \end{align}
-where $t \setin \reals$, $u(t) \setin \prin$, $y(t) \setin \prout$, $x(t) \setin \prst$, and where $A: \prst \to \prst$, $B: \prin \to \prst$, $C: \prst \to \prout$, $D: \prin \to \prout$ are $\reals$-linear maps (we are identifying the tangent space of $\prst$ with $\prst$ itself).
+where~$t \setin \reals$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}\colon \prst \to \prst$,~$\mat{B}\colon \prin \to \prst$,~$\mat{C}\colon \prst \to \prout$,~$\mat{D}\colon \prin \to \prout$ are~$\reals$-linear maps (we are identifying the tangent space of~$\prst$ with~$\prst$ itself).
 
 We may associate the equation \cref{eq:LTI-system-dyn} with the function
 \begin{equation}
-    \prdyn \colon  \prin \cartprod \prst \sto \prst, \ \tup{u, x} \mapsto Ax + Bu
+    \prdyn \colon  \prin \cartprod \prst \sto \prst, \ \tup{\mat{u}, \mat{x}} \mapsto \mat{A}\mat{x} + \mat{B}\mat{u}
 \end{equation}
 and the equation \cref{eq:LTI-system-ro} with the function
 \begin{equation}
-    \prreadout \colon \prin \cartprod \prst \sto \prout, \ \tup{u,x} \mapsto Cx + Du.
+    \prreadout \colon \prin \cartprod \prst \sto \prout, \ \tup{\mat{u},\mat{x}} \mapsto \mat{C}\mat{x} + \mat{D}\mat{u}.
 \end{equation}
 
-We will call an LTI system \emph{proper} if in \cref{eq:LTI-system-ro}, the map $D$ sends any vector to zero.
+We will call an LTI system \emph{proper} if in \cref{eq:LTI-system-ro}, the map~$\mat{D}$ sends any vector to zero.
 
+\subsection{Category of LTI systems}
+We now define the category of LTI systems \LTI.
+
+\begin{ctdefinition}[Category \LTI]
+    \label{def:LTICat}
+    The category \LTI, of LTI systems \iindex{\LTI}, is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: natural numbers.
+        \item \emph{Morphisms}: A morphism in \LTI from~$l\setin \natnumbers$ to~$m\setin \natnumbers$ describes the transformation of an input sequence~$u\colon \reals \to \reals^l$ into an output sequence~$y\colon \reals \to \reals^m$.
+              Such an arrow is given by a continuous time LTI system, specified as~$\tup{\mat{A},\mat{B},\mat{C},\mat{D}}$, where~$\mat{A}\setin \reals^{n\times n}$,~$\mat{B}\setin \reals^{n\times l}$,~$\mat{C}\setin \reals^{m\times n}$,~$\mat{D}\setin \reals^{m\times l}$.
+              Note that the dimensions of the input/output are implicit.
+        \item \emph{Composition operation}: Given morphisms~$a\mto b$ and~$b\mto c$, described by the LTI systems~$\tup{\mat{A}_1,\mat{B}_1,\mat{C}_1,\mat{D}_1}$ and~$\tup{\mat{A}_2,\mat{B}_2,\mat{C}_2,\mat{D}_2}$, their composition is an arrow~$a\mto c$, parametrized by the LTI system~$\tup{\mat{A},\mat{B},\mat{C},\mat{D}}$, where
+              \begin{equation}
+                  \mat{A}=\begin{bmatrix}
+                      \mat{A}_1          & \mat{0}   \\
+                      \mat{B}_2\mat{C}_1 & \mat{A}_2
+                  \end{bmatrix},\quad
+                  \mat{B}=\begin{bmatrix}
+                      \mat{B}_1 \\
+                      \mat{B}_2\mat{D}_1
+                  \end{bmatrix},\quad
+                  \mat{C}=\begin{bmatrix}
+                      \mat{D}_2\mat{C}_1 & \mat{C}_2
+                  \end{bmatrix}, \quad
+                  \mat{D}=\mat{D}_2\mat{D}_1.
+              \end{equation}
+        \item \emph{Identity morphism}: The identity morphism for~$l\setin \natnumbers$ is an arrow~$l\to l$, parametrized by the system~$\tup{\mat{0}^{0\times 0},\mat{0}^{0\times l},\mat{0}^{l\times 0},\mathbb{I}^{l\times l}}$.
+
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{exercise}
+    Prove that \LTI is indeed a category.
+\end{exercise}
+\begin{solution}
+    We start with associativity.
+
+    Consider morphisms~$\mora \colon l\mto m$ given by~$\genericlti{1}$,~$\morb\colon m\mto n$ given by~$\genericlti{2}$, and~$\morc\colon n\mto o$ given by~$\genericlti{3}$.
+
+    The morphism~$\mora\mthen \morb$ is described by the LTI~$\genericlti{1,2}$, where
+    \begin{equation}
+        \mat{A}_{1,2}=\begin{bmatrix}
+            \mat{A}_1          & \mat{0}   \\
+            \mat{B}_2\mat{C}_1 & \mat{A}_2
+        \end{bmatrix},\
+        \mat{B}_{1,2}=\begin{bmatrix}
+            \mat{B}_1 \\
+            \mat{B}_2\mat{D}_1
+        \end{bmatrix},\
+        \mat{C}_{1,2}=\begin{bmatrix}
+            \mat{D}_2\mat{C}_1 & \mat{C}_2
+        \end{bmatrix}, \
+        \mat{D}_{1,2}=\mat{D}_2\mat{D}_1.
+    \end{equation}
+    The morphism~$(\mora\mthen \morb)\mthen \morc$ is described by~$\genericlti{(1,2),3}$, where:
+    \begin{widepar}
+        \begin{equation}
+            \label{eq:assoc_lti_1}
+            \mat{A}_{(1,2),3}=\begin{bmatrix}
+                \mat{A}_1                   & \mat{0}            & \mat{0}   \\
+                \mat{B}_2\mat{C}_1          & \mat{A}_2          & \mat{0}   \\
+                \mat{B}_3\mat{D}_2\mat{C}_1 & \mat{B}_3\mat{C}_2 & \mat{A}_3
+            \end{bmatrix},\
+            \mat{B}_{(1,2),3}=\begin{bmatrix}
+                \mat{B}_1          \\
+                \mat{B}_2\mat{D}_1 \\
+                \mat{B}_3\mat{D}_2\mat{D}_1
+            \end{bmatrix},\
+            \mat{C}_{(1,2),3}=\begin{bmatrix}
+                \mat{D}_3\mat{D}_2\mat{C}_1 & \mat{D}_3\mat{C}_2 & \mat{C}_3
+            \end{bmatrix}, \
+            \mat{D}_{(1,2),3}=\mat{D}_3\mat{D}_2\mat{D}_1.
+        \end{equation}
+    \end{widepar}
+    On the other hand, the morphism~$\morb\mthen \morc$ is described by~$\genericlti{2,3}$, where:
+    \begin{equation}
+        \mat{A}_{2,3}=\begin{bmatrix}
+            \mat{A}_2          & \mat{0}   \\
+            \mat{B}_3\mat{C}_2 & \mat{A}_3
+        \end{bmatrix},\
+        \mat{B}_{2,3}=\begin{bmatrix}
+            \mat{B}_2 \\
+            \mat{B}_3\mat{D}_2
+        \end{bmatrix},\
+        \mat{C}_{2,3}=\begin{bmatrix}
+            \mat{D}_3\mat{C}_2 & \mat{C}_3
+        \end{bmatrix}, \
+        \mat{D}_{2,3}=\mat{D}_3\mat{D}_2.
+    \end{equation}
+    Furthermore, the morphism~$\mora\mthen (\morb\mthen \morc)$ is described by~$\genericlti{1,(2,3)}$, where:
+    \begin{widepar}
+        \begin{equation}
+            \label{eq:assoc_lti_2}
+            \mat{A}_{1,(2,3)}=\begin{bmatrix}
+                \mat{A}_1                   & \mat{0}            & \mat{0}   \\
+                \mat{B}_2\mat{C}_1          & \mat{A}_2          & \mat{0}   \\
+                \mat{B}_3\mat{D}_2\mat{C}_1 & \mat{B}_3\mat{C}_2 & \mat{A}_3
+            \end{bmatrix},\
+            \mat{B}_{1,(2,3)}=\begin{bmatrix}
+                \mat{B}_1          \\
+                \mat{B}_2\mat{D}_1 \\
+                \mat{B}_3\mat{D}_2\mat{D}_1
+            \end{bmatrix},\
+            \mat{C}_{1,(2,3)}=\begin{bmatrix}
+                \mat{D}_3\mat{D}_2\mat{C}_1 & \mat{D}_3\mat{C}_2 & \mat{C}_3
+            \end{bmatrix}, \
+            \mat{D}_{1,(2,3)}=\mat{D}_3\mat{D}_2\mat{D}_1.
+        \end{equation}
+    \end{widepar}
+    Clearly, the matrices in \cref{eq:assoc_lti_1} and \cref{eq:assoc_lti_2} coincide, showing associativity.
+
+    Let's now show unitality.
+    Consider a morphism~$\mora\colon l\mto m$, described by~$\genericlti{}$.
+    The morphism~$\catid_l \mthen \mora$ is a morphism~$l\mto m$ still given by~$\genericlti{}$.
+    Similarly, the morphism~$\mora\mthen \catid_m$ is a morphism~$l\mto m$, given by~$\genericlti{}$.
+    Therefore, \LTI is a category.
+\end{solution}
+
+\subsection{LTI is stacking}
+When considering LTI systems, we can define stacking operations and show that it forms a stacking semicategory (\cref{def:simple-stacking-semi-cat}).
+The stacking operation on objects is defined as
+\begin{equation*}
+    \defmapperiod{\mtimescatob}{\Ob_\LTI \cartprod \Ob_\LTI}{\to}{\Ob_\LTI}{\tup{l,m}}{l+m}
+\end{equation*}
+On the other hand, the operation on morphisms ``stacks'' the LTI systems onto each other.
+Formally:
+\begin{equation*}
+    \defmapcomma{\mtimescatmor}{\Mor_\LTI \cartprod \Mor_\LTI}{\to}{\Mor_\LTI}{\tup{\genericlti{1},\genericlti{2}}}{\genericlti{}}
+\end{equation*}
+with
+\begin{equation*}
+    \mat{A}=\begin{bmatrix}
+        \mat{A}_1 & \mat{0}   \\
+        \mat{0}   & \mat{A}_2
+    \end{bmatrix}, \
+    \mat{B}=\begin{bmatrix}
+        \mat{B}_1 & \mat{0}   \\
+        \mat{0}   & \mat{B}_2
+    \end{bmatrix},\
+    \mat{C}=\begin{bmatrix}
+        \mat{C}_1 & \mat{0}   \\
+        \mat{0}   & \mat{C}_2
+    \end{bmatrix},\
+    \mat{D}=\begin{bmatrix}
+        \mat{D}_1 & \mat{0}   \\
+        \mat{0}   & \mat{D}_2
+    \end{bmatrix}
+\end{equation*}
+\todo{Maybe mention for engineers that know this: the resulting LTI system has RGA identity}
+Clearly, the morphism~$\genericlti{}$ satisifes the compatibility condition for stacking semicategories: if~$\genericlti{1}$ is~$l\mto m$ and~$\genericlti{2}$ is~$n\mto o$,~$\genericlti{}$ is~$l+n\mto m+o$.
+Given that the resulting LTI system is described by diagonal matrices, the defined operations are associative, and therefore \LTI is an associative stacking semicategory.
+
+\begin{exercise}
+    Prove or disprove: \LTI as defined is a functiorial stacking semicategory.
+\end{exercise}
+\begin{solution}
+    Given morphisms~$\mora\colon l\mto m$,~$\morc\colon m\mto n$,~$\morb\colon o\mto p$,~$\mord\colon p\mto q$, we need to show
+    \begin{equation*}
+        (\mora \mthen \morc)\mtimescat (\morb\mthen \mord)=(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord).
+    \end{equation*}
+    This is not true.
+    Let's see this by looking at the first component of the LTI system.
+    On one hand we have:
+    \begin{equation*}
+        \mat{A}_{(\mora \mthen \morc)\mtimescat (\morb\mthen \mord)}=
+        \begin{bmatrix}
+            \mat{A}_\mora              & \mat{0}       & \mat{0}                    & \mat{0}       \\
+            \mat{B}_\morc\mat{C}_\mora & \mat{A}_\morc & \mat{0}                    & \mat{0}       \\
+            \mat{0}                    & \mat{0}       & \mat{A}_\morb              & \mat{0}       \\
+            \mat{0}                    & \mat{0}       & \mat{B}_\mord\mat{C}_\morb & \mat{A}_\mord
+        \end{bmatrix}
+    \end{equation*}
+    However, on the other hand we have:
+    \begin{equation*}
+        \mat{A}_{(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord)}=
+        \begin{bmatrix}
+            \mat{A}_\mora               & \mat{0}                     & \mat{0}       & \mat{0}       \\
+            \mat{0}                     & \mat{A}_\morb               & \mat{0}       & \mat{0}       \\
+            \mat{B}_\morc \mat{A}_\mora & \mat{0}                     & \mat{A}_\morc & \mat{0}       \\
+            \mat{0}                     & \mat{B}_\mord \mat{C}_\morb & \mat{0}       & \mat{A}_\mord
+        \end{bmatrix}
+    \end{equation*}
+    These two are different, and will therefore describe different systems.
+\end{solution}
 \subsection{Descriptor systems}
 
 Descriptor systems (DLTI systems) are a generalization of LTI systems which differ only in that the defining system of equations has the form
 \begin{align}
-    E \dot x(t) & = Ax(t) + Bu(t) \label{eq:DLTI-system-dyn} \\
-    y(t)        & = Cx(t) + Du(t) \label{eq:DLTI-system-ro}
+    \mat{E} \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:DLTI-system-dyn} \\
+    \mat{y}(t)               & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:DLTI-system-ro}
 \end{align}
-where $E: \prst \to \prst$ is a linear map (again identifying the tangent space of $\prst$ with $\prst$).
-Clearly a DLTI system is an LTI system when $E$ is the identity map.
+where~$\mat{E}\colon \prst \to \prst$ is a linear map (again identifying the tangent space of~$\prst$ with~$\prst$).
+Clearly, a DLTI system is an LTI system when~$\mat{E}$ is the identity map.
 
 We associate the equation \cref{eq:DLTI-system-dyn} now with the relation
-\begin{equation}
+\begin{equation*}
     \prdyn \subseteq  (\prin \cartprod \prst) \cartprod \prst
-\end{equation}
+\end{equation*}
 given by
-\begin{equation}
-    \prdyn = \{ \tup{ \tup{u, x} v} \mid E v = Ax + Bu \}.
-\end{equation}
+\begin{equation*}
+    \prdyn = \{ \tup{ \tup{\mat{u}, \mat{x}} \mat{v}} \mid \mat{E} \mat{v} = \mat{A}\mat{x} + \mat{B}\mat{u} \}.
+\end{equation*}
 
 \section{System behaviors}
 
@@ -132,7 +316,7 @@ This illustrates that the recursion equations are part of what generates a behav
 We will now develop a general-purpose formalization of system behaviors.
 
 In the example above with Moore machines, we said its behavior was a function $\prin^\natnumbers \to \prout^\natnumbers$.
-Here the set $\natnumbers$ played the role of time: each $k \setin \natnumbers$ corresponded to a time step.
+Here the set~$\natnumbers$ played the role of time: each $k \setin \natnumbers$ corresponded to a time step.
 In the following, we allow as a model of time any totally ordered set $\Time = \tup{\Time, \leq}$.
 
 When we want to talk about discrete-time signals, natural choices for $\Time$ might be $\Time = \natnumbers$ or $\Time = \wnumbers$.
@@ -147,41 +331,41 @@ In other words, in general, the externally observable behavior of a system is a 
 \subsection{Categories of behaviors}
 
 \begin{definition}
-    Let $\Obja$ and $\Objb$ be sets.
+    Let~$\Obja$ and~$\Objb$ be sets.
     An \emph{input-output behavior}, with input space $\Obja$ and output space $\Objb$, is a relation
-    \begin{equation}
-        \relA \subseteq \Obja^\Time \times \Objb^\Time.
-    \end{equation}
+    \begin{equation*}
+        \relA \subseteq \Obja^\Time \cartprod \Objb^\Time.
+    \end{equation*}
 \end{definition}
 
 \begin{definition}
-    Fix a totally ordered set $\Time = \tup{\Time, \leq}$.
-    The category $\textbf{Bh}_\Time$ of input-output behaviors is the category where:
+    Fix a totally ordered set~$\Time = \tup{\Time, \leq}$.
+    The category~$\Beh_\Time$ of input-output behaviors is the category where:
     \begin{enumerate}
-        \item Objects consist of all sets of the form $\Obja^\Time$, with $\Obja$ ranging over all sets .
-        \item Morphisms from $\Obja^\Time$ to $\Objb^\Time$ are relations from $\Obja^\Time$ to $\Objb^\Time$:
+        \item Objects consist of all sets of the form~$\Obja^\Time$, with~$\Obja$ ranging over all sets.
+        \item Morphisms from~$\Obja^\Time$ to~$\Objb^\Time$ are relations from~$\Obja^\Time$ to~$\Objb^\Time$:
               \begin{equation}
-                  \HomSet{\textbf{Bh}_\Time}{\Obja^\Time}{\Objb^\Time} = \powerset (\Obja^\Time \times \Objb^\Time).
+                  \HomSet{\Beh_\Time}{\Obja^\Time}{\Objb^\Time} = \powerset (\Obja^\Time \cartprod \Objb^\Time).
               \end{equation}
-        \item The identity morphism at an object $\Obja^\Time$ is the usual identity relation from $\Obja^\Time$ to itself.
         \item Composition is the usual composition of relations.
+        \item The identity morphism at an object~$\Obja^\Time$ is the usual identity relation from~$\Obja^\Time$ to itself.
     \end{enumerate}
 \end{definition}
 
-Sometimes we will wish to consider signal spaces $\Obja$ which are vector spaces over some field $\field$.
-Then the set $\Obja^\Time$ naturally inherits a $\field$-vector space structure from $\Obja$, and we may consider input-output behaviors
+Sometimes we will wish to consider signal spaces $\Obja$ which are vector spaces over some field~$\field$.
+Then the set~$\Obja^\Time$ naturally inherits a~$\field$-vector space structure from~$\Obja$, and we may consider input-output behaviors
 \begin{equation*}
     \relA \subseteq \Obja^\Time \oplus \Objb^\Time
 \end{equation*}
-which are $\field$-linear relations.
+which are~$\field$-linear relations.
 
 \begin{definition}
-    Fix a totally ordered set $\Time = \tup{\Time, \leq}$.
-    The category $\textbf{LBh}_\Time$ of $\field$-linear input-output behaviors is the category where:
+    Fix a totally ordered set~$\Time = \tup{\Time, \leq}$.
+    The category~$\LBeh_\Time$ of~$\field$-linear input-output behaviors is the category where:
     \begin{enumerate}
-        \item Objects consist of all $\field$-vector spaces of the form $\Obja^\Time$, ranging over all $\field$-vector spaces $\Obja$.
-        \item Morphisms from $\Obja^\Time$ to $\Objb^\Time$ are linear subspaces of  $\Obja^\Time \oplus \Objb^\Time$.
-        \item The identity morphism at an object $\Obja^\Time$ is the usual identity relation from $\Obja^\Time$ to itself (this is always $\field$-linear).
+        \item Objects consist of all~$\field$-vector spaces of the form~$\Obja^\Time$, ranging over all~$\field$-vector spaces~$\Obja$.
+        \item Morphisms from~$\Obja^\Time$ to $\Objb^\Time$ are linear subspaces of~$\Obja^\Time \oplus \Objb^\Time$.
+        \item The identity morphism at an object~$\Obja^\Time$ is the usual identity relation from~$\Obja^\Time$ to itself (this is always~$\field$-linear).
         \item Composition is the usual composition of relations.
     \end{enumerate}
 \end{definition}
@@ -208,16 +392,16 @@ using the equations
 
 \subsection{Causal behaviors}
 
-Given a signal $\ela \setin \Obja^\Time$, we set the notation
+Given a signal~$\ela \setin \Obja^\Time$, we set the notation
 \begin{equation}
     \ela \vert_{\leq t} \definedas  \ela \vert_{\{ s \setin \Time \mid s \leq t\}}.
 \end{equation}
 
 \begin{definition}
-    An input-output behavior $\relA \subseteq \Obja^\Time \times \Objb^\Time$ is \emph{causal} if for all~$\tup{\ela_1, \elb_1}$, $\tup{\ela_2, \elb_2} \setin \relA$ holds:
-    \begin{equation}
-        \forall t \setin \Time: \ela_1 \vert_{ \leq t} = \ela_2 \vert_{ \leq t} \  \Rightarrow \ \elb_1 \vert_{ \leq t} = \elb_2 \vert_{ \leq t}
-    \end{equation}
+    An input-output behavior~$\relA \subseteq \Obja^\Time \times \Objb^\Time$ is \emph{causal} if for all~$\tup{\ela_1, \elb_1}$, $\tup{\ela_2, \elb_2} \setin \relA$ holds:
+    \begin{equation*}
+        \forall t \setin \Time\colon \ela_1 \vert_{ \leq t} = \ela_2 \vert_{ \leq t} \  \Rightarrow \ \elb_1 \vert_{ \leq t} = \elb_2 \vert_{ \leq t}
+    \end{equation*}
 \end{definition}
 
 \todotext{Questions: If two composable input-output behaviors are causal, is their composition also causal?
@@ -230,16 +414,16 @@ Given a signal $\ela \setin \Obja^\Time$, we set the notation
 In this subsection we assume that $\Time = \tup{\Time, \leq}$ comes equipped with a semigroup structure $\tup{\Time, +}$ which is compatible with the total order: if $t \leq t'$ and $s \leq s'$, then $t + s \leq t' + s'$.
 
 Fix an $s \setin \Time$.
-For any signal space $\Obja$, we define a shift function $\delta_s: \Obja^\Time \to \Obja^\Time$ by
-\begin{equation}
-    (\delta_s \ela)(t) := \ela(t + s).
-\end{equation}
+For any signal space~$\Obja$, we define a shift function~$\delta_s\colon \Obja^\Time \to \Obja^\Time$ by
+\begin{equation*}
+    (\delta_s \ela)(t) \definedas \ela(t + s).
+\end{equation*}
 
 \begin{definition}
     An input-output behavior $\relA \subseteq \Obja^\Time \times \Objb^\Time$ is \emph{time-invariant} if
-    \begin{equation}
-        \forall s \setin \Time: \tup{\ela, \elb} \setin \relA  \ \Rightarrow \tup{\delta_s \ela, \delta_s \elb} \setin \relA.
-    \end{equation}
+    \begin{equation*}
+        \forall s \setin \Time\colon \tup{\ela, \elb} \setin \relA  \ \implies \tup{\delta_s \ela, \delta_s \elb} \setin \relA.
+    \end{equation*}
 \end{definition}
 
 \todotext{Questions: If two time-invariant input-output behaviors are causal, is their composition also causal?
