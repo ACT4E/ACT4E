@@ -25,51 +25,37 @@ Let's consider some different examples of systems and ways of specifying them.
 
 \subsection{Moore machines}
 
-We have seen in \cref{sec:moore-machines}  that a Moore machine is specified by the data
-\begin{equation}
-    \tup{\prin, \prout, \prst, \prdyn, \prreadout}
-\end{equation}
-where
-\begin{equation}\label{eq:moore-specification-again}
-    \begin{cases}
-        \prdyn \colon \prin \cartprod \prst \sto \prst, \\
-        \prreadout \colon \prst \sto \prout.
-    \end{cases}
-\end{equation}
+Recal Moore machines from \cref{sec:moore-semicategorically}.
+..
 
 \subsection{More machines}
 
-A More machine is specified by
-\begin{equation}
-    \tup{\prin, \prout, \prst, \prdyn, \prreadout}
-\end{equation}
-where now the read-out function takes values in lists of elements of $\prout$:
-\begin{equation}\label{eq:more-specification-again}
-    \begin{cases}
-        \prdyn \colon \prin \cartprod \prst \sto \prst, \\
-        \prreadout \colon \prst \sto \listsof{\prout}.
-    \end{cases}
-\end{equation}
+Recal More machines from \cref{sec:more-machines}.
+..
 
 \subsection{LTI systems}
+\todo{ Add initial state}
+\todo{Add definition of actions, with time starting at 0}
+\todo{Note for matrices with 0 dimension}
+\todo{Correct typo with Cf}
+\todo{Definition of equivalence of systems}
+\todo{Functorial stacking not exercise.
+    Explain not functorial stacking but with permutations you get same action.
+}
+\todo{Lemma: two equiv systems have same action.}
+We now define LTI systems.
 
-A linear time-invariant dynamical system (LTI system), in a so-called state-space description, is specified by real vector spaces $\prin$ (input space), $\prout$ (output space), and $\prst$ (state space), along with a system of equations of the form
-\begin{align}
-    \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn} \\
-    \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:LTI-system-ro}
-\end{align}
-where~$t \setin \reals$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}\colon \prst \to \prst$,~$\mat{B}\colon \prin \to \prst$,~$\mat{C}\colon \prst \to \prout$,~$\mat{D}\colon \prin \to \prout$ are~$\reals$-linear maps (we are identifying the tangent space of~$\prst$ with~$\prst$ itself).
+\begin{definition}[LTI System]
+    \label{def:LTI_syst}
+    A \emph{linear time-invariant dynamical (LTI) system}, in a so-called state-space description, is specified by real vector spaces~$\prin=\reals^l$ (input space),~$\prout=\reals^m$ (output space), and~$\prst=\reals^n$ (state space), along with a system of equations of the form
+    \begin{align}
+        \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn} \\
+        \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:LTI-system-ro}
+    \end{align}
+    where~$t \setin \reals$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}\colon \prst \to \prst$,~$\mat{B}\colon \prin \to \prst$,~$\mat{C}\colon \prst \to \prout$,~$\mat{D}\colon \prin \to \prout$ are~$\reals$-linear maps (we are identifying the tangent space of~$\prst$ with~$\prst$ itself).
+\end{definition}
 
-We may associate the equation \cref{eq:LTI-system-dyn} with the function
-\begin{equation}
-    \prdyn \colon  \prin \cartprod \prst \sto \prst, \ \tup{\mat{u}, \mat{x}} \mapsto \mat{A}\mat{x} + \mat{B}\mat{u}
-\end{equation}
-and the equation \cref{eq:LTI-system-ro} with the function
-\begin{equation}
-    \prreadout \colon \prin \cartprod \prst \sto \prout, \ \tup{\mat{u},\mat{x}} \mapsto \mat{C}\mat{x} + \mat{D}\mat{u}.
-\end{equation}
-
-We will call an LTI system \emph{proper} if in \cref{eq:LTI-system-ro}, the map~$\mat{D}$ sends any vector to zero.
+We will call an LTI system \emph{proper} if in \cref{eq:LTI-system-ro}, the map~$\mat{D}=\mat{0}^{p \times m}$.
 
 \subsection{Category of LTI systems}
 We now define the category of LTI systems \LTI.
@@ -79,28 +65,31 @@ We now define the category of LTI systems \LTI.
     The category \LTI, of LTI systems \iindex{\LTI}, is defined by:
     \begin{enumerate}
         \item \emph{Objects}: natural numbers.
-        \item \emph{Morphisms}: A morphism in \LTI from~$l\setin \natnumbers$ to~$m\setin \natnumbers$ describes the transformation of an input sequence~$u\colon \reals \to \reals^l$ into an output sequence~$y\colon \reals \to \reals^m$.
-              Such an arrow is given by a continuous time LTI system, specified as~$\tup{\mat{A},\mat{B},\mat{C},\mat{D}}$, where~$\mat{A}\setin \reals^{n\times n}$,~$\mat{B}\setin \reals^{n\times l}$,~$\mat{C}\setin \reals^{m\times n}$,~$\mat{D}\setin \reals^{m\times l}$.
+        \item \emph{Morphisms}: A morphism in \LTI from~$\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$.
+              Such an arrow is given by a continuous time LTI system, specified as~$\tup{\mat{A},\mat{B},\mat{C},\mat{D}}$.
+              %where~$\mat{A}\setin \reals^{n\times n}$,~$\mat{B}\setin \reals^{n\times l}$,~$\mat{C}\setin \reals^{m\times n}$,~$\mat{D}\setin \reals^{m\times l}$.
               Note that the dimensions of the input/output are implicit.
-        \item \emph{Composition operation}: Given morphisms~$a\mto b$ and~$b\mto c$, described by the LTI systems~$\tup{\mat{A}_1,\mat{B}_1,\mat{C}_1,\mat{D}_1}$ and~$\tup{\mat{A}_2,\mat{B}_2,\mat{C}_2,\mat{D}_2}$, their composition is an arrow~$a\mto c$, parametrized by the LTI system~$\tup{\mat{A},\mat{B},\mat{C},\mat{D}}$, where
+        \item \emph{Composition operation}: Given morphisms~$\mora \colon \styleobj{a}\mto \styleobj{b}$ and~$\morb\colon \styleobj{b}\mto \styleobj{c}$, described by the LTI systems~$\tup{\mat{A}_\mora,\mat{B}_\mora,\mat{C}_\mora,\mat{D}_\mora}$ and~$\tup{\mat{A}_\morb,\mat{B}_\morb,\mat{C}_\morb,\mat{D}_\morb}$, their composition is an arrow~$(\mora \mthen \morb)\colon \styleobj{a}\mto \styleobj{c}$, parametrized by the LTI system~$\tup{\mat{A},\mat{B},\mat{C},\mat{D}}$, where
               \begin{equation}
                   \mat{A}=\begin{bmatrix}
-                      \mat{A}_1          & \mat{0}   \\
-                      \mat{B}_2\mat{C}_1 & \mat{A}_2
+                      \mat{A}_\mora              & \mat{0}       \\
+                      \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
                   \end{bmatrix},\quad
                   \mat{B}=\begin{bmatrix}
-                      \mat{B}_1 \\
-                      \mat{B}_2\mat{D}_1
+                      \mat{B}_\mora \\
+                      \mat{B}_\morb\mat{D}_\mora
                   \end{bmatrix},\quad
                   \mat{C}=\begin{bmatrix}
-                      \mat{D}_2\mat{C}_1 & \mat{C}_2
+                      \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
                   \end{bmatrix}, \quad
-                  \mat{D}=\mat{D}_2\mat{D}_1.
+                  \mat{D}=\mat{D}_\morb\mat{D}_\mora.
               \end{equation}
-        \item \emph{Identity morphism}: The identity morphism for~$l\setin \natnumbers$ is an arrow~$l\to l$, parametrized by the system~$\tup{\mat{0}^{0\times 0},\mat{0}^{0\times l},\mat{0}^{l\times 0},\mathbb{I}^{l\times l}}$.
+        \item \emph{Identity morphism}: The identity morphism for~$\styleobj{l}\setin \natnumbers$ is an arrow~$\styleobj{l}\to \styleobj{l}$, parametrized by the system~$\tup{\mat{0}^{0\times 0},\mat{0}^{0\times l},\mat{0}^{l\times 0},\mathbb{I}^{l\times l}}$.
 
     \end{enumerate}
 \end{ctdefinition}
+
+%describes the transformation of an input sequence~$u\colon \reals \to \reals^l$ into an output sequence~$y\colon \reals \to \reals^m$
 
 \begin{exercise}
     Prove that \LTI is indeed a category.
@@ -108,84 +97,84 @@ We now define the category of LTI systems \LTI.
 \begin{solution}
     We start with associativity.
 
-    Consider morphisms~$\mora \colon l\mto m$ given by~$\genericlti{1}$,~$\morb\colon m\mto n$ given by~$\genericlti{2}$, and~$\morc\colon n\mto o$ given by~$\genericlti{3}$.
+    Consider morphisms~$\mora \colon \styleobj{l}\mto \styleobj{m}$ given by~$\genericlti{\mora}$,~$\morb\colon \styleobj{m}\mto \styleobj{n}$ given by~$\genericlti{\morb}$, and~$\morc\colon \styleobj{n}\mto \styleobj{o}$ given by~$\genericlti{\morc}$.
 
-    The morphism~$\mora\mthen \morb$ is described by the LTI~$\genericlti{1,2}$, where
+    The morphism~$\mora\mthen \morb$ is described by the LTI~$\genericlti{\mora,\morb}$, where
     \begin{equation}
-        \mat{A}_{1,2}=\begin{bmatrix}
-            \mat{A}_1          & \mat{0}   \\
-            \mat{B}_2\mat{C}_1 & \mat{A}_2
+        \mat{A}_{\mora,\morb}=\begin{bmatrix}
+            \mat{A}_\mora              & \mat{0}       \\
+            \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
         \end{bmatrix},\
         \mat{B}_{1,2}=\begin{bmatrix}
-            \mat{B}_1 \\
-            \mat{B}_2\mat{D}_1
+            \mat{B}_\mora \\
+            \mat{B}_\morb\mat{D}_\mora
         \end{bmatrix},\
-        \mat{C}_{1,2}=\begin{bmatrix}
-            \mat{D}_2\mat{C}_1 & \mat{C}_2
+        \mat{C}_{\mora,\morb}=\begin{bmatrix}
+            \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
         \end{bmatrix}, \
-        \mat{D}_{1,2}=\mat{D}_2\mat{D}_1.
+        \mat{D}_{\mora,\morb}=\mat{D}_\morb\mat{D}_\mora.
     \end{equation}
-    The morphism~$(\mora\mthen \morb)\mthen \morc$ is described by~$\genericlti{(1,2),3}$, where:
+    The morphism~$(\mora\mthen \morb)\mthen \morc$ is described by~$\genericlti{(\mora,\morb),\morc}$, where:
     \begin{widepar}
         \begin{equation}
             \label{eq:assoc_lti_1}
-            \mat{A}_{(1,2),3}=\begin{bmatrix}
-                \mat{A}_1                   & \mat{0}            & \mat{0}   \\
-                \mat{B}_2\mat{C}_1          & \mat{A}_2          & \mat{0}   \\
-                \mat{B}_3\mat{D}_2\mat{C}_1 & \mat{B}_3\mat{C}_2 & \mat{A}_3
+            \mat{A}_{(\mora,\morb),\morc}=\begin{bmatrix}
+                \mat{A}_\mora                           & \mat{0}                    & \mat{0}       \\
+                \mat{B}_\morb\mat{C}_\mora              & \mat{A}_\morb              & \mat{0}       \\
+                \mat{B}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
             \end{bmatrix},\
-            \mat{B}_{(1,2),3}=\begin{bmatrix}
-                \mat{B}_1          \\
-                \mat{B}_2\mat{D}_1 \\
-                \mat{B}_3\mat{D}_2\mat{D}_1
+            \mat{B}_{(\mora,\morb),\morc}=\begin{bmatrix}
+                \mat{B}_\mora              \\
+                \mat{B}_\morb\mat{D}_\mora \\
+                \mat{B}_\morc\mat{D}_\morb\mat{D}_\mora
             \end{bmatrix},\
-            \mat{C}_{(1,2),3}=\begin{bmatrix}
-                \mat{D}_3\mat{D}_2\mat{C}_1 & \mat{D}_3\mat{C}_2 & \mat{C}_3
+            \mat{C}_{(\mora,\morb),\morc}=\begin{bmatrix}
+                \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
             \end{bmatrix}, \
-            \mat{D}_{(1,2),3}=\mat{D}_3\mat{D}_2\mat{D}_1.
+            \mat{D}_{(\mora,\morb),\morc}=\mat{D}_\morc\mat{D}_\morb\mat{D}_\mora.
         \end{equation}
     \end{widepar}
-    On the other hand, the morphism~$\morb\mthen \morc$ is described by~$\genericlti{2,3}$, where:
+    On the other hand, the morphism~$\morb\mthen \morc$ is described by~$\genericlti{\morb,\morc}$, where:
     \begin{equation}
-        \mat{A}_{2,3}=\begin{bmatrix}
-            \mat{A}_2          & \mat{0}   \\
-            \mat{B}_3\mat{C}_2 & \mat{A}_3
+        \mat{A}_{\morb,\morc}=\begin{bmatrix}
+            \mat{A}_\morb              & \mat{0}       \\
+            \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
         \end{bmatrix},\
-        \mat{B}_{2,3}=\begin{bmatrix}
-            \mat{B}_2 \\
-            \mat{B}_3\mat{D}_2
+        \mat{B}_{\morb,\morc}=\begin{bmatrix}
+            \mat{B}_\morb \\
+            \mat{B}_\morc\mat{D}_\morb
         \end{bmatrix},\
-        \mat{C}_{2,3}=\begin{bmatrix}
-            \mat{D}_3\mat{C}_2 & \mat{C}_3
+        \mat{C}_{\morb,\morc}=\begin{bmatrix}
+            \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
         \end{bmatrix}, \
-        \mat{D}_{2,3}=\mat{D}_3\mat{D}_2.
+        \mat{D}_{\morb,\morc}=\mat{D}_\morc\mat{D}_\morb.
     \end{equation}
-    Furthermore, the morphism~$\mora\mthen (\morb\mthen \morc)$ is described by~$\genericlti{1,(2,3)}$, where:
+    Furthermore, the morphism~$\mora\mthen (\morb\mthen \morc)$ is described by~$\genericlti{\mora,(\morb,\morc)}$, where:
     \begin{widepar}
         \begin{equation}
             \label{eq:assoc_lti_2}
-            \mat{A}_{1,(2,3)}=\begin{bmatrix}
-                \mat{A}_1                   & \mat{0}            & \mat{0}   \\
-                \mat{B}_2\mat{C}_1          & \mat{A}_2          & \mat{0}   \\
-                \mat{B}_3\mat{D}_2\mat{C}_1 & \mat{B}_3\mat{C}_2 & \mat{A}_3
+            \mat{A}_{\mora,(\morb,\morc)}=\begin{bmatrix}
+                \mat{A}_\mora                           & \mat{0}                    & \mat{0}       \\
+                \mat{B}_\morb\mat{C}_\mora              & \mat{A}_\morb              & \mat{0}       \\
+                \mat{B}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
             \end{bmatrix},\
-            \mat{B}_{1,(2,3)}=\begin{bmatrix}
-                \mat{B}_1          \\
-                \mat{B}_2\mat{D}_1 \\
-                \mat{B}_3\mat{D}_2\mat{D}_1
+            \mat{B}_{\mora,(\morb,\morc)}=\begin{bmatrix}
+                \mat{B}_\mora              \\
+                \mat{B}_\morb\mat{D}_\mora \\
+                \mat{B}_\morc\mat{D}_\morb\mat{D}_\mora
             \end{bmatrix},\
-            \mat{C}_{1,(2,3)}=\begin{bmatrix}
-                \mat{D}_3\mat{D}_2\mat{C}_1 & \mat{D}_3\mat{C}_2 & \mat{C}_3
+            \mat{C}_{\mora,(\morb,\morc)}=\begin{bmatrix}
+                \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
             \end{bmatrix}, \
-            \mat{D}_{1,(2,3)}=\mat{D}_3\mat{D}_2\mat{D}_1.
+            \mat{D}_{\mora,(\morb,\morc)}=\mat{D}_\morc\mat{D}_\morb\mat{D}_\mora.
         \end{equation}
     \end{widepar}
     Clearly, the matrices in \cref{eq:assoc_lti_1} and \cref{eq:assoc_lti_2} coincide, showing associativity.
 
     Let's now show unitality.
-    Consider a morphism~$\mora\colon l\mto m$, described by~$\genericlti{}$.
-    The morphism~$\catid_l \mthen \mora$ is a morphism~$l\mto m$ still given by~$\genericlti{}$.
-    Similarly, the morphism~$\mora\mthen \catid_m$ is a morphism~$l\mto m$, given by~$\genericlti{}$.
+    Consider a morphism~$\mora\colon \styleobj{l}\mto \styleobj{m}$, described by~$\genericlti{}$.
+    The morphism~$\catid_\styleobj{l} \mthen \mora$ is a morphism~$\styleobj{l}\mto \styleobj{m}$ still given by~$\genericlti{}$.
+    Similarly, the morphism~$\mora\mthen \catid_\styleobj{m}$ is a morphism~$\styleobj{l}\mto \styleobj{m}$, given by~$\genericlti{}$.
     Therefore, \LTI is a category.
 \end{solution}
 
@@ -193,40 +182,39 @@ We now define the category of LTI systems \LTI.
 When considering LTI systems, we can define stacking operations and show that it forms a stacking semicategory (\cref{def:simple-stacking-semi-cat}).
 The stacking operation on objects is defined as
 \begin{equation*}
-    \defmapperiod{\mtimescatob}{\Ob_\LTI \cartprod \Ob_\LTI}{\to}{\Ob_\LTI}{\tup{l,m}}{l+m}
+    \defmapperiod{\mtimescatob}{\Ob_\LTI \cartprod \Ob_\LTI}{\to}{\Ob_\LTI}{\tup{\styleobj{l},\styleobj{m}}}{\styleobj{l}+\styleobj{m}}
 \end{equation*}
 On the other hand, the operation on morphisms ``stacks'' the LTI systems onto each other.
 Formally:
 \begin{equation*}
-    \defmapcomma{\mtimescatmor}{\Mor_\LTI \cartprod \Mor_\LTI}{\to}{\Mor_\LTI}{\tup{\genericlti{1},\genericlti{2}}}{\genericlti{}}
+    \defmapcomma{\mtimescatmor}{\Mor_\LTI \cartprod \Mor_\LTI}{\to}{\Mor_\LTI}{\tup{\genericlti{\mora},\genericlti{\morb}}}{\genericlti{}}
 \end{equation*}
 with
 \begin{equation*}
     \mat{A}=\begin{bmatrix}
-        \mat{A}_1 & \mat{0}   \\
-        \mat{0}   & \mat{A}_2
+        \mat{A}_\mora & \mat{0}       \\
+        \mat{0}       & \mat{A}_\morb
     \end{bmatrix}, \
     \mat{B}=\begin{bmatrix}
-        \mat{B}_1 & \mat{0}   \\
-        \mat{0}   & \mat{B}_2
+        \mat{B}_\mora & \mat{0}       \\
+        \mat{0}       & \mat{B}_\morb
     \end{bmatrix},\
     \mat{C}=\begin{bmatrix}
-        \mat{C}_1 & \mat{0}   \\
-        \mat{0}   & \mat{C}_2
+        \mat{C}_\mora & \mat{0}       \\
+        \mat{0}       & \mat{C}_\morb
     \end{bmatrix},\
     \mat{D}=\begin{bmatrix}
-        \mat{D}_1 & \mat{0}   \\
-        \mat{0}   & \mat{D}_2
+        \mat{D}_\mora & \mat{0}       \\
+        \mat{0}       & \mat{D}_\morb
     \end{bmatrix}
 \end{equation*}
 \todo{Maybe mention for engineers that know this: the resulting LTI system has RGA identity}
-Clearly, the morphism~$\genericlti{}$ satisifes the compatibility condition for stacking semicategories: if~$\genericlti{1}$ is~$l\mto m$ and~$\genericlti{2}$ is~$n\mto o$,~$\genericlti{}$ is~$l+n\mto m+o$.
+Clearly, the morphism given by~$\genericlti{}$ satisifes the compatibility condition for stacking semicategories:
+if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\morb}$ is~$\styleobj{n}\mto \styleobj{o}$,~$\genericlti{}$ is~$\styleobj{l}+\styleobj{n}\mto \styleobj{m}+\styleobj{o}$.
 Given that the resulting LTI system is described by diagonal matrices, the defined operations are associative, and therefore \LTI is an associative stacking semicategory.
 
-\begin{exercise}
-    Prove or disprove: \LTI as defined is a functiorial stacking semicategory.
-\end{exercise}
-\begin{solution}
+\begin{example}
+    We want to show that \LTI as defined is a functiorial stacking semicategory.
     Given morphisms~$\mora\colon l\mto m$,~$\morc\colon m\mto n$,~$\morb\colon o\mto p$,~$\mord\colon p\mto q$, we need to show
     \begin{equation*}
         (\mora \mthen \morc)\mtimescat (\morb\mthen \mord)=(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord).
@@ -249,12 +237,13 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
         \begin{bmatrix}
             \mat{A}_\mora               & \mat{0}                     & \mat{0}       & \mat{0}       \\
             \mat{0}                     & \mat{A}_\morb               & \mat{0}       & \mat{0}       \\
-            \mat{B}_\morc \mat{A}_\mora & \mat{0}                     & \mat{A}_\morc & \mat{0}       \\
+            \mat{B}_\morc \mat{C}_\mora & \mat{0}                     & \mat{A}_\morc & \mat{0}       \\
             \mat{0}                     & \mat{B}_\mord \mat{C}_\morb & \mat{0}       & \mat{A}_\mord
         \end{bmatrix}
     \end{equation*}
     These two are different, and will therefore describe different systems.
-\end{solution}
+\end{example}
+
 \subsection{Descriptor systems}
 
 Descriptor systems (DLTI systems) are a generalization of LTI systems which differ only in that the defining system of equations has the form
@@ -269,10 +258,10 @@ We associate the equation \cref{eq:DLTI-system-dyn} now with the relation
 \begin{equation*}
     \prdyn \subseteq  (\prin \cartprod \prst) \cartprod \prst
 \end{equation*}
-given by
-\begin{equation*}
-    \prdyn = \{ \tup{ \tup{\mat{u}, \mat{x}} \mat{v}} \mid \mat{E} \mat{v} = \mat{A}\mat{x} + \mat{B}\mat{u} \}.
-\end{equation*}
+%given by
+%\begin{equation*}
+%   \prdyn = \{ \tup{ \tup{\mat{u}, \mat{x}} \mat{v}} \mid \mat{E} \mat{v} = \mat{A}\mat{x} + \mat{B}\mat{u} \}.
+%\end{equation*}
 
 \section{System behaviors}
 
