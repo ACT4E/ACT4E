@@ -88,8 +88,8 @@ In the next part we will talk about \emph{monoidal categories} (\cref{def:monoid
 
     \constit
     \begin{itemize}
-        \item A stacking operation~$\mtimescatob \colon \Ob_\CatC \times \Ob_\CatC \to \Ob_\CatC$.
-        \item A stacking operation~$\mtimescatmor \colon \Mor_\CatC \times \Mor_\CatC \to \Mor_\CatC$.
+        \item A stacking operation~$\mtimescatob \colon \Ob_\CatC \cartprod \Ob_\CatC \to \Ob_\CatC$.
+        \item A stacking operation~$\mtimescatmor \colon \Mor_\CatC \cartprod \Mor_\CatC \to \Mor_\CatC$.
     \end{itemize}
 
     \condit
@@ -130,11 +130,78 @@ In the next part we will talk about \emph{monoidal categories} (\cref{def:monoid
     \end{equation}
 \end{remark}
 
-\begin{example}
-    \SetL  is an associative stacking semicategory, with list concatenation being the semigroup operation on objects.
+\devel{
+    \begin{example}
+        \SetL  is an associative stacking semicategory.
+        We first show that is is a stacking category.
+        The stacking operation on objects is defined as list concatenation:
+        \begin{equation*}
+            \defmapperiod{\mtimescatob}{\Ob_{\SetL} \cartprod \Ob_{\SetL}}{\mto}{\Ob_{\SetL}}{\tup{\Tupcatt{\setA_1}{\ldots}{ \setA_n}, \Tupcatt{\setB_1}{\ldots}{\setB_m}}}{\Tupcatt{\setA_1}{\ldots}{\setA_n} \listconcat \Tupcatt{\setB_1}{\ldots}{\setB_m}}
+        \end{equation*}
+        The stacking operation on morphisms is defined as
+        \begin{equation*}
+            \defmapperiod{\mtimescatmor}{\Mor_{\SetL} \cartprod \Mor_{\SetL}}{\mto}{\Mor_{\SetL}}{\tup{\mora,\morb}}{\more},
+        \end{equation*}
+        which, given~$\mora\colon \Tupcatt{\setA_1}{\ldots}{\setA_n}\mto \Tupcatt{\setB_1}{\ldots}{\setB_m}$ (given by a map~$\mapc$) and~$\Tupcatt{\setC_1}{\ldots}{\setC_o}\mto \Tupcatt{\setD_1}{\ldots}{\setD_p}$ (given by a map~$\mapd$) is given by a function
+        \begin{equation*}
+            \mape \definedas \cohm_{\setA,\setC}\then (\mapc\funcprod \mapd) \then \cohm_{\setB,\setD},
+        \end{equation*}
+        which has signature
+        \begin{widepar}
+            \begin{equation*}
+                \setA_1\cartprod (\setA_2\cartprod (\ldots \cartprod (\setA_n \cartprod (\setC_1 \cartprod(\setC_2 \cartprod (\ldots \cartprod \setC_o))))))
+                \to
+                \setB_1\cartprod (\setB_2\cartprod (\ldots \cartprod (\setB_m \cartprod (\setD_1 \cartprod (\setD_2 \cartprod(\ldots \cartprod \setD_p)))))).
+            \end{equation*}
+        \end{widepar}
+        The two operations are compatible, because
+        \begin{widepar}
+            \begin{equation*}
+                \prfperiod{\mora\colon \Tupcatt{\setA_1}{\ldots}{\setA_n}\mto \Tupcatt{\setB_1}{\ldots}{\setB_m}}
+                {\morb\colon \Tupcatt{\setC_1}{\ldots}{\setC_o}\mto \Tupcatt{\setD_1}{\ldots}{\setD_p}}
+                {\more\colon \Tupca{\setA_1\setconcat \ldots \setconcat \setA_n \setconcat \setC_1 \setconcat \ldots \setconcat \setC_o} \mto \Tupca{\setB_1\setconcat \ldots \setconcat \setB_m \setconcat \setD_1 \setconcat \ldots \setconcat \setD_p}}
+            \end{equation*}
+        \end{widepar}
+        Note that using the coherence morphisms, introduced in \cref{sec:SetL}, is needed for the compatibility conditions to hold.
 
-    \todotext{expand and explain this example}
-\end{example}
+        We now show associativity.
+        We have already shown in \cref{sec:semigroups} that the concatenation of lists satisfies the properties of a semigroup operation.
+        Showing associativity of the operation on the morphisms is more cumbersome.
+        Consider morphisms
+        \begin{equation*}
+            \begin{aligned}
+                \mora\colon \Tupcatt{\setA_1}{\ldots}{\setA_m} & \mto \Tupcatt{\setB_1}{\ldots}{\setB_n}, \\
+                \morb\colon \Tupcatt{\setC_1}{\ldots}{\setC_o} & \mto \Tupcatt{\setD_1}{\ldots}{\setD_p}, \\
+                \morc\colon \Tupcatt{\setE_1}{\ldots}{\setE_q} & \mto \Tupcatt{\setF_1}{\ldots}{\setF_r},
+            \end{aligned}
+        \end{equation*}
+        to which maps~$\mapd,\mape,\mapf$ are associated.
+        We first look at the map associated to~$(\mora \mtimescatmor \morb)\mtimescatmor \morc$.
+        We know that the map associated to~$\mora \mtimescatmor \morb$ is
+        \begin{equation*}
+            \cohm_{\setA,\setC}\then (\mapd\funcprod \mape) \then \cohm_{\setB,\setD},
+        \end{equation*}
+        and therefore the map associated to~$(\mora \mtimescatmor \morb)\mtimescatmor \morc$ is
+        \begin{equation*}
+            \cohm_{\setA\listconcat\setC, \setE}\then ((\cohm_{\setA,\setC}\then (\mapd\funcprod \mape) \then \cohm_{\setB,\setD})\funcprod \mapf) \then \cohm_{\setB\listconcat \setD, \setF},
+        \end{equation*}
+        We then look at the map associated to~$\mora (\mtimescatmor \morb\mtimescatmor \morc)$.
+        We know that the map associated to~$\morb \mtimescatmor \morc$ is
+        \begin{equation}
+            \label{eq:assoc_listconcat_a}
+            \cohm_{\setC,\setE}\then (\mape\funcprod \mapf) \then \cohm_{\setD,\setF},
+        \end{equation}
+        and therefore the map associated to~$\mora \mtimescatmor (\morb\mtimescatmor \morc)$ is
+        \begin{equation}
+            \label{eq:assoc_listconcat_b}
+            \cohm_{\setA, \setC\listconcat\setE}\then (\mapd \funcprod (\cohm_{\setC,\setE}\then (\mape\funcprod \mapf) \then \cohm_{\setD,\setF})) \then \cohm_{\setB, \setD\listconcat \setF}.
+        \end{equation}
+        \cref{eq:assoc_listconcat_a} and \cref{eq:assoc_listconcat_b} are equivalent.
+        \todotext{Explictly show?
+            Pretty long and heavy.
+        }
+    \end{example}
+}
 
 \begin{definition}
     An associative stacking semicategory is called \emph{commutative} if its two stacking operations makes the collections of objects and morphisms, respectively, into commutative semigroups.
@@ -197,7 +264,7 @@ An effectful function
 %
 which could have some unknown side-effects on the world, can be represented by a pure function
 \begin{equation}
-    \mora_e\colon  \Obja  \times \EfW \mtoin{\Set}   \Objb \times \EfW,
+    \mora_e\colon  \Obja  \cartprod \EfW \mtoin{\Set}   \Objb \cartprod \EfW,
 \end{equation}
 or, in other words, as a morphism
 \begin{equation}
@@ -237,8 +304,8 @@ The second effectful function operates on the world after it was possibly modifi
 We have all the ingredients to define the category \Effects of effectful computation.
 
 \begin{definition}[Category of effectful procedures \Effects]
-    Fix a set ~$\EfW$ of all possible worlds.
-    The category $\Effects=  \Effects_\EfW$ is defined by the following:
+    Fix a set~$\EfW$ of all possible worlds.
+    The category~$\Effects=  \Effects_\EfW$ is defined by the following:
     \begin{itemize}
         \item \emph{Objects}: same as the objects of \SetL;
         \item \emph{Morphisms}: a morphism~$\mora\colon \Obja \mtoin{\Effects} \Objb$ is a morphism
@@ -280,8 +347,6 @@ This is shown in~\cref{fig:effect-stacking}.
     \label{fig:effect-stacking}
 \end{figure}
 
-\todotextjira{639}{the representation in (b) in the figure above is incorrect I believe -- W on the left-hand side should be at the bottom}
-
 \todotextjira{415}{proof.
     Need to show semigroup.
 }
@@ -301,7 +366,7 @@ This is shown in~\cref{fig:effect-stacking}.
         (\mora \mtimescat \morb )
         \mthen (\morc \mtimescat \mord )
     \end{equation}
-    for all morphisms $\mora, \morb, \morc$, and $\mord$ where respectively $\mora$ and $\morc$, and $\morb$ and $\mord$ are composable.
+    for all morphisms~$\mora, \morb, \morc$, and $\mord$ where respectively $\mora$ and $\morc$, and $\morb$ and $\mord$ are composable.
 \end{ctdefinition}
 
 %More in detail, we have that for any~$n \geq 2$, there is a semifunctor
@@ -327,14 +392,53 @@ This describes a sort of commutivity property: we can either first compose horiz
     \label{fig:stacking-functorial}
 \end{figure*}
 
-\todotext{J: in the figure (a) above, I think we should have boxes around the stacked morphisms before the are composed serially}
-
 \begin{lemma}
     \SetL is a functorial stacking semicategory.
 \end{lemma}
 
-\todotext{J: for the above lemma, one first needs to discuss/say explicitly what the stacking operation is.}
+\devel{
 
+    \begin{equation*}
+        \begin{aligned}
+            \mora\colon \Tupcatt{\setA_1}{\ldots}{\setA_m} & \mto \Tupcatt{\setB_1}{\ldots}{\setB_n}, \\
+            \morb\colon \Tupcatt{\setD_1}{\ldots}{\setD_o} & \mto \Tupcatt{\setE_1}{\ldots}{\setE_p}, \\
+            \morc\colon \Tupcatt{\setB_1}{\ldots}{\setB_n} & \mto \Tupcatt{\setC_1}{\ldots}{\setC_q}, \\
+            \mord\colon \Tupcatt{\setE_1}{\ldots}{\setE_p} & \mto \Tupcatt{\setF_1}{\ldots}{\setF_r},
+        \end{aligned}
+    \end{equation*}
+    to which maps~$\mape,\mapf,\mapg,\maph$ are associated.
+
+    We want to show that
+    \begin{equation*}
+        (\mora \mtimescat \morb )
+        \mthen (\morc \mtimescat \mord )
+        =
+        (\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ),
+    \end{equation*}
+    and we do it by showing that the map associated with the left-hand side of the equation corresponds to the one on the right-hand side.
+    We know the maps associated to~$(\mora \mtimescat \morb )$ and~$(\morc \mtimescat \mord )$, which are
+    \begin{equation*}
+        \cohm_{\setA,\setD}\then (\mape \funcprod \mapg)\then \cohm_{\setB,\setE},
+    \end{equation*}
+    and
+    \begin{equation*}
+        \cohm_{\setB,\setE}\then (\mapf \funcprod \maph)\then \cohm_{\setC,\setF},
+    \end{equation*}
+    respectively.
+    The map associated to~$(\mora \mtimescat \morb )
+        \mthen (\morc \mtimescat \mord )$ is therefore
+    \begin{equation}
+        \label{eq:setL_functorial_a}
+        \cohm_{\setA,\setD}\then (\mape \funcprod \mapg)\then \cohm_{\setB,\setE}\then \cohm_{\setB,\setE}\then (\mapf \funcprod \maph)\then \cohm_{\setC,\setF}.
+    \end{equation}
+    On the other hand, the map associated to~$(\mora \mthen \morc )$ is~$\mape\then \mapf$, and the map associated to~$(\morb \mthen \mord)$ is~$\mapg\then \maph$.
+    Therefore, the map associated to~$(\mora \mthen \morc ) \mtimescat (\morb \mthen \mord )$ is
+    \begin{equation*}
+        \cohm_{\setA,\setD}\then ((\mape\then \mapf)\funcprod (\mapg\then \maph))\then \cohm_{\setC,\setD}
+    \end{equation*}
+
+    \todotext{Now need to finish by showing equivalence of maps}
+}
 \Effects is an example of a stacking category that is not functorial.
 
 \begin{lemma}
@@ -343,12 +447,12 @@ This describes a sort of commutivity property: we can either first compose horiz
 
 \begin{proof}
     This is shown graphically in \cref{fig:effects-non-functorial} by showing that, in general,
-    \begin{equation}
+    \begin{equation*}
         (\mora \mtimescat \morb )
         \mthen (\morc \mtimescat \mord )
         \neq
         (\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ).
-    \end{equation}
+    \end{equation*}
 \end{proof}
 
 \begin{figure*}[b]
@@ -367,11 +471,9 @@ This describes a sort of commutivity property: we can either first compose horiz
     \label{fig:effects-non-functorial}
 \end{figure*}
 
-\todotextjira{640}{the representations in \cref{fig:effects7} and \cref{fig:effects9} are incorrect -- W on the left-hand sides should be at the bottom}
-
 \section{Symmetric stacking}
 
-Let $\CatC$ be an associative stacking category, and consider morphisms
+Let~$\CatC$ be an associative stacking category, and consider morphisms
 \begin{equation*}
     \mora \mtimescatmor \morb \colon \Obja \mtimescatob \Objb \mto \Objc \mtimescatob \Objd
 \end{equation*}
@@ -379,38 +481,37 @@ and~
 \begin{equation*}
     \morc \mtimescatmor \mord \colon \Objd \mtimescatob \Objc \mto \Objf \mtimescatob \Obje.
 \end{equation*}
-If $\Objc \mtimescatob \Objd \neq \Objd \mtimescatob \Objc$, then the morphisms $\mora \mtimescatmor \morb$ and $\morc \mtimescatmor \mord$ are, in our model, technically not composable.
-However, in some examples, we will in fact want to be able to compose such morphisms, because in those cases $\Objc \mtimescatob \Objd$ and $\Objd \mtimescatob \Objc$ are essentially equal, even if they aren't equal on the nose.
+If~$\Objc \mtimescatob \Objd \neq \Objd \mtimescatob \Objc$, then the morphisms~$\mora \mtimescatmor \morb$ and~$\morc \mtimescatmor \mord$ are, in our model, technically not composable.
+However, in some examples, we will in fact want to be able to compose such morphisms, because in those cases~$\Objc \mtimescatob \Objd$ and~$\Objd \mtimescatob \Objc$ are essentially equal, even if they aren't equal on the nose.
 
-For example, $\mora, \morb, \morc, \mord$ might be systems, represented graphically by boxes with wires for input and output.
-The stacked system $\mora \mtimescatmor \morb$ will have output wires for $\Objc$ and $\Objd$, and the stacked system $\morc \mtimescatmor \mord$ will have input wires for $\Objd$ and $\Objc$.
-In some applications we are often indeed able to connect the one output wire labeled with $\Objc$ to the input wire also labeled with $\Objc$, and similarly for $\Objd$.
+For example,~$\mora, \morb, \morc, \mord$ might be systems, represented graphically by boxes with wires for input and output.
+The stacked system~$\mora \mtimescatmor \morb$ will have output wires for~$\Objc$ and $\Objd$, and the stacked system~$\morc \mtimescatmor \mord$ will have input wires for~$\Objd$ and~$\Objc$.
+In some applications we are often indeed able to connect the one output wire labeled with~$\Objc$ to the input wire also labeled with~$\Objc$, and similarly for~$\Objd$.
 
 To model this for stacking semicategories, we introduce operations that correspond to switching (or permuting) input and output wires.
-Recall that, for each $n \setin \natnumbers$, the symmetric group $S_n$ is the group of bijections of the set $\{1, 2, .
-    .., n \}$ with itself.
+Recall that, for each~$n \setin \natnumbers$, the symmetric group $S_n$ is the group of bijections of the set~$\{1, 2, \ldots, n \}$ with itself.
 
 %Now consider a a stacking semicategory $\CatC$. For each natural number $n \geq 2$ and each permutation $\sigma \setin S_n$, we define an operation $P_\sigma: \Ob_\CatC \to \Ob_\CatC$ by
 %\begin{equation}
 %P_\sigma: \Obja_1 \mtimescatob \dots \mtimescatob  \Obja_n \mapsto \Obja_{\sigma(1)} \mtimescatob \dots \mtimescatob  \Obja_{\sigma(n)}
 %\end{equation}
 
-\begin{ctdefinition}[Symmetric stacking category]
+\begin{ctdefinition}[Symmetric stacking semicategory]
     \label{def:symmetric-stacking-category}
-    A symmetric associative stacking semicategory is an associative stacking semicategory $\CatC$ with:
+    A symmetric associative stacking semicategory is an associative stacking semicategory~$\CatC$ with:
 
     \constit
 
     \begin{itemize}
         \item Functions
               \begin{equation}
-                  L_\sigma : \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_i}{\mtimescatob_{i=1}^n \Objb_i} \to \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_{\sigma(i)}}{\mtimescatob_{i=1}^n \Objb_i}
+                  L_\sigma \colon \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_i}{\mtimescatob_{i=1}^n \Objb_i} \to \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_{\sigma(i)}}{\mtimescatob_{i=1}^n \Objb_i}
               \end{equation}
               and
               \begin{equation}
-                  R_\sigma : \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_i}{\mtimescatob_{i=1}^n \Objb_i} \to \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_i}{\mtimescatob_{i=1}^n \Objb_{\sigma(i)}}
+                  R_\sigma \colon \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_i}{\mtimescatob_{i=1}^n \Objb_i} \to \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_i}{\mtimescatob_{i=1}^n \Objb_{\sigma(i)}}
               \end{equation}
-              for every $\sigma \setin S_n$, $n \geq 2$.
+              for every~$\sigma \setin S_n$,~$n \geq 2$.
     \end{itemize}
 
     \condit
@@ -422,9 +523,9 @@ Recall that, for each $n \setin \natnumbers$, the symmetric group $S_n$ is the g
                   \quad \text{ and } \quad
                   R_\sigma \then R_\pi = R_{\sigma \then \pi}
               \end{equation}
-              hold for all $\sigma, \pi \setin S_n$, $n \geq 2$.
+              hold for all~$\sigma, \pi \setin S_n$,~$n \geq 2$.
         \item
-              Given $\mora_i : \Obja_i \mto \Objb_i$, $1 \leq i \leq n$, it holds that
+              Given~$\mora_i \colon \Obja_i \mto \Objb_i$,~$1 \leq i \leq n$, it holds that
               \begin{equation}
                   R_\sigma ( \mtimescatmor_{i=1}^n \mora_i ) = L_\sigma(  \mtimescatmor_{i=1}^n \mora_{\sigma(i)} ).
               \end{equation}

@@ -3,7 +3,7 @@
 \section{The category $\SetL$}
 \label{sec:SetL}
 
-In the following we present a technical construction which will allow us to define a semicategory of Moore machines after all, and will be of general interest later. 
+In the following we present a technical construction which will allow us to define a semicategory of Moore machines after all, and will be of general interest later.
 
 We define a category similar to \Set, but its objects are \emph{lists} of sets.
 
@@ -11,12 +11,12 @@ We define a category similar to \Set, but its objects are \emph{lists} of sets.
     \label{def:SetL}
     The category~$\SetL$ is:
     \begin{enumerate}
-        \item \emph{Objects:} lists $\Tupcatt {\setA_1}  \dots {\setA_n}$, $n \setin \natnumbers$, of sets.
-              This includes the empty list $\Tupca {}$.
+        \item \emph{Objects:} lists~$\Tupcatt {\setA_1}  \dots {\setA_n}$,~$n \setin \natnumbers$, of sets.
+              This includes the empty list~$\Tupca {}$.
         \item \emph{Morphisms:}
               A morphism from~$\setLA =\Tupcatt {\setA_1}  \dots {\setA_n}$ to~$\setLB = \Tupcatt {\setB_1} \dots {\setB_m}$ is a function:
               \begin{equation*}
-                  \mapa\colon {\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n})) \sto {\setB_1} \cartprod (\setB_2 \cartprod (\ldots \cartprod {\setB_m}))
+                  \mapa\colon {\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n})) \sto {\setB_1} \cartprod (\setB_2 \cartprod (\ldots \cartprod {\setB_m})).
               \end{equation*}
         \item \emph{Composition:}
               Composition is the usual composition of functions.
@@ -25,79 +25,141 @@ We define a category similar to \Set, but its objects are \emph{lists} of sets.
     \end{enumerate}
 \end{definition}
 
-As an auxiliary tool, let us define a function $\tupset$ that, given a list of sets $\Tupcatt {\setA_1}  \dots {\setA_n}$, turns it into a set via the following recipe: 
-\begin{equation}
-\tupset (\Tupcatt {\setA_1}  \dots {\setA_n}) \definedas {\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n})).
-\end{equation}
-Using this notation, a morphism $\setLA \mto \setLB$ in $\SetL$ is, by definition, a function $\tupset(\setLA) \mto \tupset(\setLB)$. 
-
-We also equip the category $\SetL$ with an operation of \emph{concatenation} of lists. Given lists $\setLA =\Tupcatt {\setA_1}  \dots {\setA_n}$ and~$\setLB = \Tupcatt {\setB_1} \dots {\setB_m}$, their concatenation is
-\begin{equation}
-\setLA  \listconcat  \setLB := \Tupcattt {\setA_1}{\dots}{\setA_n}{\setB_1}{\dots}{\setB_m}.
-\end{equation}
-
-The operation $\tupset$ of turning lists into sets works coherently with concatenation, in that there is a `canonical' isomorphism
+As an auxiliary tool, let us define a function $\tupset$ that, given a list of sets $\Tupcatt {\setA_1}  \dots {\setA_n}$, turns it into a set via the following recipe:
 \begin{equation*}
-\cohm_{\setLA, \setLB} \colon \tupset(\setLA  \listconcat  \setLB) \to \tupset( \setLA) \cartprod \tupset(\setLB);
+    \tupset (\Tupcatt {\setA_1}  \dots {\setA_n}) \definedas {\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n})).
 \end{equation*}
-namely, $\cohm_{\setLA, \setLB}$ denotes for us the function 
+For the special case of the empty list, we choose a one-element set~$\{*\}$ and define
 \begin{equation*}
-{\setA_1} \cartprod (\setA_2 \cartprod (\ldots \setB_{m-1} \cartprod {\setB_m})) \to ({\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n}))) \cartprod ({\setB_1} \cartprod (\setB_2 \cartprod (\ldots \cartprod {\setB_m})))
+    \tupset (\makelist{}) \definedas \{*\}.
 \end{equation*}
-that reorders the bracketing of elements as needed.
+Incorporating~$\tupset$ in our notation, a morphism~$\setLA \mto \setLB$ in~$\SetL$ is, by definition, a function~$\tupset(\setLA) \mto \tupset(\setLB)$.
 
+We also equip the category~$\SetL$ with an operation of \emph{concatenation} of lists.
+Given lists~$\setLA =\Tupcatt {\setA_1}  \dots {\setA_n}$ and~$\setLB = \Tupcatt {\setB_1} \dots {\setB_m}$, their concatenation is
+\begin{equation*}
+    \setLA  \listconcat  \setLB \definedas \Tupcattt {\setA_1}{\dots}{\setA_n}{\setB_1}{\dots}{\setB_m}.
+\end{equation*}
+Empty lists act neutrally for concatenation.
 
+The operation~$\tupset$ of turning lists into sets works coherently with concatenation, in that there is a `coherence' isomorphism
+\begin{equation}
+    \label{def:coherence-iso-lists}
+    \cohm_{\setLA, \setLB} \colon \tupset( \setLA) \cartprod \tupset(\setLB) \to \tupset(\setLA  \listconcat  \setLB);
+\end{equation}
+namely,~$\cohm_{\setLA, \setLB}$ denotes for us the function
+\begin{equation*}
+    ({\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n}))) \cartprod ({\setB_1} \cartprod (\setB_2 \cartprod (\ldots \cartprod {\setB_m}))) \to  {\setA_1} \cartprod (\setA_2 \cartprod (\ldots \setB_{m-1} \cartprod {\setB_m}))
+\end{equation*}
+that reorders the bracketing of elements so that they are all nested `to the right'.
+
+For example, if~$\setLA = \makelist{\setA_1, \setA_2, \setA_3}$ and~$\setLB = \makelist{\setB_1, \setB_2}$, then
+\begin{equation*}
+    \defmapperiodset{ \cohm_{\setLA, \setLB}
+    }{
+        (\setA_1 \cartprod ( \setA_2 \cartprod  \setA_3)) \cartprod (\setB_1 \cartprod  \setB_2 )
+    }{
+        \setA_1 \cartprod ( \setA_2 \cartprod ( \setA_3 \cartprod (\setB_1 \cartprod  \setB_2 )))
+    }{
+        \tup{\tup{\ela_1, \tup{\ela_2, \ela_3}}, \tup{\elb_1, \elb_2}}
+    }{
+        \tup{\ela_1, \tup{\ela_2, \tup{\ela_3, \tup{\elb_1, \elb_2}}}}
+    }
+\end{equation*}
+(Can you convince yourself that this function is indeed invertible?
+)
+
+When the empty list is involved, we also have a special rule for \cref{def:coherence-iso-lists}.
+If~$\setLA = \makelist{}$, we set
+\begin{equation*}
+    \defmapperiod{\cohm_{\setLA, \setLB}}{\{*\} \cartprod \tupset(\setLB)}{\to}{\tupset(\setLA  \listconcat  \setLB) = \tupset(\setLB)}{\tup{*, \elb}}{\elb}
+\end{equation*}
+
+An analogous isomorphism is used if instead~$\setLB = \makelist{}$, and the two cases coincide if~$\setLA = \setLB = \makelist{}$.
+
+The following will be needed later.
+
+\begin{lemma}\label{lem:coh-isos-compatible}
+    For any~$\setLA$,~$\setLB$,~$\setLC$ in~$\SetL$, the following diagram
+    \begin{center}
+        \middlesag{coh-isos-compat-lemma}
+    \end{center}
+    commutes, where~$\alpha$ is the canonical isomorphism that re-brackets tuples in the obvious way.
+\end{lemma}
 
 \devel{
-\subsection{A functor from $\SetL$ to \Set}
-\label{sec:funsetstarset}
+    \begin{proof}
+        We look at the two sides of the commuting diagram.
+        On one hand one has:
+        \begin{equation*}
+            \begin{aligned}
+                ((\cohm_{\setLA, \setLB} \times \catid_{ \tupset(\setLC) }) \mthen \cohm_{\setLA \listconcat \setLB, \setLC})(\tup{\tup{\ela,\elb},\elc}) & =
+                \cohm_{\setLA \listconcat \setLB, \setLC}((\tup{\tup{\ela,\elb},\elc})) \\
+                                                                                                                                                          & =\tup{\ela, \tup{\elb,\elc}}.
+            \end{aligned}
+        \end{equation*}
+        On the other hand, one has
+        \begin{equation*}
+            \begin{aligned}
+                 & (\alpha\mthen (\catid_{ \tupset(\setLA) } \times  \cohm_{\setLB, \setLC}) \mthen \cohm_{\setLA, \setLB  \listconcat\setLC})(\tup{\tup{\ela,\elb},\elc}) \\
+                 & =
+                ((\catid_{\tupset(\setLA)} \times  \cohm_{\setLB, \setLC})\mthen \cohm_{\setLA, \setLB  \listconcat \setLC})(\tup{\ela,\tup{\elb,\elc}}) \\
+                 & =\cohm_{\setLA, \setLB  \listconcat\setLC}(\tup{\ela, \tup{\elb,\elc}}) \\
+                 & =\tup{\ela, \tup{\elb,\elc}}.
+            \end{aligned}
+        \end{equation*}
+    \end{proof}
 
-We now define a functor~$\tupset \colon \SetL \fto \Set$:
-\begin{itemize}
-    \item On objects, one has
-          \begin{equation*}
-              \defmapperiod{\funob{\tupset}}{\SetL}{\fto}{\Set}{\Tupcatt {\setA_1}  \dots {\setA_n}}{{\setA_1}\cartprod (\ldots \cartprod {\setA_n})}
-          \end{equation*}
-    \item On morphisms, one has
-          \begin{equation*}
-              \defmapcomma{\funmor{\tupset}}{\HomSet{\SetL}{\Tupcatt{\setA_1}\dots{\setA_n}}{\Tupcatt{\setB_1} \dots {\setB_m}}}
-              {\fto}{\HomSet{\Set}{\setA}{\setB}}{\mapa}{\mapa}
-          \end{equation*}
-          where~$\setA={\setA_1} \cartprod (\ldots \cartprod {\setA_n})$ and~$\setB={\setB_1} \cartprod (\ldots \cartprod {\setB_m})$.
-\end{itemize}
-We can now check that this is indeed a functor.
-Unitality follows from the definition of~$\funmor{\tupset}$ and the definition of~$\SetL$.
-Furthermore, given
-\begin{equation*}
-    \begin{aligned}
-         & \mora \setin \HomSet{\SetL}{\Tupcatt{\setA_1}\dots{\setA_n}}{\Tupcatt{\setB_1} \dots {\setB_m}} \\
-         & \morb \setin \HomSet{\SetL}{\Tupcatt{\setB_1}\dots{\setB_m}}{\Tupcatt{\setC_1}\dots {\setC_o}},
-    \end{aligned}
-\end{equation*}
-one has
-\begin{equation*}
-    \begin{aligned}
-        \funmor{\tupset}(\mora \mthenof{\SetL} \morb) & =\mora\mthenof{\SetL} \morb \\
-                                                      & =\funmor{\tupset}(\mora)\mthenof{\Set} \funmor{\tupset}(\morb).
-    \end{aligned}
-\end{equation*}
-
-\showslides{
-    \begin{forslides}
-
-        \begin{equation}
-            \tupca \ela   = \ela
-        \end{equation}
-        ~
-        \begin{equation}
-            \label{eq:sets-monoid-el-cat}
-            \tupcat \ela \elb \elconcat \elc = \tupcatt \ela \elb \elc
-        \end{equation}
-    \end{forslides}
 }
 
-Associated to the functor~$\tupset$, one has a morphism which we call \emph{coherence morphism}.
-This is a morphism~$\cohm\colon \tupset(\setLA\listconcat \setLB)\mto \tupset(\setLA)\cartprod \tupset(\setLB)$.
+\todotext{prove the lemma}
 
-\todo{Explain without explaining monoidal functor...}
+\devel{
+    \subsection{A functor from $\SetL$ to \Set}
+    \label{sec:funsetstarset}
+
+    We now define a functor~$\tupset \colon \SetL \fto \Set$:
+    \begin{itemize}
+        \item On objects, one has
+              \begin{equation*}
+                  \defmapperiod{\funob{\tupset}}{\SetL}{\fto}{\Set}{\Tupcatt {\setA_1}  \dots {\setA_n}}{{\setA_1}\cartprod (\ldots \cartprod {\setA_n})}
+              \end{equation*}
+        \item On morphisms, one has
+              \begin{equation*}
+                  \defmapcomma{\funmor{\tupset}}{\HomSet{\SetL}{\Tupcatt{\setA_1}\dots{\setA_n}}{\Tupcatt{\setB_1} \dots {\setB_m}}}
+                  {\fto}{\HomSet{\Set}{\setA}{\setB}}{\mapa}{\mapa}
+              \end{equation*}
+              where~$\setA={\setA_1} \cartprod (\ldots \cartprod {\setA_n})$ and~$\setB={\setB_1} \cartprod (\ldots \cartprod {\setB_m})$.
+    \end{itemize}
+    We can now check that this is indeed a functor.
+    Unitality follows from the definition of~$\funmor{\tupset}$ and the definition of~$\SetL$.
+    Furthermore, given
+    \begin{equation*}
+        \begin{aligned}
+             & \mora \setin \HomSet{\SetL}{\Tupcatt{\setA_1}\dots{\setA_n}}{\Tupcatt{\setB_1} \dots {\setB_m}} \\
+             & \morb \setin \HomSet{\SetL}{\Tupcatt{\setB_1}\dots{\setB_m}}{\Tupcatt{\setC_1}\dots {\setC_o}},
+        \end{aligned}
+    \end{equation*}
+    one has
+    \begin{equation*}
+        \begin{aligned}
+            \funmor{\tupset}(\mora \mthenof{\SetL} \morb) & =\mora\mthenof{\SetL} \morb \\
+                                                          & =\funmor{\tupset}(\mora)\mthenof{\Set} \funmor{\tupset}(\morb).
+        \end{aligned}
+    \end{equation*}
+
+    \showslides{
+        \begin{forslides}
+
+            \begin{equation}
+                \tupca \ela   = \ela
+            \end{equation}
+            ~
+            \begin{equation}
+                \label{eq:sets-monoid-el-cat}
+                \tupcat \ela \elb \elconcat \elc = \tupcatt \ela \elb \elc
+            \end{equation}
+        \end{forslides}
+    }
+
 }
