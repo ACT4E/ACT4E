@@ -25,19 +25,16 @@ Let's consider some different examples of systems and ways of specifying them.
 
 \subsection{Moore machines}
 
-Recal Moore machines from \cref{sec:moore-semicategorically}.
+Recall Moore machines from \cref{sec:moore-semicategorically}.
 ..
 
 \subsection{More machines}
 
-Recal More machines from \cref{sec:more-machines}.
+Recall More machines from \cref{sec:more-machines}.
 ..
 
 \subsection{LTI systems}
-\todo{Add definition of actions, with time starting at 0}
 \todo{Note for matrices with 0 dimension}
-
-\todo{Lemma: two equiv systems have same action.}
 We now define LTI systems.
 
 \begin{definition}[LTI System]
@@ -56,9 +53,9 @@ We will call an LTI system \emph{proper} if in \cref{eq:LTI-system-ro}, the map~
 
 \begin{definition}[Equivalence of LTI systems]
     \label{def:equivalence_lti}
-    Two LTI systems~$\genericlti{\mora}$ and~$\genericlti{\morb}$ are \emph{equivalent} if and only if there exists an invertible linear transformation~$\mat{T}$ such that
+    Two LTI systems~$\genericlti{\mora}$ and~$\genericlti{\morb}$ are \emph{equivalent} if and only if there exists an invertible linear transformation~$\mat{x}_\morb(t)=T\mat{x}_\mora(t)$ such that
     \begin{equation*}
-        \mat{A}_\morb = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \quad \mat{B}_\morb = \mat{T}\mat{B}_\mora, \quad \mat{C}_\morb =\mat{C}_\mora\mat{T}^{-1},\quad \mat{D}_\morb=\mat{D}_\mora.
+        \mat{A}_\morb = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \ \mat{B}_\morb = \mat{T}\mat{B}_\mora, \ \mat{C}_\morb =\mat{C}_\mora\mat{T}^{-1},\ \mat{D}_\morb=\mat{D}_\mora, \ \mat{x}_\morb(0)=\mat{T}\mat{x}_\mora(0).
     \end{equation*}
     $\mat{T}$ is called an \emph{equivalence transformation}.
 \end{definition}
@@ -229,6 +226,7 @@ The stacking operation on objects is defined as
     \defmapperiod{\mtimescatob}{\Ob_\LTI \cartprod \Ob_\LTI}{\to}{\Ob_\LTI}{\tup{\styleobj{l},\styleobj{m}}}{\styleobj{l}+\styleobj{m}}
 \end{equation*}
 On the other hand, the operation on morphisms ``stacks'' the LTI systems onto each other.
+\footnote{For the control engineers out there: the resulting LTI system will have a Relative Gain Array (RGA) matrix corresponding to the identity matrix.}
 Formally:
 \begin{equation*}
     \defmapcomma{\mtimescatmor}{\Mor_\LTI \cartprod \Mor_\LTI}{\to}{\Mor_\LTI}{\tup{\genericlti{\mora},\genericlti{\morb}}}{\genericlti{}}
@@ -258,7 +256,6 @@ with
         \end{bmatrix}
     \end{equation*}
 \end{widepar}
-\todo{Maybe mention for engineers that know this: the resulting LTI system has RGA identity}
 Clearly, the morphism given by~$\genericlti{}$ satisifes the compatibility condition for stacking semicategories:
 if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\morb}$ is~$\styleobj{n}\mto \styleobj{o}$,~$\genericlti{}$ is~$\styleobj{l}+\styleobj{n}\mto \styleobj{m}+\styleobj{o}$.
 Given that the resulting LTI system is described by diagonal matrices, the defined operations are associative, and therefore \LTI is an associative stacking semicategory.
@@ -314,7 +311,175 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
     The other system matrices also obey \cref{def:equivalence_lti}.
 \end{example}
 
+\begin{definition}[LTI category action]
+    \label{def:lti_cat_action}
+    We define the category action of \LTI as:
+    \begin{compactitem}
+        \item A map
+              \begin{equation*}
+                  \defmapperiod{\catacOb_\LTI}{\Ob_\LTI}{\to}{\Ob_\Set}{\styleobj{n}}{(\reals^\styleobj{n})^{\nonNegReals}}
+              \end{equation*}
+        \item A Map
+              \begin{equation*}
+                  \catacMor_\LTI \colon \HomSet{\LTI}{\styleobj{m}}{\styleobj{n}}
+                  \to
+                  \HomSet{\Set}{(\reals^\styleobj{m})^{\nonNegReals}}{(\reals^\styleobj{n})^{\nonNegReals}}
+              \end{equation*}
+              where~$\catacMor_\LTI$ takes a LTI system from~$\styleobj{m}$ to~$\styleobj{n}$ and returns a map
+              \begin{equation*}
+                  \defmapcomma{\mapb}
+                  {(\reals^\styleobj{m})^{\nonNegReals}}
+                  {\to}
+                  {(\reals^\styleobj{n})^{\nonNegReals}}
+                  {\mat{u}}
+                  {\mat{y}}
+              \end{equation*}
+              where~$\mat{u}$ and~$\mat{y}$ satisfy the LTI system
+              \begin{align*}
+                  \dot{\mat{x}}(t) & = \mat{A}_\mora \mat{x}(t) + \mat{B}_\mora\mat{u}(t) \\
+                  \mat{y}(t)       & = \mat{C}_\mora\mat{x}(t) + \mat{D}_\mora\mat{u}(t) , \\
+                  \mat{x}(0)       & =\mat{x}_\mora(0)
+              \end{align*}
+    \end{compactitem}
+\end{definition}
+
+\begin{lemma}
+    \cref{def:lti_cat_action} indeed defines a category action.
+\end{lemma}
+\begin{proof}
+    We need to prove that
+    \begin{equation*}
+        \catacMor_\LTI(\mora \mthen_\LTI \morb)=\catacMor_\LTI(\mora) \mthen_\Set \catacMor_\LTI(\morb).
+    \end{equation*}
+    Let's consider~$\mora \colon \styleobj{m}\mto \styleobj{n}$ and~$\morb\colon \styleobj{n}\mto \styleobj{o}$.
+    We first look at the map
+    \begin{equation*}
+        \defmapcomma{\catacMor_\LTI(\mora \mthen_\LTI \morb)}{(\reals^\styleobj{m})^{\nonNegReals}}{\mto}{(\reals^\styleobj{o})^{\nonNegReals}}
+        {\mat{u}_{\mora \mthen \morb}}{\mat{y}_{\mora \mthen \morb}}
+    \end{equation*}
+    where~$\mat{u}_{\mora \mthen \morb}$ and~$\mat{y}_{\mora \mthen \morb}$ satisfy the LTI system
+    \begin{equation}
+        \label{eq:lti_action_1}
+        \begin{aligned}
+            \dot{\mat{x}}(t)                & =\mat{A}_{\mora \mthen \morb}\mat{x}(t)+\mat{B}_{\mora \mthen \morb}\mat{u}_{\mora \mthen \morb}(t), \\
+            \mat{y}_{\mora \mthen \morb}(t) & =\mat{C}_{\mora \mthen \morb}\mat{x}(t)+\mat{D}_{\mora \mthen \morb}\mat{u}_{\mora \mthen \morb}(t), \\
+            \mat{x}(0)                      & =\mat{x}_{\mora \mthen \morb}(0).
+        \end{aligned}
+    \end{equation}
+    From the definition of composition of LTI systems (\cref{def:LTICat}), we know that one can expand \cref{eq:lti_action_1} into
+    \begin{equation}
+        \label{eq:lti_action_12}
+        \begin{aligned}
+            \dot{\mat{x}}(t)=\begin{bmatrix}
+                                 \dot{\mat{x}}_\mora(t) \\
+                                 \dot{\mat{x}}_\morb(t)
+                             \end{bmatrix} & =\begin{bmatrix}
+                                                  \mat{A}_\mora              & \mat{0}       \\
+                                                  \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
+                                              \end{bmatrix} \begin{bmatrix}
+                                                                \mat{x}_\mora(t) \\
+                                                                \mat{x}_\morb(t)
+                                                            \end{bmatrix}+\begin{bmatrix}
+                                                                              \mat{B}_\mora \\
+                                                                              \mat{B}_\morb\mat{D}_\mora
+                                                                          \end{bmatrix}\mat{u}_{\mora \mthen \morb}(t) \\
+            \mat{y}_{\mora \mthen \morb}(t)           & =\begin{bmatrix}
+                                                             \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+                                                         \end{bmatrix} \begin{bmatrix}
+                                                                           \mat{x}_\mora(t) \\
+                                                                           \mat{x}_\morb(t)
+                                                                       \end{bmatrix}+ \mat{D}_\morb\mat{D}_\mora\mat{u}_{\mora \mthen \morb}(t) \\
+            \mat{x}(0)                                & =
+            \begin{bmatrix}
+                \mat{x}_\mora(0) \\
+                \mat{x}_\morb(0)\end{bmatrix}.
+        \end{aligned}
+    \end{equation}
+    By instead looking at~$\catacMor_\LTI(\mora)$ one has
+    \begin{equation*}
+        \defmapcomma{\catacMor_\LTI(\mora)}{(\reals^\styleobj{m})^{\nonNegReals}}{\mto}{(\reals^\styleobj{n})^{\nonNegReals}}
+        {\mat{u}_\mora}{\mat{y}_\mora}
+    \end{equation*}
+    where~$\mat{u}_\mora$ and~$\mat{y}_\mora$ satisfy the LTI system
+    \begin{equation}
+        \label{eq:lti_action_2}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}_\mora(t), \\
+            \mat{y}_\mora(t) & =\mat{C}_{\mora}\mat{x}(t)+\mat{D}_{\mora}\mat{u}_\mora(t), \\
+            \mat{x}(0)       & =\mat{x}_{\mora}(0),
+        \end{aligned}
+    \end{equation}
+    and by looking at~$\catacMor_\LTI(\morb)$ one has
+    \begin{equation*}
+        \defmapcomma{\catacMor_\LTI(\morb)}{(\reals^\styleobj{n})^{\nonNegReals}}{\mto}{(\reals^\styleobj{o})^{\nonNegReals}}
+        {\mat{u}_\morb}{\mat{y}_\morb}
+    \end{equation*}
+    where~$\mat{u}_\morb$ and~$\mat{y}_\morb$ satisfy the LTI system
+    \begin{equation}
+        \label{eq:lti_action_3}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\mat{A}_{\morb}\mat{x}(t)+\mat{B}_{\morb}\mat{u}_\morb(t), \\
+            \mat{y}_\morb(t) & =\mat{C}_{\morb}\mat{x}(t)+\mat{D}_{\morb}\mat{u}_\morb(t), \\
+            \mat{x}(0)       & =\mat{x}_{\morb}(0).
+        \end{aligned}
+    \end{equation}
+    Clearly, considering~$\catacMor_\LTI(\mora)\mthen \catacMor_\LTI(\morb)$ is equivalent to considering~$\mat{y}_\mora=\mat{u}_\morb$.
+    By substitution into \cref{eq:lti_action_2} and \cref{eq:lti_action_3} one obtains exactly \cref{eq:lti_action_12}, proving the statement.
+\end{proof}
+
+\begin{lemma}
+    Two equivalent systems have the same LTI category action.
+\end{lemma}
+\begin{proof}
+    Consider two equivalent LTI systems
+    \begin{equation*}
+        \genericlti{\mora},\quad \genericlti{\morb}.
+    \end{equation*}
+    By explicity writing the second, it reads
+    \begin{equation*}
+        \begin{aligned}
+            \dot{\mat{x}}_\morb(t) & =\mat{T}\mat{A}_{\mora}\mat{T}^{-1}\mat{x}_\morb(t)+\mat{T}\mat{B}_{\mora}\mat{u}(t), \\
+            \mat{y}(t)             & =\mat{C}_{\mora}\mat{T}^{-1}\mat{x}_\morb(t)+\mat{D}_{\mora}\mat{u}(t), \\
+            \mat{x}_\morb(0)       & =\mat{T}\mat{x}_{\mora}(0).
+        \end{aligned}
+    \end{equation*}
+    Now, by inserting the transformation~$\mat{x}_\morb=\mat{T}\mat{x}_\mora$, one gets
+    \begin{equation}
+        \label{eq:equiv_lti_1}
+        \begin{aligned}
+            \mat{T}\dot{\mat{x}}_\mora(t) & =\mat{T}\mat{A}_{\mora}\mat{x}_\mora(t)+\mat{T}\mat{B}_{\mora}\mat{u}(t), \\
+            \mat{y}(t)                    & =\mat{C}_{\mora}\mat{x}_\mora(t)+\mat{D}_{\mora}\mat{u}(t), \\
+            \mat{x}_\morb(0)              & =\mat{T}\mat{x}_{\mora}(0).
+        \end{aligned}
+    \end{equation}
+    By multiplying both sides of the first equation of \cref{eq:equiv_lti_1} by~$\mat{T}^{-1}$, one obtains exactly the LTI system~$\genericlti{\mora}$, proving equivalence of input-output relationships (and therefore, equivalence of the LTI category action).
+\end{proof}
+
+\begin{lemma}
+    Two LTI systems with the same LTI category action are not necessairily equivalent.
+\end{lemma}
+\begin{proof}
+    A counterexample is easy to find.
+    Consider the LTI system
+    \begin{equation*}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\begin{bmatrix} 1&0\\ 0&1 \end{bmatrix} \mat{x}(t)+\begin{bmatrix} 1\\ 0\end{bmatrix} \mat{u}(t) \\
+            \mat{y}(t)       & =\begin{bmatrix} 1&0\end{bmatrix} \mat{x}(t)+\mat{u}(t).
+        \end{aligned}
+    \end{equation*}
+    The LTI category action of this system will be the same as the one of any system
+    \begin{equation*}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\begin{bmatrix} 1&0\\ 0&\alpha \end{bmatrix} \mat{x}(t)+\begin{bmatrix} 1\\ 0\end{bmatrix} \mat{u}(t) \\
+            \mat{y}(t)       & =\begin{bmatrix} 1&0\end{bmatrix} \mat{x}(t)+\mat{u}(t),
+        \end{aligned}
+    \end{equation*}
+    where~$\alpha \in \reals$, because the output~$\mat{y}$ generation does not care about the second component of~$\mat{x}$.
+    However, there is no linear, invertible transformation which relates these systems.
+\end{proof}
+
 \subsection{Descriptor systems}
+\todo{J:Complete this part with subspaces.}
 
 Descriptor systems (DLTI systems) are a generalization of LTI systems which differ only in that the defining system of equations has the form
 \begin{align}
