@@ -44,7 +44,7 @@ We now define LTI systems.
         \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn} \\
         \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:LTI-system-ro},
     \end{align}
-    and an \emph{initial state}~$\mat{x}(0)\in \prst$, where~$t \setin \reals$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}\colon \prst \to \prst$,~$\mat{B}\colon \prin \to \prst$,~$\mat{C}\colon \prst \to \prout$,~$\mat{D}\colon \prin \to \prout$ are~$\reals$-linear maps (we are identifying the tangent space of~$\prst$ with~$\prst$ itself).
+    and an \emph{initial state}~$\mat{x}(0)\in \prst$, where~$t \setin \reals_{\geq 0}$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}\colon \prst \to \prst$,~$\mat{B}\colon \prin \to \prst$,~$\mat{C}\colon \prst \to \prout$,~$\mat{D}\colon \prin \to \prout$ are~$\reals$-linear maps (we are identifying the tangent space of~$\prst$ with~$\prst$ itself).
 \end{definition}
 
 We compactly refer to a LTI system by writing it as a tuple~$\genericlti{}$.
@@ -78,7 +78,7 @@ We now define the category of LTI systems \LTI.
                        & \genericlti{\morb},
                   \end{aligned}
               \end{equation*}
-              their composition is an arrow~$(\mora \mthen \morb)\colon \styleobj{a}\mto \styleobj{c}$, parametrized by the LTI system~$\genericlti{}$, where
+              their composition~$(\mora \mthen \morb)\colon \styleobj{a}\mto \styleobj{c}$ is the LTI system~$\genericlti{}$, where
               \begin{equation}
                   \begin{aligned}
                       \mat{x}(0) & =\begin{bmatrix}
@@ -99,7 +99,7 @@ We now define the category of LTI systems \LTI.
                       \mat{D}=\mat{D}_\morb\mat{D}_\mora.
                   \end{aligned}
               \end{equation}
-        \item \emph{Identity morphism}: The identity morphism for~$\styleobj{l}\setin \natnumbers$ is an arrow~$\styleobj{l}\to \styleobj{l}$, parametrized by the system~$\tup{\mat{0}^{0\times 1},\mat{0}^{0\times 0},\mat{0}^{0\times l},\mat{0}^{l\times 0},\mathbb{I}^{l\times l}}$.
+        \item \emph{Identity morphism}: The identity morphism for~$\styleobj{l}\setin \natnumbers$ is the system~$\tup{\mat{0}^{0\times 1},\mat{0}^{0\times 0},\mat{0}^{0\times l},\mat{0}^{l\times 0},\mathbb{I}^{l\times l}}$.
 
     \end{enumerate}
 \end{ctdefinition}
@@ -261,12 +261,12 @@ if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\mor
 Given that the resulting LTI system is described by diagonal matrices, the defined operations are associative, and therefore \LTI is an associative stacking semicategory.
 
 \begin{example}
-    We want to show that \LTI as defined is a functiorial stacking semicategory.
-    Given morphisms~$\mora\colon \styleobj{l}\mto \styleobj{m}$,~$\morc\colon \styleobj{m}\mto \styleobj{n}$,~$\morb\colon \styleobj{o}\mto \styleobj{p}$,~$\mord\colon \styleobj{p}\mto \styleobj{q}$, we need to show
+    We want to show that \LTI as defined is almost a functiorial stacking semicategory, but not quite.
+    Given morphisms~$\mora\colon \styleobj{l}\mto \styleobj{m}$,~$\morc\colon \styleobj{m}\mto \styleobj{n}$,~$\morb\colon \styleobj{o}\mto \styleobj{p}$,~$\mord\colon \styleobj{p}\mto \styleobj{q}$, we would need to have
     \begin{equation*}
         (\mora \mthen \morc)\mtimescat (\morb\mthen \mord)=(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord).
     \end{equation*}
-    This is not true.
+    This, however, is not true.
     Let's see this by looking at the first component of the LTI system.
     On one hand we have:
     \begin{equation*}
@@ -278,7 +278,7 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
             \mat{0}                    & \mat{0}       & \mat{B}_\mord\mat{C}_\morb & \mat{A}_\mord
         \end{bmatrix}
     \end{equation*}
-    However, on the other hand we have:
+    On the other hand we have:
     \begin{equation*}
         \mat{A}_{(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord)}=
         \begin{bmatrix}
@@ -289,8 +289,7 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
         \end{bmatrix}
     \end{equation*}
     These two are different, and will therefore describe different systems.
-    However, as you can notice, the two matrices just differ by two permutations, which can be expressed via an equivalence transformation~$\mat{T}$.
-    Indeed, one has
+    However, the two matrices just differ by two permutations, which can be expressed via an invertible linear transformation~$\mat{T}$ as follows:
     \begin{equation*}
         \mat{A}_{(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord)}=
         \underbrace{\begin{bmatrix}
@@ -325,9 +324,9 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
                   \to
                   \HomSet{\Set}{(\reals^\styleobj{m})^{\nonNegReals}}{(\reals^\styleobj{n})^{\nonNegReals}}
               \end{equation*}
-              where~$\catacMor_\LTI$ takes a LTI system from~$\styleobj{m}$ to~$\styleobj{n}$ and returns a map
+              where~$\catacMor_\LTI$ takes a LTI system $\mora: \styleobj{m} \to \styleobj{n}$ and returns a map
               \begin{equation*}
-                  \defmapcomma{\mapb}
+                  \defmapcomma{\catacMor_\LTI(\morb)}
                   {(\reals^\styleobj{m})^{\nonNegReals}}
                   {\to}
                   {(\reals^\styleobj{n})^{\nonNegReals}}
@@ -338,7 +337,7 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
               \begin{align*}
                   \dot{\mat{x}}(t) & = \mat{A}_\mora \mat{x}(t) + \mat{B}_\mora\mat{u}(t) \\
                   \mat{y}(t)       & = \mat{C}_\mora\mat{x}(t) + \mat{D}_\mora\mat{u}(t) , \\
-                  \mat{x}(0)       & =\mat{x}_\mora(0)
+                  \mat{x}(0)       & =\mat{x}_\mora(0).
               \end{align*}
     \end{compactitem}
 \end{definition}
