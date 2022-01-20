@@ -318,32 +318,34 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
     \begin{compactitem}
         \item A map
               \begin{equation*}
-                  \defmapperiod{\catacOb_\LTI}{\Ob_\LTI}{\to}{\Ob_\Set}{\styleobj{n}}{C^1(\nonNegReals, \reals^\styleobj{n})}
+                  \defmapperiod{\catacOb_\LTI}{\Ob_\LTI}{\to}{\Ob_\Set}{\styleobj{n}}{\diffun(\nonNegReals, \reals^\styleobj{n})}
               \end{equation*}
         \item A map
               \begin{equation*}
                   \catacMor_\LTI \colon \HomSet{\LTI}{\styleobj{m}}{\styleobj{n}}
                   \to
-                  \HomSet{\Set}{C^1(\nonNegReals, \reals^\styleobj{m})}{C^1(\nonNegReals, \reals^\styleobj{n})}
+                  \HomSet{\Set}{\diffun(\nonNegReals, \reals^\styleobj{m})}{\diffun(\nonNegReals, \reals^\styleobj{n})}
               \end{equation*}
-              where~$\catacMor_\LTI$ takes a LTI system $\mora: \styleobj{m} \to \styleobj{n}$ given by  $$\genericlti{\mora}$$ and returns the function
+              where~$\catacMor_\LTI$ takes a LTI system $\mora: \styleobj{m} \to \styleobj{n}$ given by
+              \begin{equation*}
+                  \genericlti{\mora},
+              \end{equation*}
+              and returns the function
               \begin{equation*}
                   \defmapcomma{\catacMor_\LTI(\mora)}
-                  {C^1(\nonNegReals, \reals^\styleobj{m})}
+                  {\diffun(\nonNegReals, \reals^\styleobj{m})}
                   {\to}
-                  {C^1(\nonNegReals, \reals^\styleobj{n})}
+                  {\diffun(\nonNegReals, \reals^\styleobj{n})}
                   {\mat{u}}
                   {\mat{C}_\mora\mat{s}_\mora(t) + \mat{D}_\mora\mat{u}(t) }
               \end{equation*}
-              where~$\mat{s}_\mora$ and is the unique solution of the initial value problem
+              where~$\mat{s}_\mora$ is the unique solution of the initial value problem
               \begin{align*}
                   \dot{\mat{x}}(t) & = \mat{A}_\mora \mat{x}(t) + \mat{B}_\mora\mat{u}(t) \\
                   \mat{x}(0)       & =\mat{x}_\mora(0).
               \end{align*}
     \end{compactitem}
 \end{definition}
-
-\todotext{J: In the proofs of the two lemmas below, I would suggest some editing/rewriting to make clearer the distinction between the variables in the ODEs and the solutions of the associated initial value problems.}
 
 \begin{lemma}
     \cref{def:lti_cat_action} indeed defines a category action.
@@ -356,18 +358,26 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
     Let's consider~$\mora \colon \styleobj{m}\mto \styleobj{n}$ and~$\morb\colon \styleobj{n}\mto \styleobj{o}$.
     We first look at the map
     \begin{equation*}
-        \defmapcomma{\catacMor_\LTI(\mora \mthen_\LTI \morb)}{(\reals^\styleobj{m})^{\nonNegReals}}{\mto}{(\reals^\styleobj{o})^{\nonNegReals}}
-        {\mat{u}_{\mora \mthen \morb}}{\mat{y}_{\mora \mthen \morb}}
+        \defmapcomma{\catacMor_\LTI(\mora \mthen_\LTI \morb)}
+        {\diffun(\nonNegReals,\reals^\styleobj{m})}
+        {\mto}
+        {\diffun(\nonNegReals,\reals^\styleobj{o})}
+        {\mat{u}_{\mora \mthen \morb}}
+        {\mat{C}_{\mora\mthen \morb}\mat{s}_{\mora\mthen \morb}(t)+\mat{D}_{\mora \mthen \morb}\mat{u}_{\mora \mthen \morb}(t)}
     \end{equation*}
-    where~$\mat{u}_{\mora \mthen \morb}$ and~$\mat{y}_{\mora \mthen \morb}$ satisfy the LTI system
+    where~$\mat{s}_{\mora \mthen \morb}$ is the unique solution of the initial value problem
     \begin{equation}
         \label{eq:lti_action_1}
         \begin{aligned}
-            \dot{\mat{x}}(t)                & =\mat{A}_{\mora \mthen \morb}\mat{x}(t)+\mat{B}_{\mora \mthen \morb}\mat{u}_{\mora \mthen \morb}(t), \\
-            \mat{y}_{\mora \mthen \morb}(t) & =\mat{C}_{\mora \mthen \morb}\mat{x}(t)+\mat{D}_{\mora \mthen \morb}\mat{u}_{\mora \mthen \morb}(t), \\
-            \mat{x}(0)                      & =\mat{x}_{\mora \mthen \morb}(0).
+            \dot{\mat{x}}(t) & =\mat{A}_{\mora \mthen \morb}\mat{x}(t)+\mat{B}_{\mora \mthen \morb}\mat{u}_{\mora \mthen \morb}(t), \\
+            %\mat{y}_{\mora \mthen \morb}(t) & =\mat{C}_{\mora \mthen \morb}\mat{x}(t)+\mat{D}_{\mora \mthen \morb}\mat{u}_{\mora \mthen \morb}(t), \\
+            \mat{x}(0)       & =\mat{x}_{\mora \mthen \morb}(0),
         \end{aligned}
     \end{equation}
+    and
+    \begin{equation*}
+        \mat{C}_{\mora\mthen \morb}=\begin{bmatrix} \mat{D}_\morb \mat{C}_\mora & \mat{C}_\morb\end{bmatrix}, \quad \mat{D}=\mat{D}_\morb \mat{D}_\mora.
+    \end{equation*}
     From the definition of composition of LTI systems (\cref{def:LTICat}), we know that one can expand \cref{eq:lti_action_1} into
     \begin{equation}
         \label{eq:lti_action_12}
@@ -385,12 +395,12 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
                                                                               \mat{B}_\mora \\
                                                                               \mat{B}_\morb\mat{D}_\mora
                                                                           \end{bmatrix}\mat{u}_{\mora \mthen \morb}(t) \\
-            \mat{y}_{\mora \mthen \morb}(t)           & =\begin{bmatrix}
-                                                             \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
-                                                         \end{bmatrix} \begin{bmatrix}
-                                                                           \mat{x}_\mora(t) \\
-                                                                           \mat{x}_\morb(t)
-                                                                       \end{bmatrix}+ \mat{D}_\morb\mat{D}_\mora\mat{u}_{\mora \mthen \morb}(t) \\
+            %\mat{y}_{\mora \mthen \morb}(t)           & =\begin{bmatrix}
+            %                                                 \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+            %                                             \end{bmatrix} \begin{bmatrix}
+            %                                                               \mat{x}_\mora(t) \\
+            %                                                               \mat{x}_\morb(t)
+            %                                                           \end{bmatrix}+ \mat{D}_\morb\mat{D}_\mora\mat{u}_{\mora \mthen \morb}(t) \\
             \mat{x}(0)                                & =
             \begin{bmatrix}
                 \mat{x}_\mora(0) \\
@@ -399,34 +409,51 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
     \end{equation}
     By instead looking at~$\catacMor_\LTI(\mora)$ one has
     \begin{equation*}
-        \defmapcomma{\catacMor_\LTI(\mora)}{(\reals^\styleobj{m})^{\nonNegReals}}{\mto}{(\reals^\styleobj{n})^{\nonNegReals}}
-        {\mat{u}_\mora}{\mat{y}_\mora}
+        \defmapcomma{\catacMor_\LTI(\mora)}
+        {\diffun(\nonNegReals,\reals^\styleobj{m})}
+        {\mto}
+        {\diffun(\nonNegReals,\reals^\styleobj{n})}
+        {\mat{u}_\mora}
+        {\mat{C}_\mora \mat{s}_\mora+\mat{D}_\mora \mat{u}_\mora}
     \end{equation*}
-    where~$\mat{u}_\mora$ and~$\mat{y}_\mora$ satisfy the LTI system
+    where~$\mat{s}_\mora$ is the unique solution of the initial value problem
     \begin{equation}
-        \label{eq:lti_action_2}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}_\mora(t), \\
-            \mat{y}_\mora(t) & =\mat{C}_{\mora}\mat{x}(t)+\mat{D}_{\mora}\mat{u}_\mora(t), \\
+            %\mat{y}_\mora(t) & =\mat{C}_{\mora}\mat{x}(t)+\mat{D}_{\mora}\mat{u}_\mora(t), \\
             \mat{x}(0)       & =\mat{x}_{\mora}(0),
         \end{aligned}
     \end{equation}
     and by looking at~$\catacMor_\LTI(\morb)$ one has
-    \begin{equation*}
-        \defmapcomma{\catacMor_\LTI(\morb)}{(\reals^\styleobj{n})^{\nonNegReals}}{\mto}{(\reals^\styleobj{o})^{\nonNegReals}}
-        {\mat{u}_\morb}{\mat{y}_\morb}
-    \end{equation*}
-    where~$\mat{u}_\morb$ and~$\mat{y}_\morb$ satisfy the LTI system
     \begin{equation}
-        \label{eq:lti_action_3}
+        \label{eq:lti_action_2}
+        \defmapcomma{\catacMor_\LTI(\morb)}
+        {\diffun(\nonNegReals,\reals^\styleobj{n})}
+        {\mto}
+        {\diffun(\nonNegReals,\reals^\styleobj{o})}
+        {\mat{u}_\morb}{\mat{C}_\morb \mat{s}_\morb+\mat{D}_\morb \mat{u}_\morb}
+    \end{equation}
+    where~$\mat{s}_\morb$ is the unique solution of the initial value problem
+    \begin{equation}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\morb}\mat{x}(t)+\mat{B}_{\morb}\mat{u}_\morb(t), \\
-            \mat{y}_\morb(t) & =\mat{C}_{\morb}\mat{x}(t)+\mat{D}_{\morb}\mat{u}_\morb(t), \\
+            %\mat{y}_\morb(t) & =\mat{C}_{\morb}\mat{x}(t)+\mat{D}_{\morb}\mat{u}_\morb(t), \\
             \mat{x}(0)       & =\mat{x}_{\morb}(0).
         \end{aligned}
     \end{equation}
-    Clearly, considering~$\catacMor_\LTI(\mora)\mthen \catacMor_\LTI(\morb)$ is equivalent to considering~$\mat{y}_\mora=\mat{u}_\morb$.
-    By substitution into \cref{eq:lti_action_2} and \cref{eq:lti_action_3} one obtains exactly \cref{eq:lti_action_12}, proving the statement.
+    Clearly, considering~$\catacMor_\LTI(\mora)\mthen \catacMor_\LTI(\morb)$ is equivalent to considering~$\mat{u}_\morb=\catacMor_\LTI(\mora)(\mat{u}_\morb)$.
+    By substitution into \cref{eq:lti_action_2} one obtains
+    \begin{equation*}
+        \defmapcomma{\catacMor_\LTI(\mora) \mthen \catacMor_\LTI(\morb)}
+        {\diffun(\nonNegReals,\reals^\styleobj{m})}
+        {\mto}
+        {\diffun(\nonNegReals,\reals^\styleobj{o})}
+        {\mat{u}_{\mora \mthen \morb}}
+        {\begin{bmatrix} \mat{D}_\morb \mat{C}_\mora & \mat{C}_\morb\end{bmatrix}\begin{bmatrix} \mat{s}_\mora \\ \mat{s}_\morb \end{bmatrix}+ \mat{D}_\morb \mat{D}_\mora \mat{u}_{\mora \mthen \morb}}
+        %{\mat{C}_{\morb}\mat{s}_{\morb}(t)+\mat{D}_{\morb}\mat{C}_\mora \mat{s}_\mora + \mat{D}_\morb \mat{D}_\mora\mat{u}_\mora(t)}
+    \end{equation*}
+
+    \cref{eq:lti_action_12}, proving the statement.
 \end{proof}
 
 \begin{lemma}
