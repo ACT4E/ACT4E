@@ -71,7 +71,7 @@ We now define the category of LTI systems \LTI.
         \item \emph{Morphisms}: A morphism in \LTI from~$\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$ is a continuous time LTI system~$\genericlti{}$.
               %where~$\mat{A}\setin \reals^{n\times n}$,~$\mat{B}\setin \reals^{n\times l}$,~$\mat{C}\setin \reals^{m\times n}$,~$\mat{D}\setin \reals^{m\times l}$.
               Note that the dimensions of the input/output are implicit.
-        \item \emph{Composition operation}: Given morphisms~$\mora \colon \styleobj{a}\mto \styleobj{b}$ and~$\morb\colon \styleobj{b}\mto \styleobj{c}$, described by the LTI systems
+        \item \emph{Composition}: Given morphisms~$\mora \colon \styleobj{a}\mto \styleobj{b}$ and~$\morb\colon \styleobj{b}\mto \styleobj{c}$, described by the LTI systems
               \begin{equation*}
                   \begin{aligned}
                        & \genericlti{\mora} \\
@@ -99,7 +99,7 @@ We now define the category of LTI systems \LTI.
                       \mat{D}=\mat{D}_\morb\mat{D}_\mora.
                   \end{aligned}
               \end{equation}
-        \item \emph{Identity morphism}: The identity morphism for~$\styleobj{l}\setin \natnumbers$ is the system~$\tup{\mat{0}^{0\times 1},\mat{0}^{0\times 0},\mat{0}^{0\times l},\mat{0}^{l\times 0},\mathbb{I}^{l\times l}}$.
+        \item \emph{Identities}: The identity morphism for~$\styleobj{l}\setin \natnumbers$ is the system~$\tup{\mat{0}^{0\times 1},\mat{0}^{0\times 0},\mat{0}^{0\times l},\mat{0}^{l\times 0},\mathbb{I}^{l\times l}}$.
 
     \end{enumerate}
 \end{ctdefinition}
@@ -219,6 +219,8 @@ We now define the category of LTI systems \LTI.
     Therefore, \LTI is a category.
 \end{solution}
 
+\todotext{J: i guess the subsection below will eventually be moved to the section/chapter on stacking? }
+
 \subsection{LTI is stacking}
 When considering LTI systems, we can define stacking operations and show that it forms a stacking semicategory (\cref{def:simple-stacking-semi-cat}).
 The stacking operation on objects is defined as
@@ -310,37 +312,38 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
     The other system matrices also obey \cref{def:equivalence_lti}.
 \end{example}
 
-\begin{definition}[LTI category action]
+\begin{definition}[LTI standard action]
     \label{def:lti_cat_action}
-    We define the category action of \LTI as:
+    We define a standard action of \LTI via:
     \begin{compactitem}
         \item A map
               \begin{equation*}
-                  \defmapperiod{\catacOb_\LTI}{\Ob_\LTI}{\to}{\Ob_\Set}{\styleobj{n}}{(\reals^\styleobj{n})^{\nonNegReals}}
+                  \defmapperiod{\catacOb_\LTI}{\Ob_\LTI}{\to}{\Ob_\Set}{\styleobj{n}}{C^1(\nonNegReals, \reals^\styleobj{n})}
               \end{equation*}
-        \item A Map
+        \item A map
               \begin{equation*}
                   \catacMor_\LTI \colon \HomSet{\LTI}{\styleobj{m}}{\styleobj{n}}
                   \to
-                  \HomSet{\Set}{(\reals^\styleobj{m})^{\nonNegReals}}{(\reals^\styleobj{n})^{\nonNegReals}}
+                  \HomSet{\Set}{C^1(\nonNegReals, \reals^\styleobj{m})}{C^1(\nonNegReals, \reals^\styleobj{n})}
               \end{equation*}
-              where~$\catacMor_\LTI$ takes a LTI system $\mora: \styleobj{m} \to \styleobj{n}$ and returns a map
+              where~$\catacMor_\LTI$ takes a LTI system $\mora: \styleobj{m} \to \styleobj{n}$ given by  $$\genericlti{\mora}$$ and returns the function
               \begin{equation*}
-                  \defmapcomma{\catacMor_\LTI(\morb)}
-                  {(\reals^\styleobj{m})^{\nonNegReals}}
+                  \defmapcomma{\catacMor_\LTI(\mora)}
+                  {C^1(\nonNegReals, \reals^\styleobj{m})}
                   {\to}
-                  {(\reals^\styleobj{n})^{\nonNegReals}}
+                  {C^1(\nonNegReals, \reals^\styleobj{n})}
                   {\mat{u}}
-                  {\mat{y}}
+                  {\mat{C}_\mora\mat{s}_\mora(t) + \mat{D}_\mora\mat{u}(t) }
               \end{equation*}
-              where~$\mat{u}$ and~$\mat{y}$ satisfy the LTI system
+              where~$\mat{s}_\mora$ and is the unique solution of the initial value problem
               \begin{align*}
                   \dot{\mat{x}}(t) & = \mat{A}_\mora \mat{x}(t) + \mat{B}_\mora\mat{u}(t) \\
-                  \mat{y}(t)       & = \mat{C}_\mora\mat{x}(t) + \mat{D}_\mora\mat{u}(t) , \\
                   \mat{x}(0)       & =\mat{x}_\mora(0).
               \end{align*}
     \end{compactitem}
 \end{definition}
+
+\todotext{J: In the proofs of the two lemmas below, I would suggest some editing/rewriting to make clearer the distinction between the variables in the ODEs and the solutions of the associated initial value problems.}
 
 \begin{lemma}
     \cref{def:lti_cat_action} indeed defines a category action.
@@ -454,12 +457,11 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
     By multiplying both sides of the first equation of \cref{eq:equiv_lti_1} by~$\mat{T}^{-1}$, one obtains exactly the LTI system~$\genericlti{\mora}$, proving equivalence of input-output relationships (and therefore, equivalence of the LTI category action).
 \end{proof}
 
-\begin{lemma}
-    Two LTI systems with the same LTI category action are not necessairily equivalent.
-\end{lemma}
+\begin{remark}
+    Two LTI systems with the same LTI category action are not necessarily equivalent.
+\end{remark}
 \begin{proof}
-    A counterexample is easy to find.
-    Consider the LTI system
+    For a simple counterexample, consider the LTI system
     \begin{equation*}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\begin{bmatrix} 1&0\\ 0&1 \end{bmatrix} \mat{x}(t)+\begin{bmatrix} 1\\ 0\end{bmatrix} \mat{u}(t) \\
