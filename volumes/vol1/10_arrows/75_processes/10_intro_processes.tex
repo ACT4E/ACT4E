@@ -1,27 +1,33 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Moore machines, first attempt}
+\section{Moore machines, first version}
 \label{sec:moore-machines}
 
 %\linkvideo{spring2021-actions:semi-actions:processes} % Signals and processes
 
 \linkvideo{spring2021-actions:semi-actions:processes:moore} % Moore machines
-We now look at processes, especially dynamical systems, and see them as (semi)\-categories that act on sequences.
 
-We have already seen linear discrete time systems.
-
-We can generalize them by allowing non-linear functions.
-We call these \textbf{Moore} machines, and describe them as a pair of functions
-%
+In the following we consider \textbf{Moore machines}\footnote{They are name after Edward F. Moore.}, which are a type of basic model for describing certain dynamical systems. It's characteristic features are: 
+\begin{itemize}
+\item a \textbf{state space} which describes all possible states that the system can possible be in;
+\item an \textbf{input space} and an \textbf{output space};
+\item a \textbf{dynamics} which describes how, given an input, the system's state changes according to that input;
+\item a \textbf{read-out} which relates the current state of the system to the output space.
+\end{itemize}
+ %
+We are in particular interested in the ways that such a machine can transform a sequence of inputs into a sequence of outputs. 
+ 
+ \subsection{A first mathematical model}
+ 
+Our first version for formalizing the idea of a Moore machine looks as follows. We model the input space, state space, and output space as sets  $\prin$, $\prst$, and $\prout$ respectively, and we model the dynamics and read-out as functions
 \begin{equation}
     \label{eq:moore-1}
     \begin{cases}
         \prdyn \colon \prin \cartprod \prst \sto \prst, \\
-        \prreadout \colon \prst \sto \prout,
+        \prreadout \colon \prst \sto \prout.
     \end{cases}
 \end{equation}
-%
-where~$\prin$ represents inputs,~$\prst$ states,~$\prout$ outputs,~$\prdyn$ the dynamics, and~$\prreadout$ the readout.
+
 
 %    As introduced in \cref{sec:actions}, we can apply currying to~$\prdyn$, to obtain a map from inputs to endomorphisms on the states:
 %    %
@@ -34,20 +40,61 @@ where~$\prin$ represents inputs,~$\prst$ states,~$\prout$ outputs,~$\prdyn$ the 
 %    \end{equation}
 %    %
 
-We will also choose an \emph{initial state} denoted~$\prstart \setin \prst$.
+We will also choose an element~$\prstart \setin \prst$ of the state space as an initial state; we will use this when specifying how a Moore machine acts on sequences of inputs.
+
 Thus, in total, a Moore machine is specified by a tuple of the following type:
 \begin{equation}
     \label{eq:moore-tuple}
     \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}.
 \end{equation}
 
-\subsection{Semantics of Moore machines as signal transformers}
+\
 
-\todo{Add semantics here, right away.}
+\todotext{provide a simple example here to illustrate}
 
-\subsection{Composition of Moore machines}
+\
 
-Suppose now that we have two Moore machines
+\subsection{Moore machines acting on sequences}
+
+Given a Moore machine $\tup{\prin, \prout, \prst, \prdyn, \prreadout, \prstart}$, the following is a standard way to think of it as acting on a sequence of inputs, transforming it into a sequence of outputs. 
+
+Given a sequence of inputs $u_0, u_1, u_2, \dots $, we use the following recipe
+\begin{equation}
+    \label{eq:Moore-action-recursion}
+    \begin{cases}
+        x_{k+1} = \prdyn(u_k, x_k) \\
+        y_{k}   = \prreadout(x_{k}).
+    \end{cases}
+\end{equation}
+ to produce a sequence $y_0, y_1, y_2, \dots $ of outputs. For the very first step, when $k = 0$, we need the initial state $x_0 = \prstart$ in order to compute $x_1 = \prdyn(u_0, x_0)$ and $y_0 = \prreadout(x_0)$. 
+ 
+ \
+
+\todotext{continue the simple example above to illustrate}
+
+\
+
+Recall that a sequence $u_0, u_1, u_2, \dots$ of elements of $\prin$ is a function $u : \natnumbers \to \prin$ with $u(0) = u_0, u(1) = u_2, u(2) = u_3, \dots$ etc. For a fixed Moore machine, the recipe \cref{eq:Moore-action-recursion} defines a function $\act$ which maps any given sequence $u$ of elements of $\prin$ to a corresponding sequence $y = \act(u)$ of elements of $\prout$. In other words, from $\tup{\prin, \prout, \prst, \prdyn, \prreadout, \prstart}$ and $\cref{eq:Moore-action-recursion}$ we obtain $$\act \colon \prin^\natnumbers \to \prout^\natnumbers.$$ We thnk of this function $\act$ as describing the external behavior of the Moore machine, because it encodes what is externally observable in terms of how the Moore machine is used to relate inputs to outputs.
+
+
+
+\begin{remark}
+As an aside, we note that in concrete applications it might be the case that we do not actually know a precise model of a Moore machine in terms of the data \cref{eq:moore-tuple}, but we can still observe what it does when we feed it inputs. And in some cases this external behavior is in fact all we really care about.
+\end{remark}
+\todotext{Is the remark above needed or relevant?}
+
+\subsection{Composing Moore machines}
+
+Let us consider composing Moore machines serially by letting the output of one machine be the input of the next. We'd like the result to again be a Moore machine. 
+
+\begin{marginfigure}
+    \centering
+    \includesag{10_moore_comp_seq}
+    \caption{Composition of Moore machines (first version).}
+    \label{fig:comp_moore_1}
+\end{marginfigure}
+
+In other words, given Moore machines
 %
 \begin{equation}
     \label{eq:moore-mora}
@@ -60,21 +107,14 @@ and
     \label{eq:moore-morb}
     \morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
 \end{equation}
-such that~$\prout_{\mora} = \prin_{\morb}$.
-\begin{marginfigure}
-    \centering
-    \includesag{10_moore_comp_seq}
-    \caption{Composition of Moore machines (first version).}
-    \label{fig:comp_moore_1}
-\end{marginfigure}
-
-We would like to compose them serially, such that the output of the one machine is the input of the next, and such that the result is again a Moore machine:
+with~$\prout_{\mora} = \prin_{\morb}$, we'd like to define their composition as a Moore machine
 \begin{equation}
     \mora \mthen \morb = \tupp{\prin_{\mora \mthen \morb},\prst_{\mora \mthen \morb},\prout_{\mora \mthen \morb},\prdyn_{\mora \mthen \morb},\prreadout_{\mora \mthen \morb},\prstart_{\mora \mthen \morb}}.
 \end{equation}
+The situation is illustrated in \cref{fig:comp_moore_1}.
 
-Here is one way to do it.
-We set
+
+Here is one way to do it: we set
 %
 \begin{equation}
     \label{eq:moore-comp-naive-1}
@@ -82,11 +122,11 @@ We set
         \prin_{\mora\mthen\morb}    & \definedas \prin_{\mora}, \\
         \prst_{\mora\mthen\morb}    & \definedas \prst_{\mora} \cartprod \prst_{\morb}, \\
         \prout_{\mora\mthen\morb}   & \definedas \prout_{\morb} \\
-        \prstart_{\mora\mthen\morb} & \definedas \tupp{\prstart_{\mora}, \prstart_{\morb}}.
+        \prstart_{\mora\mthen\morb} & \definedas \tupp{\prstart_{\mora}, \prstart_{\morb}},
     \end{aligned}
 \end{equation}
 %
-Furthermore, we define the composite dynamics
+we define the composite dynamics to be 
 %
 \begin{equation}
     \label{eq:moore-comp-naive-2}
@@ -99,11 +139,11 @@ Furthermore, we define the composite dynamics
     }{
         \tupp{u, \tupp{x_{\mora}, x_{\morb}}}
     }{
-        \tupp{ \prdyn_{\mora} (u, x_{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb})}
+        \tupp{ \prdyn_{\mora} (u, x_{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(x_{\mora}), x_{\morb}),}
     }
 \end{equation}
 %
-and the composite readout
+and we define the composite readout to be
 %
 \begin{equation}
     \label{eq:moore-comp-naive-3}
@@ -120,30 +160,33 @@ and the composite readout
     }
 \end{equation}
 %
-The situation is illustrated in \cref{fig:comp_moore_1}.
 
-It would be convenient if this composition of Moore machines were such that Moore machines form a semicategory.
-However, it turns out that the composition that we defined above is not associative.
-It \emph{almost} is, but not quite.
-The issue lies essentially with the Cartesian product of state spaces~$\prst_{\mora} \cartprod \prst_{\morb}$, and the fact that such product is not associative.
-\todo{Did we mention this before?}
+This formalization works very nicely -- it models composition using the output of one machine as the input of the next, and result of composition is again a Moore machine. 
 
-Given three composable systems~$\mora$,~$\morb$, and~$\morc$, if we compose them in the two ways~$(\mora \mthen \morb) \mthen \morc$ and~$\mora \mthen (\morb \mthen \morc)$, then their respective state spaces are~$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and~$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$.
-These sets are not equal:
-%
+However, there is one aspect which we wish were different: this composition operation is not associative. It \emph{almost} is, but not quite. We explain why below. 
+
+The reason we wish it \emph{were} associative is that Moore machines would then form a semicategory and we could integrate them nicely into the mathematics we have been developing thusfar. 
+
+The culprit for associativity failing is the Cartesian product that we use to define the state space $\prst_{\mora} \cartprod \prst_{\morb}$ of a composite Moore machine $\mora \mthen \morb$. Consider three composable systems~$\mora$,~$\morb$, and~$\morc$. If we compose them in the two ways~$(\mora \mthen \morb) \mthen \morc$ and~$\mora \mthen (\morb \mthen \morc)$, then their respective state spaces are~$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and~$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$.
+These sets are \emph{isomorphic}, but they are not equal on the nose, and hence also the Moore machines $\mora \mthen \morb$ and $\mora \mthen (\morb \mthen \morc)$ are very close to being equal, but are not quite. 
+
+To see why
 \begin{equation}
     \label{eq:assoc-fails1}
     (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} \neq \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}).
 \end{equation}
-%
-However, they are \emph{isomorphic}.
-The isomorphism between the two sets is
+recall that the elements of $(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ are nested tuples of the form 
+$$\tupp{ \tupp{x_{\mora}, x_{\morb}}, x_{\morc} }$$ while the elements of $\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$ are nested tuples of the form $$\tupp{x_{\mora}, \tupp{x_{\morb}, x_{\morc}} }.$$
+
+An isomorphism between the two sets is given by the following function 
 \begin{equation}
     \label{eq:assoc-fails2}
     \begin{aligned}
         (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} & \to \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}) \\
-        \tupp{ \tupp{x_{\mora}, x_{\morb}}, x_{\morc} }                 & \mapsto \tupp{x_{\mora}, \tupp{x_{\morb}, x_{\morc}} }.
+        \tupp{ \tupp{x_{\mora}, x_{\morb}}, x_{\morc} }                 & \mapsto \tupp{x_{\mora}, \tupp{x_{\morb}, x_{\morc}} }
     \end{aligned}
 \end{equation}
-If we want to have Moore machines be a semicategory, we have two options: either we relax the definition of category to allow associativity up to isomorphisms, or we modify slightly the definition of Moore machines to have an associative composition.
-We will take this second approach.
+which simply re-brackets the tuples. 
+
+In the next section we will introduce a technical construction for defining a product similar to the cartesian product, but which is associative on the nose - not just ``up to an isomorphism''. This construction will allow us to make a new, modified formalization of Moore machines which form a bona fide semicategory, and it will prove useful in other respects further down the road. 
+
