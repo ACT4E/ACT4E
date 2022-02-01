@@ -7,19 +7,23 @@
 
 \linkvideo{spring2021-actions:semi-actions:processes:moore} % Moore machines
 
-In the following we consider \textbf{Moore machines}\footnote{They are name after Edward F. Moore.}, which are a type of basic model for describing certain dynamical systems. It's characteristic features are:
+In the following we consider \textbf{Moore machines}\footnote{They are name after Edward F.
+    Moore.
+}, which are a type of basic model for describing certain dynamical systems.
+It's characteristic features are:
 \begin{itemize}
-\item a \textbf{state space} which describes all possible states that the system can possible be in;
-\item an \textbf{input space} and an \textbf{output space};
-\item a \textbf{dynamics} which describes how, given an input, the system's state changes according to that input;
-\item a \textbf{read-out} which relates the current state of the system to the output space.
+    \item a \textbf{state space} which describes all possible states that the system can possible be in;
+    \item an \textbf{input space} and an \textbf{output space};
+    \item a \textbf{dynamics} which describes how, given an input, the system's state changes according to that input;
+    \item a \textbf{read-out} which relates the current state of the system to the output space.
 \end{itemize}
- %
+%
 We are in particular interested in the ways that such a machine can transform a sequence of inputs into a sequence of outputs.
 
- \subsection{A first mathematical model}
+\subsection{A first mathematical model}
 
-Our first version for formalizing the idea of a Moore machine looks as follows. We model the input space, state space, and output space as sets  $\prin$, $\prst$, and $\prout$ respectively, and we model the dynamics and read-out as functions
+Our first version for formalizing the idea of a Moore machine looks as follows.
+We model the input space, state space, and output space as sets  $\prin$, $\prst$, and $\prout$ respectively, and we model the dynamics and read-out as functions
 \begin{equation}
     \label{eq:moore-1}
     \begin{cases}
@@ -27,7 +31,6 @@ Our first version for formalizing the idea of a Moore machine looks as follows. 
         \prreadout \colon \prst \sto \prout.
     \end{cases}
 \end{equation}
-
 
 %    As introduced in \cref{sec:actions}, we can apply currying to~$\prdyn$, to obtain a map from inputs to endomorphisms on the states:
 %    %
@@ -66,17 +69,18 @@ Given a sequence of inputs $u_0, u_1, u_2, \dots $, we use the following recipe
         y_{k}   = \prreadout(x_{k}).
     \end{cases}
 \end{equation}
- to produce a sequence $y_0, y_1, y_2, \dots $ of outputs. For the very first step, when $k = 0$, we need the initial state $x_0 = \prstart$ in order to compute $x_1 = \prdyn(u_0, x_0)$ and $y_0 = \prreadout(x_0)$.
+to produce a sequence $y_0, y_1, y_2, \dots $ of outputs.
+For the very first step, when $k = 0$, we need the initial state $x_0 = \prstart$ in order to compute $x_1 = \prdyn(u_0, x_0)$ and $y_0 = \prreadout(x_0)$.
 
- \
+\
 
 \todotext{continue the simple example above to illustrate}
 
 \
 
-Recall that a sequence $u_0, u_1, u_2, \dots$ of elements of $\prin$ is a function $u : \natnumbers \to \prin$ with $u(0) = u_0, u(1) = u_2, u(2) = u_3, \dots$ etc. For a fixed Moore machine, the recipe \cref{eq:Moore-action-recursion} defines a function $\act$ which maps any given sequence $u$ of elements of $\prin$ to a corresponding sequence $y = \act(u)$ of elements of $\prout$. In other words, from $\tup{\prin, \prout, \prst, \prdyn, \prreadout, \prstart}$ and $\cref{eq:Moore-action-recursion}$ we obtain $$\act \colon \prin^\natnumbers \to \prout^\natnumbers.$$ We thnk of this function $\act$ as describing the external behavior of the Moore machine, because it encodes what is externally observable in terms of how the Moore machine is used to relate inputs to outputs.
-
-
+Recall that a sequence $u_0, u_1, u_2, \dots$ of elements of $\prin$ is a function $u : \natnumbers \to \prin$ with $u(0) = u_0, u(1) = u_2, u(2) = u_3, \dots$ etc. For a fixed Moore machine, the recipe \cref{eq:Moore-action-recursion} defines a function $\act$ which maps any given sequence $u$ of elements of $\prin$ to a corresponding sequence $y = \act(u)$ of elements of $\prout$.
+In other words, from $\tup{\prin, \prout, \prst, \prdyn, \prreadout, \prstart}$ and $\cref{eq:Moore-action-recursion}$ we obtain $$\act \colon \prin^\natnumbers \to \prout^\natnumbers.
+$$ We thnk of this function $\act$ as describing the external behavior of the Moore machine, because it encodes what is externally observable in terms of how the Moore machine is used to relate inputs to outputs.
 
 \begin{remark}
 As an aside, we note that in concrete applications it might be the case that we do not actually know a precise model of a Moore machine in terms of the data \cref{eq:moore-tuple}, but we can still observe what it does when we feed it inputs. And in some cases this external behavior is all we really care about.
@@ -85,7 +89,8 @@ As an aside, we note that in concrete applications it might be the case that we 
 
 \subsection{Composing Moore machines}
 
-Let us consider composing Moore machines serially by letting the output of one machine be the input of the next. We'd like the result to again be a Moore machine.
+Let us consider composing Moore machines serially by letting the output of one machine be the input of the next.
+We'd like the result to again be a Moore machine.
 
 \begin{marginfigure}
     \centering
@@ -112,7 +117,6 @@ with~$\prout_{\mora} = \prin_{\morb}$, we'd like to define their composition as 
     \mora \mthen \morb = \tupp{\prin_{\mora \mthen \morb},\prst_{\mora \mthen \morb},\prout_{\mora \mthen \morb},\prdyn_{\mora \mthen \morb},\prreadout_{\mora \mthen \morb},\prstart_{\mora \mthen \morb}}.
 \end{equation}
 The situation is illustrated in \cref{fig:comp_moore_1}.
-
 
 Here is one way to do it: we set
 %
@@ -163,11 +167,15 @@ and we define the composite readout to be
 
 This formalization works very nicely -- it models composition using the output of one machine as the input of the next, and result of composition is again a Moore machine.
 
-However, there is one aspect which we wish were different: this composition operation is not associative. It \emph{almost} is, but not quite. We explain why below.
+However, there is one aspect which we wish were different: this composition operation is not associative.
+It \emph{almost} is, but not quite.
+We explain why below.
 
 The reason we wish it \emph{were} associative is that Moore machines would then form a semicategory and we could integrate them nicely into the mathematics we have been developing thusfar.
 
-The culprit for associativity failing is the Cartesian product that we use to define the state space $\prst_{\mora} \cartprod \prst_{\morb}$ of a composite Moore machine $\mora \mthen \morb$. Consider three composable systems~$\mora$,~$\morb$, and~$\morc$. If we compose them in the two ways~$(\mora \mthen \morb) \mthen \morc$ and~$\mora \mthen (\morb \mthen \morc)$, then their respective state spaces are~$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and~$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$.
+The culprit for associativity failing is the Cartesian product that we use to define the state space $\prst_{\mora} \cartprod \prst_{\morb}$ of a composite Moore machine $\mora \mthen \morb$.
+Consider three composable systems~$\mora$,~$\morb$, and~$\morc$.
+If we compose them in the two ways~$(\mora \mthen \morb) \mthen \morc$ and~$\mora \mthen (\morb \mthen \morc)$, then their respective state spaces are~$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and~$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$.
 These sets are \emph{isomorphic}, but they are not equal on the nose, and hence also the Moore machines $\mora \mthen \morb$ and $\mora \mthen (\morb \mthen \morc)$ are very close to being equal, but are not quite.
 
 To see why
@@ -188,4 +196,5 @@ An isomorphism between the two sets is given by the following function
 \end{equation}
 which simply re-brackets the tuples.
 
-In the next section we will introduce a technical construction for defining a product similar to the cartesian product, but which is associative on the nose - not just ``up to an isomorphism''. This construction will allow us to make a new, modified formalization of Moore machines which form a bona fide semicategory, and it will prove useful in other respects further down the road.
+In the next section we will introduce a technical construction for defining a product similar to the cartesian product, but which is associative on the nose - not just ``up to an isomorphism''.
+This construction will allow us to make a new, modified formalization of Moore machines which form a bona fide semicategory, and it will prove useful in other respects further down the road.
