@@ -98,34 +98,32 @@ The readout of $\mora \mthen \morb$ is
 \end{definition}
 
 
-\todotext{the examples below need to be be upated/edited}
-
 \begin{example}[Duplicator]
     We consider the example of a More machine~$\duplicator$, which we call \emph{duplicator}.
     Practically, this machine takes an input, and duplicates it.
     The machine is written as
     \begin{equation*}
-        \tupp{\prin_{\duplicator},\prst_{\duplicator},\listsof{\prout_{\duplicator}},\prdyn_{\duplicator},\prreadout_{\duplicator},\prstart_{\duplicator}},
+        \tupp{\prinL_{\duplicator},\prstL_{\duplicator},\listsof{\proutL_{\duplicator}},\prdyn_{\duplicator},\prreadout_{\duplicator},\prstart_{\duplicator}},
     \end{equation*}
-    where~$\prin_{\duplicator}=\prst_{\duplicator}=\prout_\duplicator$, and
+    where~$\prinL_{\duplicator}=\prstL_{\duplicator}=\proutL_\duplicator$, and
     \begin{equation*}
         \defmapcomma{\prdyn_\duplicator}
-        {\Tupcat{\prin_\duplicator}{\prst_\duplicator}}
+        { \prinL_\duplicator \cprod \prstL_\duplicator}
         {\sto}
-        {\prst_\duplicator}
-        {\tupcat{u}{x_\duplicator}}
-        {\tupca{u}}
+        {\prstL_\duplicator}
+        {u \tupconcat x}
+        {u}
     \end{equation*}
     %
     \begin{equation*}
         \defmapcomma{\prreadout_\duplicator}
-        {\prst_\duplicator}
+        {\prstL_\duplicator}
         {\sto}
-        {\listsof{\prout_\duplicator}}
-        {x_\duplicator}
-        {\tupcat{x_\duplicator}{x_\duplicator}}
+        {\listsof{\proutL_\duplicator}}
+        {x}
+       {\maketypedlist{x,x}{\proutL_\duplicator}}
     \end{equation*}
-    and~$\prstart=\tupca{}$.
+    and~$\prstart=\tup{ \ } \in \prstL_\duplicator$.
 \end{example}
 
 \begin{example}[Discarder]
@@ -133,32 +131,32 @@ The readout of $\mora \mthen \morb$ is
     Practically, this machine discards every other input.
     The machine is written as:
     \begin{equation*}
-        \tupp{\prin_{\discarder},\prst_{\discarder},\listsof{\prout_{\discarder}},\prdyn_{\discarder},\prreadout_{\discarder},\prstart_{\discarder}},
+        \tupp{\prinL_{\discarder},\prstL_{\discarder},\listsof{\proutL_{\discarder}},\prdyn_{\discarder},\prreadout_{\discarder},\prstart_{\discarder}},
     \end{equation*}
-    where~$\prst_{\discarder}=\Tupcat{\{0,1\}}{\prin_\discarder}$, and
+    where~$\prstL_{\discarder}= \{0,1\} \cprod \prinL_\discarder$, and
     \begin{equation*}
         \defmapcomma{\prdyn_\discarder}
-        {\Tupcat{\prin_\discarder}{\prst_\discarder}}
+        { \prinL_\discarder \cprod \{0,1\} \cprod \prinL_\discarder}
         {\sto}
-        {\prst_\discarder}
-        {\tupcat{u}{x_\discarder}}
-        {\tupcat{(1-x_\discarder)}{u}}
+        {\{0,1\} \cprod \prinL_\discarder}
+        {u \tupconcat t \tupconcat x}
+        {(1-t) \tupconcat u}
     \end{equation*}
     %
     \begin{equation*}
         \defmapcomma{\prreadout_\discarder}
-        {\prst_\discarder}
+        {\{0,1\} \cprod \prinL_\discarder}
         {\sto}
-        {\listsof{\prout_\discarder}}
-        {\tupcat{x_{1,\discarder}}{x_{2,\discarder}}}
+        {\listsof{\proutL_\discarder}}
+        {t \tupconcat x}
         {
             \begin{cases}
-                \tupca{x_{2,\discarder}}, & x_\discarder\neq 0, \\
-                \tupca{},                 & \text{ else}.
+                \maketypedlist{x}{\proutL_\discarder} , & \text{ if } t \neq 0, \\
+                \maketypedlist{ \ }{\proutL_\discarder},                 & \text{ else}.
             \end{cases}
         }
     \end{equation*}
-    and~$\prstart=0$.
+    and~$\prstart_\discarder = 0 \tupconcat \tup{\ } \in \prstL_\discarder$.
 \end{example}
 
 \begin{example}[Terminator]
@@ -166,29 +164,29 @@ The readout of $\mora \mthen \morb$ is
     Practically, this machine terminates any input, outputting an empty list.
     The machine is written as
     \begin{equation*}
-        \tupp{\prin_{\terminator},\prst_{\terminator},\listsof{\prout_{\terminator}},\prdyn_{\terminator},\prreadout_{\terminator},\prstart_{\terminator}},
+        \tupp{\prinL_{\terminator},\prstL_{\terminator},\listsof{\proutL_{\terminator}},\prdyn_{\terminator},\prreadout_{\terminator},\prstart_{\terminator}},
     \end{equation*}
     where:
     \begin{equation*}
         \defmapcomma{\prdyn_\terminator}
-        {\Tupcat{\prin_\terminator}{\prst_\terminator}}
+        {\prinL_\terminator \cprod \prstL_\terminator}
         {\sto}
-        {\prst_\terminator}
-        {\tupcat{u}{x_\terminator}}
-        {\tupca{x_\terminator}}
+        {\prstL_\terminator}
+        {u \tupconcat x}
+        {x}
     \end{equation*}
     %
     \begin{equation*}
         \defmapcomma{\prreadout_\terminator}
-        {\prst_\terminator}
+        {\prstL_\terminator}
         {\sto}
-        {\listsof{\prout_\terminator}}
-        {\prst_\terminator}
+        {\listsof{\proutL_\terminator}}
+        {\prstL_\terminator}
         {
-            \tupca{}
+            \maketypedlist{ \ }{\proutL_\terminator}
         }
     \end{equation*}
-    and any~$\prstart_\terminator$.
+    and $\prstart_\terminator \in \prstL_\terminator$ can be any element.
 \end{example}
 
 \todojira{589}{Example of More: Composition of duplicator and discarder gives identity}
