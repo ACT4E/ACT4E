@@ -1,0 +1,108 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Different actions of Moore machines}
+\label{sec:different-actions-of-moore-machines}
+
+
+Moore machines need not necessarily act in the standard way that we discussed in \cref{sec:Moore-acting-on-sequences}. In this section, we illustrate other actions of Moore machines. 
+
+\subsection{Changing how morphisms act}
+
+Recall that, given a Moore machine $\mora = \tup{\prinL,\prstL,\proutL,\prdyn,\prreadout,\prstart}$, the standard action defined a function 
+\begin{equation}
+{\prinL}^\natnumbers \to {\proutL}^\natnumbers
+\end{equation}
+via solving the recursion equations 
+\begin{equation}
+\label{eq:moore-recursion-once-again}
+    \begin{cases}
+        x_{k+1} = \prdyn_\mora(u_k, x_k) \\
+        y_{k}   = \prreadout_\mora(x_{k}).
+    \end{cases}
+\end{equation}
+
+One way define other actions is by changing \cref{eq:moore-recursion-once-again} to some other recipe. It is necessary then to check that the resulting action really satisfies the properties of \cref{def:semicategory-action}. 
+
+For example, consider the recursion equations
+\begin{equation}
+\label{eq:moore-new-recursion-equations}
+    \begin{cases}
+        x_{k+1} = \prdyn_\mora(u_k, x_k) \\
+        \tilde x_{k+1} = \prdyn_\mora(x_{k+1}, \tilde x_k) \\
+        y_{k}   = \prreadout_\mora(\tilde x_{k}).
+    \end{cases}
+\end{equation}
+Given  $\mora = \tup{\prinL,\prstL,\proutL,\prdyn,\prreadout,\prstart}$ we can use these to define an action of $\mora$ by interpreting the variables $x_k$ and $\tilde x_k$ (for all $k \in \natnumbers$) both as denoting elements of $\prstL$, and setting $x_0 = \tilde x_0 = \prstart$. The rest is analogous to how we defined the standard action: given a sequence $u = u_0, u_1, u_2, \dots$ we can iteratively compute from it sequences $x = x_0, x_1, x_2, \dots $ and $\tilde x = \tilde x_0, \tilde x_1, \tilde x_2, \dots$, and then the output sequence $y = y_0, y_1, y_2, \dots $ is defined by $y_{k}   = \prreadout_\mora(\tilde x_{k})$
+
+
+\begin{example}
+Let's consider the same Moore machine $\mora$ as in \cref{exa:moore-standard-action}, but now let's consider the action that uses \cref{eq:moore-new-recursion-equations}, instead of the standard action. If we give the same input sequence as we did in \cref{exa:moore-standard-action}, what does the corresponding output sequence look like now?
+
+Let's calculate the first five entries of the output sequence. 
+
+First, recall that $\prinL = \prstL = \proutL = \cObj{\natnumbers}$
+and 
+\begin{equation}
+\defmapset{
+\prdyn_\mora
+}{
+\prinL \cprod \prstL
+}{
+\prstL
+}{
+\tup{m} \tupconcat \tup{n}
+}{
+\tup{m + n}
+}
+\end{equation}
+and 
+\begin{equation}
+\defmapset{
+\prreadout_\mora
+}{
+\prstL
+}{
+\proutL
+}{
+\tup{n}
+}{
+\tup{n+1}
+}
+\end{equation}
+and $\prstart = \tup{0}$. 
+
+The input sequence has the form $u = \tup{1}, \tup{2}, \tup{3}, \tup{4}, \tup{5}, \dots$. We first compute the first five entries of the sequences of states $x = x_0, x_1, x_2, \dots$ and $x = x_0, x_1, x_2, \dots$ that solve \cref{eq:moore-new-recursion-equations}:
+\begin{align*}
+x_0 &= \prstart = \tup{0}, \\
+x_1 &= \tup{1 + 0} = \tup{1}, \\
+x_2 &= \tup{2 + 1} = \tup{3}, \\
+x_3 &= \tup{3 + 3} = \tup{6}, \\
+x_4 &= \tup{4 + 6} = \tup{10}
+\end{align*}
+and
+\begin{align*}
+\tilde x_0 &= \prstart = \tup{0}, \\
+\tilde x_1 &= \tup{1 + 0} = \tup{1}, \\
+\tilde x_2 &= \tup{3 + 1} = \tup{4}, \\
+\tilde x_3 &= \tup{6 + 4} = \tup{10}, \\
+\tilde x_4 &= \tup{10 + 10} = \tup{20}.
+\end{align*}
+Applying $\prreadout_\mora$ to the entries the sequence $\tilde x$, the first five entries of the output sequence are:
+\begin{align*}
+y_0 &= \tup{0 + 1} = \tup{1}, \\
+y_1 &= \tup{1 + 1} = \tup{2}, \\
+y_2 &= \tup{4 + 1} = \tup{5}, \\
+y_3 &= \tup{10 + 1} = \tup{11} \\
+u_4 &= \tup{20 + 1} = \tup{21}.
+\end{align*}
+\end{example}
+
+
+\todotext{insert exercises here}
+
+
+\subsection{Changing the signal spaces}
+
+\todotext{@J: fill this}
+
+
