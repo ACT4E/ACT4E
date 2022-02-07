@@ -1,6 +1,6 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Action of Moore machines on sequences}
+\section{Standard action of Moore machines}
 \label{sec:Moore-acting-on-sequences}
 
 Given a Moore machine $\mora = \tup{\prinL_\mora,\prstL_\mora,\proutL_\mora,\prdyn_\mora,\prreadout_\mora,\prstart_\mora}$
@@ -8,7 +8,7 @@ we saw that we can use it to transform a sequence of inputs $u_0, u_1, u_2, \dot
 \begin{equation}
     \label{eq:Moore-action-recursion-again}
     \begin{cases}
-        x_{k+1} = \prdyn_\mora(u_k, x_k) \\
+        x_{k+1} = \prdyn_\mora(u_k \tupconcat x_k) \\
         y_{k}   = \prreadout_\mora(x_{k}).
     \end{cases}
 \end{equation}
@@ -28,6 +28,61 @@ which takes any sequence  of elements of $\prinL_\mora$ and maps it to a corresp
         \item Given the solution $s$, the sequence $y = \act_{\mora}(u)$ is simply $y = s \then \prreadout_\mora$.
     \end{enumerate}
 \end{remark}
+
+\begin{example}
+\label{exa:moore-standard-action}
+Consider a moore machine $\mora$ with  $\prinL = \prstL = \proutL = \cObj{\natnumbers}$
+and let 
+\begin{equation}
+\defmapset{
+\prdyn_\mora
+}{
+\prinL \cprod \prstL
+}{
+\prstL
+}{
+\tup{m} \tupconcat \tup{n}
+}{
+\tup{m + n}
+}
+\end{equation}
+and 
+\begin{equation}
+\defmapset{
+\prreadout_\mora
+}{
+\prstL
+}{
+\proutL
+}{
+\tup{n}
+}{
+\tup{n+1}
+}
+\end{equation}
+and $\prstart = \tup{0}$. 
+
+Given a sequence of inputs of the form $u = \tup{1}, \tup{2}, \tup{3}, \tup{4}, \tup{5}, \dots$, what are the first five entries of the corresponding sequence of outputs? 
+
+To compute this, let us first calculate the first five entries of the sequence of states $x = x_0, x_1, x_2, \dots$ that solves \cref{eq:Moore-action-recursion-again}. We have 
+\begin{align*}
+x_0 &= \prstart = \tup{0}, \\
+x_1 &= \tup{1 + 0} = \tup{1}, \\
+x_2 &= \tup{2 + 1} = \tup{3}, \\
+x_3 &= \tup{3 + 3} = \tup{6}, \\
+x_4 &= \tup{4 + 6} = \tup{10}.
+\end{align*}
+Now, applying $\prreadout_\mora$ to the entries of this sequence of state, we obtain the first five entries of the output sequence:
+\begin{align*}
+y_0 &= \tup{0 + 1} = \tup{1}, \\
+y_1 &= \tup{1 + 1} = \tup{2}, \\
+y_2 &= \tup{3 + 1} = \tup{4}, \\
+y_3 &= \tup{6 + 1} = \tup{7} \\
+u_4 &= \tup{10 + 1} = \tup{11}.
+\end{align*}
+\end{example}
+
+\todotext{insert a graded exercise here}
 
 \subsection{Compositionality}
 

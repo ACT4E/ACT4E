@@ -7,7 +7,7 @@
 
 \todotextjira{59}{@Andrea: Enrich text, using descriptions from lecture}
 
-In this section we will generalize from actions of a semigroup to actions of a semicategory, using the example of Moore machines acting on signal sequences.
+In this section we generalize from actions of a semigroup to actions of a semicategory, using the example of Moore machines acting on signal sequences.
 
 To motivate our story, let us first consider Moore machines of the form 
 $$\tup{\prinL,\prstL,\prinL,\prdyn,\prreadout,\prstart}$$ 
@@ -15,106 +15,90 @@ where the input and output sets are equal. In other words, we are considering th
 
 In \cref{sec:Moore-acting-on-sequences} we defined a standard action which associates to every morphism $\mora \in \HomSet{\Moore}{\prinL}{\prinL}$ a function 
 \begin{equation}
-\act_{\mora} \colon {\prinL_\mora}^\natnumbers \to {\proutL_\mora}^\natnumbers.
+\act_{\mora} \colon {\prinL}^\natnumbers \to {\prinL}^\natnumbers.
 \end{equation}
 This action defines a function 
 \begin{equation}
-\act \colon  \HomSet{\Moore}{\prinL}{\prinL} \to \End ({\prinL_\mora}^{\natnumbers}).
+\funmor{\act} \colon  \HomSet{\Moore}{\prinL}{\prinL} \to \End ({\prinL}^{\natnumbers})
 \end{equation}
-And this function is in fact a semigroup action, since we proved in \cref{prop:moore-action-is-a-morphism} that
+where 
+$$
+\funmor{\act}(\mora) = \act_{\mora}.
+$$
+And this function $\funmor{\act}$ is in fact a semigroup morphism, and so a semigroup action, since we proved in \cref{prop:moore-action-is-a-morphism} that
 \begin{equation}
 \act_{\mora \mthen \morb} = \act_\mora \mthen \act_\morb.
 \end{equation}
 (Compare with \cref{def:semigroup-cov-action} of semigroup action.)
 
-
-
-\
-
-\
-
-\
-
-\
-
-
-Let~$\CatC$ a general process category; either \Moore or \More.
-% as in \cref{tab:processes-types}.
-
-We want a process in~$\HomSet\CatC\Obja\Objb$ to induce a map between signals.
-
-Note that each process type has a different signal types.
-
-For example, a Moore machine in~$\HomSet\Moore\Obja\Objb$ will map the set~$\natnumbers \to \Obja$ to the set~$\natnumbers \to \Objb$.
-A More machine in~$\HomSet\More\Obja\Objb$  will map the set~$\listsof \Obja$ to the set~$\listsof \Objb$.
-
-To look at this generically, we need to consider a map~$\catacOb$ that maps the base set~$\Obja$ to the actual set~$\catacOb(\Obja)$.
-For example:
-%
+Now let us consider the general situation of Moore machines acting on signals. Given any Moore machine of the general form 
+$$\mora = \tup{\prinL,\prstL,\proutL,\prdyn,\prreadout,\prstart}$$ 
+(the input and output spaces are no longer necessarily equal) we again have an associated function on signals
 \begin{equation}
-    \defmapcommaset{
-        \catacOb_{\Moore}
-    }{
-        \Set
-    }{
-        \Set
-    }{
-        \Obja
-    }{
-        (\natnumbers \to \Obja)
-    }
+\act_{\mora} \colon {\prinL}^\natnumbers \to {\proutL}^\natnumbers.
 \end{equation}
-%
+We can assemble this data as a family of functions (all which we call $\funmor{\act}$)
 \begin{equation}
-    \defmapperiodset{
-        \catacOb_{\More}
-    }{
-        \Set
-    }{
-        \Set
-    }{
-        \Obja
-    }{
-        \listsof \Obja
-    }
+\label{eq:moore-action-becoming-a-functor}
+\funmor{\act} \colon  \HomSet{\Moore}{\prinL}{\proutL} \to \HomSet{\Set}{\prinL^{\natnumbers}}{\proutL^{\natnumbers}},
 \end{equation}
-%
-Then we need another map~$\catacMor$ that given a process in~$\HomSet\CatC\Obja\Objb$ produces a map from~$\catacOb(\Obja)$ to~$\catacOb(\Objb)$.
-%
+where $\prinL$ and $\proutL$ range over all objects of $\Moore$. Or, if you will, 
+$$
+\funmor{\act} \colon \Mor_\Moore \to \Mor_\Set.
+$$
+From \cref{prop:moore-action-is-a-morphism} we have that this function is compatible with the composition operations in $\Moore$ and $\Set$: 
 \begin{equation}
-    \label{eq:gamma-1}
-    \catacMor\colon \HomSet\CatC\Obja\Objb \to  (\catacOb(\Obja) \sto \catacOb(\Objb)).
+\label{eq:moore-action-functor-and-composition}
+\funmor{\act}(\mora \then \morb) = \funmor{\act}(\mora) \then \funmor{\act}(\morb). 
 \end{equation}
-%
-Interpreting the arrows as morphisms in sets, we can say:
-%
+ 
+
+Note that the sets $\prinL^{\natnumbers}$ and $\proutL^{\natnumbers}$ involved in the right hand side of \cref{eq:moore-action-becoming-a-functor} depend on the objects $\prinL$ and $\proutL$ on the left-hand side. We will encode this also with a function 
 \begin{equation}
-    \label{eq:gamma-2}
-    \catacMor\colon \HomSet\CatC\Obja\Objb \to  \HomSet\Set{\catacOb(\Obja)}{\catacOb(\Objb) }.
+\funob{\act} \colon \Ob_{\Moore} \to \Ob_{\Set}, \prinL \mapsto \prinL^\natnumbers,
 \end{equation}
-%
+in which case $\cref{eq:moore-action-becoming-a-functor}$ becomes
+\begin{equation}
+\label{eq:moore-action-as-a-functor}
+\funmor{\act} \colon  \HomSet{\Moore}{\prinL}{\proutL} \to \HomSet{\Set}{ \funob{\act}(\prinL)}{\funob{\act}(\proutL)}.
+\end{equation}
+
+In summary, we have reformulated Moore machine actions as consisting of a pair of functions 
+\begin{equation}
+\funmor{\act} \colon \Mor_\Moore \to \Mor_\Set \qquad \text{ and } \qquad \funob{\act} \colon \Ob_{\Moore} \to \Ob_{\Set}
+\end{equation}
+which work together as in \cref{eq:moore-action-as-a-functor} and such that $\funmor{\act}$ is compatible with composition as in $\cref{eq:moore-action-functor-and-composition}$. 
+
+Now we formalize this situation as a general definition. 
 
 \begin{ctdefinition}[Semicategory action]
     \label{def:semicategory-action}
-    A \emph{semicategory action} of a semicategory~$\CatC$ is defined by
+    A \emph{semicategory action} of a semicategory~$\CatC$ is
+    
+    \constit
     \begin{itemize}
-        \item a map~$\catacOb$ that associates, to each object~$\Obja \setin \ObC$, a set~$\catacOb(\Obja)$:
-              \begin{equation}
-                  \catacOb \colon \ObC \to \Obof\Set;
-              \end{equation}
-        \item a map~$\catacMor$ that associates, to each morphism in $\CatC$, a function:
-              \begin{equation}
-                  \catacMor\colon \HomSet\CatC\Obja\Objb \to  \HomSet\Set{\catacOb(\Obja)}{\catacOb(\Objb) };
-              \end{equation}
+        \item a map $\funob{\act} \colon \Ob_{\CatC} \to \Ob_{\Set}$,
+        \item a map~$\funmor{\act} \colon \Mor_\CatC \to \Mor_\Set$ such that 
+        \begin{equation}
+\funmor{\act} \colon  \HomSet{\CatC}{\Obja}{\Objb} \to \HomSet{\Set}{ \funob{\act}(\Obja)}{\funob{\act}(\Objb)}
+        \end{equation}
+        for all objects $\Obja, \Objb \in \Ob_{\CatC}$. 
     \end{itemize}
-    Moreover, this condition must hold:
-    \begin{equation}
-        \catacMor(\mora\then\morb) = \catacMor(\mora) \mthen \catacMor(\morb).
+
+    
+    \condit
+    
+    \begin{itemize}
+   \item for all composable morphisms $\mora$ and $\morb$ holds: 
+   \begin{equation}
+\funmor{\act}(\mora \then \morb) = \funmor{\act}(\mora) \then \funmor{\act}(\morb). 
     \end{equation}
-    The condition is depicted in commuting diagrams in \cref{fig:semicat_ac_comm}
+    \end{itemize}
 \end{ctdefinition}
 
-\begin{figure}
+The compatibility of the action with composition is illustrated in \cref{fig:semicat_ac_comm}. 
+
+\begin{figure}[h!]
 \label{fig:semicat_ac_comm}
     \begin{center}
         \includesag{semicat_ac_comm}
@@ -122,7 +106,7 @@ Interpreting the arrows as morphisms in sets, we can say:
     \caption{}
 \end{figure}
 
-\todojira{585}{Add explanation that action of composition is composition of actions}
+
 
 \showslides{
 
