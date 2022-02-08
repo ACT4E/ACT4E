@@ -151,13 +151,73 @@ where
         \begin{equation*}
             \prfperiod{\adpa\colon \cObj{\posA_1,\ldots,\posA_m}\op \acprod \cObj{\posC_1,\ldots,\posC_o}\toinPos \Bool}
             {\adpb\colon \cObj{\posB_1,\ldots,\posB_n}\op \acprod \cObj{\posD_1,\ldots,\posD_t}\toinPos \Bool}
-            {\adpa \cprodmor \adpb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}\op \acprod \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}\toinPos \Bool}
+            {\adpa \cprodmor \adpb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}\op \acprod \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}\toinPos \cObj{\Bool,\Bool}}
         \end{equation*}
     \end{widepar}
 
     The crucial part to show is that~$\adpa \cprodmor \adpb$ is a design problem.
     This is easy to show, by leveraging the fact that~$\adpa$ and~$\adpb$ are design problems.
-    \todo{finish}
+    We start with the first implication.
+    For brevity, we write~$\posCnel{}=\tup{\posCnel{1},\ldots, \posCnel{o}}$ and~$\posDnel{}=\tup{\posDnel{1},\ldots, \posDnel{t}}$.
+    One has:
+    \begin{widepar}
+        \begin{equation*}
+            \prfperiod{
+                \tup{\posAnel{1},\ldots,\posAnel{m},\posBnel{1},\ldots, \posBnel{n}}\posleqof{\cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}} \tup{\posAnel{1}',\ldots,\posAnel{m}',\posBnel{1}',\ldots, \posBnel{n}'}
+            }
+            {\prftree{\posAnel{1} \posAleq \posAnel{1}' \booland \ldots \booland \posAnel{m} \posAleq \posAnel{m}'\booland \posBnel{1} \posBleq \posBnel{1}'\booland \ldots \booland \posBnel{n} \posBleq \posBnel{n}'}
+                {\prftree{\adpa(\tup{\posAnel{1},\ldots, \posAnel{m}}^*,\posCnel{})\posgeqof{\Bool} \adpa(\tup{\posAnel{1}',\ldots, \posAnel{m}'}^*,\posCnel{})
+                        \booland
+                        \adpb(\tup{\posBnel{1},\ldots, \posBnel{n}}^*,\posDnel{})\posgeqof{\Bool} \adpb(\tup{\posBnel{1}',\ldots, \posBnel{n}'}^*,\posDnel{})}
+                    {
+                        \prftree{
+                            \adpa(\tup{\posAnel{1},\ldots, \posAnel{m}}^*,\posCnel{})\tupconcat \adpb(\tup{\posBnel{1},\ldots, \posBnel{n}}^*,\posDnel{})
+                            \posgeqof{\cObj{\Bool,\Bool}}
+                            \adpa(\tup{\posAnel{1}',\ldots, \posAnel{m}'}^*,\posCnel{})\tupconcat \adpb(\tup{\posBnel{1}',\ldots, \posBnel{n}'}^*,\posDnel{})
+                        }
+                        {(\adpa \cprodmor \adpb)(\tup{\posAnel{1},\ldots, \posAnel{m},\posBnel{1},\ldots, \posBnel{m}}^*,\tup{\posCnel{},\posDnel{}})\posgeqof{\cObj{\Bool,\Bool}}
+                            (\adpa \cprodmor \adpb)(\tup{\posAnel{1}',\ldots, \posAnel{m}',\posBnel{1}',\ldots, \posBnel{m}'}^*,\tup{\posCnel{},\posDnel{}})} }
+                }
+            }
+        \end{equation*}
+    \end{widepar}
+    For the second iteration, we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$ and~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$.
+    One has:
+    \begin{widepar}
+        \begin{equation*}
+            \prfperiod{
+                \tup{\posCnel{1},\ldots,\posCnel{o},\posDnel{1},\ldots, \posDnel{t}}\posleqof{\cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}} \tup{\posCnel{1}',\ldots,\posCnel{o}',\posDnel{1}',\ldots, \posDnel{t}'}
+            }
+            {\prftree{\posCnel{1} \posAleq \posCnel{1}' \booland \ldots \booland \posCnel{o} \posCleq \posCnel{o}'\booland \posDnel{1} \posBleq \posDnel{1}'\booland \ldots \booland \posDnel{t} \posDleq \posDnel{t}'}
+                {\prftree{\adpa(\posAnel{}^*,\tup{\posCnel{1},\ldots, \posCnel{o}})\posleqof{\Bool}
+                        \adpa(\posAnel{}^*,\tup{\posCnel{1}',\ldots, \posCnel{o}'})
+                        \booland
+                        \adpb(\posBnel{}^*,\tup{\posDnel{1},\ldots, \posDnel{t}})\posleqof{\Bool}
+                        \adpb(\posBnel{}^*,\tup{\posDnel{1}',\ldots, \posDnel{t}'})}
+                    {
+                        \prftree{
+                            \adpa(\posAnel{}^*,\tup{\posCnel{1},\ldots, \posCnel{o}})\tupconcat \adpb(\posBnel{}^*,\tup{\posDnel{1},\ldots, \posDnel{t}})
+                            \posleqof{\cObj{\Bool,\Bool}}
+                            \adpa(\posAnel{}^*,\tup{\posCnel{1}',\ldots, \posCnel{o}'})\tupconcat \adpb(\posBnel{}^*,\tup{\posDnel{1}',\ldots, \posDnel{t}'})
+                        }
+                        {(\adpa \cprodmor \adpb)(\tup{\posAnel{},\posBnel{}}^*,\tup{\posCnel{1},\ldots, \posCnel{o},\posDnel{1},\ldots, \posDnel{t}})
+                            \posleqof{\cObj{\Bool,\Bool}}
+                            (\adpa \cprodmor \adpb)(\tup{\posAnel{},\posBnel{}}^*,\tup{\posCnel{1}',\ldots, \posCnel{o}',\posDnel{1}',\ldots, \posDnel{t}'})} }
+                }
+            }
+        \end{equation*}
+    \end{widepar}
+    Therefore,~$\adpa \cprodmor \adpb$ is a valid design problem.
+
+    Associativity can be shown following what we did for \Set.
+\end{proof}
+
+\begin{lemma}[\cCat{\DP} is functorial stacking]
+    \cCat{\DP} is functorial stacking.
+\end{lemma}
+
+\begin{proof}
+    \todo{todo}
 \end{proof}
 
 \devel{
@@ -215,6 +275,7 @@ where
         \label{fig:examplemonoidal}
     \end{figure}
 \end{example}
+
 In~\DP, putting two design problems in parallel corresponds to their \emph{monoidal product}.
 
 \begin{definition}[Monoidal product in~\DP]
