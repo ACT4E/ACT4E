@@ -94,72 +94,68 @@ The readout of~$\mora \mthen \morb$ is
     \end{enumerate}
 \end{definition}
 
-\devel{
+\begin{example}[Duplicator]
+    We consider an example of a More machine~$\duplicator$ which we call a \emph{duplicator}.
+    Practically, this machine takes an input, and duplicates it.
+    The machine is written as
+    \begin{equation*}
+        \tupp{\prinL_{\duplicator},\prstL_{\duplicator},\listsof{\proutL_{\duplicator}},\prdyn_{\duplicator},\prreadout_{\duplicator},\prstart_{\duplicator}},
+    \end{equation*}
+    where~$\prinL_{\duplicator}=\prstL_{\duplicator}=\proutL_\duplicator$, and
+    \begin{equation*}
+        \defmapcomma{\prdyn_\duplicator}
+        { \prinL_\duplicator \cprod \prstL_\duplicator}
+        {\sto}
+        {\prstL_\duplicator}
+        {\prinel \tupconcat \prstel}
+        {\prinel}
+    \end{equation*}
+    %
+    \begin{equation*}
+        \defmapcomma{\prreadout_\duplicator}
+        {\prstL_\duplicator}
+        {\sto}
+        {\listsof{\proutL_\duplicator}}
+        {\prstel}
+        {\maketypedlist{\prstel,\prstel}{\proutL_\duplicator}}
+    \end{equation*}
+    and~$\prstart=\tup{ \ } \in \prstL_\duplicator$.
+\end{example}
 
-    \begin{example}[Duplicator]
-        We consider an example of a More machine~$\duplicator$ which we call a \emph{duplicator}.
-        Practically, this machine takes an input, and duplicates it.
-        The machine is written as
-        \begin{equation*}
-            \tupp{\prinL_{\duplicator},\prstL_{\duplicator},\listsof{\proutL_{\duplicator}},\prdyn_{\duplicator},\prreadout_{\duplicator},\prstart_{\duplicator}},
-        \end{equation*}
-        where~$\prinL_{\duplicator}=\prstL_{\duplicator}=\proutL_\duplicator$, and
-        \begin{equation*}
-            \defmapcomma{\prdyn_\duplicator}
-            { \prinL_\duplicator \cprod \prstL_\duplicator}
-            {\sto}
-            {\prstL_\duplicator}
-            {\prinel \tupconcat \prstel}
-            {\prinel}
-        \end{equation*}
-        %
-        \begin{equation*}
-            \defmapcomma{\prreadout_\duplicator}
-            {\prstL_\duplicator}
-            {\sto}
-            {\listsof{\proutL_\duplicator}}
-            {\prstel}
-            {\maketypedlist{\prstel,\prstel}{\proutL_\duplicator}}
-        \end{equation*}
-        and~$\prstart=\tup{ \ } \in \prstL_\duplicator$.
-    \end{example}
+\begin{example}[Discarder]
+    Here is an example of a More machine~$\discarder$ which we call a \emph{discarder}.
+    Practically, this machine discards every other input.
+    The machine is written as:
+    \begin{equation*}
+        \tupp{\prinL_{\discarder},\prstL_{\discarder},\listsof{\proutL_{\discarder}},\prdyn_{\discarder},\prreadout_{\discarder},\prstart_{\discarder}},
+    \end{equation*}
+    where~$\prstL_{\discarder}= \{\false,\true\} \cprod \prinL_\discarder$, and
+    \begin{equation*}
+        \defmapcomma{\prdyn_\discarder}
+        { \prinL_\discarder \cprod \{\false,\true\} \cprod \prinL_\discarder}
+        {\sto}
+        {\{\false,\true\} \cprod \prinL_\discarder}
+        {\prinel \tupconcat \styleelements{t} \tupconcat \prstel}
+        {\neg \styleelements{t} \tupconcat \prinel}
+    \end{equation*}
+    %
+    \begin{equation*}
+        \defmapcomma{\prreadout_\discarder}
+        {\{\false,\true\} \cprod \prinL_\discarder}
+        {\sto}
+        {\listsof{\proutL_\discarder}}
+        {\styleelements{t} \tupconcat \prstel}
+        {
+            \begin{cases}
+                \maketypedlist{\prstel}{\proutL_\discarder} , & \text{ if } \styleelements{t} \neq \false, \\
+                \maketypedlist{ \ }{\proutL_\discarder},      & \text{ else}.
+            \end{cases}
+        }
+    \end{equation*}
+    and~$\prstart_\discarder = \false \tupconcat \tup{\ } \in \prstL_\discarder$.
+\end{example}
 
-    \begin{example}[Discarder]
-        Here is an example of a More machine~$\discarder$ which we call a \emph{discarder}.
-        Practically, this machine discards every other input.
-        The machine is written as:
-        \begin{equation*}
-            \tupp{\prinL_{\discarder},\prstL_{\discarder},\listsof{\proutL_{\discarder}},\prdyn_{\discarder},\prreadout_{\discarder},\prstart_{\discarder}},
-        \end{equation*}
-        where~$\prstL_{\discarder}= \{0,1\} \cprod \prinL_\discarder$, and
-        \begin{equation*}
-            \defmapcomma{\prdyn_\discarder}
-            { \prinL_\discarder \cprod \{0,1\} \cprod \prinL_\discarder}
-            {\sto}
-            {\{0,1\} \cprod \prinL_\discarder}
-            {\prinel \tupconcat \styleelements{t} \tupconcat \prstel}
-            {(1-\styleelements{t}) \tupconcat \prinel}
-        \end{equation*}
-        %
-        \begin{equation*}
-            \defmapcomma{\prreadout_\discarder}
-            {\{0,1\} \cprod \prinL_\discarder}
-            {\sto}
-            {\listsof{\proutL_\discarder}}
-            {\styleelements{t} \tupconcat \prstel}
-            {
-                \begin{cases}
-                    \maketypedlist{\prstel}{\proutL_\discarder} , & \text{ if } \styleelements{t} \neq 0, \\
-                    \maketypedlist{ \ }{\proutL_\discarder},      & \text{ else}.
-                \end{cases}
-            }
-        \end{equation*}
-        and~$\prstart_\discarder = 0 \tupconcat \tup{\ } \in \prstL_\discarder$.
-    \end{example}
-
-    \todojira{589}{Example of More: Composition of duplicator and discarder gives identity}
-    \todotext{J: it doesn't seem to me like the thing mentioned in the above ToDO can even be true... }
-}
+\todojira{589}{Example of More: Composition of duplicator and discarder gives identity action but not identity of cat}
 
 \begin{example}[Terminator]
     We describe a More machine~$\terminator$ which we call a \emph{terminator}.
