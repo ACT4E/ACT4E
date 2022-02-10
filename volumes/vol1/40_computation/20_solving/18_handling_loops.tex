@@ -1,0 +1,185 @@
+
+\section{Handling loops}
+
+We are close to having a complete solution. The only part that is missing is dealing with loops (trace).
+
+\begin{marginfigure}
+    \includegraphics[scale=0.33]{gmcdp_sloop2}
+    \caption{}
+    \label{fig:gmcdp_sloop2}
+\end{marginfigure}
+
+First of all, we will work with a particular form of loops, called ``the Conway form'',
+shown in~\cref{fig:gmcdp_sloop2}. This corresponds to working with design problems of the type
+\begin{equation}
+    \adp \colon \funspa \times \funspb  \profto \resspb,
+\end{equation}
+The new feedback operator has signature 
+\begin{equation}
+    \dploop: (\funspa \times \funspb \profto \resspb) \to (\funspa \profto \resspb)
+\end{equation}
+
+
+We can do this without loss of generality, because we can re-write the trace 
+with this new operator. 
+We leave \cref{fig:can-rewrite} as a graphical proof that this is possible.
+More information can be found at \XXX.
+\todotext{cite the paper with equivalence}
+
+\begin{figure*}[h]
+    \hspace*{\fill}
+    \subfloat[\label{fig:loop_generalb}]{
+        \includegraphics[scale=0.33]{gmcdp_loop_general}
+    }
+    \hspace*{\fill}
+    \subfloat[\label{fig:loop_general2b}]{
+        \includegraphics[scale=0.33]{gmcdp_loop_general2}
+    }
+    \hspace*{\fill}
+    \caption{We can rewrite the trace in Conway's form.}
+    \label{fig:can-rewrite}
+    \todographics{Re-do graphics}
+\end{figure*}
+
+\todotext{In the following, we should always use ``finite antichains'' instead of $\Aressp$.}
+
+\begin{theorem}
+    \label{prop:loop-continuous}
+    For any DP $\adp$ of the right shape, we can compute $ \ftor_{\dploop(\adp)}$ 
+    as follows:
+    \begin{equation}
+        \ftor_{\dploop(\adp)}\colon\fun_{1}\mapsto\lfp(\Phi_{\fun_{1}}),
+        \label{eq:loop_fixpoint}
+    \end{equation}
+    that is, as the \emph{least fixed point} of a map $\Phi_{\fun_{1}}$ defined as 
+    \begin{eqnarray}
+        \Phi_{\fun_{1}}:\Aressp & \to     & \Aressp,\label{eq:bigphi} \\
+         \RR                     & \mapsto & \Min_{\resleq}\bigsetunion_{\res\setin\RR}\ftor_{\adp}(\fun_{1}, \res)\ \setintersection\ \upit\res.\nonumber
+    \end{eqnarray}
+    Here we consider $\Aressp$ as a poset with the order given by 
+    \begin{equation} \RR_1 \posleq_{\Aressp} \RR_2 \equiv \uparrow \RR_1 \posleq_{\fuppersets \ressp} \uparrow \RR_2
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    The diagram in \cref{fig:sloop} implies that the map~$\ftor_{\dploop(\adp)}$
+    can be described as:
+    \begin{align}
+        \ftor_{\dploop(\adp)}\colon\funsp_{1} & \to\Aressp,\label{eq:loopproblem} \\
+        \fun_{1}                              & \mapsto\begin{cases}
+                                                           \with          & \res,\fun_{2}\setin\ressp,                 \\
+                                                           \Min_{\resleq} & \res,                                      \\
+                                                           \subto         & \res\setin\ftor_{\adp}(\fun_{1},\fun_{2}), \\
+                                                                          & \res\resleq\fun_{2}.
+                                                       \end{cases}
+    \end{align}
+    Denote by~$\ftor_{\fun_{1}}$ the map~$\ftor_{\adp}$ with the first element fixed:
+    \begin{equation*}
+        \ftor_{\fun_{1}}\colon\fun_{2}\mapsto\ftor_{\adp}(\fun_{1},\fun_{2}).
+    \end{equation*}
+    Rewrite $\res\setin\ftor_{\adp}(\fun_{1},\fun_{2})$ in~\cref{eq:loopproblem} as
+    \begin{equation}
+        \res\setin\ftor_{\fun_{1}}(\fun_{2}).
+        \label{eq:h2}
+    \end{equation}
+    Let~\res be a feasible solution, but not necessarily minimal.
+    Because of \cref{lem:antichain-write}, the constraint~\cref{eq:h2} can be rewritten as
+    \begin{equation}
+        \{\res\}=\ftor_{\fun_{1}}(\fun_{2})\setintersection\upit\res.
+        \label{eq:h3}
+    \end{equation}
+    Because $\fun_{2}\posgeq\res$, and $\ftor_{\fun_{1}}$ is \scottcontinuous, it follows that~$\ftor_{\fun_{1}}(\fun_{2})\posgeq_{\Aressp}\ftor_{\fun_{1}}(\res)$.
+    Therefore, by \cref{lem:antichain_inter}, we have
+    \begin{equation}
+        \{\res\}\posgeq_{\Aressp}\ftor_{\fun_{1}}(\res)\setintersection\upit\res.
+        \label{eq:fea}
+    \end{equation}
+    This is a recursive condition that all feasible~\res must satisfy.
+
+    Let $\RR\setin\Aressp$ be an antichain of feasible resources, and let~\res be a generic element of~\ressp.
+    Tautologically, rewrite~$\RR$ as the minimal elements of the union of the singletons containing its elements:
+    \begin{equation}
+        \RR=\Min_{\resleq}\bigsetunion_{\res\setin\RR}\ \{\res\}.
+        \label{eq:condition3}
+    \end{equation}
+    Substituting~\cref{eq:fea} in~\cref{eq:condition3} we obtain (cf
+    \cref{lem:antichain_union})
+    \begin{equation}
+        \RR\posgeq_{\Aressp}\Min_{\resleq}\bigsetunion_{\res\setin\RR}\ftor_{\fun_{1}}(\res)\ \setintersection\ \upit\res.
+        \label{eq:recursive}
+    \end{equation}
+    %
+    Converse: It is also true that if an antichain~$\RR$ satisfies~\cref{eq:recursive} then all~$\res\setin\RR$ are feasible.
+    The constraint~\cref{eq:recursive} means that for any~$\res_{0}\setin\RR$ on the left side, we can find a~$\res_{1}$ in the right side so that~$\res_{0}\posgeq_{\ressp}\res_{1}$.
+    The point~$\res_{1}$ needs to belong to one of the sets of which we take the union; say that it comes from $\res_{2}\setin\RR$, so that $\res_{1}\setin\ftor_{\fun_{1}}(\res_{2})\ \setintersection\ \upit\res_{2}$.
+    Summarizing:
+    %
+    \begin{equation}
+        \forall\res_{0}\setin\RR:\ \exists\res_{1}\colon\ (\res_{0}\posgeq_{\ressp}\res_{1})\ \wedge\ (\exists\res_{2}\setin\RR\colon\ \res_{1}\setin\ftor_{\fun_{1}}(\res_{2})\ \setintersection\ \upit\res_{2}).
+        \label{eq:conc}
+    \end{equation}
+    %
+    Because~$\res_{1}\setin\ftor_{\fun_{1}}(\res_{2})\,\setintersection\,\upit\res_{2}$, we can conclude that~$\res_{1}\setin\upit\res_{2}$, and therefore~$\res_{1}\posgeq_{\ressp}\res_{2}$, which together with~$\res_{0}\posgeq_{\ressp}\res_{1}$, implies~$\res_{0}\posgeq_{\ressp}\res_{2}$.
+    We have concluded that there exist two points~$\res_{0},\res_{2}$ in the antichain~$\RR$ such that~$\res_{0}\posgeq_{\ressp}\res_{2}$; therefore, they are the same point:~$\res_{0}=\res_{2}$.
+    Because~$\res_{0}\posgeq_{\ressp}\res_{1}\posgeq_{\ressp}\res_{2}$, we also conclude that~$\res_{1}$ is the same point as well.
+    We can rewrite~\cref{eq:conc} by using~$\res_{0}$ in place of~$\res_{1}$ and~$\res_{2}$ to obtain~$\forall\res_{0}\setin\RR:\res_{0}\setin\ftor_{\fun_{1}}(\res_{0})$,
+    which means that~$\res_{0}$ is a feasible resource.
+
+    We have concluded that all antichains of feasible resources~$\RR$ satisfy~\cref{eq:recursive}, and conversely, if an antichain~$\RR$ satisfies~\cref{eq:recursive}, then it is an antichain of feasible resources.
+
+    \Cref{eq:recursive} is a recursive constraint for~$\RR$, of the kind
+    \begin{equation*}
+        \Phi_{\fun_{1}}(\RR)\posleqof{\Aressp}\RR,
+    \end{equation*}
+    with the map~$\Phi_{\fun_{1}}$ defined by
+    \begin{eqnarray}
+        \Phi_{\fun_{1}}:\Aressp & \to     & \Aressp,\label{eq:bigphi} \\
+        \RR                     & \mapsto & \Min_{\resleq}\bigsetunion_{\res\setin\RR}\ftor_{\fun_{1}}(\res)\ \setintersection\ \upit\res.\nonumber
+    \end{eqnarray}
+    If we want the \emph{minimal} resources, we are looking for the \emph{least} antichain:
+    \begin{equation*}
+        \min_{\posleqof{\Aressp}}\{\,\RR\setin\Aressp\colon\ \Phi_{\fun_{1}}(\RR)\posleqof{\Aressp}\RR\,\},
+    \end{equation*}
+    which is equal to the \emph{least fixed point }of~$\Phi_{\fun_{1}}$.
+    Therefore, the map $\ftor_{\dploop(\adp)}$ can be written as
+    \begin{equation}
+        \ftor_{\dploop(\adp)}\colon\fun_{1}\mapsto\lfp(\Phi_{\fun_{1}}).
+        \label{eq:loop_fixpoint}
+    \end{equation}
+    \cref{lem:dagger} shows that $\lfp(\Phi_{\fun_{1}})$ is \scottcontinuous in~$\fun_{1}$.
+\end{proof}
+
+\begin{lemma}
+    \label{lem:antichain-write}
+    Let~$A$ be an antichain in~$\posA$.
+    Then
+    \begin{equation*}
+        a\setin A\qquad\equiv\qquad\{a\}=A\,\setintersection\upit a.
+    \end{equation*}
+\end{lemma}
+
+\begin{lemma}
+    \label{lem:antichain_inter}
+    For~$A,B\setin\antichains\posA$, and~$S\subseteq P$,
+    $A\posleqof{\Aressp}B$ implies $A\setintersection S\posleqof{\Aressp}B\setintersection S$.
+\end{lemma}
+
+\begin{lemma}
+    \label{lem:antichain_union}
+    For~$A,B,C,D\setin\antichains\posA$, $A\posleqof{\Aressp}C$
+    and $B\posleqof{\Aressp}D$ implies $A\setunion B\posleqof{\Aressp}C\setunion D.
+    $
+\end{lemma}
+
+\begin{lemma}
+    \label{lem:dagger}
+    Let~$f\colon\posA\cartprod\posB\to\posB$ be \scottcontinuous.
+    For each~$x\setin\posA$, define $f_{x}:y\mapsto f(x,y).
+    $
+
+    Then $f^{\dagger}:x\mapsto\lfp(f_{x})$ is \scottcontinuous.
+\end{lemma}
+\begin{proof}
+    Davey and Priestly~\cite{davey02} leave this as Exercise~8.26.
+    A proof is found in Gierz~\etal~\cite[Exercise II-2.29]{gierz03continuous}.
+\end{proof}
+

@@ -2,6 +2,8 @@ all:
 
 chapter-once: .FORCE
 	latexmk -r ../../../../latexmkrc -g  -nobibtex -pdf chapter-standalone.tex
+	cp chapter-standalone.pdf chapter-standalone-fast-stable.pdf
+	cp chapter-standalone.synctex.gz  chapter-standalone-fast-stable.synctex.gz
 
 chapter-continuous: .FORCE
 	latexmk -r ../../../../latexmkrc -pvc -nobibtex -pdf chapter-standalone.tex
