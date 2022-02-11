@@ -1,16 +1,24 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Monotonicity and fixed points}
+\section{Domain theory and fixed points}
 \label{sec:Monotonicity-and-fixed}
 
-We will use Kleene's theorem, a celebrated result that is used in disparate fields.
+In this section we recall some fundamentals of domain theory.
 It is used in computer science for defining denotational semantics~(see \eg~\cite{manes86}).
 It is used in embedded systems for defining the semantics of models of computation~(see, \eg~\cite{lee10}).
+What we need from domain theory is the least necessary to define \emph{least fixed points} and to use Kleene's theorem.
+
+Domain theory builds on order theory by defining ``directed'' and ``complete'' partial orders.
+These attributes plays the same role as compactness in analysis: they will be used to make sure that certain sequences can converge to a fixed point.
+
+\subsection{Directed and complete partial orders}
 
 \begin{definition}[Directed set]
     \label{def:directed-set}
-    A set~$S\subseteq\posA$ is \emph{directed} if each pair of elements in~$S$ has an upper bound: for all~$a,b\setin S$, there exists~$c\setin S$ such that~$a\posleq c$ and~$b\posleq c$.
+    In a poset $\posA = \tupp{\posAset, \posAleq}$, we say that a set~$\subA\subseteq\posAset$ is \emph{directed} if each pair of elements in~$\subA$ has an upper bound: for all~$\posela,\poselb \setin \subA$, there exists~$\poselc\setin \subA$ such that~$\posela\posleq \poselc$ and~$\poselb\posleq \poselc$.
 \end{definition}
+
+\todotext{@Andrea: verify condition: must }
 
 \begin{definition}[Completeness]
     \label{def:cpo}
@@ -21,35 +29,66 @@ It is used in embedded systems for defining the semantics of models of computati
 \begin{example}
     [Completion of $\nonNegReals$ to~$\nonNegRealsComp$]
     \label{exa:Rcomp}
-    The set of real numbers~\reals is not a \CPO, because it lacks a bottom.
+    The poset $\tupp{\reals, \Rleq}$ is not a \CPO, because it lacks a bottom.
+
     The nonnegative reals~$\nonNegReals=\{x\setin\reals \colon x\geq0\}$ have a bottom~$\posbot=0$, however, they are not a \DCPO because some of their directed subsets do not have an upper bound.
     For example, take~$\nonNegReals$, which is a subset of~$\nonNegReals$.
     Then~$\nonNegReals$ is directed, because for each~$a,b\setin\nonNegReals$, there exists~$c=\max\{a,b\}\setin\nonNegReals$ for which~$a\Rleq c$ and~$b\Rleq c$.
-    One way to make~$\tupp{ \nonNegReals,\Rleq} $ a \CPO is by adding an artificial top element~$\postop$, by defining~$\nonNegRealsComp\triangleq\nonNegReals\setunion\{\postop\}$, and extending the partial order~$\Rleq$ so that~$a\Rleq\postop$ for all~$a\setin\nonNegReals$.
+
+    One way to make~$\tupp{ \nonNegReals,\Rleq} $ a \CPO is by adding an artificial top element~$\postop$ that we think as ``a point at infinitely''.
+    We can define then the completion
+    \begin{equation}
+        \nonNegRealsComp\definedas\nonNegReals\setunion\{\postop\},
+    \end{equation} and extending the partial order~$\Rleq$ so that~$a\Rleq\postop$ for all~$a\setin\nonNegReals$.
 \end{example}
 
-A property of maps that will be important are monotonicity and the stronger property of \scottcontinuity.
+\subsection{\scottcontinuity}
+
+\scottcontinuity is a property of maps on DCPOs that is slightly stronger than monotonicity.
 
 \begin{definition}[\scottcontinuity]
     \label{def:scott}
-    A map~$f:\posA\rightarrow\posB$ between DCPOs is \emph{\scottcontinuous{}} iff for each directed subset~$D\subseteq\posA$, the image~$f(D)$ is directed, and $f(\Sup D)=\Sup f(D).
-    $
+    A map~$f:\posA\rightarrow\posB$ between DCPOs is \emph{\scottcontinuous{}} iff for each directed subset~$D\subseteq\posA$, the image~$f(D)$ is directed, and
+    \begin{equation}\label{eq:scott-continuity-cond}
+        f(\Sup D)=\Sup f(D).
+    \end{equation}
 \end{definition}
-\begin{remark}
+\begin{lemma}
     \scottcontinuity implies monotonicity.
-\end{remark}
+\end{lemma}
+\begin{proof}
+    Consider a map~$f:\posA\rightarrow\posB$ that is \scottcontinuous.
+    Take two elements $\posela, \poselb \setin \posA$ such that $\posela\posleq\poselb$.
+    The set $ S =  \makeset{\posela, \poselb}$ is directed.
+    It follows that $f(S) = \makeset{f(\posela), f(\poselb)}$ is directed, which means that at least one
+    of $f(\posela) \posleq f(\poselb)$ and $f(\poselb) \posleq f(\posela)$ are true.
+    From \cref{eq:scott-continuity-cond}, we know that
+    \begin{equation}
+        f(\Sup S) = f(\poselb) = \Sup \makeset{f(\posela), f(\poselb)},
+    \end{equation}
+    which implies that $f(\posela) \posleq f(\poselb)$.
+    Therefore, $f$ is monotone.
+\end{proof}
+
+\begin{marginfigure}
+    \includegraphics[scale=0.53]{gmcdptro_ceil}
+    \caption{The ceiling function is \scottcontinuous.}
+    \label{fig:gmcdp_ceil}
+    \todographics{@Gioele: redo this diagram}
+\end{marginfigure}
 
 \begin{remark}
-    \scottcontinuity does not imply topological continuity.
+    \scottcontinuity does not imply ``topological'' continuity.
     A map from the CPO $\tupp{\Rcomp,\Rleq}$ to itself is \scottcontinuous iff it is nondecreasing and left-continuous.
     For example, the ceiling function $x\mapsto\left\lceil x\right\rceil $~ is \scottcontinuous (\cref{fig:gmcdp_ceil}).
 \end{remark}
 
-\captionsideleft{\label{fig:gmcdp_ceil}}{\includegraphics[scale=0.33]{gmcdptro_ceil}}
+\subsection{Least fixed points}
 
-A \emph{fixed point} of $f:\posA\to\posA$ is a point~$x$ such that $f(x)=x$.
-\begin{definition}
+\begin{definition}[Least fixed points]
     \label{def:least-fixed}
+    A \emph{fixed point} of $f:\posA\to\posA$ is a point~$x$ such that $f(x)=x$.
+
     A \emph{least fixed point} of~$f:\posA\to\posA$ is the minimum (if it exists) of the set of fixed points of~$f$:
     \begin{equation}
         \label{eq:lfp-one}
