@@ -1,211 +1,270 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Action on sequences}
+\section{Standard action of Moore machines}
+\label{sec:Moore-acting-on-sequences}
 
-Given a Moore machine $\mora = \tup{\prinL_\mora,\prstL_\mora,\proutL_\mora,\prdyn_\mora,\prreadout_\mora,\prstart_\mora}$
-we saw that we can use it to transform a sequence of inputs $u_0, u_1, u_2, \dots$ into a sequence of outputs $y_0, y_1, y_2, \dots$ using the following recipe
+Given a Moore machine~$\mora = \tup{\prinL_\mora,\prstL_\mora,\proutL_\mora,\prdyn_\mora,\prreadout_\mora,\prstart_\mora}$
+we saw that we can use it to transform a sequence of inputs~$\prineln{0}, \prineln{1}, \prineln{2}, \ldots$ into a sequence of outputs~$\prouteln{0}, \prouteln{1}, \prouteln{2}, \ldots$ using the following recipe
 \begin{equation}
     \label{eq:Moore-action-recursion-again}
     \begin{cases}
-        x_{k+1} = \prdyn_\mora(u_k, x_k) \\
-        y_{k}   = \prreadout_\mora(x_{k}).
+        \prsteln{k+1} = \prdyn_\mora(\prineln{k} \tupconcat \prsteln{k}) \\
+        \prouteln{k}   = \prreadout_\mora(\prsteln{k}).
     \end{cases}
 \end{equation}
 
-Rephrased mathematically, this means that \cref{eq:Moore-action-recursion-again}, together with $\mora$, defines a function $$ \act_{\mora} \colon {\prinL_\mora}^\natnumbers \to {\proutL_\mora}^\natnumbers$$ which takes any sequence  of elements of $\prinL_\mora$ and maps it to a corresponding sequence  of elements of $\proutL_\mora$.
+Rephrased mathematically, this means that \cref{eq:Moore-action-recursion-again}, together with~$\mora$, defines a function
+\begin{equation*}
+    \act_{\mora} \colon {\prinL_\mora}^\natnumbers \to {\proutL_\mora}^\natnumbers,
+\end{equation*}
+which takes any sequence  of elements of~$\prinL_\mora$ and maps it to a corresponding sequence  of elements of~$\proutL_\mora$.
+We call this the \emph{standard action} of~$\mora$ on sequences.
 
 \begin{remark}
     \label{re:moore-action-two-steps}
-    One way to think about the function $\act_{\mora}$ is to imagine it being calculated in two steps.
+    One way to think about the function~$\act_{\mora}$ is to imagine it being calculated in two steps.
     \begin{enumerate}
-        \item Given a sequence $u = u_0, u_1, u_2, \dots$, there is a unique solution $s = s_0, s_1, s_2, \dots$ of the recursion $x_{k+1} = \prdyn_\mora(u_k, x_k)$ with $s_0 = \prstart_\mora$. (Clearly, this solution can be computed iteratively.)
-        \item Given the solution $s$, the sequence $y = \act_{\mora}(u)$ is simply $y = s \then \prreadout_\mora$.
+        \item Given a sequence~$\prinel = \prineln{0}, \prineln{1}, \prineln{2}, \ldots$, there is a unique solution~$\prsolel = \prsoleln{0}, \prsoleln{1}, \prsoleln{2}, \ldots$ of the recursion~$\prsteln{k+1} = \prdyn_\mora(\prineln{k}, \prsteln{k})$ with~$\prsoleln{0} = \prstart_\mora$.
+              (Clearly, this solution can be computed iteratively.)
+        \item Given the solution~$\prsolel$, the sequence~$\proutel = \act_{\mora}(\prinel)$ is simply~$\proutel = \prsolel \then \prreadout_\mora$.
     \end{enumerate}
 \end{remark}
+
+\begin{example}
+    \label{exa:moore-standard-action}
+    Consider a Moore machine~$\mora$ with~$\prinL = \prstL = \proutL = \cObj{\natnumbers}$
+    and let
+    \begin{equation}
+        \defmapset{
+            \prdyn_\mora
+        }{
+            \prinL \cprod \prstL
+        }{
+            \prstL
+        }{
+            \tup{m} \tupconcat \tup{n}
+        }{
+            \tup{m + n}
+        }
+    \end{equation}
+    and
+    \begin{equation}
+        \defmapset{
+            \prreadout_\mora
+        }{
+            \prstL
+        }{
+            \proutL
+        }{
+            \tup{n}
+        }{
+            \tup{n+1}
+        }
+    \end{equation}
+    and $\prstart = \tup{0}$.
+
+    Given a sequence of inputs of the form~$\prinel = \tup{1}, \tup{2}, \tup{3}, \tup{4}, \tup{5}, \ldots$, what are the first five entries of the corresponding sequence of outputs?
+
+    To compute this, let us first calculate the first five entries of the sequence of states~$\prstel = \prsteln{0}, \prsteln{1}, \prsteln{2}, \ldots$ that solves \cref{eq:Moore-action-recursion-again}.
+    We have
+    \begin{align*}
+        \prsteln{0} & = \prstart = \tup{0}, \\
+        \prsteln{1} & = \tup{1 + 0} = \tup{1}, \\
+        \prsteln{2} & = \tup{2 + 1} = \tup{3}, \\
+        \prsteln{3} & = \tup{3 + 3} = \tup{6}, \\
+        \prsteln{4} & = \tup{4 + 6} = \tup{10}.
+    \end{align*}
+    Now, applying~$\prreadout_\mora$ to the entries of this sequence of state, we obtain the first five entries of the output sequence:
+    \begin{align*}
+        \prouteln{0} & = \tup{0 + 1} = \tup{1}, \\
+        \prouteln{1} & = \tup{1 + 1} = \tup{2}, \\
+        \prouteln{2} & = \tup{3 + 1} = \tup{4}, \\
+        \prouteln{3} & = \tup{6 + 1} = \tup{7} \\
+        \prouteln{4} & = \tup{10 + 1} = \tup{11}.
+    \end{align*}
+\end{example}
+
+\todotext{insert a graded exercise here}
 
 \subsection{Compositionality}
 
 \begin{proposition}
-    The action of Moore machines on signal sequences is compatible with Moore machine composition in the sense that
+    \label{prop:moore-action-is-a-morphism}
+    The standard action of Moore machines on signal sequences is compatible with Moore machine composition in the sense that
     \begin{equation}
         \label{eq:moore-action-compositional}
         \act_{\mora \mthen \morb} = \act_\mora \mthen \act_\morb
     \end{equation}
-    for any composable Moore machines $\mora$ and $\morb$.
+    for any composable Moore machines~$\mora$ and~$\morb$.
 \end{proposition}
 
 \begin{proof}
     Suppose we have Moore machines
-    \begin{equation}
+    \begin{equation*}
         \mora = \tupp{\prinL_{\mora},\prstL_{\mora},\proutL_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
-    \end{equation}
+    \end{equation*}
     %
     and
     %
-    \begin{equation}
+    \begin{equation*}
         \morb = \tupp{\prinL_{\morb},\prstL_{\morb},\proutL_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
-    \end{equation}
-    with $\proutL_\mora = \prinL_\morb$.
+    \end{equation*}
+    with~$\proutL_\mora = \prinL_\morb$.
 
-    We'll first calculate the right-hand side of \cref{eq:moore-action-compositional}, following the procedure of \cref{re:moore-action-two-steps}.
+    We will first calculate the right-hand side of \cref{eq:moore-action-compositional}, following the procedure of \cref{re:moore-action-two-steps}.
 
-    Given a sequence $u \in {\prinL_{\mora}}^\natnumbers$, to calculate $\act_\mora(u)$ we first map $u$ to the unique solution $r_u \in {\prstL_{\mora}}^\natnumbers$ of the recursion
+    Given a sequence~$\prinel \in {\prinL_{\mora}}^\natnumbers$, to calculate~$\act_\mora(\prinel)$ we first map~$\prinel$ to the unique solution~$\styleelements{r}_\prinel \in {\prstL_{\mora}}^\natnumbers$ of the recursion
     \begin{equation}
-        x_{k+1} = \prdyn_\mora(u_k, x_k)  \qquad \qquad k \in \natnumbers
+        \prsteln{k+1} = \prdyn_\mora(\prineln{k}, \prsteln{k})  \qquad \qquad k \in \natnumbers,
     \end{equation}
-    such that $r_u(0) = \prstart_{\mora}$.
-    Then $\act_\mora(u) = r_u \then \prreadout_\mora$, an element of ${\proutL_{\mora}}^\natnumbers = {\prinL_{\morb}}^\natnumbers$.
+    such that~$\styleelements{r}_\prinel(0) = \prstart_{\mora}$.
+    Then~$\act_\mora(\prinel) = \styleelements{r}_\prinel \then \prreadout_\mora$, an element of~${\proutL_{\mora}}^\natnumbers = {\prinL_{\morb}}^\natnumbers$.
 
-    Next, to calculate $(\act_\mora \mthen \act_\morb)(u)$, we first map $\act_\mora(u)$ to the unique solution $s_{\act_\mora(u)} \in {\prstL_{\morb}}^\natnumbers$ of the recursion
+    Next, to calculate~$(\act_\mora \mthen \act_\morb)(\prinel)$, we first map~$\act_\mora(\prinel)$ to the unique solution~$\prsolel_{\act_\mora(\prinel)} \in {\prstL_{\morb}}^\natnumbers$ of the recursion
     \begin{equation}
-        x_{k+1} = \prdyn_\morb(\act_\mora(u)_k, x_k)  \qquad \qquad k \in \natnumbers
+        \prsteln{k+1} = \prdyn_\morb(\act_\mora(\prineln)(k), \prsteln{k})  \qquad \qquad k \in \natnumbers
     \end{equation}
-    such that $s_{\act_\mora(u)}(0) = \prstart_{\morb}$, and then we have
+    such that~$\prsolel_{\act_\mora(\prinel)}(0) = \prstart_{\morb}$, and then we have
     \begin{equation}
         \label{eq:Moore-act-composition-1}
-        (\act_\mora \mthen \act_\morb)(u) = s_{\act_\mora(u)} \then \prreadout_g.
+        (\act_\mora \mthen \act_\morb)(\prinel) = \prsolel_{\act_\mora(\prinel)} \then \prreadout_g.
     \end{equation}
 
     Now let's calculate the left-hand side of \cref{eq:moore-action-compositional}.
-    Given $u \in {\prinL_{\mora}}^\natnumbers$, we map it to the unique solution $q_u \in {\prstL_{\mora \mthen \morb}}^\natnumbers = ({\prstL_{\mora} \listconcat \prstL_{\morb}})^\natnumbers$ of the recursion
+    Given~$\prinel \in {\prinL_{\mora}}^\natnumbers$, we map it to the unique solution~$\styleelements{q}_\prinel \in {\prstL_{\mora \mthen \morb}}^\natnumbers = ({\prstL_{\mora} \cprod \prstL_{\morb}})^\natnumbers$ of the recursion
     \begin{equation}
         \label{eq:moore-composite-recursion-equation}
-        x_{k+1} = \prdyn_{\mora \mthen \morb}(u_k, x_k)  \qquad \qquad k \in \natnumbers
+        \prsteln{k+1} = \prdyn_{\mora \mthen \morb}(\prineln{k}, \prsteln{k})  \qquad \qquad k \in \natnumbers
     \end{equation}
-    with $q_u(0) = \prstart_{\mora} \listconcat \prstart_{\morb}$.
-    Using the definition of $\prdyn_{\mora \mthen \morb}$ and the fact that we can write any $x_k \in \prstL_{\mora} \listconcat \prstL_{\morb}$ as
-    $$x_k = x^\mora_k \listconcat x^\morb_k \qquad \qquad \qquad \text{ with } x^\mora_k \in \prstL_{\mora}, x^\morb_k \in \prstL_{\morb},$$
+    with~$\styleelements{q}_\prinel(0) = \prstart_{\mora} \tupconcat \prstart_{\morb}$.
+    Using the definition of~$\prdyn_{\mora \mthen \morb}$ and the fact that we can write any~$\prsteln{k} \in \prstL_{\mora} \cprod \prstL_{\morb}$ as
+    \begin{equation*}
+        \prsteln{k} = \prsteln{k}^\mora \tupconcat \prsteln{k}^\morb \qquad \qquad \text{ with } \prsteln{k}^\mora \in \prstL_{\mora}, \prsteln{k}^\morb \in \prstL_{\morb},
+    \end{equation*}
+
     we can rewrite \cref{eq:moore-composite-recursion-equation} as
     \begin{equation}
-        x^\mora_{k+1} \listconcat x^\morb_{k+1} = \prdyn_{\mora}(u_k, x^\mora_k) \listconcat \prdyn_{\morb}(\prreadout_\mora(x^\mora_k), x^\morb_k)  \qquad \qquad k \in \natnumbers.
+        \prsteln{k+1}^\mora \tupconcat \prsteln{k+1}^\morb = \prdyn_{\mora}(\prineln{k}, \prsteln{k}^\mora) \tupconcat \prdyn_{\morb}(\prreadout_\mora(\prsteln{k}^\mora), \prsteln{k}^\morb)  \qquad \qquad k \in \natnumbers.
     \end{equation}
-    Now observe that the sequence $r_u(k) \listconcat s_{\act_\mora(u)}(k)$ solves this recursion: by definition $r_u$ solves of the recursion
+    Now observe that the sequence~$\styleelements{r}_{\prinel}(k) \tupconcat \prsol_{\act_\mora(\prinel)}(k)$ solves this recursion:
+    by definition~$\styleelements{r}_\prinel$ solves of the recursion
     \begin{equation}
-        x_{k+1} = \prdyn_\mora(u_k, x_k)  \qquad \qquad k \in \natnumbers,
+        \prsteln{k+1} = \prdyn_\mora(\prineln{k}, \prsteln{k})  \qquad \qquad k \in \natnumbers,
     \end{equation}
-    and, recalling that $\act_\mora(u)_k = \prreadout_\mora(r_u(k))$, we see that $s_{\act_\mora(u)}$ solves the recursion
+    and, recalling that~$\act_\mora(\prinel)_k = \prreadout_\mora(\styleelements{r}_\prinel(k))$, we see that~$\prsolel_{\act_\mora(\prinel)}$ solves the recursion
     \begin{equation}
-        x_{k+1} = \prdyn_\morb(\prreadout_\mora(r_u(k)), x_k)  \qquad \qquad k \in \natnumbers.
+        \prsteln{k+1} = \prdyn_\morb(\prreadout_\mora(\styleelements{r}_\prinel(k)), \prsteln{k})  \qquad \qquad k \in \natnumbers.
     \end{equation}
-    Since $r_u(0) \listconcat s_{\act_\mora(u)}(0) = \prstart_{\mora} \listconcat \prstart_{\morb}$, this implies that the unique solution $q_u$ above is precisely $q_u(k) = r_u(k) \listconcat s_{\act_\mora(u)}(k)$.
+    Since~$\styleelements{r}_\prinel(0) \tupconcat \prsolel_{\act_\mora(\prinel)}(0) = \prstart_{\mora} \tupconcat \prstart_{\morb}$, this implies that the unique solution~$\styleelements{q}_\prinel$ above is precisely~$\styleelements{q}_\prinel(k) = \styleelements{r}_\prinel(k) \tupconcat \prsolel_{\act_\mora(\prinel)}(k)$.
 
     Finally, we have
     \begin{equation}
-        \act_{\mora \mthen \morb}(u) = q_u \then \prreadout_{\mora \mthen \morb}.
+        \act_{\mora \mthen \morb}(\prinel) = \styleelements{q}_\prinel \then \prreadout_{\mora \mthen \morb}.
     \end{equation}
-    Evaluating at any $k \in \natnumbers$ we find
+    Evaluating at any~$k \in \natnumbers$ we find
     \begin{align}
-        (q_u \then \prreadout_{\mora \mthen \morb})(k) & = \prreadout_{\mora \mthen \morb}(q_u(k)) \\
-                                                       & = \prreadout_{\mora \mthen \morb}(r_u(k) \listconcat s_{\act_\mora(u)}(k)) \\
-                                                       & = \prreadout_{\morb}(s_{\act_\mora(u)}(k)) \\
-                                                       & = (s_{\act_\mora(u)} \then \prreadout_{\morb})(k).
+        (\styleelements{q}_\prinel \then \prreadout_{\mora \mthen \morb})(k) & = \prreadout_{\mora \mthen \morb}(\styleelements{q}_\prinel(k)) \\
+                                                                             & = \prreadout_{\mora \mthen \morb}(\styleelements{r}_\prinel(k) \tupconcat \prsolel_{\act_\mora(\prinel)}(k)) \\
+                                                                             & = \prreadout_{\morb}(\prsolel_{\act_\mora(\prinel)}(k)) \\
+                                                                             & = (\prsolel_{\act_\mora(\prinel)} \then \prreadout_{\morb})(k).
     \end{align}
     Comparing with \cref{eq:Moore-act-composition-1}, we conclude that
     \begin{equation}
-        \act_{\mora \mthen \morb}(u) = (\act_\mora \mthen \act_\morb)(u).
+        \act_{\mora \mthen \morb}(\prinel) = (\act_\mora \mthen \act_\morb)(\prinel).
     \end{equation}
 \end{proof}
 
-\
-
-\
-
-\
-
 \todotext{J: Idea: maybe we can model ODE solvers such as the Euler method, etc, as Moore machines and their actions?? could be a cool class of examples}
 
-\
-
-\
-
-\
-
-\todotext{J: below is older material, not sure if worth keeping?}
-
-Let's now look at how machines like the above act on sequences.
-
-For now we only have defined semi-group, monoid, and group actions, and have not talked yet about (semi)category actions.
-Let's consider the set of machines systems with~$\prin = \prout = \prgen$; this is the homset~$\HomSet\Moore\prgen\prgen$.
-
-\
-
-\begin{equation}
-    \begin{cases}
-        x_{k+1} = \prdyn(u_k, x_k) \\
-        y_{k}   = \prreadout(x_{k}).
-    \end{cases}
-\end{equation}
-
-\
-
-Given a finite input sequence~$u\colon \natnumbers \to \prgen$ of length~$n$, the output is an instantaneous transformation of the state:
+%\todotext{J: below is older material, not sure if worth keeping?}
 %
-\begin{equation}
-    \label{eq:actions-on-sequences-y}
-    \begin{aligned}
-        y_0   & = \prreadout(\tupset(x_0)), \\
-        y_1   & = \prreadout(\tupset(x_1)), \\
-        y_2   & = \prreadout(\tupset(x_2)), \\
-        \dots & = \dots \\
-        y_{k} & = \prreadout(\tupset(x_{k-1})).
-    \end{aligned}
-\end{equation}
 %
-The state is computed recursively as follows:
-\begin{equation}
-    \label{eq:actions-on-sequences-x}
-    \begin{aligned}
-        x_0   & = \prdyn(u_0, \prstart), \\
-        x_1   & = \prdyn(u_1, x_0), \\
-        x_2   & = \prdyn(u_2, x_1), \\
-        \dots & = \dots \\
-        x_{k} & = \prdyn(u_{k}, x_{k-1}).
-    \end{aligned}
-\end{equation}
+%Let's now look at how machines like the above act on sequences.
 %
-Therefore, given a machine~$\mora \colon \prgen \mtoin{\Moore} \prgen$ we have defined a map from $\natnumbers \to \prgen$ to itself.
-Let's call it $\act$.
-It is defined as a map of the form
+%For now we only have defined semi-group, monoid, and group actions, and have not talked yet about (semi)category actions.
+%Let's consider the set of machines systems with~$\prin = \prout = \prgen$; this is the homset~$\HomSet\Moore\prgen\prgen$.
 %
-\begin{equation}
-    \label{eq:actions-on-sequences-1}
-    \act_{\mora}\colon  (\natnumbers \to \prgen)  \sto  (\natnumbers \to \prgen),
-\end{equation}
 %
-or, more formally,
+%\
 %
-\begin{equation}
-    \label{eq:actions-on-sequences-2}
-    \act: \HomSet\Moore\prgen\prgen \sto \Endof {\natnumbers \to \prgen}.
-\end{equation}
+%\begin{equation}
+%    \begin{cases}
+%        x_{k+1} = \prdyn(u_k, x_k) \\
+%        y_{k}   = \prreadout(x_{k}).
+%    \end{cases}
+%\end{equation}
 %
-Note that both~$\HomSet\Moore\prgen\prgen$ and $\Endof {\natnumbers \to \prgen}$ are semigroups.
-Could it be that~$\act$ is a semigroup morphism?
-And, consequently, is~$\act$ a covariant semigroup action or a contravariant semigroup action?
-
-Let's check the condition for it being a morphism (\cref{eq:sgrp-mor-comp}):
+%\
 %
-\begin{align}
-    \act ( \mora \mthenof{\Moore} \morb) & \mathrel{\stackrel{?
-    }{=} } \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-left} \\
-    \act ( \morb \mthenof{\Moore} \mora) & \mathrel{\stackrel{?}{=}}  \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-right}
-\end{align}
-
-We can check this graphically.
-First, one has
 %
-\begin{equation*}
-    \prfperiod{\prftree{\includesag{moore_right_s_f}}{\includesag{moore_right_s_f_conn}}}{\prftree{\includesag{moore_right_b}}{\includesag{moore_right_b_space}}}{\includesag{moore_right_comp_1}}
-\end{equation*}
+%Given a finite input sequence~$u\colon \natnumbers \to \prgen$ of length~$n$, the output is an instantaneous transformation of the state:
+%%
+%\begin{equation}
+%    \label{eq:actions-on-sequences-y}
+%    \begin{aligned}
+%        y_0   & = \prreadout(\tupset(x_0)), \\
+%        y_1   & = \prreadout(\tupset(x_1)), \\
+%        y_2   & = \prreadout(\tupset(x_2)), \\
+%        \ldots & = \ldots \\
+%        y_{k} & = \prreadout(\tupset(x_{k-1})).
+%    \end{aligned}
+%\end{equation}
+%%
+%The state is computed recursively as follows:
+%\begin{equation}
+%    \label{eq:actions-on-sequences-x}
+%    \begin{aligned}
+%        x_0   & = \prdyn(u_0, \prstart), \\
+%        x_1   & = \prdyn(u_1, x_0), \\
+%        x_2   & = \prdyn(u_2, x_1), \\
+%        \ldots & = \ldots \\
+%        x_{k} & = \prdyn(u_{k}, x_{k-1}).
+%    \end{aligned}
+%\end{equation}
+%%
+%Therefore, given a machine~$\mora \colon \prgen \mtoin{\Moore} \prgen$ we have defined a map from $\natnumbers \to \prgen$ to itself.
+%Let's call it $\act$.
+%It is defined as a map of the form
+%%
+%\begin{equation}
+%    \label{eq:actions-on-sequences-1}
+%    \act_{\mora}\colon  (\natnumbers \to \prgen)  \sto  (\natnumbers \to \prgen),
+%\end{equation}
+%%
+%or, more formally,
+%%
+%\begin{equation}
+%    \label{eq:actions-on-sequences-2}
+%    \act: \HomSet\Moore\prgen\prgen \sto \Endof {\natnumbers \to \prgen}.
+%\end{equation}
+%%
+%Note that both~$\HomSet\Moore\prgen\prgen$ and $\Endof {\natnumbers \to \prgen}$ are semigroups.
+%Could it be that~$\act$ is a semigroup morphism?
+%And, consequently, is~$\act$ a covariant semigroup action or a contravariant semigroup action?
 %
-Second, one has
+%Let's check the condition for it being a morphism (\cref{eq:sgrp-mor-comp}):
+%%
+%\begin{align}
+%    \act ( \mora \mthenof{\Moore} \morb) & \mathrel{\stackrel{?
+%    }{=} } \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-left} \\
+%    \act ( \morb \mthenof{\Moore} \mora) & \mathrel{\stackrel{?}{=}}  \act ( \mora) \mthenof{\Endof  {\natnumbers \to \prgen}} \act(\morb) \label{eq:actions-on-sequences-right}
+%\end{align}
 %
-\begin{equation*}
-    \prfperiod{\prftree{\includesag{moore_right_s}}{\includesag{moore_right_s_space}}}{\prftree{\includesag{moore_right_1}}{\includesag{moore_right_2}}}{\includesag{moore_right_5}}
-\end{equation*}
+%We can check this graphically.
+%First, one has
+%%
+%\begin{equation*}
+%    \prfperiod{\prftree{\includesag{moore_right_s_f}}{\includesag{moore_right_s_f_conn}}}{\prftree{\includesag{moore_right_b}}{\includesag{moore_right_b_space}}}{\includesag{moore_right_comp_1}}
+%\end{equation*}
+%%
+%Second, one has
+%%
+%\begin{equation*}
+%    \prfperiod{\prftree{\includesag{moore_right_s}}{\includesag{moore_right_s_space}}}{\prftree{\includesag{moore_right_1}}{\includesag{moore_right_2}}}{\includesag{moore_right_5}}
+%\end{equation*}
+%%
+%Therefore, we have a \emph{covariant} semigroup action.
 %
-Therefore, we have a \emph{covariant} semigroup action.
-
-\begin{publictodo}
-    The rest of the section is missing.
-\end{publictodo}
+%\begin{publictodo}
+%    The rest of the section is missing.
+%\end{publictodo}

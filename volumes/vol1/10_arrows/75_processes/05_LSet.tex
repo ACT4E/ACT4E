@@ -1,138 +1,143 @@
 % !TEX root = chapter-standalone.tex
 
-\section{The category $\Cat{LSet}$}
+\section{The category~$\cCat{\Set}$}
+\label{sec:cartcatset}
 
-In the following we will define a category whose objects are, loosely speaking, ``sets of typed lists''.
-We will call these L-sets.
+We will define a category~$\cCat{\Set}$ whose objects are ``sets of tuples''.
 
-\subsection{Lists}
+%\subsection{Lists}
+%
+%Before defining L-sets, let's first recall our notion of lists.
+%Given three things, for example (call them $\ela$, $\elb$, and $\elc$) we can list them in some order:
+%\begin{equation}
+%    [\elb, \elc, \ela].
+%\end{equation}
+%The square brackets are our notation for lists, and recall that the ordering matters for lists (for instance, $[\elc, \ela, \elb]$ is a different list of those same three things).
+%
+%Any list has a length; for example $[\elb, \elc, \ela]$ has length 3.
+%For us, by definition, all lists have finite length.
+%We also define such a thing as an \emph{empty list}, which we denote by $[ \ ]$.
+%It has length zero.
+%
+%The things in a list -- for example, $\elb$, $\elc$, and $\ela$ -- are the \emph{entries} of the list.
+%They each come with an index corresponding to their placement in the list (so we can speak of the 1st entry, 2nd entry, and so on).
 
-Before defining L-sets, let's first recall our notion of lists.
-Given three things, for example (call them $\ela$, $\elb$, and $\elc$) we can list them in some order:
+Given sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$, if they are all non-empty, then we define
 \begin{equation}
-    [\elb, \elc, \ela].
+    \label{eq:sets-of-tuples}
+    \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} \definedas \{ \tup{\elna{1}, \elna{2}, \ldots, \elna{n}} \mid \elna{1} \in \setAn{1}, \elna{2} \in \setAn{2}, \ldots, \elna{n} \in \setAn{n} \}.
 \end{equation}
-The square brackets are our notation for lists, and recall that the ordering matters for lists (for instance, $[\elc, \ela, \elb]$ is a different list of those same three things).
+So for example,
+\begin{equation*}
+    \cObj{\wnumbers, \natnumbers, \reals} = \{ \tup{\ela, \elb, \elc} \mid \ela \in \wnumbers, \elb \in \natnumbers, \elc \in \reals \}.
+\end{equation*}
 
-Any list has a length; for example $[\elb, \elc, \ela]$ has length 3.
-For us, by definition, all lists have finite length.
-We also define such a thing as an \emph{empty list}, which we denote by $[ \ ]$.
-It has length zero.
+Essentially, the objects of~$\cCat{\Set}$ will be sets of the form \cref{eq:sets-of-tuples}.
+We also include the empty set~$\Emptyset$ as an object of~$\cCat{\Set}$, as well as a special one-element set~$\stylesets{[ \ ]} \definedas \{ \tup{} \}$ whose single element is the empty tuple.
 
-The things in a list -- for example, $\elb$, $\elc$, and $\ela$ -- are the \emph{entries} of the list.
+Furthermore, we make the convention that~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$ denotes the empty set if any of the sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$ are equal to the empty set.
+
+The things in a list -- for example,~$\elb$,~$\elc$, and~$\ela$ -- are the \emph{entries} of the list.
 They each come with an index corresponding to their placement in the list (so we can speak of the 1st entry, 2nd entry, and so on).
 
-\subsection{L-sets}
+All of the objects of~$\cCat{\Set}$ are in particular just sets, so we can package them into a category whose morphisms are simply functions between sets.
 
-Suppose now that we are given some sets $\setA$, $\setB$ and $\setC$.
-We will denote by $\stylesets{[\setA, \setB, \setC]}$ the set of all lists of the form $[\ela, \elb, \elc]$, where $\ela \in \setA$, $\elb \in \setB$, and $\elc \in \setC$.
-In other words
-\begin{equation}
-    \stylesets{[\setA, \setB, \setC]} = \{ [\ela, \elb, \elc] \mid \ela \in \setA, \elb \in \setB, \elc \in \setC \}.
-\end{equation}
-Beside some details that we will address presently, this essentially captures what we mean L-sets to be: sets of lists where the entries of the lists are each specified to be an element of a certain set.
-
-Now the details.
-In our definition of L-sets, we will also include the empty set $\Emptyset$ as an L-set, and also a special one-element set $\stylesets{[ \ ]} := \{ [ \ ] \}$ whose single element is the empty list.
-We'll call the latter the unit L-set.
-
-Given sets $\setA_1, \setA_2, \dots , \setA_n$, if they are all non-empty, then we have this L-set
-\begin{equation}
-    \stylesets{[\setA_1, \setA_2, \dots, \setA_n]} := \{ [ \ela_1, \ela_2, \dots, \ela_n] \mid \ela_1 \in \setA_1, \ela_2 \in \setA_2, \dots, \ela_n \in \setA_n \},
-\end{equation}
-of typed lists.
-If however one or more of the sets $\setA_1, \setA_2, \dots , \setA_n$ are equal to the empty set, then \begin{equation}
-    \stylesets{[\setA_1, \setA_2, \dots, \setA_n]} := \Emptyset.
-\end{equation}
-
-\subsection{The category $\Cat{LSet}$}
-
-\cCat{\Set}
-
-$\cObj{\Obja} \cprod \cObj{\Objb}$
-
-$\tup{x_1, ..., x_n} \tupconcat \tup{y_1, ..., y_n}$
-
-\
-
-\
-
-Since LSets are in particular just sets, we can package them into a category whose morphisms are the simply functions between sets.
-
-\begin{ctdefinition}[\Cat{LSet}]
-    The category \Cat{LSet} is:
-
+\begin{ctdefinition}[\cCat{\Set}]
+    The category \cCat{\Set} is:
     \begin{itemize}
-        \item Objects: L-sets;
-        \item Morphisms: ordinary functions between L-sets;
-        \item Composition: composition of functions;
+        \item Objects: sets of the kind~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$, with~$n \in \natnumbers$;
+        \item Morphisms: ordinary functions between sets;
+        \item Composition: the usual composition of functions;
         \item Identities: identity functions.
     \end{itemize}
 \end{ctdefinition}
 
-\subsection{From sets to L-sets}
+\subsection{From \Set to \cCat{\Set}}
 
-Observe that we can turn any set into an L-set: given a set $\setA$, there is the associated L-set
-\begin{equation}
-    \stylesets{[\setA]} = \{ [\ela] \mid \ela \in \setA \}
-\end{equation}
-whose elements are precisely all the lists of length one whose entry is an element of $\setA$.
+Observe that we can turn any set into an object of \cCat{\Set}: given a set~$\setA$, there is the associated set
+\begin{equation*}
+    \cObj{\setA} = \{ \tup{\ela} \mid \ela \in \setA \}
+\end{equation*}
+whose elements are precisely all the tuples of length one whose entry is an element of~$\setA$.
 This defines a function
-\begin{equation}
-    \Ob_{\Set} \to \Ob_{\Cat{LSet}}, \setA \mapsto \stylesets{[\setA]}
-\end{equation}
-which one might call ``bracket'' or ``listify''.
+\begin{equation*}
+    \defmapcomma{\mapb}{\Ob_{\Set}}
+    {\to}
+    {\Ob_{\cCat{\Set}}}
+    {\setA }
+    {\cObj{\setA}}
+\end{equation*}
+%\Ob_{\Set} \to \Ob_{\cCat{\Set}}, \setA \mapsto \cObj{\setA}
+which one might call ``bracket''.
 
-Similarly, given a function $\mora \colon \setA \to \setB$ between sets, there is an associated function $\stylemorph{[ \mora ]}: \stylesets{[\setA]} \mto \stylesets{[\setB]}$ given by
-\begin{equation}
-    \stylemorph{[ \mora ]} ([ \ela ]) := [\mora(a)].
-\end{equation}
+Similarly, given a function~$\mapa \colon \setA \to \setB$ between sets, there is an associated function~$\cMor{ \mapa }\colon \cObj{\setA} \mto \cObj{\setB}$ given by
+\begin{equation*}
+    \cMor{ \mapa } ( \tup{ \ela }) \definedas \tup{\mapa(a)}.
+\end{equation*}
 This defines a function
-\begin{equation}
+\begin{equation*}
     \Hom_{\Set}(\setA,\setB) \to \Hom_{\Cat{LSet}}(\stylesets{[\setA]},\stylesets{[\setB]})
-\end{equation}
-for any sets $\setA$ and $\setB$; one might also call it ``bracket'' or ``listify''.
+\end{equation*}
+for any sets~$\setA$ and~$\setB$; one might also call it ``bracket''.
 
-\subsection{Multiplication of L-sets}
+\subsection{Concatenation of tuples}
 
-Given lists $[\ela, \elb, \elc]$ and $[\eld, \ele]$ we can stick them together to make a longer list: $[\ela, \elb, \elc, \eld, \ele]$.
-We call this operation concatenation, and in the context of L-sets we will think of it as a kind of multiplication of lists.
-Our notation for concatenation is
-\begin{equation}
-    [\ela, \elb, \elc] * [\eld, \ele] = [\ela, \elb, \elc, \eld, \ele].
-\end{equation}
-For the empty list $[ \ ]$ we also have
-\begin{equation}
-    [ \ ] * [\ela, \elb, \elc]  = [\ela, \elb, \elc]
-\end{equation}
+Given tuples~$\tup{\ela, \elb, \elc}$ and~$\tup{\eld, \ele}$ we can stick them together to make the longer tuple~$\tup{\ela, \elb, \elc, \eld, \ele}$.
+We call this operation concatenation, and in the context of \cCat{\Set} we think of it as a kind of multiplication.
+Our notation for concatenation of tuples is
+\begin{equation*}
+    \tup{\ela, \elb, \elc} \tupconcat \tup{\eld, \ele} = \tup{\ela, \elb, \elc, \eld, \ele}.
+\end{equation*}
+For the empty tuple~$\tup{  }$ we set
+\begin{equation*}
+    \tup{} \tupconcat \tup{\ela, \elb, \elc}  = \tup{\ela, \elb, \elc}
+\end{equation*}
 and
-\begin{equation}
-    [\ela, \elb, \elc]  * [ \ ] = [\ela, \elb, \elc].
-\end{equation}
+\begin{equation*}
+    \tup{\ela, \elb, \elc}  \tupconcat \tup{ } = \tup{\ela, \elb, \elc}.
+\end{equation*}
 
-Now we define a multiplication of L-sets.
-Given L-sets $\stylesets{[\setA_1, \dots, \setA_m]}$ and $\stylesets{[\setB_1,  \dots, \setB_n]}$ which are both neither the empty L-set nor the unit L-set, we define
-\begin{equation}
-    \stylesets{[\setA_1, \dots, \setA_m]} * \stylesets{[\setB_1, \dots, \setB_n]} = \stylesets{[\setA_1, \dots, \setA_m, \setB_1,  \dots, \setB_n]}.
-\end{equation}
-In other words, the elements of $\stylesets{[\setA_1, \dots, \setA_m]} * \stylesets{[\setB_1, \dots, \setB_n]}$ are all possible concatenations of elements of $\stylesets{[\setA_1, \dots, \setA_m]}$ with elements of $\stylesets{[\setB_1, \dots, \setB_m]}$.
+\subsection{Multiplication in \cCat{\Set}}
 
-If either $\stylesets{[\setA_1, \dots, \setA_m]}$ or $\stylesets{[\setB_1, \dots, \setB_n]}$ is the empty set, we define $\stylesets{[\setA_1, \dots, \setA_m]} * \stylesets{[\setB_1, \dots, \setB_n]}$ to also be the empty set:
-\begin{equation}
-    \Emptyset * \stylesets{[\setB_1, \dots, \setB_n]} = \Emptyset
-\end{equation}
+We define a multiplication for objects of \cCat{\Set}.
+The symbol~$\cprod$ will denote this multiplication in infix notation.
+
+First of all, we set
+\begin{equation*}
+    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \Emptyset = \Emptyset.
+\end{equation*}
 and
-\begin{equation}
-    \stylesets{[\setA_1, \dots, \setA_m]} * \Emptyset = \Emptyset.
-\end{equation}
+\begin{equation*}
+    \Emptyset \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} = \Emptyset
+\end{equation*}
 
-And for the unit L-set we have the following rules:
+More generally, given~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ and~$\cObj{\setBn{1},  \ldots, \setBn{n}}$ we define
 \begin{equation}
-    \stylesets{[ \ ]} * \stylesets{[\setB_1, \dots, \setB_n]} = \stylesets{[\setB_1,  \dots, \setB_n]}
+    \label{eq:strict-monoidal-product-sets}
+    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} \definedas \cObj{\setAn{1}, \ldots, \setAn{m}, \setBn{1},  \ldots, \setBn{n}}.
 \end{equation}
+In other words, when both factors are non-empty, the elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}}$ are all possible concatenations of elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ with elements of~$\cObj{\setBn{1}, \ldots, \setBn{n}}$.
+
+Equation \cref{eq:strict-monoidal-product-sets} holds in particular also in the cases when~$m = 0$ or~$n =0$:
+\begin{equation*}
+    \cObj{ \ } \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} = \cObj{\setBn{1}, \ldots, \setBn{n}}
+\end{equation*}
 and
-\begin{equation}
-    \stylesets{[\setA_1, \dots, \setA_m]} * \stylesets{[ \ ]} = \stylesets{[\setA_1, \dots, \setA_m]}.
-\end{equation}
-(Note that these rules for multiplying with the unit L-set and the ones for multiplying with the empty set are compatible with each other in the cases where they overlap).
+\begin{equation*}
+    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{ \ } = \cObj{\setAn{1}, \ldots, \setAn{m}}.
+\end{equation*}
 
+\begin{remark}
+    The multiplication of objects in~$\cCat{\Set}$ is associative: both
+    \begin{equation*}
+        ( \cObj{\setAn{1}, \ldots, \setAn{l}} \cprod \cObj{\setBn{1}, \ldots, \setBn{m}}) \cprod \cObj{\setCn{1}, \ldots, \setCn{n}}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \cObj{\setAn{1}, \ldots, \setAn{l}} \cprod (\cObj{\setBn{1}, \ldots, \setBn{m}} \cprod \cObj{\setCn{1}, \ldots, \setCn{n}})
+    \end{equation*}
+    are equal to
+    \begin{equation*}
+        \cObj{\setAn{1}, \ldots, \setAn{l}, \setBn{1}, \ldots, \setBn{m}, \setCn{1}, \ldots, \setCn{n}}.
+    \end{equation*}
+\end{remark}
