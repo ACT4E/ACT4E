@@ -1,0 +1,122 @@
+
+\section{Example: Optimizing over the natural numbers}
+
+This is a simple example that can show two interesting properties of MCDPs:
+\begin{enumerate}
+    \item the ability to work with discrete posets; and
+    \item the ability to treat multi-objective optimization problems.
+\end{enumerate}
+Consider the family of optimization problems indexed by~${\colF c}\setin\natnumbers$:
+\begin{equation}
+    \begin{cases}
+        \Min_{\posleqof{\overline{\natnumbers}\cartprod\overline{\natnumbers}}} & \tup{ {\colR x},{\colR y}} ,                                    \\
+        \subto                                                                  & x+y\geq\lceil\sqrt{x}\,\rceil+\lceil\sqrt{y}\,\rceil+{\colF c}.
+    \end{cases}\label{eq:example-1}
+\end{equation}
+One can show that this optimization problem is an MCDP by producing a co-design diagram with an equivalent semantics, such as the one in~\cref{fig:toydiagram}.
+
+\begin{figure}[h]
+    \centering 
+    \includegraphics[width=6.2cm]{gmcdptro_example_diagram}}
+    \caption{Co-design diagram equivalent to~\cref{eq:example-1}}
+    \label{fig:toydiagram}
+\end{figure}
+
+The diagram contains three primitive DPIs: $\adp_{1},$ $\adp_{2}$ (used twice), and $\adp_{3}$.
+Their \ftor maps are:
+\begin{eqnarray*}
+    \ftor_{1}:{\colF\overline{\natnumbers}\cartprod\overline{\natnumbers}\cartprod\overline{\natnumbers}} & \rightarrow & {\colR\fantichains\overline{\natnumbers}},\\
+    \tup{ \fun_{1},\fun_{2},\fun_{3}}  & \mapsto & \{\fun_{1}+\fun_{2}+\fun_{3}\},\\
+    \ftor_{2}:{\colF\overline{\natnumbers}} & \rightarrow & {\colR\fantichains\overline{\natnumbers}},\\
+    \fun& \mapsto & \{\lceil\sqrt{\fun}\,\rceil\},\\
+    \ftor_{3}:{\colF\overline{\natnumbers}} & \rightarrow & {\colR\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})},\\
+    \fun& \mapsto & \{\tup{ a,b} \setin\overline{\natnumbers}\cartprod\overline{\natnumbers}:a+b=\fun\}.
+\end{eqnarray*}
+\begin{marginfigure}
+    \includegraphics[scale=0.33]{gmcdptro_example_diagram_tree}
+    \caption{}
+    \label{fig:toydiagram_tree}
+\end{marginfigure}
+The tree decomposition (\cref{fig:toydiagram_tree}) corresponds to the expression
+\begin{equation}
+    \adp=\dploop(\dpseries(\dppar(\adp_{2},\adp_{2}),\dpseries(\adp_{1},\adp_{3}))).
+    \label{eq:expression}
+\end{equation}
+Consulting \cref{tab:correspondence}, from~\cref{eq:expression} one obtains an expression for~\ftor:
+\begin{equation}
+    \ftor=\left((\ftor_{2}\oppar\ftor_{2})\opseries\ftor_{1}\opseries\ftor_{3}\right)^{\oploop}.
+    \label{eq:h}
+\end{equation}
+This problem is small enough that we can write down an explicit expression for~\ftor.
+By substituting in~\cref{eq:h} the definitions given in~\cref{def:opseries1,def:oploop1}, we obtain that evaluating~$\ftor(\F{c})$ means finding the least fixed point of a map~$\Psi_{\F{c}}$:
+\begin{equation*}
+    \ftor:\F{c}\mapsto\lfp(\Psi_{\F{c}}).
+\end{equation*}
+The map $\Psi_{\F{c}}:\R{\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})}\rightarrow\R{\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})}$ can be obtained from~\cref{eq:phi} as follows:
+
+\begin{equation}
+    \Psi_{\F{c}}:\RR\mapsto\Min\bigsetunion_{\tup{ x,y} \setin\RR}\upit\tup{ x,y} \setintersection\qquad\qquad\qquad\qquad
+\end{equation}
+%
+\begin{equation}
+    \setintersection\left\{ \tup{ a,b} \setin\natnumbers^{2}:\left(a+b\geq\lceil\sqrt{x}\,\rceil+\lceil\sqrt{y}\,\rceil+\F{c}\right)\right\}.
+\end{equation}
+%
+
+\begin{figure}
+    \begin{centering}
+        \includegraphics[bb=0bp 0bp 458bp 621bp,clip,scale=0.5]{gmcdptro_example20}
+    \end{centering}
+    \caption{Kleene ascent to solve the problem~\cref{eq:example-1} for $\F{c}=20$.
+        The sequence converges in five steps to $\RR_{5}=\RR_{\infty}.
+        $ }
+    \label{fig:example24}
+\end{figure}
+
+\noindent Kleene's algorithm is the iteration $\RR_{k+1}=\Psi_{\F{c}}(\RR_{k})$
+starting from $\RR_{0}=\posbot_{\R{\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})}}=\{\tup{ 0,0} \}$.
+
+\noindent For $\F{c}=0$, the sequence converges immediately:
+\begin{equation*}
+    \RR_{0}=\{\boldsymbol{\tup{ 0,0} }\}=\ftor(\F{0}).
+\end{equation*}
+For~$\F{c}=1$, the sequence converges at the sixth step; however, some solutions (in bold) converge sooner:
+\begin{align*}
+    \RR_{0} & =\{\tup{0,0} \}, \\
+    \RR_{1} & =\{\tup{0,1},\tup{1,0}\}, \\
+    \RR_{2} & =\{\tup{0,2},\tup{1,1}, \tup{2,0}\}, \\
+    \RR_{3} & =\{\boldsymbol{\tup{0,3}},\tup{1,2}, \tup{2,1},\boldsymbol{\tup{3,0}}\}, \\
+    \RR_{4} & =\{\boldsymbol{\tup{0,3}},\tup{2,2},\boldsymbol{\tup{3,0}}\}, \\
+    \RR_{5} & =\{\boldsymbol{\tup{0,3}},\boldsymbol{\tup{3,0}}\}=\ftor(\F{1}).
+\end{align*}
+For~$\F{c}=2$, the sequence converges at the fifth step; however,
+some solutions (in bold) converge sooner:
+\begin{align*}
+    \RR_{0} & =\{\tup{ 0,0} \}, \\
+    \RR_{1} & =\{\tup{ 0,2} ,\tup{ 1,1} ,\tup{ 2,0} \}, \\
+    \RR_{2} & =\left\{ \boldsymbol{\tup{ 0,4} }, \tup{1,3}, \tup{2,2}, \tup{3,1}, \boldsymbol{\tup{ 4,0} }\right\} , \\
+    \RR_{3} & =\{\boldsymbol{\tup{0,4} },\tup{ 3,2}, \tup{2,3}, \boldsymbol{\tup{ 4,0} }\} \\
+    \RR_{4} & =\{\boldsymbol{\tup{0,4} },\boldsymbol{\tup{ 3,3}},\boldsymbol{\tup{ 4,0} }\}=\ftor(\F{2}).
+\end{align*}
+The next values in the sequence are:
+\begin{align*}
+    \ftor(\F{3}) & =\left\{ \boldsymbol{\tup{ 0,6} },\boldsymbol{\tup{ 3,4} },\boldsymbol{\tup{ 4,3} },\boldsymbol{\tup{ 6,0} }\right\} , \\
+    \ftor(\F{4}) & =\left\{ \boldsymbol{\tup{ 0,7} },\boldsymbol{\tup{ 3,6} },\boldsymbol{\tup{ 4,4} },\boldsymbol{\tup{ 6,3} },\boldsymbol{\tup{ 7,0} }\right\} .
+\end{align*}
+\Cref{fig:example24}~shows the sequence for~$\F{c}=20$.
+
+\subsection{Guarantees of Kleene ascent}
+
+Solving an MCDP with cycles reduces to computing a Kleene ascent sequence~$\RR_{k}$.
+At each instant~$k$ we have some additional guarantees.
+
+For any finite~$k$, the resources ``below''~$\RR_{k}$ (the set~$\ressp\ \backslash\upit\RR_{k}$,) are infeasible.
+(In \cref{fig:example24}, those are colored in red.)
+
+If the iteration converges to a non-empty antichain~$\RR_{\infty}$, the antichain~$\RR_{\infty}$ divides~\ressp in two.
+Below the antichain, all resources are infeasible.
+However, above the antichain (purple area), it is not necessarily true that all points are feasible, because there might be holes in the feasible set, as in \cref{exa:one}.
+Note that this method does not compute the entire feasible set, but rather only the \emph{minimal elements} of the feasible set, which might be much easier to compute.
+
+Finally, if the sequence converges to the empty set, it means that there are no solutions.
+The sequence~$\RR_{k}$ can be considered a certificate of infeasibility.
