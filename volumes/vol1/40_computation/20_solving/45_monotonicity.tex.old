@@ -1,0 +1,103 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Monotonicity as compositional property}
+%\label{sec:Monotone-Co-Design-Problems}
+
+The first main computational result is an invariance result.
+
+\todojira{256}{@Andrea: Restate the theorem with style and wording we use in the book.}
+\begin{theorem}
+    \label{thm:CDP-monotone}
+    The class of MCDPs is closed with respect to interconnection.
+\end{theorem}
+
+\begin{proof}
+    \cref{prop:reduction} has shown that any interconnection of design problems can be described using the three operators~$\dppar$, $\dpseries$, and~$\dploop$.
+    Therefore, we just need to check that monotonicity in the sense of~\cref{def:DPI} is preserved by each operator separately.
+    This is done below in~\cref{prop:dppar-monotone,prop:loop-continuous}.
+\end{proof}
+
+\todojira{257}{All of these are conseguence of functor and DP, UPos formalization.
+    What should we do?
+}
+
+\begin{proposition}
+    \label{prop:dppar-monotone}
+    If~$\adp_{1}$ and~$\adp_{2}$ are monotone (\cref{def:DPI}), then also the composition~$\dppar(\adp_{1},\adp_{2})$ is monotone.
+\end{proposition}
+\begin{proof}
+    We need to refer to the definition of $\dppar$ in \cref{def:parallel} and check the conditions in \cref{def:DPI}.
+    If~$\funsp_{1},\funsp_{2},\ressp_{1},\ressp_{2}$ are CPOs, then~$\funsp_{1}\cartprod\funsp_{2}$ and~$\ressp_{1}\cartprod\ressp_{2}$ are CPOs as well.
+
+    From \cref{def:ftor} and \cref{eq:dppar-exec} we know \ftor can be written as
+    \begin{align*}
+        \ftor\colon \funsp_{1}\cartprod\funsp_{2} & \to\antichains(\ressp_{1}\cartprod\ressp_{2}) \\
+        \tup{ \fun_{1},\fun_{2}}                  & \mapsto\resMin\{\tup{ \req_{1}(\imp_{1}),\req_{2}(\imp_{2})} \mid
+        \left(\tup{ \imp_{1},\imp_{2}} \setin\impsp_{1}\cartprod\impsp_{2}\right)
+        \wedge\,\left(\tup{ \fun_{1},\fun_{2}} \posleq\tup{ \prov_{1}(\imp_{1}),\prov_{2}(\imp_{2})} \right)\}.
+    \end{align*}
+    All terms factorize in the two components, giving:
+    \begin{widepar}
+        \begin{align*}
+            \ftor\!
+            :\!\tup{ \fun_{1},\fun_{2}} \mapsto & \!\!\!\quad\Min_{\ressp_{1}}\{\tup{ \req_{1}(\imp_{1})} \mid\left(\imp\setin\impsp_{1}\right)\,\wedge\,\left(\fun_{1}\posleq\prov_{1}(\imp_{1})\right)\} \\
+                                                & \!\!\!\cartprod\Min_{\ressp_{2}}\{\tup{ \req_{2}(\imp_{2})} \mid\left(\imp\setin\impsp_{2}\right)\,\wedge\,\left(\fun_{2}\posleq\prov_{2}(\imp_{2})\right)\},
+        \end{align*}
+    \end{widepar}
+    which reduces to
+    \begin{eqnarray}
+        \ftor\colon\tup{ \fun_{1},\fun_{2}} & \mapsto & \ftor_{1}(\fun_{1})\acprod\ftor_{2}(\fun_{2}).\label{eq:isproduct}
+    \end{eqnarray}
+    The map \ftor is \scottcontinuous iff $\ftor_{1}$ and $\ftor_{2}$ are~\cite[Lemma II.2.8]{gierz03continuous}.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:series-monotone}
+    If $\adp_{1}$ and $\adp_{2}$ are monotone (\cref{def:DPI}), then also the composition $\dpseries(\adp_{1},\adp_{2})$ is monotone.
+\end{proposition}
+\begin{proof}
+    From the definition of $\dpseries$ (\cref{def:series-composition}), the semantics of the interconnection is captured by this problem:
+    \begin{equation}
+        \ftor:\fun_{1}\mapsto\begin{cases}
+            \with                        & \res_{1},\fun_{2}\setin\ressp_{1},\quad\res_{2}\setin\ressp_{2}, \\
+            \Min_{\posleqof{\ressp_{2}}} & \res_{2},                                                        \\
+            \subto                       & \res_{1}\setin\ftor_{1}(\fun_{1}),                               \\
+                                         & \res_{1}\posleqof{\ressp_{1}}\fun_{2},                           \\
+                                         & \res_{2}\setin\ftor_{2}(\fun_{2}).
+        \end{cases}\label{eq:dede}
+    \end{equation}
+    The situation is described by \cref{fig:series_mono1-2}.
+    The point~$\fun_{1}$ is fixed, and thus~$\ftor(\fun_{1})$ is a fixed antichain in~$\ressp_{1}$.
+    For each point $\res_{1}\setin\ftor(\fun_{1})$, we can choose a $\fun_{2}\posgeq\res_{1}$.
+    For each~$\fun_{2}$, the antichain~$\ftor_{2}(\fun_{2})$ traces the solution in $\ressp_{2}$, from which we can choose~$\res_{2}$.
+
+    \captionsideleft{\label{fig:series_mono1-2}}{\includegraphics[scale=0.45]{gmcdp_monotone_proof_mono1}}
+
+    Because~$\ftor_{2}$ is monotone, $\ftor_{2}(\fun_{2})$ is minimized when~$\fun_{2}$ is minimized, hence we know that the constraint~$\res_{1}\posleq\fun_{2}$ will be tight.
+    We can then conclude that the objective does not change introducing the constraint~$\res_{1}=\fun_{2}$.
+    The problem is reduced to:
+
+    \begin{equation}
+        \ftor:\fun_{1}\mapsto\begin{cases}
+            \with                        & \fun_{2}\setin\ressp_{1},\quad\res_{2}\setin\ressp_{2}, \\
+            \Min_{\posleqof{\ressp_{2}}} & \res_{2},                                               \\
+            \subto                       & \fun_{2}\setin\ftor_{1}(\fun_{1}),                      \\
+                                         & \res_{2}\setin\ftor_{2}(\fun_{2}).
+        \end{cases}\label{eq:dede-2}
+    \end{equation}
+    Minimizing $\res_{2}$ with the only constraint being~$\res_{2}\setin\ftor_{2}(\fun_{2})$, and with~$\ftor_{2}(\fun_{2})$ being an antichain, the solutions are all and only~$\ftor_{2}(\fun_{2})$.
+    Hence the problem is reduced to
+    \begin{equation}
+        \ftor:\fun_{1}\mapsto\begin{cases}
+            \with                        & \fun_{2}\setin\ressp_{1},          \\
+            \Min_{\posleqof{\ressp_{2}}} & \ftor_{2}(\fun_{2}),               \\
+            \subto                       & \fun_{2}\setin\ftor_{1}(\fun_{1}).
+        \end{cases}\label{eq:dede-2-1}
+    \end{equation}
+    The solution is simply
+    \begin{equation}
+        \ftor:\fun_{1}\mapsto\Min_{\posleqof{\ressp_{2}}}\bigsetunion_{\fun_{2}\setin\ftor_{1}(\fun_{1})}\ftor_{2}(\fun_{2}).
+        \label{eq:ora}
+    \end{equation}
+    This map is \scottcontinuous because it is the composition of \scottcontinuous maps.
+\end{proof}

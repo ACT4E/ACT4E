@@ -2,6 +2,9 @@ all:
 
 chapter-once: .FORCE
 	latexmk -r ../../../../latexmkrc -g  -nobibtex -pdf chapter-standalone.tex
+	cp chapter-standalone.pdf chapter-standalone-stable.pdf
+	cp chapter-standalone.synctex.gz  chapter-standalone-stable.synctex.gz
+
 
 chapter-continuous: .FORCE
 	latexmk -r ../../../../latexmkrc -pvc -nobibtex -pdf chapter-standalone.tex
@@ -17,6 +20,13 @@ chapter-continuous-noslides-fast: .FORCE
 
 part-once: .FORCE
 	latexmk -r ../../../latexmkrc -g  -pdf part-standalone.tex
+	cp part-standalone.pdf part-standalone-stable.pdf
+	cp part-standalone.synctex.gz  part-standalone-stable.synctex.gz
+
+part-once-fast: .FORCE
+	latexmk -r ../../../latexmkrc -g  -pdf part-standalone-fast.tex
+	cp part-standalone-fast.pdf part-standalone-fast-stable.pdf
+	cp part-standalone-fast.synctex.gz  part-standalone-fast-stable.synctex.gz
 
 part-continuous: .FORCE
 	latexmk -r ../../../latexmkrc -pvc   -pdf part-standalone.tex
