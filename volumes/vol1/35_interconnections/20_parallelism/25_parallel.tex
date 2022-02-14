@@ -397,6 +397,48 @@ This is shown in~\cref{fig:effect-stacking}.
     Need to show semigroup.
 }
 
+\subsection{LTI is stacking}
+When considering LTI systems, we can define stacking operations and show that it forms a stacking semicategory (\cref{def:simple-stacking-semi-cat}).
+The stacking operation on objects is defined as
+\begin{equation*}
+    \defmapperiod{\mtimescatob}{\Ob_\LTI \cartprod \Ob_\LTI}{\to}{\Ob_\LTI}{\tup{\styleobj{l},\styleobj{m}}}{\styleobj{l}+\styleobj{m}}
+\end{equation*}
+On the other hand, the operation on morphisms ``stacks'' the LTI systems onto each other.
+\footnote{For the control engineers out there: the resulting LTI system will have a Relative Gain Array (RGA) matrix corresponding to the identity matrix.}
+Formally:
+\begin{equation*}
+    \defmapcomma{\mtimescatmor}{\Mor_\LTI \cartprod \Mor_\LTI}{\to}{\Mor_\LTI}{\tup{\genericlti{\mora},\genericlti{\morb}}}{\genericlti{}}
+\end{equation*}
+with
+\begin{widepar}
+    \begin{equation*}
+        \mat{x}(0)=\begin{bmatrix}
+            \mat{x}_\mora(0) \\
+            \mat{x}_\morb(0)
+        \end{bmatrix},\
+        \mat{A}=\begin{bmatrix}
+            \mat{A}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{A}_\morb
+        \end{bmatrix}, \
+        \mat{B}=\begin{bmatrix}
+            \mat{B}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{B}_\morb
+        \end{bmatrix},\
+        \mat{C}=\begin{bmatrix}
+            \mat{C}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{C}_\morb
+        \end{bmatrix},\
+        \mat{D}=\begin{bmatrix}
+            \mat{D}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{D}_\morb
+        \end{bmatrix}
+    \end{equation*}
+\end{widepar}
+
+Clearly, the morphism given by~$\genericlti{}$ satisifes the compatibility condition for stacking semicategories:
+if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\morb}$ is~$\styleobj{n}\mto \styleobj{o}$,~$\genericlti{}$ is~$\styleobj{l}+\styleobj{n}\mto \styleobj{m}+\styleobj{o}$.
+Given that the resulting LTI system is described by diagonal matrices, the defined operations are associative, and therefore \LTI is an associative stacking semicategory.
+
 \section{Functorial stacking semicategory}
 
 \begin{ctdefinition}[Functorial stacking semicategory]
@@ -550,6 +592,57 @@ This describes a sort of commutivity property: we can either first compose horiz
         the two morphisms above have different representations in \cCat{\Set}.}
     \label{fig:effects-non-functorial}
 \end{figure*}
+
+
+\begin{example}
+    We want to show that \LTI, as defined, is almost a functiorial stacking semicategory, but not quite.
+    Given morphisms~$\mora\colon \styleobj{l}\mto \styleobj{m}$,~$\morc\colon \styleobj{m}\mto \styleobj{n}$,~$\morb\colon \styleobj{o}\mto \styleobj{p}$,~$\mord\colon \styleobj{p}\mto \styleobj{q}$, we would need to have
+    \begin{equation*}
+        (\mora \mthen \morc)\mtimescat (\morb\mthen \mord)=(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord).
+    \end{equation*}
+    This, however, is not true.
+    Let's see this by looking at the first matrix component of the LTI system.
+    On one hand we have:
+    \begin{equation*}
+        \mat{A}_{(\mora \mthen \morc)\mtimescat (\morb\mthen \mord)}=
+        \begin{bmatrix}
+            \mat{A}_\mora              & \mat{0}       & \mat{0}                    & \mat{0}       \\
+            \mat{B}_\morc\mat{C}_\mora & \mat{A}_\morc & \mat{0}                    & \mat{0}       \\
+            \mat{0}                    & \mat{0}       & \mat{A}_\morb              & \mat{0}       \\
+            \mat{0}                    & \mat{0}       & \mat{B}_\mord\mat{C}_\morb & \mat{A}_\mord
+        \end{bmatrix}
+    \end{equation*}
+    On the other hand we have:
+    \begin{equation*}
+        \mat{A}_{(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord)}=
+        \begin{bmatrix}
+            \mat{A}_\mora               & \mat{0}                     & \mat{0}       & \mat{0}       \\
+            \mat{0}                     & \mat{A}_\morb               & \mat{0}       & \mat{0}       \\
+            \mat{B}_\morc \mat{C}_\mora & \mat{0}                     & \mat{A}_\morc & \mat{0}       \\
+            \mat{0}                     & \mat{B}_\mord \mat{C}_\morb & \mat{0}       & \mat{A}_\mord
+        \end{bmatrix}
+    \end{equation*}
+    These two are different, and will therefore describe different systems.
+    However, the two matrices just differ by two permutations, which can be expressed via an invertible linear transformation~$\mat{T}$ as follows:
+    \begin{equation*}
+        \mat{A}_{(\mora\mtimescat \morb)\mthen (\morc\mtimescat \mord)}=
+        \underbrace{\begin{bmatrix}
+                1 & 0 & 0 & 0 \\
+                0 & 0 & 1 & 0 \\
+                0 & 1 & 0 & 0 \\
+                0 & 0 & 0 & 1
+            \end{bmatrix}}_{\mat{T}}\cdot
+        \mat{A}_{(\mora \mthen \morc)\mtimescat (\morb\mthen \mord)}
+        \cdot
+        \begin{bmatrix}
+            1 & 0 & 0 & 0 \\
+            0 & 0 & 1 & 0 \\
+            0 & 1 & 0 & 0 \\
+            0 & 0 & 0 & 1
+        \end{bmatrix}.
+    \end{equation*}
+    The other system matrices also obey \cref{def:equivalence_lti}.
+\end{example}
 
 \section{Symmetric stacking}
 
