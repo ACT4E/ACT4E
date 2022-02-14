@@ -1,0 +1,197 @@
+% !TEX root = chapter-standalone.tex
+
+\section{The category \cCat{\DP}}
+\begin{definition}[The category \cCat{\DP}]
+    The category~$\cCat{\DP}$ is:
+    \begin{enumerate}
+        \item \emph{Objects:}
+              posets of tuples.
+        \item \emph{Morphisms:}
+              A morphism from~$\posA =\cObj{\posA_1,\ldots, \posA_m}$ to~$\posB = \cObj{\posB_1,\ldots, \posB_m}$ is design problem:
+              \begin{equation*}
+                  \adp\colon \cObj{\posA_1,\ldots, \posA_m}\op \acprod \cObj{\posB_1,\ldots, \posB_m} \toinPos \Bool.
+              \end{equation*}
+        \item \emph{Composition:}
+              Composition is the usual composition of design problems.
+        \item \emph{Identities:}
+              The identity morphism on an object~$\cObj{\posA_1,\ldots,\posA_n}$ is given by the identity design problem~$\catid_{\cObj{\posA_1,\ldots, \posA_n}}$.
+    \end{enumerate}
+\end{definition}
+
+Analogously to what we did for~$\cCat{\Set}$ and~$\cCat{\Pos}$, one can define a multiplication operation for~$\cCat{\DP}$.
+Given two design problems
+\begin{equation*}
+    \begin{aligned}
+        \adpa\colon \cObj{\posA_1,\ldots,\posA_m}\op \acprod \cObj{\posC_1,\ldots,\posC_o} & \toinPos \Bool \\
+        \adpb\colon \cObj{\posB_1,\ldots,\posB_n}\op \acprod \cObj{\posD_1,\ldots,\posD_t} & \toinPos \Bool,
+    \end{aligned}
+\end{equation*}
+one can define
+\begin{equation}
+    \label{eq:dpmulti}
+    \adpa \cprod \adpb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}\op \acprod \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}\toinPos \Bool
+\end{equation}
+where
+\begin{equation*}
+    \begin{aligned}
+        (\adpa \cprod \adpb) & (\tup{\posAnel{1},\ldots, \posAnel{m},\posBnel{1},\ldots, \posBnel{n}\opel}, \tup{\posCnel{1},\ldots, \posCnel{k},\posDnel{1},\ldots, \posDnel{o}}) \\
+                             & =\adpa(\tup{\posAnel{1},\ldots, \posAnel{m}}\opel,\tup{\posCnel{1},\ldots, \posCnel{k}})\booland
+        \adpb(\tup{\posBnel{1},\ldots, \posBnel{n}}\opel,\tup{\posDnel{1},\ldots, \posDnel{o}})
+    \end{aligned}
+\end{equation*}
+
+\begin{lemma}[\cCat{\DP} is associative stacking]
+    \cCat{\DP} is associative stacking.
+\end{lemma}
+
+\begin{proof}
+    We show that~$\cCat{\DP}$ is an associative stacking semicategory.
+    We first show that it is a stacking category.
+    The stacking operation on objects corresponds to the multiplication operation~$\cprod$ defined at the beginning of this section.
+
+    The stacking operation on morphisms is defined as
+    \begin{equation*}
+        \defmapcomma{\mtimescatmor}{\Mor_{\cCat{\DP}} \cartprod \Mor_{\cCat{\DP}}}{\mto}{\Mor_{\cCat{\DP}}}{\tup{\adpa,\adpb}}{\adpa \cprod \adpb},
+    \end{equation*}
+
+    To show that the two operations are compatible, we start from
+    \begin{widepar}
+        \begin{equation*}
+            \prfperiod{\adpa\colon \cObj{\posA_1,\ldots,\posA_m}\op \acprod \cObj{\posC_1,\ldots,\posC_o}\toinPos \Bool}
+            {\adpb\colon \cObj{\posB_1,\ldots,\posB_n}\op \acprod \cObj{\posD_1,\ldots,\posD_t}\toinPos \Bool}
+            {\adpa \cprod \adpb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}\op \acprod \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}\toinPos \Bool}
+        \end{equation*}
+    \end{widepar}
+
+    The crucial part to show is that~$\adpa \cprod \adpb$ is a design problem.
+    This is easy to show, by leveraging the fact that~$\adpa$ and~$\adpb$ are design problems.
+    We start with the first implication.
+    For brevity, we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$,~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$,~$\posCnel{}=\tup{\posCnel{1},\ldots, \posCnel{o}}$, and~$\posDnel{}=\tup{\posDnel{1},\ldots, \posDnel{t}}$.
+    One has:
+    \begin{equation*}
+        \prfperiod{
+        \posAnel{}\tupconcat \posBnel{}\posleqof{\cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}} \posAnel{}'\tupconcat \posBnel{}'
+        }
+        {\prftree{(\posAnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m}} \posAnel{}') \booland (\posBnel{} \posleqof{\cObj{\posB_1,\ldots, \posB_n}} \posBnel{}')}
+        {\prftree{(\adpa(\posAnel{}\opel,\posCnel{})\posgeqof{\Bool} \adpa({\posAnel{}'}\opel,\posCnel{}))
+                \booland
+                (\adpb(\posBnel{}\opel,\posDnel{})\posgeqof{\Bool} \adpb({\posBnel{}'}\opel,\posDnel{}))}
+            {
+                \prftree{
+                    (\adpa({\posAnel{}}\opel,\posCnel{})\booland \adpb(\posBnel{}\opel,\posDnel{}))
+                    \posgeqof{\Bool}
+                    (\adpa({\posAnel{}'}\opel,\posCnel{})\booland \adpb({\posBnel{}'}\opel,\posDnel{}))
+                }
+                {(\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}\tupconcat \posDnel{})\posgeqof{\Bool}
+                    (\adpa \cprod \adpb)((\posAnel{}'\tupconcat \posBnel{}')\opel,\posCnel{}\tupconcat \posDnel{})} }
+            }
+        }
+    \end{equation*}
+    For the second iteration, one has:
+    \begin{equation*}
+        \prfperiod{
+        \posCnel{}\tupconcat \posDnel{}\posleqof{\cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}} \posCnel{}'\tupconcat \posDnel{}'
+        }
+        {\prftree{(\posCnel{} \posleqof{\cObj{\posC_1,\ldots,\posC_o}} \posCnel{}') \booland (\posDnel{}\posleqof{\cObj{\posD_1,\ldots, \posD_t}} \posDnel{}')}
+        {\prftree{(\adpa(\posAnel{}\opel,\posCnel{})\posleqof{\Bool}
+                \adpa(\posAnel{}\opel,\posCnel{}'))
+                \booland
+                (\adpb(\posBnel{}\opel,\posDnel{})\posleqof{\Bool}
+                \adpb(\posBnel{}\opel,\posDnel{}'))}
+            {
+                \prftree{
+                    (\adpa(\posAnel{}\opel,\posCnel{})\booland \adpb(\posBnel{}\opel,\posDnel{}))
+                    \posleqof{\Bool}
+                    (\adpa(\posAnel{}\opel,\posCnel{}')\booland \adpb(\posBnel{}\opel,\posDnel{}'))
+                }
+                {(\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}\tupconcat \posDnel{})
+                    \posleqof{\Bool}
+                    (\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}'\tupconcat \posDnel{}')} }
+            }
+        }
+    \end{equation*}
+    Therefore,~$\adpa \cprod \adpb$ is really a design problem.
+
+    Associativity can be shown following what we did for \Set.
+\end{proof}
+
+\begin{lemma}[\cCat{\DP} is functorial stacking]
+    \cCat{\DP} is functorial stacking.
+\end{lemma}
+
+\begin{proof}
+    Consider
+    \begin{equation*}
+        \begin{aligned}
+            \adpa\colon \cObj{\posA_1,\ldots, \posA_i}\op \acprod \cObj{\posC_1,\ldots, \posC_l} & \toinPos \Bool \\
+            \adpb\colon \cObj{\posB_1,\ldots, \posB_m}\op \acprod \cObj{\posD_1,\ldots, \posD_n} & \toinPos \Bool \\
+            \adpc\colon \cObj{\posC_1,\ldots, \posC_l}\op \acprod \cObj{\posE_1,\ldots, \posE_o} & \toinPos \Bool \\
+            \adpd\colon \cObj{\posD_1,\ldots, \posD_n}\op \acprod \cObj{\posF_1,\ldots, \posF_v} & \toinPos \Bool
+        \end{aligned}
+    \end{equation*}
+    We want to prove
+    \begin{equation*}
+        (\adpa \mthen \adpc) \mtimescatmor (\adpb \mthen \adpd)=(\adpa \mtimescatmor \adpb) \mthen (\adpc \mtimescatmor \adpd).
+    \end{equation*}
+    For brevity, in the following we write
+    \begin{align*}
+        \posAnel{} & =\tup{\posAnel{1},\ldots, \posAnel{i}}, &
+        \posBnel{} & =\tup{\posBnel{1},\ldots, \posBnel{l}} \\
+        \posCnel{} & =\tup{\posCnel{1},\ldots, \posCnel{m}}, &
+        \posDnel{} & =\tup{\posDnel{1},\ldots, \posDnel{n}} \\
+        \posEnel{} & =\tup{\posEnel{1},\ldots, \posEnel{o}}, &
+        \posFnel{} & =\tup{\posFnel{1},\ldots, \posFnel{v}}
+    \end{align*}
+    Let's start from the left-hand side.
+    One has
+    \begin{equation*}
+        (\adpa \mthen \adpc)(\posAnel{}\opel,\posEnel{})=\bigvee_{\posCnel{}\in \cObj{\posC_1,\ldots, \posC_l}}
+        \adpa(\posAnel{}\opel, \posCnel{}) \booland \adpc(\posCnel{}\opel,\posEnel{})
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{aligned}
+            (\adpb \mthen \adpd)(\posBnel{}\opel,\posFnel{})=\bigvee_{\posDnel{}\in \cObj{\posD_1,\ldots, \posD_n}}
+            \adpb(\posBnel{}\opel, \posDnel{}) \booland \adpd(\posDnel{}\opel\posFnel{})
+        \end{aligned}
+    \end{equation*}
+    Therefore, we know
+    \begin{equation*}
+        \begin{aligned}
+             & ((\adpa \mthen \adpc)\mtimescatmor (\adpb \mthen \adpd))
+            ((\posAnel{}\tupconcat \posBnel{})\opel,\posEnel{}\tupconcat \posFnel{}) \\
+             & =\bigvee_{\posCnel{}\in \cObj{\posC_1,\ldots, \posC_l}}
+            \adpa(\posAnel{}\opel, \posCnel{}) \booland \adpc(\posCnel{}\opel,\posEnel{}) \booland
+            \bigvee_{\posDnel{}\in \cObj{\posD_1,\ldots, \posD_n}} \adpb(\posBnel{}\opel, \posDnel{}) \booland \adpd(\posDnel{}\opel,\posFnel{}).
+        \end{aligned}
+    \end{equation*}
+
+    On the other hand, one has
+    \begin{equation*}
+        (\adpa \mtimescatmor \adpb)((\posAnel{}\tupconcat \posBnel{})\opel, \posCnel{}\tupconcat \posDnel{})
+        =\adpa(\posAnel{}\opel,\posCnel{}) \booland \adpb(\posBnel{}\opel,\posDnel{})
+    \end{equation*}
+    and
+    \begin{equation*}
+        (\adpc \mtimescatmor \adpd)((\posCnel{}\tupconcat \posDnel{})\opel, \posEnel{}\tupconcat \posFnel{})
+        =\adpc(\posCnel{}\opel,\posEnel{}) \booland \adpd(\posDnel{}\opel,\posFnel{})
+    \end{equation*}
+    Therefore, we know
+    \begin{equation*}
+        \begin{aligned}
+             & ((\adpa \mtimescatmor \adpb)\mthen (\adpc \mtimescatmor \adpd))((\posAnel{}\tupconcat \posBnel{})\opel,\posEnel{}\tupconcat \posFnel{}) \\
+             & =\bigvee_{\posCnel{}\tupconcat \posDnel{}\in \cObj{\posC_1,\ldots, \posC_m,\posD_1,\ldots, \posD_n}}
+            (\adpa \mtimescatmor \adpb)((\posAnel{}\tupconcat \posBnel{})\opel, \posCnel{}\tupconcat \posDnel{})
+            \booland (\adpc \mtimescatmor \adpd)((\posCnel{}\tupconcat \posDnel{})\opel, \posEnel{}\tupconcat \posFnel{}) \\
+             & =\bigvee_{\posCnel{}\tupconcat \posDnel{}\in \cObj{\posC_1,\ldots, \posC_m,\posD_1,\ldots, \posD_n}}
+            \adpa(\posAnel{}\opel,\posCnel{}) \booland \adpb(\posBnel{}\opel,\posDnel{})
+            \booland
+            \adpc(\posCnel{}\opel,\posEnel{}) \booland \adpd(\posDnel{}\opel,\posFnel{}) \\
+             & =\bigvee_{\posCnel{}\in \cObj{\posC_1,\ldots, \posC_l}}
+            \adpa(\posAnel{}\opel, \posCnel{}) \booland \adpc(\posCnel{}\opel,\posEnel{}) \booland
+            \bigvee_{\posDnel{}\in \cObj{\posD_1,\ldots, \posD_n}} \adpb(\posBnel{}\opel, \posDnel{}) \booland \adpd(\posDnel{}\opel,\posFnel{}),
+        \end{aligned}
+    \end{equation*}
+    proving the statement.
+
+\end{proof}

@@ -1,325 +1,7 @@
 % !TEX root = chapter-standalone.tex
 
-\section[\DP is (strictly) symmetric monoidal]{\DP is a (strict) symmetric monoidal category}
+\section[\DP is (strictly) symmetric monoidal]{\DP is a (strictly) symmetric monoidal category}
 \label{sec:parallelism-DP-monoidal}
-
-\subsection{The Category~$\cCat{\Pos}$}
-
-We define a category analogous to~$\cCat{\Set}$, but its objects are ``posets of tuples''.
-
-Given posets~$\posA_1,\ldots, \posA_n$ we define
-\begin{equation*}
-    \cObj{\posA_1,\ldots, \posA_n}\coloneqq \tup{\cObj{\posAsetn{1},\ldots, \posAsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_n}}},
-\end{equation*}
-where~$\cObj{\posAsetn{1},\ldots, \posAsetn{n}}$ is a set of tuples and~$\tup{\posAnel{1},\ldots, \posAnel{n}}\posleqof{\cObj{\posA_1,\ldots, \posA_n}}\tup{\posAnel{1}',\ldots, \posAnel{n}'}$ if and only if~$\posAnel{i}\posleqof{\posA_i} \posAnel{i}'$ for all~$i\in \{0,\ldots, n\}$.
-%
-%\begin{equation*}
-%    \prfdouble{\tup{\posAnel{1},\ldots, \posAnel{n}}\posleqof{\cObj{\posA_1,\ldots, \posA_n}}\tup{\posAnel{1}',\ldots, \posAnel{n}'}}
-%    {\posAnel{1} \posleqof{\posA_1}\posAnel{1}' \booland \ldots \booland \posAnel{n} \posleqof{\posA_n} \posAnel{n}'}
-%\end{equation*}
-
-Analogously to what we did for \cCat{\Set}, one can define a multiplication operation in \cCat{\Pos}.
-Given~$\cObj{\posA_1,\ldots, \posA_m}$ and~$\cObj{\posB_1,\ldots, \posB_n}$, one has
-\begin{widepar}
-    \begin{equation*}
-        \begin{aligned}
-            \cObj{\posA_1,\ldots, \posA_m}\cprod \cObj{\posB_1,\ldots, \posB_n} & \definedas \tup{\cObj{\posAsetn{1},\ldots, \posAsetn{m}} \cprod \cObj{\posBsetn{1},\ldots, \posBsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_m}\cprod \cObj{\posB_1,\ldots, \posB_n}}} \\
-                                                                                & =\tup{\cObj{\posAsetn{1},\ldots, \posAsetn{m},\posBsetn{1},\ldots, \posBsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_m}\cprod \cObj{\posB_1,\ldots, \posB_n}}},
-        \end{aligned}
-    \end{equation*}
-\end{widepar}
-where~$\tup{\posAnel{1},\ldots, \posAnel{m},\posBnel{1},\ldots, \posBnel{n}} \posleqof{\cObj{\posA_1,\ldots, \posA_m}\cprod \cObj{\posB_1,\ldots, \posB_n}} \tup{\posAnel{1}',\ldots, \posAnel{m}',\posBnel{1}',\ldots, \posBnel{n}'}$ if and only if~$\posAnel{i}\posleqof{\posA_i}\posAnel{i}'$ and~$\posBnel{j}\posleqof{\posB_j}\posBnel{j}'$ for all~$i\in \{0,\ldots, m\}$,~$j\in \{0,\ldots, n\}$.
-%\begin{equation*}
-%    \prfdoubleperiod{\tup{\posAnel{1},\ldots, \posAnel{m},\posBnel{1},\ldots, \posBnel{n}} \posleqof{\cObj{\posA_1,\ldots, \posA_m}\cprod \cObj{\posB_1,\ldots, \posB_n}} \tup{\posAnel{1}',\ldots, \posAnel{m}',\posBnel{1}',\ldots, \posBnel{n}'}}
-%    {\posAnel{1} \posleqof{\posA_1}\posAnel{1}' \booland \ldots \booland \posAnel{m} \posleqof{\posA_m} \posAnel{m}' \booland \ldots \booland \posBnel{1} \posleqof{\posB_1} \posBnel{1}' \booland \ldots \booland \posBnel{n} \posleqof{\posB_n} \posBnel{n}'}
-%\end{equation*}
-
-The resulting poset of tuples is written as~$\cObj{\posA_1,\ldots, \posA_m,\posB_1,\ldots, \posB_n}$.
-
-\begin{definition}[The category~$\cCat{\Pos}$]
-    \label{def:PosL}
-    The category~$\cCat{\Pos}$ is:
-    \begin{enumerate}
-        \item \emph{Objects:} posets of tuples.
-        \item \emph{Morphisms:}
-              Monotone functions between posets of tuples.
-        \item \emph{Composition:}
-              Composition is the usual composition of functions.
-        \item \emph{Identities:}
-              Identity functions.
-    \end{enumerate}
-\end{definition}
-
-\begin{lemma}[\cCat{\Pos} is associative stacking]
-    \cCat{\Pos} is associative stacking.
-\end{lemma}
-
-\begin{proof}
-
-    We show that~$\cCat{\Pos}$ is an associative stacking semicategory.
-    We first show that it is a stacking category.
-    The stacking operation on objects corresponds to the multiplication operation~$\cprod$ defined at the beginning of this section.
-
-    The stacking operation on morphisms is defined as
-    \begin{equation*}
-        \defmapcomma{\mtimescatmor}{\Mor_{\cCat{\Pos}} \cartprod \Mor_{\cCat{\Pos}}}{\mto}{\Mor_{\cCat{\Pos}}}{\tup{\mora,\morb}}{\mora \cprod \morb},
-    \end{equation*}
-    where~$(\mora \cprod \morb)(\tup{\posAnel{1},\ldots, \posAnel{m}} \tupconcat \tup{\posBnel{1},\ldots, \posBnel{n}})\definedas \mora(\tup{\posAnel{1},\ldots, \posAnel{m}})\tupconcat \morb(\tup{\posBnel{1},\ldots, \posBnel{n}})$.
-    To show that the two operations are compatible, we start from
-    %\begin{widepar}
-    \begin{equation*}
-        \prfperiod{\mora\colon \cObj{\posA_1,\ldots,\posA_m}\mto \cObj{\posC_1,\ldots,\posC_o}}
-        {\morb\colon \cObj{\posB_1,\ldots,\posB_n}\mto \cObj{\posD_1,\ldots,\posD_t}}
-        {\mora \cprod \morb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n} \mto \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}}
-    \end{equation*}
-    %\end{widepar}
-
-    The crucial part to show is that~$\mora \cprod \morb$ is a monotone map.
-    This is easy to show, by leveraging the monotonicity of~$\mora$ and~$\morb$.
-    For brevity, in the following we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$,~$\posAnel{}'=\tup{\posAnel{1}',\ldots, \posAnel{m}'}$,~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$, and~$\posBnel{}'=\tup{\posBnel{1}',\ldots, \posBnel{n}'}$.
-    One has
-    \begin{equation*}
-        \prfcomma{\posAnel{}\tupconcat \posBnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m,\posB_1,\ldots, \posB_n}} \posAnel{}'\tupconcat \posBnel{}'}
-        {\prftree{
-                \left(\posAnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m}} \posAnel{}'\right) \booland \left(\posBnel{} \posleqof{\cObj{\posB_1,\ldots, \posB_n}} \posBnel{}'\right)}
-            {
-                \prftree{
-                    \left(\mora(\posAnel{}) \posleqof{\cObj{\posC_1,\ldots, \posC_o}} \mora(\posAnel{}')\right) \booland \left(\morb(\posBnel{})\posleqof{\cObj{\posD_1,\ldots, \posD_t}} \morb(\posBnel{}')\right)}
-                {
-                    \prftree{
-                        {\mora(\posAnel{}) \tupconcat \morb(\posBnel{})  \posleqof{\cObj{\posC_1,\ldots, \posC_o, \posD_1,\ldots, \posD_t}} \mora(\posAnel{}') \tupconcat \morb(\posBnel{}')}}
-                    {(\mora \cprod \morb)(\posAnel{}\tupconcat \posBnel{}) \posleqof{\cObj{\posC_1,\ldots, \posC_o,\posD_1,\ldots, \posD_t}} (\mora \cprod \morb)(\posAnel{}'\tupconcat \posBnel{}')
-                    }}}
-        }
-    \end{equation*}
-    which shows monotonicity.
-
-    The proof of associativity is parallel to the proof for \cCat{\Set}.
-\end{proof}
-
-\begin{lemma}
-    \cCat{\Pos} is functorial stacking.
-\end{lemma}
-\begin{proof}
-    The proof is analogous to the one for \cCat{\Set} in \cref{ex:setfunstack}.
-\end{proof}
-
-\begin{definition}[The category \cCat{\DP}]
-    The category~$\cCat{\DP}$ is:
-    \begin{enumerate}
-        \item \emph{Objects:}
-              posets of tuples.
-        \item \emph{Morphisms:}
-              A morphism from~$\posA =\cObj{\posA_1,\ldots, \posA_m}$ to~$\posB = \cObj{\posB_1,\ldots, \posB_m}$ is design problem:
-              \begin{equation*}
-                  \adp\colon \cObj{\posA_1,\ldots, \posA_m}\op \acprod \cObj{\posB_1,\ldots, \posB_m} \toinPos \Bool.
-              \end{equation*}
-        \item \emph{Composition:}
-              Composition is the usual composition of design problems.
-        \item \emph{Identities:}
-              The identity morphism on an object~$\cObj{\posA_1,\ldots,\posA_n}$ is given by the identity design problem~$\catid_{\cObj{\posA_1,\ldots, \posA_n}}$.
-    \end{enumerate}
-\end{definition}
-
-Analogously to what we did for~$\cCat{\Set}$ and~$\cCat{\Pos}$, one can define a multiplication operation for~$\cCat{\DP}$.
-Given two design problems
-\begin{equation*}
-    \begin{aligned}
-        \adpa\colon \cObj{\posA_1,\ldots,\posA_m}\op \acprod \cObj{\posC_1,\ldots,\posC_o} & \toinPos \Bool \\
-        \adpb\colon \cObj{\posB_1,\ldots,\posB_n}\op \acprod \cObj{\posD_1,\ldots,\posD_t} & \toinPos \Bool,
-    \end{aligned}
-\end{equation*}
-one can define
-\begin{equation}
-    \label{eq:dpmulti}
-    \adpa \cprod \adpb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}\op \acprod \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}\toinPos \Bool
-\end{equation}
-where
-\begin{equation*}
-    \begin{aligned}
-        (\adpa \cprod \adpb) & (\tup{\posAnel{1},\ldots, \posAnel{m},\posBnel{1},\ldots, \posBnel{n}^*}, \tup{\posCnel{1},\ldots, \posCnel{k},\posDnel{1},\ldots, \posDnel{o}}) \\
-                             & =\adpa(\tup{\posAnel{1},\ldots, \posAnel{m}}^*,\tup{\posCnel{1},\ldots, \posCnel{k}})\booland
-        \adpb(\tup{\posBnel{1},\ldots, \posBnel{n}}^*,\tup{\posDnel{1},\ldots, \posDnel{o}})
-    \end{aligned}
-\end{equation*}
-
-\begin{lemma}[\cCat{\DP} is associative stacking]
-    \cCat{\DP} is associative stacking.
-\end{lemma}
-
-\begin{proof}
-    We show that~$\cCat{\DP}$ is an associative stacking semicategory.
-    We first show that it is a stacking category.
-    The stacking operation on objects corresponds to the multiplication operation~$\cprod$ defined at the beginning of this section.
-
-    The stacking operation on morphisms is defined as
-    \begin{equation*}
-        \defmapcomma{\mtimescatmor}{\Mor_{\cCat{\DP}} \cartprod \Mor_{\cCat{\DP}}}{\mto}{\Mor_{\cCat{\DP}}}{\tup{\adpa,\adpb}}{\adpa \cprod \adpb},
-    \end{equation*}
-
-    To show that the two operations are compatible, we start from
-    \begin{widepar}
-        \begin{equation*}
-            \prfperiod{\adpa\colon \cObj{\posA_1,\ldots,\posA_m}\op \acprod \cObj{\posC_1,\ldots,\posC_o}\toinPos \Bool}
-            {\adpb\colon \cObj{\posB_1,\ldots,\posB_n}\op \acprod \cObj{\posD_1,\ldots,\posD_t}\toinPos \Bool}
-            {\adpa \cprod \adpb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}\op \acprod \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}\toinPos \Bool}
-        \end{equation*}
-    \end{widepar}
-
-    The crucial part to show is that~$\adpa \cprod \adpb$ is a design problem.
-    This is easy to show, by leveraging the fact that~$\adpa$ and~$\adpb$ are design problems.
-    We start with the first implication.
-    For brevity, we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$,~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$,~$\posCnel{}=\tup{\posCnel{1},\ldots, \posCnel{o}}$, and~$\posDnel{}=\tup{\posDnel{1},\ldots, \posDnel{t}}$.
-    One has:
-    \begin{equation*}
-        \prfperiod{
-        \posAnel{}\tupconcat \posBnel{}\posleqof{\cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}} \posAnel{}'\tupconcat \posBnel{}'
-        }
-        {\prftree{(\posAnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m}} \posAnel{}') \booland (\posBnel{} \posleqof{\cObj{\posB_1,\ldots, \posB_n}} \posBnel{}')}
-        {\prftree{(\adpa(\posAnel{}^*,\posCnel{})\posgeqof{\Bool} \adpa(\posAnel{}'^*,\posCnel{}))
-                \booland
-                (\adpb(\posBnel{}^*,\posDnel{})\posgeqof{\Bool} \adpb(\posBnel{}'^*,\posDnel{}))}
-            {
-                \prftree{
-                    (\adpa(\posAnel{}^*,\posCnel{})\booland \adpb(\posBnel{}^*,\posDnel{}))
-                    \posgeqof{\Bool}
-                    (\adpa(\posAnel{}'^*,\posCnel{})\booland \adpb(\posBnel{}'^*,\posDnel{}))
-                }
-                {(\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})^*,\posCnel{}\tupconcat \posDnel{})\posgeqof{\Bool}
-                    (\adpa \cprod \adpb)((\posAnel{}'\tupconcat \posBnel{}')^*,\posCnel{}\tupconcat \posDnel{})} }
-            }
-        }
-    \end{equation*}
-    For the second iteration, one has:
-    \begin{equation*}
-        \prfperiod{
-        \posCnel{}\tupconcat \posDnel{}\posleqof{\cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}} \posCnel{}'\tupconcat \posDnel{}'
-        }
-        {\prftree{(\posCnel{} \posleqof{\cObj{\posC_1,\ldots,\posC_o}} \posCnel{}') \booland (\posDnel{}\posleqof{\cObj{\posD_1,\ldots, \posD_t}} \posDnel{}')}
-        {\prftree{(\adpa(\posAnel{}^*,\posCnel{})\posleqof{\Bool}
-                \adpa(\posAnel{}^*,\posCnel{}'))
-                \booland
-                (\adpb(\posBnel{}^*,\posDnel{})\posleqof{\Bool}
-                \adpb(\posBnel{}^*,\posDnel{}'))}
-            {
-                \prftree{
-                    (\adpa(\posAnel{}^*,\posCnel{})\booland \adpb(\posBnel{}^*,\posDnel{}))
-                    \posleqof{\Bool}
-                    (\adpa(\posAnel{}^*,\posCnel{}')\booland \adpb(\posBnel{}^*,\posDnel{}'))
-                }
-                {(\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})^*,\posCnel{}\tupconcat \posDnel{})
-                    \posleqof{\Bool}
-                    (\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})^*,\posCnel{}'\tupconcat \posDnel{}')} }
-            }
-        }
-    \end{equation*}
-    Therefore,~$\adpa \cprod \adpb$ is really a design problem.
-
-    Associativity can be shown following what we did for \Set.
-\end{proof}
-
-\begin{lemma}[\cCat{\DP} is functorial stacking]
-    \cCat{\DP} is functorial stacking.
-\end{lemma}
-
-\begin{proof}
-    Consider
-    \begin{equation*}
-        \begin{aligned}
-            \adpa\colon \cObj{\posA_1,\ldots, \posA_i}\op \acprod \cObj{\posC_1,\ldots, \posC_l} & \toinPos \Bool \\
-            \adpb\colon \cObj{\posB_1,\ldots, \posB_m}\op \acprod \cObj{\posD_1,\ldots, \posD_n} & \toinPos \Bool \\
-            \adpc\colon \cObj{\posC_1,\ldots, \posC_l}\op \acprod \cObj{\posE_1,\ldots, \posE_o} & \toinPos \Bool \\
-            \adpd\colon \cObj{\posD_1,\ldots, \posD_n}\op \acprod \cObj{\posF_1,\ldots, \posF_v} & \toinPos \Bool
-        \end{aligned}
-    \end{equation*}
-    We want to prove
-    \begin{equation*}
-        (\adpa \mthen \adpc) \mtimescatmor (\adpb \mthen \adpd)=(\adpa \mtimescatmor \adpb) \mthen (\adpc \mtimescatmor \adpd).
-    \end{equation*}
-    For brevity, in the following we write
-    \begin{align*}
-        \posAnel{} & =\tup{\posAnel{1},\ldots, \posAnel{i}}, &
-        \posBnel{} & =\tup{\posBnel{1},\ldots, \posBnel{l}} \\
-        \posCnel{} & =\tup{\posCnel{1},\ldots, \posCnel{m}}, &
-        \posDnel{} & =\tup{\posDnel{1},\ldots, \posDnel{n}} \\
-        \posEnel{} & =\tup{\posEnel{1},\ldots, \posEnel{o}}, &
-        \posFnel{} & =\tup{\posFnel{1},\ldots, \posFnel{v}}
-    \end{align*}
-    Let's start from the left-hand side.
-    One has
-    \begin{equation*}
-        (\adpa \mthen \adpc)(\posAnel{}^*,\posEnel{})=\bigvee_{\posCnel{}\in \cObj{\posC_1,\ldots, \posC_l}}
-        \adpa(\posAnel{}^*, \posCnel{}) \booland \adpc(\posCnel{}^*,\posEnel{})
-    \end{equation*}
-    and
-    \begin{equation*}
-        \begin{aligned}
-            (\adpb \mthen \adpd)(\posBnel{}^*,\posFnel{})=\bigvee_{\posDnel{}\in \cObj{\posD_1,\ldots, \posD_n}}
-            \adpb(\posBnel{}^*, \posDnel{}) \booland \adpd(\posDnel{}^*\posFnel{})
-        \end{aligned}
-    \end{equation*}
-    Therefore, we know
-    \begin{equation*}
-        \begin{aligned}
-             & ((\adpa \mthen \adpc)\mtimescatmor (\adpb \mthen \adpd))
-            ((\posAnel{}\tupconcat \posBnel{})^*,\posEnel{}\tupconcat \posFnel{}) \\
-             & =\bigvee_{\posCnel{}\in \cObj{\posC_1,\ldots, \posC_l}}
-            \adpa(\posAnel{}^*, \posCnel{}) \booland \adpc(\posCnel{}^*,\posEnel{}) \booland
-            \bigvee_{\posDnel{}\in \cObj{\posD_1,\ldots, \posD_n}} \adpb(\posBnel{}^*, \posDnel{}) \booland \adpd(\posDnel{}^*,\posFnel{}).
-        \end{aligned}
-    \end{equation*}
-
-    On the other hand, one has
-    \begin{equation*}
-        (\adpa \mtimescatmor \adpb)((\posAnel{}\tupconcat \posBnel{})^*, \posCnel{}\tupconcat \posDnel{})
-        =\adpa(\posAnel{}^*,\posCnel{}) \booland \adpb(\posBnel{}^*,\posDnel{})
-    \end{equation*}
-    and
-    \begin{equation*}
-        (\adpc \mtimescatmor \adpd)((\posCnel{}\tupconcat \posDnel{})^*, \posEnel{}\tupconcat \posFnel{})
-        =\adpc(\posCnel{}^*,\posEnel{}) \booland \adpd(\posDnel{}^*,\posFnel{})
-    \end{equation*}
-    Therefore, we know
-    \begin{equation*}
-        \begin{aligned}
-             & ((\adpa \mtimescatmor \adpb)\mthen (\adpc \mtimescatmor \adpd))((\posAnel{}\tupconcat \posBnel{})^*,\posEnel{}\tupconcat \posFnel{}) \\
-             & =\bigvee_{\posCnel{}\tupconcat \posDnel{}\in \cObj{\posC_1,\ldots, \posC_m,\posD_1,\ldots, \posD_n}}
-            (\adpa \mtimescatmor \adpb)((\posAnel{}\tupconcat \posBnel{})^*, \posCnel{}\tupconcat \posDnel{})
-            \booland (\adpc \mtimescatmor \adpd)((\posCnel{}\tupconcat \posDnel{})^*, \posEnel{}\tupconcat \posFnel{}) \\
-             & =\bigvee_{\posCnel{}\tupconcat \posDnel{}\in \cObj{\posC_1,\ldots, \posC_m,\posD_1,\ldots, \posD_n}}
-            \adpa(\posAnel{}^*,\posCnel{}) \booland \adpb(\posBnel{}^*,\posDnel{})
-            \booland
-            \adpc(\posCnel{}^*,\posEnel{}) \booland \adpd(\posDnel{}^*,\posFnel{}) \\
-             & =\bigvee_{\posCnel{}\in \cObj{\posC_1,\ldots, \posC_l}}
-            \adpa(\posAnel{}^*, \posCnel{}) \booland \adpc(\posCnel{}^*,\posEnel{}) \booland
-            \bigvee_{\posDnel{}\in \cObj{\posD_1,\ldots, \posD_n}} \adpb(\posBnel{}^*, \posDnel{}) \booland \adpd(\posDnel{}^*,\posFnel{}),
-        \end{aligned}
-    \end{equation*}
-    proving the statement.
-
-\end{proof}
-
-\devel{
-
-    \begin{definition}[The category~$\RelL$]
-        \label{def:RelL}
-        The category~$\RelL$ is:
-        \begin{enumerate}
-            \item \emph{Objects:} lists~$\Tupcatt {\setA_1}  \dots {\setA_n}$,~$n \setin \natnumbers$, of sets.
-                  This includes the empty list~$\Tupca {}$.
-            \item \emph{Morphisms:}
-                  Morphisms from~$\setA =\Tupcatt {\setA_1}  \dots {\setA_n}$ to~$\setB = \Tupcatt {\setB_1} \dots {\setB_m}$ are all relations:
-                  \begin{equation*}
-                      \relA\subseteq ({\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n}))) \cartprod ({\setB_1} \cartprod (\setB_2 \cartprod (\ldots \cartprod {\setB_m}))).
-                  \end{equation*}
-            \item \emph{Composition:}
-                  Composition is the usual composition of relations.
-            \item \emph{Identities:}
-                  The identity morphism on an object~$\Tupcatt {\setA_1} \dots {\setA_n}$ is given by the identity relation~$\catid_{{\setA_1} \cartprod (\setA_2 \cartprod (\ldots \cartprod {\setA_n}))}$.
-        \end{enumerate}
-    \end{definition}
-
-}
 
 \subsection{Parallel Composition}
 \linkvideo{spring2021-functorial-comp-b:solving-queries:solving-parallel} % Parallel composition
@@ -380,10 +62,10 @@ The diagrammatic representation of the monoidal product is reported in~\cref{fig
             ~ & \left( \catid_{\posA}\mtimescat \catid_{\posB}\right)
             \left( \tup{\F{\posgenAel_1},\F{\posgenBel_1}}\Fop,\tup{\R{\posgenAel_2},\R{\posgenBel_2}}\right) \\
               & =
-            \catid_\posgenA(\F{\posgenAel_1^*},\R{\posgenAel_2})\booland \catid_\posgenB(\F{\posgenBel_1^*},\R{\posgenBel_2}) \\
+            \catid_\posgenA(\F{\posgenAel_1\opel},\R{\posgenAel_2})\booland \catid_\posgenB(\F{\posgenBel_1\opel},\R{\posgenBel_2}) \\
               & =\left( \F{\posgenAel_1}\posleqof\posA \R{\posgenAel_2}\right)\booland \left( \F{\posgenBel_1}\posleqof\posB \R{\posgenBel_2}\right) \\
               & =\tup{\F{\posgenAel_1},\F{\posgenBel_1}}\posleqof{\posA\cartprod \posB}\tup{\R{\posgenAel_2},\R{\posgenBel_2}} \\
-              & =\catid_{\posA\cartprod \posB}\left( \tup{\F{\posgenAel_1},\F{\posgenBel_1}}^*,\tup{\R{\posgenAel_2},\R{\posgenBel_2}}\right).
+              & =\catid_{\posA\cartprod \posB}\left( \tup{\F{\posgenAel_1},\F{\posgenBel_1}}\opel,\tup{\R{\posgenAel_2},\R{\posgenBel_2}}\right).
         \end{aligned}
     \end{equation}
     Furthermore, consider the design problems
@@ -399,9 +81,9 @@ The diagrammatic representation of the monoidal product is reported in~\cref{fig
         \begin{aligned}
             ~ & \star \left( \tup{\F{\posgenAel_1},\F{\posgenAel_2}}\Fop,\tup{\R{\posgenCel_1},\R{\posgenCel_2}}\right) \\
               & = (\adpa\fthen \adpc)(\F{\posgenAel_1}\Fop,\R{\posgenCel_1})\booland (\adpa\fthen \adpd)(\F{\posgenAel_2}\Fop,\R{\posgenCel_2}) \\
-              & =\left(\bigvee_{\posBel_\styleelements{1}\setin \posB_\stylepos{1}}\left( \adpa(\F{\posgenAel_1^*},\R{\posgenBel_1})\booland \adpc(\F{\posgenBel_1^*},\R{\posgenCel_1})\right)\right) \booland\left(\bigvee_{\posBel_\styleelements{2}\setin \posB_\stylepos{2}}\left( \adpb(\F{\posgenAel_2^*},\R{\posgenBel_2})\booland \adpd(\F{\posgenBel_2^*},\R{\posgenCel_2})\right)\right) \\
-              & =\bigvee_{\posBel_\styleelements{1}\setin \posB_\stylepos{1}}\bigvee_{\posBel_\styleelements{2}\setin \posB_\stylepos{2}} \left(\adpa(\F{\posgenAel_1^*},\R{\posgenBel_1})\booland \adpc(\F{\posgenBel_1^*},\R{\posgenCel_1})\booland \adpa(\F{\posgenAel_2^*},\R{\posgenBel_2})\booland \adpd(\F{\posgenBel_2^*},\R{\posgenCel_2}) \right) \\
-              & =\bigvee_{\tup{\posBel_\styleelements{1},\posBel_\stylepos{2}}\setin \posB_\stylepos{1}\cartprod \posB_\stylepos{2}} \left(\adpa(\F{\posgenAel_1^*},\R{\posgenBel_1})\booland \adpb(\F{\posgenAel_2^*},\R{\posgenBel_2})\booland \adpc(\F{\posgenBel_1^*},\R{\posgenCel_1})\booland \adpd(\F{\posgenBel_2^*},\R{\posgenCel_2}) \right) \\
+              & =\left(\bigvee_{\posBel_\styleelements{1}\setin \posB_\stylepos{1}}\left( \adpa(\F{\posgenAel_1\opel},\R{\posgenBel_1})\booland \adpc(\F{\posgenBel_1\opel},\R{\posgenCel_1})\right)\right) \booland\left(\bigvee_{\posBel_\styleelements{2}\setin \posB_\stylepos{2}}\left( \adpb(\F{\posgenAel_2\opel},\R{\posgenBel_2})\booland \adpd(\F{\posgenBel_2\opel},\R{\posgenCel_2})\right)\right) \\
+              & =\bigvee_{\posBel_\styleelements{1}\setin \posB_\stylepos{1}}\bigvee_{\posBel_\styleelements{2}\setin \posB_\stylepos{2}} \left(\adpa(\F{\posgenAel_1\opel},\R{\posgenBel_1})\booland \adpc(\F{\posgenBel_1\opel},\R{\posgenCel_1})\booland \adpa(\F{\posgenAel_2\opel},\R{\posgenBel_2})\booland \adpd(\F{\posgenBel_2\opel},\R{\posgenCel_2}) \right) \\
+              & =\bigvee_{\tup{\posBel_\styleelements{1},\posBel_\stylepos{2}}\setin \posB_\stylepos{1}\cartprod \posB_\stylepos{2}} \left(\adpa(\F{\posgenAel_1\opel},\R{\posgenBel_1})\booland \adpb(\F{\posgenAel_2\opel},\R{\posgenBel_2})\booland \adpc(\F{\posgenBel_1\opel},\R{\posgenCel_1})\booland \adpd(\F{\posgenBel_2\opel},\R{\posgenCel_2}) \right) \\
               & =\left( (\adpa\mtimescat \adpb)\fthen (\adpc\mtimescat \adpd)\right)\left(\tup{\F{\posgenAel_1},\F{\posgenAel_2}}\Fop,\tup{\R{\posgenCel_1},\R{\posgenCel_2}} \right).
         \end{aligned}
     \end{equation}
@@ -426,12 +108,12 @@ The diagrammatic representation of the monoidal product is reported in~\cref{fig
               One has
               \begin{equation}
                   \begin{aligned}
-                      ~ & \left( \leftunitor_\posA^{-1}\fthen \leftunitor_\posA\right)(\tup{\F{\posgenAel_1^*},\R{\posgenAel_2}}) \\
+                      ~ & \left( \leftunitor_\posA^{-1}\fthen \leftunitor_\posA\right)(\tup{\F{\posgenAel_1\opel},\R{\posgenAel_2}}) \\
                         & =
-                      \bigvee_{\tup{\singletonel,\posAel}\setin  \singleton\cartprod \posA} \leftunitor_\posA^{-1}(\F{\posgenAel_1^*},\tup{\R{\singletonel},\R{\posgenAel}})\booland \leftunitor_\posA(\tup{\F{\singletonel},\FposgenAel}\Fop,\R{\posgenAel_2}) \\
+                      \bigvee_{\tup{\singletonel,\posAel}\setin  \singleton\cartprod \posA} \leftunitor_\posA^{-1}(\F{\posgenAel_1\opel},\tup{\R{\singletonel},\R{\posgenAel}})\booland \leftunitor_\posA(\tup{\F{\singletonel},\FposgenAel}\Fop,\R{\posgenAel_2}) \\
                         & = \bigvee_{\tup{\singletonel,\posAel}\setin  \singleton\cartprod \posA}(\F{\posgenAel_1}\posleq \R{\posgenAel}) \booland \FposgenAel\posleq \R{\posgenAel_2} \\
                         & =\F{\posgenAel_1}\posleq \R{\posgenAel_2} \\
-                        & =\id_\posA(\F{\posgenAel_1^*},\R{\posgenAel_2}).
+                        & =\id_\posA(\F{\posgenAel_1\opel},\R{\posgenAel_2}).
                   \end{aligned}
               \end{equation}
               Similarly, one can show that~$\leftunitor_\posA\fthen \leftunitor_\posA^{-1}=\id_{\singleton \cartprod \posA}$.
