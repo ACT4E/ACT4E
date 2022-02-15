@@ -35,17 +35,15 @@ So for example,
 Essentially, the objects of~$\cCat{\Set}$ will be sets of the form \cref{eq:sets-of-tuples}.
 We also include the empty set~$\Emptyset$ as an object of~$\cCat{\Set}$, as well as a special one-element set~$\stylesets{[ \ ]} \definedas \{ \tup{} \}$ whose single element is the empty tuple.
 
-Furthermore, we make the convention that~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$ denotes the empty set if any of the sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$ are equal to the empty set.
+We make the convention that~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$ denotes the empty set if any of the sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$ are equal to the empty set. In particular, we have for example  $\Emptyset = \cObj{\Emptyset}$. 
 
-The things in a list -- for example,~$\elb$,~$\elc$, and~$\ela$ -- are the \emph{entries} of the list.
-They each come with an index corresponding to their placement in the list (so we can speak of the 1st entry, 2nd entry, and so on).
 
 All of the objects of~$\cCat{\Set}$ are in particular just sets, so we can package them into a category whose morphisms are simply functions between sets.
 
 \begin{ctdefinition}[\cCat{\Set}]
     The category \cCat{\Set} is:
     \begin{itemize}
-        \item Objects: sets of the kind~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$, with~$n \in \natnumbers$;
+        \item Objects: sets which can be represented as~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$, for any $n \in \natnumbers$ and any sets $\setAn{1}, \setAn{2}, \ldots, \setAn{n}$;
         \item Morphisms: ordinary functions between sets;
         \item Composition: the usual composition of functions;
         \item Identities: identity functions.
@@ -61,11 +59,7 @@ Observe that we can turn any set into an object of \cCat{\Set}: given a set~$\se
 whose elements are precisely all the tuples of length one whose entry is an element of~$\setA$.
 This defines a function
 \begin{equation*}
-    \defmapcomma{\mapb}{\Ob_{\Set}}
-    {\to}
-    {\Ob_{\cCat{\Set}}}
-    {\setA }
-    {\cObj{\setA}}
+    \Ob_{\Set} \to \Ob_{\cCat{\Set}}, \ \setA \mapsto \cObj{\setA}
 \end{equation*}
 %\Ob_{\Set} \to \Ob_{\cCat{\Set}}, \setA \mapsto \cObj{\setA}
 which one might call ``bracket''.
@@ -76,7 +70,7 @@ Similarly, given a function~$\mapa \colon \setA \to \setB$ between sets, there i
 \end{equation*}
 This defines a function
 \begin{equation*}
-    \Hom_{\Set}(\setA,\setB) \to \Hom_{\Cat{LSet}}(\stylesets{[\setA]},\stylesets{[\setB]})
+    \Hom_{\Set}(\setA,\setB) \to \Hom_{\cCat{\Set}}(\cObj{\setA},\cObj{\setB})
 \end{equation*}
 for any sets~$\setA$ and~$\setB$; one might also call it ``bracket''.
 
@@ -102,21 +96,20 @@ and
 We define a multiplication for objects of \cCat{\Set}.
 The symbol~$\cprod$ will denote this multiplication in infix notation.
 
-First of all, we set
+Given~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ and~$\cObj{\setBn{1},  \ldots, \setBn{n}}$ we define
+an operation
 \begin{equation*}
-    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \Emptyset = \Emptyset.
+\cprod \colon \Ob_{\cCat{\Set}} \times \Ob_{\cCat{\Set}} \to \Ob_{\cCat{\Set}}
 \end{equation*}
-and
-\begin{equation*}
-    \Emptyset \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} = \Emptyset
-\end{equation*}
-
-More generally, given~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ and~$\cObj{\setBn{1},  \ldots, \setBn{n}}$ we define
+by 
 \begin{equation}
     \label{eq:strict-monoidal-product-sets}
-    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} \definedas \cObj{\setAn{1}, \ldots, \setAn{m}, \setBn{1},  \ldots, \setBn{n}}.
+    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} \definedas \cObj{\setAn{1}, \ldots, \setAn{m}, \setBn{1},  \ldots, \setBn{n}}
 \end{equation}
-In other words, when both factors are non-empty, the elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}}$ are all possible concatenations of elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ with elements of~$\cObj{\setBn{1}, \ldots, \setBn{n}}$.
+for any $n, m \in \natnumbers$. 
+
+
+When both factors are non-empty, the elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}}$ are all possible concatenations of elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ with elements of~$\cObj{\setBn{1}, \ldots, \setBn{n}}$.
 
 Equation \cref{eq:strict-monoidal-product-sets} holds in particular also in the cases when~$m = 0$ or~$n =0$:
 \begin{equation*}
@@ -127,8 +120,17 @@ and
     \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{ \ } = \cObj{\setAn{1}, \ldots, \setAn{m}}.
 \end{equation*}
 
+Also, writing $\Emptyset = \cObj{\Emptyset}$ we find that 
+\begin{equation*}
+    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \Emptyset = \Emptyset
+\end{equation*}
+and
+\begin{equation*}
+    \Emptyset \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} = \Emptyset.
+\end{equation*}
+
 \begin{remark}
-    The multiplication of objects in~$\cCat{\Set}$ is associative: both
+    The multiplication of objects in~$\cCat{\Set}$ is associative (which was our goal with this construction). Both
     \begin{equation*}
         ( \cObj{\setAn{1}, \ldots, \setAn{l}} \cprod \cObj{\setBn{1}, \ldots, \setBn{m}}) \cprod \cObj{\setCn{1}, \ldots, \setCn{n}}
     \end{equation*}
