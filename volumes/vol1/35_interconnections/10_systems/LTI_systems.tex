@@ -1,6 +1,5 @@
 % !TEX root = chapter-standalone.tex
 
-
 \section{LTI systems}
 \label{sec:LTI-systems}
 
@@ -14,7 +13,7 @@ We now define LTI systems.
         \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn} \\
         \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:LTI-system-ro},
     \end{align}
-    and an \emph{initial state}~$\mat{x}(0)\in \prst$, where~$t \setin \reals_{\geq 0}$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}\colon \prst \to \prst$,~$\mat{B}\colon \prin \to \prst$,~$\mat{C}\colon \prst \to \prout$,~$\mat{D}\colon \prin \to \prout$ are~$\reals$-linear maps (we are identifying the tangent space of~$\prst$ with~$\prst$ itself).
+    and an \emph{initial state}~$\prstart\in \prst$, where~$t \setin \reals_{\geq 0}$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}\colon \prst \to \prst$,~$\mat{B}\colon \prin \to \prst$,~$\mat{C}\colon \prst \to \prout$,~$\mat{D}\colon \prin \to \prout$ are~$\reals$-linear maps (we are identifying the tangent space of~$\prst$ with~$\prst$ itself).
 \end{definition}
 
 We compactly refer to a LTI system by writing it as a tuple~$\genericlti{}$.
@@ -25,13 +24,13 @@ We will call an LTI system \emph{proper} if, in \cref{eq:LTI-system-ro},~$\mat{D
     \label{def:equivalence_lti}
     Two LTI systems~$\genericlti{\mora}$ and~$\genericlti{\morb}$ are \emph{equivalent} if and only if there exists an invertible linear transformation~$\mat{x}_\morb(t)=T\mat{x}_\mora(t)$ such that
     \begin{equation*}
-        \mat{A}_\morb = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \ \mat{B}_\morb = \mat{T}\mat{B}_\mora, \ \mat{C}_\morb =\mat{C}_\mora\mat{T}^{-1},\ \mat{D}_\morb=\mat{D}_\mora, \ \mat{x}_\morb(0)=\mat{T}\mat{x}_\mora(0).
+        \mat{A}_\morb = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \ \mat{B}_\morb = \mat{T}\mat{B}_\mora, \ \mat{C}_\morb =\mat{C}_\mora\mat{T}^{-1},\ \mat{D}_\morb=\mat{D}_\mora, \ \prstart_\morb=\mat{T}\prstart_\mora.
     \end{equation*}
     $\mat{T}$ is called an \emph{equivalence transformation}.
 \end{definition}
 
-We think of equivalent LTI-systems as different ways of specifying what is essentially ``the same system''. What is different in each specification is only different by a change of coordinates. 
-
+We think of equivalent LTI-systems as different ways of specifying what is essentially ``the same system''.
+What is different in each specification is only different by a change of coordinates.
 
 \subsection{Category of LTI systems}
 
@@ -55,10 +54,10 @@ We define a category of LTI systems \LTI.
               their composition~$(\mora \mthen \morb)\colon \styleobj{a}\mto \styleobj{c}$ is the LTI system~$\genericlti{}$, where
               \begin{equation}
                   \begin{aligned}
-                      \mat{x}(0) & =\begin{bmatrix}
-                                        \mat{x}_\mora(0) \\
-                                        \mat{x}_\morb(0) \\
-                                    \end{bmatrix},\quad
+                      \prstart & =\begin{bmatrix}
+                                      \prstart_\mora \\
+                                      \prstart_\morb \\
+                                  \end{bmatrix},\quad
                       \mat{A}=\begin{bmatrix}
                                   \mat{A}_\mora              & \mat{0}       \\
                                   \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
@@ -67,9 +66,9 @@ We define a category of LTI systems \LTI.
                                   \mat{B}_\mora \\
                                   \mat{B}_\morb\mat{D}_\mora
                               \end{bmatrix}, \\
-                      \mat{C}    & =\begin{bmatrix}
-                                        \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
-                                    \end{bmatrix}, \quad
+                      \mat{C}  & =\begin{bmatrix}
+                                      \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+                                  \end{bmatrix}, \quad
                       \mat{D}=\mat{D}_\morb\mat{D}_\mora.
                   \end{aligned}
               \end{equation}
@@ -83,15 +82,17 @@ We define a category of LTI systems \LTI.
 \end{exercise}
 \begin{solution}
     We start with associativity.
-
     Consider morphisms~$\mora \colon \styleobj{l}\mto \styleobj{m}$ given by~$\genericlti{\mora}$,~$\morb\colon \styleobj{m}\mto \styleobj{n}$ given by~$\genericlti{\morb}$, and~$\morc\colon \styleobj{n}\mto \styleobj{o}$ given by~$\genericlti{\morc}$.
-
-    The morphism~$\mora\mthen \morb$ is described by the LTI~$\genericlti{\mora,\morb}$, where
+    The morphism~$\mora\mthen \morb$ is described by the LTI
+    \begin{equation*}
+        \genericlti{\mora,\morb},
+    \end{equation*}
+    where
     \begin{widepar}
         \begin{equation}
-            \mat{x}_{\mora,\morb}(0)=\begin{bmatrix}
-                \mat{x}_\mora(0) \\
-                \mat{x}_\morb(0)
+            \prstart_{\mora,\morb}=\begin{bmatrix}
+                \prstart_\mora \\
+                \prstart_\morb
             \end{bmatrix},\quad
             \mat{A}_{\mora,\morb}=\begin{bmatrix}
                 \mat{A}_\mora              & \mat{0}       \\
@@ -107,16 +108,20 @@ We define a category of LTI systems \LTI.
             \mat{D}_{\mora,\morb}=\mat{D}_\morb\mat{D}_\mora.
         \end{equation}
     \end{widepar}
-    The morphism~$(\mora\mthen \morb)\mthen \morc$ is described by~$\genericlti{(\mora,\morb),\morc}$, where:
+    The morphism~$(\mora\mthen \morb)\mthen \morc$ is described by
+    \begin{equation*}
+        \genericlti{(\mora,\morb),\morc},
+    \end{equation*}
+    where:
     \begin{widepar}
         \begin{equation}
             \label{eq:assoc_lti_1}
             \begin{aligned}
-                \mat{x}(0)_{(\mora,\morb),\morc} & =\begin{bmatrix}
-                                                        \mat{x}_\mora(0) \\
-                                                        \mat{x}_\morb(0) \\
-                                                        \mat{x}_\morc(0)
-                                                    \end{bmatrix},\quad
+                \prstart_{(\mora,\morb),\morc} & =\begin{bmatrix}
+                                                      \prstart_\mora \\
+                                                      \prstart_\morb \\
+                                                      \prstart_\morc
+                                                  \end{bmatrix},\quad
                 \mat{A}_{(\mora,\morb),\morc}=\begin{bmatrix}
                                                   \mat{A}_\mora                           & \mat{0}                    & \mat{0}       \\
                                                   \mat{B}_\morb\mat{C}_\mora              & \mat{A}_\morb              & \mat{0}       \\
@@ -127,19 +132,23 @@ We define a category of LTI systems \LTI.
                                                   \mat{B}_\morb\mat{D}_\mora \\
                                                   \mat{B}_\morc\mat{D}_\morb\mat{D}_\mora
                                               \end{bmatrix}, \\
-                \mat{C}_{(\mora,\morb),\morc}    & =\begin{bmatrix}
-                                                        \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
-                                                    \end{bmatrix}, \
+                \mat{C}_{(\mora,\morb),\morc}  & =\begin{bmatrix}
+                                                      \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
+                                                  \end{bmatrix}, \
                 \mat{D}_{(\mora,\morb),\morc}=\mat{D}_\morc\mat{D}_\morb\mat{D}_\mora.
             \end{aligned}
         \end{equation}
     \end{widepar}
-    On the other hand, the morphism~$\morb\mthen \morc$ is described by~$\genericlti{\morb,\morc}$, where:
+    On the other hand, the morphism~$\morb\mthen \morc$ is described by
+    \begin{equation*}
+        \genericlti{\morb,\morc},
+    \end{equation*}
+    where:
     \begin{widepar}
         \begin{equation}
-            \mat{x}_{\morb,\morc}(0)=\begin{bmatrix}
-                \mat{x}_\morb(0) \\
-                \mat{x}_\morc(0)
+            \prstart{\morb,\morc}=\begin{bmatrix}
+                \prstart_\morb \\
+                \prstart_\morc
             \end{bmatrix},\
             \mat{A}_{\morb,\morc}=\begin{bmatrix}
                 \mat{A}_\morb              & \mat{0}       \\
@@ -155,16 +164,20 @@ We define a category of LTI systems \LTI.
             \mat{D}_{\morb,\morc}=\mat{D}_\morc\mat{D}_\morb.
         \end{equation}
     \end{widepar}
-    Furthermore, the morphism~$\mora\mthen (\morb\mthen \morc)$ is described by~$\genericlti{\mora,(\morb,\morc)}$, where:
+    Furthermore, the morphism~$\mora\mthen (\morb\mthen \morc)$ is described by
+    \begin{equation*}
+        \genericlti{\mora,(\morb,\morc)},
+    \end{equation*}
+    where:
     \begin{widepar}
         \begin{equation}
             \begin{aligned}
                 \label{eq:assoc_lti_2}
-                \mat{x}(0)_{(\mora,\morb),\morc} & =\begin{bmatrix}
-                                                        \mat{x}_\mora(0) \\
-                                                        \mat{x}_\morb(0) \\
-                                                        \mat{x}_\morc(0)
-                                                    \end{bmatrix},\quad
+                \prstart_{(\mora,\morb),\morc} & =\begin{bmatrix}
+                                                      \prstart_\mora \\
+                                                      \prstart_\morb \\
+                                                      \prstart_\morc
+                                                  \end{bmatrix},\quad
                 \mat{A}_{\mora,(\morb,\morc)}=\begin{bmatrix}
                                                   \mat{A}_\mora                           & \mat{0}                    & \mat{0}       \\
                                                   \mat{B}_\morb\mat{C}_\mora              & \mat{A}_\morb              & \mat{0}       \\
@@ -175,9 +188,9 @@ We define a category of LTI systems \LTI.
                                                   \mat{B}_\morb\mat{D}_\mora \\
                                                   \mat{B}_\morc\mat{D}_\morb\mat{D}_\mora
                                               \end{bmatrix}, \\
-                \mat{C}_{\mora,(\morb,\morc)}    & =\begin{bmatrix}
-                                                        \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
-                                                    \end{bmatrix}, \
+                \mat{C}_{\mora,(\morb,\morc)}  & =\begin{bmatrix}
+                                                      \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
+                                                  \end{bmatrix}, \
                 \mat{D}_{\mora,(\morb,\morc)}=\mat{D}_\morc\mat{D}_\morb\mat{D}_\mora.
             \end{aligned}
         \end{equation}
@@ -223,7 +236,7 @@ We define a category of LTI systems \LTI.
               where~$\mat{s}_\mora$ is the unique solution of the initial value problem
               \begin{align*}
                   \dot{\mat{x}}(t) & = \mat{A}_\mora \mat{x}(t) + \mat{B}_\mora\mat{u}(t) \\
-                  \mat{x}(0)       & =\mat{x}_\mora(0).
+                  \prstart         & = \prstart_\mora.
               \end{align*}
     \end{compactitem}
 \end{definition}
@@ -251,7 +264,7 @@ We define a category of LTI systems \LTI.
         \label{eq:lti_action_1}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\mora \mthen \morb}\mat{x}(t)+\mat{B}_{\mora \mthen \morb}\mat{u}(t), \\
-            \mat{x}(0)       & =\mat{x}_{\mora \mthen \morb}(0),
+            \prstart         & = \prstart_{\mora \mthen \morb},
         \end{aligned}
     \end{equation}
     and
@@ -281,10 +294,11 @@ We define a category of LTI systems \LTI.
             %                                                               \mat{x}_\mora(t) \\
             %                                                               \mat{x}_\morb(t)
             %                                                           \end{bmatrix}+ \mat{D}_\morb\mat{D}_\mora\mat{u}_{\mora \mthen \morb}(t) \\
-            \mat{x}(0)                                & =
+            \prstart                                  & =
             \begin{bmatrix}
-                \mat{x}_\mora(0) \\
-                \mat{x}_\morb(0)\end{bmatrix}.
+                \prstart_\mora \\
+                \prstart_\morb
+            \end{bmatrix}.
         \end{aligned}
     \end{equation}
     By instead looking at~$\funmorspace{\act}(\mora)$ one has
@@ -300,7 +314,7 @@ We define a category of LTI systems \LTI.
     \begin{equation}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}(t), \\
-            \mat{x}(0)       & =\mat{x}_{\mora}(0),
+            \prstart         & = \prstart_{\mora},
         \end{aligned}
     \end{equation}
     and by looking at~$\funmorspace{\act}(\morb)$ one has
@@ -316,7 +330,7 @@ We define a category of LTI systems \LTI.
     \begin{equation}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\morb}\mat{x}(t)+\mat{B}_{\morb}\mat{u}(t), \\
-            \mat{x}(0)       & =\mat{x}_{\morb}(0).
+            \prstart         & = \prstart_{\morb}.
         \end{aligned}
     \end{equation}
     Clearly, considering~$\funmorspace{\act}(\mora)\mthen \funmorspace{\act}(\morb)$ is equivalent to considering~$\mat{u}_\morb=\funmorspace{\act}(\mora)(\mat{u}_\mora)$.
@@ -327,10 +341,9 @@ We define a category of LTI systems \LTI.
         {\mto}
         {\diffun(\nonNegReals,\reals^\styleobj{o})}
         {\mat{u}}
-        {\begin{bmatrix} \mat{D}_\morb \mat{C}_\mora & \mat{C}_\morb\end{bmatrix}\begin{bmatrix} \mat{s}_\mora \\ \mat{s}_\morb \end{bmatrix}+ \mat{D}_\morb \mat{D}_\mora \mat{u}}
+        {\begin{bmatrix} \mat{D}_\morb \mat{C}_\mora & \mat{C}_\morb\end{bmatrix}\begin{bmatrix} \mat{s}_\mora \\ \mat{s}_\morb \end{bmatrix}+ \mat{D}_\morb \mat{D}_\mora \mat{u}},
     \end{equation*}
-
-    \cref{eq:lti_action_12}, proving the statement.
+    proving the statement.
 \end{proof}
 
 \begin{lemma}
@@ -347,7 +360,7 @@ We define a category of LTI systems \LTI.
         \label{eq:first_lti_equiv}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}(t), \\
-            \mat{x}(0)       & =\mat{x}_\mora(0).
+            \prstart         & = \prstart_\mora.
         \end{aligned}
     \end{equation}
     Let~$\mat{s}(t)$ be the solution of \cref{eq:first_lti_equiv}.
@@ -361,14 +374,14 @@ We define a category of LTI systems \LTI.
                              & =\mat{A}_\morb\mat{r}(t)+\mat{B}_\morb \mat{u}(t),
         \end{aligned}
     \end{equation*}
-    and~$\mat{r}(0)=\mat{T}\mat{s}(0)=\mat{T}\mat{x}_\mora$.
+    and~$ \prstart_\morb=\mat{T} \prstart_\mora$.
     Therefore, the action of the system~$\genericlti{\morb}$ is:
     \begin{equation*}
         \begin{aligned}
             \funmorspace{\act}(\morb)(\mat{u}(t)) & =\mat{C}_\morb \mat{r}(t)+ \mat{D}_\morb \mat{u}(t) \\
                                                   & =\mat{C}_\mora \mat{T}^{-1}\mat{T}\mat{s}+\mat{D}_\mora \mat{u}(t) \\
                                                   & =\mat{C}_\mora \mat{s}(t)+\mat{D}_\mora \mat{u}(t) \\
-                                                  & =\catacMor_\LTI(\mora)(\mat{u}(t)).
+                                                  & =\funmorspace{\act}(\mora)(\mat{u}(t)).
         \end{aligned}
     \end{equation*}
 \end{proof}
@@ -393,6 +406,8 @@ We define a category of LTI systems \LTI.
     \end{equation*}
     where~$\alpha \in \reals$, because the output~$\mat{y}$ generation does not care about the second component of~$\mat{x}$.
     However, there is no linear, invertible transformation which relates these systems.
+    Note that control theory has developed tools to deal with hidden parts of the dynamics.
+    Examples are the notion of controllability (ability of an actuator/input to control all states of a system) and observability (ability to estimate all states of the system).
 \end{proof}
 
 \devel{
@@ -416,5 +431,4 @@ We define a category of LTI systems \LTI.
     %   \prdyn = \{ \tup{ \tup{\mat{u}, \mat{x}} \mat{v}} \mid \mat{E} \mat{v} = \mat{A}\mat{x} + \mat{B}\mat{u} \}.
     %\end{equation*}
 
-   
- }
+}
