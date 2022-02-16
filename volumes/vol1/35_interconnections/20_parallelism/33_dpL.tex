@@ -7,40 +7,43 @@
         \item \emph{Objects:}
               posets of tuples.
         \item \emph{Morphisms:}
-              A morphism from~$\posA =\cObj{\posA_1,\ldots, \posA_m}$ to~$\posB = \cObj{\posB_1,\ldots, \posB_m}$ is design problem:
+              A morphism from~$\posA =\cObj{\posA_1,\ldots, \posA_m}$ to ~$\posB = \cObj{\posB_1,\ldots, \posB_m}$ is design problem:
               \begin{equation*}
-                  \adp\colon \cObj{\posA_1,\ldots, \posA_m}\op \acprod \cObj{\posB_1,\ldots, \posB_m} \toinPos \Bool.
+                  \adp\colon \cObj{\posA\op, \posB} \toinPos \Bool.
               \end{equation*}
         \item \emph{Composition:}
               Composition is the usual composition of design problems.
         \item \emph{Identities:}
-              The identity morphism on an object~$\cObj{\posA_1,\ldots,\posA_n}$ is given by the identity design problem~$\catid_{\cObj{\posA_1,\ldots, \posA_n}}$.
+              The identity morphism on an object~$\posA=\cObj{\posA_1,\ldots,\posA_n}$ is given by the identity design problem~$\catid_\posA$.
     \end{enumerate}
 \end{definition}
+\begin{remark}
+    In other words, \cCat{\DP} is the subcategory of \DP in which objects are of the form presented in \cref{eq:posetoftuples}.
+\end{remark}
 
 Analogously to what we did for~$\cCat{\Set}$ and~$\cCat{\Pos}$, one can define a multiplication operation for~$\cCat{\DP}$.
 Given two design problems
 \begin{equation*}
     \begin{aligned}
-        \adpa\colon \posA\op \acprod \posC & \toinPos \Bool \\
-        \adpb\colon \posB\op \acprod \posD & \toinPos \Bool,
+        \adpa\colon \cObj{\posA\op, \posC} & \toinPos \Bool \\
+        \adpb\colon \cObj{\posB\op, \posD} & \toinPos \Bool,
     \end{aligned}
 \end{equation*}
 one can define
 \begin{equation}
     \label{eq:dpmulti}
-    \adpa \cprod \adpb \colon \cObj{\posA\op, \posB\op} \acprod \cObj{\posC,\posD}\toinPos \Bool
+    \adpa \cproddp \adpb \colon \cObj{\posA\op, \posB\op,\posC,\posD}\toinPos \Bool
 \end{equation}
 where
 \begin{equation*}
-        (\adpa \cprod \adpb)  (\tup{\posAnel{}\opel,\posBnel{}\opel}, \tup{\posCnel{},\posDnel{}}) 
-                              \definedas\adpa(\posAnel{}\opel,\posCnel{})\booland
-        \adpb(\tup{\posBnel{}\opel,\posDnel{}}).
+    (\adpa \cproddp \adpb)  (\tup{\posAnel{}\opel,\posBnel{}\opel,\posCnel{},\posDnel{}})
+    \definedas\adpa(\tup{\posAnel{}\opel,\posCnel{}})\booland
+    \adpb(\tup{\posBnel{}\opel,\posDnel{}}).
 \end{equation*}
 
-We now consider the stacking operation on objects we considered for \cCat{\Pos}, and the stacking operation on morphism defined as
+We now consider the stacking operation on objects we considered for~$\cCat{\Pos}$, and the stacking operation on morphism defined as
 \begin{equation*}
-    \defmapcomma{\mtimescatmor}{\Mor_{\cCat{\DP}} \cartprod \Mor_{\cCat{\DP}}}{\mto}{\Mor_{\cCat{\DP}}}{\tup{\adpa,\adpb}}{\adpa \cprod \adpb},
+    \defmapcomma{\mtimescatmor}{\Mor_{\cCat{\DP}} \cartprod \Mor_{\cCat{\DP}}}{\mto}{\Mor_{\cCat{\DP}}}{\tup{\adpa,\adpb}}{\adpa \cproddp \adpb},
 \end{equation*}
 
 \begin{lemma}
@@ -49,18 +52,25 @@ We now consider the stacking operation on objects we considered for \cCat{\Pos},
 
 \begin{proof}
     We show that~$\cCat{\DP}$ is an associative stacking semicategory.
-    We first show that it is a stacking category.
-
-    To show that the two operations are compatible, we start from
+    We first show that it is a stacking category, by first showing that the stacking operations indeed fulfill \cref{def:simple-stacking-semi-cat}, and then showing the compatibility condition.
+    The stacking operation on objects fulfills \cref{def:simple-stacking-semi-cat}, since, given two posets of tuples it returns a poset of tuples.
+    To show that the stacking operation on morphism fulfills \cref{def:simple-stacking-semi-cat}, we need to show that given design problems~$\adpa,\adpb$, the morphism~$\adpa \mtimescatmor \adpb$ is a design problem.
+    This is easy to show, by leveraging the fact that~$\adpa$ and~$\adpb$ are design problems.
+    We know that
     \begin{equation*}
-        \prfperiod{\adpa\colon \posA\op \acprod \posC \toinPos \Bool}
-        {\adpb\colon \posB\op \acprod \posD\toinPos \Bool}
-        {\adpa \cprod \adpb \colon \cObj{\posA\op, \posB\op} \cprod \cObj{\posC,\posD}\toinPos \Bool}
+        \prfcomma{\tup{\posAnel{}\opel,\posBnel{}\opel,\posCnel{},\posDnel{}} \posleqof{\cObj{\posA\op, \posB\op,\posC,\posD}} \tup{{\posAnel{}'}\opel,{\posBnel{}'}\opel,\posCnel{}',\posDnel{}'}}
+        {(\posAnel{}\opel \posleqof{\posA\op} {\posAnel{}'}\opel) \booland (\posBnel{}\opel \posleqof{\posB\op} {\posBnel{}'}\opel)\booland (\posCnel{}\posleqof{\posC}\posCnel{}')\booland (\posDnel{}\posleqof{\posD}\posDnel{}')}
+    \end{equation*}
+    and that~$\booland$ is a monotone operator.
+    Therefore,~$\adpa \cproddp \adpb$ is a design problem.
+    Furthermore, the two stacking operations are compatible:
+    \begin{equation*}
+        \prfperiod{\adpa\colon \cObj{\posA\op, \posC} \toinPos \Bool}
+        {\adpb\colon \cObj{\posB\op, \posD}\toinPos \Bool}
+        {\adpa \cproddp \adpb \colon \cObj{\posA\op, \posB\op,\posC,\posD}\toinPos \Bool}
     \end{equation*}
 
-    The crucial part to show is that~$\adpa \cprod \adpb$ is a design problem.
-    This is easy to show, by leveraging the fact that~$\adpa$ and~$\adpb$ are design problems.
-    We start with the first implication.
+    \begin{comment}
     For brevity, we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$,~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$,~$\posCnel{}=\tup{\posCnel{1},\ldots, \posCnel{o}}$, and~$\posDnel{}=\tup{\posDnel{1},\ldots, \posDnel{t}}$.
     One has:
     \begin{equation*}
@@ -106,8 +116,8 @@ We now consider the stacking operation on objects we considered for \cCat{\Pos},
         }
     \end{equation*}
     Therefore,~$\adpa \cprod \adpb$ is really a design problem.
-
-    Associativity can be shown following what we did for \Set.
+    \end{comment}
+    Associativity can be shown following what we did for~$\cObj{\Set}$.
 \end{proof}
 
 \begin{lemma}[\cCat{\DP} is functorial stacking]
