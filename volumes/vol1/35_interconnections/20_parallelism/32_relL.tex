@@ -12,24 +12,25 @@ We can define a multiplication operation for relations.
 Consider
 \begin{equation*}
     \begin{aligned}
-        \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} & \mto_{\cCat{\Rel}}\cObj{\setBn{1},\ldots, \setBn{n}}, \\
-        \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} & \mto_{\cCat{\Rel}}\cObj{\setDn{1},\ldots, \setDn{p}}.
+        \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} & \mtoin{\cCat{\Rel}}\cObj{\setBn{1},\ldots, \setBn{n}}, \\
+        \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} & \mtoin{\cCat{\Rel}}\cObj{\setDn{1},\ldots, \setDn{p}}.
     \end{aligned}
 \end{equation*}
 One has
 \begin{equation*}
-    \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mto_{\cCat{\Rel}}
+    \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mtoin{\cCat{\Rel}}
     \cObj{\setBn{1},\ldots, \setBn{n}}\cprod \cObj{\setDn{1},\ldots, \setDn{p}}.
 \end{equation*}
 Specifically, the multiplication is given by:
-\begin{equation*}
+\begin{equation}
+    \label{eq:multiofrels}
     \defmapperiod{\mtimescatmor}
     {\Mor_{\cCat{\Rel}}\cartprod \Mor_{\cCat{\Rel}}}
     {\mto}
     {\Mor_{\cCat{\Rel}}}
     {\tup{\relA,\relB}}
     {\{\tup{\setAeln{}\tupconcat \setCeln{},\setBeln{}\tupconcat \setDeln{}} \mid \tup{\setAeln{},\setBeln{}}\setin \relA \booland \tup{\setCeln{},\setDeln{}}\setin \relB\}}
-\end{equation*}
+\end{equation}
 
 \begin{definition}[The category~$\cCat{\Rel}$]
     \label{def:RelL}
@@ -47,18 +48,72 @@ Specifically, the multiplication is given by:
 
 \begin{exercise}
     \label{ex:relassocstack}
-    Consider the stacking operation on objects we have defined for \cCat{\Set}, and define a stacking operation on morphisms, such that \cCat{\Rel} is associative stacking.
+    Consider the stacking operations on objects and on morphisms introduced in this section.
+    Prove that~$\cCat{\Rel}$ is associative stacking.
 \end{exercise}
 
 \begin{solution}
-    \todo{to write}
+    To prove the statement we first check that the stacking operations satisfy \cref{def:simple-stacking-semi-cat}, we then show that they are compatible, and finally show associativity.
+    The stacking operation on objects was already checked for~$\cCat{\Set}$.
+    The stacking operation on morphisms clearly returns a valid relation.
+    Furthermore, compatibility is satisfied:
+    \begin{equation*}
+        \prfperiod{
+            \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} \mtoin{\cCat{\Rel}}\cObj{\setBn{1},\ldots, \setBn{n}}
+        }
+        {
+            \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} \mtoin{\cCat{\Rel}}\cObj{\setDn{1},\ldots, \setDn{p}}
+        }
+        {
+            \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mtoin{\cCat{\Rel}}
+            \cObj{\setBn{1},\ldots, \setBn{n}}\cprod \cObj{\setDn{1},\ldots, \setDn{p}}
+        }
+    \end{equation*}
+    Finally, associativity for the operation on objects was already shown for~$\cCat{\Set}$.
+    The stacking operation on morphisms follows directly from \cref{eq:multiofrels}.
 \end{solution}
 \begin{exercise}
     \label{ex:relfuncstack}
-    Prove that the structure defined in \cref{ex:relassocstack} makes \cCat{\Rel} functorial stacking.
+    Prove that the structure defined in \cref{ex:relassocstack} makes~$\cCat{\Rel}$ functorial stacking.
 \end{exercise}
 
 \begin{solution}
-    \todo{to write}
+    Consider
+    \begin{equation*}
+        \begin{aligned}
+            \relA\colon \setA & \mtoin{\cCat{\Rel}} \setB \\
+            \relB\colon \setD & \mtoin{\cCat{\Rel}} \setE \\
+            \relC\colon \setB & \mtoin{\cCat{\Rel}} \setC \\
+            \relD\colon \setE & \mtoin{\cCat{\Rel}} \setF \\
+        \end{aligned}
+    \end{equation*}
+    We want to prove that
+    \begin{equation*}
+        (\relA \mthen \relC) \mtimescatmor (\relB \mthen \relD)=(\relA \mtimescatmor \relB) \mthen (\relC \mtimescatmor \relD).
+    \end{equation*}
+    Recall that
+    \begin{equation*}
+        \relA \mthen \relC =\{ \tup{\setAel, \setCel}\in \setA\cartprod \setC \mid \exists \setBel \in \setB \colon (\tup{\setAel,\setBel}\setin \relA) \booland (\tup{\setBel, \setCel} \setin \relC)\}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \relB \mthen \relD =\{ \tup{\setDel, \setFel}\in \setD\cartprod \setF \mid \exists \setEel \in \setE \colon (\tup{\setDel,\setEel}\setin \relB) \booland (\tup{\setEel, \setFel} \setin \relD)\}
+    \end{equation*}
+    Therefore:
+    \begin{equation*}
+        \begin{aligned}
+            (\relA \mthen \relC) \mtimescatmor (\relB \mthen \relD) & =\{\tup{\setAeln{}\tupconcat \setDeln{},\setCeln{}\tupconcat \setFeln{}} \mid (\tup{\setAeln{},\setCeln{}}\setin \relA\mthen \relC) \booland (\tup{\setDeln{},\setFeln{}}\setin \relB\mthen \relD)\}
+        \end{aligned}
+    \end{equation*}
+    On the other hand, one has:
+    \begin{widepar}
+        \begin{equation*}
+            \begin{aligned}
+                 & (\relA \mtimescatmor \relB) \mthen (\relC \mtimescatmor \relD) \\
+                 & =\{\tup{\setAeln{}\tupconcat \setDeln{},\setCeln{}\tupconcat \setFeln{}} \mid \exists \setBel \tupconcat \setEel \in \cObj{\setB,\setE} \colon  (\tup{\setAeln{}\tupconcat \setCeln{},\setBeln{}\tupconcat \setEeln{}}\setin \relA\mtimescatmor \relB) \booland (\tup{\setBeln{}\tupconcat \setEeln{}, \setCeln{}\tupconcat \setFeln{}}\setin \relC\mtimescatmor \relD)\}
+            \end{aligned}
+        \end{equation*}
+        which shows the equivalence.
+    \end{widepar}
 \end{solution}
 
