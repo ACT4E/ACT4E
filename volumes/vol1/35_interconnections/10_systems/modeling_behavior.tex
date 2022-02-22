@@ -2,8 +2,6 @@
 
 \section{Modeling behavior}
 
-\todotext{the below needs editing/rewriting}
-
 We present here a general-purpose formalization of system behaviors, using relations between signals.
 This is certainly not the only way one might model system behaviors; we choose to introduce this model because it provides a flexible yet unified view on many different types of behaviors.
 
@@ -101,19 +99,20 @@ The action of this functor on morphisms is
     }
 \end{equation}
 
-In general, we will work with signal spaces of the form $\stylefunctors{S}(\prinL)$, where $\stylefunctors{S}$ is some functor which encodes how to build a space of signals from an initial set of space $\prinL$.
+In general, we will work with signal spaces of the form $\signalsin{\prinL}$, where $\signals$ is some (semi)functor which encodes how to build a space of signals from an initial set of space $\prinL$.
 
 \subsection{Behaviors}
 
 \todotext{@J: rewrite this section}
 
-Given a set $\Obja$, we consider the set $\Obja^\Time$ of functions $\Time \to \Obja$ as the set of time-dependent signals taking values in the set $\Obja$.
-Then a system behavior is, for example, a function $\styleobj{U}^\Time \to \styleobj{Y}^\Time$.
-For more flexibility in our formalism, we will also allow behaviors which are \emph{relations} $\styleobj{U}^\Time \to \styleobj{Y}^\Time$.
-In other words, in general, the externally observable behavior of a system is a relation between input signals and output signals.
+In the context of Moore machines, we said that the behavior of a machine $\prinL \to \proutL$ might be modeled via an action as a function $\prinL^\natnumbers \to \proutL^\natnumbers$ or $\listsof{\prinL} \to \listsof{\proutL}$.
+More generally, we can consider actions which produce a function $\signalsin{\prinL} \to \signalsin{\proutL}$, where $\signals$ is some chosen construction of signal spaces.
+
+In some cases, we will want to not only consider actions (which, by definition are functors into the category $\Set$), but also other categories for modeling notions of behavior.
+In the following we will use categories of relations as general-purpose settings for modeling behaviors of systems.
 
 \begin{definition}
-    Let $\signalsin{\Obja}$ and $\signalsin{\Objb}$ be spaces of signals with values in the sets $\Obja$ and~$\Objb$, respectively.
+    Let $\signalsin{\Obja}$ and $\signalsin{\Objb}$ be sets which model signals with values in $\Obja$ and~$\Objb$, respectively.
     An \emph{input-output behavior}, with input space $\Obja$ and output space $\Objb$, is a relation
     \begin{equation*}
         \relA \subseteq \signalsin{\Obja} \cartprod \signalsin{\Objb}.
@@ -121,11 +120,10 @@ In other words, in general, the externally observable behavior of a system is a 
 \end{definition}
 
 \begin{definition}
-    Let $\signals$ be a functor for building signal spaces.
-    The category~$\Beh_\signals$ of input-output behaviors is the category where:
+    Given a semicategory $\CatC$ (modeling some systems) and a semifunctor $\signals: \CatC \to \Set$ (modeling sets of signals), we define the category~$\Beh_\signals$ of input-output behaviors with respect to $\signals$ as the category where:
     \begin{enumerate}
-        \item Objects consist of all sets of the form~$\signalsin{\Obja}$, with~$\Obja$ ranging over all sets.
-        \item Morphisms from~$\signalsin{\Obja}$ to~$\signalsin{\Objb}$ are relations from~$\signalsin{\Obja}$ to~$\signalsin{\Obja}$:
+        \item Objects consist of all sets of the form~$\signalsin{\Obja}$, with~$\Obja$ ranging over all objects of $\CatC$.
+        \item Morphisms from~$\signalsin{\Obja}$ to~$\signalsin{\Objb}$ are relations from~$\signalsin{\Obja}$ to~$\signalsin{\Objb}$:
               \begin{equation}
                   \HomSet{\Beh_\signals}{\signalsin{\Obja}}{\signalsin{\Objb}} = \powerset (\signalsin{\Obja} \cartprod \signalsin{\Objb}).
               \end{equation}
@@ -138,7 +136,9 @@ In other words, in general, the externally observable behavior of a system is a 
 
 \todotext{J: @J: include LTI action as an example}
 
-\todotext{J: are there examples where we might want to consider a construction $\signals$ which is distinct from the action functor itself??}
+\todotext{J: are there examples where we might want to consider a construction $\signals$ which is distinct from the action functor itself?}
+
+\todotext{J: include an example where indeterminacy is involved in the behavior}
 
 \subsection{Linear behaviors}
 
@@ -161,4 +161,3 @@ which are~$\field$-linear relations.
 \end{definition}
 
 \todotext{J: @J: remark that LTI action as an example that has linear behaviors}
-
