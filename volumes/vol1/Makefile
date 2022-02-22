@@ -5,6 +5,13 @@ all:
 	@echo 	make -B ACT4E-vol2.pdf
 	@echo Create the chached tikz using \"make tikz\".
 
+all-new:
+	@echo do
+	@echo 	make -B ACT4E-devel-slow.pdf
+	@echo 	make -B ACT4E-public-slow.pdf
+	@echo 	make -B ACT4E-instructors-slow.pdf
+	@echo Create the chached tikz using \"make tikz\".
+
 
 tmpdir=tmp
 
