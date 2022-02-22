@@ -21,9 +21,14 @@ The arrow means ``inherits from''.
     \label{fig:Setoid-inheritance}
 \end{marginfigure}
 
+\subsection*{Setoids}
+
 \Cref{lst:Setoid} shows the interface for \Setoid.
 
 \classlisting{Setoid}
+
+
+\Setoid is declared ``generic'' in \TypeVar{E}; that represents the type of the elements.
 
 The class \Setoid  derives from \ABC, which means \emph{abstract base class}; it tells the interpreter that some of the methods of the class will have to be implemented by the subclasses.
 This is the equivalent of the ``virtual'' methods in C++.
@@ -46,18 +51,22 @@ This is the semantics of the first three methods:
 There are other methods that have to do with serializing/deserializing the data:
 
 \begin{itemize}
-    \item The method \funcname{save} saves an object into a ``concrete representation'' \ConcreteRepr.
-          By that we mean something that can be serialized to YAML.
+    \item The method \funcname{save} saves an object into a ``concrete representation'', indicated by the placeholder type \ConcreteRepr.
+          We use this type to mean something that can be serialized to YAML.
     \item The method \funcname{load} does the inverse.
 \end{itemize}
 
-Note that YAML supports the following types: \pystr{int}, \pystr{bool}, \pystr{float}, \pystr{datetime},
-, \pystr{dict}, \pystr{list}.
-Most of Python values are representable in YAML.
-The exception is class instances.
-For that you need to come up with a way to represent the data.
-For example, you might have the class \classname{Vector}:
+Note that YAML supports the following types: \pystr{int}, \pystr{bool}, \pystr{float}, \pystr{datetime}, \pystr{dict}, \pystr{list}.
+Python values composed by these types and compositions are directly representable in YAML.
+There are two exceptions to note:
+\begin{itemize}
+\item Class instances;
+\item Tuples.
+\end{itemize}
+If you use internally those types, you need to come up with a way to represent the data.
 
+For example, imagine that you are using internally a class \classname{Vector}:
+%
 \begin{minted}{python}
     @dataclass
     class Vector:
@@ -68,7 +77,7 @@ For example, you might have the class \classname{Vector}:
     a = V(1,2,3)
 \end{minted}
 
-You might choose one of these possible variations for serialization:
+You might choose either of these possible variations for serialization:
 
 \begin{tabular}{ll}
     Serialize as array      &
@@ -85,12 +94,10 @@ You might choose one of these possible variations for serialization:
     \end{minipage}
 \end{tabular}
 
-The \Setoid is the one that knows how to serialize its elements.
+The choice is up to you; and the choice is encoded in the load/save functions of the \Setoid interface.
 
-The code contains also typing annotations.
-The symbol \Element, like the others we will see later, such as \Object and \Morphism, are simple aliases to Python's \classname{object} class; which means that they are not specifying the type at all.
-However, they are useful for intuition.
-The latest versions of Python have supported typing annotations with generics, so we could have chosen to use those and have more accurate typing, however we want these exercises to be accessible to all.
+\subsection*{Enumerable sets}
+
 
 \Cref{lst:EnumerableSet} shows the interface for \EnumerableSet:
 
@@ -102,12 +109,20 @@ The class inherits from \Setoid and adds one methods:
 \end{itemize}
 \Cref{lst:FiniteSet} shows the interface for \FiniteSet.
 
+\subsection*{Finite sets}
+
 \classlisting{FiniteSet}
 
 The additional method:
 \begin{itemize}
     \item The method \funcname{size} returns the size of the set.
 \end{itemize}
+
+
+You will have to implement the \FiniteSet class as part of the exercise.
+
+\subsection*{Representation for finite sets }
+
 
 \begin{marginfigure}
     \begin{minted}{yaml}
@@ -124,10 +139,6 @@ The additional method:
     \caption{We show data formats in YAML because it is terse, but in the exercises you will receive the Python data structure directly.}
     \label{fig:as-python}
 \end{marginfigure}
-
-You will have to implement the \FiniteSet class as part of the exercise.
-
-%\subsection*{Representation}
 
 We have defined formats for all the structures to be used in the exercises.
 The file format for \FiniteSet is shown in \cref{fig:set1}.
@@ -192,12 +203,6 @@ as in \cref{lst:act4e_book_examples.empty}.
 
     \label{lst:act4e_book_examples.empty}
 \end{longcode}
-
-Now modify \files|__init__.py| to import all the symbols from the \files{first} module.
-
-\begin{minted}{python}
-    from .first import *
-\end{minted}
 
 At this point you can check again by typing:
 
