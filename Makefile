@@ -29,8 +29,10 @@ ACT%.pdf: ACT%.tex .FORCE
 	texloganalyser -r $*.log > $*.warnings.txt
 
 clean:
-	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg  *.pyg *.ptc* *.mtc* *.gls *.tdo *.mw *warnings.txt
-
+	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg  *.dep *.pyg *.ptc* *.mtc* *.gls *.tdo *.mw *warnings.txt *.synctex.gz *-tmp.* ACT4E-*.pdf
+	
+	find volumes -name 'chapter*pdf' -delete 
+	find volumes -name 'part*pdf' -delete 
 tikz:
 	touch sag/*pdf
 	make -C sag -j3
