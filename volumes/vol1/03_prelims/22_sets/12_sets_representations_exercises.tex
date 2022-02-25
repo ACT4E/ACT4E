@@ -78,19 +78,18 @@ a = V(1,2,3)
 
 You might choose either of these possible variations for serialization:
 
-\todographics{Not well visualized below.
-}
+
 \begin{tabular}{ll}
     Serialize as array      &
     \begin{minipage}{4cm}
         \begin{minted}{python}
-            [1, 2, 3]
+[1, 2, 3]
         \end{minted}
     \end{minipage} \\
     Serialize as dictionary &
     \begin{minipage}{4cm}
         \begin{minted}{python}
-            {'x': 1, 'y': 2, 'z': 3}
+{'x': 1, 'y': 2, 'z': 3}
         \end{minted}
     \end{minipage}
 \end{tabular}
@@ -125,7 +124,7 @@ You will have to implement the \FiniteSet class as part of the exercise.
 
 \begin{marginfigure}
     \begin{minted}{yaml}
-        elements: [a, b, c]
+elements: [a, b, c]
     \end{minted}
     \caption{Example shown in YAML format.}
     \label{fig:set1}
@@ -133,7 +132,7 @@ You will have to implement the \FiniteSet class as part of the exercise.
 
 \begin{marginfigure}
     \begin{minted}{python}
-        { "elements": ["a", "b", "c"] }
+{"elements": ["a", "b", "c"] }
     \end{minted}
     \caption{We show data formats in YAML because it is terse, but in the exercises you will receive the Python data structure directly.}
     \label{fig:as-python}
@@ -146,36 +145,64 @@ YAML can represent most primitive data format of Python, as well as lists and di
 We visualize the data samples in the book using YAML, but you never have to deal with YAML yourself.
 You can expect to receive a Python data structure as in~\cref{fig:as-python}.
 
+
+Throughout the exercises we will encounter many times classes that must load or save data.
+We describe them through the interfaces of \classname{Loader}, \classname{Saver}, and (union of the two) \classname{Serializer}. The two type parameters \TypeVar{E} and \TypeVar{R} correspond to the Python type that they serialize and to the resulting serialization format.
+For now, you can ignore the argument \pystr{h: IOHelper}.
+
+
+\classlisting{Loader}
+\classlisting{Saver}
+\classlisting{Serializer}
+
+
+In particular, \classname{FiniteSetRepresentation} is a serializer of \classname{FiniteSet}.
+The type \classname{FiniteSet\_desc} is a type that describe the serialization format in \cref{fig:set1}. We don't show it, but you can click through and see the definition in the development environment.
+
+\classlisting{FiniteSetRepresentation}
+
+
 \begin{codeexercise}[\exname{TestFiniteSetRepresentation}]
     \label{ex:setrepr}
     The first exercise is to implement the methods that read and write from this file format.
     You have to implement the interface \FiniteSetRepresentation shown in \cref{lst:FiniteSetRepresentation}.
     As part of the exercise, you will also have to implement a concrete subclass of \FiniteSet.
+
+Check your solution using:
+\begin{console}
+    make check-TestFiniteSetRepresentation
+\end{console}
 \end{codeexercise}
 
-\begin{longcode}
-    \centering
-    \caption{}\label{lst:FiniteSetRepresentation}
-    \classsource{FiniteSetRepresentation}{remove_comments=True}
-\end{longcode}
+% \begin{longcode}
+%     \centering
+%     \caption{}\label{lst:FiniteSetRepresentation}
+%     \classsource{FiniteSetRepresentation}{remove_comments=True}
+% \end{longcode}
 
-For now, you can ignore the argument \pystr{h: IOHelper}.
-That is an interface we will need later when serializing large objects.
 
-%
-\begin{marginfigure}
-    \includesag{dirtree-relevant}
-    \caption{Relevant files for the moment}
-    \label{fig:dirtree-relevant}
-\end{marginfigure}
+% %
+% \begin{marginfigure}
+%     \includesag{dirtree-relevant}
+%     \caption{Relevant files for the moment}
+%     \label{fig:dirtree-relevant}
+% \end{marginfigure}
 
 \subsection{Walk-through for first exercise}
 
 We are going to solve this exercise together.
 
-We assume that you have checked out the repository as explained in the setup section.
+We assume that you have checked out the template repository as explained in the setup section.
 
-Of all the files in the repository, we only need the ones displayed in \cref{fig:dirtree-relevant}.
+% Of all the files in the repository, we only need the ones displayed in \cref{fig:dirtree-relevant}.
+There is already a skeleton implemented in the template in the file \files{act4e_solutions/sets_representation.py}, which contains the following:
+
+\begin{longcode}
+    \caption{}
+    \visualizemodule{act4e_book_examples.initial}{}
+
+    \label{lst:act4e_book_examples.initial}
+\end{longcode}
 
 We can start by checking if this is a valid solution.
 There is a recipe for this in the \files{Makefile}.
@@ -188,13 +215,12 @@ Type this:
 Here \exname{TestFiniteSetRepresentation} is the code name for the exercise.
 You can check other exercises by changing the name.
 
-This will fail; it will complain saying that it didn't even find any code implementing the exercise.
+This will fail; it will complain saying that some parts of the exercise were not implemented.
 
-Create a file called \files{first.py} in the \files|src/act4e_solutions| directory.
-This file will contain the implementation of the classes.
+% Create a file called \files{first.py} in the \files|src/act4e_solutions| directory.
+% This file will contain the implementation of the classes.
 
-For now we are just going to add non-functional code for the classes,
-as in \cref{lst:act4e_book_examples.empty}.
+First, you need to add your implementation of \classname{FiniteSet}. A possible skeleton is in \cref{lst:act4e_book_examples.empty}.
 
 \begin{longcode}
     \caption{}
@@ -208,10 +234,6 @@ At this point you can check again by typing:
 \begin{console}
     make check-TestFiniteSetRepresentation
 \end{console}
-
-The program will tell you that it found the code supposedly implementing the function,
-but that the tests failed.
-All of our functions returned \pystr{None}.
 
 At this point we need to implement the rest of the code.
 
@@ -251,14 +273,14 @@ In fact, the tester will try to call that function with a different implementati
 Note that the implementation above uses this line to get the elements:
 
 \begin{minted}{python}
-    all_elements = sorted(f.elements())
+all_elements = sorted(f.elements())
 \end{minted}
 
 This is correct because it is using the method \funcname{elements} that all implementations of \FiniteSet need to have.
 What could be wrong is using code like the following:
 
 \begin{minted}{python}
-    all_elements = sorted(f._elements)
+all_elements = sorted(f._elements)
 \end{minted}
 
 This code accesses the attribute \pystr|_elements| of the class \classname{MyFiniteSet}.
