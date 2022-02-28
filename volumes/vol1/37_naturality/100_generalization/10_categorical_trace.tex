@@ -9,7 +9,7 @@
 
 \begin{ctdefinition}[Trace of an endomorphism]
     \label{def:trace_endo}
-    Let~$\tup{\CatC,\mtimescat,\idmoncat_{\CatC}, \braiding}$ be a symmetric monoidal category.
+    Let~$\tup{\CatC,\mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor, \braiding}$ be a symmetric monoidal category.
     Let~$\Obja \setin \ObC$ be dualizable and let~$\mora \setin \Hom(\Obja, \Obja)$.
     The \emph{trace} of~$\mora$ is the morphism~$\Tr(\mora) \setin \Hom(\idmoncat, \idmoncat)$ defined by
     \begin{equation}
@@ -47,7 +47,7 @@
 \begin{widepar}
     \begin{ctdefinition}[Trace of a generalized endomorphism]
         \label{def:trace_gen_endo}
-        Let~$\tup{\CatC,\mtimescat,\idmoncat, \braiding}$ be a symmetric monoidal category.
+        Let~$\tup{\CatC,\mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor, \braiding}$ be a symmetric monoidal category.
         Let~$\Obja \setin \ObC$ be dualizable and let~$\mora \setin \HomSet{\CatC}{\Objb \mtimescat \Obja}{\Objc \mtimescat \Obja}$.
         The \emph{trace over}~$\Obja$ of~$\mora$ is the morphism~$\Tr_{\Objb, \Objc}^\Obja (\mora) \setin \Hom(\Objb, \Objc)$ defined by
         %\begin{equation}\label{eq:endomorphism-trace}
@@ -90,33 +90,39 @@
 \begin{ctdefinition}[Traced monoidal category]
     \label{def:traced-monoidal-cat}
     \label{def:traced-monoidal-category}
-    We say that a symmetric monoidal category~$\tup{\CatC,\mtimescat,\idmoncat, \braiding}$ is to \emph{traced} if it is equipped with a family of functions
+    We say that a symmetric monoidal category~$\tup{\CatC,\mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor, \braiding}$ is \emph{traced} if it is equipped with a family of functions
     \begin{equation}
         \Tr_{\Obja,\Objb}^\Objc\colon \HomSet{\CatC}{\Obja \mtimescat \Objc}{\Objb\mtimescat \Objc}\to \HomSet{\CatC}{\Obja}{\Objb},
     \end{equation}
     satisfying the following axioms:
     \begin{enumerate}
-        \item \emph{Naturality in $\Obja$:} For all morphisms $\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ and $\morb : \Obja' \mto \Obja$,
+        \item \emph{Naturality in $\Obja$:} For any morphisms $\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ and $\morb : \Obja' \mto \Obja$,
               \begin{equation}
                   \Tr_{\Obja', \Objb}^\Objc ( (\morb \mtimescat \catid_\Objc) \then \mora) = \morb \then \Tr_{\Obja, \Objb}^\Objc (\mora)
               \end{equation}
-        \item \emph{Naturality in $\Objb$:} For all morphisms $\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ and $\morb : \Objb \mto \Objb'$,
+        \item \emph{Naturality in $\Objb$:} For any morphisms $\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ and $\morb : \Objb \mto \Objb'$,
               \begin{equation}
                   \Tr_{\Obja, \Objb'}^\Objc ( \mora \then (\morb \mtimescat \catid_\Objc) ) =  \Tr_{\Obja, \Objb}^\Objc (\mora) \then \morb
               \end{equation}
-        \item \emph{Vanishing:} For all morphisms~$\mora \colon \Obja\mto \Objb$ in \CatC,
+        \item \emph{Dinaturality in $\Objc$:} For any morphisms $\mora \colon \Obja \mtimescat \Objc \mto \Objb \mtimescat \Objc'$ and $\morb \colon \Objc' \mto \Objc$, 
+        \begin{equation}
+        \Tr_{\Obja, \Objb}^{\Objc} (\mora \mthen (\catid_\Objb \mtimescat \morb)) = \Tr_{\Obja, \Objb}^{\Objc'}((\catid_\Obja \mtimescat \morb) \mthen \mora).
+        \end{equation}
+           
+        \item \emph{Vanishing I:} For any morphisms~$\mora \colon \Obja\mto \Objb$ in \CatC,
               \begin{equation}
                   \label{eq:vanishing_1}
-                  \Tr_{\Obja,\Objb}^\idmoncat (\mora)=\mora.
+                  \Tr_{\Obja,\Objb}^\idmoncat (\mora)= \leftunitor^{-1}_{\Obja} \mthen \mora \mthen \leftunitor_\Objb.
               \end{equation}
-              Furthermore, for all morphisms~$\mora \colon \Obja\mtimescat \Objc \mtimescat \Objd \mto \Objb\mtimescat \Objc \mtimescat \Objd$ in \CatC,
+       \item \emph{Vanishing II:}
+              For any morphism~$\mora \colon \Obja\mtimescat \Objc \mtimescat \Objd \mto \Objb\mtimescat \Objc \mtimescat \Objd$ in \CatC,
               \begin{equation}
                   \label{eq:vanishing_2}
                   \Tr_{\Obja,\Objb}^{\Objc\mtimescat \Objd}(\mora)=\Tr_{\Obja,\Objb}^\Objc\left(
                   \Tr_{\Obja \mtimescat \Objc , \Objb \mtimescat \Objc}^\Objd(\mora)\right).
               \end{equation}
         \item \emph{Superposing:}
-              For all morphisms~$\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ in \CatC,
+              For any morphism~$\mora\colon \Obja\mtimescat \Objc \mto \Objb\mtimescat \Objc$ in \CatC,
               \begin{equation}
                   \label{eq:superposing}
                   \Tr_{\Obje\mtimescat \Obja,\Obje\mtimescat \Objb}^{\Objc}(\catid_\Obje\mtimescat \mora)=\catid_\Obje\mtimescat \Tr_{\Obja,\Objb}^\Objc(\mora).
