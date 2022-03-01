@@ -1,7 +1,6 @@
 % !TEX root = chapter-standalone.tex
 
 \section{Rope Goldberg Machines}
-
 The inventions of Professor Butts, transcribed by Rube Goldberg, are prodigious machines that provide practical ways to perform everyday tasks (\cref{fig:Rube3}).
 They also highlight the power of compositionality.
 
@@ -61,6 +60,7 @@ The strain~$\strain$ is usually written as the ratio of the difference in length
     \end{figure}
 
     \begin{example}
+        \label{exa:chairlift}
         You are skiing in the beautiful Swiss alps.
         Your friend weighs \unit[100]{kg} and sits on a chairlift with spring constant \unit[4,000]{N/m}.
         The nominal extension of the chairlift is \unit[0.25]{m}.
@@ -69,10 +69,33 @@ The strain~$\strain$ is usually written as the ratio of the difference in length
             \begin{aligned}
                 \deformation & =\frac{\force}{\springconst} \\
                              & =\frac{mg}{\springconst} \\
-                             & \approx \unit[0.15]{m}.
+                             & \approx \unit[0.25]{m}.
             \end{aligned}
         \end{equation*}
-        One can therefore compute the total extension of the spring as~$L=L_0+\deformation=\unit[0.4]{m}$.
+        One can therefore compute the total extension of the spring as~$L=L_0+\deformation=\unit[0.5]{m}$.
+    \end{example}
+
+    Note that in \cref{exa:chairlift}, we assumed the weight of the chairlift to be negligible.
+    When this is not the case (case referred to as \emph{heavy spring}), one can derive the elongation/compression of the spring using first principles.
+    This is beyond the scope of the class, and we will just report the formula.
+    Given a heavy spring of mass~$m$, spring constant~$k$ and nominal extension~$l_0$, the elongation one gets by hanging the spring vertically is given by
+    \begin{equation*}
+        \begin{aligned}
+            \delta x =\frac{m g}{2k},
+        \end{aligned}
+    \end{equation*}
+    where~$g$ is the gravitational acceleration.
+
+    \begin{example}
+        If you consider \cref{exa:chairlift} by assuming a heavy spring of with mass~$M=\unit[20]{kg}$, one gets
+        \begin{equation*}
+            \begin{aligned}
+                \deformation & =\frac{\force}{\springconst} \\
+                             & =\frac{mg}{\springconst}+\frac{Mg}{2\springconst} \\
+                             & \approx \unit[0.27]{m}.
+            \end{aligned}
+        \end{equation*}
+        One can therefore compute the total extension of the spring as~$L=L_0+\deformation=\unit[0.52]{m}$.
     \end{example}
 
     The ability of a material to being deformed elastically is described by the so-called Young's \emph{modulus}, name of which is due to the physicist Thomas Young.
@@ -123,21 +146,22 @@ In the following exercise, we are going to highlight this by considering specifi
     \label{ex:Goldberg}
     Consider the components (and relative properties) listed in \cref{tab:spring_const}.
     In this exercise we will compute the behavior of a chain of these components.
+    Each component will be modeled as a heavy spring.
     \begin{enumerate}
         \item Suppose you hang a rope, an elastic, and a brick as depicted in \cref{fig:hang}.
               Assume that all components remain in their elastic deformation domains.
               \begin{enumerate}[(a)]
-                  \item Compute the deformation of each component at equilibrium.
-                  \item Compute the deformation of each component at equilibrium, when you hang a \unit[1]{kg} weight at the end of the brick.
+                  \item Compute the deformation of each component.
+                  \item Compute the deformation of each component, when you hang a \unit[1]{kg} weight at the end of the brick.
               \end{enumerate}
               \emph{Hint:}
               To solve the exercise, you just need the presented examples and the spring laws.
-        \item Assume now you are either pulling or pushing your chain horizontally, as depicted in \cref{fig:push} and \cref{fig:pull}.
+        \item Assume now you are either pulling or pushing your chain, horizontally or vertically, as depicted in \cref{fig:push} and \cref{fig:pull}.
               Define the set of materials
               \begin{equation}
-                  \setA\definedas \{ \tup{l_0, \springconst_\mathrm{push},\springconst_\mathrm{pull}, c_\mathrm{max}, e_\mathrm{max}} \setin \posReals^5\}.
+                  \setA\definedas \{ \tup{m,l_0, \springconst_\mathrm{push},\springconst_\mathrm{pull}, c_\mathrm{max}, e_\mathrm{max}} \setin \nonNegReals^6\}.
               \end{equation}
-              Each material is characterized by a length at rest~$l_0$, spring constants for extension $\springconst_\mathrm{pull}$, for compression~$\springconst_\mathrm{push}$, for maximum compression~$c_\mathrm{max}$, and maximum extension~$e_\mathrm{max}$.
+              Each material is characterized by a mass~$m$, length at rest~$l_0$, spring constants for extension $\springconst_\mathrm{pull}$, for compression~$\springconst_\mathrm{push}$, for maximum compression~$c_\mathrm{max}$, and maximum extension~$e_\mathrm{max}$.
               Define this as a semigroup (based on the discussion about springs above), and show it satisfies the desired properties.
         \item Can you extend the semigroup structure to a monoid structure?
               Motivate your answer.
@@ -159,6 +183,7 @@ In the following exercise, we are going to highlight this by considering specifi
 
               \begin{hint}
                   For simplicity, we say that the chain breaks if a component exceeds its maximum compression/elongation.
+                  Try to leverage the semigroup structure when coding your solution.
               \end{hint}
     \end{enumerate}
 \end{gradedexercise}
@@ -174,12 +199,12 @@ In the following exercise, we are going to highlight this by considering specifi
         Component & $\springconst_\mathrm{pull}$ & $\springconst_\mathrm{push}$ & Length       & Mass \\
                   & \unit[]{[N/m]}               & \unit[]{[N/m]}               & \unit[]{[m]} & \unit[]{[kg]} \\
         \toprule
-        Rope      & $5.6\cdot 10^2$              &                              & 0.2          & 0.1 \\
-        Elastic   & 17.0                         & 0.2                          &              & 0.15 \\
-        Brick     & $20\cdot 10^7$               &                              & 0.2          & 2.0 \\
-        Glass     & $7.0\cdot 10^7$              &                              & 0.2          & 0.5 \\
-        Spring    & 5.0                          & 0.2                          &              & 0.5 \\
-        Rubber    & 45.0                         & 0.2                          &              & 0.3
+        Rope      & $5.6\cdot 10^2$              & 0.01                         & 0.2          & 0.1 \\
+        Elastic   & 17.0                         & 0.2                          & 0.2          & 0.15 \\
+        Brick     & $20\cdot 10^7$               & $30\cdot 10^7$               & 0.2          & 2.0 \\
+        %Glass     & $7.0\cdot 10^7$              &                              & 0.2          & 0.5 \\
+        %Spring    & 5.0                          & 0.2                          &              & 0.5 \\
+         %Rubber    & 45.0                         & 0.2                          &              & 0.3
     \end{tabular}
     \caption{Spring constants for different materials.
     }
