@@ -1,0 +1,185 @@
+\section{Uncertain DPs}
+
+We are going to build a theory of approximation for DPs.
+
+\begin{marginfigure}
+    \includegraphics[scale=0.33]{unc_ftorLU}
+    \caption{}
+    \label{fig:udp-bounds}
+\end{marginfigure}
+
+We will consider objects that we call Uncertain DPs (UDPs).
+These are ordered pairs (intervals) of DPs.
+Each pair can be interpreted as upper and lower bounds for resource consumption~(\cref{fig:udp-bounds}).
+
+\todo{Add section references below}
+In the previous chapters, we have already shown that:
+\begin{itemize}
+    \item For each pairs of functionality and resources $\funsp$, $\ressp$, the hom-set $\HomSet\DP\funsp\ressp$
+          is a poset.
+    \item Moreover, the poset is also a bounded lattice.
+          The top and bottom are the DPs that are always true and false, respectively.
+\end{itemize}
+
+We can then apply the twisted construction of a poset (\cref{def:twisted-arrow}) to the hom-set, and obtain the poset
+\begin{equation}
+    \text{UDP}_{\funsp,\ressp} \definedas \posint \HomSet\DP\funsp\ressp
+\end{equation}
+
+We obtain:
+
+\begin{definition}[Uncertain DPs]
+    An Uncertain DP (UDP)~$\boldsymbol{u}$ is an interval of DPs~$\interv{\udpL\boldsymbol{u}}{\udpU\boldsymbol{u}}$
+    such that~$\udpL\boldsymbol{u}\dpleq\udpU\boldsymbol{u}$.
+\end{definition}
+\begin{figure}[h!]
+    \includegraphics[scale=0.43]{unc_udpdef}
+    \caption{}
+\end{figure}
+
+\begin{definition}
+    [Partial order $\udpleq$]
+    A UDP~$\udpa$ precedes another UDP~$\udpb$ if the interval~$\interv{\udpL\udpa}{\udpU\udpa}]$
+    is contained in the interval~$\interv{\udpL\udpa}{\udpU\udpa}]$ (\cref{fig:udpspace}):
+    \begin{equation}
+        \udpa\udpleq\udpb\quad\equiv\quad\udpL\udpb\dpleq\udpL\udpa\dpleq\udpU\udpa\dpleq\udpU\udpb.
+    \end{equation}
+\end{definition}
+
+\begin{figure}[h!]
+    \includegraphics[scale=0.43]{unc_udpab2}\includegraphics[scale=0.43]{unc_udpab}
+    \caption{}
+    \label{fig:udpspace}
+\end{figure}
+
+The partial order~$\udpleq$ has a top~$\postop_{\udpsp}=\tupp{\posbot_{\dpsp},\postop_{\dpsp}}.
+$
+This pair describes maximum uncertainty about the DP: we do not know
+if the DP is feasible with 0 resources~($\posbot_{\dpsp}$), or if it
+is completely infeasible~($\postop_{\dpsp}$).
+
+A DP~$\ftor$ is equivalent to a degenerate UDP~$\tupp{\ftor,\ftor}$.
+
+A UDP~$\boldsymbol{u}$ is a bound for a DP~$\ftor$ if~$\boldsymbol{u}\udpleq\tupp{\ftor,\ftor}$,
+or, equivalently, if $\udpL\boldsymbol{u}\udpleq\ftor\udpleq\udpU\boldsymbol{u}$.
+
+\begin{figure}[h!]
+    \includegraphics[scale=0.43]{unc_dpcones2}\includegraphics[scale=0.43]{unc_dpcones}
+    \caption{}
+    \label{fig:pyr1}
+\end{figure}
+
+A pair $\tupp{\ftor,\ftor}$ is a minimal element of~$\udpsp$, because it cannot be dominated by any other.
+Thus, we can imagine  the space $\udpsp$ as a pyramid~(\cref{fig:pyr1}), with the  space~$\dpsp$ forming the base.
+The base represents non-uncertain  DPs.
+The top of the pyramid is~$\postop_{\udpsp}$, which represents  maximum uncertainty.
+
+%
+%
+% We will be able to propagate this interval uncertainty through an
+% arbitrary interconnection of DPs.
+% The result presented to the user
+% will be a \emph{pair} of antichains \textemdash{} a lower and an upper
+% bound for the resource consumption.
+
+\begin{ctdefinition}[Category of uncertain DPs]
+    \label{def:UDP}
+    The category \iindex{\UDP} is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: posets.
+        \item \emph{Morphisms}: given two posets~$\funsp$ and~$\ressp$, the hom-set~$\HomSet{\UDP}{\funsp}{\ressp}$ is the set of all intervals of DPs:
+              \begin{equation}
+                  \HomSet{\UDP}{\funsp}{\ressp}=\posint \HomSet\DP\funsp\ressp
+              \end{equation}
+        \item \emph{Composition operation}: composition is given by
+              \begin{equation}
+                  \mora \mthen \morb \definedas \interv{ \udpL\mora\mthen \udpL\morb}{\udpU\mora\mthen \udpU\morb}
+              \end{equation}
+        \item \emph{Identity morphism}: given a poset~$\posA$, the identity morphism is the degenerate interval of the DP identity
+              \begin{equation}
+                  \catid^{\UDP}_{\posA} \definedas \interv{\catid^{\DP}_\posA}{\catid^{\DP}_\posA}.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\section{Approximation results}
+\label{sec:Approximation-results}
+
+The main result of this section is a relaxation result stated as \cref{thm:udpsem-monotone}
+below.
+
+Suppose that we have an MCDP composed of many DPs, and one of those is~$\ftor_{a}$~(\cref{fig:consider1}).
+
+\begin{figure}[h!]
+    \includegraphics[scale=0.33]{unc_f1}
+    \caption{}
+    \label{fig:consider1}
+\end{figure}
+
+Suppose that we can find two DPs $\boldsymbol{\mathsf{L}}$, $\boldsymbol{\mathsf{U}}$ that bound the DP~$\ftor_{a}$~(\cref{fig:consider2}).
+
+\begin{figure}[h!]
+    \includegraphics[scale=0.33]{unc_f2}
+    \caption{}
+    \label{fig:consider2}
+\end{figure}
+
+This can model either (a)~uncertainty in our knowledge
+of~$\ftor_{a}$, or (b)~a relaxation that we willingly introduce.
+
+Then we can consider the pair~$\boldsymbol{\mathsf{L}}$,
+$\boldsymbol{\mathsf{U}}$ as a UDP~$\left\langle \boldsymbol{\mathsf{L}},\boldsymbol{\mathsf{U}}\right\rangle $
+and we can plug it in the original MCDP in place of~$\ftor_{a}$~(\cref{fig:luinside}).
+
+\begin{figure}[h!]
+    \includegraphics[scale=0.33]{unc_f3}
+    \caption{}
+    \label{fig:luinside}
+\end{figure}
+Given the semantics of interconnections of UDPs (\cref{def:semantics-udp}),
+this is equivalent to considering a pair of MCDPs, in which we choose
+either the lower bound or the upper bound~(\cref{fig:pair}).
+
+\begin{figure}[h!]
+    \includegraphics[width=1\columnwidth]{unc_result}
+    \caption{}
+    \label{fig:pair}
+\end{figure}
+
+We can then show that the solution of the original MCDP
+is bounded below and above by the solution of the new pair of MCDPs~(\cref{fig:domin}).
+
+\begin{figure}[h!]
+    \includegraphics[scale=0.33]{unc_f4}
+    \caption{}
+    \label{fig:domin}
+\end{figure}
+This result generalizes for any number of substitutions.
+
+\subsubsection*{Formal statement}
+
+First, we define a partial order on the valuations.
+A valuation precedes
+another if it gives more information on each DP.
+\begin{definition}
+    \label{def:For-two-valuations}
+    [Partial order $\posleqof{V}$ on valuations]
+    For two valuations~$\val_{1},\val_{2}:\atoms\rightarrow\udpsp$,
+    say that~$\val_{1}\posleqof{V}\val_{2}$ if~$\val_{1}(a)\udpleq\val_{2}(a)$
+    for all~$a\setin\atoms$.
+\end{definition}
+At this point, we have enough machinery in place that we can simply
+state the result as ``the semantics is monotone in the valuation''.
+\begin{theorem}[$\udpsem$ is monotone in the valuation]
+    \label{thm:udpsem-monotone}
+    If $\val_{1}\posleqof{V}\val_{2}$, then
+    \begin{equation}
+        \udpsem\llbracket\left\langle \atoms,\atree,\val_{1}\right\rangle \rrbracket\udpleq\udpsem\llbracket\left\langle \atoms,\atree,\val_{2}\right\rangle \rrbracket.
+    \end{equation}
+\end{theorem}
+The proof is given in Appendix~\cref{subsec:proof-main-result}
+in the supplementary materials.
+
+This result says that we can swap any DP in a MCDP with a UDP relaxation, obtain a UMCDP, which we can solve to obtain inner and outer approximations  to the solution of the original MCDP.
+This shows that considering  uncertainty in the MCDP framework is easy; as the problem reduces  to solving a pair of problems instead of one.
+
