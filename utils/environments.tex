@@ -331,13 +331,13 @@
 %
 \makeatletter
 \def\@insertbreakingcomma{%
-    \ifnum\@tempcnta = 0\else,\linebreak[1]\fi%
+    \ifnum\@tempcnta = 0\else,\linebreak[0]\fi%
     \advance\@tempcnta\@ne%
 }
 
 \makeatletter
 \def\@insertbreakingsemicolon{%
-    \ifnum\@tempcnta = 0\else;\linebreak[1]\fi%
+    \ifnum\@tempcnta = 0\else;\linebreak[0]\fi%
     \advance\@tempcnta\@ne%
 }
 
@@ -392,6 +392,38 @@
     % \}%
 }
 
+\newcommand{\cleft}[2][.]{%
+  \begingroup\colorlet{savedleftcolor}{.}%
+  \color{#1}\left#2\color{savedleftcolor}%
+}
+\newcommand{\cright}[2][.]{%
+  \color{#1}\right#2\endgroup
+}
+
+\DeclareRobustCommand{\makesett}[1]{%
+    \@tempcnta=0
+    \cleft[formulasetcolor]{\{}
+    % \{%
+    \@for\@ii:=#1\do{%
+        \@insertbreakingcomma%
+        \@ii%
+    }%
+    \cright[formulasetcolor]{\}}
+    % \}%
+}
+
+\DeclareRobustCommand{\makesetBig}[1]{%
+    \@tempcnta=0
+    {\color{formulasetcolor} \mathbf{\Big\{}}
+    % \{%
+    \@for\@ii:=#1\do{%
+        \@insertbreakingcomma%
+        \@ii%
+    }%
+    {\color{formulasetcolor}\mathbf{\Big\}}}
+    % \}%
+}
+
 
 \DeclareRobustCommand{\tupp}[1]{%
     \@tempcnta=0%
@@ -404,8 +436,8 @@
 }
 \makeatother
 
-\newcommand{\lb}{\linebreak[1]} % allow linebreak in formula
-\newcommand{\com}{,\linebreak[1] }% Use this as a comma that can have a line break after
+\newcommand{\lb}{\linebreak[0]} % allow linebreak in formula
+\newcommand{\com}{,\linebreak[0]}% Use this as a comma that can have a line break after
 
 % \makeatletter
 % % Centered captions for all floats
