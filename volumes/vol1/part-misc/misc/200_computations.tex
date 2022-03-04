@@ -45,7 +45,7 @@ We will see $\antichains \posA$ itself as a poset, with the order given by
 \end{equation*}
 where $\upit$ is the upper closure of the set (\cref{def:upperset}).
 
-The top element of the poset $\antichains\posA$ is the empty set $\emptyset$.
+The top element of the poset $\antichains\posA$ is the empty set $\Emptyset$.
 
 When we talk about computing minimal sets of resources, we always mean computing an appropriate antichain, \ie an element in $\antichains \posA$.
 
@@ -65,10 +65,10 @@ where $K_d$ is the feasible set of $\adp$,
 and the map $\Min$ returns the minimal elements of the subset~(\cref{def:Min}).
 
 The problem is that not all upper sets of $\posA$ are representable by their minimal elements.
-For example, take the two distinct upper sets $S_1 = \emptyset$ and $S_2 = \makeset{x \setin \reals : x > 0}$.
-We have $\Min S_1 = \Min S_2 = \emptyset$.
+For example, take the two distinct upper sets $S_1 = \Emptyset$ and $S_2 = \makeset{x \setin \reals : x > 0}$.
+We have $\Min S_1 = \Min S_2 = \Emptyset$.
 
-Suppose we restrict to only subsets which are \emph{downward-closed}, \ie  $\Min S = \emptyset \Rightarrow S = \emptyset$.
+Suppose we restrict to only subsets which are \emph{downward-closed}, \ie  $\Min S = \Emptyset \Rightarrow S = \Emptyset$.
 % \devel{
 %     \AC{
 %         I am not sure the above is what we want.
@@ -84,14 +84,14 @@ Suppose we restrict to only subsets which are \emph{downward-closed}, \ie  $\Min
 %         In any case I put that definition now as \cref{def:downward-closed-upperset}.
 
 %     } \JT{They're not equivalent but on upper sets they're very close.
-%         Assume my definition, and let $\Min S = \emptyset$, then $S = \emptyset$, which does \emph{not} satisfy $S = \upit \Min S$.
-%         On the other hand, suppose $\Min S = K \neq \emptyset$ for some set $K$.
-%         Then $S \neq \emptyset$ trivially, and it remains to determine $\upit K$.
+%         Assume my definition, and let $\Min S = \Emptyset$, then $S = \Emptyset$, which does \emph{not} satisfy $S = \upit \Min S$.
+%         On the other hand, suppose $\Min S = K \neq \Emptyset$ for some set $K$.
+%         Then $S \neq \Emptyset$ trivially, and it remains to determine $\upit K$.
 %         But since $S$ is an upper set, every $s \setin S$ satisfies $s \geq k$ for some $k \setin K$, so $s \setin \upit K$; on the other hand this is the same definition of a typical element $k \setin \upit K$.
 %     }
 
-%     So basically, with respect to all the proofs below (which involve only upper sets and exclude the case $\emptyset$) both definitions work fine.
-%     Mine feels a bit weaker (though neither implies the other due to how they behave on $\emptyset$) but yours is maybe more clear.
+%     So basically, with respect to all the proofs below (which involve only upper sets and exclude the case $\Emptyset$) both definitions work fine.
+%     Mine feels a bit weaker (though neither implies the other due to how they behave on $\Emptyset$) but yours is maybe more clear.
 %     So I'm happy to use yours.
 % }
 
@@ -147,8 +147,8 @@ Looking at the definition of $\ftor_\adp$:
         f                   & \mapsto \Min \then \makeset{ r \setin R \colon \adp(f^*, r) = \true }
     \end{aligned}
 \end{equation}
-
-Assuming $K_d \neq \emptyset$, one immediately observes that an exact solution exists if and only if $\adp$ is downward-closed.
+%
+Assuming $K_d \neq \Emptyset$, one immediately observes that an exact solution exists if and only if $\adp$ is downward-closed.
 So the bijection tells us how to restrict to design problems which have exact solutions.
 % Unfortunately, this bijection still has problems. Imagine if we take a subset with two minimal elements and then remove one of them. There may still be a set of feasible solutions in a neighborhood of the removed element that are not dominated by the leftover minimal solution, but $\Min$ would miss these solutions. It feels like we should also discount these kinds of situations?
 
@@ -282,7 +282,7 @@ What's going on here?
           The goal is to compute the antichain of minimal elements $c \setin C$ which provide $a$, across \emph{all} possible choices of $b_{\text{in}}$.
     \item Throw away all those minimal elements in $\ftor_\adp(b_{\text{in}},a)$ that do not satisfy the trace constraint, $b_{\text{in}} \leq b_{\text{out}}$,\footnote{If the loop is composed with an addition behind the input, which is often the case, then this condition would change to reflect the addition.} where $b_{\text{out}} \setin \pi_B(\ftor_\adp(b_{\text{in}},a))$.
     \item At this point, we are left with an antichain $S \subset \antichains (B \times C)$ of minimal elements $\langle b_{\text{out}},c \rangle$ that satisfy the trace constraint, but the resources $c \setin S|_C$ (which do not necessarily form an antichain) are not necessarily minimal with respect to the functionality $a$, since we might have chosen some other initial $b_{\text{in}}$ and gotten better results.
-          Alternately, if we had started with the wrong $b_{\text{in}}$, the entire computation might have terminated with $\emptyset$.
+          Alternately, if we had started with the wrong $b_{\text{in}}$, the entire computation might have terminated with $\Emptyset$.
           % [Andrea's example in the original paper seems to imply that the antichains are not necessarily feasible, rather than minimal.]
     \item Take the list of $b_{\text{out}}$ from Step 2 as the new $b_{\text{in}}$, and run through steps 1--2 in parallel for each new $b_{\text{in}}$.
           Take the union of the results, and take the $\Min$ of the union to obtain a new list of $b_{\text{out}}$.
@@ -376,7 +376,11 @@ To ensure that we do not miss any solutions by starting with the wrong $b_{\text
     The proposition is a direct application of Ad\'amek's theorem for algebras over an endofunctor.
 
     Recall the statement of Ad\'amek's theorem for algebras over an endofunctor: let $\CatC$ be a category with an initial object $0$ and transfinite composition of length $\omega$, hence colimits of sequences $\omega \to \CatC$ (where $\omega$ is the first infinite ordinal), and suppose $F: \CatC \to \CatC$ preserves colimits of $\omega$-chains.
-    Then the colimit $\gamma$ of the chain \[0 \overset{i}{\to} F(0) \overset{F(i)}{\to} \ldots \to F^{(n)}(0) \overset{F^{(n)}(i)}{\to} F^{(n+1)}(0) \to \ldots\] carries the structure of an initial $F$-algebra.
+    Then the colimit $\gamma$ of the chain
+    \begin{equation}
+        0 \overset{i}{\to} F(0) \overset{F(i)}{\to} \ldots \to F^{(n)}(0) \overset{F^{(n)}(i)}{\to} F^{(n+1)}(0) \to \ldots
+    \end{equation}
+    carries the structure of an initial $F$-algebra.
 
     The category $\CatC$ is the poset $\antichains (B \times C)$, whose initial object is just the bottom element $\bot$.
     The colimit of a (possibly infinite) sequence or chain of elements in $\antichains (B\times C)$ is simply the supremum of that chain.
