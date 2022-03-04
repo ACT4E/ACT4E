@@ -6,12 +6,14 @@ This is a simple example that can show two interesting properties of MCDPs:
     \item the ability to treat multi-objective optimization problems.
 \end{enumerate}
 Consider the family of optimization problems indexed by~${\colF c}\setin\natnumbers$:
+%
 \begin{equation}
     \begin{cases}
         \Min_{\posleqof{\overline{\natnumbers}\cartprod\overline{\natnumbers}}} & \tup{ {\colR x},{\colR y}} ,                                    \\
         \subto                                                                  & x+y\geq\lceil\sqrt{x}\,\rceil+\lceil\sqrt{y}\,\rceil+{\colF c}.
     \end{cases}\label{eq:example-1}
 \end{equation}
+%
 One can show that this optimization problem is an MCDP by producing a co-design diagram with an equivalent semantics, such as the one in~\cref{fig:toydiagram}.
 
 \begin{figure}[h]
@@ -31,26 +33,34 @@ Their \ftor maps are:
     \ftor_{3}:{\colF\overline{\natnumbers}} & \rightarrow & {\colR\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})},\\
     \fun& \mapsto & \makeset{\tup{ a,b} \setin\overline{\natnumbers}\cartprod\overline{\natnumbers}:a+b=\fun}.
 \end{eqnarray*}
+
 \begin{marginfigure}
     \includegraphics[scale=0.33]{gmcdptro_example_diagram_tree}
     \caption{}
     \label{fig:toydiagram_tree}
 \end{marginfigure}
+
 The tree decomposition (\cref{fig:toydiagram_tree}) corresponds to the expression
+%
 \begin{equation}
     \adp=\dploop(\dpseries(\dppar(\adp_{2},\adp_{2}),\dpseries(\adp_{1},\adp_{3}))).
     \label{eq:expression}
 \end{equation}
+%
 From~\cref{eq:expression} one obtains an expression for~\ftor:
+%
 \begin{equation}
     \ftor=\left((\ftor_{2}\oppar\ftor_{2})\opseries\ftor_{1}\opseries\ftor_{3}\right)^{\oploop}.
     \label{eq:h}
 \end{equation}
+%
 This problem is small enough that we can write down an explicit expression for~\ftor.
 By substituting in~\cref{eq:h} the definitions for $\oppar, \oploop, \opseries$, we obtain that evaluating~$\ftor(\F{c})$ means finding the least fixed point of a map~$\Psi_{\F{c}}$:
-\begin{equation*}
+%
+\begin{equation}
     \ftor:\F{c}\mapsto\lfp(\Psi_{\F{c}}).
-\end{equation*}
+\end{equation}
+%
 The map $\Psi_{\F{c}}:\R{\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})}\rightarrow\R{\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})}$ can be obtained from~\cref{prop:loop-continuous} as follows:
 %
 \begin{equation}
@@ -68,25 +78,31 @@ The map $\Psi_{\F{c}}:\R{\fantichains(\overline{\natnumbers}\cartprod\overline{\
 %
 
 \begin{figure}
-    \begin{centering}
-        \includegraphics[bb=0bp 0bp 458bp 621bp,clip,scale=0.5]{gmcdptro_example20}
-    \end{centering}
-    \caption{Kleene ascent to solve the problem~\cref{eq:example-1} for $\F{c}=20$.
-        The sequence converges in five steps to $\RR_{5}=\RR_{\infty}.
-        $ }
+    \centering
+    \includegraphics[bb=0bp 0bp 458bp 621bp,clip,scale=0.5]{gmcdptro_example20}
+    \caption{
+        Kleene ascent to solve the problem~\cref{eq:example-1} for $\F{c}=20$.
+        The sequence converges in five steps to $\RR_{5}=\RR_{\infty}$.
+    }
     \label{fig:example24}
 \end{figure}
 %
-Kleene's algorithm is the iteration $\RR_{k+1}=\Psi_{\F{c}}(\RR_{k})$
-starting from \begin{equation}
-    \RR_{0}=\posbot_{\R{\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})}}=\makeset{\tup{ 0,0} }.
+Kleene's algorithm is the iteration $\RR_{k+1}=\Psi_{\F{c}}(\RR_{k})$ starting from
+\begin{equation}
+    \RR_{0}
+    =
+    \posbot_{\R{\fantichains(\overline{\natnumbers}\cartprod\overline{\natnumbers})}}
+    =\makeset{\tup{ 0,0} }.
 \end{equation}
 %
 For $\F{c}=0$, the sequence converges immediately:
-\begin{equation*}
+%
+\begin{equation}
     \RR_{0}=\makeset{\boldsymbol{\tup{0,0}}}=\ftor(\F{0}).
-\end{equation*}
+\end{equation}
+%
 For~$\F{c}=1$, the sequence converges at the sixth step; however, some solutions (in bold) converge sooner:
+%
 \begin{align*}
     \RR_{0} & =\makeset{\tup{0,0} }, \\
     \RR_{1} & =\makeset{\tup{0,1},\tup{1,0}}, \\
@@ -95,8 +111,9 @@ For~$\F{c}=1$, the sequence converges at the sixth step; however, some solutions
     \RR_{4} & =\makeset{\boldsymbol{\tup{0,3}},\tup{2,2},\boldsymbol{\tup{3,0}}}, \\
     \RR_{5} & =\makeset{\boldsymbol{\tup{0,3}},\boldsymbol{\tup{3,0}}}=\ftor(\F{1}).
 \end{align*}
-For~$\F{c}=2$, the sequence converges at the fifth step; however,
-some solutions (in bold) converge sooner:
+%
+For~$\F{c}=2$, the sequence converges at the fifth step; however, some solutions (in bold) converge sooner:
+%
 \begin{align*}
     \RR_{0} & =\makeset{\tup{ 0,0} }, \\
     \RR_{1} & =\makeset{\tup{ 0,2} ,\tup{ 1,1} ,\tup{ 2,0} }, \\
@@ -104,11 +121,14 @@ some solutions (in bold) converge sooner:
     \RR_{3} & =\makeset{\boldsymbol{\tup{0,4} },\tup{ 3,2}, \tup{2,3}, \boldsymbol{\tup{ 4,0} }} \\
     \RR_{4} & =\makeset{\boldsymbol{\tup{0,4} },\boldsymbol{\tup{ 3,3}},\boldsymbol{\tup{ 4,0} }}=\ftor(\F{2}).
 \end{align*}
+%
 The next values in the sequence are:
+%
 \begin{align*}
     \ftor(\F{3}) & =\makesett{ \boldsymbol{\tup{ 0,6} },\boldsymbol{\tup{ 3,4} },\boldsymbol{\tup{ 4,3} },\boldsymbol{\tup{ 6,0} }} , \\
     \ftor(\F{4}) & =\makesett{ \boldsymbol{\tup{ 0,7} },\boldsymbol{\tup{ 3,6} },\boldsymbol{\tup{ 4,4} },\boldsymbol{\tup{ 6,3} },\boldsymbol{\tup{ 7,0} }} .
 \end{align*}
+%
 \Cref{fig:example24}~shows the sequence for~$\F{c}=20$.
 
 \subsection{Guarantees of Kleene ascent}
