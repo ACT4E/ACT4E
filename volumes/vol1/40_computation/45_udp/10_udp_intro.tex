@@ -54,7 +54,7 @@ We obtain:
     \label{fig:udpspace}
 \end{figure}
 
-The partial order~$\udpleq$ has a top~$\postop_{\udpsp}=\interv {\posbot_{\dpsp}} {\postop_{\dpsp}}.
+The partial order~$\udpleq$ has a top~$\postop_{\UDP}=\interv {\posbot_{\dpsp}} {\postop_{\dpsp}}.
 $
 This pair describes maximum uncertainty about the DP: we do not know
 if the DP is feasible with 0 resources~($\posbot_{\dpsp}$), or if it
@@ -71,10 +71,10 @@ or, equivalently, if $\udpL\boldsymbol{u}\udpleq\ftor\udpleq\udpU\boldsymbol{u}$
     \label{fig:pyr1}
 \end{figure}
 
-A pair $\interv\ftor\ftor$ is a minimal element of~$\udpsp$, because it cannot be dominated by any other.
-Thus, we can imagine the space $\udpsp$ as a pyramid~(\cref{fig:pyr1}), with the space~$\dpsp$ forming the base.
+A pair $\interv\ftor\ftor$ is a minimal element of~$\UDP$, because it cannot be dominated by any other.
+Thus, we can imagine the space $\UDP$ as a pyramid~(\cref{fig:pyr1}), with the space~$\dpsp$ forming the base.
 The base represents non-uncertain DPs.
-The top of the pyramid is~$\postop_{\udpsp}$, which represents maximum uncertainty.
+The top of the pyramid is~$\postop_{\UDP}$, which represents maximum uncertainty.
 
 %
 %
@@ -197,33 +197,30 @@ is bounded below and above by the solution of the new pair of MCDPs~(\cref{fig:d
 This result says that we can swap any DP in a MCDP with a UDP relaxation, obtain a UMCDP, which we can solve to obtain inner and outer approximations to the solution of the original MCDP.
 This shows that considering uncertainty in the MCDP framework is easy; as the problem reduces to solving a pair of problems instead of one.
 
-\section{Applications\label{sec:Applications}}
+\section{Dealing with parametric uncertainty}
+\label{sec:Applications}
 
-This section shows three example applications of the theory:
+We proceed to show three example applications of the theory:
 \begin{enumerate}
     \item The first example deals with \emph{parametric uncertainty}.
-    \item The second example deals with the idea of relaxation of a scalar relation.
-          This is equivalent to accepting a tolerance for a given variable,
-          in exchange for a reduced number of iterations.
-    \item The third example deals with the relaxation of relations with infinite
-          cardinality.
-          In particular, it shows how one can obtain consistent
-          estimates with a finite and prescribed amount of computation.
+    \item The second example deals with the idea of ``relaxation of a scalar relation''.
+          This is equivalent to accepting a tolerance for a given variable, in exchange for a reduced number of iterations.
+    \item The third example deals with the relaxation of relations with infinite cardinality.
+          In particular, it shows how one can obtain consistent estimates with a finite and prescribed amount of computation.
 \end{enumerate}
 
-\Cref{fig:Example1} shows the reference model for these applications.
-
-\begin{figure}[h]
+We use the same model in all cases, show in \cref{fig:Example1}.
+\begin{figure*}[b!]
     \centering
-    \includegraphics[scale=0.33]{unc_bigproblem}
+    \includegraphics[scale=0.43]{unc_bigproblem}
     \caption{Monotone Co-Design Problems (MCDPs) can capture much of the complexity of the optimal robot design process.
         The user defines a co-design diagram by hierarchical composition and arbitrary interconnection of primitive ``design problems'', modeled as monotone relations between \F{functionality} and \R{resources}.
         The semantics of the MCDP of the figure is the minimization of the \R{total mass} and \R{cost} of the platform, subject to functionality constraints (\F{distance}, \F{payload}, \F{number of missions}).
         This paper describes how to introduce uncertainty in this framework, which allows, for example, to introduce parametric uncertainty in the definition of components properties (\eg  specific cost of batteries).
     }
     \label{fig:Example1}
-\end{figure}
-
+\end{figure*}
+\vfill\pagebreak
 \subsection{Application: Dealing with Parametric Uncertainty\label{sec:Application-uncertainty}}
 
 To instantiate the model in~\cref{fig:Example1}, we need to
@@ -262,35 +259,69 @@ We can then solve the UDPs to obtain a lower bound and an upper bound to the sol
 Each panel shows two curves: the lower bound (best case analysis) and the upper bound (worst case analysis).
 In some cases, the lower bound is feasible, but the upper bound is not.
 For example, in panel~\emph{b}, for 10\% uncertainty, we can conclude that, notwithstanding the uncertainty, there exists a solution for endurance~$\leq1.3\,\text{hours}$, while for higher endurance, because the upper bound is infeasible, we cannot conclude that there is a solution \textemdash{} though, because the lower bound is feasible, we cannot conclude that a solution does not exist~(\cref{fig:unc_battery_uncertain}c).
-
-\begin{figure}[h]
+\vfill
+\begin{figure*}[h]
     \centering
-    \includegraphics[scale=0.33]{unc_battery_uncertain}
+    \includegraphics[scale=0.53]{unc_battery_uncertain}
     \caption{
         Uncertain relation between \F{endurance} and the minimal \R{total mass} required, obtained by solving the example in \cref{fig:Example1} for different values of the uncertainty on the characteristics of the batteries.
         As the uncertainty increases, there are no solutions for the worst case.
     }
     \label{fig:unc_battery_uncertain}
-\end{figure}
+\end{figure*}
 
-\subsection{Application: Introducing Tolerances}
+\section{Introducing Tolerances}
 \label{sec:Application-tolerance}
 
-Another application of the theory is the introduction of tolerances
-for any variable in the optimization problem.
-For example, one might
-not care about the variations of the battery mass below, say,~$1\,\text{g}$.
-One can then introduce a $\pm1\,\text{\ensuremath{\text{g}} }$ uncertainty
-in the definition of the problem by adding a UDP hereby called ``uncertain
-identity''.
+Another application of the theory is the introduction of tolerances for any variable in the optimization problem.
+For example, one might not care about the variations of the battery mass below, say,~$1\,\text{g}$.
+One can then introduce a $\pm1\,\text{\ensuremath{\text{g}} }$ uncertainty in the definition of the problem by adding a UDP hereby called ``uncertain identity''.
 
 \subsubsection{The uncertain identity}
 
-Let~$\alpha>0$ be a step size.
-Define~$\ufloor_{\alpha}$ and~$\uceil_{\alpha}$
-to be the floor and ceiling functions with step size~$\alpha$~(\cref{fig:identity_approximation}).
-By construction, $\ufloor_{\alpha}\dpleq\catid\dpleq\uceil_{\alpha}.
-$
+Let~$\alpha>0$ be a step size. Define~$\funfloor_{\alpha}$ and~$\funceil_{\alpha}$ to be the floor and ceiling functions with step size~$\alpha$~(\cref{fig:identity_approximation}):
+\begin{equation}
+    \defmapcomma{
+        \funfloor_{\alpha}
+    }{
+        \nonNegReals
+    }{
+        \toinPos
+    }{
+        \nonNegReals
+    }{
+        x
+    }{
+        \alpha \cdot \funfloor(x/\alpha)
+    }
+\end{equation}
+\begin{equation}
+    \defmapperiod{
+        \funceil_{\alpha}
+    }{
+        \nonNegReals
+    }{
+        \toinPos
+    }{
+        \nonNegReals
+    }{
+        x
+    }{
+        \alpha \cdot \funceil(x/\alpha)
+    }
+\end{equation}
+It is easy to verify that for all $\alpha$ and for all $x$,
+\begin{equation}
+    \funfloor_{\alpha}(x) \leq x \leq \funceil_{\alpha}(x).
+\end{equation}
+
+Then, define $\ufloor_{\alpha}$ and $\uceil_\alpha$ as the companions (see \cref{def:comp_conj}) of those two functions:
+\begin{align}
+\ufloor_{\alpha} & = \comp{\funfloor_\alpha}, \\
+\uceil_{\alpha} & = \comp{\funceil_\alpha} .
+\end{align}
+
+
 
 \begin{figure}[h]
     \subfloat{\centering{}\includegraphics[scale=0.33]{unc_approx1a}}\hfill{}\subfloat{\includegraphics[scale=0.33]{unc_approx1b}}\hfill{}\subfloat{\includegraphics[scale=0.33]{unc_approx1c}}
@@ -300,17 +331,23 @@ $
     \label{fig:identity_approximation}
 \end{figure}
 
-Let $\UId_{\alpha}\definedas\left\langle \ufloor_{\alpha},\uceil_{\alpha}\right\rangle $
-be the ``uncertain identity''.
-For~$0<\alpha<\beta$, it holds
-that
+By construction, 
 \begin{equation}
-    \mathsf{Id}\poslt_{\udpsp}\UId_{\alpha}\poslt_{\udpsp}\UId_{\beta}.
+    \ufloor_{\alpha}\dpleq\catid\dpleq\uceil_{\alpha}.
 \end{equation}
-Therefore, the sequence $\UId_{\alpha}$ is a descending chain that
-converges to~$\mathsf{Id}$ as~$\alpha\rightarrow0$~(\cref{fig:other}).
+Therefore, we can pair the two DPs to create a UDP that we call the ``uncertain identity'' as
+\begin{equation}
+    \UId_{\alpha}\definedas \interv {\ufloor_{\alpha}} {\uceil_{\alpha}}.
+\end{equation}
+For~$0<\alpha<\beta$, it holds that
+%
+\begin{equation}
+    \UId\poslt_{\UDP}\UId_{\alpha}\poslt_{\UDP}\UId_{\beta}.
+\end{equation}
+%
+Therefore, the sequence $\UId_{\alpha}$ is a descending chain that converges to~$\mathsf{Id}$ as~$\alpha\rightarrow0$~(\cref{fig:other}).
 
-\captionsideleft{\label{fig:other}}{\includegraphics[scale=0.33]{unc_uid1}\includegraphics[scale=0.33]{unc_uid2}}
+\captionsideleft{\label{fig:other}}{\includegraphics[scale=0.43]{unc_uid1}\includegraphics[scale=0.33]{unc_uid2}}
 
 \subsubsection{Approximations in MCDP}
 
@@ -323,15 +360,14 @@ Formally, we first introduce an identity~$\mathsf{Id}$ and then relax it using~$
     \label{fig:introduce}
 \end{marginfigure}
 
-Mathematically, given an MCDP~$\left\langle \atoms,\atree,\val\right\rangle $,
-we generate a UMCDP~$\left\langle \atoms,\atree,\val_{\alpha}\right\rangle $,
-where the new valuation~$\val_{\alpha}$ agrees with~$\val$ except
-on a particular atom~$a\setin\atoms$, which is replaced by the series
-of the original~$\val(a)$ and the approximation~$\text{UId}_{\alpha}$:
-\begin{align*}
-    \val_{\alpha}(a) & \definedas\dpseries(\UId_{\alpha},\val(a))
-\end{align*}
+Mathematically, given an MCDP~$\tupp{ \atoms,\atree,\val}$, we generate a UMCDP~$\tupp{\atoms,\atree,\val_{\alpha}}$, where the new valuation~$\val_{\alpha}$ agrees with~$\val$ except on a particular atom~$a\setin\atoms$, which is replaced by the series of the original~$\val(a)$ and the approximation~$\text{UId}_{\alpha}$:
+%
+\begin{equation}
+    \val_{\alpha}(a) \definedas \dpseries(\UId_{\alpha},\val(a))
+\end{equation}
+%
 Call the original and approximated DPs~$\adp$ and~$\adp_{\alpha}$:
+%
 \begin{equation}
     \begin{array}{ccc}
         \adp\definedas\udpsem\left\llbracket \left\langle \atoms,\atree,\val\right\rangle \right\rrbracket , &  & \adp{}_{\alpha}\definedas\udpsem\left\llbracket \left\langle \atoms,\atree,\val_{\alpha}\right\rangle \right\rrbracket .
@@ -339,23 +375,21 @@ Call the original and approximated DPs~$\adp$ and~$\adp_{\alpha}$:
 \end{equation}
 % Because $\val\posleqof{V}\val_{\alpha}$ (in the sense of~\cref{def:For-two-valuations,}), \cref{thm:udpsem-monotone} implies that
 From previous results, we know
+%
 \begin{equation}
     \adp\udpleq\adp_{\alpha}.
 \end{equation}
-This means that we can solve~$\udpL\adp_{\alpha}$ and~$\udpU\adp_{\alpha}$
-and obtain upper and lower bounds for~$\adp$.
-Furthermore, by
-varying~$\alpha$, we can construct an approximating sequence of
-DPs whose solution will converge to the solution of the original MCDP.
+%
+This means that we can solve~$\udpL\adp_{\alpha}$ and~$\udpU\adp_{\alpha}$ and obtain upper and lower bounds for~$\adp$.
+Furthermore, by varying~$\alpha$, we can construct an approximating sequence of DPs whose solution will converge to the solution of the original MCDP.
 
 \paragraph*{Numerical results}
 
-This procedure was applied to the example model in~\cref{fig:Example1}
-by introducing a tolerance to the ``power'' variable for the actuation.
-The tolerance~$\alpha$ is chosen at logarithmic intervals between~$0.01\,\text{mW}$
-and~$1\,\text{W}$.
+This procedure was applied to the example model in~\cref{fig:Example1} by introducing a tolerance to the ``power'' variable for the actuation.
+The tolerance~$\alpha$ is chosen at logarithmic intervals between~$0.01\,\text{mW}$ and~$1\,\text{W}$.
 
 \cref{fig:mass}~shows the solutions of the minimal mass required for~$\udpL\adp_{\alpha}$ and~$\udpU\adp_{\alpha}$, as a function of~$\alpha$. \cref{fig:mass} confirms the consistency results predicted by the theory.
+
 First, if the solutions for both~$\udpL\adp_{\alpha}$ and~$\udpU\adp_{\alpha}$ exist, then they are ordered ($\udpL\adp_{\alpha}(\fun)\posleq\udpU\adp_{\alpha}(\fun)$).
 Second, as~$\alpha$ decreases, the interval shrinks.
 Third, the bounds are consistent (the solution for the original DP is always contained in the bound).
@@ -373,66 +407,54 @@ Third, the bounds are consistent (the solution for the original DP is always con
 \end{figure}
 
 Next, it is interesting to consider the computational complexity.
-\Cref{fig:num_iterations}~shows the number of iterations as
-a function of the resolution~$\alpha$, and the trade-off of the
-uncertainty of the solution and the computational resources spent.
-This shows that this approximation scheme is an effective way to reduce
-the computation load while maintaining a consistent estimate.
+\Cref{fig:num_iterations}~shows the number of iterations as a function of the resolution~$\alpha$, and the trade-off of the uncertainty of the solution and the computational resources spent.
+This shows that this approximation scheme is an effective way to reduce the computation load while maintaining a consistent estimate.
 
-\subsection{Application: Relaxation for relations with infinite cardinality\label{sec:Application-relax}}
+\section{ Relaxation for relations with infinite cardinality}
+\label{sec:Application-relax}
 
-Another way in which uncertain DPs can be used is to construct approximations
-of DPs that would be too expensive to solve exactly.
-For example,
-consider a relation like
-\begin{equation}
+Another way in which uncertain DPs can be used is to construct approximations of DPs that would be too expensive to solve exactly.
+For example, consider a relation like
+\begin{equation}\label{eq:qun}
     {\colF\text{travel\_distance}}
-    \leq{\colR\text{velocity}}\times{\colR\text{endurance}},\label{eq:qun}
+    \leq{\colR\text{velocity}}\times{\colR\text{endurance}},
 \end{equation}
 which appears in the model in \cref{fig:Example1}.
-If we take
-these three quantities in \cref{eq:qun} as belonging to~$\reals$,
-then, for each value of the \F{travel distance}, there are infinite
-pairs of~$\left\langle {\colR\text{velocity}},{\colR\text{endurance}}\right\rangle $
-that are feasible.
-(On a computer, where the quantities could be represented
-as floating point numbers, the combinations are properly not ``infinite'',
-but, still, extremely large.)
+If we take these three quantities in \cref{eq:qun} as belonging to~$\reals$, then, for each value of the \F{travel distance}, there are infinite pairs of~$\left\langle {\colR\text{velocity}},{\colR\text{endurance}}\right\rangle $ that are feasible.
+(On a computer, where the quantities could be represented as floating point numbers, the combinations are properly not ``infinite'', but, still, extremely large.)
 
-We can avoid considering all combinations by creating a sequence of
-uncertain DPs that use finite and prescribed computation.
+We can avoid considering all combinations by creating a sequence of uncertain DPs that use finite and prescribed computation.
 
 \subsubsection{Relaxations for addition}
 
-Consider a monotone relation between some functionality~$\fun_{1}\setin\nonNegReals$
-and resources~$\res_{1},\res_{2}\setin\nonNegReals$ described by
-the constraint that~$\fun_{1}\leq\res_{1}+\res_{2}$ (\cref{fig:example-invplus}).
-For example, this could represent the case where there are two batteries
-providing the power~$\fun_{1}$, and we need to decide how much to
-allocate to the first~($\res_{1}$) or the second~($\res_{2}$).
+\begin{marginfigure}
+    \centering
+    \includegraphics[scale=0.33]{unc_plusinv}
+    \caption{}
+    \label{fig:example-invplus}
+\end{marginfigure}
 
-\captionsideleft{\label{fig:example-invplus}}{\includegraphics[scale=0.33]{unc_plusinv}}
+
+Consider a monotone relation between some functionality~$\fun_{1}\setin\nonNegReals$ and resources~$\res_{1},\res_{2}\setin\nonNegReals$ described by the constraint that~$\fun_{1}\leq\res_{1}+\res_{2}$ (\cref{fig:example-invplus}).
+For example, this could represent the case where there are two batteries providing the power~$\fun_{1}$, and we need to decide how much to allocate to the first~($\res_{1}$) or the second~($\res_{2}$).
 
 The formal definition of this constraint as an DP is
 \begin{align*}
     \overline{+}:{\colF\nonNegReals} & \rightarrow{\colR\antichains(\nonNegReals\times\nonNegReals)}, \\
     \fun_{1}                         & \mapsto\makeset{\left\langle x,\fun_{1}-x\right\rangle \mid x\setin\nonNegReals}.
 \end{align*}
-Note that, for each value~$\fun_{1}$, $\overline{+}(\fun_{1})$
-is a set of infinite cardinality.
+Note that, for each value~$\fun_{1}$, $\overline{+}(\fun_{1})$ is a set of infinite cardinality.
 
-We will now define two sequences of relaxations for~$\overline{+}$
-with a fixed number of solutions~$n\geq1$.
+We will now define two sequences of relaxations for~$\overline{+}$ with a fixed number of solutions~$n\geq1$.
 
 \subsubsection*{Using uniform sampling}
 
-We will first define a sequence of UDPs~$S_{n}$ based on uniform
-sampling.
+We will first define a sequence of UDPs~$S_{n}$ based on uniform sampling.
 Let~$\udpU S_{n}$ consist of~$n$ points sampled on the segment with extrema~$\tup{0,\fun_{1}}$ and~$\tup{\fun_{1},0} $.
 For~$\udpL S_{n}$, sample~$n+1$ points on the segment and take the \emph{meet} of successive points~(\cref{fig:make_lower}).
 
 \begin{figure}[h]
-    \includegraphics[scale=0.33]{unc_make_lower}
+    \includegraphics[scale=0.43]{unc_make_lower}
     \caption{}
     \label{fig:make_lower}
 \end{figure}
@@ -444,24 +466,18 @@ Moreover, $S_{n}$ converges to $\overline{+}$ as $n\rightarrow\infty$.
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.43]{unc_sampling}
-    \caption{Approximations to $\overline{+}$ using
-        the uniform sampling sequence~$S_{n}$. }
+    \caption{Approximations to $\overline{+}$ using the uniform sampling sequence~$S_{n}$. }
     \label{fig:approx_invplus}
 \end{figure}
 
-However, note that the convergence is not monotonic: $S_{n+1}{\not\posleq}_{\udpsp}S_{n}.
-$
+However, note that the convergence is not monotonic: $S_{n+1}{\not\posleq}_{\UDP}S_{n}$.
 The situation can be represented graphically as in~\cref{fig:notchain}.
-The sequence~$S_{n}$ eventually converges to $\overline{+}$, but
-it is not a descending chain.
-This means that it is not true, in general,
-that the solution to the MCDP obtained by plugging in~$S_{n+1}$
-gives smaller bounds than~$S_{n}$.
+The sequence~$S_{n}$ eventually converges to $\overline{+}$, but it is not a descending chain.
+This means that it is not true, in general, that the solution to the MCDP obtained by plugging in~$S_{n+1}$ gives smaller bounds than~$S_{n}$.
 
 \subsubsection*{Relaxation based on Van Der Corput sequence}
 
-We can easily create an approximation sequence~$V:\natnumbers\to\udpsp$
-that converges monotonically using Var Der Corput (VDC) sampling~\cite[Section 5.2]{LaValle2006Planning}.
+We can easily create an approximation sequence~$V:\natnumbers\to\UDP$ that converges monotonically using Var Der Corput (VDC) sampling~\cite[Section 5.2]{LaValle2006Planning}.
 Let~$\vdc(n)$ be the VDC sequence of~$n$ elements in the interval~$[0,1]$.
 The first elements of the VDC are $0,0.5,0.25,0.75,0.125,\dots$.
 The sequence is guaranteed to satisfy~$\vdc(n)\setsubseteq\vdc(n+1)$ and to minimize the discrepancy.
@@ -469,8 +485,7 @@ The upper bound~$\udpU V_{n}$ is defined as sampling the segment with extrema~$\
 \begin{equation}
     \udpU V_{n}\colon\fun_{1}\mapsto\makeset{\left\langle \fun_{1}x,\fun_{1}(1-x)\right\rangle \mid x\setin\vdc(n)}.
 \end{equation}
-The lower bound~$\udpL V_{n}$ is defined by taking meets of successive
-points, according to the procedure in~\cref{fig:make_lower}.
+The lower bound~$\udpL V_{n}$ is defined by taking meets of successive points, according to the procedure in~\cref{fig:make_lower}.
 
 \begin{figure}[h]
     \centering
@@ -481,10 +496,8 @@ points, according to the procedure in~\cref{fig:make_lower}.
     \label{fig:Vn}
 \end{figure}
 
-For this sequence, one can prove that not only~$\overline{+}\udpleq V_{n}$,
-but also that the convergence is uniform, in the sense that~$\overline{+}\udpleq V_{n+1}\udpleq V_{n}$.
-The situation is represented graphically in~\cref{fig:convergence_pyramid}:
-the sequence is a descending chain that converges to~$\overline{+}$.
+For this sequence, one can prove that not only~$\overline{+}\udpleq V_{n}$, but also that the convergence is uniform, in the sense that~$\overline{+}\udpleq V_{n+1}\udpleq V_{n}$.
+The situation is represented graphically in~\cref{fig:convergence_pyramid}: the sequence is a descending chain that converges to~$\overline{+}$.
 
 \subsubsection{Inverse of multiplication}
 
@@ -506,10 +519,8 @@ The VDC sequence are shown in~\cref{fig:approx_invmult}.
 We have applied this relaxation to the relation ${\colF\text{travel distance}}\leq{\colR\text{velocity}}\times{\colR\text{endurance}}$ in the MCDP in~\cref{fig:Example1}.
 Thanks to this theory, we can obtain estimates of the solutions using bounded computation, even though that relation has infinite cardinality.
 
-\Cref{fig:invplus1}~shows the result using uniform sampling,
-and~\cref{fig:invplus2} shows the result using VDC sampling.
-As predicted by the theory, uniform sampling does not give monotone
-convergence, while VDC sampling does.
+\Cref{fig:invplus1}~shows the result using uniform sampling, and~\cref{fig:invplus2} shows the result using VDC sampling.
+As predicted by the theory, uniform sampling does not give monotone convergence, while VDC sampling does.
 \begin{figure}[t]
     \centering
     \subfloat[\label{fig:notchain}
