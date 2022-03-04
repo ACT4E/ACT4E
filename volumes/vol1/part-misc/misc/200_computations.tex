@@ -127,7 +127,7 @@ We say that a design problem $\adp : F \profto R$ is \emph{downward-closed} if $
 \end{remark}
 \devel{
     \AC{I don't understand what "approximation" means here.} \JT{I wrote approximation because restricting attention to just those downward-closed upper sets was less strong than just assuming DCC on the whole poset (I think of it as focusing attention on parts of the poset while leaving the funky other parts blurred out), but allowed you to prove a similar bijection.
-    But I'm not familiar with the arguments in terms of trees that Hamkin brought up, I'll think about this later.
+        But I'm not familiar with the arguments in terms of trees that Hamkin brought up, I'll think about this later.
     }
 
     \AC{
@@ -135,7 +135,7 @@ We say that a design problem $\adp : F \profto R$ is \emph{downward-closed} if $
         to make the bijection work.
         See \href{https://mathoverflow.net/questions/219425/acc-dcc-implies-upper-lower-sets-are-upper-lower-closure-of-antichains}{this discussion}.
     } \JT{I added the mention of choice in the remark.
-    For the main proof see above comment.
+        For the main proof see above comment.
     }
 }
 Why does this bijection matter?
@@ -163,7 +163,7 @@ A primitive design problem $\adp$ is computable when $\ftor_\adp$ is computable 
     \AC{And what does it mean "almost"?} \JT{See above.}
 
     \AC{"querying" a lookup table might take infinitely long if such lookup table is infinite...} \JT{Fair enough.
-    I've changed the characterization.
+        I've changed the characterization.
     }
 }
 Every combination of computable design problems we have so far looked at---excepting loop---can be easily seen to be computable:
@@ -176,9 +176,9 @@ Every combination of computable design problems we have so far looked at---excep
     These are direct properties of \DP.
 
     \todotext{ \AC{This is not really a proof, it is just a statement of facts without proofs.} \JT{Hmm I thought I was copying a proposition in your original paper but now that I go back I can't find it.
-    In that case I will need to think about this a bit more.
-    The issues are the $\Min$ in the composition and the coproduct in the cases with an infinite antichain.
-    }}
+            In that case I will need to think about this a bit more.
+            The issues are the $\Min$ in the composition and the coproduct in the cases with an infinite antichain.
+        }}
 
     \textbf{Composition}.
     Suppose $\adp_1 : A \profto B$ and $\adp_2 \colon B \profto C$.
@@ -227,13 +227,13 @@ To see that we can compute them in finite time, we will need the following fact:
     If $\adp$ is downward-closed, then $\adp$ is Scott-continuous.
 
     \todotext{\AC{I am confused.
-    In "$\adp$ Scott-continuous just means.
-    ..", what does it
-    mean for a DP to be Scott-continuous?
-    Scott-continuous is a property of a map.
-    } \JT{Recall that $\adp$ is defined to be a monotone map from a given poset $F\op \times R$ to \Bool.
-    The sentence above is a direct translation of what it means for $\adp(D^\upit) = \adp(D)^\upit$, where $D \subset F\op \times R$.
-    }}
+            In "$\adp$ Scott-continuous just means.
+            ..", what does it
+            mean for a DP to be Scott-continuous?
+            Scott-continuous is a property of a map.
+        } \JT{Recall that $\adp$ is defined to be a monotone map from a given poset $F\op \times R$ to \Bool.
+            The sentence above is a direct translation of what it means for $\adp(D^\upit) = \adp(D)^\upit$, where $D \subset F\op \times R$.
+        }}
 
     If $\adp$ is Scott-continuous, then $\ftor_\adp$ is Scott-continuous, since $\ftor_\adp$ only observes the lower boundary of the feasible set, which is controlled by the downward-closed condition.
 \end{proof}
@@ -264,7 +264,7 @@ where $\pi_C \colon B \times C \to C$ is the projection on $C$.
     \AC{TODO: define  $\pi_C$ (projection on $C$)} \JT{Done.}
 
     \AC{Where does \text{lfp} come from?
-    I think there are many passages omitted here.
+        I think there are many passages omitted here.
     } \JT{I assume they know what a lfp is, or can look it up.}
 
     \AC{Also, this formula is not equivalent to what I had found; see below for more comments.} \JT{The main thing that is different is the fact that we're carrying around an extra variable's worth of data, namely $C$.}}
@@ -279,26 +279,26 @@ What's going on here?
 
 \begin{enumerate}
     \item First, calculate $\ftor_\adp$ for some fixed, initial $\langle b_{\text{in}},a \rangle$.
-    The goal is to compute the antichain of minimal elements $c \setin C$ which provide $a$, across \emph{all} possible choices of $b_{\text{in}}$.
+          The goal is to compute the antichain of minimal elements $c \setin C$ which provide $a$, across \emph{all} possible choices of $b_{\text{in}}$.
     \item Throw away all those minimal elements in $\ftor_\adp(b_{\text{in}},a)$ that do not satisfy the trace constraint, $b_{\text{in}} \leq b_{\text{out}}$,\footnote{If the loop is composed with an addition behind the input, which is often the case, then this condition would change to reflect the addition.} where $b_{\text{out}} \setin \pi_B(\ftor_\adp(b_{\text{in}},a))$.
     \item At this point, we are left with an antichain $S \subset \antichains (B \times C)$ of minimal elements $\langle b_{\text{out}},c \rangle$ that satisfy the trace constraint, but the resources $c \setin S|_C$ (which do not necessarily form an antichain) are not necessarily minimal with respect to the functionality $a$, since we might have chosen some other initial $b_{\text{in}}$ and gotten better results.
-    Alternately, if we had started with the wrong $b_{\text{in}}$, the entire computation might have terminated with $\Emptyset$.
-    % [Andrea's example in the original paper seems to imply that the antichains are not necessarily feasible, rather than minimal.]
+          Alternately, if we had started with the wrong $b_{\text{in}}$, the entire computation might have terminated with $\Emptyset$.
+          % [Andrea's example in the original paper seems to imply that the antichains are not necessarily feasible, rather than minimal.]
     \item Take the list of $b_{\text{out}}$ from Step 2 as the new $b_{\text{in}}$, and run through steps 1--2 in parallel for each new $b_{\text{in}}$.
-    Take the union of the results, and take the $\Min$ of the union to obtain a new list of $b_{\text{out}}$.
-    Each result will be a smaller antichain in $C$, \ie  a ``better'' result.
-    % Note that this requires that the minimal elements exist for arbitrary subsets, not just $K_\adp$. Motivates dcpo.
+          Take the union of the results, and take the $\Min$ of the union to obtain a new list of $b_{\text{out}}$.
+          Each result will be a smaller antichain in $C$, \ie  a ``better'' result.
+          % Note that this requires that the minimal elements exist for arbitrary subsets, not just $K_\adp$. Motivates dcpo.
     \item Keep iterating Step 4 until the result converges to a least fixed point: the antichain of minimal elements $\langle b, c \rangle \setin B \times C$ which provide $\langle b, a \rangle$, across \emph{all} possible choices of $b_{\text{in}}$.
     \item Lastly, given an antichain in $\antichains (B\times C)$, we need to convert it into an antichain $\antichains C$.
-    The obvious way to do this is to project the antichain to $C$ and take the minimal elements of the projection.
+          The obvious way to do this is to project the antichain to $C$ and take the minimal elements of the projection.
 
-    % Typically, these results will look something like, assuming the biggest allowable b, find the smallest resources c.
+          % Typically, these results will look something like, assuming the biggest allowable b, find the smallest resources c.
 \end{enumerate}
 \devel{
     \JT{Something about this last step feels wrong.
-    I feel that $\antichains (B \times C)$ is more important than $\antichains C$.
-    Wouldn't you prefer to retain the information there, rather than throw it all away?
-    Projecting to the minimal elements of the projection would also distinguish a subset of the ``stable'' $b$, namely those in the pre-image under the projection of those minimal elements (pullback?
+        I feel that $\antichains (B \times C)$ is more important than $\antichains C$.
+        Wouldn't you prefer to retain the information there, rather than throw it all away?
+        Projecting to the minimal elements of the projection would also distinguish a subset of the ``stable'' $b$, namely those in the pre-image under the projection of those minimal elements (pullback?
         ).
     }
 
@@ -308,8 +308,8 @@ What's going on here?
         in the derivation.
         Try to fill those gaps and see if the result changes?
     } \JT{I'll look at it again.
-    If you think of something specific, could you help me by pointing it out?
-    In reference to ``magic equation'', see comment above.
+        If you think of something specific, could you help me by pointing it out?
+        In reference to ``magic equation'', see comment above.
     }
 }
 %\JT{Never mind, this is definitely not true. Imagine if $B = \makeset{*}$.}
