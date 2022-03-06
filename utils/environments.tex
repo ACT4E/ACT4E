@@ -302,10 +302,12 @@
 
 
 
-\newenvironment{forslides}{\colorlet{shadecolor}{Pink!50}\begin{shaded*}%
-                                                             \textbf{This content was created for slides. Do not erase or change the names}.\\%
-                                                             }{
-\end{shaded*}}
+\newenvironment{forslides}{%
+    \colorlet{shadecolor}{Pink!50}%
+    \begin{shaded*}%
+        \textbf{This content was created for slides. Do not erase or change the names}.\\%
+        }{%
+    \end{shaded*}}
 
 %%%%%%%%%%%%%%%%%%%%
 % Fail the compilation if using \XXX in non-devel
@@ -330,135 +332,158 @@
 % Line breaks in formulas
 %
 \makeatletter
-\def\@insertbreakingcomma{%
-    \ifnum\@tempcnta = 0\else,\linebreak[0]\fi%
-    \advance\@tempcnta\@ne%
-}
-\def\@insertbreakingcprod{%
-    \ifnum\@tempcnta = 0\else\cprod\linebreak[0]\fi%
-    \advance\@tempcnta\@ne%
-}
+% \def\@insertbreakingcomma{%
+%     \ifnum\@tempcnta = 0\else,\linebreak[0]\fi%
+%     \advance\@tempcnta\@ne%
+% }
+% \def\@insertbreakingcprod{%
+%     \ifnum\@tempcnta = 0\else\cprod\linebreak[0]\fi%
+%     \advance\@tempcnta\@ne%
+% }
 
-
-\makeatletter
-\def\@insertbreakingsemicolon{%
-    \ifnum\@tempcnta = 0\else;\linebreak[0]\fi%
-    \advance\@tempcnta\@ne%
-}
-
-\DeclareRobustCommand{\makelist}[1]{%
-    \@tempcnta=0%
-    [%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcomma%
-        \@ii%
-    }%
-    ]%xX
-}
+% \def\@insertbreakingsemicolon{%
+%     \ifnum\@tempcnta = 0\else;\linebreak[0]\fi%
+%     \advance\@tempcnta\@ne%
+% }
 
 
 
-\DeclareRobustCommand{\cObj}[1]{%
-    \@tempcnta=0%
-    \textbf{\fatstart}%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcomma%
-        \@ii%
-    }%
-    \textbf{\fatend}%
-}
 
-
-\DeclareRobustCommand{\maketypedlist}[2]{%
-    \@tempcnta=0%
-    [%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcomma%
-        \@ii%
-    }%
-    ]_{#2}%
-}
 \newcommand{\opensetbracket}{{\color{formulasetcolor}\mathbf{\{}}}
 \newcommand{\closesetbracket}{{\color{formulasetcolor}\mathbf{\}}}}
-
-\DeclareRobustCommand{\makeset}[1]{%
-    \@tempcnta=0%
-    \opensetbracket%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcomma%
-        \@ii%
-    }%
-    \closesetbracket%
-}
+%
+% \DeclareRobustCommand{\makeset}[1]{%
+%     \@tempcnta=0%
+%     \opensetbracket%
+%     \@for\@ii:=#1\do{%
+%         \@insertbreakingcomma%
+%         \@ii%
+%     }%
+%     \closesetbracket%
+% }
 
 \newcommand{\cleft}[2][.]{%
-  \begingroup\colorlet{savedleftcolor}{.}%
-  \color{#1}\left#2\color{savedleftcolor}%
+    \begingroup\colorlet{savedleftcolor}{.}%
+    \color{#1}\left#2\color{savedleftcolor}%
 }
 \newcommand{\cright}[2][.]{%
-  \color{#1}\right#2\endgroup%
+    \color{#1}\right#2\endgroup%
 }
+%
+% \DeclareRobustCommand{\makesett}[1]{%
+%     \@tempcnta=0%
+%     \cleft[formulasetcolor]{\{}%
+%     \@for\@ii:=#1\do{%
+%         \@insertbreakingcomma%
+%         \@ii%
+%     }%
+%     \cright[formulasetcolor]{\}}%
+% }
+%
 
-\DeclareRobustCommand{\makesett}[1]{%
+
+% \DeclareRobustCommand{\tupp}[1]{%
+%     \@tempcnta=0%
+%     \langle%
+%     \@for\@ii:=#1\do{%
+%         \@insertbreakingcomma%
+%         \@ii%
+%     }%
+%     \rangle%
+% }
+
+% \DeclareRobustCommand{\makeTupcat}[1]{%
+%     \@tempcnta=0%
+%     \fatstart%
+%     \@for\@ii:=#1\do{%
+%         \@insertbreakingcomma%
+%         \@ii%
+%     }%
+%     \fatend%
+% }
+
+%
+% \DeclareRobustCommand{\makecprod}[1]{%
+%     \@tempcnta=0%
+%     \@for\@ii:=#1\do{%
+%         \@insertbreakingcprod%
+%         \@ii%
+%     }%
+% }
+
+
+
+\DeclareRobustCommand{\@makelists}[4]{%
     \@tempcnta=0%
-    \cleft[formulasetcolor]{\{}%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcomma%
+    #1%
+    \@for\@ii:=#4\do{%
+        \ifnum\@tempcnta = 0\else#2\linebreak[0]\fi%
+        \advance\@tempcnta\@ne%
         \@ii%
     }%
-    \cright[formulasetcolor]{\}}%
+    #3%
+}
+\DeclareRobustCommand{\makeset}[1]{%
+    \@makelists{\opensetbracket}{,}{\closesetbracket}{#1}%
+}
+\DeclareRobustCommand{\tupp}[1]{%
+    \@makelists{\langle}{,}{\rangle}{#1}%
+}
+
+\DeclareRobustCommand{\makeTupcat}[1]{%
+    \@makelists{\fatstart}{,}{\fatend}{#1}%
+}
+
+\DeclareRobustCommand{\makecprod}[1]{%
+    \@makelists{}{\cprod}{}{#1}%
+}
+
+\DeclareRobustCommand{\makecartprod}[1]{%
+    \@makelists{}{\cartprod}{}{#1}%
+}
+
+\DeclareRobustCommand{\maketupconcat}[1]{%
+    \@makelists{}{\tupconcat}{}{#1}%
+}
+
+\DeclareRobustCommand{\maketypedlist}[2]{%
+    \makelist{#1}_{#2}%
 }
 
 \DeclareRobustCommand{\makesetBig}[1]{%
-    \@tempcnta=0
-    {\color{formulasetcolor}\mathbf{\Big\{}}%
-    % \{%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcomma%
-        \@ii%
-    }%
-    {\color{formulasetcolor}\mathbf{\Big\}}}%
-    % \}%
+    \@makelists{{\color{formulasetcolor}\mathbf{\Big\{}}}{,}{{\color{formulasetcolor}\mathbf{\Big\}}}}{#1}%
+}
+
+\DeclareRobustCommand{\makesett}[1]{%
+    \@makelists{\cleft[formulasetcolor]{\{}}{,}{\cright[formulasetcolor]{\}}}{#1}%
+}
+
+\DeclareRobustCommand{\makelist}[1]{%
+    \@makelists{[}{,}{]}{#1}%
+}
+
+\DeclareRobustCommand{\cObj}[1]{%
+    \@makelists{\fatstart}{,}{\fatend}{#1}%
 }
 
 
-\DeclareRobustCommand{\tupp}[1]{%
-    \@tempcnta=0%
-    \langle%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcomma%
-        \@ii%
-    }%
-    \rangle%
-}
-
-
-
-\DeclareRobustCommand{\makeTupcat}[1]{%
-    \@tempcnta=0%
-    \fatstart%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcomma%
-        \@ii%
-    }%
-    \fatend%
-}
-
-
-\DeclareRobustCommand{\makecprod}[1]{%
-    \@tempcnta=0%
-    % \fatstart%
-    \@for\@ii:=#1\do{%
-        \@insertbreakingcprod%
-        \@ii%
-    }%
-    % \fatend%
-}
+%
+% \DeclareRobustCommand{\makesetBig}[1]{%
+%     \@tempcnta=0%
+%     {\color{formulasetcolor}\mathbf{\Big\{}}%
+% % \{%
+%     \@for\@ii:=#1\do{%
+%         \@insertbreakingcomma%
+%         \@ii%
+%     }%
+%     {\color{formulasetcolor}\mathbf{\Big\}}}%
+% % \}%
+% }
 
 
 \makeatother
 
-\newcommand{\lb}{\linebreak[0]} % allow linebreak in formula
+% \newcommand{\lb}{\linebreak[0]} % allow linebreak in formula
 \newcommand{\com}{,\linebreak[0]}% Use this as a comma that can have a line break after
 
 % \makeatletter
@@ -518,8 +543,8 @@
 }
 
 \newcommand{\checkexercise}[1]{
-\par
-\texttt{\footnotesize\ \ \ act4e-check Test#1}
+    \par
+    \texttt{\footnotesize\ \ \ act4e-check Test#1}
 }
 
 
@@ -541,11 +566,11 @@
 
 \makeatletter
 \DeclareRobustCommand{\shortto}{%
-  \mathrel{\mathpalette\short@to\relax}%
+    \mathrel{\mathpalette\short@to\relax}%
 }
 
 \newcommand{\short@to}[2]{%
-  \mkern2mu
-  \clipbox{{.4\width} 0 0 0}{$\m@th#1\vphantom{+}{\shortrightarrow}$}%
-  }
+    \mkern2mu
+    \clipbox{{.4\width} 0 0 0}{$\m@th#1\vphantom{+}{\shortrightarrow}$}%
+}
 \makeatother
