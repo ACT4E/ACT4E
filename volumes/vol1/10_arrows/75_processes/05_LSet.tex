@@ -25,11 +25,11 @@ We will define a category~$\SetL$ whose objects are ``sets of tuples''.
 Given sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$, if they are all non-empty, then we define
 \begin{equation}
     \label{eq:sets-of-tuples}
-    \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} \definedas \makeset{ \tup{\elna{1}, \elna{2}, \ldots, \elna{n}} \mid \elna{1} \in \setAn{1}, \elna{2} \in \setAn{2}, \ldots, \elna{n} \in \setAn{n} }.
+    \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} \definedas \makeset{ \tup{\elna{1}, \elna{2}, \ldots, \elna{n}} \mid \elna{1} \setin \setAn{1}, \elna{2} \setin \setAn{2}, \ldots, \elna{n} \setin \setAn{n} }.
 \end{equation}
 So for example,
 \begin{equation}
-    \cObj{\wnumbers, \natnumbers, \reals} = \makeset{ \tup{\ela, \elb, \elc} \mid \ela \in \wnumbers, \elb \in \natnumbers, \elc \in \reals }.
+    \cObj{\wnumbers, \natnumbers, \reals} = \makeset{ \tup{\ela, \elb, \elc} \mid \ela \setin \wnumbers, \elb \setin \natnumbers, \elc \setin \reals }.
 \end{equation}
 
 Essentially, the objects of~$\SetL$ will be sets of the form \cref{eq:sets-of-tuples}.
@@ -54,7 +54,7 @@ All the objects of~$\SetL$ are in particular just sets, so we can package them i
 
 Observe that we can turn any set into an object of $\SetL$: given a set~$\setA$, there is the associated set
 \begin{equation}
-    \cObj{\setA} = \makeset{ \tup{\ela} \mid \ela \in \setA }
+    \cObj{\setA} = \makeset{ \tup{\ela} \mid \ela \setin \setA }
 \end{equation}
 whose elements are precisely all the tuples of length one whose entry is an element of~$\setA$.
 This defines a function
@@ -69,7 +69,7 @@ which one might call ``bracket''.
 
 Similarly, given a function~$\mapa \colon \setA \to \setB$ between sets, there is an associated function~$\cMor{ \mapa }\colon \cObj{\setA} \mto \cObj{\setB}$ given by
 \begin{equation}
-    \cMor{ \mapa } ( \tup{ \ela }) \definedas \tup{\mapa(a)}.
+    \cMor{ \mapa } ( \tup{ \ela }) \definedas \tup{\mapa(\ela)}.
 \end{equation}
 This defines a function
 \begin{equation}
@@ -80,7 +80,7 @@ for any sets~$\setA$ and~$\setB$; one might also call it ``bracket''.
 \subsection{Concatenation of tuples}
 
 Given tuples~$\tup{\ela, \elb, \elc}$ and~$\tup{\eld, \ele}$ we can stick them together to make the longer tuple~$\tup{\ela, \elb, \elc, \eld, \ele}$.
-We call this operation concatenation, and in the context of \SetL we think of it as a kind of multiplication.
+We call this operation \emph{concatenation}, and in the context of \SetL we think of it as a kind of multiplication.
 Our notation for concatenation of tuples is
 \begin{equation}
     \tup{\ela, \elb, \elc} \tupconcat \tup{\eld, \ele} = \tup{\ela, \elb, \elc, \eld, \ele}.
@@ -107,40 +107,69 @@ an operation
 by
 \begin{equation}
     \label{eq:strict-monoidal-product-sets}
-    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} \definedas \cObj{\setAn{1}, \ldots, \setAn{m}, \setBn{1},  \ldots, \setBn{n}}
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{m}},
+        \cObj{\setBn{1}, \ldots, \setBn{n}}
+    } \definedas \cObj{\setAn{1}, \ldots, \setAn{m}, \setBn{1},  \ldots, \setBn{n}}
 \end{equation}
-for any $n, m \in \natnumbers$.
+for any $n, m \setin \natnumbers$.
 
 When both factors are non-empty, the elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}}$ are all possible concatenations of elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ with elements of~$\cObj{\setBn{1}, \ldots, \setBn{n}}$.
 
 Equation \cref{eq:strict-monoidal-product-sets} holds in particular also in the cases when~$m = 0$ or~$n =0$:
 \begin{equation}
-    \cObj{ \ } \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} = \cObj{\setBn{1}, \ldots, \setBn{n}}
+    \makecprod{
+        \cObj{ \ },
+        \cObj{\setBn{1}, \ldots, \setBn{n}}
+    } =
+    \cObj{
+        \setBn{1}, \ldots, \setBn{n}
+    }
 \end{equation}
 and
 \begin{equation}
-    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{ \ } = \cObj{\setAn{1}, \ldots, \setAn{m}}.
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{m}},
+        \cObj{ \ }
+    } =
+    \cObj{
+        \setAn{1}, \ldots, \setAn{m}
+    }.
 \end{equation}
 
 Also, writing $\Emptyset = \cObj{\Emptyset}$ we find that
 \begin{equation}
-    \cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \Emptyset = \Emptyset
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{m}},
+        \Emptyset
+    } = \Emptyset
 \end{equation}
 and
 \begin{equation}
-    \Emptyset \cprod \cObj{\setBn{1}, \ldots, \setBn{n}} = \Emptyset.
+    \makecprod{\Emptyset, \cObj{\setBn{1}, \ldots, \setBn{n}}} = \Emptyset.
 \end{equation}
 
 \begin{remark}
     The multiplication of objects in~$\SetL$ is associative (which was our goal with making this construction).
     Indeed, both
     \begin{equation}
-        ( \cObj{\setAn{1}, \ldots, \setAn{l}} \cprod \cObj{\setBn{1}, \ldots, \setBn{m}})
-        \cprod \cObj{\setCn{1}, \ldots, \setCn{n}}
+        \makecprod{
+            ( \makecprod{\cObj{\setAn{1}, \ldots, \setAn{l}}, \cObj{\setBn{1}, \ldots, \setBn{m}}})
+            ,
+            \cObj{\setCn{1}, \ldots, \setCn{n}}
+        }
     \end{equation}
     and
     \begin{equation}
-        \cObj{\setAn{1}, \ldots, \setAn{l}} \cprod (\cObj{\setBn{1}, \ldots, \setBn{m}} \cprod \cObj{\setCn{1}, \ldots, \setCn{n}})
+        \makecprod{
+            \cObj{\setAn{1}, \ldots, \setAn{l}},
+            (
+            \makecprod{
+                \cObj{\setBn{1}, \ldots, \setBn{m}},
+                \cObj{\setCn{1}, \ldots, \setCn{n}}
+            }
+            )
+        }
     \end{equation}
     are equal to
     \begin{equation}
