@@ -1,0 +1,217 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Different actions of Moore machines}
+\label{sec:different-actions-of-moore-machines}
+
+Moore machines need not necessarily act in the standard way given in \cref{def:moore-standard-action-on-sequences}.
+In this section, we illustrate other actions of Moore machines.
+
+\subsection{Changing how morphisms act}
+
+Recall that, given a Moore machine~$\mora = \tup{\prinL,\prstL,\proutL,\prdyn,\prreadout,\prstart}$, the standard action defined a function
+\begin{equation}
+    \streamsof{\prinL}  \to \streamsof{\proutL}
+\end{equation}
+via solving the recursion equations
+\begin{equation}
+    \label{eq:moore-recursion-once-again}
+    \begin{cases}
+        \prsteln{k+1} = \prdyn_\mora(\prineln{k} \tupconcat \prsteln{k}) \\
+        \prouteln{k}   = \prreadout_\mora(\prsteln{k}).
+    \end{cases}
+\end{equation}
+%
+One way define other actions is by changing \cref{eq:moore-recursion-once-again} to some other recipe.
+It is necessary then to check that the resulting action really satisfies the condition of \cref{def:semicategory-action}.
+
+For example, consider the recursion equations
+\begin{equation}
+    \label{eq:moore-new-recursion-equations}
+    \begin{cases}
+        \prsteln{k+1} = \prdyn_\mora(\prineln{k} \tupconcat \prsteln{k})                                                           \\
+        \tilde{\prstel}_{\styleelements{k+1}} = \prdyn_\mora(\prinel_{\styleelements{k}} \tupconcat \prstel_{\styleelements{k+1}}) \\
+        \prouteln{k}   = \prreadout_\mora(\tilde{\prstel}_{\styleelements{k}}).
+    \end{cases}
+\end{equation}
+Given~$\mora = \tup{\prinL,\prstL,\proutL,\prdyn,\prreadout,\prstart}$ we can use these to define an action of~$\mora$ by interpreting the variables~$\prsteln{k}$ and $\tilde{\prstel}_\styleelements{k}$ (for all~$k \setin \natnumbers$) both as denoting elements of~$\prstL$, and setting~$\prsteln{0} = \tilde{\prstel}_\styleelements{0} = \prstart$.
+The rest is analogous to how we defined the standard action:
+given a sequence~$\prinel = \prineln{0}, \prineln{1}, \prineln{2}, \ldots$ we can iteratively compute from it sequences~$\prstel = \prsteln{0}, \prsteln{1}, \prsteln{2}, \ldots$ and~$\tilde \prstel = \tilde{\prstel}_\styleelements{0}, \tilde{\prstel}_\styleelements{1}, \tilde{\prstel}_\styleelements{2}, \ldots$, and then the output sequence~$\proutel = \prouteln{0}, \prouteln{1}, \prouteln{2}, \ldots$ is defined by~$\prouteln{k}   = \prreadout_\mora(\tilde{\prstel}_{\styleelements{k}})$.
+
+\begin{example}
+    \label{exa:moore-non-standard-action-on-sequences}
+    Consider the same Moore machine~$\mora$ as in \cref{exa:moore-standard-action}, but now consider the action that uses \cref{eq:moore-new-recursion-equations}, instead of the standard action.
+    If we give the same input sequence as we did in \cref{exa:moore-standard-action}, what does the corresponding output sequence look like now?
+
+    We calculate the first five entries of the output sequence.
+    First, recall that~$\prinL = \prstL = \proutL = \cObj{\natnumbers}$ and
+    \begin{equation}
+        \defmapset{
+            \prdyn_\mora
+        }{
+            \prinL \cprod \prstL
+        }{
+            \prstL
+        }{
+            \tup{m} \tupconcat \tup{n}
+        }{
+            \tup{m + n}
+        }
+    \end{equation}
+    and
+    \begin{equation}
+        \defmapset{
+            \prreadout_\mora
+        }{
+            \prstL
+        }{
+            \proutL
+        }{
+            \tup{n}
+        }{
+            \tup{n+1}
+        }
+    \end{equation}
+    and~$\prstart = \tup{0}$.
+
+    The input sequence has the form~$\prinel = \tup{1}, \tup{2}, \tup{3}, \tup{4}, \tup{5}, \ldots$.
+    We first compute the first five entries of the sequences of states~$\prstel = \prsteln{0}, \prsteln{1}, \prsteln{2}, \ldots$ and~$\tilde{\prstel} = \tilde{\prstel}_\styleelements{0}, \tilde{\prstel}_\styleelements{1}, \tilde{\prstel}_\styleelements{2}, \ldots$ that solve \cref{eq:moore-new-recursion-equations}:
+    \begin{align*}
+        \prsteln{0} & = \prstart = \tup{0}, \\
+        \prsteln{1} & = \tup{1 + 0} = \tup{1}, \\
+        \prsteln{2} & = \tup{2 + 1} = \tup{3}, \\
+        \prsteln{3} & = \tup{3 + 3} = \tup{6}, \\
+        \prsteln{4} & = \tup{4 + 6} = \tup{10}
+    \end{align*}
+    and
+    \begin{align*}
+        \tilde{\prstel}_\styleelements{0} & = \prstart = \tup{0}, \\
+        \tilde{\prstel}_\styleelements{1} & = \tup{1 + 1} = \tup{2}, \\
+        \tilde{\prstel}_\styleelements{2} & = \tup{3 + 2} = \tup{5}, \\
+        \tilde{\prstel}_\styleelements{3} & = \tup{6 + 3} = \tup{9}, \\
+        \tilde{\prstel}_\styleelements{4} & = \tup{10 + 4} = \tup{14}.
+    \end{align*}
+    Applying~$\prreadout_\mora$ to the entries the sequence~$\tilde \prstel$, the first five entries of the output sequence are:
+    \begin{align*}
+        \prouteln{0} & = \tup{0 + 1} = \tup{1}, \\
+        \prouteln{1} & = \tup{2 + 1} = \tup{3}, \\
+        \prouteln{2} & = \tup{5 + 1} = \tup{6}, \\
+        \prouteln{3} & = \tup{9 + 1} = \tup{10}, \\
+        \prouteln{4} & = \tup{14 + 1} = \tup{15}.
+    \end{align*}
+\end{example}
+
+\todotext{Insert exercises here.}
+
+\begin{lemma}
+    The recursion equations \cref{eq:moore-new-recursion-equations} do indeed define a semicategory action of Moore machines in the sense of \cref{def:semicategory-action}.
+\end{lemma}
+
+\todotext{Make a graded exercise which is to prove the above lemma.}
+
+\subsection{Changing the signal spaces}
+
+The action defined above using \cref{eq:moore-new-recursion-equations} differs from the standard action of \cref{sec:Moore-acting-on-sequences} in terms of how morphisms act; it defines a different map
+\begin{equation}
+    \Mor_\Moore \to \Mor_\Set.
+\end{equation}
+However, the on the level of objects, the action stayed the same:
+\begin{equation}
+    \begin{aligned}
+        \Ob_{\Moore} & \to \Ob_{\Set} \\
+        \prinL       & \mapsto \streamsof\prinL
+    \end{aligned}
+\end{equation}
+
+Here we'll define an action which is different at the level of objects.
+Namely, we now make a different choice for a map
+\begin{equation}
+    \funobspace{\act} \colon \Ob_{\Moore} \to \Ob_{\Set}.
+\end{equation}
+Instead of mapping any object~$\Obja$ to the set of signals of the type~$\streamsof\Obja$, which are sequences of elements of~$\Obja$, our new action maps~$\Obja$ to the set~$\listsof{\Obja}$ of lists of elements of~$\Obja$.
+In other words, we model Moore machines now as taking finite lists as inputs, rather than infinite sequences.
+
+On the level of morphisms, we will keep the recipe of the original standard action of Moore machines.
+
+\begin{definition}
+    \label{def:moore-standard-action-on-lists}
+    We define the standard action of Moore machines on lists by
+    \begin{equation}
+        \defmapcomma{\funobspace{\act}}
+        {\Ob_{\Moore}}
+        {\to}
+        {\Ob_{\Set}}
+        {\prinL}
+        {\listsof{\prinL}}
+    \end{equation}
+    on the level of objects, and on the level of morphisms, the functions
+    \begin{equation}
+        \funmorspace{\act} \colon  \HomSet{\Moore}{\prinL}{\proutL} \to \HomSet{\Set}{ \listsof{\prinL}}{\listsof{\proutL}}
+    \end{equation}
+    are defined via the recursion equations
+    \begin{equation}
+        \begin{cases}
+            \prsteln{k+1} = \prdyn_\mora(\prineln{k} \tupconcat \prsteln{k}) \\
+            \prouteln{k}   = \prreadout_\mora(\prsteln{k})
+        \end{cases}
+    \end{equation}
+    analogously as for the standard action on sequences.
+    The only special cases are when the empty list~$\maketypedlist{\ }{\prinL}$ is the input: then we set
+    \begin{equation}
+        \funmorspace{\act}(\mora)(\maketypedlist{\ }{\prinL}) = \maketypedlist{ \prreadout_\mora(\prstart_\mora) }{\proutL}
+    \end{equation}
+    for any Moore machine~$\mora = \tup{\prinL,\prstL,\proutL,\prdyn,\prreadout,\prstart}$.
+\end{definition}
+
+\begin{example}
+    \label{exa:moore-non-standard-action-on-lists}
+    Consider the same Moore machine~$\mora$ as in \cref{exa:moore-standard-action} and \cref{exa:moore-non-standard-action-on-sequences}, namely with~$\prinL = \prstL = \proutL = \cObj{\natnumbers}$
+    and
+    \begin{equation}
+        \defmapset{
+            \prdyn_\mora
+        }{
+            \prinL \cprod \prstL
+        }{
+            \prstL
+        }{
+            \tup{m} \tupconcat \tup{n}
+        }{
+            \tup{m + n}
+        }
+    \end{equation}
+    and
+    \begin{equation}
+        \defmapset{
+            \prreadout_\mora
+        }{
+            \prstL
+        }{
+            \proutL
+        }{
+            \tup{n}
+        }{
+            \tup{n+1}
+        }
+    \end{equation}
+    and~$\prstart = \tup{0}$.
+
+    If we take the list
+    \begin{equation}
+        \maketypedlist{\tup{1}, \tup{2}, \tup{3}, \tup{4}, \tup{5}}{\prinL}
+    \end{equation}
+    as input, then the corresponding output is
+    \begin{equation}
+        \maketypedlist{\tup{0}, \tup{2}, \tup{3}, \tup{6}, \tup{10}}{\proutL},
+    \end{equation}
+    analogous to \cref{exa:moore-standard-action}.
+
+    If we take~$\maketypedlist{\ }{\prinL}$ as input, then the output is~$\maketypedlist{\tup{0}}{\proutL}$.
+\end{example}
+
+\todotext{Include another example?}
+
+\begin{lemma}
+    \cref{def:moore-standard-action-on-lists} defines a semicategory action.
+\end{lemma}
+
+\todotext{Make a graded exercise which asks for a proof of this lemma.}
