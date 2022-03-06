@@ -334,6 +334,11 @@
     \ifnum\@tempcnta = 0\else,\linebreak[0]\fi%
     \advance\@tempcnta\@ne%
 }
+\def\@insertbreakingcprod{%
+    \ifnum\@tempcnta = 0\else\cprod\linebreak[0]\fi%
+    \advance\@tempcnta\@ne%
+}
+
 
 \makeatletter
 \def\@insertbreakingsemicolon{%
@@ -342,56 +347,48 @@
 }
 
 \DeclareRobustCommand{\makelist}[1]{%
-    \@tempcnta=0
-    % {\color{formulasetcolor} \{}
+    \@tempcnta=0%
     [%
     \@for\@ii:=#1\do{%
         \@insertbreakingcomma%
         \@ii%
     }%
-    % {\color{formulasetcolor} \}}
-    ]%
+    ]%xX
 }
 
 
 
 \DeclareRobustCommand{\cObj}[1]{%
-    \@tempcnta=0
-    % {\color{formulasetcolor} \{}
+    \@tempcnta=0%
     \textbf{\fatstart}%
     \@for\@ii:=#1\do{%
         \@insertbreakingcomma%
         \@ii%
     }%
-    % {\color{formulasetcolor} \}}
     \textbf{\fatend}%
 }
 
 
 \DeclareRobustCommand{\maketypedlist}[2]{%
-    \@tempcnta=0
-    % {\color{formulasetcolor} \{}
+    \@tempcnta=0%
     [%
     \@for\@ii:=#1\do{%
         \@insertbreakingcomma%
         \@ii%
     }%
-    % {\color{formulasetcolor} \}}
     ]_{#2}%
 }
-\newcommand{\opensetbracket}{{\color{formulasetcolor} \mathbf{\{}}}
+\newcommand{\opensetbracket}{{\color{formulasetcolor}\mathbf{\{}}}
 \newcommand{\closesetbracket}{{\color{formulasetcolor}\mathbf{\}}}}
 
 \DeclareRobustCommand{\makeset}[1]{%
     \@tempcnta=0%
     \opensetbracket%
-    % \{%
     \@for\@ii:=#1\do{%
         \@insertbreakingcomma%
         \@ii%
     }%
     \closesetbracket%
-    % \}%
 }
 
 \newcommand{\cleft}[2][.]{%
@@ -399,30 +396,28 @@
   \color{#1}\left#2\color{savedleftcolor}%
 }
 \newcommand{\cright}[2][.]{%
-  \color{#1}\right#2\endgroup
+  \color{#1}\right#2\endgroup%
 }
 
 \DeclareRobustCommand{\makesett}[1]{%
-    \@tempcnta=0
-    \cleft[formulasetcolor]{\{}
-    % \{%
+    \@tempcnta=0%
+    \cleft[formulasetcolor]{\{}%
     \@for\@ii:=#1\do{%
         \@insertbreakingcomma%
         \@ii%
     }%
-    \cright[formulasetcolor]{\}}
-    % \}%
+    \cright[formulasetcolor]{\}}%
 }
 
 \DeclareRobustCommand{\makesetBig}[1]{%
     \@tempcnta=0
-    {\color{formulasetcolor} \mathbf{\Big\{}}
+    {\color{formulasetcolor}\mathbf{\Big\{}}%
     % \{%
     \@for\@ii:=#1\do{%
         \@insertbreakingcomma%
         \@ii%
     }%
-    {\color{formulasetcolor}\mathbf{\Big\}}}
+    {\color{formulasetcolor}\mathbf{\Big\}}}%
     % \}%
 }
 
@@ -436,6 +431,31 @@
     }%
     \rangle%
 }
+
+
+
+\DeclareRobustCommand{\makeTupcat}[1]{%
+    \@tempcnta=0%
+    \fatstart%
+    \@for\@ii:=#1\do{%
+        \@insertbreakingcomma%
+        \@ii%
+    }%
+    \fatend%
+}
+
+
+\DeclareRobustCommand{\makecprod}[1]{%
+    \@tempcnta=0%
+    % \fatstart%
+    \@for\@ii:=#1\do{%
+        \@insertbreakingcprod%
+        \@ii%
+    }%
+    % \fatend%
+}
+
+
 \makeatother
 
 \newcommand{\lb}{\linebreak[0]} % allow linebreak in formula
@@ -517,3 +537,15 @@
 
 
 \DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+
+
+\makeatletter
+\DeclareRobustCommand{\shortto}{%
+  \mathrel{\mathpalette\short@to\relax}%
+}
+
+\newcommand{\short@to}[2]{%
+  \mkern2mu
+  \clipbox{{.4\width} 0 0 0}{$\m@th#1\vphantom{+}{\shortrightarrow}$}%
+  }
+\makeatother

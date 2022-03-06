@@ -28,9 +28,7 @@ We have seen that an instance of a database can be modeled as a functor whose ta
 The architecture of the database in our example might be encoded by a category with four objects and three non-identity morphisms, as depicted in \cref{fig:student_database_schema}.
 The object~$\styleobj{S}$ stands for \emph{Student},~$\styleobj{D}$ stands for \emph{Discipline},~$\styleobj{N}$ stands for \emph{Name}, and~$\styleobj{Y}$ stands for \emph{Year}.
 Call this category~$\CatC$.
-A database instance~$\funa \colon \CatC \fto \Set$ entails specifying a set~$\funa(\styleobj{S})$ of all student IDs, a set~$\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, etc.
-.
-.. and so on.
+A database instance~$\funa \colon \CatC \fto \Set$ entails specifying a set~$\funa(\styleobj{S})$ of all student IDs, a set~$\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, \etc
 It also entails defining functions for each of the arrows in~$\CatC$.
 For example,~$\funa(\stylemorph{\text{studied}}) \colon \funa(\styleobj{S}) \mto \funa(\styleobj{D})$ is the function that assigns to each student ID the name of the discipline that that student studied.
 
@@ -56,9 +54,9 @@ the new discipline names are just
 \end{equation}
 
 In order to implement these changes, we use a function~$\ntrafoa_{\styleobj{D}}\colon \funa(\styleobj{D}) \mto \funb(\styleobj{D})$ which maps the old discipline names to the corresponding new ones in an obvious way:
-\begin{equation*}
+\begin{equation}
     \ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
-\end{equation*}
+\end{equation}
 
 The functions~$\ntrafoa_\styleobj{S}$ and~$\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance~$\funb$ relates coherently with the older database instance~$\funa$.
 Concretely, we want that if a student ID in~$\funb(\styleobj{S})$ is inherited from~$\funa(\styleobj{S})$ -- in other words, if it is in the image of~$\ntrafoa_{\styleobj{S}}$ --  then we want that its associated discipline in the database instance~$\funb$ is the same as if we first computed the student's discipline in the older database instance~$\funa$, and then mapped it to~$\funb$ using the function~$\ntrafoa_{\styleobj{D}}$.
@@ -88,35 +86,28 @@ One straightforward way to relate~$\funa(\Obja)$ to~$\funb(\Obja)$ is to choose 
 We call this morphism~$\ntrafoa_{\Obja}$, using the subscript~$\Obja$ since~$\ntrafoa_{\Obja}$ relates the respective images of the object~$\Obja$ under~$\funa$ and~$\funb$.
 If we choose such a morphism for each object in~$\CatC$, then we'll have collection~$\makeset{ \ntrafoa_\Obja }_{\Obja \setin \Ob_\CatC}$ of morphisms in~$\CatD$, indexed by the objects of~$\CatC$.
 
-Next,   consider a morphism~$\mora \colon \Obja \mto \Objb$ in the category~$\CatC$.
+Next, consider a morphism~$\mora \colon \Obja \mto \Objb$ in the category~$\CatC$.
 Under the functor~$\funa$ it will be mapped to some morphism~$\funa(\mora)\colon \funa(\Obja) \mto \funb(\Objb)$ in~$\CatD$, and under the functor~$\funb$ it will be mapped to some other morphism~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$, also in~$\CatD$.
-
-%
-\begin{figure}[h!]
-    \begin{center}
-        \includesag{diagram_two_functors}
-        \caption{
-            \label{fig:two-functors-diagram}}
-    \end{center}
-\end{figure}
-%
+\equationsag{diagram_two_functors}{eq:diagram_two_functors}
+% %
+% \begin{figure}[h!]
+%     \centering
+%     \includesag{}
+%     \caption{}
+%     \label{fig:two-functors-diagram}
+% \end{figure}
+% %
 
 We can think of~$\funa(\mora)\colon \funa(\Obja) \mto \funb(\Objb)$ and~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in~$\CatD$.
-If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \funb(\Obja)$ and~$\ntrafoa_\Objb\colon \funa(\Objb) \mto \funb(\Objb)$ in~$\CatD$, then these will connect the two diagrams, as depicted in \cref{fig:two-functors-connected-diagram}.
-
+If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \funb(\Obja)$ and~$\ntrafoa_\Objb\colon \funa(\Objb) \mto \funb(\Objb)$ in~$\CatD$, then these will connect the two diagrams, as depicted in \cref{eq:two-functors-connected-diagram}.
+\equationsag{diagram_two_functors_conn}{eq:two-functors-connected-diagram}
+% \begin{figure}[h!]
+%     \centering
+%     \includesag{diagram_two_functors_conn}
+%     \caption{}
+%     \label{fig:two-functors-connected-diagram}
+% \end{figure}
 %
-\begin{figure}[h!]
-    \begin{center}
-        \includesag{diagram_two_functors_conn}
-    \end{center}
-    \caption{
-        \label{fig:two-functors-connected-diagram}}
-\end{figure}
-%
-
-\begin{center}
-
-\end{center}
 
 In~$\CatD$, this gives rise to the square diagram shown in \cref{fig:naturality-square}.
 We'll require, as a condition on the morphisms~$\ntrafoa_\Obja$ and~$\ntrafoa_\Objb$, that they make the diagram in \cref{fig:naturality-square} commutative:
@@ -142,7 +133,7 @@ Under~$\funa$, the category~$\CatC$ is mapped to a -- possibly very complicated 
 
 To relate the image of~$\funa$ to the image of~$\funb$ we can proceed in the same way as above: for each object~$\Obja$ in~$\CatC$, we choose a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Objb)$ in~$\CatD$.
 In other words, we have a collection of morphisms~$(\ntrafoa_\Obja)_{\Obja \setin \Ob_\CatC}$ indexed by the objects of~$\CatC$.
-This gives rise to lots of squares of the kind in \cref{fig:naturality-square}, which we will require to be commutative.
+These gives rise to lots of squares of the kind in \cref{fig:naturality-square}, which we will require to be commutative.
 It is because of this commutativity condition, which is a condition on the collection~$(\ntrafoa_\Obja)_{\Obja \setin \Ob_\CatC}$, that some mathematicians would say that the collection~$(\ntrafoa_\Obja)_{\Obja \setin \Ob_\CatC}$ is a ``coherent'' or ``natural'' way to relate the image of~$\funa$ to the image of~$\funb$.
 (This does not mean, however, that there is at most one natural transformation between any two given functors - on the contrary, there might be many!)
 
@@ -257,26 +248,25 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
         \ntrafoa_V(v)(l) = l(v), \quad  v \setin V, l \setin V^*.
     \end{equation}
     These form the components of a natural transformation from the identity functor on \Vect to the double dual functor.
-    \begin{center}
-        \includesag{nat-trafo-ddual}
-    \end{center}
+    \equationsag{nat-trafo-ddual}{eq:nat-trafo-ddual}
+
 \end{example}
 
 \begin{example}
     Consider the powerset functor from \cref{ex:powerset_functor}, and denote it~$\funa$.
     As a reminder, the functor maps each set to its powerset, and each map to a map distributed over subsets of the powerset.
     We now look at a natural transformation~$\ntrafoa\colon \funid_\Set \nto \funa$, specified by
-    \begin{equation*}
+    \begin{equation}
         \begin{aligned}
             \ntrafoa_\setA\colon \funid_\Set(\setA) & \mto \funa(\setA) \\
             \setA                                   & \mto \powerset(\setA) \\
             \setAel                                 & \mapsto \makeset{\setAel}.
         \end{aligned}
-    \end{equation*}
+    \end{equation}
     In other words, the natural transformation embeds each element of~$\setA$ into the power set~$\powerset(\setA)$.
     To check that this is a valid natural transformation, consider $\mora\colon \setA\mto \setB$.
-    One has
-    \begin{equation*}
+    We have
+    \begin{equation}
         \begin{aligned}
             (\ntrafoa_\setA \mthen \funa(\mora))(\setAel)
              & =\makeset{\setAel} \mthen \funa(\mora) \\
@@ -284,7 +274,7 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
              & =\mora(\setAel)\mthen \ntrafoa_\setB \\
              & =(\mora \mthen \ntrafoa_\setB)(\setAel).
         \end{aligned}
-    \end{equation*}
+    \end{equation}
 \end{example}
 
 \vfill
@@ -324,10 +314,10 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
 
     \section{Horizontal composition}
 
-    \todojira{638}{@J: write this up}
+    \todojira{638}{@JL: write this up}
 
     \section{To add}
-    \todojira{141}{Add parts corresponding to listed videos.
+    \todojira{141}{@JL: Add parts corresponding to listed videos.
     }
     \linkvideo{spring2021-nat-trafos:natural-trafos:horizontal-composition} % Horizontal composition
     \linkvideo{spring2021-nat-trafos:natural-trafos:interchange-law} % Interchange law

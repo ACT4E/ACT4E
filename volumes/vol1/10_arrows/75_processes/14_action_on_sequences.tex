@@ -14,9 +14,9 @@ we saw that we can use it to transform a sequence of inputs~$\prineln{0}, \prine
 \end{equation}
 
 Rephrased mathematically, this means that \cref{eq:Moore-action-recursion-again}, together with~$\mora$, defines a function
-\begin{equation*}
-    \act_{\mora} \colon {\prinL_\mora}^\natnumbers \to {\proutL_\mora}^\natnumbers,
-\end{equation*}
+\begin{equation}
+    \act_{\mora} \colon \streamsof{\prinL_\mora}  \to \streamsof{\proutL_\mora},
+\end{equation}
 which takes any sequence of elements of~$\prinL_\mora$ and maps it to a corresponding sequence of elements of~$\proutL_\mora$.
 We call this the \emph{standard action} of~$\mora$ on sequences.
 
@@ -99,67 +99,67 @@ We call this the \emph{standard action} of~$\mora$ on sequences.
 
 \begin{proof}
     Suppose we have Moore machines
-    \begin{equation*}
+    \begin{equation}
         \mora = \tupp{\prinL_{\mora},\prstL_{\mora},\proutL_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
-    \end{equation*}
+    \end{equation}
     %
     and
     %
-    \begin{equation*}
+    \begin{equation}
         \morb = \tupp{\prinL_{\morb},\prstL_{\morb},\proutL_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
-    \end{equation*}
+    \end{equation}
     with~$\proutL_\mora = \prinL_\morb$.
 
     We will first calculate the right-hand side of \cref{eq:moore-action-compositional}, following the procedure of \cref{re:moore-action-two-steps}.
 
-    Given a sequence~$\prinel \in {\prinL_{\mora}}^\natnumbers$, to calculate~$\act_\mora(\prinel)$ we first map~$\prinel$ to the unique solution~$\styleelements{r}_\prinel \in {\prstL_{\mora}}^\natnumbers$ of the recursion
-    \begin{equation*}
-        \prsteln{k+1} = \prdyn_\mora(\prineln{k}, \prsteln{k})  \qquad \qquad k \in \natnumbers,
-    \end{equation*}
+    Given a sequence~$\prinel \setin \streamsof{\prinL_{\mora}}$, to calculate~$\act_\mora(\prinel)$ we first map~$\prinel$ to the unique solution~$\styleelements{r}_\prinel \setin \streamsof{\prstL_{\mora}}$ of the recursion
+    \begin{equation}
+        \prsteln{k+1} = \prdyn_\mora(\prineln{k}, \prsteln{k})  \qquad \qquad k \setin \natnumbers,
+    \end{equation}
     such that~$\styleelements{r}_\prinel(0) = \prstart_{\mora}$.
-    Then~$\act_\mora(\prinel) = \styleelements{r}_\prinel \then \prreadout_\mora$, an element of~${\proutL_{\mora}}^\natnumbers = {\prinL_{\morb}}^\natnumbers$.
+    Then~$\act_\mora(\prinel) = \styleelements{r}_\prinel \then \prreadout_\mora$, an element of~$\streamsof{\proutL_{\mora}} = \streamsof{\prinL_{\morb}}$.
 
-    Next, to calculate~$(\act_\mora \mthen \act_\morb)(\prinel)$, we first map~$\act_\mora(\prinel)$ to the unique solution~$\prsolel_{\act_\mora(\prinel)} \in {\prstL_{\morb}}^\natnumbers$ of the recursion
-    \begin{equation*}
-        \prsteln{k+1} = \prdyn_\morb(\act_\mora(\prineln{k}, \prsteln{k})  \qquad \qquad k \in \natnumbers
-    \end{equation*}
-    such that~$\prsolel_{\act_\mora(\prinel)}(0) = \prstart_{\morb}$, and then we have
-    \begin{equation}
-        \label{eq:Moore-act-composition-1}
-        (\act_\mora \mthen \act_\morb)(\prinel) = \prsolel_{\act_\mora(\prinel)} \then \prreadout_g.
-    \end{equation}
+    Next, to calculate~$(\act_\mora \mthen \act_\morb)(\prinel)$, we first map~$\act_\mora(\prinel)$ to the unique solution~$\prsolel_{\act_\mora(\prinel)} \setin \streamsof{\prstL_{\morb}}$ of the recursion
+        \begin{equation}
+            \prsteln{k+1} = \prdyn_\morb(\act_\mora(\prineln{k}, \prsteln{k})  \qquad \qquad k \setin \natnumbers
+        \end{equation}
+        such that~$\prsolel_{\act_\mora(\prinel)}(0) = \prstart_{\morb}$, and then we have
+        \begin{equation}
+            \label{eq:Moore-act-composition-1}
+            (\act_\mora \mthen \act_\morb)(\prinel) = \prsolel_{\act_\mora(\prinel)} \then \prreadout_g.
+        \end{equation}
 
-    We calculate the left-hand side of \cref{eq:moore-action-compositional}.
-    Given~$\prinel \in {\prinL_{\mora}}^\natnumbers$, we map it to the unique solution~$\styleelements{q}_\prinel \in {\prstL_{\mora \mthen \morb}}^\natnumbers = ({\prstL_{\mora} \cprod \prstL_{\morb}})^\natnumbers$ of the recursion
-    \begin{equation}
-        \label{eq:moore-composite-recursion-equation}
-        \prsteln{k+1} = \prdyn_{\mora \mthen \morb}(\prineln{k}, \prsteln{k})  \qquad \qquad k \in \natnumbers
-    \end{equation}
-    with~$\styleelements{q}_\prinel(0) = \prstart_{\mora} \tupconcat \prstart_{\morb}$.
-    Using the definition of~$\prdyn_{\mora \mthen \morb}$ and the fact that we can write any~$\prsteln{k} \in \prstL_{\mora} \cprod \prstL_{\morb}$ as
-    \begin{equation*}
-        \prsteln{k} = \prsteln{k}^\mora \tupconcat \prsteln{k}^\morb \qquad \qquad \text{ with } \prsteln{k}^\mora \in \prstL_{\mora}, \prsteln{k}^\morb \in \prstL_{\morb},
-    \end{equation*}
-    we can rewrite \cref{eq:moore-composite-recursion-equation} as
-    \begin{equation*}
-        \prsteln{k+1}^\mora \tupconcat \prsteln{k+1}^\morb = \prdyn_{\mora}(\prineln{k}, \prsteln{k}^\mora) \tupconcat \prdyn_{\morb}(\prreadout_\mora(\prsteln{k}^\mora), \prsteln{k}^\morb)  \qquad \qquad k \in \natnumbers.
-    \end{equation*}
-    Now observe that the sequence~$\styleelements{r}_{\prinel}(k) \tupconcat \prsol_{\act_\mora(\prinel)}(k)$ solves this recursion:
-    by definition~$\styleelements{r}_\prinel$ solves of the recursion
-    \begin{equation*}
-        \prsteln{k+1} = \prdyn_\mora(\prineln{k}, \prsteln{k})  \qquad \qquad k \in \natnumbers,
-    \end{equation*}
-    and, recalling that~$\act_\mora(\prinel)_k = \prreadout_\mora(\styleelements{r}_\prinel(k))$, we see that~$\prsolel_{\act_\mora(\prinel)}$ solves the recursion
-    \begin{equation*}
-        \prsteln{k+1} = \prdyn_\morb(\prreadout_\mora(\styleelements{r}_\prinel(k)), \prsteln{k})  \qquad \qquad k \in \natnumbers.
-    \end{equation*}
-    Since~$\styleelements{r}_\prinel(0) \tupconcat \prsolel_{\act_\mora(\prinel)}(0) = \prstart_{\mora} \tupconcat \prstart_{\morb}$, this implies that the unique solution~$\styleelements{q}_\prinel$ above is precisely~$\styleelements{q}_\prinel(k) = \styleelements{r}_\prinel(k) \tupconcat \prsolel_{\act_\mora(\prinel)}(k)$.
+        We calculate the left-hand side of \cref{eq:moore-action-compositional}.
+        Given~$\prinel \setin \streamsof{\prinL_{\mora}}$, we map it to the unique solution~$\styleelements{q}_\prinel \setin \streamsof{\prstL_{\mora \mthen \morb}}  = \streamsof{({\prstL_{\mora} \cprod \prstL_{\morb}})}$ of the recursion
+        \begin{equation}
+            \label{eq:moore-composite-recursion-equation}
+            \prsteln{k+1} = \prdyn_{\mora \mthen \morb}(\prineln{k}, \prsteln{k})  \qquad \qquad k \setin \natnumbers
+        \end{equation}
+        with~$\styleelements{q}_\prinel(0) = \prstart_{\mora} \tupconcat \prstart_{\morb}$.
+        Using the definition of~$\prdyn_{\mora \mthen \morb}$ and the fact that we can write any~$\prsteln{k} \setin \prstL_{\mora} \cprod \prstL_{\morb}$ as
+        \begin{equation}
+            \prsteln{k} = \prsteln{k}^\mora \tupconcat \prsteln{k}^\morb \qquad \qquad \text{ with } \prsteln{k}^\mora \setin \prstL_{\mora}, \prsteln{k}^\morb \setin \prstL_{\morb},
+        \end{equation}
+        we can rewrite \cref{eq:moore-composite-recursion-equation} as
+        \begin{equation}
+            \prsteln{k+1}^\mora \tupconcat \prsteln{k+1}^\morb = \prdyn_{\mora}(\prineln{k}, \prsteln{k}^\mora) \tupconcat \prdyn_{\morb}(\prreadout_\mora(\prsteln{k}^\mora), \prsteln{k}^\morb)  \qquad \qquad k \setin \natnumbers.
+        \end{equation}
+        Now observe that the sequence~$\styleelements{r}_{\prinel}(k) \tupconcat \prsol_{\act_\mora(\prinel)}(k)$ solves this recursion:
+        by definition~$\styleelements{r}_\prinel$ solves of the recursion
+        \begin{equation}
+            \prsteln{k+1} = \prdyn_\mora(\prineln{k}, \prsteln{k})  \qquad \qquad k \setin \natnumbers,
+        \end{equation}
+        and, recalling that~$\act_\mora(\prinel)_k = \prreadout_\mora(\styleelements{r}_\prinel(k))$, we see that~$\prsolel_{\act_\mora(\prinel)}$ solves the recursion
+        \begin{equation}
+            \prsteln{k+1} = \prdyn_\morb(\prreadout_\mora(\styleelements{r}_\prinel(k)), \prsteln{k})  \qquad \qquad k \setin \natnumbers.
+        \end{equation}
+        Since~$\styleelements{r}_\prinel(0) \tupconcat \prsolel_{\act_\mora(\prinel)}(0) = \prstart_{\mora} \tupconcat \prstart_{\morb}$, this implies that the unique solution~$\styleelements{q}_\prinel$ above is precisely~$\styleelements{q}_\prinel(k) = \styleelements{r}_\prinel(k) \tupconcat \prsolel_{\act_\mora(\prinel)}(k)$.
 
-    Finally, we have
-    \begin{equation*}
-        \act_{\mora \mthen \morb}(\prinel) = \styleelements{q}_\prinel \then \prreadout_{\mora \mthen \morb}.
-    \end{equation*}
-    Evaluating at any~$k \in \natnumbers$ we find
+        Finally, we have
+        \begin{equation}
+            \act_{\mora \mthen \morb}(\prinel) = \styleelements{q}_\prinel \then \prreadout_{\mora \mthen \morb}.
+        \end{equation}
+        Evaluating at any~$k \setin \natnumbers$ we find
     \begin{align*}
         (\styleelements{q}_\prinel \then \prreadout_{\mora \mthen \morb})(k)
          & = \prreadout_{\mora \mthen \morb}(\styleelements{q}_\prinel(k)) \\
@@ -168,9 +168,9 @@ We call this the \emph{standard action} of~$\mora$ on sequences.
          & = (\prsolel_{\act_\mora(\prinel)} \then \prreadout_{\morb})(k).
     \end{align*}
     Comparing with \cref{eq:Moore-act-composition-1}, we conclude that
-    \begin{equation*}
+    \begin{equation}
         \act_{\mora \mthen \morb}(\prinel) = (\act_\mora \mthen \act_\morb)(\prinel).
-    \end{equation*}
+    \end{equation}
 \end{proof}
 
 \todotext{J: Idea: maybe we can model ODE solvers such as the Euler method, etc., as Moore machines and their actions?
@@ -252,17 +252,17 @@ We call this the \emph{standard action} of~$\mora$ on sequences.
 %\end{align}
 %
 %We can check this graphically.
-%First, one has
+%First, we have
 %%
-%\begin{equation*}
+%\begin{equation}
 %    \prfperiod{\prftree{\includesag{moore_right_s_f}}{\includesag{moore_right_s_f_conn}}}{\prftree{\includesag{moore_right_b}}{\includesag{moore_right_b_space}}}{\includesag{moore_right_comp_1}}
-%\end{equation*}
+%\end{equation}
 %%
-%Second, one has
+%Second, we have
 %%
-%\begin{equation*}
+%\begin{equation}
 %    \prfperiod{\prftree{\includesag{moore_right_s}}{\includesag{moore_right_s_space}}}{\prftree{\includesag{moore_right_1}}{\includesag{moore_right_2}}}{\includesag{moore_right_5}}
-%\end{equation*}
+%\end{equation}
 %%
 %Therefore, we have a \emph{covariant} semigroup action.
 %

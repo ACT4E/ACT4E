@@ -172,7 +172,7 @@ We start by defining a ``design problem with implementation'', which is a tuple 
         \includesag{bin_packing_dp}
         \begin{equation}
             \label{eq:imp_comp}
-            \impsp \setsubseteq \Tupcat \impsp_{1}  \impsp_{2}
+            \impsp \setsubseteq \makeTupcat{ \impsp_{1}, \impsp_{2}}
         \end{equation}
         \begin{equation}
             \label{eq:dp_mob_4}
@@ -216,8 +216,8 @@ We start by defining a ``design problem with implementation'', which is a tuple 
 
 \begin{example}[Chassis design]
     \label{exa:chassis}
-    Suppose we need to choose a chassis for a robot~(\cref{fig:gmcdp_chassis_eval}).
-    The implementation space~\impsp could be the set of all chassis that could ever be designed (in case of a theoretical analysis), or just the set of chassis available in the catalogue at hand (in case of a practical design decision).
+    Suppose we need to choose a chassis for a robot.
+    The implementation space~\impsp~(\cref{fig:gmcdp_chassis_eval}) could be the set of all chassis that could ever be designed (in case of a theoretical analysis), or just the set of chassis available in the catalogue at hand (in case of a practical design decision).
     The functionality of a chassis could be formalized as ``the ability to transport a certain \F{payload
     {[}g{]}}'' and ``at a given \F{speed {[}m/s{]}}''.
     More refined functional requirements would include maneuverability, the cargo volume, \etc
@@ -328,6 +328,8 @@ If there are no \textF{green} (respectively, \textR{red}) edges, then~$\dpinumf$
 
 These \emph{co-design diagrams} are not to be confused with signal flow diagrams, in which the boxes represent oriented systems and the edges represent signals.
 
+\todotextjira{297}{@Andrea: We start right away talking about monotonicity after the DPI definition, but the link is not clear.}
+
 %\captionsideleft{\label{fig:gmcdp_chassis_eval}}{\includegraphics[scale=0.33]{gmcdp_chassis_eval.pdf}}
 
 \section{Examples}
@@ -350,24 +352,24 @@ Many mechanisms can be readily modeled as relations between a provided functiona
 %\end{figure}
 
 \begin{example}
-    A gearbox (\cref{fig:gearbox}) provides a certain \textF{output torque} $\F{\tau_o}$ and \textF{speed} $\F{\tau_o}$, given a certain
-    \R{input torque $\tau_i$} and \R{speed $\omega_i$}.
-    For an ideal gearbox with a reduction ratio $r \setin \ratnumbers_+$ and efficiency ratio $\gamma$, $0<\gamma<1$, the constraints among those quantities are ${\colR \omega_i}\geq r\,{\colF \omega_o}$
-    and ${\colR \tau_i\omega_i}\geq\gamma\,{\colF \tau_o\omega_o}.
-    $
+    A gearbox (\cref{fig:gearbox}) provides a certain \textF{output torque} $\F{\tau_o}$ and \textF{speed} $\F{\tau_o}$, given a certain \R{input torque $\tau_i$} and \R{speed $\omega_i$}.
+    For an ideal gearbox with a reduction ratio ${\colI r} \setin \ratnumbers_+$ and efficiency ratio $\colI\gamma$, $0<\gamma<1$, the constraints among those quantities are ${\colR \omega_i}\geq r\,{\colF \omega_o}$ and ${\colR \tau_i\omega_i}\geq\gamma\,{\colF \tau_o\omega_o}$.
+    With this simple model, the set of implementations are given by the possible values of reduction and efficiency ratio.
 \end{example}
-\todotextjira{296}{@Andrea: What are the implementations?}
+
 \begin{figure}[h]
     \centering
     \includesag{520_dp_gearbox}
     \caption{}
     \label{fig:gearbox}
+    \todographics{@Gioele: can we put the reduction ratio and efficieny ratio as implementations in the drawing? }
 \end{figure}
 
 \begin{example}
-    \emph{Propellers}~(\cref{fig:propeller}) generate \F{thrust}
-    given a certain \R{torque} and \R{speed}.
+    \emph{Propellers}~(\cref{fig:propeller}) generate \F{thrust} given a certain \R{torque} and \R{speed}.
+    % A simple model is that thrust is proportional to the product of the torque and the speed.
 \end{example}
+\todotext{@Gioele: Can you write down a model for propeller thrust? Double check that it is monotone.}
 \todotextjira{296}{@Andrea: What are the implementations?}
 \begin{figure}[h]
     \centering
@@ -377,10 +379,13 @@ Many mechanisms can be readily modeled as relations between a provided functiona
 \end{figure}
 
 \begin{example}
-    A \emph{crank-rocker} (\cref{fig:crack}) converts \R{rotational motion} into a \F{rocking motion}.
+    A four-bar \emph{crank-rocker} (\cref{fig:crack}) converts \R{rotational motion} into a \F{rocking motion}.
+    The parametrization depends on the length of the four linkages.
 \end{example}
-\todographicsjira{296}{@Gioele: Put here an additional crank-rocker mechanism figure so that people who don't know that can get an idea.}
-\todotextjira{296}{@Andrea: What are the implementations?}
+\todographicsjira{296}{@Gioele: Put here an additional crank-rocker mechanism figure so that people who don't know that can get an idea.
+    Also can we find some equations describing relation between torque, speed and force
+}
+
 \begin{figure}[h]
     \centering
     \includesag{520_crank}
@@ -397,6 +402,7 @@ Geometrical constraints are examples of constraints that are easily recognized a
     What is the minimal size of the enclosure?
     This is a variation of the \emph{bin packing} problem, which is in NP for both 2D and 3D~\cite{lodi02two}.
     It is easy to see that the problem is monotone, by noticing that, if one the components shapes increases, then the size of the enclosure cannot shrink.
+
 \end{example}
 \todotextjira{296}{@Andrea: What are the implementations?}
 \begin{figure}[tbh]
@@ -404,6 +410,7 @@ Geometrical constraints are examples of constraints that are easily recognized a
     \includesag{bin_packing}
     \caption{}
     \label{fig:packing}
+    \todographics{@Gioele: can you put `content shapes' in green, and `container shape' in red?}
 \end{figure}
 
 \subsubsection{Inference}
@@ -414,11 +421,10 @@ or \R{sensing} as resources.
 Typically, these bounds are known in a closed form only for restricted classes of systems, such as the linear/Gaussian setting.
 
 \begin{example}[SLAM]
-    One issue with particle-filter-based estimation procedures, such as the ones used in the popular GMapping~\cite{grisetti07improved}
-    method, is that the filter might diverge if there aren't enough particles.
+    One issue with particle-filter-based estimation procedures, such as the ones used in the popular GMapping~\cite{grisetti07improved} suite, is that the filter might diverge if there aren't enough particles.
     Although the relation might be hard to characterize, there is a monotone relation between the \F{robustness} (1 - probability of failure), the \F{accuracy}, and the \R{number of particles}~(\cref{fig:gmapping}).
+    Here, the implementation space contains the other choices of parameters for the filter: fixed the number of particles, by changing the tuning of the filter, one can explore the trade-off of accuracy and robustness.
 \end{example}
-\todotextjira{296}{@Andrea: What are the implementations?}
 \begin{figure}[h]
     \centering
     \includesag{520_mapping}
@@ -483,7 +489,7 @@ In a multi-robot system there is always a trade-off between the number of robots
     Suppose we need to create a swarm of agents whose functionality is
     \F{to sweep an area}.
     If the functionality is fixed, one expects a three-way trade-off between the three resources: number of agents, the speed of a single agent, and the execution time.
-    For example, if the time available decreases, one has to increase either the speed of an agent or the number of agents~(\cref{fig:multirobot2}).
+    For example, if the time available decreases, we have to increase either the speed of an agent or the number of agents~(\cref{fig:multirobot2}).
 \end{example}
 
 \begin{figure}[h]
@@ -497,12 +503,12 @@ In a multi-robot system there is always a trade-off between the number of robots
     \caption{}
 \end{figure}
 
-\subsubsection{LQG Control}
+% \subsubsection{LQG Control}
 \todojira{155}{@Gioele: Fill LQG section}
 
-\begin{publictodo}
-    Missing: discussion of LGQ control as a design problem.
-\end{publictodo}
+% \begin{publictodo}
+%     Missing: discussion of LGQ control as a design problem.
+% \end{publictodo}
 \showslides{
 
     \begin{forslides}
@@ -574,7 +580,7 @@ In a multi-robot system there is always a trade-off between the number of robots
             \label{lem:codesigncnt_1}
             Let~$\mat{Q}(\alpha)=\alpha \mat{Q}_0$ and~$\mat{R}(\alpha)=\frac{1}{\alpha}\mat{R}_0$, $\alpha\setin \mathbb{R}_+$.
             Let~$\mat{u}^\star(\alpha)$ be the solution of the LQG problem with $\mat{Q}(\alpha)$ and $\mat{R}(\alpha)$.
-            Then, under optimal control one has:
+            Then, under optimal control we have:
             \begin{itemize}
                 \item $P_\mathrm{track}(\alpha)$ is decreasing with $\alpha$
                       increasing.
