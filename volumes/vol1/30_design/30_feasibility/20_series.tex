@@ -25,13 +25,13 @@ The first and most basic way is series composition, or just ``composition''.
 
 The series composition~$\adpab$ judges a pair~$\tup{\funposAopel,\resposCel}$ as feasible if and only if there exists a~$\posBel \setin \posB$ such that~$\adpa(\funposAopel,\resposBel)$ and~$\adpb(\funposBopel,\resposCel)$ are feasible.
 
-We use the same diagrammatic notation for DPs as for DPIs. We represent series composition as
+We use the same diagrammatic notation for DPs as for DPIs.
+We represent series composition as
 %
 \equationsag{50_series_diag}{fig:compositiondiagram}
 %
 One can notice the ``co-design constraint'' $\posleq$, which can be interpreted as follows.
 The \textR{resource} required by a component is limited by the \textF{functionality} produced by another component.
-
 
 \footnote{In~\cref{eq:composition2} we could have written ``$\exists_{\posBel\setin \posB}$'' instead of ``$\bigvee_{\posBel\setin \posB}$''; the latter form highlights the connection with operations on matrices.
     Given a set~$\setA$ and a map~$\stylemaps{s}\colon \setA\to\Bool$, we can define the boolean~$\bigvee_{\setAel\setin \setA}\stylemaps{s}(\setAel)$ by
@@ -96,62 +96,6 @@ Thus, the visualization of the composite~$\adpa \fthen \adpb$ is as in \cref{fig
 \end{figure}
 
 \todotextjira{359}{@Andrea: Implement material explaining and illustrating the perspective on composing design problems in terms of matrices and matrix multiplication.}
-
-\subsection{Alternative form of composition}
-    As an alternative to \cref{eq:composition2}, rather than taking the ``or'' ($\boolor$) over an element~$\resposBel$, we can iterate over pairs~$\resposBel_1,\funposBel_2$ such that~$\resposBel_1\posleq\funposBel_2$:
-    \begin{equation}
-        \label{eq:composition}
-        \defmapperiod{\adpab}{\funposA\op \cartprod \resposC}{\toinPos}{\Bool}{\tup{\funposAopel, \resposCel}}{\bigvee_{\resposBel_\R{1}\posleq\funposBel_\F{2}, \resposBel_\R{1},\funposBel_\F{2}\setin \posB} \adpa(\funposAopel,\resposBel_\R{1}) \booland \adpb(\funposBel^{\F{*}}_\F{2},\resposCel)}
-        %            \adpab  \colon \funposA\op \cartprod \resposC & \toinPos  \Bool, \\
-        %            \tup{\funposAopel, \resposCel}                & \mapsto \bigvee_{\resposBel_\R{1}\posleq\funposBel_\F{2}, \resposBel_\R{1},\funposBel_\F{2}\setin \posB} \adpa(\funposAopel,\resposBel_\R{1}) \booland \adpb(\funposBel^{\F{*}}_\F{2},\resposCel).
-    \end{equation}
-
-\begin{exercise}
-    \label{ex:composition_equivalency}
-    Prove that the series composition operations given in~\cref{eq:composition2,eq:composition} are equivalent.
-\end{exercise}
-%
-\begin{solution}
-    First consider the direction~\cref{eq:composition}~$\implies$ \cref{eq:composition2}.
-    In order for%
-    \begin{equation}
-        \bigvee_{\resposBel_\R{1}\posleq\funposBel_\F{2}, \resposBel_\R{1},\funposBel_\F{2}\setin \posB} \adpa(\funposAopel,\resposBel_\R{1}) \booland \adpb(\funposBel_\F{2}\Fop,\resposCel)%
-    \end{equation}
-    to be true, there should exist some~$\resposBel_\R{1}\posleq \funposBel_\F{2}$ for which~$\adpa(\funposAopel,\resposBel_\R{1}) \booland\adpb(\funposBel_\F{2}\Fop,\resposCel)$ is true.
-    However, due to the monotonicity of~$\adpa$,~$\adpa(\funposAopel,\resposBel_\R{2}) \booland \adpb(\funposBel_\F{2}\Fop,\resposCel)$ and \cref{eq:composition2} must be true as well.
-    On the other hand, if%
-    \begin{equation}
-        \bigvee_{\resposBel_\R{1}\posleq\funposBel_\F{2}, \resposBel_\R{1},\funposBel_\F{2}\setin \posB} \adpa(\funposAopel,\resposBel_\R{1}) \booland \adpb(\funposBel_\F{2}\Fop,\resposCel)%
-    \end{equation}
-    is false, then due to the equality, it is false for any~$\resposBel_\R{1}=\funposBel_\F{2}$, and therefore all inner terms of \cref{eq:composition2} must be false as well.
-
-    The other direction, \cref{eq:composition2}~$\implies$ \cref{eq:composition}, can be shown similarly.
-    If \cref{eq:composition2} is true, then there must exist a~$\posBel'$ such that~$\adpa(\funposAopel, \R{\posgenBel'})=\true$ and~$\adpb(\F{\posgenBel'^*}, \resposCel)=\true$.
-    Then, the inner term in \cref{eq:composition} is true for~$\resposBel_\R{1}=\funposBel_\F{2}=\posBel'$.
-    If \cref{eq:composition2} is false, then there is no such~$\posBel'$ for which both~$\adpa(\funposAopel, \R{\posgenBel'})$ and~$\adpb(\F{\posgenBel'^*}, \resposCel)$ are true, but then due to the monotonicity of~$\adpa$ and~$\adpb$ they also cannot be true for any~$\resposBel_\R{1} \posleq \funposBel_\F{2} = \posBel'$ or~$\posBel'=\resposBel_\R{1} \posleq \funposBel_\F{2}$.
-    Hence, \cref{eq:composition} must also be false.
-\end{solution}
-
-\begin{remark}
-    At first sight, \cref{eq:composition} might seem like a more verbose version of \cref{eq:composition2}.
-    However, assume that we have the means to obtain the minimal antichain of the feasible set of resources that provide~$\funposA$ for the first term:
-    \begin{equation}
-        \resposB_\adpa = \Min \makeset{\resposBel\setin \resposB \mid \adpa(\funposAopel,\resposBel)=\true} \setin \antichains \resposB.
-    \end{equation}
-    This represents the minimal resources with which~$\adpa$ can provide~$\funposA$.
-    Assume further that we similarly have the means to obtain the maximal antichain of the feasible set of functionalities that~$\resposCel$ provides for the second term
-    \begin{equation}
-        \funposB_\adpb = \Max \makeset{\funposBel\setin \funposB \mid \adpb(\funposBopel,\resposCel)=\true} \setin \antichains \funposB,
-    \end{equation}
-    which represents the maximal functionality that~$\adpb$ can provide given~$\resposCel$.
-    Then, \cref{eq:composition} implies that it suffices to only evaluate
-    \begin{equation}
-        \bigvee_{\substack{\resposBel_\R{1}\posleq\funposBel_\F{2} \\ \resposBel_\R{1}\setin \resposB_\adpa,~ \funposBel_\F{2}\setin\funposB_\adpb }} \adpa(\funposAopel,\resposBel_\R{1}) \booland \adpb(\funposBel_\F{2}\Fop,\resposCel),
-    \end{equation}
-    which can be much more efficient than iterating over all~$\posBel\setin \posB$.
-\end{remark}
-
-
 
 \begin{example}
     After the Bucket of Boom X100 blew upon re-entry, Jeb's Spaceship Parts is building the X101.
