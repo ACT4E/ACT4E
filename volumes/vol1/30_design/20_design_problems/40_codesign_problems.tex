@@ -9,7 +9,7 @@ A ``co-design problem'' will be defined as a \emph{multigraph} of design problem
     A \emph{Co-Design Problem with Implementation} (CDPI) is a tuple~$\tup{\funsp,\ressp,\tup{\cdpiN,\cdpiE}}$, where~\funsp and~\ressp are two posets, and~$\tup{ \cdpiN,\cdpiE}$ is a multigraph of DPIs.
     Each node~$\adp\setin\cdpiN$ is a DPI~$\adp=\tup{\funsp_{\adp},\ressp_{\adp},\impsp_{\adp},\prov_{\adp},\req_{\adp}}.
     $
-    An edge~$\cdpie\setin\cdpiE$ is a tuple $\cdpie=\tup{ \tup{ \adp_1,\cdpiresindA} ,\tup{\adp_2,\cdpifunindB}}$, where~$\adp_1,\adp_2\setin\cdpiN$ are two nodes and~$\cdpiresindA$ and~$\cdpifunindB$ are the indices of the components of the functionality and resources to be connected, and it holds that~$\pi_{\cdpiresindA}\ressp_{\adp_1}=\pi_{\cdpifunindB}\funsp_{\adp_2}$~(\cref{fig:mcdps}).
+    An edge~$\cdpie\setin\cdpiE$ is a tuple $\cdpie=\tup{ \tup{ \adpan{1},\cdpiresindA} ,\tup{\adpan{2},\cdpifunindB}}$, where~$\adpan{1},\adpan{2}\setin\cdpiN$ are two nodes and~$\cdpiresindA$ and~$\cdpifunindB$ are the indices of the components of the functionality and resources to be connected, and it holds that~$\pi_{\cdpiresindA}\ressp_{\adpan{1}}=\pi_{\cdpifunindB}\funsp_{\adpan{2}}$~(\cref{fig:mcdps}).
 
 \end{definition}
 
@@ -21,16 +21,16 @@ A ``co-design problem'' will be defined as a \emph{multigraph} of design problem
     \label{fig:mcdps}
 \end{figure}
 
-A CDPI is equivalent to a DPI with an implementation space~\impsp that is a subset of the product $\prod_{\adp\setin\cdpiN}\impsp_{\adp}$, and contains only the tuples that satisfy the co-design constraints.
+A CDPI is equivalent to a DPI with an implementation space~$\impsp$ that is a subset of the product~$\prod_{\adp\setin\cdpiN}\impsp_{\adp}$, and contains only the tuples that satisfy the co-design constraints.
 An implementation tuple~$\imp\setin\prod_{\adp\setin\cdpiN}\impsp_{\adp}$
-belongs to~\impsp iff it respects all functionality--resources constraints on the edges, in the sense that, for all edges~$\tup{\tup{ \adp_1,\cdpiresindA} ,\tup{\adp_2,\cdpifunindB}}$
+belongs to~\impsp iff it respects all functionality--resources constraints on the edges, in the sense that, for all edges~$\tup{\tup{ \adpan{1},\cdpiresindA} ,\tup{\adpan{2},\cdpifunindB}}$
 in~$\cdpiE$, it holds that
 \begin{equation}
-    \pi_{\cdpiresindA}\req_{\adp_1}(\pi_{\adp_1}\imp)\posleq\pi_{\cdpifunindB}\prov_{\adp_2}(\pi_{\adp_2}\imp).
+    \pi_{\cdpiresindA}\req_{\adpan{1}}(\pi_{\adpan{1}}\imp)\posleq\pi_{\cdpifunindB}\prov_{\adpan{2}}(\pi_{\adpan{2}}\imp).
 \end{equation}
 The posets~$\funsp,\ressp$ for the entire CDPI are the products of the functionality and resources of the nodes that remain \emph{unconnected}.
 For a node~$\adp$, let~$\unconnectedfun_{\adp}$ and~$\unconnectedres_{\adp}$ be the set of unconnected functionalities and resources.
-Then~$\funsp$ and~$\ressp$ for the CDPI are defined as the product of the unconnected functionality and resources of all DPIs: $\funsp=\prod_{\adp\setin\cdpiN}\prod_{\cdpifunind\setin\unconnectedfun_{\adp}}\pi_{\cdpifunind}\funsp_{\adp}$ and~$\ressp=\prod_{\adp\setin\cdpiN}\prod_{\cdpiresind\setin\unconnectedres_{\adp}}\pi_{\cdpiresind}\ressp_{\adp}.
+Then~$\funsp$ and~$\ressp$ for the CDPI are defined as the product of the unconnected functionality and resources of all DPIs:~$\funsp=\prod_{\adp\setin\cdpiN}\prod_{\cdpifunind\setin\unconnectedfun_{\adp}}\pi_{\cdpifunind}\funsp_{\adp}$ and~$\ressp=\prod_{\adp\setin\cdpiN}\prod_{\cdpiresind\setin\unconnectedres_{\adp}}\pi_{\cdpiresind}\ressp_{\adp}.
 $
 The maps~$\prov,\req$ return the values of the unconnected functionality and resources:
 \begin{equation}
@@ -66,13 +66,13 @@ The maps~$\prov,\req$ return the values of the unconnected functionality and res
               \end{align}
         \item Wiring constraints:
               \begin{align}
-                  \tupp{\fun_{\adpa,1}, \fun_{\adpa_2}}  = \fun_\adpa, \\
+                  \tupp{\fun_{\adpan{1}}, \fun_{\adpan{2}}}  = \fun_\adpa, \\
                   \res_{\adpb,\adpc}=\tup{\res_\adpb,\res_\adpc}, \\
                   \fun_{\adpb,\adpc}=\tup{\fun_\adpb,\fun_\adpc}.
               \end{align}
         \item Co-design constraints:
               \begin{align}
-                  \res_{\adpb,\adpc}\posleq \fun_{\adpa,1}, \\
+                  \res_{\adpb,\adpc}\posleq \fun_{\adpan{1}}, \\
                   \res_\adpa \posleq \fun_{\adpb,\adpc}.
               \end{align}
     \end{enumerate}
@@ -179,7 +179,7 @@ To show this, we will give an example of a 1-dimensional problem with a continuo
     \end{figure*}
     %\captionsideleft{\label{fig:gmcdp_chassis_plus_motor_series}}{\includegraphics[scale=0.33]{gmcdp_chassis_plus_motor_series.pdf}}
 
-    Resources can be summed together using a trivial DP corresponding to the map $\ftor:\tup{\fun_{1},\fun_{2}} \mapsto\makeset{\fun_{1}+\fun_{2}}$~(\cref{fig:total_cost}).
+    Resources can be summed together using a trivial DP corresponding to the map~$\ftor\colon\tup{\funan{1},\funan{2}} \mapsto\makeset{\funan{1}+\funan{2}}$~(\cref{fig:total_cost}).
 
     \begin{figure}[h!]
         \centering
