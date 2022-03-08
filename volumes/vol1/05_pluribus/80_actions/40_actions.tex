@@ -2,13 +2,15 @@
 
 \section{Actions}
 \label{sec:actions}
-
-There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
-\footnote{
-    Traditionally, people have used the names ``left'' and ``right'' to describe the two types.
-    However, those names are connected to a particular choice of notation.
-    We name the two versions by highlighting the properties of covariance and contravariance.
-}
+In the previous section, we have seen how matrix semigroups ``act'' on vectors.
+There are many other examples in engineering of situations where there is a semigroup whose elements can be thought of transformations that are applied to a second space.
+This concept is formalized as an ``action''.
+% There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
+% \footnote{
+%     Traditionally, people have used the names ``left'' and ``right'' to describe the two types.
+%     However, those names are connected to a particular choice of notation.
+%     We name the two versions by highlighting the properties of covariance and contravariance.
+% }
 
 %\linkvideo{spring2021-actions:semi-actions} % Semigroup actions
 \begin{ctdefinition}
@@ -16,7 +18,7 @@ There are two versions for actions: a ``covariant'' and a ``contravariant'' vers
     A \emph{semigroup \textbf{covariant} action} of a semigroup~$\sgrpA$ on a set~$\setA$ is a map
     \begin{equation}
         \label{eq:lact}
-        \lact \colon \sgrpAset \cartprod \setA \to \setA
+        \lact \colon \makecartprod{\sgrpAset, \setA} \to \setA
     \end{equation}
     such that, for all~$\setAel \setin \setA$,
     \begin{equation}
@@ -25,19 +27,22 @@ There are two versions for actions: a ``covariant'' and a ``contravariant'' vers
     \end{equation}
 \end{ctdefinition}
 
-\begin{ctdefinition}
-    [Semigroup contravariant action (preliminary version)]\label{def:semigroup-contra-action-prelim}
-    A \emph{semigroup \textbf{contravariant} action} of a semigroup~$\sgrpA$ on a set~$\setA$ is a map
-    \begin{equation}
-        \label{eq:ract}
-        \ract \colon \setA \cartprod \sgrpAset \to \setA
-    \end{equation}
-    such that, for all~$\setAel \setin \setA$,
-    \begin{equation}
-        \label{eq:ract1cond}
-        \ract(\ract(\setAel, \monelb), \monela) = \ract(\setAel, \monela \mthenof\sgrpA \monelb).
-    \end{equation}
-\end{ctdefinition}
+We read \cref{eq:lact1cond} as saying that, if we first apply the action of $\monela$ to obtain $\lact(\monela, \setAel)$,
+and then we apply the action of $\monelb$ $\lact(\monelb, -)$, it is the same thing as applying the action of $\monela\mthen\monelb$.
+
+% \begin{ctdefinition}
+%     [Semigroup contravariant action (preliminary version)]\label{def:semigroup-contra-action-prelim}
+%     A \emph{semigroup \textbf{contravariant} action} of a semigroup~$\sgrpA$ on a set~$\setA$ is a map
+%     \begin{equation}
+%         \label{eq:ract}
+%         \ract \colon \makecartprod{\sgrpAset, \setA} \to \setA
+%     \end{equation}
+%     such that, for all~$\setAel \setin \setA$,
+%     \begin{equation}
+%         \label{eq:ract1cond}
+%         \ract(\monelb, \ract(\monela, \setAel)) = \ract(\monelb \mthenof\sgrpA  \monela, \setAel).
+%     \end{equation}
+% \end{ctdefinition}
 
 This definition is the standard algebraic definition.
 We will compress it a bit using the language of category theory.
@@ -99,14 +104,15 @@ this is the same as a function that needs the two arguments~$\setA$ and~$\setB$ 
 To describe the isomorphism we can write it as
 \begin{equation}
     \label{eq:currying-iso-1}
-    \setA \to ( \setB \to \setC) \simeq  \setA \cartprod \setB \to \setC,
+    \setA \to ( \setB \to \setC) \simeq  \setA \cartprod \setB \to \setC.
 \end{equation}
-or, more precisely, highlighting that these are morphism arrows in~\Set, we have
-\begin{equation}
-    \label{eq:currying-iso-2}
-    \HomSet\Set\setA{\HomSet\Set\setB\setC} \simeq \HomSet\Set{\setA \cartprod \setB}\setC.
-\end{equation}
-Keep this in mind, it will show up later.
+
+% or, more precisely, highlighting that these are morphism arrows in~\Set, we have
+% \begin{equation}
+%     \label{eq:currying-iso-2}
+%     \HomSet\Set\setA{\HomSet\Set\setB\setC} \simeq \HomSet\Set{\setA \cartprod \setB}\setC.
+% \end{equation}
+% Keep this in mind, it will show up later.
 
 Now armed with currying, we can take a second look at~\cref{eq:lact} and realize that we can rewrite
 \begin{equation}
@@ -189,25 +195,13 @@ Recall that an invertible endomorphism is called an \emph{automorphism}, and tha
     \end{equation}
 \end{ctdefinition}
 
-And what about contravariant actions?
-A contravariant semigroup action can in fact be defined as a covariant action of \emph{the opposite} semigroup.
-And similarly for monoids and groups.
-
-\begin{ctdefinition}[Semigroup contravariant action]
-    \label{def:semigroup-cont-action}
-    A \emph{semigroup \textbf{contravariant} action} of a semigroup~$\sgrpA$ onto a set~$\setA$ is a semigroup morphism
-    \begin{equation}
-        \ract \colon \sgrpA^{\op} \fto \Endof\setA.
-    \end{equation}
-\end{ctdefinition}
-
 \vfill%exercises
 
 \todotextjira{26}{add some exercises}
 
 \begin{gradedexercise}[\exname{MatrixMultAction}]
     \label{ex:MatrixMultAction}
-    Let~$\setA = \reals^n$, and let~$\mgGLn$ be the group of invertible~$n \cartprod n$ matrices.
+    Let~$\setA = \reals^n$, and let~$\mgGLn$ be the group of invertible~$n \times n$ matrices.
     Let
     \begin{equation}
         \label{eq:action-matrix-mult}
@@ -228,3 +222,42 @@ And similarly for monoids and groups.
 \end{gradedexercise}
 
 \solutionof{MatrixMultAction}
+
+\section{Contravariant actions}
+
+There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
+\footnote{
+    Traditionally, people have used the names ``left'' and ``right'' to describe the two types.
+    However, those names are connected to a particular choice of notation.
+    We name the two versions by highlighting the properties of covariance and contravariance.
+}
+
+\begin{ctdefinition}
+    [Semigroup contravariant action (preliminary version)]\label{def:semigroup-contra-action-prelim}
+    A \emph{semigroup \textbf{contravariant} action} of a semigroup~$\sgrpA$ on a set~$\setA$ is a map
+    \begin{equation}
+        \label{eq:ract}
+        \ract \colon \makecartprod{\sgrpAset, \setA} \to \setA
+    \end{equation}
+    such that, for all~$\setAel \setin \setA$,
+    \begin{equation}
+        \label{eq:ract1cond}
+        \ract(\monelb, \ract(\monela, \setAel)) = \ract(\monelb \mthenof\sgrpA  \monela, \setAel).
+    \end{equation}
+\end{ctdefinition}
+
+In contrast to \cref{eq:lact1cond},  \cref{eq:ract1cond} says that, if we first apply the action of $\monela$ to obtain $\lact(\monela, \setAel)$,
+and then we apply the action of $\monelb$ $\lact(\monelb, -)$, it is the same thing as applying the action of $\monelb\mthen\monela$ (note the inverted order).
+
+% And what about contravariant actions?
+A contravariant semigroup action can be defined as a covariant action of \emph{the opposite} semigroup.
+And similarly for monoids and groups.
+
+\begin{ctdefinition}[Semigroup contravariant action]
+    \label{def:semigroup-cont-action}
+    A \emph{semigroup \textbf{contravariant} action} of a semigroup~$\sgrpA$ onto a set~$\setA$ is a semigroup morphism
+    \begin{equation}
+        \ract \colon \sgrpA^{\op} \fto \Endof\setA.
+    \end{equation}
+\end{ctdefinition}
+
