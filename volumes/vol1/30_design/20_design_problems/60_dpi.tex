@@ -11,23 +11,23 @@
         \item The morphisms from \funsp to \ressp are DPIs $\tupp{\funsp,\ressp,\impsp,\prov,\req}$, with \impsp an object of \SetL.
         \item Given two morphisms
               \begin{align}
-                  \adp_1 & \colon \posA \to \posB, \\
-                  \adp_2 & \colon \posB \to \posC,
+                  \adpan{1} & \colon \funspa \mto \resspb, \\
+                  \adpan{2} & \colon \funspb \mto \resspc,
               \end{align}
               described by
               \begin{align}
-                  \adp_1 & = \tupp{\posA,\posB,\impsp_1,\prov_1,\req_1}, \\
-                  \adp_2 & = \tupp{\posB,\posC,\impsp_2,\prov_2,\req_2},
+                  \adpan{1} & = \tupp{\funspa,\resspb,\impspn{1},\provn{1},\reqn{1}}, \\
+                  \adpan{2} & = \tupp{\funspb,\resspc,\impspn{2},\provn{2},\reqn{2}},
               \end{align}
-              their composition $\adp_1 \fthen \adp_2$ is given by
+              their composition~$\adpan{1} \fthen \adpan{2}$ is given by
               \begin{equation}
-                  \adp_1 \fthen \adp_2 = \tupp{\posA,\posC,\impsp,\prov,\req},
+                  \adpan{1} \fthen \adpan{2} = \tupp{\funspa,\resspc,\impsp,\prov,\req},
               \end{equation}
               where
               \begin{align}
-                  \impsp & = \makeset{ \imp_1 \tupconcat \imp_2 \setin \makecprod{\impsp_1, \impsp_2} \mid \req_1(\imp_1) \posleq_{\posB} \prov_2(\imp_2)} \\
-                  \prov  & \colon \imp_1 \tupconcat \imp_2 \mapsto \prov_1(\imp_1) \\
-                  \req   & \colon \imp_1 \tupconcat \imp_2 \mapsto \req_2(\imp_2)
+                  \impsp & = \makeset{ \impn{1} \tupconcat \impn{2} \setin \makecprod{\impspn{1}, \impspn{2}} \mid \reqn{1}(\impn{1}) \posleqof{\neutrb} \provn{2}(\impn{2})} \\
+                  \prov  & \colon \impn{1} \tupconcat \impn{2} \mapsto \provn{1}(\impn{1}) \\
+                  \req   & \colon \impn{1} \tupconcat \impn{2} \mapsto \reqn{2}(\impn{2})
               \end{align}
     \end{itemize}
 \end{definition}
@@ -171,7 +171,7 @@
 %\captionsideleft{\label{fig:connection}}{\includegraphics[scale=0.33]{papers/uncertainty/unc_connection.pdf}}
 
 The semantics of the interconnection is that the second DPI provides the resources required by the first DPI.
-This is a partial order inequality constraint of the type~$\res_{1}\posleq\fun_{2}$.
+This is a partial order inequality constraint of the type~$\resan{1}\posleq\funan{2}$.
 
 \linkvideo{spring2021-design:design:dpi-comp} % Composing DPIs
 % \begin{definition}[DPI composition]
@@ -215,88 +215,74 @@ This is a partial order inequality constraint of the type~$\res_{1}\posleq\fun_{
 \begin{lemma}
     Series composition is associative.
 \end{lemma}
-\devel {
-    \todotext{@Gioele: adapt the proof with new notation}
+\begin{proof}
+    Consider
+    \begin{equation*}
+        \begin{aligned}
+            \adpan{1} & = \tupp{\funspa,\resspb,\impspn{1},\provn{1},\reqn{1}}, \\
+            \adpan{2} & = \tupp{\funspb,\resspc,\impspn{2},\provn{2},\reqn{2}}, \\
+            \adpan{3} & = \tupp{\funspc,\resspd,\impspn{3},\provn{3},\reqn{3}}.
+        \end{aligned}
+    \end{equation*}
+    We want to show that
+    \begin{equation}
+        \label{eq:assoc_dpi}
+        (\adpan{1}\fthen \adpan{2})\fthen \adpan{3}=\adpan{1}\fthen (\adpan{2}\fthen \adpan{3}).
+    \end{equation}
+    We know that the first part of the left term of \cref{eq:assoc_dpi} gives
+    \begin{equation*}
+        (\adpan{1} \fthen \adpan{2})
+        =
+        \tupp{ \funspa,\resspc,\impspn{1,2},\provn{1,2},\reqn{1,2}},
+    \end{equation*}
+    where
+    \begin{align*}
+        \impspn{1, 2} & = \makeset{ \impn{1} \tupconcat \impn{2} \setin \makecprod{\impspn{1}, \impspn{2}} \mid \reqn{1}(\impn{1}) \posleqof{\neutrb} \provn{2}(\impn{2})} \\
+        \provn{1,2}   & \colon \impn{1} \tupconcat \impn{2} \mapsto \provn{1}(\impn{1}) \\
+        \reqn{1,2}    & \colon \impn{1} \tupconcat \impn{2} \mapsto \reqn{2}(\impn{2})
+    \end{align*}
+    Therefore, the full left term of \cref{eq:assoc_dpi} reads
+    \begin{equation}
+        \label{eq:dpi_ass_1}
+        (\adpan{1} \fthen \adpan{2})\fthen \adpan{3}=\tupp{ \funspa,\resspd,\impspn{1,3},\provn{1,3},\reqn{1,3}},
+    \end{equation}
+    where
+    \begin{align*}
+        \impspn{1, 3} & = \makeset{ \impn{1} \tupconcat \impn{2} \tupconcat \impn{3} \setin \impsp \mid \reqn{1,2}(\impn{1}\tupconcat \impn{2}) \posleqof{\neutrc} \provn{3}(\impn{3})\booland \reqn{1}(\impn{1})\posleqof{\neutrb}\provn{2}(\impn{2})}, \\
+                      & = \makeset{ \impn{1} \tupconcat \impn{2} \tupconcat \impn{3} \setin \impsp \mid \reqn{2}(\impn{2}) \posleqof{\neutrc} \provn{3}(\impn{3})\booland \reqn{1}(\impn{1})\posleqof{\neutrb}\provn{2}(\impn{2})}, \\
+        \provn{1,3}   & \colon \impn{1} \tupconcat \impn{2} \tupconcat \impn{3} \mapsto \provn{1,2}(\impn{1}\tupconcat \impn{2})=\provn{1}(\impn{1}), \\
+        \reqn{1,3}    & \colon \impn{1} \tupconcat \impn{2}\tupconcat \impn{3} \mapsto \reqn{3}(\impn{3}),
+    \end{align*}
+    where~$\impsp=\makecprod{\impspn{1}, \impspn{2}, \impspn{3}}$.
 
-    \begin{proof}
-        Consider
-        \begin{equation}
-            \begin{aligned}
-                \adp_{1} & = \tupp{\funsp_{1},\ressp_{1},\impsp_{1},\prov_{1},\req_{1}}, \\
-                \adp_{2} & = \tupp{\funsp_{2},\ressp_{2},\impsp_{2},\prov_{2},\req_{2}}, \\
-                \adp_{3} & = \tupp{\funsp_{3},\ressp_{3},\impsp_{3},\prov_{3},\req_{3}},
-            \end{aligned}
-        \end{equation}
-        for which~$\funsp_{2}=\ressp_{1}$ and~$\funsp_{3}=\ressp_{2}$.
-        We want to show that
-        \begin{equation}
-            \label{eq:assoc_dpi}
-            (\adp_1\fthen \adp_2)\fthen \adp_3=\adp_1\fthen (\adp_2\fthen \adp_3).
-        \end{equation}
-        We know that the first part of the left term of \cref{eq:assoc_dpi} gives
-        \begin{equation}
-            (\adp_{1} \fthen \adp_{2})
-            =
-            \tupp{ \funsp_{1},\ressp_{2},\impsp_{1,2},\prov_{1,2},\req_{1,2}},
-        \end{equation}
-        Therefore, the full left term of \cref{eq:assoc_dpi} reads
-        \begin{equation}
-            \label{eq:dpi_ass_1}
-            (\adp_{1} \fthen \adp_{2})\fthen \adp_{3}=\tupp{ \funsp_{1},\ressp_{3},\impsp_{1,3},\prov_{1,3},\req_{1,3}},
-        \end{equation}
-        with
-        \begin{equation}
-            \begin{aligned}
-                \impsp_{1,3} & =  \opensetbracket  \tupp {\tupp{\imp_{1}, \imp_{2}}, \imp_{3}} \setin ((\impsp_{1} \cartprod \impsp_{2})\cartprod \impsp_{3})\mid\req_{1,2}
-                (\tupp {\imp_{1}, \imp_{2}})\posleqof{\ressp_{2}}\prov_{3}(\imp_{3}) \\
-                             & \qquad \wedge \req_{1}(\imp_{1})\posleqof{\ressp_1}\prov_2(\imp_2) \closesetbracket \\
-                             & =\opensetbracket  \tupp{\imp_{1}, \imp_{2}, \imp_{3}} \setin (\impsp_{1} \cartprod \impsp_{2}\cartprod \impsp_{3})\mid\req_{2}(\imp_2)\posleqof{\ressp_{2}}\prov_{3}(\imp_{3}) \\
-                             & \qquad \wedge \req_{1}(\imp_{1})\posleqof{\ressp_1}\prov_2(\imp_2) \closesetbracket
-            \end{aligned}
-        \end{equation}
-        and
-        \begin{equation}
-            \begin{aligned}
-                \prov_{1,3} \colon \tupp {\tupp {\imp_{1}, \imp_{2}}, \imp_{3}} & \mapsto\prov_{1,2}(\tupp{\imp_{1}, \imp_{2}}), \\
-                \tup{\imp_{1}, \imp_{2}, \imp_{3}}                              & \mapsto \prov_1(\imp_{1}), \\
-                \req_{1,3} \colon \tupp {\tupp {\imp_{1}, \imp_{2}}, \imp_{3}}  & \mapsto\req_{3}(\imp_{3}) \\
-                \tupp{\imp_{1}, \imp_{2},\imp_{3}}                              & \mapsto\req_{3}(\imp_{3}).
-            \end{aligned}
-        \end{equation}
-        By expanding the second part of the second term of \cref{eq:assoc_dpi}, we have:
-        \begin{equation}
-            (\adp_{2} \fthen \adp_{3})
-            =
-            \tupp{ \funsp_{2},\ressp_{3},\impsp_{2,3},\prov_{2,3},\req_{2,3}},
-        \end{equation}
-        Therefore, the full right term of \cref{eq:assoc_dpi} reads
-        \begin{equation}
-            \label{eq:dpi_ass_2}
-            \adp_{1} \fthen (\adp_{2}\fthen \adp_{3})=\tupp{ \funsp_{1},\ressp_{3},\impsp'_{1,3},\prov'_{1,3},\req'_{1,3}},
-        \end{equation}
-        with
-        \begin{equation}
-            \begin{aligned}
-                \impsp_{1,3}' & =  \opensetbracket  \tupp {\imp_{1}, \tupp {\imp_{2}, \imp_{3}}} \setin (\impsp_{1} \cartprod (\impsp_{2}\cartprod \impsp_{3}))\mid\req_{1}(\imp_{1})\posleqof{\ressp_{1}}\prov_{2,3}
-                (\tupp{\imp_{2}, \imp_{3}}) \\
-                              & \qquad \wedge \req_2(\imp_2)\posleqof{\ressp_2}\prov_3(\imp_3)\closesetbracket \\
-                              & =\opensetbracket  \tupp{\imp_{1}, \imp_{2}, \imp_{3}} \setin (\impsp_{1} \cartprod \impsp_{2}\cartprod \impsp_{3})\mid\req_{1}(\imp_{1})\posleqof{\ressp_{1}}\prov_{2}(\imp_2) \\
-                              & \qquad \wedge \req_2(\imp_2)\posleqof{\ressp_2}\prov_3(\imp_3)\closesetbracket
-            \end{aligned}
-        \end{equation}
-        and
-        \begin{equation}
-            \begin{aligned}
-                \prov'_{1,3} \colon  \tupp{\imp_{1}, \tup{\imp_{2}, \imp_{3}}} & \mapsto\prov_{1}(\imp_{1}) \\
-                \tupp{\imp_{1}, \imp_{2}, \imp_{3}}                            & \mapsto\prov_{1}(\imp_{1}), \\
-                \req'_{1,3} \colon  \tupp{\imp_{1}, \tup{\imp_{2}, \imp_{3}}}  & \mapsto\req_{2,3}(\tupp{\imp_{2}, \imp_{3}}) \\
-                \tupp{\imp_{1}, \imp_{2}, \imp_{3}}                            & \mapsto \req_{3}(\imp_{3})
-            \end{aligned}
-        \end{equation}
-        It is clear that~$\impsp_{1,3}=\impsp'_{1,3}$,~$\prov_{1,3}=\prov'_{1,3}$, and~$\req_{1,3}=\req'_{1,3}$.
-        This, together with \cref{eq:dpi_ass_1} and \cref{eq:dpi_ass_2} shows associativity.
-    \end{proof}
-}
+    By expanding the second part of the second term of \cref{eq:assoc_dpi}, we have:
+    \begin{equation*}
+        (\adpan{2} \fthen \adpan{3})
+        =
+        \tupp{ \funspb,\resspd,\impspn{2,3},\provn{2,3},\reqn{2,3}},
+    \end{equation*}
+    where
+    \begin{align*}
+        \impspn{2, 3} & = \makeset{ \impn{2} \tupconcat \impn{3} \setin \makecprod{\impspn{2}, \impspn{3}} \mid \reqn{2}(\impn{2}) \posleqof{\neutrc} \provn{3}(\impn{3})} \\
+        \provn{2,3}   & \colon \impn{2} \tupconcat \impn{3} \mapsto \provn{2}(\impn{2}) \\
+        \reqn{2,3}    & \colon \impn{2} \tupconcat \impn{3} \mapsto \reqn{3}(\impn{3})
+    \end{align*}
+    Therefore, the full right term of \cref{eq:assoc_dpi} reads
+    \begin{equation}
+        \label{eq:dpi_ass_2}
+        \adpan{1} \fthen (\adpan{2}\fthen \adpan{3})=\tupp{ \funspa,\resspd,\impspn{1,3}\colI{'},\provn{1,3}\colF{'},\reqn{1,3}\colR{'}},
+    \end{equation}
+    where
+    \begin{align*}
+        \impspn{1, 3}\colI{'} & = \makeset{ \impn{1} \tupconcat \impn{2} \tupconcat \impn{3} \setin \impsp \mid \reqn{1}(\impn{1}) \posleqof{\neutrb} \provn{2,3}(\impn{2}\tupconcat\impn{3})\booland \reqn{2}(\impn{2})\posleqof{\resspc}\provn{3}(\impn{3})}, \\
+                              & =   \makeset{ \impn{1} \tupconcat \impn{2} \tupconcat \impn{3} \setin \impsp \mid \reqn{1}(\impn{1}) \posleqof{\neutrb} \provn{2}(\impn{2})\booland \reqn{2}(\impn{2})\posleqof{\resspc}\provn{3}(\impn{3})}, \\
+        \provn{1,3}\colF{'}   & \colon \impn{1} \tupconcat \impn{2} \tupconcat \impn{3} \mapsto \provn{1}(\impn{1}), \\
+        \reqn{1,3}\colR{'}    & \colon \impn{1} \tupconcat \impn{2}\tupconcat \impn{3} \mapsto \reqn{2,3}(\impn{2}\tupconcat \impn{3})=\reqn{3}(\impn{3}).
+    \end{align*}
+
+    It is clear that~$\impspn{1,3}=\impspn{1,3}\colI{'}$,~$\provn{1,3}=\provn{1,3}\colF{'}$, and~$\reqn{1,3}=\reqn{1,3}\colR{'}$.
+    This, together with \cref{eq:dpi_ass_1} and \cref{eq:dpi_ass_2} shows associativity.
+\end{proof}
 
 These two properties are sufficient to conclude that there exists a semicategory of design problems.
 
@@ -308,13 +294,13 @@ These two properties are sufficient to conclude that there exists a semicategory
 \begin{proof}
     We prove this by contradiction.
     Suppose we can find a DPI that works as an identity for interconnection for any other DPI with implementation space $\impsp_{\catid}$.
-    Therefore, when postponed to a DPI with implementation space $\impsp_1$ we should have that
+    Therefore, when postponed to a DPI with implementation space~$\impspn{1}$ we should have that
     \begin{equation}
-        \makecprod{\impsp_1, \impsp_{\catid}} = \impsp_1.
+        \makecprod{\impspn{1}, \impspn{\catid}} = \impspn{1}.
     \end{equation}
-    This implies that $\impsp_{\catid}$ is an empty list of sets, that is inhabited by only one element, the empty tuple.
-    Therefore, the map $\req_{\catid}$ of the identity is necessarily a constant, because there is only one element in the domain.
-    Therefore, it is impossible to preserve $\req_1$.
+    This implies that~$\impspn{\catid}$ is an empty list of sets, that is inhabited by only one element, the empty tuple.
+    Therefore, the map~$\reqn{\catid}$ of the identity is necessarily a constant, because there is only one element in the domain.
+    Therefore, it is impossible to preserve~$\reqn{1}$.
 \end{proof}
 % We also have an identity.
 
@@ -380,15 +366,15 @@ The sum of two design problems with implementation is a design problem with the 
 
 \begin{definition}[Sum of DPIs]
     \label{def:parallel-1}
-    Given two DPIs with same functionality and resources~$\adpa=\tupp{\funsp,\ressp,\impsp_{1},\prov_{1},\req_{1}}$ and~$\adpb=\tupp{\funsp,\ressp,\impsp_{2},\prov_{2},\req_{2}}$, define their sum as
+    Given two DPIs with same functionality and resources~$\adpa=\tupp{\funsp,\ressp,\impspn{1},\provn{1},\reqn{1}}$ and~$\adpb=\tupp{\funsp,\ressp,\impspn{2},\provn{2},\reqn{2}}$, define their sum as
     \begin{equation}
-        \adpa\join\adpb\definedas\tupp{\funsp,\ressp,\impsp_{1}+\impsp_{2},\prov,\req} ,
+        \adpa\join\adpb\definedas\tupp{\funsp,\ressp,\impspn{1}\setdisunion\impspn{2},\prov,\req} ,
     \end{equation}
     where
     \begin{equation}
         \begin{aligned}
-            \prov & = \prov_1 + \prov_2, \\
-            \req  & = \req_1 + \req_2.
+            \prov & = \provn{1} \funcsum \provn{2}, \\
+            \req  & = \reqn{1} \funcsum \reqn{2}.
         \end{aligned}
     \end{equation}
 
@@ -428,13 +414,13 @@ The sum of two design problems with implementation is a design problem with the 
     where
     \begin{equation}
         \begin{multlined}
-            \impsp = \makeset{ (\maketupconcat{\imp_1, \imp_2, \fun, \res}) \setin (\makecprod{ \impsp_1, \impsp_2, \funsp, \ressp }) \mid \\
-                (\fun \funleq \prov_1(\imp_1))  \booland
-                (\fun \funleq \prov_2(\imp_2))  \booland \\
-                (  \req_1(\imp_1) \resleq \res )  \booland
-                ( \req_2(\imp_2) \resleq \res )}
+            \impsp = \makeset{ (\maketupconcat{\impn{1}, \impn{2}, \fun, \res}) \setin (\makecprod{ \impspn{1}, \impspn{2}, \funsp, \ressp }) \mid \\
+                (\fun \funleq \provn{1}(\impn{1}))  \booland
+                (\fun \funleq \provn{2}(\impn{2}))  \booland \\
+                (  \reqn{1}(\impn{1}) \resleq \res )  \booland
+                ( \reqn{2}(\impn{2}) \resleq \res )}
         \end{multlined}
     \end{equation}
-    and the maps $\prov$ and $\req$ are the projections of the third and fourth component.
+    and the maps~$\prov$ and~$\req$ are the projections of the third and fourth component.
 \end{definition}
 
