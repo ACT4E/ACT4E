@@ -29,16 +29,171 @@ Therefore, \DP is a category.
 %     \end{remark}
 % }
 
-\devel{
-    \subsection{Relation between \DPI and \DP}
+\subsection{Relation between \DPI and \DP}
 
-    We have already seen in \cref{rem:DP-from-DPI} that we can obtain a DP from a DPI.
-    We can make this more formal and say that there exists a \emph{forgetful semifunctor} from \DPI to \DP.
+We have already seen in \cref{rem:DP-from-DPI} that we can obtain a DP from a DPI.
+We can make this more formal and say that there exists a \emph{forgetful semifunctor} from \DPI to \DP.
 
-    \todotext{@Gioele: Define this semifunctor}
+\begin{definition}
+    \label{def:dpitodpsemi}
+    The forgetful semifunctor~$\dpitodp\colon \DPI\fto \DP$ is given by:
+    \begin{compactenum}
+        \item Identity on the objects:~$\dpitodpob(\posA)=\posA$.
+        \item Given~$\adp=\tup{\funsp,\ressp,\impsp,\prov,\req}$, the action on morphisms is given by
+              \begin{equation*}
+                  \defmapperiod{\dpitodpmor(\adp)}
+                  {\funsp \op \Ctimes \ressp}
+                  {\toinPos}
+                  {\Bool}
+                  {\tup{\fun\opel, \res}}
+                  {\exists \imp \setin \setI\colon (\fun \posleqof{\funsp}\prov(\imp))\booland (\req(\imp)\posleqof{\ressp} \res)}
+              \end{equation*}
+    \end{compactenum}
+\end{definition}
 
-    In the other direction, we can take a DP and find a corresponding DPI.
-    We obtain another semifunctor.
+\begin{lemma}
+    \cref{def:dpitodpsemi} indeed defines a semifunctor.
+\end{lemma}
+\begin{proof}
+    Consider
+    \begin{equation*}
+        \begin{aligned}
+            \adpa & =\tup{\funposA,\resposB,\impspn{1},\provn{1},\reqn{1}}, \\
+            \adpb & =\tup{\funposB,\resposC,\impspn{2},\provn{2},\reqn{2}},
+        \end{aligned}
+    \end{equation*}
+    We need to show
+    \begin{equation*}
+        \dpitodpmor(\adpa \fthen_\DPI \adpb)=\dpitodpmor(\adpa)\fthen_\DP \dpitodpmor(\adpb).
+    \end{equation*}
+    Let's start with the left term.
+    One has
+    \begin{equation}
+        \label{eq:dpitodp_a}
+        \begin{aligned}
+            \dpitodpmor(\adpa \fthen_\DPI \adpb)(\funposAel\F{\opel},\resposCel) & =
+            \exists \imp \setin \impsp\colon (\funposAel \posleqof{\posA}\provn{1}(\impn{1}))\booland (\reqn{2}(\impn{2})\posleqof{\posC} \resposCel),
+        \end{aligned}
+    \end{equation}
+    where~$\impsp=\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}} \mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})}$.
 
-    \todotext{@Gioele: Define this semifunctor}
-}
+    On the other hand,
+    \begin{equation}
+        \label{eq:dpitodp_b}
+        \begin{aligned}
+             & (\dpitodpmor(\adpa) \fthen_\DP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel) \\
+             & =\bigvee_{\posBel \setin \posB}\dpitodpmor(\adpa)(\funposAel\F{\opel},\resposBel)\booland \dpitodpmor(\adpb)(\funposBel\F{\opel},\resposCel) \\
+             & =\bigvee_{\posBel \setin \posB} \left({\exists \impn{1} \setin \impspn{1}\colon (\funposAel \posleqof{\posA}\provn{1}(\impn{1}))\booland (\reqn{1}(\impn{1})\posleqof{\posB} \resposBel)}\right) \\
+             & \booland \left({\exists \impn{2} \setin \impspn{2}\colon (\funposBel \posleqof{\posB}\provn{2}(\impn{2}))\booland (\reqn{2}(\impn{2})\posleqof{\posC} \resposCel)}\right)
+        \end{aligned}
+    \end{equation}
+    Consider the followin cases:
+    \begin{compactitem}
+        \item If~$\dpitodpmor(\adpa \fthen_\DPI \adpb)(\funposAel\F{\opel},\resposCel)=\true$, there exist~$\impn{1}\setin \impspn{1},\impn{2}\setin \impspn{2}$ for which
+              \begin{equation*}
+                  \begin{aligned}
+                      \funposAel         & \posleqof{\posA}\provn{1}(\impn{1}), \\
+                      \reqn{2}(\impn{2}) & \posleqof{\posC} \resposCel, \\
+                      \reqn{1}(\impn{1}) & \posleqof{\posB}\provn{2}(\impn{2}).
+                  \end{aligned}
+              \end{equation*}
+              The first two terms are clear, and the last term implies that there exists a~$\posBel\setin \posB$ such that
+              \begin{equation*}
+                  (\funposBel\posleqof{\posB}\provn{2}(\impn{2}))\booland (\reqn{1}(\impn{1})\posleqof{\posB}\resposBel),
+              \end{equation*}
+              implying~$(\dpitodpmor(\adpa) \fthen_\DP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel)=\true$.
+        \item The case
+              \begin{equation*}
+                  \prftree{\dpitodpmor(\adpa \fthen_\DPI \adpb)(\funposAel\F{\opel},\resposCel)=\false}{(\dpitodpmor(\adpa) \fthen_\DP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel)=\false}
+              \end{equation*}
+              follows analogously.
+        \item The other direction is easier to show, since clearly
+              \begin{equation*}
+                  \prftree{(\dpitodpmor(\adpa) \fthen_\DP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel)=\true}{\dpitodpmor(\adpa \fthen_\DPI \adpb)(\funposAel\F{\opel},\resposCel)=\true}
+              \end{equation*}
+              and
+              \begin{equation*}
+                  \prftree{(\dpitodpmor(\adpa) \fthen_\DP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel)=\false}{\dpitodpmor(\adpa \fthen_\DPI \adpb)(\funposAel\F{\opel},\resposCel)=\false}
+              \end{equation*}
+              by inspecting \cref{eq:dpitodp_a} and \cref{eq:dpitodp_b}.
+    \end{compactitem}
+\end{proof}
+
+In the other direction, we can take a DP and find a corresponding DPI.
+We obtain another semifunctor.
+
+\begin{definition}
+    \label{def:dptodpisemi}
+    The semifunctor~$\dptodpi\colon \DP\fto \DPI$ is given by:
+    \begin{compactenum}
+        \item Identity on the objects:~$\dpitodpob(\posA)=\posA$.
+        \item Given~$\adp\colon \funsp\op \Ctimes \ressp \toinPos \Bool$, the action on morphisms is given by
+              \begin{equation*}
+                  \dptodpimor(\adp)=\tup{\funsp,\ressp, \impsp,\prov,\req},
+              \end{equation*}
+              where
+              \begin{equation*}
+                  \begin{aligned}
+                      \impsp & =\makeset{\tup{\fun,\res}\setin \funsp \cartprod \ressp \colon \adp(\fun\F{\opel},\res)}, \\
+                      \prov  & \colon \tup{\fun,\res}\mapsto \fun, \\
+                      \req   & \colon \tup{\fun,\res}\mapsto \res,
+                  \end{aligned}
+              \end{equation*}
+    \end{compactenum}
+\end{definition}
+
+\begin{lemma}
+    \cref{def:dptodpisemi} indeed defines a semifunctor.
+\end{lemma}
+\begin{proof}
+    Consider~$\adpa\colon \funposA\Ctimes \resposB \toinPos \Bool$ and~$\adpb\colon \funposB\Ctimes \resposC\toinPos \Bool$.
+    We need to show
+    \begin{equation*}
+        \dptodpimor(\adpa \fthen_\DP \adpb)=\dptodpimor(\adpa)\fthen_\DPI \dptodpimor(\adpb).
+    \end{equation*}
+    Let's start with the left term.
+    One has
+    \begin{equation*}
+        \dptodpimor(\adpa \fthen_\DP \adpb)=\tup{\funposA,\resposC,\impsp,\prov,\req},
+    \end{equation*}
+    where
+    \begin{equation*}
+        \begin{aligned}
+            \impsp & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon (\adpa \fthen_\DP \adpb)(\funposAel,\resposCel)}, \\
+                   & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon \bigvee_{\posBel\setin \posB}\adpa(\funposAopel,\resposBel)\booland \adpb(\funposBopel,\resposCel)} \\
+            \prov  & =\projstart, \\
+            \req   & =\projend,
+        \end{aligned}
+    \end{equation*}
+    where~$\projstart$ is the projection mapping returning the first element of a tuple, and~$\projend$ is the projection mapping returning the last element of a tuple.
+    For the right-hand side, instead, one has
+    \begin{equation*}
+        \dptodpimor(\adpa) \fthen_\DPI \dptodpimor(\adpb)=\tup{\funposA,\resposC,\impsp\colI{'},\prov\F{'},\req\R{'}},
+    \end{equation*}
+    where
+    \begin{equation*}
+        \begin{aligned}
+            \impsp\colI{'} & =\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}}\mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})} \\
+            \impspn{1}     & =\makeset{\tup{\funposAel,\resposBel}\setin \funposA \cartprod \resposB \colon \adpa(\funposAel,\resposBel)}, \\
+            \impspn{2}     & =\makeset{\tup{\funposBel,\resposCel}\setin \funposB \cartprod \resposC \colon \adpb(\funposBel,\resposCel)}, \\
+            \provn{1}      & =\projstart \\
+            \provn{2}      & =\projstart \\
+            \reqn{1}       & =\projend \\
+            \reqn{2}       & =\projend \\
+            \prov\F{'}     & =\projstart \\
+            \req\R{'}      & =\projend.
+        \end{aligned}
+    \end{equation*}
+    One can already notice that~$\prov=\prov\F{'}$ and~$\req=\req\R{'}$.
+    To finish the proof, one can massage~$\impsp\colI{'}$:
+    \begin{equation*}
+        \begin{aligned}
+            \impsp\colI{'} & =\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}}\mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})} \\
+                           & =\makeset{\tup{\funposAel,\resposBel,\funposBel\F{'},\resposCel}\setin \funposA \cartprod \resposB\cartprod \funposB\cartprod \resposC \colon \adpa(\funposAel\F{\opel},\resposBel) \booland \adpb(\funposBel\F{\opel},\resposCel)
+            \booland \resposBel \posleqof{\posB}\funposBel\F{'}} \\
+                           & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon \bigvee_{\posBel\setin \posB}\adpa(\funposAopel,\resposBel)\booland \adpb(\funposBopel,\resposCel)} \\
+                           & =\impsp.
+        \end{aligned}
+    \end{equation*}
+
+\end{proof}
