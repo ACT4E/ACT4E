@@ -67,12 +67,6 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
     is empty or not.
 \end{remark}
 \vfill\pagebreak
-\todotext{@Gioele: this example is weak now, but it can be made much better:
-    1) In the table, use the colors for functionality, implementation, resources.
-    2) Order them like this: functionality on the left, implementation, resources in the middle.
-    3) Show the resulting DP as another table, where we have forgotten about the implementation.
-    This shows the difference between a DP and a DPI.
-}
 \begin{example}
     Recall \cref{exa:dpi_elmotor}, with the catalogue of electric motors in \cref{tab:electric_motors_3}.
 
@@ -80,30 +74,42 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
         \centering
         \adjustbox{max width=\textwidth}{%
             \begin{tabular}{c|c|c|c|c|c}
-                Motor ID      & Company              & $\unit[\text{Torque}]{[kg\cdot cm]}$ & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
-                              & \unit[Cost]{[USD]} \\
+                \F{$\unit[\text{Torque}]{[kg\cdot cm]}$} & \colI{Motor ID}        & \R{\unit[Weight]{[g]}} & \R{\unit[Max Power]{[W]}}
+                                                         & \R{\unit[Cost]{[USD]}} \\
                 \hline
-                \textsf{1204} & \textsf{SOYO}        & 0.18                                 & 60.0               & 2.34                  & 19.95 \\
-                \textsf{1206} & \textsf{SOYO}        & 0.95                                 & 140.0              & 3.00                  & 19.95 \\
-                \textsf{1207} & \textsf{SOYO}        & 0.65                                 & 130.0              & 2.07                  & 12.95 \\
-                \textsf{2267} & \textsf{SOYO}        & 3.7                                  & 285.0              & 4.76                  & 16.95 \\
-                \textsf{2279} & \textsf{Sanyo Denki} & 1.9                                  & 165.0              & 5.40                  & 164.95 \\
-                \textsf{1478} & \textsf{SOYO}        & 19.0                                 & 1,000              & 8.96                  & 49.95 \\
-                \textsf{2299} & \textsf{Sanyo Denki} & 2.2                                  & 150.0              & 5.90                  & 59.95
+                \F{0.18}                                 & \colI{\textsf{1204}}   & \R{60.0}               & \R{2.34}                  & \R{19.95} \\
+                \F{0.95}                                 & \colI{\textsf{1206}}   & \R{140.0}              & \R{3.00}                  & \R{19.95} \\
+                \F{0.65}                                 & \colI{\textsf{1207}}   & \R{130.0}              & \R{2.07}                  & \R{12.95} \\
+                \F{3.7}                                  & \colI{\textsf{2267}}   & \R{285.0}              & \R{4.76}                  & \R{16.95} \\
+                \F{1.9}                                  & \colI{\textsf{2279}}   & \R{165.0}              & \R{5.40}                  & \R{164.95} \\
+                \F{19.0}                                 & \colI{\textsf{1478}}   & \R{1,000}              & \R{8.96}                  & \R{49.95} \\
+                \F{2.2}                                  & \colI{\textsf{2299}}   & \R{150.0}              & \R{5.90}                  & \R{59.95}
             \end{tabular}%
         }
         \caption{A simplified catalogue of motors.
         }
         \label{tab:electric_motors_3}
     \end{table*}
-
-    The catalogue induces a design problem~$\adp_\mathrm{EM}$ with diagrammatic form as in \cref{fig:dp_em_2}.
-    In particular, we can query the design problem for combinations of \textF{functionalities} and \textR{resources}.
-    For instance:
-    \begin{equation}
-        \adp\left(\unit[0.2]{kg\cdot cm}, \tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}} \right)=\false,
-    \end{equation}
-    since no listed model can provide~$\unit[0.2]{kg\cdot cm}$ \textF{torque} by requiring the set of \textR{resources}~$\tup{\unit[50.0]{g},\unit[2.0]{W},\unit[15.0]{USD}}$ or less.
+    \begin{table*}[h]
+        \centering
+        \adjustbox{max width=\textwidth}{%
+            \begin{tabular}{c|c|c|c|c|c}
+                \F{$\unit[\text{Torque}]{[kg\cdot cm]}$} & \R{\unit[Weight]{[g]}} & \R{\unit[Max Power]{[W]}}
+                                                         & \R{\unit[Cost]{[USD]}} \\
+                \hline
+                \F{0.18}                                 & \R{60.0}               & \R{2.34}                  & \R{19.95} \\
+                \F{0.95}                                 & \R{140.0}              & \R{3.00}                  & \R{19.95} \\
+                \F{0.65}                                 & \R{130.0}              & \R{2.07}                  & \R{12.95} \\
+                \F{3.7}                                  & \R{285.0}              & \R{4.76}                  & \R{16.95} \\
+                \F{1.9}                                  & \R{165.0}              & \R{5.40}                  & \R{164.95} \\
+                \F{19.0}                                 & \R{1,000}              & \R{8.96}                  & \R{49.95} \\
+                \F{2.2}                                  & \R{150.0}              & \R{5.90}                  & \R{59.95}
+            \end{tabular}%
+        }
+        \caption{Feasibility relations for the design problem of motors.
+        }
+        \label{tab:electric_motors_dp}
+    \end{table*}
 
     \begin{figure}[tbh]
         \centering
@@ -111,6 +117,16 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
         \caption{Electric motor design problem.}
         \label{fig:dp_em_2}
     \end{figure}
+
+    The catalogue induces a design problem~$\adpan{\mathrm{EM}}$, where each feasibility relation between functionality and resources is reported in \cref{tab:electric_motors_dp}.
+    with diagrammatic form as in \cref{fig:dp_em_2}.
+    In particular, we can query the design problem for combinations of \textF{functionalities} and \textR{resources}.
+    For instance:
+    \begin{equation}
+        \adpan{\mathrm{EM}}\left(\F{\unit[0.2]{kg\cdot cm}}, \R{\tup{\unit[50.0]{g}},\R{\unit[2.0]{W}},\R{\unit[15.0]{USD}}} \right)=\false,
+    \end{equation}
+    since no listed model can provide~$\F{\unit[0.2]{kg\cdot cm}}$ \textF{torque} by requiring the set of \textR{resources}~$\tup{\R{\unit[50.0]{g}},\R{\unit[2.0]{W}},\R{\unit[15.0]{USD}}}$ or less.
+
 \end{example}
 
 \section{DPs as upper sets}
