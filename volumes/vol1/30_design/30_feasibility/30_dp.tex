@@ -29,13 +29,65 @@ Therefore, \DP is a category.
 %     \end{remark}
 % }
 
+\subsection{Relation between \DPI and \DP}
+
+We have already seen in \cref{rem:DP-from-DPI} that we can obtain a DP from a DPI.
+We can make this more formal and say that there exists a \emph{forgetful semifunctor} from \DPI to \DP.
+
+\begin{definition}
+    \label{def:dpitodpsemi}
+    The forgetful semifunctor~$\dpitodp\colon \DPI\fto \DP$ is given by:
+    \begin{compactenum}
+        \item Identity on the objects:~$\dpitodpob(\posA)=\posA$.
+        \item Given~$\adp=\tup{\funsp,\ressp,\impsp,\prov,\req}$, the action on morphisms is given by
+              \begin{equation*}
+                  \defmapperiod{\dpitodpmor(\adp)}
+                  {\funsp \op \cprod \ressp}
+                  {\toinPos}
+                  {\Bool}
+                  {\tup{\fun\opel, \res}}
+                  {\exists \imp \setin \setI\colon (\fun \posleqof{\funsp}\prov(\imp))\booland (\req(\imp)\posleqof{\ressp} \res)}
+              \end{equation*}
+    \end{compactenum}
+\end{definition}
+
+\begin{lemma}
+    \cref{def:dpitodpsemi} indeed defines a semifunctor.
+\end{lemma}
+\begin{proof}
+    Consider
+    \begin{equation*}
+        \begin{aligned}
+            \adpa & =\tup{\funposA,\resposB,\impspn{1},\provn{1},\reqn{1}}, \\
+            \adpb & =\tup{\funposB,\resposC,\impspn{2},\provn{2},\reqn{2}},
+        \end{aligned}
+    \end{equation*}
+    We need to show
+    \begin{equation*}
+        \dpitodpmor(\adpa \fthen_\DPI \adpb)=\dpitodpmor(\adpa)\fthen_\DP \dpitodpmor(\adpb).
+    \end{equation*}
+    Let's start with the left term.
+    One has
+    \begin{equation*}
+        \begin{aligned}
+            \dpitodpmor(\adpa \fthen_\DPI \adpb)(\funposAel\F{\opel},\resposCel) & =
+            \exists \imp \setin \impsp\colon (\funposAel \posleqof{\posA}\provn{1}(\impn{1}))\booland (\reqn{2}(\impn{2})\posleqof{\posC} \resposCel),
+        \end{aligned}
+    \end{equation*}
+    where~$\impsp=\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}} \mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})}$.
+
+    On the other hand,
+    \begin{equation*}
+        \begin{aligned}
+             & (\dpitodpmor(\adpa) \fthen_\DP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel) \\
+             & =\bigvee_{\posBel \setin \posB}\dpitodpmor(\adpa)(\funposAel\F{\opel},\resposBel)\booland \dpitodpmor(\adpb)(\funposBel\F{\opel},\resposCel) \\
+             & =\bigvee_{\posBel \setin \posB}{\exists \impn{1} \setin \impspn{1}\colon (\funposAel \posleqof{\posA}\provn{1}(\impn{1}))\booland (\reqn{1}(\impn{1})\posleqof{\posB} \resposBel)} \\
+             & \booland {\exists \impn{2} \setin \impspn{2}\colon (\funposBel \posleqof{\posB}\provn{2}(\impn{2}))\booland (\reqn{2}(\impn{2})\posleqof{\posC} \resposCel)}
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
 \devel{
-    \subsection{Relation between \DPI and \DP}
-
-    We have already seen in \cref{rem:DP-from-DPI} that we can obtain a DP from a DPI.
-    We can make this more formal and say that there exists a \emph{forgetful semifunctor} from \DPI to \DP.
-
-    \todotext{@Gioele: Define this semifunctor}
 
     In the other direction, we can take a DP and find a corresponding DPI.
     We obtain another semifunctor.
