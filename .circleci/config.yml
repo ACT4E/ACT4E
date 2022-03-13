@@ -52,10 +52,12 @@ jobs:
           cp latexmkrc.batch  latexmkrc
           make ACT4E-devel-fast.pdf
           cp *log *warnings.txt _build
+          cp .circleci/ACT4E-devel.manifest.yaml _build
     - run:
         name: encrypt
         command: |
           pdftk ACT4E-devel-fast.pdf output _build/ACT4E-devel.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+          cd _build && tar cfvz ACT4E-devel.package.tgz ACT4E-devel.*
     - store_artifacts:
         path: _build
         destination: _build
@@ -94,10 +96,12 @@ jobs:
           cp latexmkrc.batch  latexmkrc
           make ACT4E-instructors-fast.pdf
           cp *log *warnings.txt _build
+          cp .circleci/ACT4E-instructors.manifest.yaml _build
     - run:
         name: encrypt
         command: |
           pdftk ACT4E-instructors-fast.pdf output _build/ACT4E-instructors.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+          cd _build && tar cfvz ACT4E-instructors.package.tgz ACT4E-instructors*
     - store_artifacts:
         path: _build
         destination: _build
@@ -129,10 +133,13 @@ jobs:
           cp latexmkrc.batch  latexmkrc
           make ACT4E-devel-fastslides.pdf
           cp *log *warnings.txt _build
+#          cp .circleci/ACT4E-devel-slides.manifest.yaml _build
     - run:
         name: encrypt
         command: |
-          pdftk  ACT4E-devel-fastslides.pdf output _build/ACT4E-devel-fastslides.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+          pdftk  ACT4E-devel-fastslides.pdf output _build/ACT4E-devel-slides.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+
+#          cd _build && tar cfvz ACT4E-devel-slides.package.tgz ACT4E-devel-slides.*
 
     - store_artifacts:
         path: _build
@@ -163,7 +170,8 @@ jobs:
           make ACT4E-public-slow.pdf
           cp ACT4E-public-slow.pdf _build/ACT4E-public.pdf
           cp *log *warnings.txt _build
-
+          cp .circleci/ACT4E-public.manifest.yaml _build
+          cd _build && tar cfvz ACT4E-public.package.tgz ACT4E-public*
     - store_artifacts:
         path: _build
         destination: _build
