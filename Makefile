@@ -30,9 +30,9 @@ ACT%.pdf: ACT%.tex .FORCE
 
 clean:
 	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg  *.dep *.pyg *.ptc* *.mtc* *.gls *.tdo *.mw *warnings.txt *.synctex.gz *-tmp.* ACT4E-*.pdf
-	
-	find volumes -name 'chapter*pdf' -delete 
-	find volumes -name 'part*pdf' -delete 
+
+	find volumes -name 'chapter*pdf' -delete
+	find volumes -name 'part*pdf' -delete
 tikz:
 	touch sag/*pdf
 	make -C sag -j3
@@ -55,6 +55,7 @@ chapters-makefiles  =$(subst chapter.tex,Makefile,              $(chapters))
 parts=$(wildcard volumes/vol*/*/part.tex)
 parts-standalones=$(subst part.tex,part-standalone.tex,$(parts))
 parts-standalones-fast=$(subst part.tex,part-standalone-fast.tex,$(parts))
+parts-standalones-noslides-fast=$(subst part.tex,part-standalone-noslides-fast.tex,$(parts))
 parts-standalones-public-fast=$(subst part.tex,part-standalone-public-fast.tex,$(parts))
 parts-pdf        =$(subst part.tex,part-standalone.pdf,$(parts))
 parts-links      =$(subst part.tex,part-link-snippets, $(parts))
@@ -93,9 +94,12 @@ volumes/%/Makefile: templates/template-Makefile.mk
 
 %/chapter-standalone-public-fast.tex: templates/template-chapter-standalone-public-fast.tex
 	cp $< $@
+%/part-standalone-public-fast.tex: templates/template-part-standalone-public-fast.tex
+	cp $< $@
+
 %/chapter-standalone-noslides-fast.tex: templates/template-chapter-standalone-noslides-fast.tex
 	cp $< $@
-%/part-standalone-public-fast.tex: templates/template-part-standalone-public-fast.tex
+%/part-standalone-noslides-fast.tex: templates/template-part-standalone-noslides-fast.tex
 	cp $< $@
 
 
@@ -109,6 +113,7 @@ volumes/%/Makefile: templates/template-Makefile.mk
 standalone: \
 	$(parts-standalones) \
 	$(parts-standalones-fast) \
+	$(parts-standalones-noslides-fast) \
 	$(parts-standalones-public-fast)  \
 	$(chapters-standalones) \
 	$(chapters-standalones-fast) \
@@ -240,8 +245,8 @@ docker-%:
 pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
 
 latexindent-version:
-	latexindent -v 
-	
+	latexindent -v
+
 latexindent:
 	bash -c 'for a in volumes/*/*/*/*.tex; do echo $$a; ./latexindent.sh $$a; done'
 	bash -c 'for a in sag/*.tikz; do echo $$a; ./latexindent.sh $$a; done'
