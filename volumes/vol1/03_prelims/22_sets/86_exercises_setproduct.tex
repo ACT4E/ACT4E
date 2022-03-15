@@ -1,16 +1,25 @@
 \sectionexercises{Set products}
 
-We define a \classname{SetProduct} to be a special \Setoid that remembers its factors
-and is able to pack/unpack elements into/out of a product element.
+We define a \classname{SetProduct} to be a \Setoid that also has the structure of the Cartesian product of sets.
+This means that:
+\begin{itemize}
+    \item It is possible to recover the ``factors'' of the product (if $\setA = \makecartprod{\setB, \setC, \setD}$, we must be able to recover the components $\setB, \setC, \setD$ from $\setA$);
+    \item It is possible to access the elements of a tuple (if $\setA = \makecartprod{\setB, \setC, \setD}$ and $x = \tupp{\setBel, \setCel, \setDel}$, we should be able to access the components of the tuple).
+    \item On the other way around: it is possible to construct a tuple from the single components.
+\end{itemize}
+Our Python interpretation of these properties is specified in the class \classname{SetProduct}.
 
 \classlisting{SetProduct}
 
 The semantics is the following:
 \begin{itemize}
-    \item The method \funcname{components} returns the ordered list of the setoid components.
+    \item The generic type variable \TypeVar{C} represents the type of the components; the generic type variable \TypeVar{E}
+          refers to the type of the product.
+          Note that we are not constraining the internal representation of the product.
+          (A possible choice could be \pystr{E = List[C]}).
+    \item The method \funcname{components} returns the ordered list of the setoid factors; these must be setoids of type \TypeVar{C}.
     \item The method \funcname{pack} takes a number of arguments and creates an element of the product.
-          % \item The method \funcname{projections} returns the list of projection mappings.
-          %       The~$i$-th projection mapping takes an element of the product and returns the~$i$-th component.
+    \item The method \funcname{unpack} allows to recover the components of an element of the product.
 \end{itemize}
 
 There is also a specialization, which corresponds to a product of finite sets; the only change is that the components are finite sets rather than setoids.
@@ -21,7 +30,11 @@ There is also a specialization, which corresponds to a product of finite sets; t
 
 }
 \classlisting{FiniteMakeSetProduct}{}
-\clearpage
+
+As in the previous exercises, you need to implement the class \classname{FiniteSetProduct} and all the methods from the classes in inherits from as well as the \funcname{__init__} method.
+This procedure will be similar for subsequent exercises and won't be repeated every time.
+
+%\clearpage
 
 \subsection{Representation}
 % The interface above means that if you are passed 2 \FiniteSet{}s, you should return a \FiniteSet.

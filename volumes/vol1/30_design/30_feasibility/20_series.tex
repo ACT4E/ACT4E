@@ -31,7 +31,7 @@ The first and most basic way is series composition, or just ``composition''.
 \end{definition}
 The series composition~$\adpab$ judges a pair~$\tup{\funposAopel,\resposCel}$ as feasible if and only if there exists a~$\posBel \setin \posB$ such that~$\adpa(\funposAopel,\resposBel)$ and~$\adpb(\funposBopel,\resposCel)$ are feasible.
 
-Given a set~$\setA$ and a map~$\stylemaps{s}\colon \setA\to\Bool$, we can define the boolean~$\bigvee_{\setAel\setin \setA}\stylemaps{s}(\setAel)$ by
+Given a set~$\setA$ and a map~$\stylemaps{s}\colon \setA\to\boolset$, we can define the boolean~$\bigvee_{\setAel\setin \setA}\stylemaps{s}(\setAel)$ by
 \begin{equation}
     \bigvee_{\setAel\setin \setA}\stylemaps{s}(\setAel)\definedas
     \begin{cases}
@@ -42,19 +42,19 @@ Given a set~$\setA$ and a map~$\stylemaps{s}\colon \setA\to\Bool$, we can define
 
 In~\cref{eq:composition2} we could have written ``$\exists_{\posBel\setin \posB}$'' instead of ``$\bigvee_{\posBel\setin \posB}$'':
 \begin{equation}
-    \defmapperiod{
-        \adpab
-    }{
-        \funposA\op \Ctimes \resposC
-    }{
-        \toinPos
-    }{
-        \Bool
-    }{
-        \tup{\funposAopel, \resposCel}
-    }{
-        \exists_{\posBel \setin \posB} \adpa(\funposAopel,\resposBel) \booland \adpb(\funposBopel,\resposCel)
-    }
+    % \defmapperiod{
+    %     \adpab
+    % }{
+    %     \funposA\op \Ctimes \resposC
+    % }{
+    %     \toinPos
+    % }{
+    %     \Bool
+    % }{
+    %     \tup{\funposAopel, \resposCel}
+    % }{
+    \exists_{\posBel \setin \posB}\  \adpa(\funposAopel,\resposBel) \booland \adpb(\funposBopel,\resposCel)
+    % }
     %                \adpab
     %                \colon \funposA\op \cartprod \resposC & \toinPos  \Bool, \\
     %                \tup{\funposAopel, \resposCel}        & \mapsto \bigvee_{\posBel \setin \posB} \adpa(\funposAopel,\resposBel) \booland \adpb(\funposBopel,\resposCel).
@@ -80,49 +80,29 @@ To explain how this works, consider the design problem
 \begin{equation}
     \adpa \colon \F{\posgenA} \op \Ctimes  \R{\posgenB} \toinPos \Bool,
 \end{equation}
-from \cref{exa:visualize-dp}, visualized again for convenience in \cref{fig:example_dp_graph_xy_again}.
+from \cref{exa:visualize-dp}, visualized again for convenience in the first row of \cref{fig:example_dp_graph_xyz}.
 
 And consider another design problem of the type
 \begin{equation}
     \adpb \colon \F{\posgenB} \op \Ctimes  \R{\posgenC} \toinPos \Bool,
 \end{equation}
-as given by the visualization in \cref{fig:example_dp_graph_yz}.
+as given by the visualization in the first row of \cref{fig:example_dp_graph_xyz}.
 
-We can calculate the series composition~$\adpa \fthen \adpb$ by tracing paths in the ``composite'' visualization given in \cref{fig:example_dp_graph_xyz}.
+We can calculate the series composition~$\adpa\dpthen \adpb$ by tracing paths in the ``composite'' visualization given in the second row of \cref{fig:example_dp_graph_xyz}.
 Namely, a pair~$\tup{\setAel, \setCel}$ is in the feasibility set of~$\adp \fthen \adpb$ if and only if we can trace a path from~$\setAel$ to~$\setCel$ by only moving upwards in the posets~$\posA$,~$\posB$, and~$\posC$, or crossing from one poset to another following dashed arrows in the direction they are pointing.
-Thus, the visualization of the composite~$\adpa \fthen \adpb$ is as in \cref{fig:example_dp_graph_xz}.
+Thus, the visualization of the composite~$\adpa\dpthen \adpb$ is as in the third row of \cref{fig:example_dp_graph_xyz}.
 
-\todographics{@Gioele: put these 4 figures together.
-    First row: example-dp-composition-xy, example-dp-composition-yz.
-    Second row: example-dp-composition-xyz.
-    Third row: example-dp-composition-xz }
 \begin{figure}[h!]
     \centering
-    \includesag{example_dp_composition_xy}
+    \begin{tabular}{cc}
+        \includesag{example_dp_composition_xy}\includesag{example_dp_composition_yz} \\
+    \end{tabular}
+    \begin{tabular}{c}
+        \includesag{example_dp_composition_xyz} \\
+        \includesag{example_dp_composition_xz}
+    \end{tabular}
     \caption{ }
-    \label{fig:example_dp_graph_xy_again}
-    \todographics{@Gioele: add name of posets and of DPs on the arrow}
-\end{figure}[h!]
-\begin{figure}
-    \centering
-    \includesag{example_dp_composition_yz}
-    \caption{ }
-    \label{fig:example_dp_graph_yz}
-    \todographics{@Gioele: add name of posets and of DPs on the arrow}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \includesag{example_dp_composition_xyz}
-    \caption{}
     \label{fig:example_dp_graph_xyz}
-    \todographics{@Gioele: add name of posets and of DPs on the arrow}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \includesag{example_dp_composition_xz}
-    \caption{}
-    \label{fig:example_dp_graph_xz}
-    \todographics{@Gioele: add name of posets and of DPs on the arrow}
 \end{figure}
 
 \todotextjira{359}{@Andrea: Implement material explaining and illustrating the perspective on composing design problems in terms of matrices and matrix multiplication.
@@ -148,8 +128,8 @@ We can show two important properties for the ``$\fthen$'' operation: associativi
 \begin{lemma}
     The series composition operation as in~\cref{eq:composition2} is associative:
     \begin{equation}
-        (\adpa\fthen \adpb)
-        \fthen \adpc = \adpa\fthen (\adpb\fthen \adpc).
+        (\adpa\dpthen \adpb)
+        \fthen \adpc = \adpa\dpthen (\adpb\dpthen \adpc).
     \end{equation}
 \end{lemma}
 
@@ -166,36 +146,34 @@ We can show two important properties for the ``$\fthen$'' operation: associativi
             \booland \adpb(\funposBopel,\resposCel) \booland \adpc (\funposCopel, \resposDel)
             \right ) \\
              & = \bigvee_{\posBel \setin \posB } \adpa(\funposAopel,\resposBel) \booland \left ( \bigvee_{\posCel\setin \posC} \adpb(\funposBopel,\resposCel) \booland \adpc (\funposCopel, \resposDel) \right ) \\
-             & = \left(\adpa \fthen (\adpb \fthen \adpc )\right) (\funposAopel, \resposDel).
+             & = \left(\adpa\dpthen (\adpb\dpthen \adpc )\right) (\funposAopel, \resposDel).
         \end{aligned}
     \end{equation}
 \end{proof}
 
-Because of associativity, we can write~$\adpa\fthen \adpb\fthen \adpc$ without ambiguity.
+Because of associativity, we can write~$\adpa\dpthen\adpb\dpthen\adpc$ without ambiguity.
 Associativity of composition is represented as:
 \equationsag{50_assoc_1_2_3}{fig:compositionassociativity}
 
 \section{Identity for DP}
 There exists an identity for the ``$\fthen$'' operation.
-We define the identity~$\stylefunctors{\id}_\posA \colon \funposA \profto \resposA$ as follows.
+We define the identity~$\dpid_\posA \colon \funposA \profto \resposA$ as follows.
 
 \begin{definition}[Identity design problem]
     \label{def:dp-identity}
-    For any poset~$\posA$, the \emph{\iindex{identity design problem}}~$\id_\posA \colon \funposA \profto \resposA$ is a monotone map
+    For any poset~$\posA$, the \emph{\iindex{identity design problem}}~$\dpid_\posA \colon \funposA \profto \resposA$ is a monotone map
     \begin{equation}
         \label{eq:identity}
-        \defmapperiod{\stylefunctors{\id}_\posA}{\funposA\op \Ctimes \resposA}{\toinPos}{\Bool}{\tupp{\funposAel_\F{1}^\F{*},\resposAel_\R{2}}}{\funposAel_\F{1} \posleqof{\posA} \resposAel_\R{2}}
+        \defmapperiod{\dpid_\posA}{\funposA\op \Ctimes \resposA}{\toinPos}{\Bool}{\tupp{\funposAel_\F{1}^\F{*},\resposAel_\R{2}}}{\funposAel_\F{1} \posleqof{\posA} \resposAel_\R{2}}
     \end{equation}
-    %    \begin{equation}
-    %        \begin{aligned}
-    %            \stylefunctors{\id}_\posA \colon \funposA\op \cartprod \resposA & \toinPos   \Bool, \label{eq:identity} \\
-    %            \tupp{\funposAel_\F{1}^\F{*},\resposAel_\R{2}}                  & \mapsto \funposAel_\F{1} \posleqof{\posA} \resposAel_\R{2}.
-    %        \end{aligned}
-    %    \end{equation}
 \end{definition}
-\todotext{Describe why this function is monotone.
-    not obvious.}
-In the diagrammatic notation, we represent~$\id_\posA$ as:
+\begin{remark}[Monotonicity of the identity]
+    Let's consider~$\funposAel_\F{1}\F{'} \posleqof{\posA} \funposAel_\F{1}$.
+    If it holds~$\funposAel_\F{1}\posleqof{\posA}\resposAel_\R{2}$, then it also holds~$\funposAel_\F{1}\F{'}\posleqof{\posA}\resposAel_\R{2}$.
+    Similarly, now consider~$\resposAel_\R{2}\posleqof{\posA}\resposAel_\R{2}\R{'}$.
+    If it holds~$\funposAel_\F{1} \posleqof{\posA} \resposAel_\R{2}$, then it also holds~$\funposAel_\F{1} \posleqof{\posA} \resposAel_\R{2}\R{'}$.
+\end{remark}
+In the diagrammatic notation, we represent~$\dpid_\posA$ as:
 %
 \equationsag{110_identity}{fig:identitydp}
 
@@ -208,12 +186,12 @@ In the diagrammatic notation, we represent~$\id_\posA$ as:
 \begin{proof}
     Given~$\adpa\colon \funposA\profto \resposB$, we need to show:
     \begin{equation}
-        \stylefunctors{\id}_\posA \fthen \adpa = \adpa = \adpa \fthen \stylefunctors{\id}_\posB.
+        \dpid_\posA \fthen \adpa = \adpa = \adpa \dpthen \dpid_\posB.
     \end{equation}
-    In the following, we prove~$\stylefunctors{\id}_\posA \fthen \adpa = \adpa$.
-    Proving~$\adpa\fthen \stylefunctors{\id}_\posB=\adpa$ is similar.
+    In the following, we prove~$\dpid_\posA \fthen \adpa = \adpa$.
+    Proving~$\adpa\dpthen \dpid_\posB=\adpa$ is similar.
     Consider the poset~\Bool.
-    Since for~$\ela,\elb\setin \Bool$,
+    Since for~$\ela,\elb\setin \boolset$,
     \begin{equation}
         \prfcomma{
             \ela\cong \elb
@@ -221,28 +199,33 @@ In the diagrammatic notation, we represent~$\id_\posA$ as:
             \ela=\elb
         }
     \end{equation}
-    (also referred to as skeletality~\cite{fong2019}), we just need to show that~$\adpa\posleq \stylefunctors{\id}_\posA\fthen \adpa$ and~$\stylefunctors{\id}_\posA\fthen \adpa\posleq \adpa$.
+    (also referred to as skeletality~\cite{fong2019}), we just need to show that~$\adpa\posleq \dpid_\posA\fthen \adpa$ and~$\dpid_\posA\fthen \adpa\posleq \adpa$.
+    Here,~$\adpa\posleq \adpb$ means~$\adpa(\funposAopel,\resposBel)\posleqof{\Bool}\adpb(\funposAopel,\resposBel)$ for all~$\funposAel\setin \funposA$,~$\resposBel\setin \resposB$.
     We have
     \begin{equation}
         \label{eq:dp_unit_1}
         \begin{aligned}
             \adpa(\funposAopel,\resposBel) & =\true \booland \adpa(\funposAopel,\resposBel) \\
-                                           & = \stylefunctors{\id}_\posA(\funposAopel,\R{\posAel'}) \booland \adpa(\funposAopel,\resposBel) \\
-                                           & \posleq \bigvee_{\posAel\elprime \setin \posA}\stylefunctors{\id}_\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\F{\posAel'^*},\resposBel) \\
-                                           & =(\stylefunctors{\id}_\posA\fthen \adpa)(\funposAopel,\resposBel).
+                                           & = \dpid_\posA(\funposAopel,\resposAel) \booland \adpa(\funposAopel,\resposBel) \\
+                                           & \posleq \bigvee_{\posAel\elprime \setin \posA}\dpid_\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\funposAel\F{'}\F{\opel},\resposBel) \\
+                                           & =(\dpid_\posA\fthen \adpa)(\funposAopel,\resposBel).
         \end{aligned}
     \end{equation}
-    For the other direction, we need to show that~$\stylefunctors{\id}_\posA\fthen \adpa\posleq \adpa$:
+    For the other direction, we need to show that~$\dpid_\posA\fthen \adpa\posleq \adpa$:
     \begin{equation}
         \label{eq:dp_unit_2}
-        \bigvee_{\posAel\elprime\setin \posA}\stylefunctors{\id}_\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\F{\posgenAel'^*},\resposBel) \posleq \adpa(\funposAopel,\resposBel).
+        \bigvee_{\posAel\elprime\setin \posA}\dpid_\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\F{\posgenAel'^*},\resposBel) \posleq \adpa(\funposAopel,\resposBel).
     \end{equation}
-    This holds if and only if~$\stylefunctors{\id}_\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\F{\posgenAel'^*},\resposBel) \posleq \adpa(\funposAopel,\resposBel)$ for some~$\posAel\elprime\setin \posA$.
+    This holds if and only if~$\dpid_\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\F{\posgenAel'^*},\resposBel) \posleq \adpa(\funposAopel,\resposBel)$ for some~$\posAel\elprime\setin \posA$.
     If there is no such~$\posAel\elprime$, then the inequality holds ($\false \posleq \false$ and~$\false \posleq \true$).
-    If there is such an element~$\posAel\elprime$, it means that~$\stylefunctors{\id}_\posA(\funposAopel,\R{\posgenAel'})=\true$ and~$\adpa(\F{\posgenAel'^*},\resposBel)=\true$.
+    If there is such an element~$\posAel\elprime$, it means that~$\dpid_\posA(\funposAopel,\R{\posgenAel'})=\true$ and~$\adpa(\F{\posgenAel'^*},\resposBel)=\true$.
     We know that
     \begin{equation}
-        \prfdouble{\stylefunctors{\id}_\posA(\funposAopel,\R{\posgenAel'})=\true}{\funposAel \posleq \R{\posAel'}}
+        \prfdouble{
+            \dpid_\posA(\funposAopel,\R{\posgenAel'})=\true
+        }{
+            \funposAel \posleq \R{\posAel'}
+        }
     \end{equation}
     and hence~$\adpa(\funposAopel,\resposBel)=\true$.
 \end{proof}
