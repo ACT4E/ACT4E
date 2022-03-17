@@ -4,7 +4,7 @@ chapter-once: .FORCE
 	latexmk -r ../../../../latexmkrc -g  -nobibtex -pdf chapter-standalone.tex
 	cp chapter-standalone.pdf $(PWD)/chapter-standalone-stable.pdf
 	cp chapter-standalone.synctex.gz  $(PWD)/chapter-standalone-stable.synctex.gz
-	
+
 chapter-continuous: .FORCE
 	latexmk -r ../../../../latexmkrc -pvc -nobibtex -pdf chapter-standalone.tex
 
@@ -37,7 +37,7 @@ part-continuous-public-fast: .FORCE
 	latexmk -r ../../../latexmkrc -pvc -pdf part-standalone-public-fast.tex
 
 clean:
-	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw
+	rm -f *.fdb_latexmk *.fls *.log  *.aux *.dvi *.out *.maf *.mtc* *.ptc* *-blx.bib *.run.xml *.idx *.toc *.bbl *.blg *.ind *.ilg   *.ptc* *.mtc* *.gls *.tdo *.mw *synctex.gz  part-*pdf chapter-*pdf *.pyg
 
 
 .FORCE:
