@@ -7,10 +7,16 @@ workflows:
         context: alphubel-stage
     - build-devel-slides:
         context: alphubel-stage
+        requires:
+        - build-devel
     - build-public:
         context: alphubel-stage
+        requires:
+        - build-devel
     - build-instructors:
         context: alphubel-stage
+        requires:
+        - build-devel
     - docs-deploy:
         requires:
         - build-devel
@@ -21,6 +27,7 @@ workflows:
             only: alphubel-stage-AC-
 jobs:
   build-devel:
+    resource_class: small
     environment: &environment
       max_print_line: "1000"
       error_line: "254"
@@ -71,6 +78,7 @@ jobs:
           ./check_no_undefined_refs.py *warnings.txt
           ./check_no_multiple_refs.py *warnings.txt
   build-instructors:
+    resource_class: small
     environment: *environment
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
@@ -111,6 +119,7 @@ jobs:
         - _build
     - run: *check_no_missing_refs
   build-devel-slides:
+    resource_class: small
     environment: *environment
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
@@ -151,6 +160,7 @@ jobs:
     - run: *check_no_missing_refs
 
   build-public:
+    resource_class: small
     environment: *environment
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
