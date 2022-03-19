@@ -2,22 +2,41 @@
 
 \section{Graphs}
 
-\todotextjira{67}{\alphubel: @Andrea: Write introduction to say why this section is here}
+A graph is a data structure with ``points'' and ``arrows'', usually called \emph{no\-des}/\emph{ver\-tices} and \emph{arcs}/\emph{edges}.
 
-To begin, we recall some formal definitions related to (directed) graphs.
-\footnote{
-    In an alternative definition, a directed graph is defined as a pair~$\graph=\tup{\vertices, \arcs}$, made of a set of vertices~$\vertices$ and a set of edges
-    \begin{equation}
-        \arcs \setsubseteq \makeset{ \tup{\vertexa, \vertexb} \mid \tup{\vertexa, \vertexb} \setin \vertices \cartprod \vertices \text{ and } \vertexa \neq \vertexb}.
-    \end{equation}
-    The constructions in this chapter can be adapted for this definition too.
-}
+\begin{marginfigure}
+    \includesag{graph_ex_network}
+    \caption{\label{fig:graph_road_network}}
+    \todographics{\bernina: @Gioele: can we put here a nice mobility-related graph or two?
+        E.g. 1) road network of a city; 2) intermodal graph}
+\end{marginfigure}
+
+Graphs are widely used in many engineering disciplines, to represent, formulate, and solve complex problems.
+For instance, we can represent the mobility network in a city as a directed graph (\cref{fig:graph_road_network}).
+The vertices represent locations, and the edges represent different roads connecting the locations.
+
+\subsection{Defining graphs}
+
+The usual definition of directed graph in engineering, which we will \emph{not} use, is as follows:
+
+\begin{definition}[Directed Graph]
+    \label{def:directed-graph}
+    A \emph{\iindex{directed graph}} is a pair~$\graph=\tup{\vertices, \arcs}$, where~$\vertices$ is
+    a set of ``vertices'' and $\arcs \setsubseteq \vertices \cartprod \vertices$ is the set of edges.
+\end{definition}
+In this definition an arc is a pair of vertices $\tup{\ela,\elb}$ where $\ela$ is the source and $\elb$ is the target.
+This way to model a graph is elegant but not much expressive.
+For example, we can only have \emph{one} edge between two vertices in either direction.
+
+The following definition is more expressive.
 
 \begin{definition}[Directed Multigraph]
     \label{def:Graph}
-    A \emph{\iindex{directed multigraph}}~$\graph=\tup{\vertices,\arcs, \source,\target}$ consists of a set of vertices~$\vertices$, a set of edges~$\arcs$, and two functions~$\source,\target \colon \arcs \sto \vertices$, called the \emph{source} and \emph{target} functions, respectively.
+    A \emph{\iindex{directed multigraph}}~$\graph=\tupp{\vertices,\arcs, \source,\target}$ consists of a set of vertices~$\vertices$, a set of edges~$\arcs$, and two functions~$\source,\target \colon \arcs \sto \vertices$, called the \emph{source} and \emph{target} functions, respectively.
     Given~$\arc\setin \arcs$ with~$\source(\arc)=\vertexa$ and~$\target(\arc)=\vertexb$, we say that~$\arc$ is an \emph{arrow} from~$\vertexa$ to~$\vertexb$.
 \end{definition}
+
+With this definition, we can define \emph{multi}graphs, which are graphs with multiple edges between two vertices.
 
 %\begin{remark}[Undirected graph]
 %    We call \emph{undirected} a graph for which each edge is \emph{bidirectional}.
@@ -29,21 +48,14 @@ To begin, we recall some formal definitions related to (directed) graphs.
     In this text, we work primarily with directed multigraphs and so, from now on, we drop the ``directed'' and the ``multi'': unless indicated otherwise, the word ``graph'' will mean ``directed multigraph''.
 \end{remark}
 
-Graphs are widely used in many engineering disciplines, to represent, formulate, and solve complex problems.
-For instance, one can represent the mobility network in a city as a directed graph (\cref{fig:graph_road_network}).
-
-\begin{marginfigure}
-    \includesag{graph_ex_network}
-    \caption{\label{fig:graph_road_network}}
-\end{marginfigure}
-The vertices represent locations, and the edges represent different roads connecting the locations.
-
 %Another example is the one of \emph{resource graphs} (\cref{fig:resource_graphs}), which describe the architecture of a computing unit.
 %\begin{marginfigure}
 %    \includesag{graph_ex_proc}
 %    \caption{\label{fig:resource_graphs}}
 %\end{marginfigure}
 %Here, vertices represent processors (e.g., CPUs) and arcs represent communication links between them.
+
+\subsection{Paths}
 
 \begin{definition}[Paths]
     \label{def:path}

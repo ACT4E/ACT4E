@@ -9,7 +9,7 @@ chapter-continuous: .FORCE
 	latexmk -r ../../../../latexmkrc -pvc -nobibtex -pdf chapter-standalone.tex
 
 chapter-continuous-fast: .FORCE
-	latexmk -r ../../../../latexmkrc -pvc -nobibtex -pdf chapter-standalone-fast.tex
+	latexmk -r ../../../../latexmkrc -pvc -nobibtex -pdf  chapter-standalone-fast.tex
 
 chapter-continuous-public-fast: .FORCE
 	latexmk -r ../../../../latexmkrc -pvc -nobibtex -pdf chapter-standalone-public-fast.tex
