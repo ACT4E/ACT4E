@@ -6,7 +6,7 @@ We can order them point wise.
 \begin{definition}[Order on monotone maps]
     \label{def:order-monotone-maps}
     Consider two monotone maps $\mora,\morb\colon\posA\mto\posB$.
-    We say that $\mora$ precedes $\morb$ if:
+    We say that $\mora$ precedes $\morb$ if, point wise, the output of $\mora$ precedes the output of $\morb$ when presented with the same input:
     \begin{equation}
         \prfdoubleperiod{
             \mora \posleqof{\posA\mto\posB} \morb
@@ -18,15 +18,16 @@ We can order them point wise.
 
 \begin{example}[Rounding functions]
     \label{ex:rounding-functions}
-    In this example we look at three rounding functions: \funceil~(\cref{fig:ceil}), \funfloor~(\cref{fig:floor}), and~$\rtntte$~(\cref{fig:rtntte}).
-    Both the maps
+    In this example we look at ``rounding functions'': these are functions that truncate a real number to an integer.
+    You might already know the ceiling function \funceil~(\cref{fig:ceil}) and the floor function \funfloor~(\cref{fig:floor}),
+    which are formally defined as
     \begin{equation}
         \defmapcomma{
             \funceil
         }{
             \tup{\reals,\leq}
         }{
-            \to
+            \mto
         }{
             \tup{\natnumbers,\leq}
         }{
@@ -38,12 +39,12 @@ We can order them point wise.
     \end{equation}
     and
     \begin{equation}
-        \defmapcomma{
+        \defmapperiod{
             \funfloor
         }{
             \tup{\reals,\leq}
         }{
-            \to
+            \mto
         }{
             \tup{\natnumbers,\leq}
         }{
@@ -53,10 +54,14 @@ We can order them point wise.
             \max \makeset{\elb \setin \natnumbers \colon \elb \leq \ela }
         }
     \end{equation}
-    are monotone, since~$\ela\leq \elc$ implies both~$\funceil(\ela)\leq \funceil(\elc)$ and~$\funfloor(\ela)\leq\funfloor(\elc)$.
-    There are other rounding functions.
-    For example, the map ``round to nearest, ties to even'' \cite{P754:2008:ISF} is defined as
-    % 
+    The functions $\funceil$ and $\funfloor$ are monotone, since~$\ela\leq \elc$ implies both~$\funceil(\ela)\leq \funceil(\elc)$ and~$\funfloor(\ela)\leq\funfloor(\elc)$.
+
+    There are also other rounding functions that are commonly used by computers.
+    For example, the map ``round to nearest, ties to even'' \cite{P754:2008:ISF}
+    rounds a number to the closest integer, and in case of ties it rounds to the even one (\cref{fig:rtntte}).
+    For example, $3.2$ is mapped to $3$, $1.5$ is mapped to $2$, and $4.5$ is mapped to $4$.
+    This is the formal definition:
+    %
     \begin{widepar}
         \begin{equation}
             \defmapperiod{
@@ -64,7 +69,7 @@ We can order them point wise.
             }{
                 \tup{\reals,\leq}
             }{
-                \to
+                \mto
             }{
                 \tup{\natnumbers,\leq}
             }{
@@ -73,37 +78,39 @@ We can order them point wise.
                 \begin{cases}
                     \funfloor(\ela), & \ela< (\funfloor(\ela)+\funceil(\ela))/2                                                \\
                     \funceil(\ela),  & \ela> (\funfloor(\ela)+\funceil(\ela))/2                                                \\
-                    \funceil(\ela),  & (\ela= (\funfloor(\ela)+\funceil(\ela))/2 )\booland (\funceil(\ela) \text{ is even } ) \\
+                    \funceil(\ela),  & (\ela= (\funfloor(\ela)+\funceil(\ela))/2 )\booland (\funceil(\ela) \text{ is even } )  \\
                     \funfloor(\ela), & (\ela= (\funfloor(\ela)+\funceil(\ela))/2 )\booland (\funfloor(\ela) \text{ is even } )
                 \end{cases}
             }
         \end{equation}
     \end{widepar}
-    \begin{figure*}[h!]
-        \centering
-        \subfloat[$\funceil$.
-            \label{fig:ceil}]{
-            \includesag{ceil}}
-        \hfill
-        \subfloat[$\funfloor$. \label{fig:floor}]{
-            \includesag{floor}}
-        \hfill
-        \subfloat[$\rtntte$. \label{fig:rtntte}]{
-            \includesag{rtntte}}
-    \end{figure*}
 
     In this example, note that
-    \begin{equation*}
+    \begin{equation}
         \funfloor \posleq \mapid \posleq \funceil
-    \end{equation*}
+    \end{equation}
     and
-    \begin{equation*}
+    \begin{equation}
         \funfloor \posleq \rtntte \posleq \funceil,
-    \end{equation*}
-    and~$\mapid$ and $\rtntte$ are not comparable (see \cref{fig:floorceilhasse}).
+    \end{equation}
+    and $\mapid$ and $\rtntte$ are not comparable (see \cref{fig:floorceilhasse}).
     \begin{marginfigure}
-    \includesag{floorceilhasse}
-    \caption{}
-    \label{fig:floorceilhasse}
+        \includesag{floorceilhasse}
+        \caption{}
+        \label{fig:floorceilhasse}
     \end{marginfigure}
 \end{example}
+
+\begin{figure*}[b]
+    \centering
+    \subfloat[$\funceil$.
+        \label{fig:ceil}]{
+        \includesag{ceil}}
+    \hfill
+    \subfloat[$\funfloor$. \label{fig:floor}]{
+        \includesag{floor}}
+    \hfill
+    \subfloat[$\rtntte$. \label{fig:rtntte}]{
+        \includesag{rtntte}}
+    \caption{Comparison of three rounding methods.}
+\end{figure*}
