@@ -7,8 +7,18 @@
 % \linkvideo{spring2021-functors:semi-and-fun:mon-functions:fun-req-mon} % Functionalities and requirements
 \linkvideo{spring2021-functors:semi-and-fun:mon-functions:mon-on-pos} % Monotone functions on posets
 
-\todojira{80}{\bernina: @Andrea: Add some motivation from design.
-    \eg generalization of ``non-decreasing'' and ``non-increasing'' from real numbers to partial orders}
+A monotone map is the generalization to posets of a ``non-decreasing'' function on real numbers.
+The function $x \mapsto \max(0, 42 x)$ is non-decreasing on the real numbers because
+\begin{equation}
+    \prfdoubleperiod{
+        x \leq y
+    }{
+        \max(0, 42 x) \leq \max(0, 42 y)
+    }
+\end{equation}
+Note that we use ``$\leq$'' and not ``$<$''. Non-decreasing is weaker than ``increasing''.
+
+The definition of monotone function on a poset is the direct generalization of this concept; the only change  is that we use the partial order rather than the total order on the reals.
 
 \begin{definition}[Monotone map]
     \label{def:monotone}
@@ -24,23 +34,54 @@
 \end{definition}
 
 \begin{example}[Identity is monotone]
-    Given a poset~$\posA$, the identity map~$\catidat{\posA}\colon \posA \mto \posA$ is monotone, since if~$\posela\posAleq \poselb$, then~$\catidat{\posA}(\posela)=\posela \posAleq  \poselb =  \catidat{\posA}(\poselb )$.
+    Given a poset~$\posA$, the identity map~$\catidat{\posAset}\colon \posAset \mto \posAset$ is monotone, since if~$\posela\posAleq \poselb$, then~$\mapid_{\posAset}(\posela)=\posela \posAleq  \poselb =  \mapid_{\posAset}(\poselb )$.
 \end{example}
 
 \begin{example}[Constant maps are monotone]
     Every constant map is monotone.
 \end{example}
 
-\begin{example}[Cardinality map]
-    Consider the poset arising from the power set (power poset, \cref{def:power-poset}) of a set~$\setA=\makeset{\posela,\poselb,\poselc}$ and ordered via subset inclusion.
 
-    The map~$\vert \cdot \vert \colon \powerposet{\setA} \to \tup{\natnumbers,\leq}$ (cardinality), is a monotone map (\cref{fig:cardinality}).
-    \begin{figure*}[h!]
-        \centering
-        \includesag{40_dpcatfig_exmonotone}
-        \caption{The cardinality map is a monotone map. }
-        \label{fig:cardinality}
-    \end{figure*}
+\begin{figure*}[b]
+    \centering
+    \includesag{40_dpcatfig_exmonotone}
+    \caption{The cardinality map is a monotone map. }
+    \label{fig:cardinality}
+\end{figure*}
+
+\begin{example}[Cardinality map]
+    Consider the power poset (\cref{def:power-poset}) $\powerposet\setA$ of a finite set $\setA$.
+    The cardinality map
+    \begin{equation}
+        \cardmap : \powerset\setA \sto \natnumbers
+    \end{equation}
+    is monotone when considered as a map from the poset $\powerposet\setA$ to the poset $\tup{\natnumbers,\leq}$.
+    % \begin{equation}
+    %     \defmap{
+    %         \cardmap
+    %     }{
+    %         \powerposet{\setA}
+    %     }{
+    %         \sto
+    %     }{
+    %         \tup{\natnumbers,\leq}
+    %     }{
+    %         \subA
+    %     }{
+    %         \vert\subA\vert
+    %     }
+    % \end{equation}
+    % is monotone.
+    \Cref{fig:cardinality} shows a visualization of this map for the set~$\setA=\makeset{\posela,\poselb,\poselc}$.
+    To prove this, recall that in the power poset subsets are ordered by inclusion.  Therefore, we need to show that
+    \begin{equation}
+        \prfdoubleperiod{
+            \subA \setsubseteq \subB
+        }{
+            \cardof \subA  \leq  \cardof \subB
+        }
+    \end{equation}
+    This is easy to see that, because all elements of $\subA$ are also in $\subB$, the cardinality of $\subA$ cannot be more than the cardinality of $\subB$.
 \end{example}
 
 \begin{lemma}
@@ -90,13 +131,14 @@
                   \defmap{\mapa}{\tup{\wnumbers, \leq}}{\to}{\tup{\wnumbers, \leq}}{\ela}{\ela^2}
               \end{equation}
               monotone?
-        \item Let~$\setA = \makeset{\ela, \elb, \elc}$ and consider the posets~$\tup{\powerset{\setA}, \setsubseteq}$ and~$\tup{\natnumbers, \leq}$.
-              Let
-              \begin{equation}
-                  \defmap{\mapa}{\posA}{\to}{\natnumbers}{\subA}{\vert \subA \vert}
-              \end{equation}
-              be the function which calculates the cardinality of any subset of~$\setA$.
-              Is~$\mapa$ monotone?
+        % \item Let~$\setA = \makeset{\ela, \elb, \elc}$ and consider the posets~$\tup{\powerset{\setA}, \setsubseteq}$ and~$\tup{\natnumbers, \leq}$.
+        %       Let $\cardmap$ be
+        %       \begin{equation}
+        %           \defmap{\mapa}{\posA}{\to}{\natnumbers}{\subA}{\vert \subA \vert}
+        %       \end{equation}
+        %       be the function which calculates the cardinality of any subset of~$\setA$.
+        %       Is~$\mapa$ monotone?
+        %       \todotext{\alphubel: @JL: Note that this question cannot be used as exercise because it's an example.}
         \item Consider the set of natural numbers which divide the number 36, equip\-ped with the partial order such that~$\ela \leq \elb$ if and only if~$\ela$ divides~$\elb$.
               Call this poset~$\posA = \tup{\posAset, \leq}$, and let~$\mapa \colon \posAset \sto \boolset$ be defined by
               \begin{equation}
