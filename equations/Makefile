@@ -11,13 +11,13 @@ Sources = $(shell find . -name '*.texi')
 
 
 PDFGraphics = $(patsubst %.texi,%.pdf,$(Sources))
-Pages = $(patsubst %.texi,%-page.tex,$(Sources))
+#Pages = $(patsubst %.texi,%-page.tex,$(Sources))
 
 
 
 all: $(PDFGraphics)
 
-pages: $(Pages)
+#pages: $(Pages)
 
 Sources_defs = $(shell find . -name 'def*.texi')
 PDFGraphics_defs = $(patsubst %.texi,%.pdf,$(Sources))
