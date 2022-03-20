@@ -6,8 +6,8 @@ RM       = /bin/rm
 
 Sources = $(shell find . -name '*.texi')
 
-%-page.tex :  head.txt %.texi foot.txt
-	cat $^ > $@
+#%-page.tex :  head.txt %.texi foot.txt
+#	cat $^ > $@
 
 
 PDFGraphics = $(patsubst %.texi,%.pdf,$(Sources))
@@ -15,7 +15,7 @@ Pages = $(patsubst %.texi,%-page.tex,$(Sources))
 
 
 
-all: $(PDFGraphics)  $(Pages)
+all: $(PDFGraphics)
 
 pages: $(Pages)
 
@@ -25,18 +25,25 @@ PDFGraphics_defs = $(patsubst %.texi,%.pdf,$(Sources))
 defs: $(PDFGraphics_defs)
 
 #pages: $(patsubst %.texi,%-page.tex,$(Sources))
-%.pdf : %.tex
-	cd $(shell dirname $@) && $(PDFLATEX) $(shell basename $*)
-	rm -f $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc* $*.mw $*.idx
+%.pdf : %.texi
+	cat head.txt $*.texi foot.txt > $*-page.tex
+	cd $(shell dirname $@) && $(PDFLATEX) $(shell basename $*-page)
 
-
-%.pdf : %-page.pdf
-	$(PDFCROP) --margins 2 $< $*.tmp.pdf
-
-	cpdf $*.tmp.pdf -scale-page "3.2 3.2" -o  $*.tmp2.pdf
+	$(PDFCROP) --margins 2  $*-page.pdf $*.tmp1.pdf
+	cpdf $*.tmp1.pdf  -scale-page "3.2 3.2" -o  $*.tmp2.pdf
 	cpdf -set-metadata-date 2010-01-01 $*.tmp2.pdf -o $*.tmp3.pdf
-	mv  $*.tmp3.pdf $@
-	rm -f  $*.tmp*.pdf
+	rm -f  $*.tmp1.pdf $*.tmp2.pdf  $*-page.* $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc* $*.mw $*.idx
+	mv $*.tmp3.pdf $@
+
+
+#
+#%.pdf : %-page.pdf
+#	$(PDFCROP) --margins 2 $< $*.tmp.pdf
+#
+#	cpdf $*.tmp.pdf -scale-page "3.2 3.2" -o  $*.tmp2.pdf
+#	cpdf -set-metadata-date 2010-01-01 $*.tmp2.pdf -o $*.tmp3.pdf
+#	mv  $*.tmp3.pdf $@
+#	rm -f  $*.tmp*.pdf
 #$(PDFCROP) --margins 10 $< $*.tmp.pdf
 #cpdf $*.tmp.pdf -scale-page "2.0 2.0" -o $@
 
