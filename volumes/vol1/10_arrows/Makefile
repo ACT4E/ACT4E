@@ -48,7 +48,7 @@ part-once-fast-force: .FORCE
 	cp part-standalone-fast.synctex.gz  $(CURDIR)/$(base)-fast-stable.synctex.gz.tmp
 	mv $(CURDIR)/$(base)-fast-stable.synctex.gz.tmp $(CURDIR)/$(base)-fast-stable.synctex.gz
 	mv $(CURDIR)/$(base)-fast-stable.pdf.tmp $(CURDIR)/$(base)-fast-stable.pdf
-	
+
 part-continuous: .FORCE
 	latexmk -r ../../../latexmkrc -pvc -pdf part-standalone.tex
 
