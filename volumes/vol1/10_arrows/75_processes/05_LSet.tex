@@ -22,7 +22,7 @@ We will define a category~\SetL whose objects are ``sets of tuples''.
 %The things in a list -- for example, $\elb$, $\elc$, and $\ela$ -- are the \emph{entries} of the list.
 %They each come with an index corresponding to their placement in the list (so we can speak of the 1st entry, 2nd entry, and so on).
 
-Given sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$, if they are all non-empty, then we define
+Given sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$, where $n \in \natnumbers$, we define
 \begin{equation}
     \label{eq:sets-of-tuples}
     \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} \definedas \makeset{ \tup{\elna{1}, \elna{2}, \ldots, \elna{n}} \mid \elna{1} \setin \setAn{1}, \elna{2} \setin \setAn{2}, \ldots, \elna{n} \setin \setAn{n} }.
@@ -32,30 +32,37 @@ So for example,
     \cObj{\wnumbers, \natnumbers, \reals} = \makeset{ \tup{\ela, \elb, \elc} \mid \ela \setin \wnumbers, \elb \setin \natnumbers, \elc \setin \reals }.
 \end{equation}
 
-Essentially, the objects of~$\SetL$ will be sets of the form \cref{eq:sets-of-tuples}.
-We also include the empty set~$\Emptyset$ as an object of~$\SetL$, as well as a special one-element set~$\cObj{} \definedas \makeset{ \tup{} }$ whose single element is the empty tuple.
+A special case is when any of the sets $\setAn{1}, \dots, \setAn{n}$ are the empty set $\Emptyset$; then we have 
+\begin{equation}
+\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} = \Emptyset. 
+\end{equation}
+Note also the case $n = 0$, where 
+\begin{equation}
+\cObj{} = \makeset{ \tup{} }
+\end{equation}
+is a singleton set whose element is the empty tuple.
 
-We make the convention that~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$ denotes the empty set if any of the sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$ are equal to the empty set.
-In particular, we have for example~$\Emptyset = \cObj{\Emptyset}$.
+% We make the convention that~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$ denotes the empty set if any of the sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$ are equal to the empty set.
+% In particular, we have for example~$\Emptyset = \cObj{\Emptyset}$.
 
 All the objects of~$\SetL$ are in particular just sets, so we can package them into a category whose morphisms are simply functions between such sets.
 
 \begin{ctdefinition}[\SetL]
-    The category \SetL is the subcategory of \Set in which the objects are the sets
-    that can be represented as~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$, for any~$n \setin \natnumbers$ and any sets~$\setAn{1}, \setAn{2}, \ldots, \setAn{n}$.
+    The category \SetL is the subcategory of \Set in which the objects are the sets of the form~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$, for any~$n \setin \natnumbers$ and any sets~$\setAn{1}, \setAn{2}, \ldots, \setAn{n}$.
 \end{ctdefinition}
-
+\todotext{\alphubel: It is very nice to use the word subcategory here, but we haven't defined subcategories yet.
+    How to change the structure?}
 \subsection{From \Set to~\SetL}
 
-Observe that we can turn any set into an object of \SetL: given a set~$\setA$, there is the associated set
+Observe that we can turn any set into an object of \SetL: given a set~\setA, there is the associated set
 \begin{equation}
     \cObj{\setA} = \makeset{ \tup{\ela} \mid \ela \setin \setA }
 \end{equation}
-whose elements are precisely all the tuples of length one whose entry is an element of~$\setA$.
+whose elements are precisely all the tuples of length one whose entry is an element of~\setA.
 This defines a function
 \begin{equation}
     \begin{aligned}
-        \Ob_{\Set} & \to \Ob_{\SetL} \\
+        \Obof{\Set} & \to \Obof{\SetL} \\
         \setA      & \mapsto \cObj{\setA}
     \end{aligned}
 \end{equation}
@@ -70,7 +77,7 @@ This defines a function
 \begin{equation}
     \Hom_{\Set}(\setA,\setB) \to \Hom_{\SetL}(\cObj{\setA},\cObj{\setB})
 \end{equation}
-for any sets~$\setA$ and~$\setB$; one might also call it ``bracket''.
+for any sets~\setA and~\setB; one might also call it ``bracket''.
 
 \subsection{Concatenation of tuples}
 
@@ -80,6 +87,7 @@ Our notation for concatenation of tuples is
 \begin{equation}
     \tup{\ela, \elb, \elc} \tupconcat \tup{\eld, \ele} = \tup{\ela, \elb, \elc, \eld, \ele}.
 \end{equation}
+\todotext{\alphubel: We already defined the concatenation of tuples...}
 For the empty tuple~$\tup{  }$ we set
 \begin{equation}
     \tup{} \tupconcat \tup{\ela, \elb, \elc}  = \tup{\ela, \elb, \elc}
@@ -94,10 +102,9 @@ and
 We define a multiplication for objects of \SetL.
 The symbol~$\cprod$ will denote this multiplication in infix notation.
 
-Given~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ and~$\cObj{\setBn{1}, \ldots, \setBn{n}}$ we define
-an operation
+Given~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ and~$\cObj{\setBn{1}, \ldots, \setBn{n}}$ we define the operation
 \begin{equation}
-    \cprod \colon \Ob_{\SetL} \cartprod \Ob_{\SetL} \to \Ob_{\SetL}
+    \cprod \colon \Obof{\SetL} \cartprod \Obof{\SetL} \to \Obof{\SetL}
 \end{equation}
 by
 \begin{equation}
@@ -109,12 +116,12 @@ by
 \end{equation}
 for any $n, m \setin \natnumbers$.
 
-When both factors are non-empty, the elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}}$ are all possible concatenations of elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ with elements of~$\cObj{\setBn{1}, \ldots, \setBn{n}}$.
+The elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}}$ are all possible concatenations of elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ with elements of~$\cObj{\setBn{1}, \ldots, \setBn{n}}$.
 
 Equation \cref{eq:strict-monoidal-product-sets} holds in particular also in the cases when~$m = 0$ or~$n =0$:
 \begin{equation}
     \makecprod{
-        \cObj{ \ },
+        \emptycobj,
         \cObj{\setBn{1}, \ldots, \setBn{n}}
     } =
     \cObj{
@@ -125,7 +132,7 @@ and
 \begin{equation}
     \makecprod{
         \cObj{\setAn{1}, \ldots, \setAn{m}},
-        \cObj{ \ }
+        \emptycobj
     } =
     \cObj{
         \setAn{1}, \ldots, \setAn{m}
