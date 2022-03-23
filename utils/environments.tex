@@ -416,17 +416,48 @@
 
 
 
+\makeatletter
+    \newcommand{\coloruline}[2]{%
+        \newcommand\temp@reduline{\bgroup\markoverwith%
+            {\textcolor{#1}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}%
+        \temp@reduline{#2}%
+    }
+
+    \newcommand{\coloruuline}[2]{%
+        \UL@protected\def\temp@uuline{\leavevmode \bgroup%
+            \UL@setULdepth%
+            \ifx\UL@on\UL@onin \advance\ULdepth2.8\p@\fi%
+            \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox%
+                {\kern-.03em\vbox{\hrule width.2em\kern1\p@\hrule}\kern-.03em}}}%
+        \ULon}%
+        \temp@uuline{#2}%
+    }
+
+    \newcommand{\coloruwave}[2]{%
+        \UL@protected\def\temp@uwave{\leavevmode \bgroup%
+        \ifdim \ULdepth=\maxdimen \ULdepth 3.5\p@%
+        \else \advance\ULdepth2\p@%
+        \fi \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox{\sixly \char58}}}\ULon}%
+        \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
+        \temp@uwave{#2}%
+    }
+\makeatother
+
+\definecolor{symbol-underline}{RGB}{232,235,207}
 
 \DeclareRobustCommand{\SY}[1]{\SYN{#1}{#1}}
 
 \DeclareRobustCommand{\SYN}[2]{%
-    \pgfkeysifdefined{/mydefs/#1}{%
-        \hyperref[\pgfkeysvalueof{/mydefs/#1}]{%
+    \pgfkeysifdefined{/mydefs/#1/index}{%
+        \index{\pgfkeysvalueof{/mydefs/#1/index}}%
+    }{}%
+    \pgfkeysifdefined{/mydefs/#1/label}{%
+        \hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
             \ifthenelse{\boolean{devel}}{%
                 {\color{blue}#2}%
             }{%
-                #2%
-            }
+                \coloruwave{yellow}{#2}%
+            }%
         }%
     }{%
         \ifthenelse{\boolean{devel}}{%
@@ -436,21 +467,27 @@
         }%
     }\xspace%
 }
-\newcommand{\SYDEF}[2]{%
-    \pgfkeyssetvalue{/mydefs/#1}{#2}%
+\newcommand{\SYDEF}[3]{%
+    \pgfkeyssetvalue{/mydefs/#1/label}{#2}%
+    \pgfkeyssetvalue{/mydefs/#1/index}{#3}%
 }
 
-\SYDEF{semigroup}{def:semigroup}
-\SYDEF{semigroups}{def:semigroup}
-\SYDEF{monoid}{def:monoid}
-\SYDEF{submonoid}{def:submonoid}
-\SYDEF{monoids}{def:monoid}
-\SYDEF{commutative group}{def:commutative-group}
-\SYDEF{group}{def:group}
-\SYDEF{groups}{def:group}
-\SYDEF{injective}{sub:injective-and-surjective}
-\SYDEF{surjective}{sub:injective-and-surjective}
-\SYDEF{bijective}{sub:injective-and-surjective}
-\SYDEF{monoid morphism}{def:monoid-mor}
-\SYDEF{morphism of monoids}{def:monoid-mor}
-\SYDEF{identity morphism}{def:identity-morphism}
+\SYDEF{semigroup}{def:semigroup}{semigroup}
+\SYDEF{semigroups}{def:semigroup}{semigroup}
+\SYDEF{monoid}{def:monoid}{monoid}
+\SYDEF{monoids}{def:monoid}{monoid}
+\SYDEF{submonoid}{def:submonoid}{submonoid}
+\SYDEF{magma}{def:magma}{magma}
+\SYDEF{magmas}{def:magma}{magma}
+\SYDEF{commutative group}{def:commutative-group}{commutative group}
+\SYDEF{group}{def:group}{group}
+\SYDEF{groups}{def:group}{group}
+\SYDEF{injective}{sub:injective-and-surjective}{injective function}
+\SYDEF{surjective}{sub:injective-and-surjective}{surjective function}
+\SYDEF{bijective}{sub:injective-and-surjective}{bijective function}
+\SYDEF{monoid morphism}{def:monoid-mor}{monoid morphism}
+\SYDEF{morphism of semigroups}{def:semigroup-mor}{semigroup morphism}
+\SYDEF{morphism of monoids}{def:monoid-mor}{monoid morphism}
+\SYDEF{identity morphism}{def:identity-morphism}{identity morphism}
+\SYDEF{identity morphisms}{def:identity-morphism}{identity morphism}
+
