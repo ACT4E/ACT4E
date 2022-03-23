@@ -441,11 +441,16 @@
         \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
         \temp@uwave{#2}%
     }
-\makeatother
+
 
 \definecolor{symbol-underline}{RGB}{232,235,207}
 
 \DeclareRobustCommand{\SY}[1]{\SYN{#1}{#1}}
+\DeclareRobustCommand{\SYNDEF}[1]{%
+    \pgfkeysifdefined{/mydefs/#1/index}{%
+        \index{\pgfkeysvalueof{/mydefs/#1/index}|textbf}
+    }{}%
+}
 
 \DeclareRobustCommand{\SYN}[2]{%
     \pgfkeysifdefined{/mydefs/#1/index}{%
@@ -468,28 +473,11 @@
     }\xspace%
 }
 \newcommand{\SYDEF}[3]{%
-    \pgfkeyssetvalue{/mydefs/#1/label}{#2}%
-    \pgfkeyssetvalue{/mydefs/#1/index}{#3}%
+    \@for\@ii:=#1\do{%
+        \pgfkeyssetvalue{/mydefs/\@ii/label}{#2}%
+        \pgfkeyssetvalue{/mydefs/\@ii/index}{#3}%
+    }%
 }
-
-\SYDEF{semigroup}{def:semigroup}{semigroup}
-\SYDEF{semigroups}{def:semigroup}{semigroup}
-\SYDEF{monoid}{def:monoid}{monoid}
-\SYDEF{monoids}{def:monoid}{monoid}
-\SYDEF{submonoid}{def:submonoid}{submonoid}
-\SYDEF{magma}{def:magma}{magma}
-\SYDEF{magmas}{def:magma}{magma}
-\SYDEF{commutative group}{def:commutative-group}{commutative group}
-\SYDEF{group}{def:group}{group}
-\SYDEF{groups}{def:group}{group}
-\SYDEF{injective}{sub:injective-and-surjective}{injective function}
-\SYDEF{surjective}{sub:injective-and-surjective}{surjective function}
-\SYDEF{bijective}{sub:injective-and-surjective}{bijective function}
-\SYDEF{monoid morphism}{def:monoid-mor}{monoid morphism}
-\SYDEF{morphism of semigroups}{def:semigroup-mor}{semigroup morphism}
-\SYDEF{morphism of monoids}{def:monoid-mor}{monoid morphism}
-\SYDEF{identity morphism}{def:identity-morphism}{identity morphism}
-\SYDEF{identity morphisms}{def:identity-morphism}{identity morphism}
 
 
 % https://tex.stackexchange.com/questions/466026/test-if-current-color-is-black
@@ -508,3 +496,21 @@
     }%
 }
 \makeatother
+
+
+\SYDEF{semigroup,semigroups}{def:semigroup}{semigroup}
+\SYDEF{monoid,monoids}{def:monoid}{monoid}
+\SYDEF{submonoid}{def:submonoid}{submonoid}
+\SYDEF{magma,magmas}{def:magma}{magma}
+\SYDEF{commutative group}{def:commutative-group}{commutative group}
+\SYDEF{group,groups}{def:group}{group}
+\SYDEF{injective}{sub:injective-and-surjective}{injective function}
+\SYDEF{surjective}{sub:injective-and-surjective}{surjective function}
+\SYDEF{bijective}{sub:injective-and-surjective}{bijective function}
+\SYDEF{monoid morphism,morphism of monoids}{def:monoid-mor}{monoid morphism}
+\SYDEF{semigroup morphism,morphism of semigroups}{def:semigroup-mor}{semigroup morphism}
+\SYDEF{identity morphism,identity morphisms}{def:identity-morphism}{identity morphism}
+
+\SYDEF{antichain,antichains}{def:antichain}{antichain in a poset}
+\SYDEF{chain,chains}{def:chain}{chain in a poset}
+\SYDEF{power poset}{def:pospower}{power poset}
