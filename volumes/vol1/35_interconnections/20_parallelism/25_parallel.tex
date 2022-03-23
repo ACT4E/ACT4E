@@ -69,7 +69,7 @@ In the next part we will talk about \emph{monoidal categories} (\cref{def:monoid
     We define the three non-classical notions mentioned above for the following reasons:
     \begin{itemize}
         \item Using the strictification construction of \SetL all the monoidal categories that we need through the book are strict.
-              Therefore, we can study parallel and feedback composition without knowing  natural transformations.
+              Therefore, we can study parallel and feedback composition without knowing natural transformations.
 
         \item There are important cases of semicategories without identities with a stacking operation that do not fit the notion of monoidal category.
               An example is discrete-time linear systems.
@@ -193,82 +193,171 @@ In particular, in an associative stacking semicategory, and stacking of two morp
         }
     \end{equation}
 \end{remark}
-
-\begin{example}[\SetL is associative stacking]
-    In this example we show that~\SetL is an associative stacking semicategory.
-    We first show that it is a stacking category.
-    To do so, we start by showing that the stacking operations fulfill \cref{def:simple-stacking-semi-cat}.
-    The stacking operation on objects was defined in \cref{sec:cartcatset} and was referred to as the ``multiplication in \SetL''.
-    Since it returns a set, it is valid.
-    We have
+\clearpage
+\begin{lemma}
+    \label{lem:SetL-is-associative-stacking}
+    \SetL is associative stacking using the structure that arises from tuple concatenation.
+    % by setting $\mtimescatob_{\SetL} \definedas \cprod$
+    % and $\mtimescatmor_{\SetL} \definedas \cprod$
+\end{lemma}
+\begin{proof}
+    % In this example we show that~\SetL is an associative stacking semicategory.
+    % We first show that it is a stacking category.
+    % To do so, we start by showing that the stacking operations fulfill \cref{def:simple-stacking-semi-cat}.
+    For the stacking operation on objects $\mtimescatob$ we use the operation $\cprod$ defined in \cref{sec:cartcatset} which was referred to as the ``multiplication in \SetL''.
+    \\
+    As for $\mtimescatmor$, we define it as follows:
     \begin{equation}
-        \defmapperiod{
-            \mtimescatob
+        \label{eq:mtimescatmor-SetL}
+        \prfperiod{
+            \mora\colon\setA\mtoin\SetL\setB
         }{
-            \Obof{\SetL} \cartprod \Obof{\SetL}
+            \quad
         }{
-            \mto
+            \morb\colon\setC\mtoin\SetL\setD
         }{
-            \Obof{\SetL}
-        }{
-            \tup{\cObj{\setAn{1},\ldots, \setAn{n}}, \cObj{\setBn{1},\ldots,\setBn{m}}}
-        }{
-            \cObj{\setAn{1},\ldots, \setAn{n}, \setBn{1},\ldots,\setBn{m}}
+            \defmap{
+                (\mora\mtimescatmor\morb )
+            }{
+                \setA \cprod \setC
+            }{
+                \mtoin\SetL
+            }{
+                \setB \cprod \setD
+            }{
+                \maketupconcat{\ela, \elc}
+            }{
+                \maketupconcat{\mora(\ela), \morb(\elc)}
+            }
         }
     \end{equation}
-    The stacking operation on morphisms is defined as
+    The two operations $\mtimescatob, \mtimescatmor$ so defined satisfy the compatibility conditions
+    required by \cref{def:simple-stacking-semi-cat}.
+
+    To show associativity, consider three morphisms
+    \begin{equation}
+        % \begin{aligned}
+        \mora\colon\setA\mtoin\SetL\setB,\qquad
+        \morb\colon\setC\mtoin\SetL\setD,\qquad
+        \morc\colon\setE\mtoin\SetL\setF.
+        % \end{aligned}
+    \end{equation}
+    We compute $\mora\mtimescatmor(\morb\mtimescatmor\morc)$ and $(\mora\mtimescatmor\morb)\mtimescatmor\morc$ following the recipe \cref{eq:mtimescatmor-SetL} to obtain
     \begin{equation}
         \defmapcomma{
-            \mtimescatmor
+            \parslight{\mora\mtimescatmor\morb}\mtimescatmor\morc
         }{
-            \Mor_{\SetL} \cartprod \Mor_{\SetL}
+            \parslight{\setA \cprod \setC} \cprod \setE
         }{
-            \mto
+            \mtoin\SetL
         }{
-            \Mor_{\SetL}
+            \parslight{\setB \cprod \setD} \cprod \setF
         }{
-            \tup{\mora,\morb}
+            \maketupconcat{\parslight{\maketupconcat{\ela, \elc}}, \ele}
         }{
-            \mora \cprod \morb
-        },
+            \maketupconcat{\parslight{\maketupconcat{\mora(\ela), \morb(\elc)}}, \morc(\ele) }
+        }
     \end{equation}
-    where~$(\mora \cprod \morb)(\tup{\setAeln{1},\ldots, \setAeln{m}} \tupconcat \tup{\setBel_1,\ldots, \setBel_n})\definedas \mora(\tup{\setAeln{1},\ldots, \setAeln{m}})\tupconcat \morb(\tup{\setBel_1,\ldots, \setBel_n})$.
-    This is indeed a map between sets.
-    The two operations are compatible, because
-    \begin{widepar}
-        \begin{equation}
-            \prfperiod{
-                \mora\colon \cObj{\setAn{1},\ldots,\setAn{n}}\mto \cObj{\setBn{1},\ldots,\setBn{m}}
-            }{
-                \morb\colon \cObj{\setCn{1},\ldots,\setCn{o}}\mto \cObj{\setDn{1},\ldots,\setDn{p}}
-            }{
-                \mora \mtimescatmor \morb \colon \cObj{\setAn{1}, \ldots, \setAn{n}, \setCn{1}, \ldots, \setCn{o}} \mto \cObj{\setBn{1}, \ldots, \setBn{m}, \setDn{1}, \ldots, \setDn{p}}
-            }
-        \end{equation}
-    \end{widepar}
-
-    We now show associativity.
-    We have already shown in \cref{sec:cartcatset} that~$\cprod$ satisfies the properties of a semigroup operation.
-    For the operation on morphisms, consider
     \begin{equation}
-        \begin{aligned}
-            \mora\colon \cObj{\setAn{1},\ldots,\setAn{m}} & \mto \cObj{\setBn{1}, \ldots, \setBn{n}}, \\
-            \morb\colon \cObj{\setCn{1},\ldots,\setCn{o}} & \mto \cObj{\setDn{1},\ldots,\setDn{p}}, \\
-            \morc\colon \cObj{\setEn{1},\ldots,\setEn{q}} & \mto \cObj{\setFn{1},\ldots,\setFn{r}},
-        \end{aligned}
+        \defmapperiod{
+            \mora\mtimescatmor\parslight{\morb\mtimescatmor\morc}
+        }{
+            \setA \cprod \parslight{\setC \cprod \setE}
+        }{
+            \mtoin\SetL
+        }{
+            \setB \cprod \parslight{\setD \cprod \setF}
+        }{
+            \maketupconcat{\ela, \parslight{\maketupconcat{\elc, \ele}}}
+        }{
+            \maketupconcat{\mora(\ela), \parslight{\maketupconcat{\morb(\elc), \morc(\ele)}}}
+        }
     \end{equation}
-    For brevity, we write~$\setAeln{}=\tup{\setAeln{1},\ldots, \setAeln{m}}$,~$\setCeln{}=\tup{\setCeln{1},\ldots, \setCeln{o}}$, and~$\setEeln{}=\tup{\setEeln{1},\ldots,\setEeln{q}}$.
-    We have
-    \begin{align}
-        ((\mora \cprod \morb)\cprod \morc)(\tup{\setAeln{}, \setCeln{},\setEeln{}})
-         & =(\mora(\setAeln{})\tupconcat \morb(\setCeln{}))\tupconcat \morc(\setEeln{}) \\
-         & =\mora(\setAeln{})\tupconcat \morb(\setCeln{})\tupconcat \morc(\setEeln{}) \\
-         & =\mora(\setAeln{})\tupconcat (\morb(\setCeln{})\tupconcat \morc(\setEeln{})) \\
-         & =(\mora \cprod (\morb\cprod \morc))(\tup{\setAeln{}, \setCeln{},\setEeln{}})
-    \end{align}
-    for all~$\tup{\setAeln{}, \setCeln{},\setEeln{}}\setin \cObj{\setAn{1},\ldots,\setAn{m},\setCn{1},\ldots,\setCn{o},\setEn{1},\ldots,\setEn{q}}$.
+    Notice that the operations $\cprod$ and $\tupconcat$ are associative; therefore, we can remove all the light parentheses that appear in the formulas.
+    This implies that both functions are equal to
+    \begin{equation}
+        \defmapperiod{
+            \mora\mtimescatmor\morb\mtimescatmor\morc
+        }{
+            \setA \cprod \setC \cprod \setE
+        }{
+            \mtoin\SetL
+        }{
+            \setB \cprod \setD \cprod \setF
+        }{
+            \maketupconcat{\ela, \elc, \ele}
+        }{
+            \maketupconcat{\mora(\ela), \morb(\elc), \morc(\ele)}
+        }
+    \end{equation}
+    % \begin{equation}
+    %     \defmapperiod{
+    %         \mtimescatob
+    %     }{
+    %         \Obof{\SetL} \cartprod \Obof{\SetL}
+    %     }{
+    %         \mto
+    %     }{
+    %         \Obof{\SetL}
+    %     }{
+    %         \tup{\cObj{\setAn{1},\ldots, \setAn{n}}, \cObj{\setBn{1},\ldots,\setBn{m}}}
+    %     }{
+    %         \cObj{\setAn{1},\ldots, \setAn{n}, \setBn{1},\ldots,\setBn{m}}
+    %     }
+    % \end{equation}
+    % The stacking operation on morphisms is defined as
+    % \begin{equation}
+    %     \defmapcomma{
+    %         \mtimescatmor
+    %     }{
+    %         \Mor_{\SetL} \cartprod \Mor_{\SetL}
+    %     }{
+    %         \mto
+    %     }{
+    %         \Mor_{\SetL}
+    %     }{
+    %         \tup{\mora,\morb}
+    %     }{
+    %         \mora \cprod \morb
+    %     },
+    % \end{equation}
+    % where~$(\mora \cprod \morb)(\tup{\setAeln{1},\ldots, \setAeln{m}} \tupconcat \tup{\setBel_1,\ldots, \setBel_n})\definedas \mora(\tup{\setAeln{1},\ldots, \setAeln{m}})\tupconcat \morb(\tup{\setBel_1,\ldots, \setBel_n})$.
+    % This is indeed a map between sets.
+    % The two operations are compatible, because
+    % \begin{widepar}
+    %     \begin{equation}
+    %         \prfperiod{
+    %             \mora\colon \cObj{\setAn{1},\ldots,\setAn{n}}\mto \cObj{\setBn{1},\ldots,\setBn{m}}
+    %         }{
+    %             \morb\colon \cObj{\setCn{1},\ldots,\setCn{o}}\mto \cObj{\setDn{1},\ldots,\setDn{p}}
+    %         }{
+    %             \mora \mtimescatmor \morb \colon \cObj{\setAn{1}, \ldots, \setAn{n}, \setCn{1}, \ldots, \setCn{o}} \mto \cObj{\setBn{1}, \ldots, \setBn{m}, \setDn{1}, \ldots, \setDn{p}}
+    %         }
+    %     \end{equation}
+    % \end{widepar}
 
-\end{example}
+    % We now show associativity.
+    % We have already shown in \cref{sec:cartcatset} that~$\cprod$ satisfies the properties of a semigroup operation.
+    % For the operation on morphisms, consider
+    % \begin{equation}
+    %     \begin{aligned}
+    %         \mora\colon \cObj{\setAn{1},\ldots,\setAn{m}} & \mto \cObj{\setBn{1}, \ldots, \setBn{n}}, \\
+    %         \morb\colon \cObj{\setCn{1},\ldots,\setCn{o}} & \mto \cObj{\setDn{1},\ldots,\setDn{p}}, \\
+    %         \morc\colon \cObj{\setEn{1},\ldots,\setEn{q}} & \mto \cObj{\setFn{1},\ldots,\setFn{r}},
+    %     \end{aligned}
+    % \end{equation}
+    % For brevity, we write~$\setAeln{}=\tup{\setAeln{1},\ldots, \setAeln{m}}$,~$\setCeln{}=\tup{\setCeln{1},\ldots, \setCeln{o}}$, and~$\setEeln{}=\tup{\setEeln{1},\ldots,\setEeln{q}}$.
+    % We have
+    % \begin{align}
+    %     ((\mora \cprod \morb)\cprod \morc)(\tup{\setAeln{}, \setCeln{},\setEeln{}})
+    %      & =(\mora(\setAeln{})\tupconcat \morb(\setCeln{}))\tupconcat \morc(\setEeln{}) \\
+    %      & =\mora(\setAeln{})\tupconcat \morb(\setCeln{})\tupconcat \morc(\setEeln{}) \\
+    %      & =\mora(\setAeln{})\tupconcat (\morb(\setCeln{})\tupconcat \morc(\setEeln{})) \\
+    %      & =(\mora \cprod (\morb\cprod \morc))(\tup{\setAeln{}, \setCeln{},\setEeln{}})
+    % \end{align}
+    % for all~$\tup{\setAeln{}, \setCeln{},\setEeln{}}\setin \cObj{\setAn{1},\ldots,\setAn{m},\setCn{1},\ldots,\setCn{o},\setEn{1},\ldots,\setEn{q}}$.
+
+\end{proof}
 
 % \begin{comment}
 % \todotext{The example below is perhaps deprecated if we no longer use Set* as a main character in our story}
@@ -441,6 +530,7 @@ The second effectful function operates on the world after it was possibly modifi
 We have all the ingredients to define the category \Effects of effectful computation.
 
 \begin{definition}[Category of effectful procedures \Effects]
+    \label{def:Effects}
     Fix a set~$\EfW$ of all possible worlds.
     The category~$\Effects$ is defined by the following:
     \begin{itemize}
@@ -458,6 +548,22 @@ We have all the ingredients to define the category \Effects of effectful computa
     \end{itemize}
 \end{definition}
 
+\begin{marginfigure}
+    \centering
+    \subfloat[\label{fig:effects4}
+        Stacking in \Effects]{
+        \includesag{stacking_eff}
+        %\includegraphics[width=4.5cm]{effects4}
+    }
+
+    \subfloat[\label{fig:effects5} Its representation in \SetL]{
+        %\includegraphics[width=4.5cm]{effects5}
+        \includesag{stacking_tup}
+    }
+    \caption{}
+    \label{fig:effect-stacking}
+\end{marginfigure}
+
 We can now make \Effects into a stacking semicategory by deciding how to evaluate a stack of functions.
 We cannot evaluate them in parallel.
 We need to decide on a sequence.
@@ -469,28 +575,15 @@ This is shown in~\cref{fig:effect-stacking}.
     \Effects is an associative stacking category using the evaluation rule as in~\cref{fig:effect-stacking}.
 \end{lemma}
 
-\begin{figure}[h!]
-    \centering
-    \subfloat[\label{fig:effects4}
-        Stacking in \Effects]{
-        \includesag{stacking_eff}
-        %\includegraphics[width=4.5cm]{effects4}
-    }
-    \subfloat[\label{fig:effects5} Its representation in \SetL]{
-        %\includegraphics[width=4.5cm]{effects5}
-        \includesag{stacking_tup}
-    }
-    \caption{}
-    \label{fig:effect-stacking}
-\end{figure}
-
 \todotextjira{415}{\bernina: @Andrea: proof.
     Need to show semigroup.
 }
 
+\clearpage
+
 \subsection{LTI is stacking}
 When considering LTI systems, we can define stacking operations and show that it forms a stacking semicategory (\cref{def:simple-stacking-semi-cat}).
-The stacking operation on objects is defined as
+The stacking operation on objects is just addition on the natural numbers:
 \begin{equation}
     \defmapperiod{
         \mtimescatob
@@ -506,61 +599,112 @@ The stacking operation on objects is defined as
         \styleobj{l}+\styleobj{m}
     }
 \end{equation}
-On the other hand, the operation on morphisms ``stacks'' the LTI systems onto each other.
-\footnote{For the control engineers out there: the resulting LTI system will have a Relative Gain Array (RGA) matrix corresponding to the identity matrix.}
+On the other hand, the operation on morphisms ``stacks'' the LTI systems onto each other\footnote{For the control engineers out there: the resulting LTI system will have a Relative Gain Array (RGA) matrix corresponding to the identity matrix.
+}.
 Formally:
 \begin{equation}
-    \defmapcomma{
-        \mtimescatmor
+    \prfperiod{
+        \mora  \colon \styleobj{l}\mtoin\LTI \styleobj{m}
     }{
-        \Mor_\LTI \cartprod \Mor_\LTI
+        \morb  \colon \styleobj{n}\mtoin\LTI \styleobj{o}
     }{
-        \to
-    }{
-        \Mor_\LTI
-    }{
-        \tup{\genericlti{\mora},\genericlti{\morb}}
-    }{
-        \genericlti{}
+        \mora\mtimescatmor\morb =  \genericlti{} \colon
+        \styleobj{l+n}\mtoin\LTI \styleobj{m+o}
     }
 \end{equation}
+% \begin{equation}
+%     \defmapcomma{
+%         \mtimescatmor
+%     }{
+%         \Mor_\LTI \cartprod \Mor_\LTI
+%     }{
+%         \to
+%     }{
+%         \Mor_\LTI
+%     }{
+%         \tup{\genericlti{\mora},\genericlti{\morb}}
+%     }{
+%         \genericlti{}
+%     }
+% \end{equation}
 with
-\begin{widepar}
-    \begin{equation}
-        \prstart=\begin{bmatrix}
-            \prstart_\mora \\
-            \prstart_\morb
-        \end{bmatrix},\
-        \mat{A}=\begin{bmatrix}
-            \mat{A}_\mora & \mat{0}       \\
-            \mat{0}       & \mat{A}_\morb
-        \end{bmatrix}, \
-        \mat{B}=\begin{bmatrix}
-            \mat{B}_\mora & \mat{0}       \\
-            \mat{0}       & \mat{B}_\morb
-        \end{bmatrix},\
-        \mat{C}=\begin{bmatrix}
-            \mat{C}_\mora & \mat{0}       \\
-            \mat{0}       & \mat{C}_\morb
-        \end{bmatrix},\
-        \mat{D}=\begin{bmatrix}
-            \mat{D}_\mora & \mat{0}       \\
-            \mat{0}       & \mat{D}_\morb
-        \end{bmatrix}
-    \end{equation}
-\end{widepar}
+\begin{equation}
+    \prstart=\begin{bmatrix}
+        \prstart_\mora \\
+        \prstart_\morb
+    \end{bmatrix},\
+    \mat{A}=\begin{bmatrix}
+        \mat{A}_\mora & \mat{0}       \\
+        \mat{0}       & \mat{A}_\morb
+    \end{bmatrix},
+    %  \
+    % \mat{B}=\begin{bmatrix}
+    %     \mat{B}_\mora & \mat{0}       \\
+    %     \mat{0}       & \mat{B}_\morb
+    % \end{bmatrix},\
+    % \mat{C}=\begin{bmatrix}
+    %     \mat{C}_\mora & \mat{0}       \\
+    %     \mat{0}       & \mat{C}_\morb
+    % \end{bmatrix},\
+    % \mat{D}=\begin{bmatrix}
+    %     \mat{D}_\mora & \mat{0}       \\
+    %     \mat{0}       & \mat{D}_\morb
+    % \end{bmatrix}
+\end{equation}
+\begin{equation}
+    % \prstart=\begin{bmatrix}
+    %     \prstart_\mora \\
+    %     \prstart_\morb
+    % \end{bmatrix},\
+    % \mat{A}=\begin{bmatrix}
+    %     \mat{A}_\mora & \mat{0}       \\
+    %     \mat{0}       & \mat{A}_\morb
+    % \end{bmatrix}, \
+    % \mat{B}=\begin{bmatrix}
+    %     \mat{B}_\mora & \mat{0}       \\
+    %     \mat{0}       & \mat{B}_\morb
+    % \end{bmatrix},\
+    \mat{C}=\begin{bmatrix}
+        \mat{C}_\mora & \mat{0}       \\
+        \mat{0}       & \mat{C}_\morb
+    \end{bmatrix},\
+    \mat{D}=\begin{bmatrix}
+        \mat{D}_\mora & \mat{0}       \\
+        \mat{0}       & \mat{D}_\morb
+    \end{bmatrix}
+\end{equation}
 
-Clearly, the morphism given by~$\genericlti{}$ satisfies the compatibility condition for stacking semicategories:
-if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\morb}$ is~$\styleobj{n}\mto \styleobj{o}$,~$\genericlti{}$ is~$\styleobj{l}+\styleobj{n}\mto \styleobj{m}+\styleobj{o}$.
+% Clearly, the morphism given by~$\genericlti{}$ satisfies the compatibility condition for stacking semicategories:
+% if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\morb}$ is~$\styleobj{n}\mto \styleobj{o}$,~$\genericlti{}$ is~$\styleobj{l}+\styleobj{n}\mto \styleobj{m}+\styleobj{o}$.
 Given that the resulting LTI system is described by diagonal matrices, the defined operations are associative, and therefore \LTI is an associative stacking semicategory.
 
 \section{Functorial stacking semicategories}
+
+\begin{marginfigure}
+    \centering
+    $(\mora \mtimescat \morb )
+        \mthen (\morc \mtimescat \mord )$
+
+    \vspace{3mm}
+    \includesag{commuting_stacking_eff}
+
+    $=$
+
+    \vspace{3mm}
+    \includesag{commuting_stacking_eff_bis}
+    %\includegraphics[width=6.5cm]{effects8}
+    \vspace{3mm}
+    $(\mora \mthen \morc ) \mtimescat (\morb \mthen \mord )$
+
+    \caption{Commutation of stacking and composition in a functorial stacking semicategory. }
+    \label{fig:stacking-functorial}
+\end{marginfigure}
 
 \begin{ctdefinition}[Functorial stacking semicategory]
     \label{def:functorial-stacking-semi-cat}
     A functorial stacking semicategory is a stacking semicategory where the two stacking operations~$\mtimescatob$ and~$\mtimescatmor$ are the two components of a semifunctor
     \begin{equation}
-        \mtimescat\colon \CatC \times \CatC \to \CatC.
+        \mtimescat\colon \CatC \Ctimes \CatC \to \CatC.
     \end{equation}
     Concretely, and in infix notation, this means that
     \begin{equation}
@@ -581,32 +725,54 @@ Given that the resulting LTI system is described by diagonal matrices, the defin
 %
 This describes a sort of commutativity property: we can either first compose horizontally and then vertically, or vice versa, and we obtain the same morphism~(\cref{fig:stacking-functorial}).
 
+This property is somewhat strong.
+\Effects is an example of a stacking category that is not functorial.
+
+\begin{lemma}
+    \label{lem:effects-not-functorial}
+    \Effects is \emph{not} a functorial stacking semicategory.
+\end{lemma}
+
+\begin{proof}
+    In general, we have
+    \begin{equation}
+        (\mora \mtimescat \morb )
+        \mthen (\morc \mtimescat \mord )
+        \neq
+        (\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ).
+    \end{equation}
+    This is shown graphically in \cref{fig:effects-non-functorial}.
+\end{proof}
+
 \begin{figure*}[h]
     \centering
-    \subfloat[\label{fig:effects6}$(\mora \mtimescat \morb )
+    \hfill
+    \subfloat[\label{fig:effects7}$(\mora \mtimescat \morb )
             \mthen (\morc \mtimescat \mord )$]{
-        %\includegraphics[width=6.5cm]{effects6}
-        \includesag{commuting_stacking_eff}
-    }=
-    \subfloat[\label{fig:effects8}$(\mora \mthen \morc ) \mtimescat (\morb \mthen \mord )$]{
-        \includesag{commuting_stacking_eff_bis}
-        %\includegraphics[width=6.5cm]{effects8}
+        %\includegraphics[width=6.5cm]{effects7}
+        \includesag{stacking_tup_counterproof}
     }
-    \caption{Commutation of stacking and composition in a functorial stacking semicategory. }
-    \label{fig:stacking-functorial}
+    \hfill
+    \subfloat[\label{fig:effects9} $(\mora \mthen \morc ) \mtimescat (\morb \mthen \mord )$]{
+        %\includegraphics[width=6.5cm]{effects9}
+        \includesag{stacking_tup_counterproof_bis}
+    }
+    \hfill
+    \caption{Proof that \Effects is not a functorial stacking category by showing that
+        the two morphisms above have different representations in~\SetL.}
+    \label{fig:effects-non-functorial}
 \end{figure*}
 
 \begin{example}[\SetL is functorial stacking.]
     \label{ex:setfunstack}
     We want to show that~\SetL is a functorial stacking semicategory.
 
-    Consider
+    Consider four morphisms
     \begin{equation}
         \begin{aligned}
-            \mora\colon \cObj{\setAn{1},\ldots,\setAn{m}} & \mto \cObj{\setBn{1},\ldots,\setBn{n}}, \\
-            \morb\colon \cObj{\setDn{1},\ldots,\setDn{o}} & \mto \cObj{\setEn{1},\ldots,\setEn{p}}, \\
-            \morc\colon \cObj{\setBn{1},\ldots,\setBn{n}} & \mto \cObj{\setCn{1},\ldots,\setCn{q}}, \\
-            \mord\colon \cObj{\setEn{1},\ldots,\setEn{p}} & \mto \cObj{\setFn{1},\ldots,\setFn{r}},
+            \mora\colon \setA \mto \setB, & \quad \morc\colon \setB \mto \setC, \\
+            \morb\colon \setD \mto \setE, & \quad \mord\colon \setE  \mto \setF.
+            \\
         \end{aligned}
     \end{equation}
     We want to show that
@@ -616,21 +782,16 @@ This describes a sort of commutativity property: we can either first compose hor
         =
         (\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ),
     \end{equation}
-    For brevity we write~$\setAeln{}=\tup{\setAeln{1},\ldots, \setAeln{m}}$ and~$\setDeln{}=\tup{\setDeln{1},\ldots, \setDeln{0}}$.
-    We have
-    \begin{widepar}
-        \begin{equation}
-            \begin{aligned}
-                ((\mora \mtimescat \morb )\mthen (\morc \mtimescat \mord ))(\tup{\setAeln{},\setDeln{}})
-                 & =(\morc \mtimescat \mord)(\mora(\setAeln{})\tupconcat \morb(\setDeln{})) \\
-                 & =\morc(\mora(\setAeln{}))\tupconcat \mord(\morb(\setDeln{})) \\
-                 & =(\mora \mthen \morc)(\setAeln{})\tupconcat (\morb\mthen \mord)(\setDeln{}) \\
-                 & =((\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ))(\tup{\setAeln{}, \setDeln{}}),
-            \end{aligned}
-        \end{equation}
-    \end{widepar}
-    for all~$\tup{\setAeln{}, \setDeln{}}\setin \cObj{\setAn{1},\ldots,\setAn{m},\setDn{1},\ldots,\setDn{o}}$.
-
+    We show this by showing that, for any $\tup{\setAel,\setBel}\setin \setA\cartprod\setB$:
+    \begin{equation}
+        \begin{aligned}
+             & ((\mora \mtimescat \morb )\mthen (\morc \mtimescat \mord ))(\tup{\setAeln{},\setDeln{}}) \\
+             & = (\morc \mtimescat \mord)(\mora(\setAeln{})\tupconcat \morb(\setDeln{})) \\
+             & =\morc(\mora(\setAeln{}))\tupconcat \mord(\morb(\setDeln{})) \\
+             & =(\mora \mthen \morc)(\setAeln{})\tupconcat (\morb\mthen \mord)(\setDeln{}) \\
+             & =((\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ))(\tup{\setAeln{}, \setDeln{}}).
+        \end{aligned}
+    \end{equation}
 \end{example}
 % \begin{comment}
 % \devel{
@@ -677,42 +838,6 @@ This describes a sort of commutativity property: we can either first compose hor
 %     \todotext{Now need to finish by showing equivalence of maps}
 % }
 % \end{comment}
-
-\Effects is an example of a stacking category that is not functorial.
-
-\begin{lemma}
-    \Effects is \emph{not} a functorial stacking semicategory.
-\end{lemma}
-
-\begin{proof}
-    In general, we do not have
-    \begin{equation}
-        (\mora \mtimescat \morb )
-        \mthen (\morc \mtimescat \mord )
-        \neq
-        (\mora \mthen \morc ) \mtimescat (\morb \mthen \mord ).
-    \end{equation}
-    This is shown graphically in \cref{fig:effects-non-functorial}.
-\end{proof}
-
-\begin{figure*}[b]
-    \centering
-    \hfill
-    \subfloat[\label{fig:effects7}$(\mora \mtimescat \morb )
-            \mthen (\morc \mtimescat \mord )$]{
-        %\includegraphics[width=6.5cm]{effects7}
-        \includesag{stacking_tup_counterproof}
-    }
-    \hfill
-    \subfloat[\label{fig:effects9} $(\mora \mthen \morc ) \mtimescat (\morb \mthen \mord )$]{
-        %\includegraphics[width=6.5cm]{effects9}
-        \includesag{stacking_tup_counterproof_bis}
-    }
-    \hfill
-    \caption{Proof that \Effects is not a functorial stacking category by showing that
-        the two morphisms above have different representations in~\SetL.}
-    \label{fig:effects-non-functorial}
-\end{figure*}
 
 \begin{example}
     We want to show that \LTI, as defined, is almost a functorial stacking semicategory, but not quite.
@@ -940,6 +1065,7 @@ In \cref{fig:compatibility-with-stacking} the first equation \cref{eq:perm-compa
 \end{example}
 
 \begin{lemma}
+    \label{lem:effects-not-symmetric}
     \Effects is not symmetric.
 \end{lemma}
 
@@ -947,4 +1073,34 @@ In \cref{fig:compatibility-with-stacking} the first equation \cref{eq:perm-compa
 
 \todojira{699}{\alphubel: Example of \LTI with $d=0$ a symmetric semicat}
 
+% \devel{
 
+%     \section{Strict monoidal semicategories}
+
+%     \begin{ctdefinition}\label{def:strict-monoidal-semicat}
+%         A \emph{strict monoidal semicategory} is a functorial stacking semicategory $\tup{\CatC, \mtimescat}$ with
+
+%         \constit
+
+%         \begin{itemize}
+%             \item an object $\idmoncat \setin \Obof{\CatC}$, called the \emph{monoidal unit}
+%         \end{itemize}
+
+%         \condit
+
+%         \begin{itemize}
+%             \item For any object $\Obja$ of \CatC,
+%                   \begin{equation}
+%                       \Obja \mtimescat \idmoncat = \Obja \qquad \text{and} \qquad  \idmoncat \mtimescat  \Obja = \Obja.
+%                   \end{equation}
+%             \item The monoidal unit $\idmoncat$ has an identity morphism $\catid_\idmoncat$, and for any morphism $\mora: \Obja \mto \Objb$,
+%                   \begin{equation}
+%                       \mora \mtimescat \catid_\idmoncat = \mora \qquad \text{and} \qquad \catid_\idmoncat \mtimescat  \mora = \mora.
+%                   \end{equation}
+%         \end{itemize}
+
+%     \end{ctdefinition}
+
+%     \todotext{@JL: write def of symmetric strict monoidal semicategory}
+
+% }
