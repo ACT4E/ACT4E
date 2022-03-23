@@ -417,21 +417,26 @@
 
 
 
-\newcommand{\SY}[1]{%
-    \pgfkeysifdefined{/mydefs/#1}{
-        \hyperref[\pgfkeysvalueof{/mydefs/#1}]{\color{blue}#1}%
+\DeclareRobustCommand{\SY}[1]{\SYN{#1}{#1}}
+
+\DeclareRobustCommand{\SYN}[2]{%
+    \pgfkeysifdefined{/mydefs/#1}{%
+        \hyperref[\pgfkeysvalueof{/mydefs/#1}]{%
+            \ifthenelse{\boolean{devel}}{%
+                {\color{blue}#2}%
+            }{%
+                #2%
+            }
+        }%
     }{%
-            {\color{red}#1}%
-    }\xspace%
-}
-\newcommand{\SYN}[2]{%
-    \pgfkeysifdefined{/mydefs/#1}{
-        \hyperref[\pgfkeysvalueof{/mydefs/#1}]{#2}%
-    }{%
+        \ifthenelse{\boolean{devel}}{%
             {\color{red}#2}%
+        }{%
+            #2%
+        }%
     }\xspace%
 }
-\newcommand{\SYDEF}[2]{
+\newcommand{\SYDEF}[2]{%
     \pgfkeyssetvalue{/mydefs/#1}{#2}%
 }
 
@@ -443,3 +448,9 @@
 \SYDEF{commutative group}{def:commutative-group}
 \SYDEF{group}{def:group}
 \SYDEF{groups}{def:group}
+\SYDEF{injective}{sub:injective-and-surjective}
+\SYDEF{surjective}{sub:injective-and-surjective}
+\SYDEF{bijective}{sub:injective-and-surjective}
+\SYDEF{monoid morphism}{def:monoid-mor}
+\SYDEF{morphism of monoids}{def:monoid-mor}
+\SYDEF{identity morphism}{def:identity-morphism}
