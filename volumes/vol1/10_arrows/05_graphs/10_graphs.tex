@@ -23,21 +23,18 @@ The usual definition of directed graph in engineering, which we will \emph{not} 
 \begin{definition}[Directed Graph]
     \label{def:directed-graph}
     A \emph{\iindex{directed graph}} is a pair~$\graph=\tup{\vertices, \arcs}$, where~$\vertices$ is
-    a set of ``vertices'' and $\arcs \setsubseteq \vertices \cartprod \vertices$ is the set of ``edges''.
+    a set of vertices and $\arcs \setsubseteq \vertices \cartprod \vertices$ is a set of edges.
 \end{definition}
-In this definition an arc is a pair of vertices $\tup{\ela,\elb}$ where $\ela$ is the source and $\elb$ is the target.
-This way to model a graph is elegant but not much expressive.
-For example, we can only have \emph{one} edge between two vertices in either direction.
+In this definition, an edge is a pair of vertices $\tup{\ela,\elb}$ where $\ela$ is the source and $\elb$ is the target.
+One limitation of this notion of graph is that we can only have \emph{one} edge between two vertices in either direction.
 
 The following definition is more expressive, though a bit more abstract.
 
 \begin{definition}[Directed Multigraph]
     \label{def:Graph}
     A \emph{\iindex{directed multigraph}}~$\graph=\tupp{\vertices,\arcs, \source,\target}$ consists of a set of vertices~$\vertices$, a set of edges~$\arcs$, and two functions~$\source,\target \colon \arcs \sto \vertices$, called the \emph{source} and \emph{target} functions, respectively.
-    Given~$\arc\setin \arcs$ with~$\source(\arc)=\vertexa$ and~$\target(\arc)=\vertexb$, we say that~$\arc$ is an \emph{arrow} from~$\vertexa$ to~$\vertexb$.
+    Given~$\arc\setin \arcs$ with~$\source(\arc)=\vertexa$ and~$\target(\arc)=\vertexb$, we say that~$\arc$ is an edge (or arrow) from~$\vertexa$ to~$\vertexb$.
 \end{definition}
-
-With this definition, we can define \emph{multi}graphs, which are graphs with multiple edges between two vertices.
 
 %\begin{remark}[Undirected graph]
 %    We call \emph{undirected} a graph for which each edge is \emph{bidirectional}.
@@ -61,12 +58,29 @@ With this definition, we can define \emph{multi}graphs, which are graphs with mu
 
 \begin{definition}[Paths]
     \label{def:path}
-    A \emph{path} in a graph is a possibly empty sequence of edges such that the target of one edge is the source of the next.
-    The \emph{length} of a path is the number of edges in the sequence.
+    A \emph{path} in a graph $\graph=\tupp{\vertices,\arcs, \source,\target}$ is:
+
+    \constit
+
+    \begin{itemize}
+        \item a list of edges $\maketypedlist{e_1, \dots, e_n}{\arcs}$, with $n \in \natnumbers$.
+              \begin{itemize}
+                  \item If $n = 0$, we speak of a ``trivial path'' or an ''empty path'' and we must additional specify an element $\ela \setin \vertices$ which is designated as both the source and target of the path.
+                  \item If $n \neq 0$, the source of a path $\maketypedlist{e_1, \dots, e_n}{\arcs}$ is defined as $\source(e_1)$ and its target is $\target(e_n)$.
+              \end{itemize}
+    \end{itemize}
+
+    \condit
+
+    \begin{itemize}
+        \item if $n \geq 2$, we require that for any two subsequent edges $e_i$ and $e_{i+1}$ in $\maketypedlist{e_1, \dots, e_n}{\arcs}$,
+              \begin{equation}
+                  \target(e_i) = \source(e_{i+1}).
+              \end{equation}
+    \end{itemize}
+    The length of $\maketypedlist{e_1, \dots, e_n}{\arcs}$ is called the \emph{length} of the path.
 \end{definition}
 
-We also formally allow for sequences made up of ``zero-many'' arrows (such paths therefore have length zero).
-We call such paths \emph{trivial} or \emph{empty}.
-If paths describe a journey, then trivial paths correspond to ``not going anywhere''.
-The notions of source and target for edges extend to paths in an obvious way.
-For trivial paths, the source and target nodes coincide.
+\begin{remark}
+    If paths describe a journey, then trivial paths correspond to ``not going anywhere''.
+\end{remark}
