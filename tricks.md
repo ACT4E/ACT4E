@@ -12,3 +12,31 @@ Find the `\to`:
     (\\set\w\s*)\\to(\s*\\set\w\s*)
     $1\\sto$2
     
+
+Don't have SY inside section:
+
+    
+    (\\\w*section.*)\\SY\{(.*)\}
+    $1 $2
+Bad substs:
+
+    ` SY\{`
+    ` \SY\{`
+
+Too much space:
+
+    (\\SY\{.*\}) ([,.])
+    $1$2
+
+    (\\SY\{[\w\s]*\})\s\s+
+    $1 
+
+Note SPACE
+
+     (associative)([ \.\,\~])
+    \\SY\{$1\}$2
+
+
+SY inside SY
+
+    \\SY\{[^\}]*\\SY
