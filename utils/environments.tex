@@ -280,7 +280,7 @@
 
 \makeatletter
 \newcommand{\iflabelexists}[2]{%
-    \ifthenelse{\boolean{devel}}{%
+    \ifbool{devel}{%
         \@ifundefined{r@#1}{%
         % \todotext{label #1 not defined}%
         % #2%
@@ -313,7 +313,7 @@
 % Fail the compilation if using \XXX in non-devel
 %
 \AtBeginDocument{
-    \ifthenelse{\boolean{devel}}{
+    \ifbool{devel}{
         \newcommand{\XXX}{{\color{red}XXX}\xspace}
     }{
         \def\XXX{
@@ -451,29 +451,35 @@
         \index{\pgfkeysvalueof{/mydefs/#1/index}|textbf}
     }{}%
 }
-
 \DeclareRobustCommand{\SYN}[2]{%
+    \SYNinner{#1}{#2}\xspace%
+}
+\DeclareRobustCommand{\SYNinner}[2]{%
     \pgfkeysifdefined{/mydefs/#1/index}{%
         \index{\pgfkeysvalueof{/mydefs/#1/index}}%
-    }{
+    }{%
         \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
     }%
     \pgfkeysifdefined{/mydefs/#1/label}{%
-        \hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
-            \ifthenelse{\boolean{devel}}{%
-                {\color{blue}#2}%
-            }{%
-                \coloruline{symbol-underline}{#2}%
+        \texorpdfstring{%
+            \protect\hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
+                \ifbool{devel}{%
+                    {\color{blue}#2}%
+                }{%
+                    \coloruline{symbol-underline}{#2}%
+                }%
             }%
+        }{%
+            #2%
         }%
     }{%
         \typeout{SYN: Warning: there is no label associated to (#1).}%
-        \ifthenelse{\boolean{devel}}{%
+        \ifbool{devel}{%
             {\color{red}#2}%
         }{%
             #2%
         }%
-    }\xspace%
+    }%
 }
 \newcommand{\SYDEF}[3]{%
     \@for\@ii:=#1\do{%
@@ -486,6 +492,7 @@
 \newcommand{\maindef}[1]{%
     \SYNDEF{#1}\emph{#1}%
 }
+
 
 
 % https://tex.stackexchange.com/questions/466026/test-if-current-color-is-black
@@ -560,9 +567,57 @@
 \SYDEF{symmetric monoidal category}{}{symmetric monoidal category}
 \SYDEF{enriched category theory}{}{enriched category theory}
 \SYDEF{associative law}{}{associative law}
-\SYDEF{faithful functor}{}{faithful functor}
+\SYDEF{faithful functor,faithful semifunctor}{}{faithful functor}
+\SYDEF{forgetful functor,forgetful semifunctor}{}{forgetful functor}
 \SYDEF{monoidal poset}{}{monoidal poset}
 \SYDEF{product order}{}{product order}
 \SYDEF{Scott continuous}{def:scott}{Scott continuity}
-\SYDEF{matrix groups}{}{matrix groups}
+\SYDEF{matrix groups,matrix semigroups,group of invertible square matrices}{}{matrix groups}
 \SYDEF{relation,binary relation}{def:binary-relation}{relation}
+\SYDEF{automorphism}{}{automorphism}
+\SYDEF{group action,covariant group action}{}{group action}
+\SYDEF{free semigroup}{}{free semigroup}
+\SYDEF{groups of symmetries,Groups of symmetries}{}{groups of symmetries}
+\SYDEF{sublattice}{}{sublattice}
+\SYDEF{submonoid}{}{submonoid}
+\SYDEF{subgroup}{}{subgroup}
+\SYDEF{unital,unitality}{}{unitality property}
+\SYDEF{category of semigroups and morphisms}{def:SGrp}{SGrp@$\CatStyle{SGrp}$ (category of semigroups and morphisms)}
+\SYDEF{category of monoids and morphisms}{def:Mon}{Mon@$\CatStyle{Mon}$ (category of semigroups and morphisms)}
+\SYDEF{category of groups and morphisms}{def:Grp}{Grp@$\CatStyle{Grp}$ (category of groups and morphisms)}
+\SYDEF{category of sets and functions}{def:Set}{Set@$\CatStyle{Set}$ (category of sets and functions)}
+\SYDEF{category of sets and relations}{def:Rel}{Rel@$\CatStyle{Rel}$ (category of sets and relations)}
+\SYDEF{category of finite sets and functions}{def:FinSet}{FinSet@$\CatStyle{FinSet}$ (category of sets and relations)}
+\SYDEF{Moore machine}{}{Moore machine}
+\SYDEF{category of Moore machines}{}{Moore@$\CatStyle{Moore}$ (category of Moore machines)}
+\SYDEF{category of More machines}{}{More@$\CatStyle{More}$ (category of More machines)}
+
+
+\SYDEF{category of semigroups and morphisms}{def:SGrp}{SGrp@$\CatStyle{SGrp}$ (category of semigroups and morphisms)}
+\SYDEF{category of monoids and morphisms}{def:Mon}{Mon@$\CatStyle{Mon}$ (category of monoids and morphisms)}
+\SYDEF{category of groups and morphisms}{def:Grp}{Grp@$\CatStyle{Grp}$ (category of groups and morphisms)}
+\SYDEF{category of finite-dimensional linear time-invariant systems}{def:LTI}{LTI@$\CatStyle{LTI}$ (category of finite-dimensional linear time-invariant systems)}
+\SYDEF{free category construction on graphs}{def:free-category}{Free@$\CatStyle{Free}$ (free category construction on graphs)}
+\SYDEF{category of design problems}{def:DP}{DP@$\CatStyle{DP}$ (category of design problems)}
+\SYDEF{category of design problems with implementations}{def:DPI}{DPI@$\CatStyle{DPI}$ (category of design problems with implementations)}
+\SYDEF{category of uncertain DPs}{def:UDP}{UDP@$\CatStyle{UDP}$ (category of uncertain DPs)}
+\SYDEF{posets of booleans}{def:bool-poset}{Bool@$\CatStyle{Bool}$ (poset/category of booleans)}
+\SYDEF{category of small categories}{def:Category}{Cat@$\CatStyle{Cat}$ (category of small categories)}
+\SYDEF{category of posets and monotone maps}{def:Pos}{Pos@$\CatStyle{Pos}$ (category of posets and monotone maps)}
+\SYDEF{category of lattices and lattices homomorphisms}{def:Lat}{Lat@$\CatStyle{Lat}$ (category of lattices and lattice homomorphisms)}
+\SYDEF{category of bounded lattices and lattices homomorphisms}{def:BoundedLat}{BoundedLat@$\CatStyle{BoundedLat}$ (category of bounded lattices and lattice homomorphisms)}
+\SYDEF{category of graphs and graphs homomorphisms}{def:Grph}{Grph@$\CatStyle{Grph}$ (category of graphs and graphs homomorphisms)}
+\SYDEF{category of sets and functions with side effects}{def:Eff}{Eff@$\CatStyle{Eff}$ (category of sets and functions with side effects)}
+
+\SYDEF{category of tuple-sets and relations}{def:RelL}{Rel@$\cCatStyle{Rel}$ (category of tuple-sets and relations)}
+\SYDEF{category of tuple-sets and functions}{def:SetL}{Set@$\cCatStyle{Set}$ (category of tuple-sets and functions)}
+\SYDEF{category of tuple-posets and monotone maps}{def:PosL}{Pos@$\cCatStyle{Pos}$ (category of tuple-posets and monotone maps)}
+\SYDEF{category of tuple-posets and design problems}{def:DPL}{DP@$\cCatStyle{DP}$ (category of tuple-posets and design problems)}
+
+\SYDEF{category of sets and injective functions}{ex:Injset}{InjSet@$\CatStyle{InjSet}$ (category of sets and injective functions)}
+
+\SYDEF{bounded lattice}{}{bounded lattice}
+\SYDEF{lattice}{}{lattice}
+
+\SYDEF{category of vector spaces}{}{Vect@$\CatStyle{Vect}$ (category of vector spaces)}
+\SYDEF{category of finite vector spaces}{subsec:trace-linear}{FinVect@$\CatStyle{FinVect}$ (category of vector spaces)}
