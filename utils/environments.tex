@@ -453,6 +453,9 @@
 }
 
 \DeclareRobustCommand{\SYN}[2]{%
+    \pgfkeysifdefined{/mydefs/#1}{}{%
+        \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
+    }%
     \pgfkeysifdefined{/mydefs/#1/index}{%
         \index{\pgfkeysvalueof{/mydefs/#1/index}}%
     }{}%
@@ -465,7 +468,7 @@
             }%
         }%
     }{%
-        \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
+        \typeout{SYN: Warning: there is no label associated to (#1).}%
         \ifthenelse{\boolean{devel}}{%
             {\color{red}#2}%
         }{%
@@ -475,11 +478,14 @@
 }
 \newcommand{\SYDEF}[3]{%
     \@for\@ii:=#1\do{%
-        \pgfkeyssetvalue{/mydefs/\@ii/label}{#2}%
+       \ifstrempty{#2}{}{\pgfkeyssetvalue{/mydefs/\@ii/label}{#2}}%
         \pgfkeyssetvalue{/mydefs/\@ii/index}{#3}%
-        \pgfkeyssetvalue{/mydefs/\@ii s/label}{#2}%
+        \ifstrempty{#2}{}{\pgfkeyssetvalue{/mydefs/\@ii s/label}{#2}}%
         \pgfkeyssetvalue{/mydefs/\@ii s/index}{#3}%
     }%
+}
+\newcommand{\maindef}[1]{%
+    \SYNDEF{#1}\emph{#1}%
 }
 
 
@@ -519,6 +525,7 @@
 \SYDEF{everywhere-defined}{def:rel_properties}{everywhere-defined}
 \SYDEF{single-valued}{def:rel_properties}{single-valued}
 \SYDEF{functor}{def:functor}{functor}
+\SYDEF{semifunctor}{def:semi-functor}{semifunctor}
 \SYDEF{companion}{def:comp_conj}{companion construction}
 \SYDEF{conjoint}{def:comp_conj}{conjoint construction}
 \SYDEF{poset}{def:poset}{partially ordered set (poset)}
@@ -540,3 +547,23 @@
 \SYDEF{design problem}{sec:dpdefinition}{design problem (without implementation)}
 \SYDEF{design problem with implementation,design problems with implementation}{def:DPI}{design problem (with implementation)}
 \SYDEF{profunctor}{def:profunctor}{profunctor}
+\SYDEF{associative stacking,associative stacking semicategory}{def:stacking-semi-cat}{associative stacking semicategory}
+\SYDEF{stacking semicategory}{def:simple-stacking-semi-cat}{stacking semicategory}
+\SYDEF{functorial stacking,functorial stacking semicategory}{def:functorial-stacking-semi-cat}{functorial stacking semicategory}
+\SYDEF{least fixed point}{def:least-fixed}{least fixed point}
+\SYDEF{covariant monoid action,monoid action}{def:monoid-cov-action}{monoid action}
+
+
+% missing link to definition
+\SYDEF{endomorphism}{}{endomorphism}
+\SYDEF{biproduct}{}{biproduct}
+\SYDEF{traced symmetrict monoidal category}{}{traced symmetric monoidal category}
+\SYDEF{symmetrict monoidal category}{}{symmetric monoidal category}
+\SYDEF{enriched category theory}{}{enriched category theory}
+\SYDEF{associative law}{}{associative law}
+\SYDEF{faithful functor}{}{faithful functor}
+\SYDEF{monoidal poset}{}{monoidal poset}
+\SYDEF{product order}{}{product order}
+\SYDEF{Scott-continuous,Scott continuous}{}{Scott continuity}
+\SYDEF{matrix groups}{}{matrix groups}
+\SYDEF{relation}{}{relation}

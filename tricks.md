@@ -15,9 +15,9 @@ Find the `\to`:
 
 Don't have SY inside section:
 
-    
     (\\\w*section.*)\\SY\{(.*)\}
     $1 $2
+
 Bad substs:
 
     ` SY\{`
@@ -25,7 +25,7 @@ Bad substs:
 
 Too much space:
 
-    (\\SY\{.*\}) ([,.])
+    (\\SY\{[^\}]*\}) ([,.\)\;\:\~])
     $1$2
 
     (\\SY\{[\w\s]*\})\s\s+
@@ -33,7 +33,7 @@ Too much space:
 
 Note SPACE
 
-     (associative)([ \.\,\~])
+    (associative)([ \.\,\;\:\~])
     \\SY\{$1\}$2
 
 
