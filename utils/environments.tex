@@ -265,14 +265,14 @@
     #1
 % \adjustbox{scale=0.9}{#1}%
 }
-\newcommand{\todographics}[1]{\wrapit{\todo[color=red!70]{#1}}}
-\newcommand{\todotext}[1]{\wrapit{\todo[color=red!50]{#1}}}
-\newcommand{\todostructure}[1]{\wrapit{\todo[color=red!10]{#1}}}
+\DeclareRobustCommand{\todographics}[1]{\wrapit{\todo[color=red!70]{#1}}}
+\DeclareRobustCommand{\todotext}[1]{\wrapit{\todo[color=red!50]{#1}}}
+\DeclareRobustCommand{\todostructure}[1]{\wrapit{\todo[color=red!10]{#1}}}
 
-\newcommand{\todojira}[2]{\todo{\href{https://ethidsc.atlassian.net/jira/software/c/projects/ACT4EBOOK/issues/ACT4EBOOK-#1}{ACT4EBOOK-#1}: #2}}
-\newcommand{\todographicsjira}[2]{\todographics{\href{https://ethidsc.atlassian.net/jira/software/c/projects/ACT4EBOOK/issues/ACT4EBOOK-#1}{ACT4EBOOK-#1}: #2}}
-\newcommand{\todostructurejira}[2]{\todostructure{\href{https://ethidsc.atlassian.net/jira/software/c/projects/ACT4EBOOK/issues/ACT4EBOOK-#1}{ACT4EBOOK-#1}: #2}}
-\newcommand{\todotextjira}[2]{\todotext{\href{https://ethidsc.atlassian.net/jira/software/c/projects/ACT4EBOOK/issues/ACT4EBOOK-#1}{ACT4EBOOK-#1}: #2}}
+\DeclareRobustCommand{\todojira}[2]{\todo{\href{https://ethidsc.atlassian.net/jira/software/c/projects/ACT4EBOOK/issues/ACT4EBOOK-#1}{ACT4EBOOK-#1}: #2}}
+\DeclareRobustCommand{\todographicsjira}[2]{\todographics{\href{https://ethidsc.atlassian.net/jira/software/c/projects/ACT4EBOOK/issues/ACT4EBOOK-#1}{ACT4EBOOK-#1}: #2}}
+\DeclareRobustCommand{\todostructurejira}[2]{\todostructure{\href{https://ethidsc.atlassian.net/jira/software/c/projects/ACT4EBOOK/issues/ACT4EBOOK-#1}{ACT4EBOOK-#1}: #2}}
+\DeclareRobustCommand{\todotextjira}[2]{\todotext{\href{https://ethidsc.atlassian.net/jira/software/c/projects/ACT4EBOOK/issues/ACT4EBOOK-#1}{ACT4EBOOK-#1}: #2}}
 
 \newcommand{\todousedefinemap}{
     \todotextjira{498}{Use the proper definemap macro.}
@@ -455,7 +455,9 @@
 \DeclareRobustCommand{\SYN}[2]{%
     \pgfkeysifdefined{/mydefs/#1/index}{%
         \index{\pgfkeysvalueof{/mydefs/#1/index}}%
-    }{}%
+    }{
+        \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
+    }%
     \pgfkeysifdefined{/mydefs/#1/label}{%
         \hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
             \ifthenelse{\boolean{devel}}{%
@@ -465,6 +467,7 @@
             }%
         }%
     }{%
+        \typeout{SYN: Warning: there is no label associated to (#1).}%
         \ifthenelse{\boolean{devel}}{%
             {\color{red}#2}%
         }{%
@@ -474,34 +477,24 @@
 }
 \newcommand{\SYDEF}[3]{%
     \@for\@ii:=#1\do{%
-        \pgfkeyssetvalue{/mydefs/\@ii/label}{#2}%
+       \ifstrempty{#2}{}{\pgfkeyssetvalue{/mydefs/\@ii/label}{#2}}%
         \pgfkeyssetvalue{/mydefs/\@ii/index}{#3}%
-        \pgfkeyssetvalue{/mydefs/\@ii s/label}{#2}%
+        \ifstrempty{#2}{}{\pgfkeyssetvalue{/mydefs/\@ii s/label}{#2}}%
         \pgfkeyssetvalue{/mydefs/\@ii s/index}{#3}%
     }%
+}
+\newcommand{\maindef}[1]{%
+    \SYNDEF{#1}\emph{#1}%
 }
 
 
 % https://tex.stackexchange.com/questions/466026/test-if-current-color-is-black
 
 
-\edef\BlackColor{\csname\string\color@.\endcsname}
-
-\makeatletter
-\newcommand{\@CurrentColor}{}% Make sure we are not using an existing macro
-\DeclareRobustCommand{\ColorIfNowBlack}[2]{%
-    \edef\@CurrentColor{\csname\string\color@.\endcsname}% Get current color
-    \IfStrEq{\@CurrentColor}{\BlackColor}{%
-        {\color{#1}#2}% current color IS black
-    }{%
-        #2% current color is NOT black
-    }%
-}
-\makeatother
-
 
 \SYDEF{semigroup}{def:semigroup}{semigroup}
 \SYDEF{monoid}{def:monoid}{monoid}
+\SYDEF{neutral element}{def:monoid}{neutral element of a monoid}
 \SYDEF{submonoid}{def:submonoid}{submonoid}
 \SYDEF{magma}{def:magma}{magma}
 \SYDEF{commutative group}{def:commutative-group}{commutative group}
@@ -512,14 +505,13 @@
 \SYDEF{monoid morphism,morphism of monoids}{def:monoid-mor}{monoid morphism}
 \SYDEF{semigroup morphism,morphism of semigroups}{def:semigroup-mor}{semigroup morphism}
 \SYDEF{group morphism,morphism of groups}{def:group-mor}{group morphism}
-\SYDEF{identity morphism}{def:identity-morphism}{identity morphism}
 
 \SYDEF{antichain}{def:antichain}{antichain in a poset}
 \SYDEF{chain}{def:chain}{chain in a poset}
 \SYDEF{power poset}{def:pospower}{power poset}
 
 \SYDEF{commutative semigroup}{def:commutative-semigroup}{commutative semigroup}
-\SYDEF{transitive}{def:endo_transitive}{transitive relation}
+\SYDEF{transitive,transitivity}{def:endo_transitive}{transitive relation}
 \SYDEF{reflexive}{def:endo_reflexive_irreflexive}{reflexive relation}
 \SYDEF{irreflexive}{def:endo_reflexive_irreflexive}{irreflexive relation}
 \SYDEF{symmetric}{def:endo_sym_asym_antisym}{symmetric relation}
@@ -532,3 +524,45 @@
 \SYDEF{everywhere-defined}{def:rel_properties}{everywhere-defined}
 \SYDEF{single-valued}{def:rel_properties}{single-valued}
 \SYDEF{functor}{def:functor}{functor}
+\SYDEF{semifunctor}{def:semi-functor}{semifunctor}
+\SYDEF{companion}{def:comp_conj}{companion construction}
+\SYDEF{conjoint}{def:comp_conj}{conjoint construction}
+\SYDEF{poset}{def:poset}{partially ordered set (poset)}
+\SYDEF{pre-ordered set,pre-order}{def:preorder}{pre-ordered set}
+\SYDEF{semicategory,semicategories}{def:semicategory-compact}{semicategory}
+\SYDEF{hom-set,hom-sets}{def:semicategory-compact}{hom-sets}
+\SYDEF{identity morphism,Identity morphism}{def:identity-morphism}{identity morphism}
+\SYDEF{identity functor,Identity functor}{def:identity_functor}{identity functors}
+\SYDEF{category,categories}{def:categorymain}{category}
+\SYDEF{monotone,monotone map,monotone maps,monotonicity,Monotonicity,monotone function}{def:monotone}{monotone map}
+\SYDEF{antitone,antitone map}{def:antitone}{antitone map}
+\SYDEF{identity function,Identity function}{sub:identity-function}{identity function}
+\SYDEF{associative,associativity}{sec:commutativity-associativity}{associativity}
+\SYDEF{commutative,commutativity}{sec:commutativity-associativity}{commutativity}
+\SYDEF{category disjoint union,disjoint union of categories}{sec:commutativity-associativity}{disjoint union (of categories)}
+\SYDEF{disjoint union}{sec:disjoint-union}{disjoint union (of sets)}
+
+\SYDEF{powerset,powersets}{sec:power-set}{powerset}
+\SYDEF{design problem}{sec:dpdefinition}{design problem (without implementation)}
+\SYDEF{design problem with implementation,design problems with implementation}{def:DPI}{design problem (with implementation)}
+\SYDEF{profunctor}{def:profunctor}{profunctor}
+\SYDEF{associative stacking,associative stacking semicategory}{def:stacking-semi-cat}{associative stacking semicategory}
+\SYDEF{stacking semicategory}{def:simple-stacking-semi-cat}{stacking semicategory}
+\SYDEF{functorial stacking,functorial stacking semicategory}{def:functorial-stacking-semi-cat}{functorial stacking semicategory}
+\SYDEF{least fixed point}{def:least-fixed}{least fixed point}
+\SYDEF{covariant monoid action,monoid action}{def:monoid-cov-action}{monoid action}
+
+
+% missing link to definition
+\SYDEF{endomorphism}{}{endomorphism}
+\SYDEF{biproduct}{}{biproduct}
+\SYDEF{traced symmetrict monoidal category}{}{traced symmetric monoidal category}
+\SYDEF{symmetric monoidal category}{}{symmetric monoidal category}
+\SYDEF{enriched category theory}{}{enriched category theory}
+\SYDEF{associative law}{}{associative law}
+\SYDEF{faithful functor}{}{faithful functor}
+\SYDEF{monoidal poset}{}{monoidal poset}
+\SYDEF{product order}{}{product order}
+\SYDEF{Scott continuous}{def:scott}{Scott continuity}
+\SYDEF{matrix groups}{}{matrix groups}
+\SYDEF{relation,binary relation}{def:binary-relation}{relation}
