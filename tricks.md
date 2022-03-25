@@ -39,4 +39,4 @@ Note SPACE
 
 SY inside SY
 
-    \\SY\{[^\}]*\\SY
+    \\SY\w*\{[^\}]*\\SY
