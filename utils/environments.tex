@@ -419,7 +419,7 @@
 \makeatletter
     \newcommand{\coloruline}[2]{%
         \newcommand\temp@reduline{\bgroup\markoverwith%
-            {\textcolor{#1}{\rule[-0.5ex]{2pt}{0.4pt}}}\ULon}%
+            {\textcolor{#1}{\rule[-0.1ex]{2pt}{0.4pt}}}\ULon}%
         \temp@reduline{#2}%
     }
 
@@ -463,22 +463,26 @@
     \pgfkeysifdefined{/mydefs/#1/label}{%
         \texorpdfstring{%
             \protect\hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
+            \relax\ifmmode%
                 \ifbool{devel}{%
                     {\color{blue}#2}%
                 }{%
                     \coloruline{symbol-underline}{#2}%
                 }%
+            \else#2\fi%
             }%
         }{%
             #2%
         }%
     }{%
         \typeout{SYN: Warning: there is no label associated to (#1).}%
+        \relax\ifmmode%
         \ifbool{devel}{%
             {\color{red}#2}%
         }{%
             #2%
         }%
+        \else#2\fi%
     }%
 }
 \newcommand{\SYDEF}[3]{%
