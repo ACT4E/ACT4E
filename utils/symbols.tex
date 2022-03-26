@@ -29,7 +29,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%% Sets
 
 %:section:gen/sets/styles: Sets
-\newcommand{\stylesets}[1]{{\color{formulasetcolor}\mathbf{#1}}}
+\newcommand{\stylesets}[1]{{\ColorIfNowBlack{formulasetcolor}{\mathbf{#1}}}}
 %:nomenc-exclude:
 \newcommand{\styleLsets}[1]{{\color{formulasetLcolor}\mathbf{#1}}}
 %:nomenc-exclude:
@@ -37,9 +37,11 @@
 %:nomenc-exclude:
 \newcommand{\stylemaps}[1]{{\stylemorph{#1}}}
 %:nomenc-exclude:
+\newcommand{\EM}[1]{\ensuremath{#1}\xspace}
+%:nomenc-exclude:
 
-\newcommand{\makesymbolset}[1]{\ensuremath{\stylesets{#1}}\xspace}
-\newcommand{\makesymbolLset}[1]{\ensuremath{\styleLsets{#1}}\xspace}
+\newcommand{\makesymbolset}[1]{\EM{\stylesets{#1}}}
+\newcommand{\makesymbolLset}[1]{\EM{\styleLsets{#1}}}
 
 \newcommand{\setAneut}{\mathbf{A}}
 %:nomenc-exclude:
@@ -226,27 +228,28 @@
 %:nomenc-exclude:
 \newcommand{\bigsetintersection}{\mathbin{{\color{formulasetcolor}\bigcap}}} % Big Set intersection
 %:nomenc-exclude:
-\newcommand{\setin}{\linebreak[0]\mathbin{{\color{formulasetcolor}\in}}\linebreak[0]} % Belongs to
+\newcommand{\setin}{\linebreak[0]\mathrel{{\color{formulasetcolor}\in}}\linebreak[0]} % Belongs to
 %:nomenc:\ela\setin\setA:The element $\ela$ belongs to the set $\setA$.
-\newcommand{\notsetin}{\mathbin{{\color{formulasetcolor}\not\in}}} % Does not belong to
+\newcommand{\notsetin}{\mathrel{{\color{formulasetcolor}\not\in}}} % Does not belong to
 %:nomenc:\ela\notsetin\setA:The element $\ela$ does not belong to the set $\setA$.
 
-\newcommand{\setsubseteq}{\mathbin{\color{formulasetcolor}{\subseteq}}} % subset
+\newcommand{\setsubseteq}{\mathrel{\color{formulasetcolor}{\subseteq}}} % subset
 %:nomenc:\setA\setsubseteq\setB:The set $\setA$ is a subset of $\setB$.
 
-\newcommand{\setsupseteq}{\mathbin{\color{formulasetcolor}{\supseteq}}} % superset
+\newcommand{\setsupseteq}{\mathrel{\color{formulasetcolor}{\supseteq}}} % superset
 %:nomenc:\setA\setsupseteq\setB:The set $\setA$ is a superset of $\setB$.
 
 
 %:section:gen/sets/known: Well-known sets.
+
 \newcommand{\Emptyset}{\stylesets{\emptyset}} % Empty set
-\newcommand{\cnumbers}{\ensuremath{\stylesets{\mathbb{C}}}} % Complex numbers
-\newcommand{\reals}{\ensuremath{\stylesets{\mathbb{R}}}\xspace} % Real numbers
-\newcommand{\natnumbers}{\ensuremath{\stylesets{\mathbb{N}}}} % Natural numbers: $0, 1, 2, \dots$
-\newcommand{\wnumbers}{\ensuremath{\stylesets{\mathbb{Z}}}} % Integers: $0, 1, -1, 2, -2, \dots$
-\newcommand{\ratnumbers}{\ensuremath{\stylesets{\mathbb{Q}}}} % Rational numbers
-\newcommand{\posReals}{\ensuremath{\reals_{>0}}\xspace} % Positive real numbers
-\newcommand{\nonNegReals}{\ensuremath{\reals_{\geq0}}\xspace} % Non-negative real numbers
+\newcommand{\cnumbers}{\EM{\stylesets{\mathbb{C}}}} % Complex numbers
+\newcommand{\reals}{\EM{\stylesets{\mathbb{R}}}} % Real numbers
+\newcommand{\natnumbers}{\EM{\stylesets{\mathbb{N}}}} % Natural numbers: $0, 1, 2, \dots$
+\newcommand{\wnumbers}{\EM{\stylesets{\mathbb{Z}}}} % Integers: $0, 1, -1, 2, -2, \dots$
+\newcommand{\ratnumbers}{\EM{\stylesets{\mathbb{Q}}}} % Rational numbers
+\newcommand{\posReals}{\EM{\reals_{>0}}} % Positive real numbers
+\newcommand{\nonNegReals}{\EM{\reals_{\geq0}}} % Non-negative real numbers
 \newcommand{\nonNegRealsComp}{\overline{\reals}_{\geq0}} % Completion of non-negative real numbers.
 
 \newcommand{\Rcomp}{\nonNegRealsComp} % Not sure - need to check
@@ -261,12 +264,16 @@
 %:nomenc:\Runit m: A copy of $\reals$ with units of meters
 
 %:section:gen/sets/constructors: Constructors
-\newcommand{\powerset}{\stylesets{\aword{Pow}}\,}
+\newcommand{\powerset}{\powersetmap\,}
+\newcommand{\powersetmap}{\stylesets{\aword{Pow}}}
+\newcommand{\powersetfunctor}{\stylefunctors{\aword{Pow}}} % powerset seen as a functor
 %:nomenc:\powerset \setA: Power set of $\setA$.
 %:def:def:power-set
 
 %:section:gen/sets/operations: Operations
-\newcommand{\cartprod}{\mathbin{\stylesets{\times}}} % set product
+
+%%%% \newcommand{\cartprod}{\SYNinner{cartesian product}{\mathbin{\stylesets{\times}}}} % cartesian product
+\newcommand{\cartprod}{\mathbin{\stylesets{\times}}} % cartesian product
 %:nomenc:\setA\cartprod\setB:Cartesian product of two sets.
 %:def:def:cartesian-product
 
@@ -277,18 +284,19 @@
 %:nomenc:\mora\funcsum\morb:Direct sum of two functions
 
 
+% \newcommand{\setdisunion}{\SYNinner{disjoint union of sets}{\mathbin{\stylesets{+}}}} % Disjoint union
 \newcommand{\setdisunion}{\mathbin{\stylesets{+}}} % Disjoint union
 %:nomenc:\setA\setdisunion\setB:Disjoint union of two sets.
 %:def:def:disjoint-union
 
-\newcommand{\disunionA}[1]{\tup{1, #1}}
+\newcommand{\disunionA}[1]{{\tup{1, #1}}}
 %:nomenc:\disunionA{a}, \disunionA{b}:Decorated elements of disjoint union
 %:def:def:disjoint-union
-\newcommand{\disunionB}[1]{\tup{2, #1}}
+\newcommand{\disunionB}[1]{{\tup{2, #1}}}
 %:nomenc-exclude:
-\newcommand{\disunionI}[1]{\tup{i, #1}}
-\newcommand{\disunionJ}[1]{\tup{j, #1}}
-\newcommand{\disunionK}[1]{\tup{k, #1}}
+\newcommand{\disunionI}[1]{{\tup{i, #1}}}
+\newcommand{\disunionJ}[1]{{\tup{j, #1}}}
+\newcommand{\disunionK}[1]{{\tup{k, #1}}}
 \newcommand{\inj}{\stylemorph{\aword{in}}}
 
 
@@ -355,7 +363,7 @@
 %:section:gen/relations/styles:
 \newcommand{\relstyle}[1]{\stylemorph{#1}} % style for relation (temporary)
 
-\newcommand{\makesymbolrel}[1]{\ensuremath{\relstyle{#1}}}
+\newcommand{\makesymbolrel}[1]{\EM{\relstyle{#1}}}
 \newcommand{\relA}{\makesymbolrel{R}}
 %:nomenc:\relA, \relB:Generic relation names.
 \newcommand{\relB}{\makesymbolrel{S}}
@@ -366,14 +374,15 @@
 %:nomenc-exclude:
 
 \newcommand{\transclos}{^{\relstyle{+}}}
+\newcommand{\traclos}[1]{{#1}^{\relstyle{+}}}
 
 \newcommand{\reltransp}{^{\intercal}}
 %:nomenc:\relA\reltransp:Transpose of a relation $\relA$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%% Posets
-
 %:section:gen/posets/generic:Generic poset names
-\newcommand{\stylepos}[1]{\mathbf{#1}}
+
+\newcommand{\stylepos}[1]{{\textcolor{colorposetsymbol}{#1}}}
 %:nomenc-exclude:
 \newcommand{\posAlet}{P}
 %:nomenc-exclude:
@@ -405,7 +414,7 @@
 \newcommand{\forcedchoice}[2]{\mathbin{\R{\bigsqcup_{#1\setin #2}}}}
 \newcommand{\freechoicesmall}{\mathbin{\F{\sqcap}}}
 \newcommand{\forcedchoicesmall}{\mathbin{\R{\sqcup}}}
-\newcommand{\makesymbolpos}[1]{\ensuremath{\stylepos{#1}}\xspace}
+\newcommand{\makesymbolpos}[1]{\EM{\stylepos{\mathbf{#1}}}}
 
 \newcommand{\posA}{\makesymbolpos{\posAlet}}
 \newcommand{\subposA}{\makesymbolpos{\posDlet}}
@@ -567,7 +576,7 @@
 %:nomenc-exclude:
 
 % \newcommand{\interval}[1]{\left[#1\right]}
-\newcommand{\interv}[2]{{\colL[}#1, #2{\colU]}}
+\newcommand{\interv}[2]{{\colL[}#1,\smallspace#2{\colU]}}
 %:nomenc:\interv{a}{b}: Interval with boundaries $a$ and $b$.
 \newcommand{\posAleq}{\posleqof\posA} % Order on poset $\posA$
 \newcommand{\posAleqop}{\posleqopof\posA} % Order on poset $\posA$
@@ -672,13 +681,13 @@
 \newcommand{\fantichains}{{\colAnti \aword{Anti}}_\mathrm{f}\,} % finite antichain
 %:nomenc:\fantichains \posA: The set of finite antichains of a poset $\posA$.
 
-\newcommand{\setOfUppersets}{\aword{USets}\,}
+\newcommand{\setOfUppersets}{{\colU\aword{USets}}\,}
 %:nomenc:\setOfUppersets \posA: The set of upper sets of a poset $\posA$.
-\newcommand{\setOfLowersets}{\aword{LSets}\,}
+\newcommand{\setOfLowersets}{{\colL\aword{LSets}}\,}
 %:nomenc:\setOfLowersets \posA: The set of lower sets of a poset $\posA$.
-\newcommand{\setOfDCUppersets}{\overline{\aword{UpSets}}\,}
+\newcommand{\setOfDCUppersets}{\overline{\colU\aword{UpSets}}\,}
 %:nomenc:\setOfDCUppersets \posA : $\subset \setOfUppersets \posA$. The set of downward-closed upper sets of poset $\posA$.
-\newcommand{\setOfUCLowersets}{\overline{\aword{LowSets}}\,}
+\newcommand{\setOfUCLowersets}{\overline{\colL\aword{LowSets}}\,}
 %:nomenc:\setOfUCLowersets \posA : $\subset \setOfLowersets \posA$. The set of upward-closed upper sets of poset $\posA$.
 
 \newcommand{\uppersets}{\mathscr{\colUp U}}
@@ -757,12 +766,14 @@
 \definecolor{transmuter}{RGB}{46,117,189}
 \definecolor{objects}{RGB}{213,87,96}
 \definecolor{morphisms}{RGB}{46,117,189}
+\definecolor{colorposetsymbol}{RGB}{90,90,90}
+
 \definecolor{transmuted}{RGB}{213,87,96}
 \definecolor{naturaltransformations}{rgb}{0.1,0.5,0.0}
 \definecolor{functors}{rgb}{0.5,0,0.5}
 
 \definecolor{instructors}{RGB}{214,120,5}
-\definecolor{upcolor}{named}{Purple}
+\definecolor{upcolor}{RGB}{252, 3, 107}
 \definecolor{downcolor}{named}{Orange}
 \definecolor{antichaincolor}{named}{Brown}
 \definecolor{staincola}{RGB}{181,23,0}
@@ -786,10 +797,10 @@
 \newcommand{\colH}{\color[rgb]{0.000000,0.400000,1.000000}}
 %:nomenc-exclude:
 %:example: $\colH X$
-\newcommand{\colU}{\color{purple}}
+\newcommand{\colU}{\color{upcolor}}
 %:nomenc-exclude:
 %:example: $\colU X$
-\newcommand{\colL}{\color{orange}}
+\newcommand{\colL}{\color{downcolor}}
 %:nomenc-exclude:
 %:example: $\colL X$
 \newcommand{\colUp}{\color{upcolor}}
@@ -879,6 +890,7 @@
 %:nomenc-exclude:
 
 \newcommand{\fthen}{\mathbin{\stylefunctors{\fatsemi}}} % Composition for functors
+\newcommand{\fthenof}[1]{\mathbin{\stylefunctors{\fatsemi}_{#1}}\linebreak[0]} % Composition for morphisms
 %:nomenc:\funa \fthen \funb: Composition of functors
 
 % \newcommand{\nthen}{\mathbin{\stylenat{\fatsemi}}} % Compositions for natural transformations
@@ -904,9 +916,18 @@
 \newcommand{\catidat}[1]{\catid_{#1}} % Identity for an object
 
 \newcommand{\catidofat}[2]{\catid^{#1}_{#2}} % Identity for an object
-\newcommand{\Cat}[1]{\text{{\index{#1@\textbf{#1}}}\textbf{#1}}\xspace}
+
+% \newcommand{\Cat}[1]{\EM{{\index{#1@\textbf{#1}}\mathbf{#1}}}}
+% \newcommand{\CatLinkConcept}[2]{\EM{{\SYNinner{#2}{\CatStyle{#1}}}}}
+\newcommand{\CatLinkConcept}[2]{{\SYNinner{#2}{\ensuremath{\CatStyle{#1}}}}\xspace}
+%:example:-
 %:nomenc-exclude:
-\newcommand{\CatNoIndex}[1]{\text{\textbf{#1}}\xspace}
+\newcommand{\cCatLinkConcept}[2]{{\SYNinner{#2}{\ensuremath{\cCatStyle{#1}}}}\xspace}
+%:example:-
+%:nomenc-exclude:
+\newcommand{\cCatStyle}[1]{{\fatstart\mathbf{#1}\fatend}}%
+%:nomenc-exclude:
+\newcommand{\CatStyle}[1]{\EM{\mathbf{#1}}}
 %:nomenc-exclude:
 
 \newcommand{\Hom}{\stylefunctors{\operatorname{Hom}}}
@@ -917,24 +938,24 @@
 %:nomenc-exclude:
 
 %:section:gen/categories/generic: Generic names
-\newcommand{\CatA}{\CatNoIndex{A}}
+\newcommand{\CatA}{\CatStyle{A}}
 %:nomenc:\CatA,\CatB,\CatC, \CatD, \dots: Symbols for categories
-\newcommand{\CatB}{\CatNoIndex{B}}
+\newcommand{\CatB}{\CatStyle{B}}
 %:nomenc-exclude:
-\newcommand{\CatC}{\CatNoIndex{C}}
+\newcommand{\CatC}{\CatStyle{C}}
 %:nomenc-exclude:
-\newcommand{\CatD}{\CatNoIndex{D}}
+\newcommand{\CatD}{\CatStyle{D}}
 %:nomenc-exclude:
-\newcommand{\CatE}{\CatNoIndex{E}}
+\newcommand{\CatE}{\CatStyle{E}}
 %:nomenc-exclude:
-\newcommand{\CatV}{\CatNoIndex{V}}
+\newcommand{\CatV}{\CatStyle{V}}
 %:nomenc:\CatV: Symbol for enrichment categories.
-\newcommand{\CatI}{\CatNoIndex{I}}
+\newcommand{\CatI}{\CatStyle{I}}
 %:nomenc:\CatI, \CatJ, \CatK: Symbol for a diagram shape category.
-\newcommand{\CatJ}{\CatNoIndex{J}}
+\newcommand{\CatJ}{\CatStyle{J}}
 %:nomenc:\CatJ: Symbol for a diagram shape category.
 %:nomenc-exclude:
-\newcommand{\CatK}{\CatNoIndex{K}}
+\newcommand{\CatK}{\CatStyle{K}}
 %:nomenc:\CatK: Symbol for a diagram shape category.
 %:nomenc-exclude:
 
@@ -943,7 +964,7 @@
 %:nomenc-exclude:
 \newcommand{\ObD}{\Obof\CatD}
 %:nomenc-exclude:
-\newcommand{\twoCat}{\Cat{2}}
+\newcommand{\twoCat}{\CatStyle{2}}
 %:nomenc-exclude:
 
 \newcommand{\Obja}{\styleobj{X}}
@@ -1059,10 +1080,11 @@
 \newcommand{\confun}{\stylefunctors{\Pi_\R{r}}}
 \newcommand{\funeqa}{\swarrow}
 \newcommand{\funeqb}{\nearrow}
-% \newcommand{\funob}[1]{\stylefunctors{#1}_{\!\!\styleobj{\bullet}}}
 \newcommand{\funobspace}[1]{\stylefunctors{#1}_{\!\styleobj{\bullet}}}
-% \newcommand{\funmor}[1]{\stylefunctors{#1}_{\!\!\stylemorph{\rightarrow}}}
 \newcommand{\funmorspace}[1]{\stylefunctors{#1}_{\!\stylemorph{\shortto}}}
+% \newcommand{\funobspace}[1]{\styleobj{#1}_{\!\styleobj{\bullet}}}
+% \newcommand{\funmorspace}[1]{\stylemorph{#1}_{\!\stylemorph{\shortto}}}
+
 \newcommand{\funamor}{\funmorspace{F}}
 \newcommand{\funaob}{\funobspace{F}}
 \newcommand{\funbmor}{\funmorspace{G}}
@@ -1155,18 +1177,18 @@
 %:def:def:monad
 \newcommand{\moncomp}{\stylenat{\aword{mu}}} % Monad identity
 %:def:def:monad
-
-\newcommand{\fish}{\text{\emph{fish}}}
+\newcommand{\monadfunction}[1]{\EM{\stylemorph{\text{#1}}}}
+\newcommand{\fish}{\monadfunction{fish}}
 %:def:def:monad-computer-science
-\newcommand{\lift}{\text{\emph{lift}}}
+\newcommand{\lift}{\monadfunction{lift}}
 %:def:def:monad-computer-science
-\newcommand{\mjoin}{\text{\emph{join}}}
+\newcommand{\mjoin}{\monadfunction{join}}
 %:def:def:monad-computer-science
-\newcommand{\bind}{\text{\emph{bind}}}
+\newcommand{\bind}{\monadfunction{bind}}
 %:def:def:monad-computer-science
-\newcommand{\fmap}{\text{\emph{fmap}}}
+\newcommand{\fmap}{\monadfunction{fmap}}
 %:def:def:monad-computer-science
-\newcommand{\return}{\text{\emph{return}}}
+\newcommand{\return}{\monadfunction{return}}
 %:def:def:monad-computer-science
 
 \newcommand{\Uendo}{\stylefunctors{U}} % upper-set endofunctor
@@ -1204,18 +1226,20 @@
 % \newcommand{\ceil}[1]{\left \lceil #1 \right \rceil}
 %  :nomenc:\ceil{x}:Rounding of $x$ to the next integer
 
-\newcommand{\funceil}{\ensuremath{\stylemorph{{\aword{ceil}}}}\xspace} % ceiling function
+\newcommand{\funceil}{\EM{\stylemorph{{\aword{ceil}}}}} % ceiling function
 %:def:ex:rounding-functions
-\newcommand{\funfloor}{\ensuremath{\stylemorph{\aword{floor}}}\xspace} % floor function
+\newcommand{\funfloor}{\EM{\stylemorph{\aword{floor}}}} % floor function
 %:def:ex:rounding-functions
 
 \newcommand{\rtntte}{\stylemorph{\aword{rtntte}}} % Round to nearest, ties to even
 %:def:ex:rounding-functions
 
 %:section:gen/categories/companion: Companion/conjoints
-\newcommand{\comp}[1]{\stylefunctors{\aword{comp}}[#1]} % Companion
+\newcommand{\compmap}{\stylefunctors{\aword{comp}}}
+\newcommand{\comp}[1]{\compmap(#1)} % Companion
 %:def:def:comp_conj
-\newcommand{\conj}[1]{\stylefunctors{\aword{conj}}[#1]} % Conjoint
+\newcommand{\conjmap}{\stylefunctors{\aword{conj}}}
+\newcommand{\conj}[1]{\conjmap(#1)} % Conjoint
 %:def:def:comp_conj
 
 %:section:playground: Playground
@@ -1227,33 +1251,40 @@
 
 \newcommand{\col}[1]{\mathrm{col(#1)}}
 
-\newcommand{\coprodMap}[2]{{#1}\funcsum{#2}}
+\newcommand{\prodMapob}[2]{{#1}\mathbin{\styleobj{\times}}{#2}}
+\newcommand{\prodMapmor}[2]{{#1}\mathbin{\stylemorph{\times}}{#2}}
+\newcommand{\coprodMapmor}[2]{{#1}\mathbin{\stylemorph{+}}{#2}}
+\newcommand{\coprodMapob}[2]{{#1}\mathbin{\styleobj{+}}{#2}}
 \newcommand{\cP}{P}
 \newcommand{\cQ}{Q}
 \newcommand{\cR}{R}
 
 %:section:gen/categories/operations: Operations
+\newcommand{\Ptimes}{\mathbin{\color{colorposetsymbol}\pmb{\times}}} % Product of posets
 \newcommand{\Ctimes}{\mathbin{\pmb{\times}}} % Product in a category
 %:def:def:categorical-product
 
+\newcommand{\Pplus}{\mathbin{\color{colorposetsymbol}\pmb{+}}} % Disjoint union of posets
 \newcommand{\Cplus}{\mathbin{\pmb{+}}} % Co-product in a category
 %:def:def:catcoproduct
 
 %\newcommand{\Ctimes}{ \tikz[baseline=-.55ex] \node [inner sep=0pt,cross out,draw,line width=1pt,minimum size=1ex] (a) {};}
 
 %:section:gen/categories/constructors: Constructors
-\newcommand{\Free}{\Cat{Free}} % free construction
+\newcommand{\Free}{\CatLinkConcept{Free}{free category construction on graphs}} % free construction
 %:def:def:free-category
 %:nomenc:\Free(G):Free category constructed from the graph G
 
 % \newcommand{\twisted}[1]{\TwistedArrow#1}
 %  :nomenc:\twisted{\CatA}:Twisted arrow construction on category $\CatA$.
 
-\newcommand{\PosArrow}{\mathbf{Arr}\,} % Arrow poset
-\newcommand{\Arrow}{\stylefunctors{\mathbf{Arr}}\,} % Arrow category
+\newcommand{\PosArrow}{\textcolor{colorposetsymbol}{\mathbf{Arr}}\,} % Arrow poset
+\newcommand{\Arrow}{\ArrowFunctor\,} % Arrow category
+\newcommand{\Arrowof}{\ArrowFunctor\,}
+\newcommand{\ArrowFunctor}{\stylefunctors{\mathbf{Arr}}}
 %:nomenc:\Arrow{\CatA}:Arrow construction on category $\CatA$.
 %:def:def:arrow_category
-\newcommand{\PosTwistedArrow}{\mathbf{Tw}\,} % Twisted Arrow poset
+\newcommand{\PosTwistedArrow}{\textcolor{colorposetsymbol}{\mathbf{Tw}}\,} % Twisted Arrow poset
 
 \newcommand{\TwistedArrow}{\stylefunctors{\mathbf{Tw}}\,} % Twisted Arrow category
 %:nomenc:\TwistedArrow{\CatA}:Twisted arrow construction on category $\CatA$.
@@ -1274,13 +1305,13 @@
 %\newcommand{\frdt}{f^\mathrm{rdt}}
 
 %:section:gen/semigroups/names: Semigroups
-\newcommand{\sgrpA}{\CatNoIndex{S}} % Generic semigroup names
+\newcommand{\sgrpA}{\CatStyle{S}} % Generic semigroup names
 %:nomenc:\sgrpA, \sgrpB, \sgrpC:Generic semigroup names.
 \newcommand{\sgrpAset}{\makesymbolset{S}} % Generic semigroup names
 %:nomenc:\sgrpAset, \sgrpBset, \sgrpCset:Generic names for underlying carrier set of a semigroup.
-\newcommand{\sgrpB}{\CatNoIndex{T}} % Generic semigroup
+\newcommand{\sgrpB}{\CatStyle{T}} % Generic semigroup
 %:nomenc-exclude:
-\newcommand{\sgrpC}{\CatNoIndex{U}} % Generic semigroup
+\newcommand{\sgrpC}{\CatStyle{U}} % Generic semigroup
 %:nomenc-exclude:
 \newcommand{\sgrpBset}{\makesymbolset{T}} % Generic semigroup
 %:nomenc-exclude:
@@ -1309,10 +1340,10 @@
 %:section:gen/monoids: Monoids
 \newcommand{\idmon}{\stylemorph{\idname}} % identity for monoid
 %:def:def:monoid
-\newcommand{\monoidA}{\CatNoIndex{M}} % Generic monoid names
+\newcommand{\monoidA}{\CatStyle{M}} % Generic monoid names
 %:nomenc:\monoidA, \monoidB, \dots: Generic monoid names
 %:def:def:monoid
-\newcommand{\monoidB}{\CatNoIndex{N}} % Generic monoid
+\newcommand{\monoidB}{\CatStyle{N}} % Generic monoid
 %:nomenc-exclude:
 \newcommand{\monoidAset}{\makesymbolset{M}} % Underlying set of $\monoidA$.
 %:nomenc:\monoidAset, \monoidBset, \dots: Underlying sets for the monoids.
@@ -1350,10 +1381,10 @@
 %:section:gen/groups: Groups
 \newcommand{\idgrp}{\stylemorph{\idname}} % identity for group
 %:def:def:group
-\newcommand{\grpA}{\CatNoIndex{G}} % Generic group names
+\newcommand{\grpA}{\CatStyle{G}} % Generic group names
 %:nomenc:\grpA, \grpB: Generic group names
 %:def:def:group
-\newcommand{\grpB}{\CatNoIndex{H}}
+\newcommand{\grpB}{\CatStyle{H}}
 %:nomenc-exclude:
 \newcommand{\grpAset}{\makesymbolset{G}} % Underlying set of $\grpA$.
 %:nomenc:\grpAset, \grpBset: Underlying set of  groups.
@@ -1389,20 +1420,24 @@
 %:def:def:group
 
 %:section:gen/categories/monoidal: Monoidal categories
-\newcommand{\Moncat}{\Cat{MonCat}}
+\newcommand{\Moncat}{\CatStyle{MonCat}}
 
+\newcommand{\monpostimes}{\mtimescatob} % Monoidal poset operation
 \newcommand{\mtimescatob}{\mathbin{\styleobj{\pmb{\otimes}}}} % Stacking category objects semigroup operation
 %:def:def:stacking-semi-cat
 \newcommand{\mtimescatmor}{\mathbin{\stylemorph{\pmb{\otimes}}}} % Stacking category morphisms semigroup operation
 %:def:def:stacking-semi-cat
 \newcommand{\mtimescat}{\mathbin{\stylefunctors{\pmb{\otimes}}}} % Monoidal product
-%:nomenc:\mtimescat_{\CatA}:Monoidal operation for category $\CatA$.
+%:nomenc:\mtimescatof{\CatA}:Monoidal operation for category $\CatA$.
 %:def:def:monoidal-cat
+\newcommand{\mtimescatof}[1]{\mathbin{\stylefunctors{\pmb{\otimes}}_{#1}}}
+
+
 \newcommand{\idmoncat}{\styleobj{\mathbf{1}}} % Identity object for monoidal operation
 %:def:def:monoidal-cat
-\newcommand{\mtimesD}{\mathbin{\mtimescat_{\CatD}}}
+\newcommand{\mtimesD}{\mathbin{\mtimescatof{\CatD}}}
 %:nomenc-exclude:
-\newcommand{\mtimesC}{\mathbin{\mtimescat_{\CatC}}}
+\newcommand{\mtimesC}{\mathbin{\mtimescatof{\CatC}}}
 %:nomenc-exclude:
 
 \newcommand{\sourceperm}[1]{{#1}_{s}}
@@ -1411,7 +1446,7 @@
 \newcommand{\targetperm}[1]{{#1}_{t}}
 %:nomenc-exclude:
 
-\newcommand{\prcat}{\Cat{PR}}
+\newcommand{\prcat}{\CatStyle{PR}}
 %:nomenc-exclude:
 
 
@@ -1466,7 +1501,7 @@
 \newcommand{\para}{\text{par}}
 %:nomenc-exclude:
 
-% \newcommand{\prodMap}[2]{{#1}\times{#2}}
+
 % :nomenc-exclude:
 
 \newcommand{\qqand}{\qquad\text{and}\qquad}
@@ -1484,8 +1519,7 @@
 \newcommand{\uncmon}{\mathcal{U}}
 
 %:section:gen/tuples: Tuples
-\newcommand{\tup}[1]{\left\langle#1\right\rangle}
-%:example: $\tup{\posA, \posAleq}$
+
 
 \newcommand{\emptytuple}{\tup{\,}} % zero-size tuple
 \newcommand{\emptylist}{\makelist{\,}} % zero-size list
@@ -1530,6 +1564,7 @@
 \newcommand{\norto}{\mathrel{\stylemorph{\dasharrow}}}
 \newcommand{\mfrom}{\mathrel{{\stylemorph{\leftarrow}}}} % Morphism arrow
 \newcommand{\fto}{\mathrel{\stylefunctors{\to}}} % Functors arrow
+\newcommand{\ftoin}[1]{\mathrel{{\stylefunctors{\to}}_{#1}}\linebreak[0]}
 \newcommand{\ftolong}{\mathrel{\stylefunctors{\longrightarrow}}} % Functors arrow, longer
 %:nomenc-exclude:
 \newcommand{\nto}{\mathrel{\stylenat{\Rightarrow}}} % Natural transformation arrow
@@ -1583,50 +1618,50 @@
 
 %:section:gen/dp: DP
 %:section:gen/dp/formalization: Formalization
-\newcommand{\fun}{\ensuremath{{\colF f}}\xspace} % A generic functionality in $\funsp$.
+\newcommand{\fun}{\EM{{\colF f}}} % A generic functionality in $\funsp$.
 %:def:def:DPI
-\newcommand{\res}{\ensuremath{{\colR r}}\xspace} % A generic cost in $\ressp$.
+\newcommand{\res}{\EM{{\colR r}}} % A generic cost in $\ressp$.
 
 \newcommand{\resan}[1]{\res_\R{#1}}
 \newcommand{\funan}[1]{\fun_\F{#1}}
 %:def:def:DPI
-\newcommand{\imp}{\ensuremath{{\colI i}}\xspace} % A generic implementation in in $\impsp$.
+\newcommand{\imp}{\EM{{\colI i}}} % A generic implementation in in $\impsp$.
 %:def:def:DPI
 
-\newcommand{\impn}[1]{\ensuremath{{\colI i_{#1}}}\xspace}
-\newcommand{\funsp}{\ensuremath{{\colF \mathbf{F}}}\xspace} % Functionality space
+\newcommand{\impn}[1]{\EM{{\colI i_{#1}}}}
+\newcommand{\funsp}{\EM{{\colF \mathbf{F}}}} % Functionality space
 \newcommand{\ulfunsp}{\uppersets \lowersets \funsp}
 \newcommand{\ulressp}{\uppersets \lowersets \ressp}
-\newcommand{\funspn}[1]{\ensuremath{{\colF \mathbf{F}_{#1}}}\xspace} % Functionality space
-\newcommand{\funspa}{\ensuremath{{\colF \mathbf{A}}}\xspace} % Functionality space
+\newcommand{\funspn}[1]{\EM{{\colF \mathbf{F}_{#1}}}} % Functionality space
+\newcommand{\funspa}{\EM{{\colF \mathbf{A}}}} % Functionality space
 %:nomenc-exclude:
-\newcommand{\funspb}{\ensuremath{{\colF \mathbf{B}}}\xspace} % Functionality space
+\newcommand{\funspb}{\EM{{\colF \mathbf{B}}}} % Functionality space
 %:nomenc-exclude:
-\newcommand{\funspc}{\ensuremath{{\colF \mathbf{C}}}\xspace} % Functionality space
+\newcommand{\funspc}{\EM{{\colF \mathbf{C}}}} % Functionality space
 %:nomenc-exclude:
 
-\newcommand{\neutra}{\ensuremath{\mathbf{A}}\xspace}
-\newcommand{\neutrb}{\ensuremath{\mathbf{B}}\xspace}
-\newcommand{\neutrc}{\ensuremath{\mathbf{C}}\xspace}
-\newcommand{\neutrd}{\ensuremath{\mathbf{D}}\xspace}
+\newcommand{\neutra}{\EM{\mathbf{A}}}
+\newcommand{\neutrb}{\EM{\mathbf{B}}}
+\newcommand{\neutrc}{\EM{\mathbf{C}}}
+\newcommand{\neutrd}{\EM{\mathbf{D}}}
 
-\newcommand{\ressp}{\ensuremath{{\colR\mathbf{R}}}\xspace} % Requirements space
+\newcommand{\ressp}{\EM{{\colR\mathbf{R}}}} % Requirements space
 %:def:def:DPI
-\newcommand{\resspn}[1]{\ensuremath{{\colR\mathbf{R}_{#1}}}\xspace}
+\newcommand{\resspn}[1]{\EM{{\colR\mathbf{R}_{#1}}}}
 
-\newcommand{\resspa}{\ensuremath{{\colR\mathbf{A}}}\xspace} % Requirements space
+\newcommand{\resspa}{\EM{{\colR\mathbf{A}}}} % Requirements space
 %:nomenc-exclude:
-\newcommand{\resspb}{\ensuremath{{\colR\mathbf{B}}}\xspace} % Requirements space
+\newcommand{\resspb}{\EM{{\colR\mathbf{B}}}} % Requirements space
 %:nomenc-exclude:
-\newcommand{\resspc}{\ensuremath{{\colR\mathbf{C}}}\xspace} % Requirements space
+\newcommand{\resspc}{\EM{{\colR\mathbf{C}}}} % Requirements space
 %:nomenc-exclude:
-\newcommand{\resspd}{\ensuremath{{\colR\mathbf{D}}}\xspace} % Requirements space
+\newcommand{\resspd}{\EM{{\colR\mathbf{D}}}} % Requirements space
 %:nomenc-exclude:
 
-\newcommand{\impsp}{\ensuremath{{\colI\mathbf{I}}}\xspace} % Implementation space
+\newcommand{\impsp}{\EM{{\colI\mathbf{I}}}} % Implementation space
 %:def:def:DPI
 
-\newcommand{\impspn}[1]{\ensuremath{{\colI\mathbf{I}_{#1}}}\xspace}
+\newcommand{\impspn}[1]{\EM{{\colI\mathbf{I}_{#1}}}}
 \newcommand{\prov}{{\colF\aword{prov}}} % unctionality of an implementation
 %:def:def:DPI
 %:nomenc:\prov \colon \impsp\sto\funsp: functionality of an implementation
@@ -1663,6 +1698,7 @@
 % \newcommand{\poscat}[1]{#1^{\dagger}}
 
 \newcommand{\posleq}{\mathrel{\stylemorph{\preceq}}}
+%:nomenc:\posAleq:Order relation associated to the poset $\posA$
 %:nomenc-exclude:
 \newcommand{\posleqof}[1]{\mathrel{{\stylemorph{\preceq}}_{#1}}}
 %:nomenc-exclude:
@@ -1671,7 +1707,7 @@
 \newcommand{\posgeq}{\mathrel{\stylemorph{\succeq}}}
 %:nomenc-exclude:
 \newcommand{\posgeqof}[1]{\mathrel{{\stylemorph{\succeq}}_{#1}}}
-%:nomenc:\posAleq:Order relation associated to the poset $\posA$
+
 \newcommand{\postop}{\top} % Top of a poset
 %:nomenc:\top_{\posA}:Top of poset $\posA$
 %:def:def:top
@@ -1680,6 +1716,7 @@
 %:def:def:bot
 
 \newcommand{\poslt}{\mathrel{\stylemorph{\prec}}}
+\newcommand{\posltof}[1]{\mathrel{\stylemorph{\prec}_{#1}}}
 %:nomenc-exclude:
 \newcommand{\ordleq}{\preceq}
 %:nomenc-exclude:
@@ -1739,22 +1776,18 @@
 %:nomenc-exclude:
 
 %:section:gen/dp/computational:Computational representation
-\newcommand{\rtof}{\ensuremath{{\colH k}}\xspace}
+\newcommand{\rtof}{\EM{{\colH k}}}
 %:def:def:rtof
-\newcommand{\rtoF}{\ensuremath{{\colH K}}\xspace}
+\newcommand{\rtoF}{\EM{{\colH K}}}
 %:def:def:rtoF
-\newcommand{\ftor}{\ensuremath{{\colH h}}\xspace}
+\newcommand{\ftor}{\EM{{\colH h}}}
 %:def:def:ftor
-\newcommand{\ftoR}{\ensuremath{{\colH H}}\xspace}
+\newcommand{\ftoR}{\EM{{\colH H}}}
 %:def:def:ftoR
 
-\newcommand{\ftorL}{\ensuremath{{\colL h_L}}\xspace}
-\newcommand{\ftorU}{\ensuremath{{\colU h_U}}\xspace}
+\newcommand{\ftorL}{\EM{{\colL h_L}}}
+\newcommand{\ftorU}{\EM{{\colU h_U}}}
 
-\newcommand{\scottcontinuous}{Scott continuous\xspace}
-%:nomenc-exclude:
-\newcommand{\scottcontinuity}{Scott continuity\xspace}
-%:nomenc-exclude:
 
 %:section:uncertainty: Uncertainty paper
 
@@ -1870,95 +1903,93 @@
 %:def:prob:Feasibility
 \newcommand{\FeasibleImp}{\aword{FeasibleImp}}
 %:def:prob:FeasibleImp
-\newcommand{\FixFunMinRes}{\aword{Fix\-Fun\-Min\-Res}}
+\newcommand{\FixFunMinRes}{\EM{\stylefunctors{\aword{Fix\-Fun\-Min\-Res}}}}
 %:def:prob:FixFunMinRes
-\newcommand{\FixResMaxFun}{\aword{Fix\-Res\-Max\-Fun}}
+\newcommand{\FixResMaxFun}{\EM{\stylefunctors{\aword{Fix\-Res\-Max\-Fun}}}}
 %:def:prob:FixResMaxFun
-\newcommand{\FixFunMinResBack}{\aword{Fix\-Fun\-Min\-Res\-Back}}
+\newcommand{\FixFunMinResBack}{\stylefunctors{\aword{Fix\-Fun\-Min\-Res\-Back}}}
 %:def:prob:FixFunMinRes
 %:nomenc-exclude:
-\newcommand{\FixResMaxFunBack}{\aword{Fix\-Res\-Max\-Fun\-Back}}
+\newcommand{\FixResMaxFunBack}{\stylefunctors{\aword{Fix\-Res\-Max\-Fun\-Back}}}
 %:def:prob:FixResMaxFun
 %:nomenc-exclude:
 %:section:gen/categories/named: Well-known categories
 
-\newcommand{\DP}{\Cat{DP}} % Category of design problems
+\newcommand{\DP}{\CatLinkConcept{DP}{category of design problems}} % Category of design problems
 %:def:def:DP
 
-\newcommand{\DPfinite}{{\ensuremath{\Pos_{\fuppersets}}}\xspace}
-\newcommand{\feas}{\Cat{Feas}} % Synonym of $\DP$
+\newcommand{\DPfinite}{{\EM{\Pos_{\fuppersets}}}}
+\newcommand{\feas}{\CatStyle{Feas}} % Synonym of $\DP$
 %:def:def:DP
 
-\newcommand{\UDP}{\Cat{UDP}}
-\newcommand{\DPI}{\Cat{DPI}} % Semi-category $\DPI$
+\newcommand{\UDP}{\CatLinkConcept{UDP}{category of uncertain DPs}}
+%:def:def:UDP
+\newcommand{\DPI}{\CatLinkConcept{DPI}{semicategory of design problems with implementation}} % Semi-category $\DPI$
 %:def:def:DPI
 
-\newcommand{\Bool}{\Cat{Bool}} % Category of Booleans
+\newcommand{\Bool}{\CatLinkConcept{Bool}{posets of booleans}} % Posets/category of Booleans
 
-\newcommand{\CatMon}{\Cat{Mon}} % Category of Monoids
+\newcommand{\CatMon}{\CatLinkConcept{Mon}{category of monoids and morphisms}} % Category of Monoids
 
-\newcommand{\Category}{\Cat{Cat}} % Category of small categories
+\newcommand{\Category}{\CatLinkConcept{Cat}{category of small categories}} % Category of small categories
 %:def:def:Category
-\newcommand{\Vect}{\Cat{Vect}} % Category of vector spaces
+\newcommand{\Vect}{\CatLinkConcept{Vect}{category of vector spaces}} % Category of vector spaces
 %:def:ex:Vect
-\newcommand{\FinVect}{\Cat{FinVect}} % Category of finite-dimensional vector spaces
+\newcommand{\FinVect}{\CatLinkConcept{FinVect}{category of finite-dimensional vector spaces}} % Category of finite-dimensional vector spaces
 %:def:sub:trace-linear
-\newcommand{\Rel}{\Cat{Rel}} % Category of sets and relations
+\newcommand{\Rel}{\CatLinkConcept{Rel}{category of sets and relations}} % Category of sets and relations
 %:def:def:Rel
 
 
 \newcommand{\inrel}[3]{#1\mkern 2mu #2 \mkern 2mu #3} % To be used xRy at the moment
 %:def:def:inrel
-\newcommand{\FinSet}{\Cat{FinSet}} % Category of finite sets and functions
+\newcommand{\FinSet}{\CatLinkConcept{FinSet}{category of finite sets and functions}} % Category of finite sets and functions
 %:def:ex:FinSet
-\newcommand{\Set}{\Cat{Set}} % Category of sets and functions
+\newcommand{\Set}{\CatLinkConcept{Set}{category of sets and functions}} % Category of sets and functions
 %:def:def:Set
-\newcommand{\Injset}{\Cat{InjSet}} % Category of sets and injective functions
+\newcommand{\Injset}{\CatLinkConcept{InjSet}{category of sets and injective functions}} % Category of sets and injective functions
 %:def:ex:Injset
 
 
-%
-% \newcommand{\tupset}{\stylefunctors{S}} % Functor from Tup to Set
-% %:def:sec:SetL
 
-\newcommand{\Prof}{\mathbb{P}\CatNoIndex{rof}} % Category of profunctors
-\newcommand{\Pos}{\Cat{Pos}} % Category of posets and monotone maps
+\newcommand{\Prof}{\mathbb{P}\CatStyle{rof}} % Category of profunctors
+\newcommand{\Pos}{\CatLinkConcept{Pos}{category of posets and monotone maps}} % Category of posets and monotone maps
 %:def:def:Pos
-\newcommand{\Lat}{\Cat{Lat}} % Category of lattices and lattice homomorphisms
+\newcommand{\Lat}{\CatLinkConcept{Lat}{category of lattices and lattices homomorphisms}} % Category of lattices and lattice homomorphisms
 %:def:def:Lat
-\newcommand{\BoundedLat}{\Cat{BoundedLat}} % Category of lattices and lattice homomorphisms
+\newcommand{\BoundedLat}{\CatLinkConcept{BoundedLat}{category of bounded lattices and lattices homomorphisms}} % Category of lattices and lattice homomorphisms
 %:def:def:BoundedLat
-\newcommand{\Grph}{\Cat{Grph}} % Category of directed graphs
+\newcommand{\Grph}{\CatLinkConcept{Grph}{category of graphs and graphs homomorphisms}} % Category of directed graphs
 %:def:def:Grph
 
 
-\newcommand{\Effects}{\Cat{Eff}} % The effects category
+\newcommand{\Effects}{\CatLinkConcept{Eff}{category of sets and functions with side effects}} % The effects category
 %:def:def:Effects
 
 
 
 
-\newcommand{\UPos}{{\ensuremath{\Pos_{\uppersets}}}\xspace}
-\newcommand{\fUPos}{{\ensuremath{\Pos_{\fuppersets}}}\xspace}
-\newcommand{\LPos}{{\ensuremath{\Pos_{\lowersets}}}\xspace} %
+\newcommand{\UPos}{{\EM{\Pos_{\uppersets}}}}
+\newcommand{\fUPos}{{\EM{\Pos_{\fuppersets}}}}
+\newcommand{\LPos}{{\EM{\Pos_{\lowersets}}}} %
 \newcommand{\ulposmap}[1]{{#1}^\star}
-\newcommand{\Graph}{\Cat{Grph}} % Category of graphs
+\newcommand{\Graph}{\CatStyle{Grph}} % Category of graphs
 %:def:def:Graph
 
-\newcommand{\LTI}{\Cat{LTI}}
+\newcommand{\LTI}{\CatLinkConcept{LTI}{category of finite-dimensional linear time-invariant systems}}
 %:def:def:LTICat
-\newcommand{\Beh}{\Cat{Beh}}
+\newcommand{\Beh}{\CatStyle{Beh}}
 %:def:def:Beh
-\newcommand{\LBeh}{\Cat{LBeh}}
-%:nomenc-exclude:
+\newcommand{\LBeh}{\CatStyle{LBeh}}
+%:def:def:linear-io-behavior
 
-\newcommand{\RelL}{\cCat{Rel}} % Category of lists of relations
+\newcommand{\RelL}{\cCatLinkConcept{Rel}{category of tuple-sets and relations}} % category of tuple-sets and relations
 %:def:def:RelL
-\newcommand{\SetL}{\cCat{Set}} % Category of lists of sets
+\newcommand{\SetL}{\cCatLinkConcept{Set}{category of tuple-sets and functions}} % category of tuple-sets and functions
 %:def:def:SetL
-\newcommand{\PosL}{\cCat{Pos}} % Category of lists of posets
+\newcommand{\PosL}{\cCatLinkConcept{Pos}{category of tuple-posets and monotone maps}} % category of tuple-posets and monotone maps
 %:def:def:PosL
-\newcommand{\DPL}{\cCat{DP}} % Category of lists of DPs
+\newcommand{\DPL}{\cCatLinkConcept{DP}{category of tuple-posets and design problems}} % Category of lists of DPs
 %:def:def:DPL
 
 \newcommand{\genericlti}[1]{\tupp{\prstart_{#1},\mat{A}_{#1},\mat{B}_{#1},\mat{C}_{#1},\mat{D}_{#1}}}
@@ -2039,10 +2070,10 @@
 
 %:section:vol1/10_arrows/30_transmutation:
 
-\newcommand{\Curr}{\Cat{Curr}} % Currency category
+\newcommand{\Curr}{\CatStyle{Curr}} % Currency category
 %:def:def:Curr
 
-\newcommand{\Temp}{\Cat{Temp}} % Temperature category
+\newcommand{\Temp}{\CatStyle{Temp}} % Temperature category
 %:def:ex:temperatures
 
 \newcommand{\transmuter}[1]{\text{\fontseries{bf}\colTransmuter #1}\xspace}
@@ -2067,19 +2098,19 @@
 %:nomenc-exclude:
 
 
-\newcommand{\Berg}{\Cat{Berg}}
+\newcommand{\Berg}{\CatStyle{Berg}}
 %:nomenc:\Berg:The category of Swiss mountains
 %:def:def:Berg
-\newcommand{\Bergama}{\Cat{BergAma}}
+\newcommand{\Bergama}{\CatStyle{BergAma}}
 %:def:sec:subcat_berg
-\newcommand{\Berglazy}{\Cat{BergLazy}}
+\newcommand{\Berglazy}{\CatStyle{BergLazy}}
 %:def:sec:subcat_berg
-\newcommand{\subcat}[1]{\Cat{SubCat}(#1)}
+\newcommand{\subcat}[1]{\CatStyle{SubCat}(#1)}
 
-\newcommand{\Intermodal}{\Cat{Intermodal}}
-\newcommand{\Car}{\Cat{Car}}
-\newcommand{\Flight}{\Cat{Flight}}
-\newcommand{\Board}{\Cat{Board}}
+\newcommand{\Intermodal}{\CatStyle{Intermodal}}
+\newcommand{\Car}{\CatStyle{Car}}
+\newcommand{\Flight}{\CatStyle{Flight}}
+\newcommand{\Board}{\CatStyle{Board}}
 
 \newcommand{\LIN}{\transmuted{LIN}}
 %:nomenc-exclude:
@@ -2151,7 +2182,7 @@
 %:nomenc-exclude:
 \newcommand{\Multiply}{\transmuter{Multiply}}
 %:nomenc-exclude:
-\newcommand{\Database}{\Cat{Database}}
+\newcommand{\Database}{\CatStyle{Database}}
 
 %:section:vol1/22_operations/20_combinations: \chrefplus{chap:combination}
 \newcommand{\globe}{\raisebox{-1pt}{\includegraphics[height=8pt]{globe}}}
@@ -2220,7 +2251,7 @@
 
 %:section:vol1/25_translation/50_functors: \chrefplus{chap:functors}
 
-\newcommand{\Plans}{\Cat{Plans}}
+\newcommand{\Plans}{\CatStyle{Plans}}
 %:def:ex:planning-as-search-functor
 
 %:section:miscellanea: To categorize
@@ -2245,7 +2276,7 @@
 
 \newcommand{\iindex}[1]{\index{#1}#1\xspace}
 %:nomenc-exclude:
-\newcommand{\aword}[1]{\ensuremath{\mathsf{#1}}\xspace}
+\newcommand{\aword}[1]{\EM{\mathrm{#1}}}
 %:nomenc-exclude:
 
 %\newcommand{\Lo}[1]{\mathsf{L}#1}
@@ -2303,17 +2334,17 @@
 
 %:section:vol1/05_pluribus/50_morphisms:\chrefplus{chap:morphisms}
 %:section:vol1/05_pluribus/50_morphisms/morse:Morse code
-\newcommand{\morsedot}{\ensuremath{\bullet}\xspace} % Morse dot
-\newcommand{\morsedash}{\ensuremath{\pmb{-}}\xspace} % Morse dash
-\newcommand{\morsedsp}{\ensuremath{\,s_1\,}\xspace} % Silence between dots and dashes
-\newcommand{\morselsp}{\ensuremath{\,s_3\,}\xspace} % Silence between letters
-\newcommand{\morsewsp}{\ensuremath{\,s_7\,}\xspace} % Silence between words
+\newcommand{\morsedot}{\EM{\bullet}} % Morse dot
+\newcommand{\morsedash}{\EM{\pmb{-}}} % Morse dash
+\newcommand{\morsedsp}{\EM{\,s_1\,}} % Silence between dots and dashes
+\newcommand{\morselsp}{\EM{\,s_3\,}} % Silence between letters
+\newcommand{\morsewsp}{\EM{\,s_7\,}} % Silence between words
 
-\newcommand{\Morsedot}{\ensuremath{{\color{black}\rule{\mb}{\ml}}}\xspace} % Beep of $\ell$
-\newcommand{\Morsedash}{\ensuremath{{\color{black}\rule{3\mb}{\ml}}}\xspace}% Beep of $3\ell$
-\newcommand{\Morsedsp}{\ensuremath{{\color{gray}\rule{\mb}{\ml}}}\xspace}% Silence of $\ell$
-\newcommand{\Morselsp}{\ensuremath{{\color{gray}\rule{3\mb}{\ml}}}\xspace}% Silence of $3\ell$
-\newcommand{\Morsewsp}{\ensuremath{{\color{gray}\rule{7\mb}{\ml}}}\xspace}% Silence of $7\ell$
+\newcommand{\Morsedot}{\EM{{\color{black}\rule{\mb}{\ml}}}} % Beep of $\ell$
+\newcommand{\Morsedash}{\EM{{\color{black}\rule{3\mb}{\ml}}}}% Beep of $3\ell$
+\newcommand{\Morsedsp}{\EM{{\color{gray}\rule{\mb}{\ml}}}}% Silence of $\ell$
+\newcommand{\Morselsp}{\EM{{\color{gray}\rule{3\mb}{\ml}}}}% Silence of $3\ell$
+\newcommand{\Morsewsp}{\EM{{\color{gray}\rule{7\mb}{\ml}}}}% Silence of $7\ell$
 
 %:section:vol1/05_pluribus/50_morphisms/morse/internal: internal
 %:nomenc-exclude:
@@ -2360,10 +2391,8 @@
 
 %:section:text: Frequently mispelled words
 %:nomenc-exclude:
-\newcommand{\whomo}{\text{morphism}\xspace}
-\newcommand{\whomos}{\text{morphisms}\xspace}
-\newcommand{\wHomo}{\text{Morphism}\xspace}
-\newcommand{\wHomos}{\text{Morphisms}\xspace}
+
+
 \newcommand{\morsemap}{\operatorname{morse}}
 
 %:section:python:Python code
@@ -2491,53 +2520,53 @@
 %:nomenc-exclude:
 
 %:section:vol1/10_arrows/75_processes/procedures: Procedures
-\newcommand{\ExecTime}{\Cat{ProcTime}} % Procedures with execution time
+\newcommand{\ExecTime}{\CatStyle{ProcTime}} % Procedures with execution time
 %:def:def:ExecTime
 \newcommand{\sizefun}{\aword{size}} % Size of datatype
 %:def:def:ExecTime
-\newcommand{\ProcSize}{\Cat{ProcSize}} % Procedures with sized sets
+\newcommand{\ProcSize}{\CatStyle{ProcSize}} % Procedures with sized sets
 %:def:def:ProcSize
 \newcommand{\sizetran}{\sigma}
 %:def:def:ProcSize
-\newcommand{\ProcSizeTime}{\Cat{ProcSizeTime}} % Procedures with size-dependent durations
+\newcommand{\ProcSizeTime}{\CatStyle{ProcSizeTime}} % Procedures with size-dependent durations
 %:def:def:ProcSizeTime
 \newcommand{\timefun}{\aword{dur}}
 %:def:def:ProcSizeTime
 
-\newcommand{\TimeMonoidal}{\CatNoIndex{T}}
-\newcommand{\SpaceMonoidal}{\CatNoIndex{S}}
+\newcommand{\TimeMonoidal}{\CatStyle{T}}
+\newcommand{\SpaceMonoidal}{\CatStyle{S}}
 \newcommand{\SpaceTime}{\SpaceMonoidal\TimeMonoidal}
-\newcommand{\ProcMod}{\Cat{ProcSizeTime}_{\TimeMonoidal}}
-\newcommand{\ProcSTMod}{\Cat{ProcSizeTime}_{\SpaceTime}}
+\newcommand{\ProcMod}{\CatStyle{ProcSizeTime}_{\TimeMonoidal}}
+\newcommand{\ProcSTMod}{\CatStyle{ProcSizeTime}_{\SpaceTime}}
 \newcommand{\spacefun}{\aword{space}}
 
 
 %:section:vol1/05_pluribus/80_actions/matrix-groups:Matrix groups
-\newcommand{\mgOn}{\ensuremath{\mathrm{O}(n, \reals)}\xspace} % Orthogonal group
+\newcommand{\mgOn}{\EM{\mathrm{O}(n, \reals)}} % Orthogonal group
 %:def:def:general-orthogonal-group
-\newcommand{\mgSOn}{\ensuremath{\mathrm{SO}(n, \reals)}\xspace} % Special orthogonal group
+\newcommand{\mgSOn}{\EM{\mathrm{SO}(n, \reals)}} % Special orthogonal group
 %:def:def:special-orthogonal-group
-\newcommand{\mgGLn}{\ensuremath{\mathrm{GL}(n, \reals)}\xspace} % General linear group
+\newcommand{\mgGLn}{\EM{\mathrm{GL}(n, \reals)}} % General linear group
 %:def:def:general-linear-group
-\newcommand{\mgSLn}{\ensuremath{\mathrm{SL}(n, \reals)}\xspace} % Special linear group
+\newcommand{\mgSLn}{\EM{\mathrm{SL}(n, \reals)}} % Special linear group
 %:def:def:special-linear-group
-\newcommand{\mgEn}{\ensuremath{\mathrm{E}(n, \reals)}\xspace} % Euclidean group
+\newcommand{\mgEn}{\EM{\mathrm{E}(n, \reals)}} % Euclidean group
 %:def:def:general-euclidean-group
-\newcommand{\mgSEn}{\ensuremath{\mathrm{SE}(n, \reals^n)}\xspace} % Special euclidean group
+\newcommand{\mgSEn}{\EM{\mathrm{SE}(n, \reals^n)}} % Special euclidean group
 %:def:def:special-euclidean-group
 
-\newcommand{\mgSOtwo}{\ensuremath{\mathrm{SO}(2, \reals)}\xspace}
+\newcommand{\mgSOtwo}{\EM{\mathrm{SO}(2, \reals)}}
 %:nomenc-exclude:
-\newcommand{\mgSOthree}{\ensuremath{\mathrm{SO}(3, \reals)}\xspace}
+\newcommand{\mgSOthree}{\EM{\mathrm{SO}(3, \reals)}}
 %:nomenc-exclude:
-\newcommand{\mgSEtwo}{\ensuremath{\mathrm{SE}(2, \reals)}\xspace}
+\newcommand{\mgSEtwo}{\EM{\mathrm{SE}(2, \reals)}}
 %:nomenc-exclude:
-\newcommand{\mgSEthree}{\ensuremath{\mathrm{SE}(3, \reals)}\xspace}
+\newcommand{\mgSEthree}{\EM{\mathrm{SE}(3, \reals)}}
 %:nomenc-exclude:
 
 \newcommand{\Ematrix}[2]{
     \begin{bmatrix}
-        #1                    & #2             \\
+        #1 & #2 \\
         % \stylemorph{\vect{0}} & \stylemorph{1}
         \vect{0} & 1
     \end{bmatrix}
@@ -2670,8 +2699,9 @@
 
 % strict cartesian category construction
 \newcommand{\cCat}[1]{%
-    \ensuremath{{\fatstart\mathbf{#1}\fatend}}\xspace%
+    \EM{{\fatstart\mathbf{#1}\fatend}}%
 }
+
 
 
 
@@ -2702,10 +2732,10 @@
 
 \newcommand{\istype}[2]{#1\colon #2}
 
-\newcommand{\Moore}{\Cat{Moo}} % Category of Moore machines
+\newcommand{\Moore}{\CatStyle{Moo}} % Category of Moore machines
 %:def:def:moore
 
-\newcommand{\More}{\Cat{Mor}} % the Mor category
+\newcommand{\More}{\CatStyle{Mor}} % the Mor category
 %:def:def:more
 
 \newcommand{\signals}{\stylefunctors{S}}
@@ -2713,10 +2743,10 @@
 
 
 
-\newcommand{\vectorfield}{\Cat{VF}}
+\newcommand{\vectorfield}{\CatStyle{VF}}
 
-\newcommand{\tmpEB}{\Cat{EB}}
-\newcommand{\tmpDS}{\Cat{DS}}
+\newcommand{\tmpEB}{\CatStyle{EB}}
+\newcommand{\tmpDS}{\CatStyle{DS}}
 
 \newcommand{\catacOb}{\stylefunctors{\varphi}}
 \newcommand{\catacMor}{\stylefunctors{\gamma}}
@@ -2778,7 +2808,7 @@
 %:nomenc-exclude:
 %:section:vol1/25_translation/55_specialization: \chrefplus{chap:specialization}
 %:section:vol1/25_translation/55_specialization/drawings: drawings
-\newcommand{\Draw}{\Cat{Draw}} % Category of drawings
+\newcommand{\Draw}{\CatStyle{Draw}} % Category of drawings
 %:def:def:Draw
 
 \newcommand{\scaling}{\text{sc}}
@@ -2806,15 +2836,15 @@
 \newcommand{\sol}{\stylesets{S}}
 \newcommand{\solver}{\stylemaps{\sigma}}
 \newcommand{\prob}{\stylemaps{f}}
-\newcommand{\Lagset}{\Cat{LagSet}}
-\newcommand{\Lagrel}{\Cat{LagRel}}
-\newcommand{\LagCat}{\Cat{LagCat}}
-\newcommand{\LagMonCat}{\Cat{LagMonCat}}
-\newcommand{\LagDP}{\Cat{LagDP}}
-\newcommand{\LagDPerf}{\Cat{LagDPerf}}
-\newcommand{\NRel}{\Cat{NRel}}
-\newcommand{\NSet}{\Cat{NSet}}
-\newcommand{\DPerf}{\Cat{DPerf}}
+\newcommand{\Lagset}{\CatStyle{LagSet}}
+\newcommand{\Lagrel}{\CatStyle{LagRel}}
+\newcommand{\LagCat}{\CatStyle{LagCat}}
+\newcommand{\LagMonCat}{\CatStyle{LagMonCat}}
+\newcommand{\LagDP}{\CatStyle{LagDP}}
+\newcommand{\LagDPerf}{\CatStyle{LagDPerf}}
+\newcommand{\NRel}{\CatStyle{NRel}}
+\newcommand{\NSet}{\CatStyle{NSet}}
+\newcommand{\DPerf}{\CatStyle{DPerf}}
 
 
 %:section:dynamical-systems: Dynamical Systems
@@ -2888,8 +2918,8 @@
 \newcommand{\cproddp}{\cprod}
 
 
-\newcommand{\Cont}{\Cat{Cont}}
-\newcommand{\Surj}{\Cat{Surj}}
+\newcommand{\Cont}{\CatStyle{Cont}}
+\newcommand{\Surj}{\CatStyle{Surj}}
 
 \newcommand{\dpid}{\funid} % Identity for DPs
 \newcommand{\dpidat}[1]{\dpid_{#1}}
@@ -2907,7 +2937,7 @@
 
 \newcommand{\NomSet}[3]{\Nom_{#1}\left({#2};\linebreak[0]{#3}\right)}
 %:nomenc-exclude:
-\newcommand{\prcatb}{\Cat{PR0}}
+\newcommand{\prcatb}{\CatStyle{PR0}}
 \newcommand{\engamma}{\styleobj{\aword{eo}}}
 \newcommand{\engammaof}[2]{\engamma_{#1,#2}}
 \newcommand{\enid}{\stylemorph{\aword{em}}}
@@ -2930,3 +2960,18 @@
 \newcommand{\matdim}[2]{{#1 \times #2}}
 \newcommand{\ntimesn}{\matdim{n}{n}}
 \newcommand{\realsnn}{\reals^{\ntimesn}}
+\newcommand{\SGrp}{\CatLinkConcept{SGrp}{category of semigroups and morphisms}} % category of semigroups and morphisms
+\newcommand{\Mon}{\CatLinkConcept{Mon}{category of monoids and morphisms}} % category of monoids and morphisms
+\newcommand{\Grp}{\CatLinkConcept{Grp}{category of groups and morphisms}} % category of groups and morphisms
+\newcommand{\UMoore}{\CatStyle{UMoore}}
+\newcommand{\RMoore}{\CatStyle{RMoore}}
+
+\newcommand{\setTwo}{\stylesets{2}} % The set with two elements
+\newcommand{\posAdefinition}{\posA=\tupp{\posAset, {{\posAleq}}}}
+\newcommand{\posBdefinition}{\posB=\tupp{\posBset, {{\posBleq}}}}
+
+\newcommand{\realswithleq}{\tup{\reals,{{\Rleq}}}}
+\newcommand{\natswithleq}{\tup{\natnumbers,{{\Nleq}}}}
+\newcommand{\catcoprodpsi}{\stylemorph{\psi}}
+\newcommand{\catprodphi}{\stylemorph{\phi}}
+\newcommand{\realswithplusmonoid}{\tup{\reals,{{+}}}}

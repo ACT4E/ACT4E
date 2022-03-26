@@ -76,8 +76,11 @@
 
 
 
-\newcommand{\opensetbracket}{{\color{formulasetcolor}\mathbf{\{}}}
-\newcommand{\closesetbracket}{{\color{formulasetcolor}\mathbf{\}}}}
+\newcommand{\opensetbracket}{{\ColorIfNowBlack{formulasetcolor}{\mathbf{\{}}}}
+\newcommand{\closesetbracket}{{\ColorIfNowBlack{formulasetcolor}{\mathbf{\}}}}}
+
+% \newcommand{\opensetbracket}{{\ColorIfNowBlack{formulasetcolor}{A}}}
+% \newcommand{\closesetbracket}{{\ColorIfNowBlack{formulasetcolor}{B}}}
 
 
 \newcommand{\cleft}[2][.]{%
@@ -100,16 +103,24 @@
     }%
     #3%
 }
+\newcommand{\smallspace}{\mspace{4mu}}
+\newcommand{\commaspace}{{,\smallspace}}
 \DeclareRobustCommand{\makeset}[1]{%
-    \@makelists{\opensetbracket}{,}{\closesetbracket}{#1}%
+    \@makelists{\opensetbracket}{\commaspace}{\closesetbracket}{#1}%
 }
 \DeclareRobustCommand{\makesetnocolor}[1]{%
-    \@makelists{\{}{,}{\}}{#1}%
+    \@makelists{\{}{\commaspace}{\}}{#1}%
 }
 \DeclareRobustCommand{\tupp}[1]{%
-    \@makelists{\langle}{,}{\rangle}{#1}%
+    \@makelists{\langle}{\commaspace}{\rangle}{#1}%
 }
 
+% \newcommand{\tup}[1]{\left\langle#1\right\rangle}
+%:example: $\tup{\posA, \posAleq}$
+
+\DeclareRobustCommand{\tup}[1]{%
+        \@makelists{\left\langle}{\commaspace}{\right\rangle}{#1}%
+}
 
 \DeclareRobustCommand{\makecprod}[1]{%
     \@makelists{}{\cprod}{}{#1}%
@@ -128,19 +139,19 @@
 }
 
 \DeclareRobustCommand{\makesetBig}[1]{%
-    \@makelists{{\color{formulasetcolor}\mathbf{\Big\{}}}{,}{{\color{formulasetcolor}\mathbf{\Big\}}}}{#1}%
+    \@makelists{{\color{formulasetcolor}\mathbf{\Big\{}}}{\commaspace}{{\color{formulasetcolor}\mathbf{\Big\}}}}{#1}%
 }
 
 \DeclareRobustCommand{\makesett}[1]{%
-    \@makelists{\cleft[formulasetcolor]{\{}}{,}{\cright[formulasetcolor]{\}}}{#1}%
+    \@makelists{\cleft[formulasetcolor]{\{}}{\commaspace}{\cright[formulasetcolor]{\}}}{#1}%
 }
 
 \DeclareRobustCommand{\makelist}[1]{%
-    \@makelists{[}{,}{]}{#1}%
+    \@makelists{[}{\commaspace}{]}{#1}%
 }
 
 \DeclareRobustCommand{\cObj}[1]{%
-    \@makelists{\fatstart}{,}{\fatend}{#1}%
+    \@makelists{\fatstart}{\commaspace}{\fatend}{#1}%
 }
 
 \makeatother
@@ -153,10 +164,25 @@
 \newcommand{\beef}{\text{beef}}
 \newcommand{\chicken}{\text{chicken}}
 
-\newcommand{\alphubel}{\textcolor{purple}{ALPHUBEL}}
+\newcommand{\alphubel}{\textcolor{violet}{ALPHUBEL}}
 \newcommand{\bernina}{\textcolor{blue}{BERNINA}}
-\newcommand{\someday}{\textcolor{green}{SOMEDAY}}
+\newcommand{\someday}{\textcolor{black}{SOMEDAY}}
 
 \newcommand{\pars}[1]{\left(#1\right)}
 \newcommand{\parsL}[1]{\Big(#1\Big)}
 \newcommand{\parslight}[1]{\cleft[lightgray]{(}#1\cright[lightgray]{)}}
+
+
+\edef\BlackColor{\csname\string\color@.\endcsname}
+
+\makeatletter
+\newcommand{\@CurrentColor}{}% Make sure we are not using an existing macro
+\DeclareRobustCommand{\ColorIfNowBlack}[2]{%
+    \edef\@CurrentColor{\csname\string\color@.\endcsname}% Get current color
+    \IfStrEq{\@CurrentColor}{\BlackColor}{%
+        {\color{#1}#2}% current color IS black
+    }{%
+        #2% current color is NOT black
+    }%
+}
+\makeatother

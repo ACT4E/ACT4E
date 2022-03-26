@@ -26,14 +26,14 @@ defs: $(PDFGraphics_defs)
 
 #pages: $(patsubst %.texi,%-page.tex,$(Sources))
 %.pdf : %.texi
-	cat head.txt $*.texi foot.txt > $*-page.tex
-	cd $(shell dirname $@) && $(PDFLATEX) $(shell basename $*-page)
+	@cat head.txt $*.texi foot.txt > $*-page.tex
+	@cd $(shell dirname $@) && $(PDFLATEX) -interaction=batchmode $(shell basename $*-page) ||  $(PDFLATEX) $(shell basename $*-page)
 
-	$(PDFCROP) --margins 2  $*-page.pdf $*.tmp1.pdf
-	cpdf $*.tmp1.pdf  -scale-page "3.2 3.2" -o  $*.tmp2.pdf
-	cpdf -set-metadata-date 2010-01-01 $*.tmp2.pdf -o $*.tmp3.pdf
-	rm -f  $*.tmp1.pdf $*.tmp2.pdf  $*-page.* $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc* $*.mw $*.idx
-	mv $*.tmp3.pdf $@
+	@$(PDFCROP) --margins 2  $*-page.pdf $*.tmp1.pdf 2>/dev/null
+	@cpdf $*.tmp1.pdf  -scale-page "3.2 3.2" -o  $*.tmp2.pdf  2>/dev/null
+	@cpdf -set-metadata-date 2010-01-01 $*.tmp2.pdf -o $*.tmp3.pdf 2>/dev/null
+	@rm -f  $*.tmp1.pdf $*.tmp2.pdf  $*-page.* $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc* $*.mw $*.idx
+	@mv $*.tmp3.pdf $@
 
 
 #
