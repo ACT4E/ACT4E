@@ -73,19 +73,19 @@ In other words, $\powerset \mora$ maps a subset $\subA \setsubseteq \setA$ to it
 
 \begin{gradedexercise}[\exname{PowersetMonad}]
     \label{ex:PowersetMonad}
-    The aim of this exercise is to prove in full detail that the \SY{powerset} \SY{functor} $\stylefunctors{\powerset} : \Set \fto \Set$ from \cref{ex:PowersetImageFunctor} is a monad, when equipped with the following \emph{unit} and \emph{multiplication}.
-    We define $\monunit : \stylefunctors{\text{Id}}_{\Set}  \nto \stylefunctors{\powerset}$ and $\moncomp : \stylefunctors{\powerset} \fthen \stylefunctors{\powerset} \nto \stylefunctors{\powerset}$ in terms of components: given an object $\setA \setin \Set$, let
+    The aim of this exercise is to prove in full detail that the \SY{powerset} \SY{functor} $\powersetfunctor : \Set \fto \Set$ from \cref{ex:PowersetImageFunctor} is a monad, when equipped with the following \emph{unit} and \emph{multiplication}.
+    We define $\monunit : \stylefunctors{\text{Id}}_{\Set}  \nto \powersetfunctor$ and $\moncomp : \powersetfunctor \fthen \powersetfunctor \nto \powersetfunctor$ in terms of components: given an object $\setA \setin \Set$, let
     \todotext{@JL: write these using defmap, on two lines}
     \begin{equation}
         \label{eq:powerset-mult-component}
-        \moncomp_{\setA} : (\stylefunctors{\powerset} \fthen \stylefunctors{\powerset})(\setA) \mto \stylefunctors{\powerset}(\setA), \ \stylesets{D} \mapsto \bigsetunion_{\subA \setin \stylesets{D}} \subA
+        \moncomp_{\setA} : (\powersetfunctor \fthen \powersetfunctor)(\setA) \mto \powersetfunctor(\setA), \ \stylesets{D} \mapsto \bigsetunion_{\subA \setin \stylesets{D}} \subA
     \end{equation}
     and
     \begin{equation}
         \label{eq:powerset-unit-component}
-        \monunit{_\setA} \colon \setA \mto \stylefunctors{\powerset}(\setA), \ \ela \mapsto \makeset{ \ela }.
+        \monunit{_\setA} \colon \setA \mto \powersetfunctor(\setA), \ \ela \mapsto \makeset{ \ela }.
     \end{equation}
-    To show that $\tup{\stylefunctors{\powerset}, \moncomp, \monunit}$ is a monad,
+    To show that $\tup{\powersetfunctor, \moncomp, \monunit}$ is a monad,
     \begin{enumerate}
         \item prove that $\monunit$, as defined in components in \cref{eq:powerset-unit-component}, is a \SY{natural transformation};
         \item prove that $\moncomp$, as defined in components in \cref{eq:powerset-mult-component}, is a \SY{natural transformation};
@@ -342,22 +342,22 @@ In other words, $\powerset \mora$ maps a subset $\subA \setsubseteq \setA$ to it
 
 \paragraph*{Example: interval construction}
 In the following, we analyze the interval construction and show that it gives rise to a monad.
-Given \Pos, we define the action of the $\Arrow$ \SY{functor} on objects (posets) as
+Given \Pos, we define the action of the $\ArrowFunctor$ \SY{functor} on objects (posets) as
 
 \todotextjira{422}{@JL: I think we should use two different notations for the \SY{functor} for the monad and the actual arrow construction\dots}
 \begin{equation}
     \label{eq:monad-arrow-functor-objects}
     \begin{aligned}
-        \Arrow\colon \Pos & \to \Pos \\
-        \posA             & \mapsto \Arrow\posA
+        \ArrowFunctor\colon \Pos & \to \Pos \\
+        \posA                    & \mapsto \posintbis\posA
     \end{aligned}
 \end{equation}
 and on morphisms as
 \begin{equation}
     \label{eq:monad-arrow-functor-morphisms}
     \begin{aligned}
-        \Arrow \mora\colon \Arrow\posA & \to \Arrow\posB \\
-        \interv{a}{b}                  & \mapsto \interv{\mora(a)}{\mora(b)}.
+        \ArrowFunctor \mora\colon \posintbis\posA & \to \posintbis\posB \\
+        \interv{a}{b}                             & \mapsto \interv{\mora(a)}{\mora(b)}.
     \end{aligned}
 \end{equation}
 %
@@ -368,9 +368,9 @@ Furthermore, we define the multiplication as
     \defmapset{
         \moncomp_{\Obja}
     }{
-        \Arrow (\Arrow\Obja)
+        \ArrowFunctor (\ArrowFunctor\Obja)
     }{
-        \Arrow \Obja
+        \ArrowFunctor \Obja
     }{
         \interv{\interv{\alpha}{\beta}}{ \interv{\gamma}{ \delta}}
     }{
@@ -387,7 +387,7 @@ and the unit as
     }{
         \Obja
     }{
-        \Arrow\Obja
+        \ArrowFunctor\Obja
     }{
         x
     }{
@@ -402,8 +402,8 @@ On the one hand, we have:
 \begin{equation}
     \label{eq:example_arrow_nat_1}
     \begin{aligned}
-        ((\Arrow\fthen \Arrow)(\mora) \mthen \moncomp_\Objb)(\interv{\interv{a}{b}}{\interv{c,d}}) & =\moncomp_\Objb(\interv{\interv{\mora(a)}{\mora(b)}}{\interv{\mora(c)}{\mora(d)}}) \\
-                                                                                                   & =\interv{\mora(a)}{\mora(d)}.
+        ((\ArrowFunctor\fthen \ArrowFunctor)(\mora) \mthen \moncomp_\Objb)(\interv{\interv{a}{b}}{\interv{c,d}}) & =\moncomp_\Objb(\interv{\interv{\mora(a)}{\mora(b)}}{\interv{\mora(c)}{\mora(d)}}) \\
+                                                                                                                 & =\interv{\mora(a)}{\mora(d)}.
     \end{aligned}
 \end{equation}
 %
@@ -412,8 +412,8 @@ On the other hand we have:
 \begin{equation}
     \label{eq:example_arrow_nat_2}
     \begin{aligned}
-        (\moncomp_\Obja \fthen \Arrow)(\interv{\interv{a}{b}}{\interv{c}{d}})
-         & =\Arrow(\mora)(\interv{a}{d}) \\
+        (\moncomp_\Obja \fthen \ArrowFunctor)(\interv{\interv{a}{b}}{\interv{c}{d}})
+         & =\ArrowFunctor(\mora)(\interv{a}{d}) \\
          & =\interv{\mora(a)}{\mora(d)}.
     \end{aligned}
 \end{equation}
@@ -436,8 +436,8 @@ and
 \begin{equation}
     \label{eq:example_arrow_nat_4}
     \begin{aligned}
-        (\monunit_\Obja \mthen \Arrow(\mora))(x)
-         & =\Arrow(\mora)(\interv{x}{x}) \\
+        (\monunit_\Obja \mthen \ArrowFunctor(\mora))(x)
+         & =\ArrowFunctor(\mora)(\interv{x}{x}) \\
          & =\interv{\mora(x)}{\mora(x)}
     \end{aligned}
 \end{equation}
@@ -452,11 +452,11 @@ We have
 \begin{equation}
     \label{eq:monad-arrow-arrow-moncomp}
     \defmapset{
-        \Arrow \moncomp_{\Obja}
+        \ArrowFunctor \moncomp_{\Obja}
     }{
-        \Arrow (\Arrow (\Arrow(\Obja)))
+        \ArrowFunctor (\ArrowFunctor (\ArrowFunctor(\Obja)))
     }{
-        \Arrow (\Arrow (\Obja))
+        \ArrowFunctor (\ArrowFunctor (\Obja))
     }{
         \interv{\interv{\interv{\alpha_1}{\beta_1}}{ \interv{\gamma_1}{ \delta_1}}}%
         {\interv{\interv{\alpha_2}{\beta_2}}{ \interv{\gamma_2}{ \delta_2}}}
@@ -470,11 +470,11 @@ and
 \begin{equation}
     \label{eq:monad-arrow-moncomp-arrow}
     \defmapset{
-        \moncomp_{\Arrow (\Obja)}
+        \moncomp_{\ArrowFunctor (\Obja)}
     }{
-        \Arrow (\Arrow (\Arrow(\Obja)))
+        \ArrowFunctor (\ArrowFunctor (\ArrowFunctor(\Obja)))
     }{
-        \Arrow (\Arrow(\Obja))
+        \ArrowFunctor (\ArrowFunctor(\Obja))
     }{
         \interv{\interv{\interv{\alpha_1}{\beta_1}}{ \interv{\gamma_1}{ \delta_1}}}%
         {\interv{\interv{\alpha_2}{\beta_2}}{ \interv{\gamma_2}{ \delta_2}}}
@@ -496,11 +496,11 @@ For left and right unitality, we need to work out two additional quantities:
 \begin{equation}
     \label{eq:monad-arrow-monunit-arrow}
     \defmapset{
-        \monunit_{\Arrow(\Obja)}
+        \monunit_{\ArrowFunctor(\Obja)}
     }{
-        \Arrow(\Obja)
+        \ArrowFunctor(\Obja)
     }{
-        \Arrow (\Arrow(\Obja))
+        \ArrowFunctor (\ArrowFunctor(\Obja))
     }{
         \interv{a}{b}
     }{
@@ -513,11 +513,11 @@ and
 \begin{equation}
     \label{eq:monad-arrow-arrow-monunit}
     \defmapset{
-        \Arrow(\monunit_\Obja)
+        \ArrowFunctor(\monunit_\Obja)
     }{
-        \Arrow(\Obja)
+        \ArrowFunctor(\Obja)
     }{
-        \Arrow (\Arrow(\Obja))
+        \ArrowFunctor (\ArrowFunctor(\Obja))
     }{
         \interv{a}{b}
     }{
