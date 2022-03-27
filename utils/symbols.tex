@@ -265,15 +265,16 @@
 
 %:section:gen/sets/constructors: Constructors
 \newcommand{\powerset}{\powersetmap\,}
-\newcommand{\powersetmap}{\stylesets{\aword{Pow}}}
+\newcommand{\powersetmap}{\SYNinner{powerset}{\stylesets{\aword{Pow}}}}
+% \newcommand{\powersetmap}{\stylesets{\aword{Pow}}}
 \newcommand{\powersetfunctor}{\stylefunctors{\aword{Pow}}} % powerset seen as a functor
 %:nomenc:\powerset \setA: Power set of $\setA$.
 %:def:def:power-set
 
 %:section:gen/sets/operations: Operations
 
+%% \newcommand{\cartprod}{\mathbin{\stylesets{\raisedtexttimes}}} % cartesian product
 \newcommand{\cartprod}{\SYNinner{cartesian product}{\mathbin{\stylesets{\raisedtexttimes}}}} % cartesian product
-% \newcommand{\cartprod}{\mathbin{\stylesets{\raisedtexttimes}}} % cartesian product
 %:nomenc:\setA\cartprod\setB:Cartesian product of two sets.
 %:def:def:cartesian-product
 
@@ -283,9 +284,8 @@
 \newcommand{\funcsum}{\mathbin{\textcolor{morphisms}{+}}} % maps direct sum
 %:nomenc:\mora\funcsum\morb:Direct sum of two functions
 
-
+%% \newcommand{\setdisunion}{\mathbin{\stylesets{\raisedtextplus}}} % Disjoint union
 \newcommand{\setdisunion}{\SYNinner{disjoint union of sets}{\mathbin{\stylesets{\raisedtextplus}}}} % Disjoint union
-% \newcommand{\setdisunion}{\mathbin{\stylesets{\raisedtextplus}}} % Disjoint union
 %:nomenc:\setA\setdisunion\setB:Disjoint union of two sets.
 %:def:def:disjoint-union
 
@@ -1251,14 +1251,36 @@
 %:section:misc: Misc
 
 \newcommand{\col}[1]{\mathrm{col(#1)}}
+\newcommand{\catprodmor}{\mathbin{\stylemorph{\times}}}
+% \newcommand{\catprodmor}{\mathbin{\stylemorph{\times}}}
 
-\newcommand{\prodMapob}[2]{{#1}\mathbin{\styleobj{\raisedtexttimes}}{#2}}
-\newcommand{\prodMapmor}[2]{{#1}\mathbin{\stylemorph{\times}}{#2}}
-\newcommand{\coprodMapmor}[2]{{#1}\mathbin{\stylemorph{+}}{#2}}
-\newcommand{\coprodMapob}[2]{{#1}\mathbin{\styleobj{\raisedtextplus}}{#2}}
+\newcommand{\catprodob}{\mathbin{\styleobj{\raisedtexttimes}}}
+% \newcommand{\catprodob}{\SYNinner{categorical product}{\mathbin{\styleobj{\raisedtexttimes}}}}
+% \let\oldcmd\catprodob
+% \renewcommand{\catprodob}{\SYNinner{categorical product}{\oldcmd}}
+\def\oldcmd{}
+\newcommand{\wrapcmd}[2]{%
+    \expandafter\let\expandafter\oldcmd\csname #1\endcsname%
+    % \expandafter\expandafter\expandafter\let\csname oldcmd\endcsname\csname #1\endcsname%
+    % \expandafter\let\expandafter\expandafter\csname old#1\endcsname\csname #1\endcsname%
+    \expandafter\renewcommand\csname #1\endcsname{\SYNinner{#2}{1}}%
+}
+
+\wrapcmd{catprodob}{categorical product}
+\wrapcmd{catprodmor}{categorical product}
+
+\newcommand{\prodMapob}[2]{{#1}\catprodob{#2}}
+\newcommand{\prodMapmor}[2]{{#1}\catprodmor{#2}}
+\newcommand{\coprodMapob}[2]{{#1}\catcoprodob{#2}}
+\newcommand{\coprodMapmor}[2]{{#1}\catcoprodmor{#2}}
 \newcommand{\cP}{P}
 \newcommand{\cQ}{Q}
 \newcommand{\cR}{R}
+
+
+
+\newcommand{\catcoprodob}{\SYNinner{categorical coproduct}{\mathbin{\styleobj{\raisedtextplus}}}}
+\newcommand{\catcoprodmor}{\SYNinner{categorical coproduct}{\mathbin{\stylemorph{+}}}}
 
 %:section:gen/categories/operations: Operations
 \newcommand{\Ptimes}{\mathbin{\color{colorposetsymbol}\boldtimes}} % Product of posets
