@@ -15,9 +15,10 @@ all-new:
 tmpdir=tmp
 
 ACT%.pdf: ACT%.tex .FORCE
+	# in case of latexmk not stopping:
 	# first do one individual pass; sometimes latexmk doesn't stop on fatal error
-	pdflatex --shell-escape -interaction=errorstopmode -halt-on-error -file-line-error $<
-	pdflatex --shell-escape -interaction=errorstopmode -halt-on-error -file-line-error $<
+	# pdflatex --shell-escape -interaction=errorstopmode -halt-on-error -file-line-error $<
+	# pdflatex --shell-escape -interaction=errorstopmode -halt-on-error -file-line-error $<
 	max_print_line=10000 nice -n 20 latexmk -synctex=1 -pdf -shell-escape  -f $<
 	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
 	cp ACT$*.aux ACT$*-refs.aux
