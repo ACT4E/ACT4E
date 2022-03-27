@@ -296,6 +296,9 @@
         #2%
     }{}%
 }
+\newcommand{\ifelselabeldefined}[3]{%
+    \@ifundefined{r@#1}{#3}{#2}%
+}
 \makeatother
 
 
@@ -465,18 +468,23 @@
         \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
     }%
     \pgfkeysifdefined{/mydefs/#1/label}{%
-        \texorpdfstring{%
-            \protect\hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
-            \relax\ifmmode%
-            #2\else%
-                \ifbool{devel}{%
-                    {\color{blue}#2}%
-                }{%
-                    \coloruline{symbol-underline}{#2}%
+        \ifelselabeldefined{\pgfkeysvalueof{/mydefs/#1/label}}{%
+            \texorpdfstring{%
+                \protect\hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
+                \relax\ifmmode%
+                #2\else%
+                    \ifbool{devel}{%
+                        {\color{blue}#2}%
+                    }{%
+                        \coloruline{symbol-underline}{#2}%
+                    }%
+                \fi%
                 }%
-            \fi%
+            }{%
+                #2%
             }%
         }{%
+            \typeout{SYN: Warning: label (\pgfkeysvalueof{/mydefs/#1/label}) is not defined.}%
             #2%
         }%
     }{%
@@ -525,7 +533,7 @@
 \SYDEF{semigroup}{def:semigroup}{semigroup}
 \SYDEF{monoid}{def:monoid}{monoid}
 \SYDEF{neutral element}{def:monoid}{neutral element of a monoid}
-\SYDEF{submonoid}{def:submonoid}{submonoid}
+\SYDEF{submonoid}{def:submonoids}{submonoid}
 \SYDEF{magma}{def:magma}{magma}
 \SYDEF{commutative group}{def:commutative-group}{commutative group}
 \SYDEF{Group,group}{def:group}{group}
@@ -563,7 +571,7 @@
 \SYDEF{semicategory,semicategories}{def:semicategory-compact}{semicategory}
 \SYDEF{hom-set}{def:semicategory-compact}{hom-sets}
 \SYDEF{identity morphism,Identity morphism}{def:identity-morphism}{identity morphism}
-\SYDEF{identity functor,identity semifunctor,Identity functor}{def:identity_functor}{identity functors}
+\SYDEF{identity functor,identity semifunctor,Identity functor}{def:identity-semifunctor}{identity functors}
 \SYDEF{category,categories}{def:categorymain}{category}
 \SYDEF{monotone,monotone map,monotonicity,Monotonicity,monotone function}{def:monotone}{monotone map}
 \SYDEF{antitone,antitone map}{def:antitone}{antitone map}
@@ -585,8 +593,8 @@
 \SYDEF{covariant semigroup action,semigroup action}{}{semigroup action}
 \SYDEF{contravariant semigroup action}{}{contravariant semigroup action}
 \SYDEF{covariant monoid action,monoid action}{def:monoid-cov-action}{monoid action}
-\SYDEF{semicategory action,semicategory actions}{}{semicategory action}
-\SYDEF{semicategory of design problems with implementation}{def:DPIcategory}{DPI@\DPI (semicategory of design problems with implementation)}
+\SYDEF{semicategory action}{def:semicategory-action}{semicategory action}
+\SYDEF{semicategory of design problems with implementation}{def:DPIcat}{DPI@\DPI (semicategory of design problems with implementation)}
 
 % missing link to definition
 \SYDEF{endomorphism}{}{endomorphism}
@@ -620,7 +628,7 @@
 \SYDEF{category of groups and morphisms}{def:Grp}{Grp@$\CatStyle{Grp}$ (category of groups and morphisms)}
 \SYDEF{category of sets and functions}{def:Set}{Set@$\CatStyle{Set}$ (category of sets and functions)}
 \SYDEF{category of sets and relations}{def:Rel}{Rel@$\CatStyle{Rel}$ (category of sets and relations)}
-\SYDEF{category of finite sets and functions}{def:FinSet}{FinSet@$\CatStyle{FinSet}$ (category of finite sets and functions)}
+\SYDEF{category of finite sets and functions}{ex:FinSet}{FinSet@$\CatStyle{FinSet}$ (category of finite sets and functions)}
 \SYDEF{Moore machine}{def:moore_machine_3rd}{Moore machine}
 \SYDEF{semicategory of Moore machines}{def:Moore-semicat-new}{Moore@$\CatStyle{Moore}$ (semicategory of Moore machines)}
 \SYDEF{semicategory of More machines}{def:More}{More@$\CatStyle{More}$ (semicategory of More machines)}
@@ -635,7 +643,7 @@
 \SYDEF{identity morphism of monoids}{}{identity morphism of monoids}
 \SYDEF{identity morphism of groups}{}{identity morphism of groups}
 
-\SYDEF{category of finite-dimensional linear time-invariant systems}{def:LTI}{LTI@$\CatStyle{LTI}$ (category of finite-dimensional linear time-invariant systems)}
+\SYDEF{category of finite-dimensional linear time-invariant systems}{def:LTICat}{LTI@$\CatStyle{LTI}$ (category of finite-dimensional linear time-invariant systems)}
 \SYDEF{free category construction on graphs}{def:free-category}{Free@$\CatStyle{Free}$ (free category construction on graphs)}
 \SYDEF{category of design problems}{def:DP}{DP@$\CatStyle{DP}$ (category of design problems)}
 % \SYDEF{semicategory of design problems with implementation}{def:DPI}{DPI@$\CatStyle{DPI}$ (semicategory of design problems with implementation)}
@@ -646,7 +654,7 @@
 \SYDEF{category of lattices and lattices homomorphisms}{def:Lat}{Lat@$\CatStyle{Lat}$ (category of lattices and lattice homomorphisms)}
 \SYDEF{category of bounded lattices and lattices homomorphisms}{def:BoundedLat}{BoundedLat@$\CatStyle{BoundedLat}$ (category of bounded lattices and lattice homomorphisms)}
 \SYDEF{category of graphs and graphs homomorphisms}{def:Grph}{Grph@$\CatStyle{Grph}$ (category of graphs and graphs homomorphisms)}
-\SYDEF{category of sets and functions with side effects}{def:Eff}{Eff@$\CatStyle{Eff}$ (category of sets and functions with side effects)}
+\SYDEF{category of sets and functions with side effects}{def:Effects}{Eff@$\CatStyle{Eff}$ (category of sets and functions with side effects)}
 
 \SYDEF{category of tuple-sets and relations}{def:RelL}{Rel@$\cCatStyle{Rel}$ (category of tuple-sets and relations)}
 \SYDEF{category of tuple-sets and functions}{def:SetL}{Set@$\cCatStyle{Set}$ (category of tuple-sets and functions)}
@@ -714,44 +722,44 @@
 \SYDEF{discrete-time linear time-invariant open system}{}{discrete-time linear time-invariant open system}
 \SYDEF{commutative strict monoidal semicategory}{}{commutative strict monoidal semicategory}
 \SYDEF{permutation}{}{permutation}
-\SYDEF{initial object}{}{initial object}
-\SYDEF{terminal object}{}{terminal object}
+\SYDEF{Initial object,initial object}{}{initial object}
+\SYDEF{Terminal object,terminal object}{}{terminal object}
 \SYDEF{right dual object,right dualizable,right dualizability,dualizability}{}{right dual object}
 \SYDEF{left dual object,left dualizability}{}{terminal object}
 \SYDEF{directed complete partial order}{}{directed complete partial order}
-\SYDEF{fixed point}{}{fixed point}
+\SYDEF{fixed point}{def:fixed-point}{fixed point}
 \SYDEF{finite design problem}{}{finite design problem}
-\SYDEF{finitely supported}{}{finitely supported upper set }
-\SYDEF{Kleisli morphism}{}{Kleisli morphism}
-\SYDEF{Kleisli category}{}{Kleisli category}
-\SYDEF{Kleisli composition}{}{Kleisli composition}
-\SYDEF{algebra of a monad}{}{algebra of a monad}
+\SYDEF{finitely supported}{def:fuppersets}{finitely supported upper set }
+\SYDEF{Kleisli morphism}{def:kleislimor}{Kleisli morphism}
+\SYDEF{Kleisli category}{def:kleislicat}{Kleisli category}
+\SYDEF{Kleisli composition}{def:kleislicomp}{Kleisli composition}
+\SYDEF{algebra of a monad}{def:algebramon}{algebra of a monad}
 \SYDEF{uncertain DP}{}{uncertain design problem}
 \SYDEF{enriched functor}{}{enriched functor}
 \SYDEF{identity design problem with implementation}{}{identity design problem with implementation}
-\SYDEF{cospan}{}{cospan}
-\SYDEF{span}{}{span}
-\SYDEF{functor between operads}{}{functor between operads}
-\SYDEF{algebra of an operad}{}{algebra of an operad}
-\SYDEF{biproduct of design problems}{}{biproduct of design problems}
-\SYDEF{function isomorphism}{}{function isomorphism}
-\SYDEF{isomorphism of sets}{}{isomorphism (of sets)}
-\SYDEF{product of functions}{}{product of functions}
-\SYDEF{sum of functions}{}{sum of functions $\funcsum$}
-\SYDEF{composition of functions}{}{composition of functions}
-\SYDEF{composition of relations}{}{composition of relations}
-\SYDEF{opposite of a relation}{}{opposite of a relation}
-\SYDEF{relation on a semigroup}{}{relation on a semigroup}
-\SYDEF{Hasse diagram}{}{Hasse diagram}
-\SYDEF{positive definite}{}{positive definite matrices}
-\SYDEF{totally ordered set,total order}{}{totally ordered set}
+\SYDEF{cospan}{def:cospan}{cospan}
+\SYDEF{span}{def:span}{span}
+\SYDEF{functor between operads}{def:functors_operads}{functor between operads}
+\SYDEF{algebra of an operad}{def:algebra_operad}{algebra of an operad}
+\SYDEF{biproduct of design problems}{def:biproduct-dp}{biproduct of design problems}
+\SYDEF{function isomorphism}{def:function-isomorphism}{function isomorphism}
+\SYDEF{isomorphism of sets}{def:set-isomorphic}{isomorphism (of sets)}
+\SYDEF{product of functions}{def:prod_functions}{product of functions $\funcprod$}
+\SYDEF{sum of functions}{def:dirsum_functions}{sum of functions $\funcsum$}
+\SYDEF{composition of functions}{def:composition-of-functions}{composition of functions}
+\SYDEF{composition of relations}{def:composition_of_relations}{composition of relations}
+\SYDEF{opposite of a relation,transpose of a relation}{def:relation-transpose}{opposite of a relation}
+\SYDEF{relation on a semigroup}{def:relation-on-semigroup}{relation on a semigroup}
+\SYDEF{Hasse diagram}{sec:hasse-diagram}{Hasse diagram}
+\SYDEF{positive definite}{def:posdef}{positive definite matrices}
+\SYDEF{totally ordered set,total order}{def:total_order}{totally ordered set}
 \SYDEF{poset,partially-ordered set,partial order}{def:poset}{poset}
-\SYDEF{width of a poset}{}{width of a poset}
-\SYDEF{height of a poset}{}{width of a poset}
-\SYDEF{semiorder}{}{semiorder}
+\SYDEF{width of a poset}{def:poset-width}{width of a poset}
+\SYDEF{height of a poset}{def:poset-height}{width of a poset}
+\SYDEF{semiorder}{def:semiorder}{semiorder}
 \SYDEF{twisted poset of intervals}{}{twisted poset of intervals}
 \SYDEF{arrow poset of intervals}{}{arrow poset of intervals}
-\SYDEF{interval}{}{interval}
+\SYDEF{interval}{def:interval}{interval}
 \SYDEF{order on monotone maps}{}{order on monotone maps}
 \SYDEF{directed graph}{}{directed graph}
 \SYDEF{directed multigraph}{}{directed multigraph}
@@ -764,29 +772,29 @@
 \SYDEF{twisted arrow category}{}{twisted arrow category}
 \SYDEF{standard action of More machines}{}{actions (of More machines)}
 \SYDEF{cartesian product of categories}{}{product of categories}
-\SYDEF{categorical product}{}{categorical product}
-\SYDEF{categorical coproduct}{}{categorical coproduct}
-\SYDEF{categorification of a poset}{}{categorification of a poset}
-\SYDEF{embedding functor}{}{embedding functor}
-\SYDEF{upper bounds}{}{upper bounds}
-\SYDEF{lower bounds}{}{lower bounds}
+\SYDEF{categorical product}{def:categorical-product}{categorical product}
+\SYDEF{categorical coproduct}{def:catcoproduct}{categorical coproduct}
+\SYDEF{categorification of a poset}{def:poscat}{categorification of a poset}
+\SYDEF{embedding functor}{def:embedding-functor}{embedding functor}
+\SYDEF{upper bounds}{def:upper-bounds}{upper bounds}
+\SYDEF{lower bounds}{def:lower-bounds}{lower bounds}
 \SYDEF{co-design problem with implementation}{}{co-design problem with implementation}
 \SYDEF{equivalence of LTI systems}{}{equivalence of LTI systems}
-\SYDEF{time invariant,time invariance}{}{time invariance}
+\SYDEF{time invariant,time invariance}{def:behavior-time-invariant}{time invariance of behavior}
 \SYDEF{symmetric associative stacking semicategory}{}{symmetric associative stacking semicategory}
 \SYDEF{isomorphism in a category}{}{isomorphism in a category}
 \SYDEF{isomorphism,isomorphic}{}{isomorphism}
-\SYDEF{strictly monotone}{}{strictly monotone}
-\SYDEF{equivalence of categories}{}{equivalence of categories}
-\SYDEF{adjoint equivalence}{}{adjoint equivalence}
-\SYDEF{monoidal functor}{}{monoidal functor}
-\SYDEF{strong monoidal functor}{}{strong monoidal functor}
+\SYDEF{strictly monotone}{def:strict-monotone-function}{strictly monotone}
+\SYDEF{equivalence of categories}{def:cat-equivalence}{equivalence of categories}
+\SYDEF{adjoint equivalence}{def:adjoin-equivalence}{adjoint equivalence}
+\SYDEF{monoidal functor}{sec:monoidal-functors}{monoidal functor}
+\SYDEF{strong monoidal functor}{def:strong-monoidal-functor}{strong monoidal functor}
 \SYDEF{design complexity}{}{design complexity}
 \SYDEF{profunctor composition}{}{profunctor composition}
 \SYDEF{function}{}{function}
-\SYDEF{partition}{}{partition}
-\SYDEF{commutative magma}{}{commutative magma}
-\SYDEF{quasitransitive,quasitransitive relation}{}{quasitransitive relation}
+\SYDEF{partition}{def:partition}{partition}
+\SYDEF{commutative magma}{def:magma-commutativity}{commutative magma}
+\SYDEF{quasitransitive,quasitransitive relation}{def:quasitransitive-relation}{quasitransitive relation}
 \SYDEF{standard action of Moore machines}{}{standard action of Moore machines}
 \SYDEF{locally posetal}{}{locally posetal}
 \SYDEF{compact closed}{}{compact closed}
