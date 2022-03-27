@@ -600,6 +600,39 @@ Example:
 
 \section{Formatting sets/lists/tuples}
 
+\paragraph{Parentheses}
+
+We have a command \str{\pars} that is equivalent to \str{\left(...\right)}. 
+Always use it, otherwise the commands  \str{\makeset}, \str{\makelist}, etc. get confused. 
+In an expression like this:
+
+\begin{minted}{latex}
+    \makeset{A,  \left(B,C \right),  D}
+\end{minted}
+
+The code for \str{\makeset} with divide the contents in the following chunks:
+
+\begin{enumerate}
+    \item \str{A}
+    \item \str{\left(B}
+    \item \str{C\right)}
+    \item \str{D}
+\end{enumerate}
+This will create problems down the road and lead to errors about ``missing matched parentheses''.
+
+Instead, if you use: 
+
+\begin{minted}{latex}
+    \makeset{A,  \pars{B,C},  D}
+\end{minted}
+
+then the group \str{{B,C}} will be treated as one, and the comma inside will not be seen as a separator for \str{\makeset}.Therefore, it will be parsed correctly as 
+
+\begin{enumerate}
+    \item \str{A}
+    \item \str{\pars(B,C)}
+    \item \str{D}
+\end{enumerate}
 
 \paragraph{Sets}
 There is the command \str{\makeset} to create sets:
