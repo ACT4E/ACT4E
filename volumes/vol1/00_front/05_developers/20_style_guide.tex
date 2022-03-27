@@ -444,21 +444,7 @@ This separates semantics from presentation, and also allows to remove the punctu
 Most of the maps we care about are either in \Set or \Pos.
 Therefore, there are utility macros for those special cases that only take 5 arguments instead of six.
 Example:
-\begin{equation}
-    \Pos
-    a_\Pos
-    %     \defmapperiodpos{
-    %     f
-    % }{
-    %     X
-    % }{
-    %     Y
-    % }{
-    %     x
-    % }{
-    %     x + 2
-    % }
-\end{equation}
+
 \begin{widepar}
     \begin{tabular}{rlll}
                        & must specify arrow                           & uses $\sto$            & uses $\toinPos$ \\
@@ -587,6 +573,34 @@ Example:
 
 \vfill\pagebreak
 
+\section{Bold symbols}
+ 
+
+
+\begin{tabular}{rc}
+    $1 + 2$ \\
+    $\setA \setdisunion \setB$  \\
+    $\mapa \funcsum \mapb$ \\
+    $\coprodMapob \Obja \Objb$ \\
+    $\coprodMapmor \mora \morb$ \\
+    $\posA \Pplus \posB$  \\
+    $\CatC \Cplus \CatD$   
+\end{tabular}
+
+
+\begin{tabular}{rc}
+    \str{n \times n} & $n \times n$ \\
+    \str{\setA \cartprod \setB} &$\setA \cartprod \setB$  \\
+    \str{\mapa \funcprod \mapb} &$\mapa \funcprod \mapb$ \\
+    \str{\prodMapob \Obja \Objb} &$\prodMapob \Obja \Objb$ \\
+    \str{\prodMapmor \mora \morb } &$\prodMapmor \mora \morb $\\
+    \str{\posA \Ptimes \posB} &$\posA \Ptimes \posB $ \\
+    \str{\CatC \Ctimes \CatD} &$\CatC \Ctimes \CatD $  \\
+\end{tabular}
+
+\section{Formatting sets/lists/tuples}
+
+
 \paragraph{Sets}
 There is the command \str{\makeset} to create sets:
 \begin{minted}{latex}
@@ -682,9 +696,69 @@ Here, $a \setin A, b \setin B, c \setin C$ are \textbf{tuples}.
     \setin (\makecprod{A,B,C})
 \end{equation}
 
-\vfill\pagebreak
+\subsection{Checking things work recursively}
 
-\subsection{Graphics}
+This section serves as a continuous check that the latex magic is working.
+
+\paragraph{Simple constructs without matching}~
+
+Nested \str{\tupp}, \str{\tupp}, \str{\tupp} 
+
+\begin{equation}
+    \tupp{ 1, \tupp{2, \tupp{3, 4}, \tupp{5, A^B}}, \tupp{2,1}}
+\end{equation}
+
+
+Nested \str{\makeset}, \str{\makeset}, \str{\makeset} 
+
+\begin{equation}
+    \makeset{ 1, \makeset{2, \makeset{3, 4}, \makeset{5, A^B}}, \makeset{2,1}}
+\end{equation}
+Nested \str{\makelist}, \str{\makelist}, \str{\makelist} 
+
+\begin{equation}
+    \makelist{ 1, \makelist{2, \makelist{3, 4}, \makelist{5, A^B}}, \makelist{2,1}}
+\end{equation}
+
+\paragraph{Simple constructs with left/right}~
+
+Nested \str{\makesett}, \str{\makesett}, \str{\makesett} 
+
+\begin{equation}
+    \makesett{ 1, \makesett{2, \makesett{3, 4}, \makesett{5, A^B}}, \makesett{2,1}}
+\end{equation}
+
+Nested \str{\tup}, \str{\tup}, \str{\tup}. 
+\begin{equation}
+    \tup{ 1, \tup{2, \tup{3, 4}, \tup{5, A^B}}, \tup{2,1}}
+\end{equation}
+
+% Some stress test:
+% \begin{equation}
+%     \label{eq:vanish-upos-b}
+%     \begin{aligned}
+%         ~ &
+%         \ulposmap{
+%             \left(\Tr_{\Obja,\Objb}^{\Objc}
+%             \left(\Tr_{\Obja\cartprod \Objc,\Objb\cartprod \Objc}^{\Objd}(\mora)
+%             \right)
+%             \right)}(\Objael) \\
+%           & =
+%         \makesett{\Objbel \setin \Objb\mid \nlbigvee_{\Objcel \setin \Objc}\tup{\Objbel, \Objcel}\setin \ulposmap{\Tr_{\Obja\cartprod \Objc,\Objb\cartprod \Objc}^{\Objd}(\mora)}(\Objael,\Objcel)} \\
+%           & =\makesett{ \Objbel \setin \Objb\mid \nlbigvee_{\Objcel \setin \Objc}\tup{\Objbel, \Objcel}\setin \makesett{ \tup{\Objbel',\Objcel'}\setin \Objb\cartprod \Objc \mid \nlbigvee_{\Objdel\setin \Objd}\tup{\Objbel',\Objcel',\Objd}\setin \ulposmap{\mora}(\Objael,\Objcel',\Objdel)}} \\
+%           & =\makesett{ 
+%               \Objbel \setin \Objb\mid \nlbigvee{\Objcel\setin \Objc}
+%               \left(
+%                   a \nlbigvee_{\Objdel \setin \Objd}
+%                 %    \tup{\Objbel,\Objcel,\Objdel}
+%                   \setin \ulposmap{} (\Objdel) 
+%               \right)
+%               } \\
+%         %   & =\makesett{\Objbel \setin \Objb \mid \nlbigvee_{\tup{\Objcel,\Objdel}\setin \Objc\cartprod \Objd} \tup{\Objbel,\Objcel,\Objdel}\setin \ulposmap{\mora}(\Objael,\Objcel,\Objdel) }.
+%     \end{aligned}
+% \end{equation}
+
+\section{Graphics}
 
 \subsubsection*{Use separate tikz files for different graphics}
 
