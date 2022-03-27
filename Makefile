@@ -3,19 +3,20 @@ all:
 	@echo 	make -B ACT4E-vol1.pdf
 	@echo 	make -B ACT4E-vol1-final.pdf
 	@echo 	make -B ACT4E-vol2.pdf
-	@echo Create the chached tikz using \"make tikz\".
+	@echo Create the cached tikz using \"make tikz\".
 
 all-new:
 	@echo do
 	@echo 	make -B ACT4E-devel-slow.pdf
 	@echo 	make -B ACT4E-public-slow.pdf
 	@echo 	make -B ACT4E-instructors-slow.pdf
-	@echo Create the chached tikz using \"make tikz\".
+	@echo Create the cached tikz using \"make tikz\".
 
 tmpdir=tmp
 
 ACT%.pdf: ACT%.tex .FORCE
 	# first do one individual pass; sometimes latexmk doesn't stop on fatal error
+	pdflatex --shell-escape -interaction=errorstopmode -halt-on-error -file-line-error $<
 	pdflatex --shell-escape -interaction=errorstopmode -halt-on-error -file-line-error $<
 	max_print_line=10000 nice -n 20 latexmk -synctex=1 -pdf -shell-escape  -f $<
 	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
