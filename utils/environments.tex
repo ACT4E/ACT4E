@@ -492,12 +492,24 @@
         \fi%
     }%
 }
+\newcommand{\SYDEFone}[3]{%
+        \ifstrempty{#2}{}{%
+            \pgfkeysifdefined{/mydefs/#1/label}{%
+                \typeout{SYN: Error: term (#1) already present.}%
+            }{%
+                \pgfkeyssetvalue{/mydefs/#1/label}{#2}%
+            }%
+        }%
+        \pgfkeysifdefined{/mydefs/#1/index}{%
+            \typeout{SYN: Error: index for (#1) already present.}%
+        }{%
+            \pgfkeyssetvalue{/mydefs/#1/index}{#3}%
+        }%
+}
 \newcommand{\SYDEF}[3]{%
     \@for\@ii:=#1\do{%
-       \ifstrempty{#2}{}{\pgfkeyssetvalue{/mydefs/\@ii/label}{#2}}%
-        \pgfkeyssetvalue{/mydefs/\@ii/index}{#3}%
-        \ifstrempty{#2}{}{\pgfkeyssetvalue{/mydefs/\@ii s/label}{#2}}%
-        \pgfkeyssetvalue{/mydefs/\@ii s/index}{#3}%
+        \SYDEFone{\@ii}{#2}{#3}%
+        \SYDEFone{\@ii s}{#2}{#3}%
     }%
 }
 \newcommand{\maindef}[1]{%
@@ -546,14 +558,14 @@
 \SYDEF{semifunctor}{def:semi-functor}{semifunctor}
 \SYDEF{companion}{def:comp_conj}{companion construction}
 \SYDEF{conjoint}{def:comp_conj}{conjoint construction}
-\SYDEF{poset}{def:poset}{partially ordered set (poset)}
+
 \SYDEF{pre-ordered set,pre-order}{def:preorder}{pre-ordered set}
 \SYDEF{semicategory,semicategories}{def:semicategory-compact}{semicategory}
-\SYDEF{hom-set,hom-sets}{def:semicategory-compact}{hom-sets}
+\SYDEF{hom-set}{def:semicategory-compact}{hom-sets}
 \SYDEF{identity morphism,Identity morphism}{def:identity-morphism}{identity morphism}
 \SYDEF{identity functor,identity semifunctor,Identity functor}{def:identity_functor}{identity functors}
 \SYDEF{category,categories}{def:categorymain}{category}
-\SYDEF{monotone,monotone map,monotone maps,monotonicity,Monotonicity,monotone function}{def:monotone}{monotone map}
+\SYDEF{monotone,monotone map,monotonicity,Monotonicity,monotone function}{def:monotone}{monotone map}
 \SYDEF{antitone,antitone map}{def:antitone}{antitone map}
 \SYDEF{identity function,Identity function}{def:identity-function}{identity function}
 \SYDEF{associative,associativity}{sec:commutativity-associativity}{associativity}
@@ -562,7 +574,7 @@
 \SYDEF{disjoint union of sets,disjoint union}{sec:disjoint-union}{disjoint union (of sets) $\setdisunion$}
 \SYDEF{disjoint union of posets}{}{disjoint union (of posets) $\Pplus$}
 
-\SYDEF{powerset,powersets}{sec:power-set}{powerset}
+\SYDEF{powerset}{sec:power-set}{powerset}
 \SYDEF{design problem}{sec:dpdefinition}{design problem (without implementation)}
 \SYDEF{design problem with implementation,design problems with implementation}{def:DPI}{design problem (with implementation)}
 \SYDEF{profunctor}{def:profunctor}{profunctor}
@@ -598,12 +610,13 @@
 \SYDEF{free semigroup}{}{free semigroup}
 \SYDEF{groups of symmetries,Groups of symmetries}{}{groups of symmetries}
 \SYDEF{sublattice}{}{sublattice}
-\SYDEF{submonoid}{def:submonoids}{submonoid}
+
 \SYDEF{subgroup}{def:subgroup}{subgroup}
 \SYDEF{subsemigroup}{}{subsemigroup}
 \SYDEF{unital,unitality}{}{unitality property}
+
 \SYDEF{category of semigroups and morphisms}{def:SGrp}{SGrp@$\CatStyle{SGrp}$ (category of semigroups and morphisms)}
-\SYDEF{category of monoids and morphisms}{def:Mon}{Mon@$\CatStyle{Mon}$ (category of semigroups and morphisms)}
+\SYDEF{category of monoids and morphisms}{def:Mon}{Mon@$\CatStyle{Mon}$ (category of monoids and morphisms)}
 \SYDEF{category of groups and morphisms}{def:Grp}{Grp@$\CatStyle{Grp}$ (category of groups and morphisms)}
 \SYDEF{category of sets and functions}{def:Set}{Set@$\CatStyle{Set}$ (category of sets and functions)}
 \SYDEF{category of sets and relations}{def:Rel}{Rel@$\CatStyle{Rel}$ (category of sets and relations)}
@@ -621,13 +634,11 @@
 \SYDEF{identity morphism of semigroups}{}{identity morphism of semigroups}
 \SYDEF{identity morphism of monoids}{}{identity morphism of monoids}
 \SYDEF{identity morphism of groups}{}{identity morphism of groups}
-\SYDEF{category of semigroups and morphisms}{def:SGrp}{SGrp@$\CatStyle{SGrp}$ (category of semigroups and morphisms)}
-\SYDEF{category of monoids and morphisms}{def:Mon}{Mon@$\CatStyle{Mon}$ (category of monoids and morphisms)}
-\SYDEF{category of groups and morphisms}{def:Grp}{Grp@$\CatStyle{Grp}$ (category of groups and morphisms)}
+
 \SYDEF{category of finite-dimensional linear time-invariant systems}{def:LTI}{LTI@$\CatStyle{LTI}$ (category of finite-dimensional linear time-invariant systems)}
 \SYDEF{free category construction on graphs}{def:free-category}{Free@$\CatStyle{Free}$ (free category construction on graphs)}
 \SYDEF{category of design problems}{def:DP}{DP@$\CatStyle{DP}$ (category of design problems)}
-\SYDEF{semicategory of design problems with implementation}{def:DPI}{DPI@$\CatStyle{DPI}$ (semicategory of design problems with implementation)}
+% \SYDEF{semicategory of design problems with implementation}{def:DPI}{DPI@$\CatStyle{DPI}$ (semicategory of design problems with implementation)}
 \SYDEF{category of uncertain DPs}{def:UDP}{UDP@$\CatStyle{UDP}$ (category of uncertain DPs)}
 \SYDEF{posets of booleans,boolean poset}{def:bool-poset}{Bool@$\CatStyle{Bool}$ (poset/category of booleans)}
 \SYDEF{category of small categories}{def:Category}{Cat@$\CatStyle{Cat}$ (category of small categories)}
@@ -648,6 +659,9 @@
 \SYDEF{lattice}{def:lattice}{lattice}
 
 \SYDEF{category of vector spaces}{ex:Vect}{Vect@$\CatStyle{Vect}$ (category of vector spaces)}
+\SYDEF{category of real vector spaces}{def:cat-of-real-vector-spaces}{Vect@$\VectRs$ (category of vector spaces)}
+\SYDEF{category of real matrices}{def:cat-of-real-vector-spaces}{Mat@$\MatRs$ (category of real matrices)}
+
 \SYDEF{category of finite-dimensional vector spaces}{subsec:trace-linear}{FinVect@$\CatStyle{FinVect}$ (category of finite-dimensional vector spaces)}
 \SYDEF{boolean profunctor}{}{boolean profunctor}
 \SYDEF{identity design problem}{def:dp-identity}{identity design problem}
@@ -723,7 +737,7 @@
 \SYDEF{function isomorphism}{}{function isomorphism}
 \SYDEF{isomorphism of sets}{}{isomorphism (of sets)}
 \SYDEF{product of functions}{}{product of functions}
-\SYDEF{sum of functions}{}{sum of functions}
+\SYDEF{sum of functions}{}{sum of functions $\funcsum$}
 \SYDEF{composition of functions}{}{composition of functions}
 \SYDEF{composition of relations}{}{composition of relations}
 \SYDEF{opposite of a relation}{}{opposite of a relation}
@@ -731,7 +745,7 @@
 \SYDEF{Hasse diagram}{}{Hasse diagram}
 \SYDEF{positive definite}{}{positive definite matrices}
 \SYDEF{totally ordered set,total order}{}{totally ordered set}
-\SYDEF{poset,partially-ordered set,partial order}{}{poset}
+\SYDEF{poset,partially-ordered set,partial order}{def:poset}{poset}
 \SYDEF{width of a poset}{}{width of a poset}
 \SYDEF{height of a poset}{}{width of a poset}
 \SYDEF{semiorder}{}{semiorder}
