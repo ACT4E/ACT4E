@@ -31,12 +31,12 @@ Too much space:
     (\\SY\{[\w\s]*\})\s\s+
     $1 
 
-Note SPACE
+Note SPACE and s? for plurals
 
-    (associative)([ \.\,\;\:\~])
+    (morphisms?)([ \.\,\;\:\~])
     \\SY\{$1\}$2
 
 
 SY inside SY
 
-    \\SY\{[^\}]*\\SY
+    \\SY\w*\{[^\}]*\\SY

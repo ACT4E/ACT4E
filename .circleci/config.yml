@@ -5,18 +5,18 @@ workflows:
     jobs:
     - build-devel:
         context: alphubel-stage
-    - build-devel-slides:
-        context: alphubel-stage
-        requires:
-        - build-devel
+#    - build-devel-slides:
+#        context: alphubel-stage
+#        requires:
+#        - build-devel
     - build-public:
         context: alphubel-stage
-        requires:
-        - build-devel
+#        requires:
+#        - build-devel
     - build-instructors:
         context: alphubel-stage
-        requires:
-        - build-devel
+#        requires:
+#        - build-devel
     - docs-deploy:
         requires:
         - build-devel
@@ -27,7 +27,7 @@ workflows:
             only: alphubel-stage-AC-
 jobs:
   build-devel:
-    resource_class: small
+    resource_class: large
     environment: &environment
       max_print_line: "1000"
       error_line: "254"
@@ -119,7 +119,7 @@ jobs:
         - _build
     - run: *check_no_missing_refs
   build-devel-slides:
-    resource_class: small
+    resource_class: large
     environment: *environment
     docker:
     - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
@@ -140,13 +140,15 @@ jobs:
           make nomenc
           make table
           cp latexmkrc.batch  latexmkrc
-          make ACT4E-devel-fastslides.pdf
-          cp *log *warnings.txt _build
+          make find-equations
+          make -C equations -j 4
+#          make ACT4E-devel-fastslides.pdf
+#          cp *log *warnings.txt _build
 #          cp .circleci/ACT4E-devel-slides.manifest.yaml _build
-    - run:
-        name: encrypt
-        command: |
-          pdftk  ACT4E-devel-fastslides.pdf output _build/ACT4E-devel-slides.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
+#    - run:
+#        name: encrypt
+#        command: |
+#          pdftk  ACT4E-devel-fastslides.pdf output _build/ACT4E-devel-slides.pdf owner_pw ${OWNER_PWD} user_pw ${USER_PWD}
 
 #          cd _build && tar cfvz ACT4E-devel-slides.package.tgz ACT4E-devel-slides.*
 
