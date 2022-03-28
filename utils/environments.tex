@@ -422,30 +422,30 @@
 
 
 \makeatletter
-    \newcommand{\coloruline}[2]{%
-        \newcommand\temp@reduline{\bgroup\markoverwith%
-            {\textcolor{#1}{\rule[-0.1ex]{2pt}{0.4pt}}}\ULon}%
-        \temp@reduline{#2}%
-    }
+\newcommand{\coloruline}[2]{%
+    \newcommand\temp@reduline{\bgroup\markoverwith%
+    {\textcolor{#1}{\rule[-0.1ex]{2pt}{0.4pt}}}\ULon}%
+    \temp@reduline{#2}%
+}
 
-    \newcommand{\coloruuline}[2]{%
-        \UL@protected\def\temp@uuline{\leavevmode \bgroup%
-            \UL@setULdepth%
-            \ifx\UL@on\UL@onin \advance\ULdepth2.8\p@\fi%
-            \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox%
-                {\kern-.03em\vbox{\hrule width.2em\kern1\p@\hrule}\kern-.03em}}}%
-        \ULon}%
-        \temp@uuline{#2}%
-    }
+\newcommand{\coloruuline}[2]{%
+    \UL@protected\def\temp@uuline{\leavevmode \bgroup%
+    \UL@setULdepth%
+    \ifx\UL@on\UL@onin \advance\ULdepth2.8\p@\fi%
+    \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox%
+    {\kern-.03em\vbox{\hrule width.2em\kern1\p@\hrule}\kern-.03em}}}%
+    \ULon}%
+    \temp@uuline{#2}%
+}
 
-    \newcommand{\coloruwave}[2]{%
-        \UL@protected\def\temp@uwave{\leavevmode \bgroup%
-        \ifdim \ULdepth=\maxdimen \ULdepth 3.5\p@%
-        \else \advance\ULdepth2\p@%
-        \fi \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox{\sixly \char58}}}\ULon}%
-        \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
-        \temp@uwave{#2}%
-    }
+\newcommand{\coloruwave}[2]{%
+    \UL@protected\def\temp@uwave{\leavevmode \bgroup%
+    \ifdim \ULdepth=\maxdimen \ULdepth 3.5\p@%
+    \else \advance\ULdepth2\p@%
+    \fi \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox{\sixly \char58}}}\ULon}%
+    \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
+    \temp@uwave{#2}%
+}
 
 
 \definecolor{symbol-underline}{RGB}{232,235,207}
@@ -461,7 +461,7 @@
 \DeclareRobustCommand{\SYN}[2]{%
     \SYNinner{#1}{#2}\xspace%
 }
-\DeclareRobustCommand{\SYNinner}[2]{%
+\DeclareRobustCommand{\SYNindex}[1]{%
     \pgfkeysifdefined{/mydefs/#1/index}{%
         \relax\ifmmode\else%
         \index{\pgfkeysvalueof{/mydefs/#1/index}}%
@@ -469,52 +469,66 @@
     }{%
         \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
     }%
-    \pgfkeysifdefined{/mydefs/#1/label}{%
-        \ifelselabeldefined{\pgfkeysvalueof{/mydefs/#1/label}}{%
-            \texorpdfstring{%
-                \protect\hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
-                \relax\ifmmode%
-                #2\else%
-                    \ifbool{devel}{%
-                        {\color{blue}#2}%
-                    }{%
-                        \coloruline{symbol-underline}{#2}%
+}
+\DeclareRobustCommand{\SYNinner}[2]{%
+    \SYNindex{#1}%
+    \SYNlink{#1}{#2}%
+}
+
+\DeclareRobustCommand{\SYNlink}[2]{%
+    \pgfkeysifdefined{/mydefs/#1/index}{%
+        \pgfkeysifdefined{/mydefs/#1/label}{%
+            \ifelselabeldefined{\pgfkeysvalueof{/mydefs/#1/label}}{%
+                \texorpdfstring{%
+                    \hypersetup{colorlinks=false}%
+                    \protect\hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
+                        \relax\ifmmode%
+                        #2\else%
+                        \ifbool{devel}{%
+                                {\color{blue}#2}%
+                        }{%
+                            #2%
+                        % \coloruline{symbol-underline}{#2}%
+                        }%
+                        \fi%
                     }%
-                \fi%
+                }{%
+                    #2%
                 }%
             }{%
+                \typeout{SYN: Warning: label (\pgfkeysvalueof{/mydefs/#1/label}) is not found in this document.}%
                 #2%
             }%
         }{%
-            \typeout{SYN: Warning: label (\pgfkeysvalueof{/mydefs/#1/label}) is not defined.}%
+            \typeout{SYN: Warning: there is no label associated to (#1).}%
+            \relax\ifmmode%
             #2%
+            \else%
+            \ifbool{devel}{%
+                    {\color{red}#2}%
+            }{%
+                #2%
+            }%
+            \fi%
         }%
     }{%
-        \typeout{SYN: Warning: there is no label associated to (#1).}%
-        \relax\ifmmode%
+        \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
         #2%
-        \else%
-        \ifbool{devel}{%
-            {\color{red}#2}%
-        }{%
-            #2%
-        }%
-        \fi%
     }%
 }
 \newcommand{\SYDEFone}[3]{%
-        \ifstrempty{#2}{}{%
-            \pgfkeysifdefined{/mydefs/#1/label}{%
-                \typeout{SYN: Error: term (#1) already present.}%
-            }{%
-                \pgfkeyssetvalue{/mydefs/#1/label}{#2}%
-            }%
-        }%
-        \pgfkeysifdefined{/mydefs/#1/index}{%
-            \typeout{SYN: Error: index for (#1) already present.}%
+    \ifstrempty{#2}{}{%
+        \pgfkeysifdefined{/mydefs/#1/label}{%
+            \typeout{SYN: Error: term (#1) already present.}%
         }{%
-            \pgfkeyssetvalue{/mydefs/#1/index}{#3}%
+            \pgfkeyssetvalue{/mydefs/#1/label}{#2}%
         }%
+    }%
+    \pgfkeysifdefined{/mydefs/#1/index}{%
+        \typeout{SYN: Error: index for (#1) already present.}%
+    }{%
+        \pgfkeyssetvalue{/mydefs/#1/index}{#3}%
+    }%
 }
 \newcommand{\SYDEF}[3]{%
     \@for\@ii:=#1\do{%
@@ -527,284 +541,54 @@
 }
 
 
+% https://tex.stackexchange.com/questions/466026/test-if-current-c
+% olor-is-black
 
-% https://tex.stackexchange.com/questions/466026/test-if-current-color-is-black
+
+\ExplSyntaxOn
+
+\NewDocumentCommand{\wrapcmd}{mm}
+{
+    \andreacensi_wrapcmd:Ncn #1 {andreacensi@\cs_to_str:N #1} { #2 }
+}
+\cs_new_protected:Nn \andreacensi_wrapcmd:NNn
+{
+    \NewCommandCopy #2 #1
+    \renewcommand #1 {\SYNlink{#3}{#2}}
+}
+\cs_generate_variant:Nn \andreacensi_wrapcmd:NNn { Nc }
 
 
+\NewDocumentCommand{\wrapcmdnopar}{mm}
+{
+    \andreacensi_wrapcmdnopar:Ncn #1 {andreacensinopar@\cs_to_str:N #1} { #2 }
+}
+\cs_new_protected:Nn \andreacensi_wrapcmdnopar:NNn
+{
+    \NewCommandCopy #2 #1
+    \renewcommand #1 {\SYNlink{#3}{#2}}
+}
+\cs_generate_variant:Nn \andreacensi_wrapcmdnopar:NNn { Nc }
 
-\SYDEF{semigroup}{def:semigroup}{semigroup}
-\SYDEF{monoid}{def:monoid}{monoid}
-\SYDEF{neutral element}{def:monoid}{neutral element of a monoid}
-\SYDEF{submonoid}{def:submonoids}{submonoid}
-\SYDEF{magma}{def:magma}{magma}
-\SYDEF{commutative group}{def:commutative-group}{commutative group}
-\SYDEF{Group,group}{def:group}{group}
-\SYDEF{injective,injectivity,injective function}{def:injective-function}{injective function}
-\SYDEF{surjective,surjectivity,Surjectivity,surjective function}{def:surjective-function}{surjective function}
-\SYDEF{bijective,bijection,bijective function}{def:bijective-function}{bijective function}
-\SYDEF{monoid morphism,morphism of monoids}{def:monoid-mor}{monoid morphism}
-\SYDEF{semigroup morphism,morphism of semigroups}{def:semigroup-mor}{semigroup morphism}
-\SYDEF{group morphism,morphism of groups}{def:group-mor}{group morphism}
+\NewDocumentCommand{\wrapcmdalsoindex}{mm}
+{
+    \andreacensi_wrapcmdalsoindex:Ncn #1 {andreacensialsoindex@\cs_to_str:N #1} { #2 }
+}
+\cs_new_protected:Nn \andreacensi_wrapcmdalsoindex:NNn
+{
+    \NewCommandCopy #2 #1
+    \renewcommand #1 {\SYNlink{#3}{#2}}
+}
+\cs_generate_variant:Nn \andreacensi_wrapcmdalsoindex:NNn { Nc }
 
-\SYDEF{antichain}{def:antichain}{antichain in a poset}
-\SYDEF{chain}{def:chain}{chain in a poset}
-\SYDEF{power poset}{def:power-poset}{power poset}
-\SYDEF{power set}{def:power-set}{power set}
-\SYDEF{commutative semigroup}{def:commutative-semigroup}{commutative semigroup}
-\SYDEF{transitive,transitivity,transitive relation}{def:endo_transitive}{transitive relation}
-\SYDEF{reflexive,reflexivity,reflexive relation}{def:endo_reflexive_irreflexive}{reflexive relation}
-\SYDEF{irreflexive,irreflexive relation}{def:endo_reflexive_irreflexive}{irreflexive relation}
-\SYDEF{totality,total relation}{}{total relation}
-\SYDEF{symmetric,symmetric relation}{def:endo_sym_asym_antisym}{symmetric relation}
-\SYDEF{asymmetric,asymmetric relation}{def:endo_sym_asym_antisym}{asymmetric relation}
-\SYDEF{antisymmetric,antisymmetric relation,antisymmetry}{def:endo_sym_asym_antisym}{antisymmetric relation}
-\SYDEF{transitive closure}{def:transitive-closure}{transitive closure of a relation}
-\SYDEF{endorelation}{sec:endorelations}{endorelation}
-\SYDEF{surjective relation}{def:rel_properties}{surjective relation}
-\SYDEF{injective relation}{def:rel_properties}{injective relation}
-\SYDEF{everywhere-defined}{def:rel_properties}{everywhere-defined}
-\SYDEF{single-valued}{def:rel_properties}{single-valued}
-\SYDEF{functor}{def:functor}{functor}
-\SYDEF{semifunctor}{def:semi-functor}{semifunctor}
-\SYDEF{companion}{def:comp_conj}{companion construction}
-\SYDEF{conjoint}{def:comp_conj}{conjoint construction}
+\ExplSyntaxOff
+%
+% \renewcommand{\wrapcmd}[2]{%
+%     % \expandafter\let\csname  old#1\expandafter\endcsname\csname #1\endcsname%
+%     % \expandafter\renewcommand\csname #1\endcsname{\SYNlink{#2}{{\csname old#1\endcsname}}}%
+% }
 
-\SYDEF{pre-ordered set,pre-order}{def:preorder}{pre-ordered set}
-\SYDEF{semicategory,semicategories}{def:semicategory-compact}{semicategory}
-\SYDEF{hom-set}{def:semicategory-compact}{hom-sets}
-\SYDEF{identity morphism,Identity morphism}{def:identity-morphism}{identity morphism}
-\SYDEF{identity functor,identity semifunctor,Identity functor}{def:identity-semifunctor}{identity functors}
-\SYDEF{category,categories}{def:categorymain}{category}
-\SYDEF{monotone,monotone map,monotonicity,Monotonicity,monotone function}{def:monotone}{monotone map}
-\SYDEF{antitone,antitone map}{def:antitone}{antitone map}
-\SYDEF{identity function,Identity function}{def:identity-function}{identity function}
-\SYDEF{associative,associativity}{sec:commutativity-associativity}{associativity}
-\SYDEF{commutative,commutativity}{sec:commutativity-associativity}{commutativity}
-\SYDEF{category disjoint union,disjoint union of categories}{sec:commutativity-associativity}{disjoint union (of categories) $\Cplus$}
-\SYDEF{disjoint union of sets,disjoint union}{sec:disjoint-union}{disjoint union (of sets) $\setdisunion$}
-\SYDEF{disjoint union of posets}{}{disjoint union (of posets) $\Pplus$}
-
-\SYDEF{powerset}{sec:power-set}{powerset}
-\SYDEF{design problem}{sec:dpdefinition}{design problem (without implementation)}
-\SYDEF{design problem with implementation,design problems with implementation}{def:DPI}{design problem (with implementation)}
-\SYDEF{profunctor}{def:profunctor}{profunctor}
-\SYDEF{associative stacking,associative stacking semicategory}{def:stacking-semi-cat}{associative stacking semicategory}
-\SYDEF{stacking semicategory}{def:simple-stacking-semi-cat}{stacking semicategory}
-\SYDEF{functorial stacking,functorial stacking semicategory}{def:functorial-stacking-semi-cat}{functorial stacking semicategory}
-\SYDEF{least fixed point}{def:least-fixed}{least fixed point}
-\SYDEF{covariant semigroup action,semigroup action}{def:semigroup-cov-action}{semigroup action}
-\SYDEF{contravariant semigroup action}{def:semigroup-cont-action}{contravariant semigroup action}
-\SYDEF{covariant monoid action,monoid action}{def:monoid-cov-action}{monoid action}
-\SYDEF{semicategory action}{def:semicategory-action}{semicategory action}
-\SYDEF{semicategory of design problems with implementation}{def:DPIcat}{DPI@\DPI (semicategory of design problems with implementation)}
-
-% missing link to definition
-\SYDEF{endomorphism}{}{endomorphism}
-\SYDEF{biproduct}{def:biproduct}{biproduct}
-\SYDEF{traced symmetric monoidal category,traced monoidal category,traced monoidal categories}{def:traced-monoidal-category}{traced symmetric monoidal category}
-\SYDEF{symmetric monoidal category}{def:sym-mon-cat}{symmetric monoidal category}
-\SYDEF{monoidal category,monoidal categories}{def:monoidal-cat}{monoidal category}
-\SYDEF{enriched category theory}{chap:enrichment}{enriched category theory}
-\SYDEF{associative law}{}{associative law}
-\SYDEF{faithful,faithful functor,faithful semifunctor}{def:functorfullfaith}{faithful functor}
-\SYDEF{full,full functor}{def:functorfullfaith}{full functor}
-\SYDEF{forgetful functor,forgetful semifunctor}{sec:forgetful-functors}{forgetful functor}
-\SYDEF{monoidal poset}{def:monoidal-poset}{monoidal poset}
-\SYDEF{symmetric monoidal poset}{}{symmetric monoidal poset}
-\SYDEF{product order,poset product,product poset}{def:productposet}{product (of posets) $\Ptimes$}
-\SYDEF{Scott continuity,Scott continuous}{def:scott}{Scott continuity}
-\SYDEF{matrix groups,matrix semigroups,group of invertible square matrices}{}{matrix groups}
-\SYDEF{relation,binary relation}{def:binary-relation}{relation}
-\SYDEF{automorphism}{}{automorphism}
-\SYDEF{group action,covariant group action}{def:semigroup-cov-action}{group action}
-\SYDEF{free semigroup}{}{free semigroup}
-\SYDEF{groups of symmetries,Groups of symmetries}{}{groups of symmetries}
-\SYDEF{sublattice}{}{sublattice}
-
-\SYDEF{subgroup}{def:subgroup}{subgroup}
-\SYDEF{subsemigroup}{}{subsemigroup}
-\SYDEF{unital,unitality}{}{unitality property}
-
-\SYDEF{category of semigroups and morphisms}{def:SGrp}{SGrp@$\CatStyle{SGrp}$ (category of semigroups and morphisms)}
-\SYDEF{category of monoids and morphisms}{def:Mon}{Mon@$\CatStyle{Mon}$ (category of monoids and morphisms)}
-\SYDEF{category of groups and morphisms}{def:Grp}{Grp@$\CatStyle{Grp}$ (category of groups and morphisms)}
-\SYDEF{category of sets and functions}{def:Set}{Set@$\CatStyle{Set}$ (category of sets and functions)}
-\SYDEF{category of sets and relations}{def:Rel}{Rel@$\CatStyle{Rel}$ (category of sets and relations)}
-\SYDEF{category of finite sets and functions}{ex:FinSet}{FinSet@$\CatStyle{FinSet}$ (category of finite sets and functions)}
-\SYDEF{Moore machine}{def:moore_machine_3rd}{Moore machine}
-\SYDEF{semicategory of Moore machines}{def:Moore-semicat-new}{Moore@$\CatStyle{Moore}$ (semicategory of Moore machines)}
-\SYDEF{semicategory of More machines}{def:More}{More@$\CatStyle{More}$ (semicategory of More machines)}
-\SYDEF{upper set}{def:upperset}{upper set}
-\SYDEF{lower set}{def:lowerset}{lower set}
-\SYDEF{upper closure,upper closure operator}{def:upperclosure}{upper closure}
-\SYDEF{lower closure,lower closure operator}{def:lowerclosure}{lower closure}
-\SYDEF{downward-closed}{}{downward-closed}
-\SYDEF{upward-closed}{}{upward-closed}
-\SYDEF{identity matrix,identity matrices}{}{identity matrix}
-\SYDEF{identity morphism of semigroups}{}{identity morphism of semigroups}
-\SYDEF{identity morphism of monoids}{}{identity morphism of monoids}
-\SYDEF{identity morphism of groups}{}{identity morphism of groups}
-
-\SYDEF{category of finite-dimensional linear time-invariant systems}{def:LTICat}{LTI@$\CatStyle{LTI}$ (category of finite-dimensional linear time-invariant systems)}
-\SYDEF{free category construction on graphs}{def:free-category}{Free@$\CatStyle{Free}$ (free category construction on graphs)}
-\SYDEF{category of design problems}{def:DP}{DP@$\CatStyle{DP}$ (category of design problems)}
-% \SYDEF{semicategory of design problems with implementation}{def:DPI}{DPI@$\CatStyle{DPI}$ (semicategory of design problems with implementation)}
-\SYDEF{category of uncertain DPs}{def:UDP}{UDP@$\CatStyle{UDP}$ (category of uncertain DPs)}
-\SYDEF{posets of booleans,boolean poset}{def:bool-poset}{Bool@$\CatStyle{Bool}$ (poset/category of booleans)}
-\SYDEF{category of small categories}{def:Category}{Cat@$\CatStyle{Cat}$ (category of small categories)}
-\SYDEF{category of posets and monotone maps}{def:Pos}{Pos@$\CatStyle{Pos}$ (category of posets and monotone maps)}
-\SYDEF{category of lattices and lattices homomorphisms}{def:Lat}{Lat@$\CatStyle{Lat}$ (category of lattices and lattice homomorphisms)}
-\SYDEF{category of bounded lattices and lattices homomorphisms}{def:BoundedLat}{BoundedLat@$\CatStyle{BoundedLat}$ (category of bounded lattices and lattice homomorphisms)}
-\SYDEF{category of graphs and graphs homomorphisms}{def:Grph}{Grph@$\CatStyle{Grph}$ (category of graphs and graphs homomorphisms)}
-\SYDEF{category of sets and functions with side effects}{def:Effects}{Eff@$\CatStyle{Eff}$ (category of sets and functions with side effects)}
-
-\SYDEF{category of tuple-sets and relations}{def:RelL}{Rel@$\cCatStyle{Rel}$ (category of tuple-sets and relations)}
-\SYDEF{category of tuple-sets and functions}{def:SetL}{Set@$\cCatStyle{Set}$ (category of tuple-sets and functions)}
-\SYDEF{category of tuple-posets and monotone maps}{def:PosL}{Pos@$\cCatStyle{Pos}$ (category of tuple-posets and monotone maps)}
-\SYDEF{category of tuple-posets and design problems}{def:DPL}{DP@$\cCatStyle{DP}$ (category of tuple-posets and design problems)}
-
-\SYDEF{category of sets and injective functions}{ex:Injset}{InjSet@$\CatStyle{InjSet}$ (category of sets and injective functions)}
-
-\SYDEF{bounded lattice}{def:bounded-lattice}{bounded lattice}
-\SYDEF{lattice}{def:lattice}{lattice}
-
-\SYDEF{category of vector spaces}{ex:Vect}{Vect@$\CatStyle{Vect}$ (category of vector spaces)}
-\SYDEF{real vector space}{}{real vector space}
-\SYDEF{matrix multiplication}{}{matrix multiplication}
-\SYDEF{category of real vector spaces}{def:cat-of-real-vector-spaces}{Vect@$\VectRs$ (category of real vector spaces)}
-\SYDEF{category of real matrices}{def:cat-of-real-vector-spaces}{Mat@$\MatRs$ (category of real matrices)}
-
-\SYDEF{category of finite-dimensional vector spaces}{subsec:trace-linear}{FinVect@$\CatStyle{FinVect}$ (category of finite-dimensional vector spaces)}
-\SYDEF{boolean profunctor}{}{boolean profunctor}
-\SYDEF{identity design problem}{def:dp-identity}{identity design problem}
-\SYDEF{compactness}{}{compactness}
-\SYDEF{Cauchy sequence}{}{Cauchy sequence}
-\SYDEF{natural isomorphism,Natural isomorphism}{def:natural-isomorphism}{natural isomorphism}
-\SYDEF{natural transformation}{def:natural-transformation}{natural transformation}
-\SYDEF{adjunction}{sec:adjunctions-hom-set-definition}{adjunction}
-\SYDEF{cartesian product,cartesian product of sets,set product}{sec:cartesian-product}{cartesian product}
-\SYDEF{monotone Galois connection,Galois connection}{def:monotone-galois-connection}{monotone Galois connection}
-\SYDEF{antitone Galois connection}{def:antitone-galois-connection}{antitone Galois connection}
-\SYDEF{left adjoint}{def:cat-adjunction-v2}{left adjoint}
-\SYDEF{right adjoint}{def:cat-adjunction-v2}{right adjoint}
-\SYDEF{isomorphism of categories}{}{isomorphism (of categories)}
-\SYDEF{vector space}{exa:double-dual-functor}{vector space}
-\SYDEF{endofunctor}{sec:functors}{endofunctor}
-\SYDEF{operad}{def:operad}{operad}
-\SYDEF{order isomorphism}{def:order-isomorphism}{order isomorphism}
-\SYDEF{semigroup isomorphism,isomorphism of semigroup}{def:semigroup-iso}{isomorphism (of semigroups)}
-\SYDEF{strict monoidal categories,strict monoidal category}{def:strict-monoidal-category}{strict monoidal category}
-\SYDEF{strict monoidal semicategories,strict monoidal semicategory}{def:strict-monoidal-semicat}{strict monoidal semicategory}
-\SYDEF{subcategory,subcategories}{def:subcategory}{subcategory}
-\SYDEF{greatest lower bound}{def:supremum}{greatest lower bound}
-\SYDEF{supremum}{def:supremum}{supremum}
-\SYDEF{join}{def:supremum}{join}
-\SYDEF{least upper bound}{def:infimum}{least upper bound}
-\SYDEF{infimum}{def:infimum}{infimum}
-\SYDEF{meet}{def:infimum}{meet}
-\SYDEF{setoid}{def:setoid}{setoid}
-\SYDEF{composition of functors,functor composition}{def:functor_composition}{composition (of functors)}
-\SYDEF{monoid isomorphism,isomorphism of monoids}{def:monoid-iso}{isomorphism (of monoids)}
-\SYDEF{group isomorphism}{def:grp-iso}{isomorphism (of groups)}
-\SYDEF{lattice homomorphism}{def:lattice_homomorphism}{lattice homomorphism}
-\SYDEF{bounded lattice homomorphism}{def:bounded_lat_homomorphism}{bounded lattice homomorphism}
-\SYDEF{identity profunctor}{}{identity profunctor}
-\SYDEF{monad}{def:monad}{monad}
-\SYDEF{directed subset,directed set}{def:directed-set}{directed subset}
-\SYDEF{opposite category}{def:opposite-category}{opposite category}
-\SYDEF{opposite poset,opposite of a poset}{def:poset-opposite}{opposite poset}
-\SYDEF{category theory}{}{category theory}
-\SYDEF{braided monoidal category}{def:braided_moncat}{braided monoidal category}
-\SYDEF{skeletal category}{}{skeletal category}
-\SYDEF{More machine}{sec:more-machines}{More machine}
-\SYDEF{commutative diagram,commutative square}{def:commutative-diagram}{commutative diagram}
-\SYDEF{equivalence relation,Equivalence relation}{def:equivalence-relation}{equivalence relation}
-\SYDEF{distributive lattice}{}{distributive lattice}
-\SYDEF{complete lattice}{}{complete lattice}
-\SYDEF{diagonal function}{}{diagonal function}
-\SYDEF{codiagonal function}{}{codiagonal function}
-\SYDEF{discrete-time linear time-invariant open system}{}{discrete-time linear time-invariant open system}
-\SYDEF{commutative strict monoidal semicategory}{}{commutative strict monoidal semicategory}
-\SYDEF{permutation}{}{permutation}
-\SYDEF{Initial object,initial object}{}{initial object}
-\SYDEF{Terminal object,terminal object}{}{terminal object}
-\SYDEF{right dual object,right dualizable,right dualizability,dualizability}{}{right dual object}
-\SYDEF{left dual object,left dualizability}{}{terminal object}
-\SYDEF{directed complete partial order}{}{directed complete partial order}
-\SYDEF{fixed point}{def:fixed-point}{fixed point}
-\SYDEF{finite design problem}{}{finite design problem}
-\SYDEF{finitely supported}{def:fuppersets}{finitely supported upper set }
-\SYDEF{Kleisli morphism}{def:kleislimor}{Kleisli morphism}
-\SYDEF{Kleisli category}{def:kleislicat}{Kleisli category}
-\SYDEF{Kleisli composition}{def:kleislicomp}{Kleisli composition}
-\SYDEF{algebra of a monad}{def:algebramon}{algebra of a monad}
-\SYDEF{uncertain DP}{}{uncertain design problem}
-\SYDEF{enriched functor}{}{enriched functor}
-\SYDEF{identity design problem with implementation}{}{identity design problem with implementation}
-\SYDEF{cospan}{def:cospan}{cospan}
-\SYDEF{span}{def:span}{span}
-\SYDEF{functor between operads}{def:functors_operads}{functor between operads}
-\SYDEF{algebra of an operad}{def:algebra_operad}{algebra of an operad}
-\SYDEF{biproduct of design problems}{def:biproduct-dp}{biproduct of design problems}
-\SYDEF{function isomorphism}{def:function-isomorphism}{function isomorphism}
-\SYDEF{isomorphism of sets}{def:set-isomorphic}{isomorphism (of sets)}
-\SYDEF{product of functions}{def:prod_functions}{product of functions $\funcprod$}
-\SYDEF{sum of functions}{def:dirsum_functions}{sum of functions $\funcsum$}
-\SYDEF{composition of functions}{def:composition-of-functions}{composition of functions}
-\SYDEF{composition of relations}{def:composition_of_relations}{composition of relations}
-\SYDEF{opposite of a relation,transpose of a relation}{def:relation-transpose}{opposite of a relation}
-\SYDEF{relation on a semigroup}{def:relation-on-semigroup}{relation on a semigroup}
-\SYDEF{Hasse diagram}{sec:hasse-diagram}{Hasse diagram}
-\SYDEF{positive definite}{def:posdef}{positive definite matrices}
-\SYDEF{totally ordered set,total order}{def:total_order}{totally ordered set}
-\SYDEF{poset,partially-ordered set,partial order}{def:poset}{poset}
-\SYDEF{width of a poset}{def:poset-width}{width of a poset}
-\SYDEF{height of a poset}{def:poset-height}{width of a poset}
-\SYDEF{semiorder}{def:semiorder}{semiorder}
-\SYDEF{twisted poset of intervals}{}{twisted poset of intervals}
-\SYDEF{arrow poset of intervals}{}{arrow poset of intervals}
-\SYDEF{interval}{def:interval}{interval}
-\SYDEF{order on monotone maps}{}{order on monotone maps}
-\SYDEF{directed graph}{}{directed graph}
-\SYDEF{directed multigraph}{}{directed multigraph}
-\SYDEF{path in a graph}{def:path}{path in a graph}
-\SYDEF{graph homomorphism}{def:graph_homom}{graph homomorphism}
-\SYDEF{free semicategory on a graph}{}{free semicategory on a graph}
-\SYDEF{category of mountain trips}{}{category of mountain trips}
-\SYDEF{category of currencies}{}{category of currencies}
-\SYDEF{arrow category}{}{arrow category}
-\SYDEF{twisted arrow category}{}{twisted arrow category}
-\SYDEF{standard action of More machines}{}{actions (of More machines)}
-\SYDEF{cartesian product of categories}{}{product of categories}
-\SYDEF{categorical product}{def:categorical-product}{categorical product}
-\SYDEF{categorical coproduct}{def:catcoproduct}{categorical coproduct}
-\SYDEF{categorification of a poset}{def:poscat}{categorification of a poset}
-\SYDEF{embedding functor}{def:embedding-functor}{embedding functor}
-\SYDEF{upper bounds}{def:upper-bounds}{upper bounds}
-\SYDEF{lower bounds}{def:lower-bounds}{lower bounds}
-\SYDEF{co-design problem with implementation}{}{co-design problem with implementation}
-\SYDEF{equivalence of LTI systems}{}{equivalence of LTI systems}
-\SYDEF{time invariant,time invariance}{def:behavior-time-invariant}{time invariance of behavior}
-\SYDEF{symmetric associative stacking semicategory}{}{symmetric associative stacking semicategory}
-\SYDEF{isomorphism in a category}{}{isomorphism in a category}
-\SYDEF{isomorphism,isomorphic}{}{isomorphism}
-\SYDEF{strictly monotone}{def:strict-monotone-function}{strictly monotone}
-\SYDEF{equivalence of categories}{def:cat-equivalence}{equivalence of categories}
-\SYDEF{adjoint equivalence}{def:adjoin-equivalence}{adjoint equivalence}
-\SYDEF{monoidal functor}{sec:monoidal-functors}{monoidal functor}
-\SYDEF{strong monoidal functor}{def:strong-monoidal-functor}{strong monoidal functor}
-\SYDEF{design complexity}{}{design complexity}
-\SYDEF{profunctor composition}{}{profunctor composition}
-\SYDEF{function}{}{function}
-\SYDEF{partition}{def:partition}{partition}
-\SYDEF{commutative magma}{def:magma-commutativity}{commutative magma}
-\SYDEF{quasitransitive,quasitransitive relation}{def:quasitransitive-relation}{quasitransitive relation}
-\SYDEF{standard action of Moore machines}{}{standard action of Moore machines}
-\SYDEF{locally posetal}{}{locally posetal}
-\SYDEF{compact closed}{}{compact closed}
-\SYDEF{union of sets}{def:union-of-sets}{union of sets $\setunion$}
-\SYDEF{intersection of sets}{def:intersection-of-sets}{intersection of sets $\setintersection$}
-\SYDEF{top element}{}{top element of a poset $\postop$}
-\SYDEF{bottom element}{}{bottom element of a poset $\posbot$}
-
-\SYDEF{category of drawings}{def:Draw}{Draw@$\CatStyle{Draw}$ category of drawings}
+% \renewcommand{\wrapcmdnopar}[2]{%
+%     % \expandafter\let\csname  old#1\expandafter\endcsname\csname #1\endcsname%
+%     % \expandafter\renewcommand\csname #1\endcsname{\SYNlink{#2}{\csname old#1\endcsname}}%
+% }
