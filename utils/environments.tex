@@ -422,30 +422,30 @@
 
 
 \makeatletter
-    \newcommand{\coloruline}[2]{%
-        \newcommand\temp@reduline{\bgroup\markoverwith%
-            {\textcolor{#1}{\rule[-0.1ex]{2pt}{0.4pt}}}\ULon}%
-        \temp@reduline{#2}%
-    }
+\newcommand{\coloruline}[2]{%
+    \newcommand\temp@reduline{\bgroup\markoverwith%
+    {\textcolor{#1}{\rule[-0.1ex]{2pt}{0.4pt}}}\ULon}%
+    \temp@reduline{#2}%
+}
 
-    \newcommand{\coloruuline}[2]{%
-        \UL@protected\def\temp@uuline{\leavevmode \bgroup%
-            \UL@setULdepth%
-            \ifx\UL@on\UL@onin \advance\ULdepth2.8\p@\fi%
-            \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox%
-                {\kern-.03em\vbox{\hrule width.2em\kern1\p@\hrule}\kern-.03em}}}%
-        \ULon}%
-        \temp@uuline{#2}%
-    }
+\newcommand{\coloruuline}[2]{%
+    \UL@protected\def\temp@uuline{\leavevmode \bgroup%
+    \UL@setULdepth%
+    \ifx\UL@on\UL@onin \advance\ULdepth2.8\p@\fi%
+    \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox%
+    {\kern-.03em\vbox{\hrule width.2em\kern1\p@\hrule}\kern-.03em}}}%
+    \ULon}%
+    \temp@uuline{#2}%
+}
 
-    \newcommand{\coloruwave}[2]{%
-        \UL@protected\def\temp@uwave{\leavevmode \bgroup%
-        \ifdim \ULdepth=\maxdimen \ULdepth 3.5\p@%
-        \else \advance\ULdepth2\p@%
-        \fi \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox{\sixly \char58}}}\ULon}%
-        \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
-        \temp@uwave{#2}%
-    }
+\newcommand{\coloruwave}[2]{%
+    \UL@protected\def\temp@uwave{\leavevmode \bgroup%
+    \ifdim \ULdepth=\maxdimen \ULdepth 3.5\p@%
+    \else \advance\ULdepth2\p@%
+    \fi \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox{\sixly \char58}}}\ULon}%
+    \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
+    \temp@uwave{#2}%
+}
 
 
 \definecolor{symbol-underline}{RGB}{232,235,207}
@@ -462,7 +462,7 @@
     \SYNinner{#1}{#2}\xspace%
 }
 \DeclareRobustCommand{\SYNindex}[1]{%
-   \pgfkeysifdefined{/mydefs/#1/index}{%
+    \pgfkeysifdefined{/mydefs/#1/index}{%
         \relax\ifmmode\else%
         \index{\pgfkeysvalueof{/mydefs/#1/index}}%
         \fi%
@@ -476,54 +476,58 @@
 }
 
 \DeclareRobustCommand{\SYNlink}[2]{%
-    \pgfkeysifdefined{/mydefs/#1/label}{%
-        \ifelselabeldefined{\pgfkeysvalueof{/mydefs/#1/label}}{%
-            \texorpdfstring{%
-                \hypersetup{colorlinks=false}%
-                \protect\hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
-                \relax\ifmmode%
-                #2\else%
-                    \ifbool{devel}{%
-                        {\color{blue}#2}%
-                    }{%
-                    #2%
+    \pgfkeysifdefined{/mydefs/#1/index}{%
+        \pgfkeysifdefined{/mydefs/#1/label}{%
+            \ifelselabeldefined{\pgfkeysvalueof{/mydefs/#1/label}}{%
+                \texorpdfstring{%
+                    \hypersetup{colorlinks=false}%
+                    \protect\hyperref[\pgfkeysvalueof{/mydefs/#1/label}]{%
+                        \relax\ifmmode%
+                        #2\else%
+                        \ifbool{devel}{%
+                                {\color{blue}#2}%
+                        }{%
+                            #2%
                         % \coloruline{symbol-underline}{#2}%
+                        }%
+                        \fi%
                     }%
-                \fi%
+                }{%
+                    #2%
                 }%
             }{%
+                \typeout{SYN: Warning: label (\pgfkeysvalueof{/mydefs/#1/label}) is not defined.}%
                 #2%
             }%
         }{%
-            \typeout{SYN: Warning: label (\pgfkeysvalueof{/mydefs/#1/label}) is not defined.}%
+            \typeout{SYN: Warning: there is no label associated to (#1).}%
+            \relax\ifmmode%
             #2%
+            \else%
+            \ifbool{devel}{%
+                    {\color{red}#2}%
+            }{%
+                #2%
+            }%
+            \fi%
         }%
     }{%
-        \typeout{SYN: Warning: there is no label associated to (#1).}%
-        \relax\ifmmode%
-        #2%
-        \else%
-        \ifbool{devel}{%
-            {\color{red}#2}%
-        }{%
-            #2%
-        }%
-        \fi%
+        \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
     }%
 }
 \newcommand{\SYDEFone}[3]{%
-        \ifstrempty{#2}{}{%
-            \pgfkeysifdefined{/mydefs/#1/label}{%
-                \typeout{SYN: Error: term (#1) already present.}%
-            }{%
-                \pgfkeyssetvalue{/mydefs/#1/label}{#2}%
-            }%
-        }%
-        \pgfkeysifdefined{/mydefs/#1/index}{%
-            \typeout{SYN: Error: index for (#1) already present.}%
+    \ifstrempty{#2}{}{%
+        \pgfkeysifdefined{/mydefs/#1/label}{%
+            \typeout{SYN: Error: term (#1) already present.}%
         }{%
-            \pgfkeyssetvalue{/mydefs/#1/index}{#3}%
+            \pgfkeyssetvalue{/mydefs/#1/label}{#2}%
         }%
+    }%
+    \pgfkeysifdefined{/mydefs/#1/index}{%
+        \typeout{SYN: Error: index for (#1) already present.}%
+    }{%
+        \pgfkeyssetvalue{/mydefs/#1/index}{#3}%
+    }%
 }
 \newcommand{\SYDEF}[3]{%
     \@for\@ii:=#1\do{%
@@ -536,7 +540,6 @@
 }
 
 
-
 % https://tex.stackexchange.com/questions/466026/test-if-current-c
 % olor-is-black
 
@@ -544,37 +547,37 @@
 \ExplSyntaxOn
 
 \NewDocumentCommand{\wrapcmd}{mm}
- {
-  \andreacensi_wrapcmd:Ncn #1 {andreacensi@\cs_to_str:N #1} { #2 }
- }
+{
+    \andreacensi_wrapcmd:Ncn #1 {andreacensi@\cs_to_str:N #1} { #2 }
+}
 \cs_new_protected:Nn \andreacensi_wrapcmd:NNn
- {
-  \NewCommandCopy #2 #1
-  \renewcommand #1 {\SYNlink{#3}{#2}}
- }
+{
+    \NewCommandCopy #2 #1
+    \renewcommand #1 {\SYNlink{#3}{#2}}
+}
 \cs_generate_variant:Nn \andreacensi_wrapcmd:NNn { Nc }
 
 
 \NewDocumentCommand{\wrapcmdnopar}{mm}
- {
-  \andreacensi_wrapcmdnopar:Ncn #1 {andreacensinopar@\cs_to_str:N #1} { #2 }
- }
+{
+    \andreacensi_wrapcmdnopar:Ncn #1 {andreacensinopar@\cs_to_str:N #1} { #2 }
+}
 \cs_new_protected:Nn \andreacensi_wrapcmdnopar:NNn
- {
-  \NewCommandCopy #2 #1
-  \renewcommand #1 {\SYNlink{#3}{#2}}
- }
+{
+    \NewCommandCopy #2 #1
+    \renewcommand #1 {\SYNlink{#3}{#2}}
+}
 \cs_generate_variant:Nn \andreacensi_wrapcmdnopar:NNn { Nc }
 
 \NewDocumentCommand{\wrapcmdalsoindex}{mm}
- {
-  \andreacensi_wrapcmdalsoindex:Ncn #1 {andreacensialsoindex@\cs_to_str:N #1} { #2 }
- }
+{
+    \andreacensi_wrapcmdalsoindex:Ncn #1 {andreacensialsoindex@\cs_to_str:N #1} { #2 }
+}
 \cs_new_protected:Nn \andreacensi_wrapcmdalsoindex:NNn
- {
-  \NewCommandCopy #2 #1
-  \renewcommand #1 {\SYNinner{#3}{#2}}
- }
+{
+    \NewCommandCopy #2 #1
+    \renewcommand #1 {\SYNinner{#3}{#2}}
+}
 \cs_generate_variant:Nn \andreacensi_wrapcmdalsoindex:NNn { Nc }
 
 \ExplSyntaxOff
