@@ -475,7 +475,7 @@
     \SYNlink{#1}{#2}%
 }
 
-\DeclareRobustCommand{\SYNlink}[2]{
+\DeclareRobustCommand{\SYNlink}[2]{%
     \pgfkeysifdefined{/mydefs/#1/label}{%
         \ifelselabeldefined{\pgfkeysvalueof{/mydefs/#1/label}}{%
             \texorpdfstring{%
@@ -540,27 +540,39 @@
 % olor-is-black
 
 
-% \ExplSyntaxOn
-%
-% \NewDocumentCommand{\wrapcmd}{mm}
-%  {
-%   \andreacensi_wrapcmd:Ncn #1 {andreacensi@\cs_to_str:N #1} { #2 }
-%  }
-% \cs_new_protected:Nn \andreacensi_wrapcmd:NNn
-%  {
-%   \NewCommandCopy #2 #1
-%   \renewcommand #1 { \SYNlink{#3}{#2} }
-%  }
-% \cs_generate_variant:Nn \andreacensi_wrapcmd:NNn { Nc }
-%
-% \ExplSyntaxOff
+\ExplSyntaxOn
 
-\newcommand{\wrapcmd}[2]{%
-    \expandafter\let\csname  old#1\expandafter\endcsname\csname #1\endcsname%
-    \expandafter\renewcommand\csname #1\endcsname{\SYNlink{#2}{{\csname old#1\endcsname}}}%
-}
+\NewDocumentCommand{\wrapcmd}{mm}
+ {
+  \andreacensi_wrapcmd:Ncn #1 {andreacensi@\cs_to_str:N #1} { #2 }
+ }
+\cs_new_protected:Nn \andreacensi_wrapcmd:NNn
+ {
+  \NewCommandCopy #2 #1
+  \renewcommand #1 {\SYNlink{#3}{#2}}
+ }
+\cs_generate_variant:Nn \andreacensi_wrapcmd:NNn { Nc }
 
-\newcommand{\wrapcmdnopar}[2]{%
-    \expandafter\let\csname  old#1\expandafter\endcsname\csname #1\endcsname%
-    \expandafter\renewcommand\csname #1\endcsname{\SYNlink{#2}{\csname old#1\endcsname}}%
-}
+
+\NewDocumentCommand{\wrapcmdnopar}{mm}
+ {
+  \andreacensi_wrapcmdnopar:Ncn #1 {andreacensinopar@\cs_to_str:N #1} { #2 }
+ }
+\cs_new_protected:Nn \andreacensi_wrapcmdnopar:NNn
+ {
+  \NewCommandCopy #2 #1
+  \renewcommand #1 {\SYNlink{#3}{#2}}
+ }
+\cs_generate_variant:Nn \andreacensi_wrapcmdnopar:NNn { Nc }
+
+\ExplSyntaxOff
+%
+% \newcommand{\wrapcmd}[2]{%
+%     % \expandafter\let\csname  old#1\expandafter\endcsname\csname #1\endcsname%
+%     % \expandafter\renewcommand\csname #1\endcsname{\SYNlink{#2}{{\csname old#1\endcsname}}}%
+% }
+%
+% \newcommand{\wrapcmdnopar}[2]{%
+%     % \expandafter\let\csname  old#1\expandafter\endcsname\csname #1\endcsname%
+%     % \expandafter\renewcommand\csname #1\endcsname{\SYNlink{#2}{\csname old#1\endcsname}}%
+% }
