@@ -444,21 +444,7 @@ This separates semantics from presentation, and also allows to remove the punctu
 Most of the maps we care about are either in \Set or \Pos.
 Therefore, there are utility macros for those special cases that only take 5 arguments instead of six.
 Example:
-\begin{equation}
-    \Pos
-    a_\Pos
-    %     \defmapperiodpos{
-    %     f
-    % }{
-    %     X
-    % }{
-    %     Y
-    % }{
-    %     x
-    % }{
-    %     x + 2
-    % }
-\end{equation}
+
 \begin{widepar}
     \begin{tabular}{rlll}
                        & must specify arrow                           & uses $\sto$            & uses $\toinPos$ \\
@@ -587,6 +573,73 @@ Example:
 
 \vfill\pagebreak
 
+\section{Bold symbols}
+
+\begin{tabular}{rc}
+    \str{1 + 2}&$1 + 2$ \\
+    \str{\setA \setdisunion \setA}&$\setA \setdisunion \setA$ \\
+    \str{\mapa \funcsum \mapa}&$\mapa \funcsum \mapa$ \\
+    \str{\coprodMapob \Obja \Obja}&$\coprodMapob \Obja \Obja$ \\
+    \str{\coprodMapmor \mora \mora}&$\coprodMapmor \mora \mora$ \\
+    \str{\posA \Pplus \posA}&$\posA \Pplus \posA$ \\
+    \str{\CatC \Cplus \CatC}&$\CatC \Cplus \CatC$
+\end{tabular}
+
+\begin{tabular}{rcl}
+    \str{n \times n}               & $n \times n$ \\
+    \str{\setA \cartprod \setA}    & $\setA \cartprod \setA$ &  cartesian product \\
+    \str{\mapa \funcprod \mapa}    & $\mapa \funcprod \mapa$  & product of two functions \\
+    \str{\prodMapob \Obja \Obja}   & $\prodMapob \Obja \Obja$ & categorical product of objects \\
+    \str{\prodMapmor \mora \mora } & $\prodMapmor \mora \mora$& categorical product of morphisms \\
+    \str{\posA \Ptimes \posA}      & $\posA \Ptimes \posA $ & product of two posets \\
+    \str{\CatC \Ctimes \CatC}      & $\CatC \Ctimes \CatC $ & product of two categories \\ \\
+\end{tabular}
+
+
+\begin{tabular}{rcl}
+    \str{\posela \monpostimes \poselb}               & $\posela \monpostimes \poselb$ \\ 
+    \str{\Obja\mtimescatob\Objb} & $\Obja\mtimescatob\Objb$ \\ 
+    \str{\mora\mtimescatmor\morb} & $\mora\mtimescatmor\morb$ \\ 
+\end{tabular}
+
+
+\section{Formatting sets/lists/tuples}
+
+\paragraph{Parentheses}
+
+We have a command \str{\pars} that is equivalent to \str{\left(.
+..\right)}.
+Always use it, otherwise the commands  \str{\makeset}, \str{\makelist}, etc. get confused.
+In an expression like this:
+
+\begin{minted}{latex}
+    \makeset{A,  \left(B,C \right),  D}
+\end{minted}
+
+The code for \str{\makeset} will divide the contents in the following chunks:
+
+\begin{enumerate}
+    \item \str{A}
+    \item \str{\left(B}
+    \item \str{C\right)}
+    \item \str{D}
+\end{enumerate}
+This will create problems down the road and lead to errors about ``missing matched parentheses''.
+
+Instead, if you use:
+
+\begin{minted}{latex}
+    \makeset{A,  \pars{B,C},  D}
+\end{minted}
+
+then the group \str{{B,C}} will be treated as one, and the comma inside will not be seen as a separator for \str{\makeset}.Therefore, it will be parsed correctly as
+
+\begin{enumerate}
+    \item \str{A}
+    \item \str{\pars(B,C)}
+    \item \str{D}
+\end{enumerate}
+
 \paragraph{Sets}
 There is the command \str{\makeset} to create sets:
 \begin{minted}{latex}
@@ -682,9 +735,68 @@ Here, $a \setin A, b \setin B, c \setin C$ are \textbf{tuples}.
     \setin (\makecprod{A,B,C})
 \end{equation}
 
-\vfill\pagebreak
+\subsection{Checking things work recursively}
 
-\subsection{Graphics}
+This section serves as a continuous check that the latex magic is working.
+
+\paragraph{Simple constructs without matching}~
+
+Nested \str{\tupp}, \str{\tupp}, \str{\tupp}
+
+\begin{equation}
+    \tupp{ 1, \tupp{2, \tupp{3, 4}, \tupp{5, A^B}}, \tupp{2,1}}
+\end{equation}
+
+Nested \str{\makeset}, \str{\makeset}, \str{\makeset}
+
+\begin{equation}
+    \makeset{ 1, \makeset{2, \makeset{3, 4}, \makeset{5, A^B}}, \makeset{2,1}}
+\end{equation}
+Nested \str{\makelist}, \str{\makelist}, \str{\makelist}
+
+\begin{equation}
+    \makelist{ 1, \makelist{2, \makelist{3, 4}, \makelist{5, A^B}}, \makelist{2,1}}
+\end{equation}
+
+\paragraph{Simple constructs with left/right}~
+
+Nested \str{\makesett}, \str{\makesett}, \str{\makesett}
+
+\begin{equation}
+    \makesett{ 1, \makesett{2, \makesett{3, 4}, \makesett{5, A^B}}, \makesett{2,1}}
+\end{equation}
+
+Nested \str{\tup}, \str{\tup}, \str{\tup}.
+\begin{equation}
+    \tup{ 1, \tup{2, \tup{3, 4}, \tup{5, A^B}}, \tup{2,1}}
+\end{equation}
+
+% Some stress test:
+% \begin{equation}
+%     \label{eq:vanish-upos-b}
+%     \begin{aligned}
+%         ~ &
+%         \ulposmap{
+%             \left(\Tr_{\Obja,\Objb}^{\Objc}
+%             \left(\Tr_{\Obja\cartprod \Objc,\Objb\cartprod \Objc}^{\Objd}(\mora)
+%             \right)
+%             \right)}(\Objael) \\
+%           & =
+%         \makesett{\Objbel \setin \Objb\mid \nlbigvee_{\Objcel \setin \Objc}\tup{\Objbel, \Objcel}\setin \ulposmap{\Tr_{\Obja\cartprod \Objc,\Objb\cartprod \Objc}^{\Objd}(\mora)}(\Objael,\Objcel)} \\
+%           & =\makesett{ \Objbel \setin \Objb\mid \nlbigvee_{\Objcel \setin \Objc}\tup{\Objbel, \Objcel}\setin \makesett{ \tup{\Objbel',\Objcel'}\setin \Objb\cartprod \Objc \mid \nlbigvee_{\Objdel\setin \Objd}\tup{\Objbel',\Objcel',\Objd}\setin \ulposmap{\mora}(\Objael,\Objcel',\Objdel)}} \\
+%           & =\makesett{
+%               \Objbel \setin \Objb\mid \nlbigvee{\Objcel\setin \Objc}
+%               \left(
+%                   a \nlbigvee_{\Objdel \setin \Objd}
+%                 %    \tup{\Objbel,\Objcel,\Objdel}
+%                   \setin \ulposmap{} (\Objdel)
+%               \right)
+%               } \\
+%         %   & =\makesett{\Objbel \setin \Objb \mid \nlbigvee_{\tup{\Objcel,\Objdel}\setin \Objc\cartprod \Objd} \tup{\Objbel,\Objcel,\Objdel}\setin \ulposmap{\mora}(\Objael,\Objcel,\Objdel) }.
+%     \end{aligned}
+% \end{equation}
+
+\section{Graphics}
 
 \subsubsection*{Use separate tikz files for different graphics}
 
