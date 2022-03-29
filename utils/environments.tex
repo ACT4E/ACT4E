@@ -475,10 +475,13 @@
     \SYNlink{#1}{#2}%
 }
 
+\def\instring#1#2{TT\fi\begingroup%
+  \edef\x{\endgroup\in@{#1}{#2}}\x\ifin@}%
+
 \DeclareRobustCommand{\SYNlink}[2]{%
     \pgfkeysifdefined{/mydefs/#1/index}{%
         \pgfkeysifdefined{/mydefs/#1/label}{%
-            \IfSubStr{\pgfkeysvalueof{/mydefs/#1/label}}{target:}{%
+            \if\instring{\pgfkeysvalueof{/mydefs/#1/label}}{target:}{%
                  \texorpdfstring{%
                         \hypersetup{colorlinks=false}%
                         \protect\hyperlink{\pgfkeysvalueof{/mydefs/#1/label}}{%
@@ -495,7 +498,8 @@
                     }{%
                         #2%
                     }%
-            }{ %
+            }\else%
+            {%
                 \ifelselabeldefined{\pgfkeysvalueof{/mydefs/#1/label}}{%
                     \texorpdfstring{%
                         \hypersetup{colorlinks=false}%
@@ -517,7 +521,7 @@
                     \typeout{SYN: Warning: label (\pgfkeysvalueof{/mydefs/#1/label}) is not found in this document.}%
                     #2%
                 }%
-            }%
+            }\fi%
         }{%
             \typeout{SYN: Warning: there is no label associated to (#1).}%
             \relax\ifmmode%
