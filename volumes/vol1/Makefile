@@ -16,12 +16,12 @@ all-new:
 tmpdir=tmp
 
 # ACT%.pdf: ACT%.tex .FORCE
-# 	nice -n 20 latexmk -synctex=1 -pdf -shell-escape  -f $<
+# 	nice -n 20 latexmk -synctex=1 -pdf -shell-escape  $<
 # 	texloganalyser -r ACT$*.log > ACT$*.warnings.txt
 # 	cp ACT$*.aux ACT$*-refs.aux
 
 %.pdf: %.tex .FORCE
-	nice -n 19 latexmk -synctex=1 -pdf -shell-escape  -f $<
+	nice -n 19 latexmk -synctex=1 -pdf -shell-escape$<
 	texloganalyser -r $*.log > $*.warnings.txt
 
 clean:
