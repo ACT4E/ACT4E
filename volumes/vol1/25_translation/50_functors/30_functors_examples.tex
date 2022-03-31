@@ -8,8 +8,8 @@
     The action on morphisms is given by:
     \begin{equation}
         \begin{aligned}
-            \funamor(\mora)\colon \powerset(\setA) & \to \powerset(\setB) \\
-            \setC                                  & \mapsto \makeset{\mora(\setCel) \mid \setCel \setin \setC}.
+            \funamor(\mora)\colon \powersetof \setA & \to \powersetof \setB \\
+            \setC                                   & \mapsto \makeset{\mora(\setCel) \mid \setCel \setin \setC}.
         \end{aligned}
     \end{equation}
     Here is a practical example.
@@ -19,7 +19,7 @@
         \funaob(\setA)
         =
         \makeset{
-            \makeset{\Emptyset},
+            \Emptyset,
             \makeset{\sfondue},
             \makeset{\sbretzel},
             \makeset{\schoco},
@@ -92,10 +92,33 @@
 \subsection{The list functor}
 In the following, we present a concept related to \SY{monoids}.
 
-We now consider the \SY{functor}~$\listfun\colon \Set \fto \CatMon$ from the category of sets to the category of \SY{monoids}.
-\todomistake{\alphubel: We never defined \CatMon}
-Given a set~\setA, the \SY{functor} returns a specific \SY{monoid} $\listfun(\setA)=\tup{\listsof{\setA},\emptylist, \listconcat}$.
+We now consider the \SY{functor}
+\begin{equation}
+    \listfun\colon \Set \fto \Mon
+\end{equation}
+from the \SY{category of sets} to the \SY{category of monoids}.
+
+Given a set~\setA, the \SY{functor} returns a specific \SY{monoid}
+\begin{equation}
+    \listfun(\setA)\definedas\tupp{\listsof{\setA},\emptylist, \listconcat}.
+\end{equation}
+
 Given a map~$\mapa\colon \setA \sto \setB$, we have
+% \begin{equation}
+%     \defmapcomma{
+%         \listfun(\mapa)
+%     }{
+%         \listsof{\setA}
+%     }{
+%         \to
+%     }{
+%         \listsof{\setB}
+%     }{
+%         \makelist{\setAel_1, \ldots, \setAel_n}
+%     }{
+%         \makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}
+%     }
+% \end{equation}
 \begin{equation}
     \defmapcomma{
         \listfun(\mapa)
@@ -106,20 +129,27 @@ Given a map~$\mapa\colon \setA \sto \setB$, we have
     }{
         \listsof{\setB}
     }{
-        \makelist{\setAel_1, \ldots, \setAel_n}
+        \makegenlist{ \setAel_i }
     }{
-        \makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}
+        \makegenlist{  \mapa(\setAeln{i}) }
     }
 \end{equation}
 which applies~$\mapa$ element-wise in the list.
 The empty list in~$\listsof{\setA}$ is mapped to the empty list in~$\listsof{\setB}$.
     {}
 $\listfun$ is a \SY{functor}, given that the identity map is mapped to the identity map on lists, and that
+% \begin{equation}
+%     \begin{aligned}
+%         \listfun(\mapa \mthen \mapb)(\makelist{\setAeln{1},\ldots,\setAeln{n}}) & =\makelist{(\mapa \mthen \mapb)(\setAeln{1}), \ldots, (\mapa \mthen \mapb)(\setAeln{n})} \\
+%                                                                                 & =\listfun(\mapb)(\makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}) \\
+%                                                                                 & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makelist{\setAeln{1}, \ldots, \setAeln{n}}).
+%     \end{aligned}
+% \end{equation}
 \begin{equation}
     \begin{aligned}
-        \listfun(\mapa \mthen \mapb)(\makelist{\setAeln{1},\ldots,\setAeln{n}}) & =\makelist{(\mapa \mthen \mapb)(\setAeln{1}), \ldots, (\mapa \mthen \mapb)(\setAeln{n})} \\
-                                                                                & =\listfun(\mapb)(\makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}) \\
-                                                                                & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makelist{\setAeln{1}, \ldots, \setAeln{n}}).
+         & \listfun(\mapa \mthen \mapb)(\makegenlist{\setAeln{i}}) \\ & =\makegenlist{ (\mapa \mthen \mapb)(\setAeln{i})} \\
+         & =\listfun(\mapb)(\makegenlist{\mapa(\setAeln{i})}) \\
+         & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makegenlist{\setAeln{i}}).
     \end{aligned}
 \end{equation}
 
