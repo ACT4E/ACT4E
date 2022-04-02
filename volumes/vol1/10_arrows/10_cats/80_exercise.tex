@@ -3,8 +3,9 @@
 \subsection{Interface}
 
 \Cref{lst:SemiCategory} below shows the Python interface we chose to model a category.
-Compared to the previous exercises about sets, relations, posets, there is one relevant difference: 
-we are not assuming anymore that the collections are finite sets. However, we still assume that 
+Compared to the previous exercises about sets, relations, posets, there is one relevant difference:
+we are not assuming anymore that the collections are finite sets.
+However, we still assume that
 the set of objects and the hom-sets are instances of \EnumerableSet.
 
 The class \SemiCategory is a generic class with the following type variables:
@@ -18,19 +19,18 @@ The class \SemiCategory has the following methods:
     \item \funcname{objects} returns an \EnumerableSet of elements with type \TypeVar{Ob};
     \item \funcname{hom}, given two objects, returns the \EnumerableSet for the morphisms in the hom-set (of type \TypeVar{Mor}).
     \item \funcname{identity} returns the identity for the given object, if it exists; otherwise, it raises \str{InvalidValue}.
-    \item \funcname{compose} represents the composition operation. 
-Recall from \cref{eq:semicategory-composition} that the signature of $\mthen$ is
-\begin{equation}
-    \mthenof{\Obja,\Objb,\Objc}\colon \HomSet{\CatC}{\Obja}{\Objb} \cartprod \HomSet{\CatC}{\Objb}{\Objc}\mto \HomSet{\CatC}{\Obja}{\Objc}.
-\end{equation}
-That is, we need to specify 3 objects, and then the 2 morphisms. In total, 5 parameters.
+    \item \funcname{compose} represents the composition operation.
+          Recall from \cref{eq:semicategory-composition} that the signature of $\mthen$ is
+          \begin{equation}
+              \mthenof{\Obja,\Objb,\Objc}\colon \HomSet{\CatC}{\Obja}{\Objb} \cartprod \HomSet{\CatC}{\Objb}{\Objc}\mto \HomSet{\CatC}{\Obja}{\Objc}.
+          \end{equation}
+          That is, we need to specify 3 objects, and then the 2 morphisms.
+          In total, 5 parameters.
 \end{enumerate}
 
 \classlisting{SemiCategory}{}
 
 % \classlisting{Category}{}
-
-
 
 % \classlisting{FiniteSemiCategory}{}
 \clearpage
@@ -49,80 +49,81 @@ A dictionary representing a category (\cref{fig:cat_example1}) has three fields:
     \item \fieldname{morphisms} describes the morphisms;
     \item \fieldname{equations} describes known equations between morphisms.
 \end{enumerate}
-Each object and morphism has a string label. In this example, there is only 1 object called \str{X}
+Each object and morphism has a string label.
+In this example, there is only 1 object called \str{X}
 and one morphism called \str{f}.
 
-Objects and morphisms have data attached to them. 
-For an object, it is given by the field \fieldname{obdata}. For a morphism, it is given by the field \fieldname{mordata}.
+Objects and morphisms have data attached to them.
+For an object, it is given by the field \fieldname{obdata}.
+For a morphism, it is given by the field \fieldname{mordata}.
 
-Each object has also a field \fieldname{identity}. If the value is none, it means that there is no identity for that object.
+Each object has also a field \fieldname{identity}.
+If the value is none, it means that there is no identity for that object.
 Otherwise, there is an identity called \str{id_OBJECT}. The field \fieldname{mordata} gives the additional data for the identity morphism.
 
 In this example, the object \str{X} has the integer \str{1} associated to it, the morphism \str{f} has the data \str{"py"} associated to it, and the morphism \str{id_X} has the data \str{""} (empty string) associated to it.
 
 For now, they are just objects without semantics; later we introduce a way to interpret the data.
 
-
-The field \fieldname{equations} describes the assumptions about morphisms composition. Each equation content is a string, consisting of two substrings separated by equality. Each substring is the concatenation of morphism names with \str{;} as a separator. In this example, the string \str{f;f;f=f} is to be interpreted as the equation
-\begin{equation}\label{eq:fffef}
+The field \fieldname{equations} describes the assumptions about morphisms composition.
+Each equation content is a string, consisting of two substrings separated by equality.
+Each substring is the concatenation of morphism names with \str{;} as a separator. In this example, the string \str{f;f;f=f} is to be interpreted as the equation
+\begin{equation}
+    \label{eq:fffef}
     \mora \mthen \mora \mthen \mora = \mora.
 \end{equation}
 
-Therefore, in this example we are describing a category with 1 object and 3 morphisms: $\catidat\Obja$, $\mora$, and $\mora\mthen\mora$. 
-Note that $\mora \mthen \mora \mthen \mora$ is equivalent to $\mora$ given \cref{eq:fffef}. 
+Therefore, in this example we are describing a category with 1 object and 3 morphisms: $\catidat\Obja$, $\mora$, and $\mora\mthen\mora$.
+Note that $\mora \mthen \mora \mthen \mora$ is equivalent to $\mora$ given \cref{eq:fffef}.
 
 In the exercises, when you are given a category description like in~\cref{fig:cat_example1}, you will not be given \emph{all} morphisms \emph{explicitly}, but you need to generate them, based on the composition rules.
 
 \newcommand{\seprule}{%
-\vspace{3mm}
-% \noindent\rule[0.5ex]{\linewidth}{1pt}%
-% \vspace{3mm}
+    \vspace{3mm}
+    % \noindent\rule[0.5ex]{\linewidth}{1pt}%
+    % \vspace{3mm}
 }%
 
 \newcommand{\bigyamlcols}[2]{
-    
+
     \begin{widepar}
-    #2
+        #2
     \end{widepar}
-    
+
     \vspace{3mm}
 
     \begin{marginfigure}
         \includegraphics[width=3cm]{#1}
     \end{marginfigure}
-    
+
     \begin{minipage}{\textwidth}
-    \begin{multicols}{3}
-    \datafile{#1}{breakat={'morphisms:': '\\vfill\\columnbreak', 'equations:': '\\vfill\\columnbreak'}}
-    \end{multicols} 
-    \end{minipage}  
+        \begin{multicols}{3}
+            \datafile{#1}{breakat={'morphisms:': '\\vfill\\columnbreak', 'equations:': '\\vfill\\columnbreak'}}
+        \end{multicols}
+    \end{minipage}
 }
 
 \subsection{More examples}
-
-
 
 \bigyamlcols{cat_Zero}{A category with zero objects.}
 
 \seprule
 
-
 \bigyamlcols{cat_single}{A category with one object, no morphisms.}
 
 \vfill\pagebreak
 
-
 \bigyamlcols{cat_One}{A category with one object and its identity.}
 
 \bigyamlcols{cat_fgh_notsame}{
-A category with three objects, three explicit morphisms $\mora,\morb,\morc$, and \emph{four} morphisms in total: $\mora,\morb,\morc,\mora\mthen\morb$.
+    A category with three objects, three explicit morphisms $\mora,\morb,\morc$, and \emph{four} morphisms in total: $\mora,\morb,\morc,\mora\mthen\morb$.
 }
 
 \seprule
 \bigyamlcols{cat_fgh_same}{
-    A category with three objects, three explicit morphisms $\mora,\morb,\morc$ and the equation $\mora\mthen\morb=\morc$. 
+    A category with three objects, three explicit morphisms $\mora,\morb,\morc$ and the equation $\mora\mthen\morb=\morc$.
     There are now only 3 morphisms in total: $\mora,\morb,\morc$.
-     
+
 }
 \seprule
 \bigyamlcols{cat_natnotzero}{
@@ -137,18 +138,17 @@ A category with three objects, three explicit morphisms $\mora,\morb,\morc$, and
 
 \bigyamlcols{cat_natmod4}{
     A category with one object, the identity, one morphism and one equation $\mora\mthen\mora\mthen\mora\mthen\mora=\mora$.
-    There are 4 morphisms: 
+    There are 4 morphisms:
     \begin{equation}
         \catidat\Obja, \mora, \mora\mthen\mora, \mora\mthen\mora\mthen\mora.
     \end{equation}
     It's similar to counting in base 4.
 }
 
-
 \subsection{Reading categories}
 
-In the file format that we have introduced, you should treat the \fieldname{obdata} and \fieldname{mordata} as opaque objects that are to be interpreted by two setoids that will be passed to you. 
-The interface hat you need to implement is in \cref{lst:SemiCategoryRepresentation}. 
+In the file format that we have introduced, you should treat the \fieldname{obdata} and \fieldname{mordata} as opaque objects that are to be interpreted by two setoids that will be passed to you.
+The interface hat you need to implement is in \cref{lst:SemiCategoryRepresentation}.
 The function \funcname{load} has the following parameters:
 \begin{enumerate}
     \item \str{h} is the usual \str{IOHelper};
@@ -157,7 +157,8 @@ The function \funcname{load} has the following parameters:
     \item \str{MorData} is a setoid that is in charge of interpreting the \fieldname{mordata};
     \item \str{compose} is the compose operation that will allow you to compose the morphisms.
 \end{enumerate}
-What you need to return is a semicategory with object type \str{RichObject} (\cref{lst:RichObject}) and morphism type \str{RichMorphism} (\cref{lst:RichMorphism}). These are just wrappers that group together the label and the object data.
+What you need to return is a semicategory with object type \str{RichObject} (\cref{lst:RichObject}) and morphism type \str{RichMorphism} (\cref{lst:RichMorphism}).
+These are just wrappers that group together the label and the object data.
 
 \classlisting{SemiCategoryRepresentation}{}
 
@@ -174,7 +175,7 @@ and the morphism
 \end{minted}
 
 To give you a more concrete idea of how the method will be called during the unit tests, here's an example usage.
-We set  \str{ObData} and \str{MorData} to be the setoids of integers (\cref{lst:IntSetoid}) and strings (\cref{lst:StringSetoid}).
+We set  \str{ObData} and \str{MorData} to be the setoids of integers (\cref{lst:IntegerSetoid}) and strings (\cref{lst:StringSetoid}).
 The \funcname{compose} function is just concatenation of strings.
 
 \begin{minted}{python}
@@ -183,7 +184,7 @@ The \funcname{compose} function is just concatenation of strings.
     def compose(od1: int, od2: int, od3: int, md1: str, md2: str) -> str:
         return md1 + md2
     yourcode: SemiCategoryRepresentation = ...
-    data = ... # one of the examples 
+    data = ... # one of the examples
     h = ...
     sc = yourcode.load(
         h,
@@ -194,7 +195,8 @@ The \funcname{compose} function is just concatenation of strings.
     )
 \end{minted}
 
-Once the semicategory is created, it will be queried. For example, we will check if it has the correct objects and morphisms.
+Once the semicategory is created, it will be queried.
+For example, we will check if it has the correct objects and morphisms.
 
 \begin{minted}{python}
     # for the first example, we expect this object to exist
@@ -225,51 +227,28 @@ Once the semicategory is created, it will be queried. For example, we will check
 Some rules to keep in mind:
 
 \begin{enumerate}
-    \item When you compose two \str{RichMorphisms} with labels \str{"label1"} and \str{"label2"}, their new label should be \str{"label1;label2"}. Their \str{mordata} will be given by the \funcname{compose} function.
-    \item Two morphisms are equal if any of the two conditions are met:    
-    \begin{enumerate}
-        \item Their labels are related by an equation.
-        \item Their \str{mordata} is equal based on what the setoid \str{MorData} thinks.
-    \end{enumerate}
-    \item Always return the shortest name for the morphisms. For example, if you can derive \str{f;g} and the equation \pystr{"f;g=h"} holds, you have to return the morphisms \str{f}, \str{g}, and \str{h}, because \str{h} is shorter than \str{f;g} even though they are equivalent.
+    \item When you compose two \str{RichMorphisms} with labels \str{"label1"} and \str{"label2"}, their new label should be \str{"label1;label2"}.
+          Their \str{mordata} will be given by the \funcname{compose} function.
+    \item Two morphisms are equal if any of the two conditions are met:
+          \begin{enumerate}
+              \item Their labels are related by an equation.
+              \item Their \str{mordata} is equal based on what the setoid \str{MorData} thinks.
+          \end{enumerate}
+    \item Always return the shortest name for the morphisms.
+          For example, if you can derive \str{f;g} and the equation \pystr{"f;g=h"} holds, you have to return the morphisms \str{f}, \str{g}, and \str{h}, because \str{h} is shorter than \str{f;g} even though they are equivalent.
 \end{enumerate}
 
 Some simplifications you can use:
 
 \begin{enumerate}
     \item  \textbf{Simplification 1}:
-        You have to return an \EnumerableSet from \funcname{hom}. The unit tests will not test the functions \funcname{load}, \funcname{save}, \funcname{contains} of this enumerable set, so you don't strictly need to implement them. However, it is important you implement \funcname{equals} and \funcname{elements}.
+          You have to return an \EnumerableSet from \funcname{hom}.
+          The unit tests will not test the functions \funcname{load}, \funcname{save}, \funcname{contains} of this enumerable set, so you don't strictly need to implement them.
+          However, it is important you implement \funcname{equals} and \funcname{elements}.
     \item \textbf{Simplification 2}:
-    If the equation is of the form \pystr{"first=second"}, it is guaranteed that you only need to substitute the second term in place of the first to guarantee that you find all equalities, and you never need to substitute in the other directions.
-    For example, if the equation is \pystr{"a;b;c=d;e"}, you will have to substitute the sequence \pystr{[d, e]} to \pystr{[a,b,c]}; that is, simplify the list of morphisms \pystr{[a,a,b,c,a]} to \pystr{[a,d,e,a]}.  But you will never need to substitute \pystr{[a,b,c]} to \pystr{[d,e]}. 
-        As a result, you are guaranteed to have a \emph{confluent} system, in the sense that if you run all the substitutions you will eventually converge. 
-    
+          If the equation is of the form \pystr{"first=second"}, it is guaranteed that you only need to substitute the second term in place of the first to guarantee that you find all equalities, and you never need to substitute in the other directions.
+          For example, if the equation is \pystr{"a;b;c=d;e"}, you will have to substitute the sequence \pystr{[d, e]} to \pystr{[a,b,c]}; that is, simplify the list of morphisms \pystr{[a,a,b,c,a]} to \pystr{[a,d,e,a]}.
+          But you will never need to substitute \pystr{[a,b,c]} to \pystr{[d,e]}.
+          As a result, you are guaranteed to have a \emph{confluent} system, in the sense that if you run all the substitutions you will eventually converge.
+
 \end{enumerate}
-
-
-
-\subsection{Categories}
-\subsection*{Interface}
-Compared to a finite \SY{semicategory}, the finite category has also an identity for each object.
-
-% \classlisting{FiniteCategory}{}
-
-\subsection*{Representation}
-
-The representation is the same as finite category.
-
-\subsection*{Operations}
-
-\begin{codeexercise}
-    Compute the \SY{disjoint union} of two categories.
-
-    \methodsource{FiniteCategoryOperations}{disjoint_union}{}
-\end{codeexercise}
-
-\begin{codeexercise}
-    Compute the product of two categories.
-
-    \methodsource{FiniteCategoryOperations}{product}{}
-\end{codeexercise}
-
-\classlisting{FiniteCategoryOperations}
