@@ -1,0 +1,70 @@
+\sectionexercises{Currency categories}
+
+
+\margindatafilefig{cat_cur_example1}{cat\_example1}{fig:cat_cur_example1}
+
+
+This exercise is based on the currency category described in \cref{sec:currency_cat}.
+Using the same format introduced in \cref{ex:SemiCategoryRepresentation}, we describe a currency category as in \cref{fig:cat_cur_example1}. 
+There are two objects: \str{CHF} and \str{USD}. There are two identity morphisms, as well as a morphism from \str{CHF} and \str{USD}.
+
+Recall that a morphism in \Curr is given by two numbers: a rate and a commission. The two identity morphisms have rate \str{1.0} and commission \str{0.0}.
+The morphism \str{f} has rate \str{0.95} and commission \str{2.0}.
+
+To parse this semicategory, we need a series of pieces that are already implemented.
+
+We already give you the implementation of \str{CurrencyExchanger} (\cref{lst:CurrencyExchangers}), which will represent the currency exchanger and load data.
+
+\classlisting{CurrencyExchanger}
+
+The composition function is given by the function \funcname{currency_exchange_compose} in \cref{lst:currency_exchange_compose}.
+
+\classlisting{currency_exchange_compose}
+
+Finally, we also have already implemented the setoid \str{AllCurrencyExchangers} (\cref{lst:AllCurrencyExchangers}).
+
+\classlisting{AllCurrencyExchangers}
+
+In the tests, the category will be loaded using the code you wrote in \cref{ex:SemiCategoryRepresentation} and the pieces above.
+In the end, we will have created an object of type
+\begin{minted}{python}
+    SemiCategory[RichObject[str], RichMorphism[CurrencyExchanger]]
+\end{minted}
+
+What you have to implement is the interface in \cref{lst:CurrencyOptimization}.
+
+The function \funcname{compute_optimal_conversion} has the following parameters:
+\begin{enumerate}
+    \item \str{available} is the semicategory already loaded.
+    \item \str{source} is the name of the source currency.
+    \item \str{amount} is the amount to be converted.
+    \item \str{target} is the target currency.
+\end{enumerate}
+The function must return an object of type \str{OptimalSolution} (\cref{lst:OptimalSolution}), which has two fields:
+\begin{enumerate}
+    \item \str{optimal_path} is the sequence of exchangers to use.
+    \item \str{final_amount} is the final amount in the target categories.
+\end{enumerate}
+
+\classlisting{CurrencyOptimization}
+
+\classlisting{OptimalSolution}
+
+\codeboilerplate{CurrencyOptimization}{}
+
+For the example in \cref{fig:cat_cur_example1}, the following table shows some examples queries and the expected result.
+
+\begin{tabular}{ccc|cc}
+    \multicolumn{3}{c}{\textbf{queries}} & \multicolumn{2}{c}{\textbf{results}} \\
+    source & amount & target &  final amount & path \\
+    \hline
+    USD & 10 & USD & 10 & \pystr{[id_USD]} \\
+    CHF & 10 & CHF & 10 & \pystr{[id_CHF]} \\
+    USD & 10 & CHF & 7.5  & \pystr{[f]} \\
+    CHF & 10 & USD & \multicolumn{2}{c}{no path exists}
+\end{tabular}
+
+
+The difficulty in this exercise lies in efficiently exploring the (possibly infinite) set of morphisms.
+One thing to notice is that no optimal path will ever employ a currency converter twice.
+
