@@ -1,25 +1,108 @@
 \sectionexercises{Semicategories}
+\label{sec:exercise-semicategories}
+
+\subsection{Computable semicategories}
+
+We need to make a couple of modifications to the theory to make sure we have implementations of categories that we can easily manipulate.
+
+\begin{marginfigure}
+    \includegraphics[width=4cm]{cat_natnotzero}
+    \caption{Category with one object and one morphism}
+    \label{fig:cat_natnotzero1}
+\end{marginfigure}
+We must take into account that a category is not a ``static'' data structure, like a graph, but rather a ``dynamic'' object that can grow.
+For example, consider a semicategory with one object $\Obja$, and one morphism $\mora\colon\Obja \mto \Obja$, which is not the identity.
+Then, even if the semicategory can be specified with a finite amount data (one object and one morphism) there are actually an infinite amount of morphisms:
+\begin{equation}
+    \HomSet{}{\Obja}{\Obja} = \makeset{\mora,\  (\mora\mthen\mora),\  (\mora\mthen\mora\mthen\mora),\  (\mora\mthen\mora\mthen\mora\mthen\mora),\  \dots}.
+\end{equation}
+So far, we have not seen a mechanism that, given two objects, allows to produce another object, but we will see several later (\eg, \cref{def:categorical-product}).
+
+Our solution for software modeling is to distinguish among different ``generations'' of morphisms.
+If a morphism is given explicitly, like $\mora$, we say it is ``of level 0''.
+The levels increase every time we use the composition operator.
+
+Let $\HomSet{i}{\Obja}{\Objb}$ be the set of morphisms of \emph{up to} level $i\geq 0$.
+Note that the morphisms at level $i+1$ include all the morphism of level $i$:
+\begin{equation}
+    \prfperiod{
+        i \leq j
+    }{
+        \HomSet{i}{\Obja}{\Objb} \setsubseteq \HomSet{j}{\Obja}{\Objb}
+    }
+\end{equation}
+The regular hom-set is recovered as the union of all the levels:
+\begin{equation}
+    \HomSet{}{\Obja}{\Objb} = \bigcup_{i\geq0} \HomSet{i}{\Obja}{\Objb}.
+\end{equation}
+
+We need a rule to update the levels of morphisms.
+We say that if $\mora$ has level $m$ and $\morb$ has level $n$, then the composition $\morc = \mora\mthen\morb$ is in level $\max(m,n) + 1$.
+We can update the signature of the composition rule as follows:
+\begin{equation}
+    \prfperiod{
+        \mora \setin \HomSet{m}{\Obja}{\Objb}
+    }{
+        \morb \setin \HomSet{n}{\Objb}{\Objc}
+    }{
+        (\mora\mthen\morb) \setin \HomSet{\max(m,n)+1}{\Obja}{\Objb}
+    }
+\end{equation}
+A morphism could be obtained in different ways, which could give different levels.
+We define ``the level'' of a morphism as the \emph{minimum} level at which it appears.
+
+\begin{margintable}
+    \caption{Generations of morphisms }
+    \begin{tabular}{cl}
+        level & new morphisms at level \\
+        \hline
+        0     & $\mora$ \\
+        1     & $\mora^2$ \\
+        2     & $\mora^3, \mora^4$ \\
+        3     & $\mora^5, \mora^6, \mora^7, \mora^8$ \\
+        4     & $\mora^9, \mora^{10}, \mora^{11}, \mora^{12}, $ \\
+              & $\mora^{13}, \mora^{14}, \mora^{15}, \mora^{16}$
+    \end{tabular}
+    \label{tab:generations}
+
+\end{margintable}
+
+Take again the example of the category with one morphism $\mora\colon\Obja \mto \Obja$ in \cref{fig:cat_natnotzero1}.
+\Cref{tab:generations} shows how each generation looks like.
+For each row after the first,
+we look in all the previous rows and find the result of all compositions, and we note the new ones that we have not obtained before.
+For clarity, we write $\mora^n$ for the composition of $n$ copies of $\mora$.
+
+There is one important property: if there is a finite number of morphisms at level 0, then there is a finite number of morphisms at each level.
+There might still be an overall infinite number of morphisms, but this assumption allows us to look at finite slices of the infinity.
+
+\vfill\pagebreak
 
 \subsection{Interface}
 
 \Cref{lst:SemiCategory} below shows the Python interface we chose to model a category.
+
 Compared to the previous exercises about sets, relations, posets, there is one relevant difference:
 we are not assuming anymore that the collections are finite sets.
-However, we still assume that
-the set of objects and the hom-sets are instances of \EnumerableSet.
+However, we still assume that the set of objects and the hom-sets are instances of \EnumerableSet.
 
 The class \SemiCategory is a generic class with the following type variables:
 \begin{enumerate}
-    \item \TypeVar{Ob} (object data) is the type of the objects;
-    \item \TypeVar{Mor} (morphism data) is the type of the morphisms.
+    \item The type variable \TypeVar{Ob} (object data) is the type of the objects;
+    \item The type variable \TypeVar{Mor} (morphism data) is the type of the morphisms.
 \end{enumerate}
 
 The class \SemiCategory has the following methods:
 \begin{enumerate}
-    \item \funcname{objects} returns an \EnumerableSet of elements with type \TypeVar{Ob};
-    \item \funcname{hom}, given two objects, returns the \EnumerableSet for the morphisms in the hom-set (of type \TypeVar{Mor}).
-    \item \funcname{identity} returns the identity for the given object, if it exists; otherwise, it raises \str{InvalidValue}.
-    \item \funcname{compose} represents the composition operation.
+    \item The method \funcname{objects} returns an \EnumerableSet of elements with type \TypeVar{Ob}.
+          The optional parameter is the maximum level of the objects.
+          If the value is \pystr{None}, the method must return all objects.
+          So far we have not seen any way to create new objects from old; so far this argument will be unused.
+    \item The method \funcname{hom}, given two objects, returns the \EnumerableSet for the morphisms in the hom-set (of type \TypeVar{Mor}).
+          The optional parameter is the maximum level of the morphisms.
+          If the value is \pystr{None},  it must return all objects.
+    \item The method \funcname{identity} returns the identity for the given object, if it exists; otherwise, it raises \str{InvalidValue}.
+    \item The method \funcname{compose} represents the composition operation.
           Recall from \cref{eq:semicategory-composition} that the signature of $\mthen$ is
           \begin{equation}
               \mthenof{\Obja,\Objb,\Objc}\colon \HomSet{\CatC}{\Obja}{\Objb} \cartprod \HomSet{\CatC}{\Objb}{\Objc}\mto \HomSet{\CatC}{\Obja}{\Objc}.
@@ -28,8 +111,16 @@ The class \SemiCategory has the following methods:
           In total, 5 parameters.
 \end{enumerate}
 
-\classlisting{SemiCategory}{}
+\vfill
+\begin{widepar}
+    \aligninner{%
+        \begin{minipage}{15cm}
+            \classlisting{SemiCategory}{}
 
+        \end{minipage}
+    }
+\end{widepar}
+\vfill
 % \classlisting{Category}{}
 
 % \classlisting{FiniteSemiCategory}{}
@@ -74,34 +165,9 @@ Each substring is the concatenation of morphism names with \str{;} as a separato
 \end{equation}
 
 Therefore, in this example we are describing a category with 1 object and 3 morphisms: $\catidat\Obja$, $\mora$, and $\mora\mthen\mora$.
-Note that $\mora \mthen \mora \mthen \mora$ is equivalent to $\mora$ given \cref{eq:fffef}.
+Note that $\mora \mthen \mora \mthen \mora$ does not appear in this list because it is equivalent to $\mora$ given \cref{eq:fffef}.
 
 In the exercises, when you are given a category description like in~\cref{fig:cat_example1}, you will not be given \emph{all} morphisms \emph{explicitly}, but you need to generate them, based on the composition rules.
-
-\newcommand{\seprule}{%
-    \vspace{3mm}
-    % \noindent\rule[0.5ex]{\linewidth}{1pt}%
-    % \vspace{3mm}
-}%
-
-\newcommand{\bigyamlcols}[2]{
-
-    \begin{widepar}
-        #2
-    \end{widepar}
-
-    \vspace{3mm}
-
-    \begin{marginfigure}
-        \includegraphics[width=3cm]{#1}
-    \end{marginfigure}
-
-    \begin{minipage}{\textwidth}
-        \begin{multicols}{3}
-            \datafile{#1}{breakat={'morphisms:': '\\vfill\\columnbreak', 'equations:': '\\vfill\\columnbreak'}}
-        \end{multicols}
-    \end{minipage}
-}
 
 \subsection{More examples}
 
@@ -130,17 +196,18 @@ In the exercises, when you are given a category description like in~\cref{fig:ca
     A category with one object, no identity, but a morphism.
     This is the first case in which there is an infinity of morphisms, starting with
     \begin{equation}
-        \mora, \mora\mthen\mora, \mora\mthen\mora\mthen\mora, \dots.
+        \mora, \quad  \mora\mthen\mora,  \quad \mora\mthen\mora\mthen\mora,\quad  \dots.
     \end{equation}
 }
 
-\seprule
+\vfill
+\pagebreak
 
 \bigyamlcols{cat_natmod4}{
     A category with one object, the identity, one morphism and one equation $\mora\mthen\mora\mthen\mora\mthen\mora=\mora$.
     There are 4 morphisms:
     \begin{equation}
-        \catidat\Obja, \mora, \mora\mthen\mora, \mora\mthen\mora\mthen\mora.
+        \catidat\Obja, \quad \mora, \quad \mora\mthen\mora, \quad \mora\mthen\mora\mthen\mora.
     \end{equation}
     It's similar to counting in base 4.
 }
