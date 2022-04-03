@@ -10,9 +10,12 @@ In this section we will see that this construction is possible because the opera
 
 Before introducing the general definition, let us approach this concept by listing some of the properties that make the ``powerset operation'' a monad.
 
-Firstly, note that the ``powerset operation'' can be viewed as \SY{functor} $\Set \fto \Set$.
+Firstly, note that the ``powerset operation'' can be viewed as \SY{functor}
+\begin{equation}
+    \powersetfunctor\colon \Set \fto \Set.
+\end{equation}
 For each object -- that is, for each set \setA -- it produces a new set, $\powerset \setA$.
-For each function $\mora: \setA \mto \setB$ we define $\powerset \mora : \powerset \setA \mto \powerset \setB$ by
+For each function $\mora: \setA \mto \setB$ we define $\powersetfunctor \mora : \powerset \setA \mto \powerset \setB$ by
 \begin{equation}
     \label{eq:powerset-functor}
     \subA \longmapsto \bigsetunion_{\ela \setin \subA} \mora(\ela).
@@ -21,7 +24,7 @@ In other words, $\powerset \mora$ maps a subset $\subA \setsubseteq \setA$ to it
 
 \begin{gradedexercise}[\exname{PowersetImageFunctor}]
     \label{ex:PowersetImageFunctor}
-    Prove that ``taking the \SY{powerset}'' defines a \SY{functor} $\powerset : \Set \fto \Set$ if we define its component on morphisms as in \cref{eq:powerset-functor}.
+    Prove that ``taking the \SY{powerset}'' defines a \SY{functor} $\powersetfunctor : \Set \fto \Set$ if we define its component on morphisms as in \cref{eq:powerset-functor}.
 \end{gradedexercise}
 \solutionof{PowersetImageFunctor}
 
@@ -51,7 +54,6 @@ In other words, $\powerset \mora$ maps a subset $\subA \setsubseteq \setA$ to it
               \equationsag{55_monad_2}{eq:monad-associativity}
         \item \emph{Left and right unitality}: the following diagrams must commute:
               \equationsag{55_monad_1}{eq:monad-unitality}
-              must commute.
     \end{enumerate}
 \end{ctdefinition}
 
@@ -356,7 +358,7 @@ and on morphisms as
 \begin{equation}
     \label{eq:monad-arrow-functor-morphisms}
     \begin{aligned}
-        \ArrowFunctor \mora\colon \posintbis\posA & \to \posintbis\posB \\
+        \Arrowof\mora \colon \posintbis\posA & \to \posintbis\posB \\
         \interv{a}{b}                             & \mapsto \interv{\mora(a)}{\mora(b)}.
     \end{aligned}
 \end{equation}
@@ -368,9 +370,9 @@ Furthermore, we define the multiplication as
     \defmapset{
         \moncomp_{\Obja}
     }{
-        \ArrowFunctor (\ArrowFunctor\Obja)
+        \Arrowof {(\Arrowof\Obja)}
     }{
-        \ArrowFunctor \Obja
+        \Arrowof \Obja
     }{
         \interv{\interv{\alpha}{\beta}}{ \interv{\gamma}{ \delta}}
     }{
@@ -387,7 +389,7 @@ and the unit as
     }{
         \Obja
     }{
-        \ArrowFunctor\Obja
+        \Arrowof\Obja
     }{
         x
     }{
@@ -413,7 +415,7 @@ On the other hand we have:
     \label{eq:example_arrow_nat_2}
     \begin{aligned}
         (\moncomp_\Obja \fthen \ArrowFunctor)(\interv{\interv{a}{b}}{\interv{c}{d}})
-         & =\ArrowFunctor(\mora)(\interv{a}{d}) \\
+         & =(\Arrowof\mora)(\interv{a}{d}) \\
          & =\interv{\mora(a)}{\mora(d)}.
     \end{aligned}
 \end{equation}
@@ -436,8 +438,8 @@ and
 \begin{equation}
     \label{eq:example_arrow_nat_4}
     \begin{aligned}
-        (\monunit_\Obja \mthen \ArrowFunctor(\mora))(x)
-         & =\ArrowFunctor(\mora)(\interv{x}{x}) \\
+        (\monunit_\Obja \mthen \Arrowof\mora)(x)
+         & =(\Arrowof\mora)(\interv{x}{x}) \\
          & =\interv{\mora(x)}{\mora(x)}
     \end{aligned}
 \end{equation}
@@ -452,11 +454,11 @@ We have
 \begin{equation}
     \label{eq:monad-arrow-arrow-moncomp}
     \defmapset{
-        \ArrowFunctor \moncomp_{\Obja}
+        \Arrowof {\moncomp_{\Obja}}
     }{
-        \ArrowFunctor (\ArrowFunctor (\ArrowFunctor(\Obja)))
+        \Arrowof {(\ArrowFunctor (\Arrowof(\Obja)))}
     }{
-        \ArrowFunctor (\ArrowFunctor (\Obja))
+        \Arrowof {(\Arrowof\Obja)}
     }{
         \interv{\interv{\interv{\alpha_1}{\beta_1}}{ \interv{\gamma_1}{ \delta_1}}}%
         {\interv{\interv{\alpha_2}{\beta_2}}{ \interv{\gamma_2}{ \delta_2}}}
@@ -470,11 +472,11 @@ and
 \begin{equation}
     \label{eq:monad-arrow-moncomp-arrow}
     \defmapset{
-        \moncomp_{\ArrowFunctor (\Obja)}
+        \moncomp_{\Arrowof \Obja}
     }{
-        \ArrowFunctor (\ArrowFunctor (\ArrowFunctor(\Obja)))
+        \ArrowFunctor (\ArrowFunctor (\Arrowof\Obja))
     }{
-        \ArrowFunctor (\ArrowFunctor(\Obja))
+        \ArrowFunctor (\Arrowof\Obja)
     }{
         \interv{\interv{\interv{\alpha_1}{\beta_1}}{ \interv{\gamma_1}{ \delta_1}}}%
         {\interv{\interv{\alpha_2}{\beta_2}}{ \interv{\gamma_2}{ \delta_2}}}
@@ -496,11 +498,11 @@ For left and right unitality, we need to work out two additional quantities:
 \begin{equation}
     \label{eq:monad-arrow-monunit-arrow}
     \defmapset{
-        \monunit_{\ArrowFunctor(\Obja)}
+        \monunit_{\Arrowof\Obja}
     }{
-        \ArrowFunctor(\Obja)
+        \Arrowof\Obja
     }{
-        \ArrowFunctor (\ArrowFunctor(\Obja))
+        \Arrowof{\Arrowof\Obja)}
     }{
         \interv{a}{b}
     }{
@@ -513,11 +515,11 @@ and
 \begin{equation}
     \label{eq:monad-arrow-arrow-monunit}
     \defmapset{
-        \ArrowFunctor(\monunit_\Obja)
+        \Arrowof{(\monunit_\Obja)}
     }{
-        \ArrowFunctor(\Obja)
+        \Arrowof\Obja
     }{
-        \ArrowFunctor (\ArrowFunctor(\Obja))
+        \Arrowof{(\Arrowof\Obja)}
     }{
         \interv{a}{b}
     }{
