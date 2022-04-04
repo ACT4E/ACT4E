@@ -1,0 +1,84 @@
+\sectionexercises{Currency categories}
+
+
+\margindatafilefig{cat_cur_example1}{cat\_example1}{fig:cat_cur_example1}
+
+
+This exercise is based on the currency category described in \cref{sec:currency_cat}.
+
+Using the same format introduced in \cref{ex:TestSemiCategoryRepresentation}, we describe a currency category as in \cref{fig:cat_cur_example1}.
+In this example, there are two objects: \str{CHF} and \str{USD}. There are two identity morphisms, as well as a morphism from \str{CHF} and \str{USD}.
+
+Recall that a morphism in \Curr is given by two numbers: a rate and a commission. The two identity morphisms have rate \str{1.0} and commission \str{0.0}.
+The morphism \str{f} has rate \str{0.95} and commission \str{2.0}.
+
+To parse this semicategory, we need a series of pieces that are already implemented and that you can find in the package \pystr{act4e_interfaces}.
+
+We already give you the implementation of \str{CurrencyExchanger} (\cref{lst:CurrencyExchanger}), which represents the currency exchanger.
+
+\classlisting{CurrencyExchanger}
+
+The composition function is given by the function \funcname{currency_exchange_compose} in \cref{lst:currency_exchange_compose}.
+
+\classlisting{currency_exchange_compose}
+
+Finally,  the setoid \str{AllCurrencyExchangers} is already implemented (\cref{lst:AllCurrencyExchangers}).
+
+\classlisting{AllCurrencyExchangers}
+
+In the tests, the category will be loaded using the code you wrote for \cref{ex:TestSemiCategoryRepresentation} and the pieces above.
+In the end, we will have created an object of type
+\begin{minted}{python}
+    SemiCategory[RichObject[str], RichMorphism[CurrencyExchanger]]
+\end{minted}
+
+What you have to implement is the interface in \cref{lst:CurrencyOptimization}.
+
+The function \funcname{compute_optimal_conversion} has the following parameters:
+\begin{enumerate}
+    \item \str{available} is the semicategory already loaded.
+    \item \str{source} is the name of the source currency.
+    \item \str{amount} is the amount to be converted.
+    \item \str{target} is the target currency.
+\end{enumerate}
+The function must return an object of type \str{OptimalSolution} (\cref{lst:OptimalSolution}), which has two fields:
+\begin{enumerate}
+    \item \str{optimal_path} is the sequence of exchangers to use.
+    \item \str{final_amount} is the final amount in the target categories.
+\end{enumerate}
+
+\classlisting{CurrencyOptimization}
+
+\classlisting{OptimalSolution}
+
+\codeboilerplate{CurrencyOptimization}{}
+
+\begin{margintable}
+    \caption{}\label{tab:cat_cur_queries}
+    \small 
+\begin{tabular}{cc|cc}
+    \multicolumn{2}{c}{\textbf{queries}} & \multicolumn{2}{c}{\textbf{results}} \\
+    currencies & val & result & path \\
+    \hline
+    $\USD\to\USD$ & 10 &  10 & \pystr{[id_USD]} \\
+    $\CHF\to\CHF$ & 10  & 10 & \pystr{[id_CHF]} \\
+    $\USD\to\CHF$ & 10  & 7.5  & \pystr{[f]} \\
+    $\CHF\to\USD$ & 10  & \multicolumn{2}{c}{no path exists}
+\end{tabular}
+\end{margintable}
+\paragraph{Example queries and result}
+For the example in \cref{fig:cat_cur_example1}, \cref{tab:cat_cur_queries} shows some examples queries and the expected result.
+In this example, the problem are trivial: there is only one morphism to go from $\USD$ to $\CHF$. 
+Therefore, it does not matter what is the initial amount. 
+In the unit tests, there are more interesting cases, in which the optimal path depends on the amount.
+
+
+\paragraph{Hints} Here are some hints:
+\begin{itemize}
+\item The difficulty in this exercise lies in efficiently exploring the (possibly infinite) set of morphisms.
+Recall that the interface of \classname{SemiCategory} has the function \funcname{hom} that allows to specify up to what level you want the morphisms.
+
+\item  One thing to notice is that no optimal path will ever employ a currency converter twice.
+
+\item  You might be needing the functionality of the \pystr{networkx} Python package. Note that there are various graph types to choose from. You likely need to use \pystr{MultiDiGraph} rather than \pystr{DiGraph}.
+\end{itemize}
