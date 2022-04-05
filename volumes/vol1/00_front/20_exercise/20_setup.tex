@@ -122,7 +122,7 @@ Sometimes there will be a need to update this package, as we improve it or fix b
 
 There are two ways to do this.
 \begin{enumerate}
-    \item You can update the package alone by running the following command:
+    \item You can update the package alone by running the following command \textbf{inside the container}:
 
           \begin{console}
         python -m pip install -U ACT4E-exercises
@@ -151,7 +151,7 @@ There are two ways to do this.
 %
 % In both cases, please pull (in case you clone the repository) or update (in case you install the package) weekly, to always use the most updated version.
 
-\subsection{Without Visual Studio Code}
+\subsection{Without Visual Studio Code, from command line}
 
 If you cannot use Visual Studio Code, you can still edit the files from your favorite editor and use Docker alone
 to check the results.
@@ -164,4 +164,37 @@ You should run the following command instead:
 \begin{console}
     make docker-check-EXERCISENAME
 \end{console}
+
+\subsection{Using PyCharm + Docker environment}
+\label{sec:pycharm-plus-docker}
+
+You can configure PyCharm to obtain the same result as Visual Studio Code, albeit with a bit more configuration.
+
+The idea is that we are going to configure a ``Python interpreter'' in PyCharm that corresponds to the interpreter \emph{inside} a Docker image.
+
+First, go to the root folder and type
+\begin{console}
+    make build
+\end{console}
+This will create an image called \str{act4e-image}.
+Make sure you can run it using:
+\begin{console}
+    docker run -it act4e-image python --version
+\end{console}
+Which should give a result like:
+\begin{console}
+    Python 3.10.2
+\end{console}
+
+Create a new PyCharm project in the root folder.
+
+In Preferences - Python Interpreter - find the gear and choose ``add interpreter''.
+
+Choose the ``Docker'' type.
+Put \pystr{act4e-image} as the image.
+
+Enable this interpreter for the project.
+
+Now you should be able to open any of the template files and all symbols should be resolvable.
+For example, you should be able to click \str{act4e_interfaces} and explore the contents of the package.
 
