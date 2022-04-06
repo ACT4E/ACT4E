@@ -37,6 +37,12 @@ Note SPACE and s? for plurals
     \\SY\{$1\}$2
 
 
+
+Forbidden:
+    "\\forslides"
+    \n\n\\begin\{equation\}
+
+
 SY inside SY
 
     \\SY\w*\{[^\}]*\\SY
