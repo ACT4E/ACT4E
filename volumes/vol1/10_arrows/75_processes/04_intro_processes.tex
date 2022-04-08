@@ -51,7 +51,39 @@ Thus, in total, a \SY{Moore machine} is specified by a tuple of the following ty
     \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}.
 \end{equation}
 
-\todotext{\alphubel: @Gioele: Provide a simple example here to illustrate}
+\begin{example}[Robot on a grid]
+We consider a robot moving on a two-dimensional unit grid, represented as $\natnumbers^2_{[0,100]}$ (\cref{fig:robot_example}).
+\begin{marginfigure}
+    \centering
+    \includesag{120_robotcategory}
+    \caption{Robot on a grid example. }
+    \label{fig:robot_example}
+\end{marginfigure}
+
+The state of the robot is described as $\prstel \setin \natnumbers^2_{[0,100]}$.
+The robot can choose from a set of input actions $\prin=\{\uparrow, \downarrow,\rightarrow,\leftarrow\}$, each representing a movement of 1 unit in the corresponding direction on the grid.
+We can write the dynamics as
+\begin{equation}
+\begin{aligned}
+    \prdyn\colon \prin \cartprod \prst &\sto \prst\\
+    \tupp{\uparrow, \tup{\prsteln{1},\prsteln{2}}}&\mapsto \tupp{\prsteln{1}, \min(\prsteln{2}+1,100)},\\
+    \tupp{\downarrow, \tup{\prsteln{1},\prsteln{2}}}&\mapsto \tupp{\prsteln{1}, \max(\prsteln{2}-1,0)},\\
+    \tupp{\rightarrow, \tup{\prsteln{1},\prsteln{2}}}&\mapsto \tupp{\min(\prsteln{1}+1,100), \prsteln{2}},\\
+    \tupp{\leftarrow, \tup{\prsteln{1},\prsteln{2}}}&\mapsto \tupp{\max(\prsteln{1}-1,0), \prsteln{2}},\\
+\end{aligned}
+\end{equation}
+where the ``$\min$'' and ``$\max$'' ensure that the robot stays in within the boundaries of the grid.
+The readout can be thought of as a sensor measuring the position of the robot (the state).
+Assuming a perfect sensor, we have:
+\begin{equation*}
+\defmapperiod{\prreadout}
+{\prst}
+{\sto}
+{\prout}
+{\tupp{\prsteln{1},\prsteln{2}}}
+{\tupp{\prsteln{1},\prsteln{2}}}
+\end{equation*}
+\end{example}
 
 \subsection{Moore machines acting on sequences}
 
