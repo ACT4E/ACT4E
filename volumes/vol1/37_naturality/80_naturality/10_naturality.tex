@@ -1,15 +1,12 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Natural transformations}
+\section{Data migration}
 
-\linkvideo{spring2021-nat-trafos:diagrams} % Diagrams
-%\linkvideo{spring2021-nat-trafos:natural-trafos} % Natural transformations
-
-The name ``natural transformation'' has historical roots -- do not worry if the concept itself does not seem natural to you at first!
-We will try to explain it in a way that is hopefully at least clear.
+The name ``natural transformation'' has historical roots -- do not worry if the concept itself does not seem ``natural'' to you at first.
+% We will try to explain it in a way that is hopefully at least clear.
 To give motivation and a concrete illustration, we start with an example.
 
-\subsection{An alumni database}
+\paragraph{An alumni database}
 
 Suppose a university is keeping a database of its alumni.
 The database contains a list of all the students that ever attended the university (each of them has a unique student ID number), as well as for example information about students' names, discipline of study, date of graduation, \etc
@@ -21,7 +18,7 @@ We have seen that an instance of a database can be modeled as a \SY{functor} who
 \begin{marginfigure}
     \centering
     \includesag{student_database_schema}
-    \caption{}
+    \caption{The schema of an alumni database.}
     \label{fig:student_database_schema}
 \end{marginfigure}
 %
@@ -33,7 +30,7 @@ A database instance~$\funa \colon \CatC \fto \Set$ entails specifying a set~$\fu
 It also entails defining functions for each of the arrows in~\CatC.
 For example,~$\funa(\stylemorph{\text{studied}}) \colon \funa(\styleobj{S}) \mto \funa(\styleobj{D})$ is the function that assigns to each student ID the name of the discipline that that student studied.
 
-\subsection{Updating the database}
+\paragraph{Updating the database}
 
 For simplicity, we focus on two aspects of the data: student ID numbers and the disciplines of study.
 We assume that the university updates its alumni database once a year.
@@ -58,7 +55,7 @@ In order to implement these changes, we use a function~$\ntrafoa_{\styleobj{D}}\
 \begin{equation}
     \ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
 \end{equation}
-
+\todographics{\bernina: Would be nice to draw this function as a diagram (like we did in the chapter about sets)}
 The functions~$\ntrafoa_\styleobj{S}$ and~$\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance~$\funb$ relates coherently with the older database instance~$\funa$.
 Concretely, we want that if a student ID in~$\funb(\styleobj{S})$ is inherited from~$\funa(\styleobj{S})$ -- in other words, if it is in the image of~$\ntrafoa_{\styleobj{S}}$ --  then we want that its associated discipline in the database instance~$\funb$ is the same as if we first computed the student's discipline in the older database instance~$\funa$, and then mapped it to~$\funb$ using the function~$\ntrafoa_{\styleobj{D}}$.
 
@@ -71,9 +68,14 @@ Concretely, we want that if a student ID in~$\funb(\styleobj{S})$ is inherited f
 \end{marginfigure}
 %
 
-This can be formulated succinctly by saying that we want the diagram in figure \cref{fig:student_database_square} to commute!
+This can be formulated succinctly by saying that we want the diagram in figure \cref{fig:student_database_square} to commute.
 
-\subsection{The general situation}
+What we have defined is a collection of morphisms: for each object $\Obja$ in~$\CatC$, we have a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Obja)$ that obeys the commutativity property corresponding to the diagram.
+Such transformations appear in many places and are formalized by the notion of \SY{natural transformations}.
+
+\section{Natural transformations}
+\linkvideo{spring2021-nat-trafos:diagrams} % Diagrams
+%\linkvideo{spring2021-nat-trafos:natural-trafos} % Natural transformations
 
 To define \SY{natural transformations}, the general situation we will start from is when we have two \SY{functors}~$\funa \colon \CatC \fto \CatD$  and~$\funb \colon \CatC \fto \CatD$, sharing the same source and target, respectively.
 In the previous example above,~$\funa$ and~$\funb$ were database instances.
@@ -87,9 +89,18 @@ One straightforward way to relate~$\funa(\Obja)$ to~$\funb(\Obja)$ is to choose 
 We call this morphism~$\ntrafoa_{\Obja}$, using the subscript~$\Obja$ since~$\ntrafoa_{\Obja}$ relates the respective images of the object~$\Obja$ under~$\funa$ and~$\funb$.
 If we choose such a morphism for each object in~\CatC, then we have collection~$\makeset{ \ntrafoa_\Obja }_{\Obja \setin \ObC}$ of morphisms in~\CatD, indexed by the objects of~\CatC.
 
+\begin{marginfigure}
+    \hfill
+    \includesag{diagram_two_functors}
+    % \caption{}
+    % \label{fig:diagram_two_functors}
+\end{marginfigure}
+
 Next, consider a morphism~$\mora \colon \Obja \mto \Objb$ in the category~\CatC.
 Under the \SY{functor}~$\funa$ it will be mapped to some morphism~$\funa(\mora)\colon \funa(\Obja) \mto \funb(\Objb)$ in~\CatD, and under the \SY{functor}~$\funb$ it will be mapped to some other morphism~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$, also in~\CatD.
-\equationsag{diagram_two_functors}{eq:diagram_two_functors}
+
+\vspace{5mm}
+% \equationsag{diagram_two_functors}{eq:diagram_two_functors}
 % %
 % \begin{figure}[h!]
 %     \centering
@@ -98,10 +109,16 @@ Under the \SY{functor}~$\funa$ it will be mapped to some morphism~$\funa(\mora)\
 %     \label{fig:two-functors-diagram}
 % \end{figure}
 % %
+\begin{marginfigure}
+    \hfill
+    \includesag{diagram_two_functors_conn}
+    % \caption{}
+    % \label{fig:two-functors-connected-diagram}
+\end{marginfigure}
 
 We can think of~$\funa(\mora)\colon \funa(\Obja) \mto \funb(\Objb)$ and~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in~\CatD.
-If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \funb(\Obja)$ and~$\ntrafoa_\Objb\colon \funa(\Objb) \mto \funb(\Objb)$ in~\CatD, then these will connect the two diagrams, as depicted in \cref{eq:two-functors-connected-diagram}.
-\equationsag{diagram_two_functors_conn}{eq:two-functors-connected-diagram}
+If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \funb(\Obja)$ and~$\ntrafoa_\Objb\colon \funa(\Objb) \mto \funb(\Objb)$ in~\CatD, then these will connect the two diagrams, as depicted in the figure to the side.
+% \equationsag{diagram_two_functors_conn}{eq:two-functors-connected-diagram}
 % \begin{figure}[h!]
 %     \centering
 %     \includesag{diagram_two_functors_conn}
@@ -110,48 +127,55 @@ If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \fun
 % \end{figure}
 %
 
-In~\CatD, this gives rise to the square diagram shown in \cref{fig:naturality-square}.
-We'll require, as a condition on the morphisms~$\ntrafoa_\Obja$ and~$\ntrafoa_\Objb$, that they make the diagram in \cref{fig:naturality-square} commutative:
-\begin{equation}
-    \funa(\mora) \mthen \ntrafoa_\Objb = \ntrafoa_\Obja \mthen \funb(\mora).
-\end{equation}
-\todojira{630}{\alphubel: @JL: ideally say more here to motivate or explain this.
-    Perhaps include somewhere this perspective: Natural transformations are meant to capture the idea that a transformation is natural in the sense of not depending on any arbitrary choices.
-    If a transformation does depend on arbitrary choices, the arrows alpha X and alpha Y would not be reusable but would have to change when f changes.
-}
+\vspace{7mm}
 
 %
 \begin{marginfigure}
-    \centering
+    \hfill
     \includesag{naturality_square}
     \caption{}
     \label{fig:naturality-square}
 \end{marginfigure}
+
+In~\CatD, this gives rise to the square diagram shown to the side.
+We'll require, as a condition on the morphisms~$\ntrafoa_\Obja$ and~$\ntrafoa_\Objb$, that they make the diagram commutative:
+\begin{equation}
+    \funa(\mora) \mthen \ntrafoa_\Objb = \ntrafoa_\Obja \mthen \funb(\mora).
+\end{equation}
+
+\vspace{7mm}
+
+% \todojira{630}{\alphubel: @JL: ideally say more here to motivate or explain this.
+%     Perhaps include somewhere this perspective: Natural transformations are meant to capture the idea that a transformation is natural in the sense of not depending on any arbitrary choices.
+%     If a transformation does depend on arbitrary choices, the arrows alpha X and alpha Y would not be reusable but would have to change when f changes.
+% }
+
 %
 
 Now consider not only a single morphism~$\mora \colon \Obja \mto \Objb$ in~\CatC being mapped by~$\funa$ and~$\funb$, respectively, but \emph{all} of the category~\CatC.
 Under~$\funa$, the category~\CatC is mapped to a -- possibly very complicated --  diagram in~\CatD (a directed graph of objects and morphism comprising the image of~$\funa$), and similarly, under~$\funb$, the category~\CatC is mapped to another diagram in~\CatD (the image of~$\funb$).
 
-To relate the image of~$\funa$ to the image of~$\funb$ we can proceed in the same way as above: for each object~$\Obja$ in~\CatC, we choose a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Objb)$ in~\CatD.
-In other words, we have a collection of morphisms~$(\ntrafoa_\Obja)_{\Obja \setin \ObC}$ indexed by the objects of~\CatC.
+To relate the image of~$\funa$ to the image of~$\funb$ we can proceed in the same way as above: for each object~$\Obja$ in~\CatC, we choose a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Obja)$ in~\CatD.
+In other words, we have a collection of morphisms~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$ indexed by the objects of~\CatC.
 These gives rise to lots of squares of the kind in \cref{fig:naturality-square}, which we will require to be commutative.
-It is because of this commutativity condition, which is a condition on the collection~$(\ntrafoa_\Obja)_{\Obja \setin \ObC}$, that some mathematicians would say that the collection~$(\ntrafoa_\Obja)_{\Obja \setin \ObC}$ is a ``coherent'' or ``natural'' way to relate the image of~$\funa$ to the image of~$\funb$.
-(This does not mean, however, that there is at most one \SY{natural transformation} between any two given \SY{functors}- on the contrary, there might be many!)
+It is because of this commutativity condition, which is a condition on the collection~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$, that some mathematicians would say that the collection~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$ is a ``coherent'' or ``natural'' way to relate the image of~$\funa$ to the image of~$\funb$.
+(This does not mean, however, that there is at most one \SY{natural transformation} between any two given \SY{functors}---on the contrary, there might be many!)
 
-In \cref{fig:two-naturality-squares} we have illustrated a situation involving three objects and two morphisms in~\CatC, giving rise to two squares.
-We have ``glued'' the two squares together since they share an edge (this a more compact way of drawing them).
-Note that because each of the two component squares in the diagram commute, so does the entire diagram.
-
-%
 \begin{marginfigure}
     \centering
     \includesag{two_naturality_squares}
     \caption{}
     \label{fig:two-naturality-squares}
 \end{marginfigure}
+
+In \cref{fig:two-naturality-squares} we have illustrated a situation involving three objects and two morphisms in~\CatC, giving rise to two squares.
+We have ``glued'' the two squares together since they share an edge (this a more compact way of drawing them).
+Note that because each of the two component squares in the diagram commute, so does the entire diagram.
+
+%
 %
 
-\
+\clearpage
 
 \linkvideo{spring2021-nat-trafos:natural-trafos:nat-trafo-def} % Definition of natural transformation
 \linkvideo{spring2021-nat-trafos:natural-trafos:nattrafos-as-mor} % Natural transformations are morphisms between functors
@@ -183,25 +207,20 @@ To reiterate: a \SY{natural transformation} $\ntrafoa$ is a \emph{collection} $(
 This is analogous to how a sequence $a = (a_n)_{n \setin \natnumbers}$ has terms or a vector $v = (v_1, .
     .., v_n)$ has components.
 
-The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality squares}, and a \SY{natural transformation}~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely as in \cref{fig:nat_trans_globular}.
+The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality squares}, and a \SY{natural transformation}~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely in this manner:
+\equationsag{55_natural_1}{eq:55_natural_1}
 
-\begin{marginfigure}
-    \centering
-    \includesag{55_natural_1}
-    \caption{}
-    \label{fig:nat_trans_globular}
-\end{marginfigure}
-%\begin{equation}
-%    \middlesag{55_natural_1}
-%\end{equation}
-\begin{figure}[h!]
+\Cref{fig:nat_trans_graphically} shows a diagram that describes the property of functors and of natural transformations.
+The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
+
+\begin{figure}[h]
     \centering
     \begin{ctdefinitionshade}
+        \small
         \includesag{096_natural_graphically}
     \end{ctdefinitionshade}
     \caption{}
     \label{fig:nat_trans_graphically}
-    \todographics{@Gioele: perfectionism: the double line is hacked with a white rectangle that does not render well on non-white background.}
 \end{figure}
 
 \section{Natural isomorphisms}
@@ -222,12 +241,12 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
 
 \begin{example}
     \label{ex:Vect}
-    Consider the category~$\Vect_{\reals}$ whose objects are real \SY{vector spaces} and whose morphisms are linear maps.
+    Consider the category~$\VectR$ whose objects are real \SY{vector spaces} and whose morphisms are linear maps.
     (For convenience, in the following we sometimes omit reference to the ground field.)
     Recall that the \emph{dual} of a \SY{vector space}~$V$ is the \SY{vector space} describing all linear maps from~$V$ to~\reals:
     \begin{equation}
         \label{eq:dual-vector-space}
-        V^* \definedas \HomSet{\Vect}{V}{\reals},
+        V^* \definedas \HomSet{\VectR}{V}{\reals},
     \end{equation}
     Also, recall that if~$\mapa\colon V \mto W$ is a linear map, then its dual is a linear map~$\mapa^* \linebreak[1]  \colon W^* \mto V^*$.
 
@@ -236,7 +255,7 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
     That is, there is a functor
     \begin{equation}
         \label{eq:double-dual-functor}
-        \text{\stylefunctors{Double dual}}\colon \Vect \fto \Vect
+        \text{\stylefunctors{Double dual}}\colon \VectRs \fto \Vect
     \end{equation}
     that maps every \SY{vector space} and every linear map to its double dual.
 
@@ -249,7 +268,7 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
         \label{eq:natural-trafo-to-double-dual}
         \ntrafoa_V(v)(l) = l(v), \quad  v \setin V, l \setin V^*.
     \end{equation}
-    These form the components of a \SY{natural transformation} from the \SY{identity functor} on \Vect to the double dual \SY{functor}.
+    These form the components of a \SY{natural transformation} from the \SY{identity functor} on $\VectRs$ to the double dual \SY{functor}.
     \equationsag{nat-trafo-ddual}{eq:nat-trafo-ddual}
 
 \end{example}

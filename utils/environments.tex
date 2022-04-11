@@ -93,28 +93,27 @@
 %
 
 
+
+\colorlet{ctshadecolor}{LightBlue!30}
+
 \surroundwithmdframed[
-    backgroundcolor=LightBlue!30,
+    backgroundcolor=ctshadecolor,
     roundcorner=4pt,
     linewidth=0pt
 ]{ctdefinition}
 
-% This line blocks compilation
-%\surroundwithmdframed[
-%    backgroundcolor=red!20,
-%    roundcorner=4pt,
-%    linewidth=0pt
-%]{exercise}
-
-
-% \newtheorem{ctdefinition}[theorem]{Definition}
+\AtBeginEnvironment{ctdefinition}{\renewcommand{\arrowbgcolor}{ctshadecolor}}
 
 
 \newenvironment{ctdefinitionshade}
-{\colorlet{shadecolor}{LightBlue!50}\begin{shaded*}
+{%
+    \colorlet{shadecolor}{ctshadecolor}%
+    \begin{shaded*}
+    \renewcommand{\arrowbgcolor}{ctshadecolor}%
 }%
-{
-\end{shaded*}}
+{%
+\end{shaded*}%
+}
 
 
 
@@ -406,6 +405,9 @@
 \newcommand{\fitinmargin}[1]{%
     \maxsizebox{\marginparwidth}{!}{#1}%
 }
+\newcommand{\fitinmarginbitless}[1]{%
+    \maxsizebox{\marginparwidth-3mm}{!}{#1}%
+}
 
 \newcommand{\fitinline}[1]{%
     \maxsizebox{\textwidth}{!}{#1}%
@@ -609,6 +611,24 @@
 
     \begin{marginfigure}
         \includegraphics[width=3cm]{#1}
+    \end{marginfigure}
+
+    \nopagebreak[4]\begin{minipage}{\textwidth}
+        \begin{multicols}{3}
+            \datafile{#1}{breakat={'morphisms:': '\\vfill\\columnbreak', 'equations:': '\\vfill\\columnbreak'}}
+        \end{multicols}
+    \end{minipage}
+}
+
+\newcommand{\bigyamlcolstikz}[2]{
+    \begin{widepar}
+        #2
+    \end{widepar}
+
+    \vspace{3mm}\nopagebreak[4]
+
+    \begin{marginfigure}
+        \includesag{#1}
     \end{marginfigure}
 
     \nopagebreak[4]\begin{minipage}{\textwidth}

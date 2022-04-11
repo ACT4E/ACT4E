@@ -51,7 +51,41 @@ Thus, in total, a \SY{Moore machine} is specified by a tuple of the following ty
     \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}.
 \end{equation}
 
-\todotext{\alphubel: @Gioele: Provide a simple example here to illustrate}
+\begin{example}[Robot on a grid]
+    \label{exa:robot_on_a_grid}
+    We consider a robot moving on a two-dimensional unit grid, represented as $\natnumbers^2_{[0,100]}$ (\cref{fig:robot_example}).
+    \begin{marginfigure}
+        \centering
+        \includesag{120_robotcategory}
+        \caption{Robot on a grid example. }
+        \label{fig:robot_example}
+    \end{marginfigure}
+
+    The state of the robot is described by its position coordinates, as $\prstel \setin \natnumbers^2_{[0,100]}$ (for convenience, consider the first element of the state to be the horizontal coordinate and the second element to be the vertical one).
+    The robot can choose from a set of input actions $\prin=\{\uparrow, \downarrow,\rightarrow,\leftarrow\}$, each representing a movement of 1 unit in the corresponding direction on the grid.
+    We can write the dynamics as
+    \begin{equation}
+        \begin{aligned}
+            \prdyn\colon \prin \cartprod \prst                & \sto \prst \\
+            \tupp{\uparrow, \tup{\prsteln{1},\prsteln{2}}}    & \mapsto \tupp{\prsteln{1}, \min(\prsteln{2}+1,100)}, \\
+            \tupp{\downarrow, \tup{\prsteln{1},\prsteln{2}}}  & \mapsto \tupp{\prsteln{1}, \max(\prsteln{2}-1,0)}, \\
+            \tupp{\rightarrow, \tup{\prsteln{1},\prsteln{2}}} & \mapsto \tupp{\min(\prsteln{1}+1,100), \prsteln{2}}, \\
+            \tupp{\leftarrow, \tup{\prsteln{1},\prsteln{2}}}  & \mapsto \tupp{\max(\prsteln{1}-1,0), \prsteln{2}}, \\
+        \end{aligned}
+    \end{equation}
+    where the ``$\min$'' and ``$\max$'' ensure that the robot stays in within the boundaries of the grid.
+    The readout can be thought of as a sensor measuring the position of the robot (the state).
+    Assuming a perfect sensor, we have:
+    \begin{equation*}
+        \defmapperiod{\prreadout}
+        {\prst}
+        {\sto}
+        {\prout}
+        {\tupp{\prsteln{1},\prsteln{2}}}
+        {\tupp{\prsteln{1},\prsteln{2}}}
+    \end{equation*}
+    The starting position of the robot can be specified as any~$\prstart\setin \natnumbers^2_{[0,100]}$.
+\end{example}
 
 \subsection{Moore machines acting on sequences}
 
@@ -68,7 +102,21 @@ Given an infinite sequence of inputs~$\prineln{0}, \prineln{1}, \prineln{2}, \ld
 to produce an infinite sequence~$\prouteln{0}, \prouteln{1}, \prouteln{2}, \ldots$ of outputs.
 For the very first step, when~$k = 0$, we need the initial state~$\prsteln{0} = \prstart$ in order to compute~$\prsteln{1} = \prdyn(\prineln{0}, \prsteln{0})$ and~$\prouteln{0} = \prreadout(\prsteln{0})$.
 
-\todotext{\alphubel: @JL: Continue the simple example above to illustrate}
+\begin{example}
+    To continue \cref{exa:robot_on_a_grid}, we can consider a robot with starting position $\tup{0,0}$.
+    We consider a sequence of inputs~$\rightarrow,\uparrow,\rightarrow,\downarrow,\leftarrow$.
+    Using the recipe given by the Moore machine in \cref{exa:robot_on_a_grid}, one can find the sequences of states and outputs, which in this case coincide, given the identity readout:
+    \begin{equation*}
+        \begin{aligned}
+            \prsteln{0} & =\prstart=\prouteln{0}=\tup{0,0} \\
+            \prsteln{1} & =\prouteln{1}=\tup{1,0}, \\
+            \prsteln{2} & =\prouteln{2}=\tup{1,1}, \\
+            \prsteln{3} & =\prouteln{3}=\tup{2,1}, \\
+            \prsteln{4} & =\prouteln{4}=\tup{2,0}, \\
+            \prsteln{5} & =\prouteln{5}=\tup{1,0},
+        \end{aligned}
+    \end{equation*}
+\end{example}
 
 An infinite sequence~$\prineln{0}, \prineln{1}, \prineln{2}, \ldots$ of elements of~$\prin$ can be also thought as a function~$\prinel \colon \natnumbers \to \prin$ with~$\prinel(0) = \prineln{0}, \prinel(1) = \prineln{2}, \prinel(2) = \prineln{3}, \ldots$ \etc
 To denote an infinite sequence of elements of $\prin$ we use the two notations $\prin^{\natnumbers}$ and $\streamsof\prin$:
@@ -117,6 +165,7 @@ and
 \end{equation}
 with~$\prout_{\mora} = \prin_{\morb}$, we'd like to define their composition as a Moore machine
 \begin{equation}
+    \label{eq:moore-morab-comp}
     \morab = \tupp{\prin_{\morab},\prst_{\morab},\prout_{\morab},\prdyn_{\morab},\prreadout_{\morab},\prstart_{\morab}}.
 \end{equation}
 The situation is illustrated in \cref{fig:comp_moore_1}.
@@ -128,7 +177,7 @@ Here is one way to do it: we set
     \begin{aligned}
         \prin_{\morab}    & \definedas \prin_{\mora}, \\
         \prst_{\morab}    & \definedas \prst_{\mora} \cartprod \prst_{\morb}, \\
-        \prout_{\morab}   & \definedas \prout_{\morb} \\
+        \prout_{\morab}   & \definedas \prout_{\morb}, \\
         \prstart_{\morab} & \definedas \tupp{\prstart_{\mora}, \prstart_{\morb}},
     \end{aligned}
 \end{equation}
@@ -208,3 +257,15 @@ which simply re-brackets the tuples.
 
 In the next section we will introduce a technical construction for defining a product similar to the \SY{cartesian product}, but which is \SY{associative} on the nose - not just ``up to an isomorphism''.
 This construction will allow us to make a new, modified formalization of \SY{Moore machines} which form a bona fide \SY{semicategory}, and it will prove useful in other respects further down the road.
+
+\begin{forslides}
+    \begin{equation}
+        \label{eq:moore-assoc-a}
+        \mora \mthen (\morb \mthen \morc)
+    \end{equation}
+    %
+    \begin{equation}
+        \label{eq:moore-assoc-b}
+        (\mora \mthen \morb) \mthen \morc
+    \end{equation}
+\end{forslides}
