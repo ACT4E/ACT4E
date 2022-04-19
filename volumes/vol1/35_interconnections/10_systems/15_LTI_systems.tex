@@ -6,20 +6,83 @@
 \todo{Note for matrices with 0 dimension}
 We now define LTI systems.
 
+\todotext{J: do we want to make a remark that the definition of LTI below is for continuous time, and that there is also a version for discrete time?}
+
 \todo{Let's just do finite-dimensional systems with matrices}
 \begin{definition}[LTI System]
     \label{def:LTI_syst}
-    A \emph{linear time-invariant dynamical (LTI) system}, in a so-called state-space description, is specified by real \SY{vector spaces}~$\prin=\reals^l$ (input space),~$\prout=\reals^m$ (output space), and~$\prst=\reals^n$ (state space), along with a system of equations of the form
+    A \emph{linear time-invariant dynamical (LTI) system}, in a so-called state-space representation, is specified by real \SY{vector spaces}~$\prin=\reals^l$ (input space),~$\prout=\reals^m$ (output space), and~$\prst=\reals^n$ (state space), along with a system of equations of the form
     \begin{align}
         \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn} \\
         \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:LTI-system-ro},
     \end{align}
-    and an \emph{initial state}~$\prstart\setin \prst$, where~$t \setin \nonNegReals$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}\colon \prst \to \prst$,~$\mat{B}\colon \prin \to \prst$,~$\mat{C}\colon \prst \to \prout$,~$\mat{D}\colon \prin \to \prout$ are~\reals-linear maps (we are identifying the tangent space of~$\prst$ with~$\prst$ itself).
+    and an \emph{initial state}~$\prstart\setin \prst$, where~$t \setin \nonNegReals$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}$,~$\mat{B}$,~$\mat{C}$,~$\mat{D}$ are real matrices of appropriate dimension.
 \end{definition}
 
-We compactly refer to an LTI system by writing it as a tuple~$\genericlti{}$.
+We compactly refer to an LTI system by writing it as a tuple~$\genericlti{}$. 
 
-We will call an LTI system \emph{proper} if, in \cref{eq:LTI-system-ro},~$\mat{D}=\mat{0}^{\matdim{p}{m}}$.
+The equations \cref{eq:LTI-system-dyn} describe the dynamics. The equations \cref{eq:LTI-system-ro} describe the output, or, one might say, the variables that are ``exposed'' or externally visible.
+
+The matrix $\mat{D}$ is called the \emph{feedthrough term}. We will call an LTI system \emph{proper} if~$\mat{D}=\mat{0}^{\matdim{l}{m}}$.
+
+\begin{remark}
+When using state-space LTI systems as models, it is typical that the equations \cref{eq:LTI-system-dyn} are chosen using physical laws and first principles reasoning, while the matrices $\mat{C}$ and $\mat{D}$ in \cref{eq:LTI-system-ro} are rather chosen based on what information from our model is explicitly relevant or accessible. 
+\end{remark}
+
+\todotext{J: @Andrea @Gioele: does the above remark seems reasonable? I want to justify why, in the following examples, we only really care, for the time being, about the dynamics equations.}
+
+\begin{example}
+Consider a mass $m$ lying on a frictionless surface, and attached to two springs as depicted from above in  [INSERT FIGURE]. The coordinate $q$ describes position of the mass along one horizontal dimension, $F$ denotes a force that is applied to $m$ in that horizontal direction, and $k_1$ and $k_2$ are the spring constants of the respective springs. 
+
+The dynamics of the position coordinate $q$ as a function of time is described by the differential equation
+\begin{equation}
+(k_1 + k_2)q + m \ddot q = F. 
+\end{equation}
+
+We may rewrite this as an LTI system in a state-space representation by choosing the state-variable to be
+\begin{equation}
+\mat{x} = 
+\begin{bmatrix}
+q \\
+\dot q
+\end{bmatrix}.
+\end{equation}
+Then 
+\begin{equation}
+\dot{\mat{x}} = 
+\begin{bmatrix}
+0 & 1 \\
+\tfrac{-(k_1 + k_2)}{m} & 0 
+\end{bmatrix}
+\mat{x} + 
+\begin{bmatrix}
+0 \\
+1
+\end{bmatrix} 
+F
+\end{equation}
+describes the dynamics, and as output we might choose
+\begin{equation}
+\mat{y} =
+\begin{bmatrix}
+1 & 0 
+\end{bmatrix}
+\mat{x} +
+\begin{bmatrix}
+0
+\end{bmatrix} 
+F.
+\end{equation}
+\end{example}
+
+\todotext{J: the above example is Example 4.3.1 from the Polderman Willems books ``Introduction to mathematical systems theory''}
+
+\begin{example}
+...
+\end{example}
+
+
+\subsection{Equivalent LTI systems}
 
 \begin{definition}[Equivalence of LTI systems]
     \label{def:equivalence_lti}
@@ -483,50 +546,6 @@ The theorem of Picard-Lindelöf guarantees that initial value problems of the fo
     Note that control theory has developed tools to deal with hidden parts of the dynamics.
     Examples are the notion of controllability (ability of an actuator/input to control all states of a system) and observability (ability to estimate all states of the system).
 \end{proof}
-
-\devel{
-\subsection{Continuous LTI}
-\todojira{196}{\alphubel: rough here, to be polished and add trace thing with Gr, finish example}
-In the following, we present the category of continuous linear time-invariant dynamical systems.
-Let $T=\nonNegReals$ represent time.
-
-\paragraph{Objects}
-The objects of the category are natural numbers $n\setin \natnumbers $.
-These represent sequences $s\colon T\sto \reals^n$, defining tuples in $\reals^n\times T$.
-
-\paragraph{Morphisms}
-A morphism in \LTI is an arrow $l\to m$, for $l,m\setin \natnumbers $.
-The arrow describes the transformation of an input sequence $u\colon T\sto \reals^l$ into an output sequence $y\colon T\sto \reals^m$.
-Such an arrow is given by a continuous time LTI system of the form
-\begin{equation}
-    \begin{aligned}
-        \dot{x}_{t} & =A x_{t}+B u_{t} \\
-        y_{t}       & =C x_{t} +D u_{t},
-    \end{aligned}
-\end{equation}
-where $A\setin \reals^{\ntimesn}$, $B\setin \reals^{n\times l}$, $C\setin \reals^{\matdim{m}{n}}$, $D\setin \reals^{\matdim{m}{l}}$, $x_t\setin \reals^n$, $u_t\setin \reals^l$, and $y_t\setin \reals^m$.
-For brevity, we refer to the LTI as the tuple $\tup{A,B,C,D}$, leaving the dimensions of the input/output implicit.
-
-\paragraph{Identity morphism}
-The \SY{identity morphism} for $l\setin \Obof\LTI$ is an arrow $l\to l$, parametrized by the system $\tup{0,0^{1\times l},0^{l\times 1},\mathbb{I}^{l\times l}}$.
-
-\paragraph{Composition of morphisms}
-Given two arrows $a\to b$ and $b\to c$, param\-etrized by the two LTI systems $\tup{A_1,B_1,C_1,D_1}$ and $\tup{A_2,B_2,C_2,D_2}$, their composition is an arrow $a\to c$, parametrized by the LTI system $\tup{A,B,C,D}$, where
-\begin{equation}
-    A=\begin{bmatrix}
-        A_1    & 0   \\
-        B_2C_1 & A_2
-    \end{bmatrix},\quad
-    B=\begin{bmatrix}
-        B_1 \\
-        B_2D_1
-    \end{bmatrix},\quad
-    C=\begin{bmatrix}
-        D_2C_1 & C_2
-    \end{bmatrix}, \quad
-    D=D_2D_1.
-\end{equation}
-}
 
 \devel{
     \subsection{Descriptor systems}
