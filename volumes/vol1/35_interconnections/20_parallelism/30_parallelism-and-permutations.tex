@@ -1,0 +1,300 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Parallelism and permutations}
+\label{sec:parallelism-and-permutations}
+
+\todotext{J: @J: write some brief intro words here}
+
+\subsection{Symmetric stacking semicategories}
+
+Let~\CatC be an \SY{associative stacking} semicategory, and consider morphisms
+\begin{equation}
+    \mora \mtimescatmor \morb \colon \Obja \mtimescatob \Objb \mto \Objc \mtimescatob \Objd
+\end{equation}
+and
+\begin{equation}
+    \morc \mtimescatmor \mord \colon \Objd \mtimescatob \Objc \mto \Objf \mtimescatob \Obje.
+\end{equation}
+If~$\Objc \mtimescatob \Objd \neq \Objd \mtimescatob \Objc$, then the morphisms~$\mora \mtimescatmor \morb$ and~$\morc \mtimescatmor \mord$ are, in our model, technically not composable.
+However, in some examples, we will in fact want to be able to compose such morphisms, because in those cases~$\Objc \mtimescatob \Objd$ and~$\Objd \mtimescatob \Objc$ are essentially equal, even if they aren't equal on the nose.
+
+For example,~$\mora, \morb, \morc, \mord$ might be systems, represented graphically by boxes with wires for input and output.
+The stacked system~$\mora \mtimescatmor \morb$ will have output wires for~$\Objc$ and $\Objd$, and the stacked system~$\morc \mtimescatmor \mord$ will have input wires for~$\Objd$ and~$\Objc$.
+In some applications we are often indeed able to connect the one output wire labeled with~$\Objc$ to the input wire also labeled with~$\Objc$, and similarly for~$\Objd$.
+
+To model this for stacking \SY{semicategories}, we introduce operations that correspond to crossing (or permuting) wires, both on the input and output sides of morphism.
+Recall that, for each~$n \setin \natnumbers$, the symmetric group $S_n$ is the group of \SY{bijections} of the set~$\makeset{1, 2, \ldots, n }$ with itself.
+
+%Now consider a a stacking semicategory $\CatC$. For each natural number $n \geq 2$ and each permutation $\sigma \setin S_n$, we define an operation $P_\sigma: \Ob_\CatC \to \Ob_\CatC$ by
+%\begin{equation}
+%P_\sigma: \Objan{1} \mtimescatob \dots \mtimescatob  \Obja_n \mapsto \Obja_{\sigma(1)} \mtimescatob \dots \mtimescatob  \Obja_{\sigma(n)}
+%\end{equation}
+
+\begin{marginfigure}
+    \centering
+    \includegraphics[scale=0.1]{parallelism_symmetric-stacking-source-perm}
+    \caption{A diagram for a source permutation map.}
+    \label{fig:symmetric-stacking-left-perm}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includegraphics[scale=0.1]{parallelism_symmetric-stacking-target-perm}
+    \caption{A diagram for a target permutation map.}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includegraphics[scale=0.1]{parallelism_symmetric-stacking-source-perm-evaluated}
+    \caption{A source permutation applied to a morphism $\mora \colon \Obja \mto \Objb$ whose source has a factorization $\Obja = \Objan{1} \mtimescatob \Objan{2}  \mtimescatob \Objan{3}$ and whose target has a factorization $\Objb = \Objbn{1} \mtimescatob \Objbn{2}  \mtimescatob \Objbn{3}$.}
+    \label{fig:symmetric-stacking-left-perm-evaluated}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includegraphics[scale=0.1]{parallelism_symmetric-stacking-target-perm-evaluated}
+    \caption{The target permutation using the same permutation as in \cref{fig:symmetric-stacking-left-perm} and applied to the same morphism.}
+    \label{fig:symmetric-stacking-target-perm}
+\end{marginfigure}
+
+\begin{ctdefinition}[Symmetric stacking semicategory]
+    \label{def:symmetric-stacking-category}
+    A \maindef{symmetric stacking semicategory} is an \SY{associative stacking} \SY{semicategory}~\CatC with:
+
+    \constit
+
+    \begin{itemize}
+        \item Functions
+              \begin{equation}
+                  \sourceperm{\sigma} \colon \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objan{i}}{\mtimescatob_{i=1}^n \Objbn{i}} \to \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_{\sigma^{-1}(i)}}{\mtimescatob_{i=1}^n \Objbn{i}}
+              \end{equation}
+              and
+              \begin{equation}
+                  \targetperm{\sigma} \colon \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objan{i}}{\mtimescatob_{i=1}^n \Objbn{i}} \to \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objan{i}}{\mtimescatob_{i=1}^n \Objb_{\sigma(i)}}
+              \end{equation}
+              for every~$\sigma \setin \Perms(n)$,~$n \geq 1$.
+              We call these functions \emph{source permutations} and \emph{target permutations}, respectively.
+    \end{itemize}
+
+    \condit
+
+    \begin{itemize}
+
+        \item \emph{Compatibility with composition:}
+
+              For all $\mora \setin \HomSet{\CatC}{\Obja}{\mtimescatob_{i=1}^n \Objbn{i}}$ and $\morb \setin \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objb_{\sigma(i)}}{\Objc}$
+              \begin{equation}
+                  \label{eq:perm-compatibility-with-composition}
+                  \targetperm{\sigma} (\mora) \mthen \morb = \mora \mthen \sourceperm{\sigma}(\morb).
+              \end{equation}
+
+        \item \emph{Compatibility with stacking:}
+
+              Given~$\moran{i} \colon \Objan{i} \mto \Objbn{i}$,~$1 \leq i \leq n$, it holds that
+              \begin{equation}
+                  \label{eq:perm-compatibility-with-stacking-1}
+                  \targetperm{\sigma} ( \mtimescatmor_{i=1}^n \moran{i} ) = \sourceperm{\sigma}( \mtimescatmor_{i=1}^n \mora_{\sigma(i)} )
+              \end{equation}
+              and
+              \begin{equation}
+                  \label{eq:perm-compatibility-with-stacking-2}
+                  \sourceperm{\sigma} ( \mtimescatmor_{i=1}^n \moran{i} ) = \targetperm{\sigma} ( \mtimescatmor_{i=1}^n \mora_{\sigma^{-1}(i)} ).
+              \end{equation}
+
+        \item \emph{Compatibility with permutation composition:}
+
+              The equations
+              \begin{equation}
+                  \label{eq:perm-compatibility-with-perm-comp}
+                  \sourceperm{\sigma} \mthen \sourceperm{\pi} = \sourceperm{(\pi\mthen\sigma)}
+                  \quad \text{ and } \quad
+                  \targetperm{\sigma} \mthen \targetperm{\pi} = \targetperm{(\sigma \mthen \pi)}
+              \end{equation}
+              hold for all~$\sigma, \pi \setin S_n$,~$n \geq 2$.
+
+    \end{itemize}
+\end{ctdefinition}
+
+\todotext{@J: check if this definition is compatible with the definition of a symmetric \SY{strict monoidal category}, in particular coherence conditions}
+
+In terms of diagrams, the condition of compatibility with composition \cref{eq:perm-compatibility-with-composition} is illustrated in terms of diagrams in \cref{fig:symmetric-stacking-comp-compat}.
+
+\begin{figure}[h]
+    \centering
+    \subfloat[\label{fig:symmetric-stacking-comp-compat-1}$\targetperm{\sigma} (\mora) \mthen \morb$]{
+        \includegraphics[scale=0.1]{parallelism_symmetric-stacking-comp-compat-1}
+    } \qquad \qquad
+    \subfloat[\label{fig:symmetric-stacking-comp-compat-2}$\mora \mthen \sourceperm{\sigma}(\morb)$]{
+        \includegraphics[scale=0.1]{parallelism_symmetric-stacking-comp-compat-2}
+    }
+    \caption{Compatibility with composition. }
+    \label{fig:symmetric-stacking-comp-compat}
+\end{figure}
+
+In \cref{fig:compatibility-with-stacking} the first equation \cref{eq:perm-compatibility-with-stacking-1} for compatibility with stacking is illustrated diagrammatically.
+
+\begin{figure}[h]
+    \centering
+    \subfloat[\label{fig:compatibility-with-stacking-1}$\targetperm{\sigma} ( \mtimescatmor_{i=1}^n \moran{i} )$]{
+        \includegraphics[scale=0.1]{parallelism_compatibility-with-stacking-1}
+    } \qquad \qquad
+    \subfloat[\label{fig:compatibility-with-stacking-2}$\sourceperm{\sigma}(  \mtimescatmor_{i=1}^n \mora_{\sigma(i)}) $]{
+        \includegraphics[scale=0.1]{parallelism_compatibility-with-stacking-2}
+    }
+    \caption{Compatibility with composition. }
+    \label{fig:compatibility-with-stacking}
+\end{figure}
+
+\cref{fig:compatibility-perm-comp} illustrates the first equation \cref{eq:perm-compatibility-with-perm-comp} for compatibility with permutation composition.
+
+\begin{figure}[h]
+    \centering
+    \subfloat[\label{fig:compatibility-perm-comp-1}$\sourceperm{\sigma} \mthen \sourceperm{\pi}$]{
+        \includegraphics[scale=0.1]{parallelism_compatibility-perm-comp-1}
+    } \qquad \qquad
+    \subfloat[\label{fig:compatibility-perm-comp-2}$\sourceperm{(\pi\mthen\sigma)} $]{
+        \includegraphics[scale=0.1]{parallelism_compatibility-perm-comp-2}
+    }
+    \caption{Compatibility with composition. }
+    \label{fig:compatibility-perm-comp}
+\end{figure}
+
+%\begin{figure*}[b]
+%    %\includegraphics[width=8cm]{symmetric}
+%    \centering
+%    \subfloat[]{
+%        \includesag{symmetric_stacking}
+%    }
+%    \subfloat[]{
+%        \includesag{symmetric_stacking_bis}
+%    }
+%    \caption{
+%        Illustration of \cref{eq:symmetric-condition}.
+%    }
+%    \label{fig:stacking-symmetric}
+%\end{figure*}
+
+\begin{example}
+    \SetL is symmetric in a straightforward manner.
+\end{example}
+
+\begin{lemma}
+    \label{lem:effects-not-symmetric}
+    \Effects is not symmetric.
+\end{lemma}
+
+\todographicsjira{431}{\alphubel: @Andrea: Add figure for this lemma, in the same style as \cref{fig:effects-non-functorial} }
+
+\todojira{699}{\alphubel: Example of \LTI with $d=0$ a symmetric semicat}
+
+\devel{ 
+\begin{ctdefinition}[Commutative stacking semicategory]
+    \label{def:commutative-stacking-semicat}
+    A \maindef{commutative stacking semicategory} is a \SY{stacking semicategory} $\tup{\CatC, \mtimescatob, \mtimescatmor}$ with
+
+    \condit
+
+    \begin{enumerate}
+        \item \emph{Symmetry}:
+              \begin{equation}
+                  \Obja \mtimescatob \Objb = \Objb \mtimescatob \Obja
+              \end{equation}
+              for all object $\Obja, \Objb \setin \Ob_\CatC$.
+    \end{enumerate}
+\end{ctdefinition}
+
+\todotext{J: @JL: do we need any more assumptions/constituents/conditions? check, because we are not assuming functorial stacking!!}
+
+\todotext{J: @J: given an example}
+
+}
+% \devel{
+
+%     \section{Strict monoidal semicategories}
+
+%     \begin{ctdefinition}\label{def:strict-monoidal-semicat}
+%         A \emph{strict monoidal semicategory} is a functorial stacking semicategory $\tup{\CatC, \mtimescat}$ with
+
+%         \constit
+
+%         \begin{itemize}
+%             \item an object $\idmoncat \setin \Obof{\CatC}$, called the \emph{monoidal unit}
+%         \end{itemize}
+
+%         \condit
+
+%         \begin{itemize}
+%             \item For any object $\Obja$ of \CatC,
+%                   \begin{equation}
+%                       \Obja \mtimescatob \idmoncat = \Obja \qquad \text{and} \qquad  \idmoncat \mtimescatob \Obja = \Obja.
+%                   \end{equation}
+%             \item The monoidal unit $\idmoncat$ has an identity morphism $\catid_\idmoncat$, and for any morphism $\mora \colon \Obja \mto \Objb$,
+%                   \begin{equation}
+%                       \mora \mtimescatmor \catid_\idmoncat = \mora \qquad \text{and} \qquad \catid_\idmoncat \mtimescat  \mora = \mora.
+%                   \end{equation}
+%         \end{itemize}
+
+%     \end{ctdefinition}
+
+%     \todotext{@JL: write def of symmetric strict monoidal semicategory}
+
+% }
+
+\devel{
+\subsection{Symmetric stacking categories}
+
+\todotext{J: @J: fill this subsection}
+
+
+\begin{ctdefinition}
+    \label{def:sym-stacking-cat}
+    A \emph{symmetric stacking category} is a \SY{stacking category} $\tup{\CatC, \mtimescatob, \mtimescatmor}$  with
+
+    \constit
+
+    \begin{enumerate}
+        \item For any two objects $\Obja, \Objb \setin \Ob_\CatC$ there exists an isomorphism
+              \begin{equation}
+                  \sigma_{\Obja, \Objb} \colon \Obja \mtimescatob \Objb \mto \Objb \mtimescatob \Obja,
+              \end{equation}
+              called the \emph{braiding}.
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item \emph{Naturality}: For any morphisms $\mora \colon \Obja \mto \Objc$, $\morb \colon \Objb \mto \Objd$, the diagram
+                  [ INSERT DIAGRAM ]
+              commutes.
+        \item \emph{Commuativity}: For all $\Obja, \Objb \setin \Ob_\CatC$,
+              \begin{equation}
+                  \sigma_{\Obja, \Objb} \mthen \sigma_{\Objb, \Obja} = \catid_{\Obja \mtimescatob \Objb}.
+              \end{equation}
+    \end{enumerate}
+
+\end{ctdefinition}
+
+\todotext{J: @JL: do we need any more assumptions/constituents/conditions? check, because we are not assuming functorial stacking!!}
+
+\todotext{J: @JL: make two example of symmetric strict monoidal \SY{semicategory} using natural numbers, once with addition and once with multiplication}
+
+\begin{ctdefinition}[Commutative stacking category]
+    \label{def:commutative-stacking-cat}
+    A \maindef{commutative stacking category} is a \SY{symmetric stacking category} $\tup{\CatC, \mtimescatob, \mtimescatmor}$  with
+
+    \condit
+
+    \begin{enumerate}
+        \item \emph{Symmetry}:
+              \begin{equation}
+                  \Obja \mtimescatob \Objb = \Objb \mtimescatob \Obja
+              \end{equation}
+              for all object $\Obja, \Objb \setin \Ob_\CatC$.
+    \end{enumerate}
+\end{ctdefinition}
+
+\todotext{J: @JL: do we need any more assumptions/constituents/conditions? check, because we are not assuming functorial stacking!!}
+
+\todotext{J: @J: given an example}
+
+}
