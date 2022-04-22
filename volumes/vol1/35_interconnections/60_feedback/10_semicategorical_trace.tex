@@ -69,10 +69,113 @@
 
 \todotext{J: the above defines what might more precisely be called a \emph{right} trace... in a \SY{symmetric monoidal category} this will, I think, automatically also give a left trace, because the axioms work nicely with the symmetric braiding... in the above I'm not sure if this works out still all nicely... perhaps or perhaps not... }
 
+\devel{
+    \begin{lemma}
+        Consider the subsemicategory of \LTI only allowing propert \LTI systems as morphisms.
+        The trace axioms not including identities are valid.
+    \end{lemma}
+
+    \begin{proof}
+        We prove the statements not involving identities one by one.
+        \paragraph*{Vanishing I}
+        Consider a proper LTI system $\mora\colon i\mto j$, given by $\genericplti{\mora}$ with state dimension $s\setin \natnumbers$.
+        We need to check
+        \begin{equation*}
+            \Tr_{i,j}^0 (\mora)=\mora.
+        \end{equation*}
+        Using the trace definition, we can write:
+        \begin{equation*}
+            \Tr_{i,j}^0 (\mora)=\tup{\prstart{\mora}, \mat{A}_\mora+\rowscols{\mat{B}_{\mora}}{:}{i+1:i+k}\rowscols{\mat{C}_{\mora}}{j+1:j+k}{:}, \rowscols{\mat{B}_{\mora}}{:}{1:i}, \rowscols{\mat{C}_{\mora}}{1:j}{:}}.
+        \end{equation*}
+        However, we have:
+        \begin{equation*}
+            \mat{B}_\mora=\begin{bmatrix}
+                \rowscols{\mat{B}_{\mora}}{:}{1:i} & \mat{0}^{s\times 0}
+            \end{bmatrix},\quad
+            \mat{C}_\mora=\begin{bmatrix}
+                \rowscols{\mat{C}_{\mora}}{1:j}{:} \\ \mat{0}^{0\times s}
+            \end{bmatrix},
+        \end{equation*}
+        and therefore
+        \begin{equation*}
+            \Tr_{i,j}^0 (\mora)=\tup{\prstart{\mora}, \mat{A}_\mora, \mat{B}_\mora, \mat{C}_\mora}=\mora.
+        \end{equation*}
+
+        \paragraph*{Vanishing II}
+        Consider a proper LTI system $\mora\colon i+k+o\mto j+k+o$, given by $\genericplti{\mora}$ with state dimension $s\setin \natnumbers$.
+        We need to check
+        \begin{equation*}
+            \Tr_{i,j}^{k+o} (\mora)=\Tr_{i,j}^{k}\left(\Tr_{i+k,j+k}^o(\mora)\right).
+        \end{equation*}
+        Let's start with the left-hand side of the statement.
+        We have:
+        \begin{equation}
+            \label{eq:vanishing2-left}
+            \Tr_{i,j}^{k+o} (\mora)=\tup{\prstart, \mat{A}+\rowscols{\mat{B}_\mora}{:}{i+1:i+k+o}\rowscols{\mat{C}_\mora}{j+1:j+k+o}{:}, \rowscols{\mat{B}_\mora}{:}{1:i},\rowscols{\mat{C}_\mora}{1:j}{:}}.
+        \end{equation}
+        Let's look at the right-hand side.
+        We have:
+        \begin{widepar}
+            \begin{equation*}
+                \Tr_{i+k,j+k}^{o} (\mora)=\tup{\prstart, \mat{A}+\rowscols{\mat{B}_\mora}{:}{i+k+1:i+k+o} \rowscols{\mat{C}_\mora}{j+k+1:j+k+o}{:}, \underbrace{\rowscols{\mat{B}_\mora}{:}{1:i+k}}_{\mat{B}_{\mora,\star}},\underbrace{\rowscols{\mat{C}_\mora}{1:j+k}{:}}_{\mat{C}_{\mora,\star}}},
+            \end{equation*}
+        \end{widepar}
+        which we can leverage to express $\Tr_{i,j}^{k}\left(\Tr_{i+k,j+k}^o(\mora)\right)=\ast$.
+        Clearly, $\projA(\ast)=\prstart$.
+        Furthermore:
+        \begin{equation*}
+            \begin{aligned}
+                \projB(\ast) & =\mat{A}_\mora + \rowscols{\mat{B}_\mora}{:}{i+k+1:i+k+o}\rowscols{\mat{C}_\mora}{j+k+1:j+k+o}{:}+\rowscols{\mat{B}_{\mora,\star}}{:}{i+1:i+k}\rowscols{\mat{C}_{\mora,\star}}{:}{j+1:j+k} \\
+                             & =\mat{A}_\mora + \rowscols{\mat{B}_\mora}{:}{i+k+1:i+k+o}\rowscols{\mat{C}_\mora}{j+k+1:j+k+o}{:}+\rowscols{\mat{B}_{\mora}}{:}{i+1:i+k}\rowscols{\mat{C}_{\mora}}{:}{j+1:j+k} \\
+                             & =\mat{A}_\mora + \begin{bmatrix}
+                                                    \rowscols{\mat{B}_{\mora}}{:}{i+1:i+k} & \rowscols{\mat{B}_\mora}{:}{i+k+1:i+k+o}
+                                                \end{bmatrix} \begin{bmatrix}
+                                                                  \rowscols{\mat{C}_{\mora}}{:}{j+1:j+k} \\
+                                                                  \rowscols{\mat{C}_\mora}{j+k+1:j+k+o}{:}
+                                                              \end{bmatrix} \\
+                             & =\mat{A}+\rowscols{\mat{B}_\mora}{:}{i+1:i+k+o}\rowscols{\mat{C}_\mora}{j+1:j+k+o}{:}.
+            \end{aligned}
+        \end{equation*}
+        Furthermore, $\projC(\ast) = \rowscols{\mat{B}_\mora}{:}{1:i}$ and $\projD(\ast) = \rowscols{\mat{C}_\mora}{1:j}{:}$.
+        Clearly, the found results correspond to \cref{eq:vanishing2-left}.
+
+        \paragraph*{Superposing}
+        Consider the proper LTI systems $\mora\colon i+k\mto j+k$, given by $\genericplti{\mora}$, and $\morb\colon l\mto m$, given by $\genericplti{\morb}$.
+        We need to check:
+        \begin{equation*}
+            \Tr_{l+i,m+j}^k(\morb \mtimescatmor \mora)=\morb \mtimescatmor \Tr_{i,j}^k(\mora).
+        \end{equation*}
+        Let's start with the left-hand side.
+        We have:
+        \begin{equation*}
+            \morb \mtimescatmor \mora=\tup{\begin{bmatrix}\prstart_\morb\\ \prstart_\mora \end{bmatrix}, \begin{bmatrix} \mat{A}_\morb&\mat{0}\\ \mat{0}&\mat{A}_\mora\end{bmatrix},
+                \begin{bmatrix} \mat{B}_\morb&\mat{0}\\ \mat{0}&\mat{B}_\mora\end{bmatrix},\begin{bmatrix} \mat{C}_\morb&\mat{0}\\ \mat{0}&\mat{C}_\mora\end{bmatrix}}
+        \end{equation*}
+        Now observe that $\mat{B}_\morb$ has $l$ columns, $\mat{B}_\mora$ has $i+k$ columns, $\mat{C}_\morb$ has $m$ rows, and $\mat{C}_\mora$ has $j+k$ rows.
+        Let's denote $\Tr_{l+i,m+j}^k(\morb \mtimescatmor \mora)$ by $\ast$.
+        We have:
+        \begin{equation*}
+            \begin{aligned}
+                \projB(\ast) & =\begin{bmatrix} \mat{A}_\morb&\mat{0}\\ \mat{0}&\mat{A}_\mora\end{bmatrix}+\rowscols{\begin{bmatrix} \mat{B}_\morb&\mat{0}\\ \mat{0}&\mat{B}_\mora\end{bmatrix}}{:}{l+i+1:l+i+k}\rowscols{\begin{bmatrix} \mat{C}_\morb&\mat{0}\\ \mat{0}&\mat{C}_\mora\end{bmatrix}}{m+j+1:m+j+k}{:} \\
+                             & =\begin{bmatrix} \mat{A}_\morb&\mat{0}\\ \mat{0}&\mat{A}_\mora\end{bmatrix}+\begin{bmatrix} \mat{0}\\ \rowscols{\mat{B}_\mora}{:}{i+1:i+k}\end{bmatrix}
+                \begin{bmatrix}
+                    \mat{0} & \rowscols{\mat{C}_\mora}{j+1:j+k}{:}
+                \end{bmatrix} \\
+                             & =\begin{bmatrix} \mat{A}_\morb&\mat{0}\\ \mat{0}&\mat{A}_\mora\end{bmatrix}
+                \begin{bmatrix}
+                    \mat{0} & \mat{0}                                                                  \\
+                    \mat{0} & \rowscols{\mat{B}_\mora}{:}{i+1:i+k}\rowscols{\mat{C}_\mora}{j+1:j+k}{:}
+                \end{bmatrix}
+            \end{aligned}
+        \end{equation*}
+    \end{proof}
+}
+
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.35]{feedback_axiomatic-semicat-trace-nat-X}
-    \caption{Naturality in $\Obja$.}
+    \caption{Naturality in $\Obja$.
+    }
     \label{fig:axiomatic-semicat-trace-nat-X}
 \end{figure}
 
