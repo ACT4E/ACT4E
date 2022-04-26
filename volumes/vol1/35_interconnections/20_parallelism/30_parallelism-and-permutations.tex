@@ -5,6 +5,52 @@
 
 \todotext{J: @J: write some brief intro words here}
 
+\subsection{A strict monoidal category of permutations}
+
+Recall that a \emph{permutation} of order $n \in \natnumbers$ is a bijective function from the set $\makeset{1,2, \dots , n}$ to itself. For fixed $n \in \natnumbers$, the set of permutations of order $n$ has a group structure, where the composition operation is composition of functions. We call this group $\Perms(n)$. For the special case of $n = 0$, we interpret $\Perms(0)$ as containing the unique function from the empty set $\emptyset$ to itself; this function is bijective. 
+
+There are several typical notations for indicating permutations. We will use the following one, and illustrate it by example. If, for instance, $\sigma \in \Perms(3)$ is the permutation 
+\begin{align*}
+\makeset{1,2,3} & \to \makeset{1,2,3} \\
+1 & \mapsto 2 \\
+2 & \mapsto 3 \\
+3 & \mapsto 1
+\end{align*}
+then we indicate this by writing $\sigma = (3, 1, 2)$. One way to think of this notation is that we start with $(1, 2, 3)$ and then apply $\sigma$ to each entry. In other words, in general, our notation for some $\sigma \in \Perms(n)$ is $(\sigma(1), \dots, \sigma(n))$. 
+
+To help us talk about permuting inputs and output of morphisms in stacking semicategories, we make the following definitions. 
+
+\begin{definition}
+The \emph{permutation category} $\Permcat$ is
+\begin{enumerate}
+\item \emph{Objects}: the natural numbers $\natnumbers$;
+\item \emph{Morphisms}: permutations in $\Perms(n)$, for all $n \in \natnumbers$. 
+\item \emph{Composition}: composition of permutations;
+\item \emph{Identities}: identity functions (which are permutations).
+\end{enumerate}
+\end{definition}
+
+\begin{definition}
+For any two objects $n, m \in \natnumbers$ of $\Permcat$, let 
+\begin{equation}
+n \mtimescatob m \definedas n + m, 
+\end{equation}
+and for any two morphisms $\sigma = (\sigma(1), \dots, \sigma(n))$, $\pi =  (\pi(1), \dots, \pi(m))$ of $\Permcat$, let
+\begin{equation}
+\sigma \mtimescatmor \pi \definedas (\sigma(1), \dots, \sigma(n), \pi(1) + n, \dots, \pi(m) + n). 
+\end{equation}
+\end{definition}
+
+\begin{lemma}
+The operations $\mtimescatob$ and $\mtimescatmor$ make $\Permcat$ into a functorial stacking category $\tup{\Permcat, \mtimescat}$. 
+\end{lemma}
+
+\begin{lemma}
+$\tup{\Permcat, \mtimescat}$ is a strict monoidal category, with unit $\idmoncat$ given by $0 \in \natnumbers$.
+\end{lemma}
+
+\todotext{\alphubel: J: @J: define refinement of permutations..}
+
 \subsection{Symmetric stacking semicategories}
 
 Let~\CatC be an \SY{associative stacking} semicategory, and consider morphisms
@@ -80,15 +126,41 @@ Recall that, for each~$n \setin \natnumbers$, the symmetric group $S_n$ is the g
 
     \begin{itemize}
 
-        \item \emph{Compatibility with composition:}
+        \item \emph{Compatibility with semicategory composition:}
 
               For all $\mora \setin \HomSet{\CatC}{\Obja}{\mtimescatob_{i=1}^n \Objbn{i}}$ and $\morb \setin \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objb_{\sigma(i)}}{\Objc}$
               \begin{equation}
                   \label{eq:perm-compatibility-with-composition}
                   \targetperm{\sigma} (\mora) \mthen \morb = \mora \mthen \sourceperm{\sigma}(\morb).
               \end{equation}
+              
+               \item \emph{Compatibility with permutation composition:}
+
+              The equations
+              \begin{equation}
+                  \label{eq:perm-compatibility-with-perm-comp}
+                  \sourceperm{\sigma} \mthen \sourceperm{\pi} = \sourceperm{(\pi\mthen\sigma)}
+                  \quad \text{ and } \quad
+                  \targetperm{\sigma} \mthen \targetperm{\pi} = \targetperm{(\sigma \mthen \pi)}
+              \end{equation}
+              hold for all~$\sigma, \pi \setin \Perms(n)$,~$n \geq 2$.
+
 
         \item \emph{Compatibility with stacking:}
+            
+            For all $\mora \in \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objan{i}}{\Objbn{1}}$, $\morb \in \HomSet{\CatC}{\mtimescatob_{i=n+1}^{n+m} \Objan{i}}{\Objbn{2}}$,
+\begin{equation}
+ \sourceperm{\sigma}(\mora) \mtimescatmor \sourceperm{\pi}(\morb) =  \sourceperm{(\sigma \mtimescat \pi)}(\mora \mtimescatmor \morb) 
+\end{equation}
+holds for all $\sigma \in \Perms(n), \pi \in \Perms(m)$, where $\mtimescat$ is the stacking operation in $\Permcat$. 
+
+Similarly, for all $\mora \in \HomSet{\CatC}{\Objan{1}}{\mtimescatob_{i=1}^n \Objbn{i}} $ and $\morb \in \HomSet{\CatC}{\Objan{2}}{\mtimescatob_{i=n+1}^{n+m} \Objbn{i}}$, 
+\begin{equation}
+ \targetperm{\sigma}(\mora) \mtimescatmor \targetperm{\pi}(\morb) =  \sourceperm{(\sigma \mtimescat \pi)}(\mora \mtimescatmor \morb) 
+\end{equation}
+holds for all $\sigma \in \Perms(n), \pi \in \Perms(m)$.
+                   
+          \item \emph{Sliding:}
 
               Given~$\moran{i} \colon \Objan{i} \mto \Objbn{i}$,~$1 \leq i \leq n$, it holds that
               \begin{equation}
@@ -101,25 +173,15 @@ Recall that, for each~$n \setin \natnumbers$, the symmetric group $S_n$ is the g
                   \sourceperm{\sigma} ( \mtimescatmor_{i=1}^n \moran{i} ) = \targetperm{\sigma} ( \mtimescatmor_{i=1}^n \mora_{\sigma^{-1}(i)} ).
               \end{equation}
 
-        \item \emph{Compatibility with permutation composition:}
-
-              The equations
-              \begin{equation}
-                  \label{eq:perm-compatibility-with-perm-comp}
-                  \sourceperm{\sigma} \mthen \sourceperm{\pi} = \sourceperm{(\pi\mthen\sigma)}
-                  \quad \text{ and } \quad
-                  \targetperm{\sigma} \mthen \targetperm{\pi} = \targetperm{(\sigma \mthen \pi)}
-              \end{equation}
-              hold for all~$\sigma, \pi \setin S_n$,~$n \geq 2$.
-
+       
     \end{itemize}
 \end{ctdefinition}
 
-\todotext{J: @J: there is another compatibility condition to include, namely compatibility with stacking... }
+\todotext{@J: make figures to illustrate compatibility with stacking...}
 
-\todotext{J: @J: also I think we need/should say something about how block permutations related to their non-block forms... how is this dealt with for classical symmetric monoidal categories? coherence? perhaps call this property something like ``compatibility with aggregation''?}
+\todotext{J: @J: also I think we need/should say something about how block permutations related to their non-block forms... how is this dealt with for classical symmetric monoidal categories? coherence? perhaps call this property something like ``compatibility with refinement''...}
 
-\todotext{@J: check if this definition is compatible with the definition of a symmetric \SY{strict monoidal category}, in particular coherence conditions}
+\todotext{@J: check if this definition is compatible with the definition of a symmetric \SY{strict monoidal category}...}
 
 In terms of diagrams, the condition of compatibility with composition \cref{eq:perm-compatibility-with-composition} is illustrated in terms of diagrams in \cref{fig:symmetric-stacking-comp-compat}.
 
