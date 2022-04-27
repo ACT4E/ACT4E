@@ -460,7 +460,7 @@
                 \Tr_{i,j}^{k}(\mora)=\langle\prstart_\mora, & \mat{A}_\mora + \rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{C}_\mora}{j+1:j+k}{:}, \\
                                                             & \rowscols{\mat{B}_\mora}{:}{1:i}+\rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}, \\
                                                             & \rowscols{\mat{C}_\mora}{1:j}{:}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k} \mat{F} \rowscols{\mat{C}_\mora}{j+1:j+k}{:}, \\
-                                                            & \rowscols{\mat{D}_\mora}{1:j}{1:i}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{i+1:i+k}\rangle,
+                                                            & \rowscols{\mat{D}_\mora}{1:j}{1:i}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}\rangle.
             \end{aligned}
         \end{equation*}
         Now, we can compute (2) component by component.
@@ -481,7 +481,7 @@
         %
         \begin{equation*}
             \begin{aligned}
-                \projC((2)) & =\begin{bmatrix} \rowscols{\mat{B}_\mora}{:}{1:i}+\rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i} \\ \mat{B}_\morb \left( \rowscols{\mat{D}_\mora}{1:j}{1:i}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{i+1:i+k}\right)\end{bmatrix} \\
+                \projC((2)) & =\begin{bmatrix} \rowscols{\mat{B}_\mora}{:}{1:i}+\rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i} \\ \mat{B}_\morb \left( \rowscols{\mat{D}_\mora}{1:j}{1:i}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}\right)\end{bmatrix} \\
                             & =\projC((1)),
             \end{aligned}
         \end{equation*}
@@ -495,7 +495,7 @@
         and
         \begin{equation*}
             \begin{aligned}
-                \projE((2)) & =\mat{D}_\morb\left(\rowscols{\mat{D}_\mora}{1:j}{1:i}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{i+1:i+k} \right) \\
+                \projE((2)) & =\mat{D}_\morb\left(\rowscols{\mat{D}_\mora}{1:j}{1:i}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i} \right) \\
                             & =\projE((1)),
             \end{aligned}
         \end{equation*}
@@ -689,6 +689,111 @@
             \end{aligned}
         \end{equation*}
         \todo{finish, this not light}
+
+        \paragraph*{Superposing}
+        Consider LTI systems $\mora\colon i+k\mto j+k$ and $\morb\colon m\mto l$.
+        We need to check:
+        \begin{equation*}
+            \underbrace{\Tr_{m+i,l+j}^{k}(\morb \mtimescatmor \mora)}_{(1)}=\morb \mtimescatmor \Tr_{i,j}^k(\mora).
+        \end{equation*}
+        We start from the left-hand side, which we refer to as (1), and write:
+        \begin{equation*}
+            \morb \mtimescatmor \mora = \tup{\begin{bmatrix}\prstart_\morb\\ \prstart_\mora \end{bmatrix}, \begin{bmatrix} \mat{A}_\morb&\mat{0}\\ \mat{0}&\mat{A}_\mora\end{bmatrix},
+                \begin{bmatrix} \mat{B}_\morb&\mat{0}\\ \mat{0}&\mat{B}_\mora\end{bmatrix},\begin{bmatrix} \mat{C}_\morb&\mat{0}\\ \mat{0}&\mat{C}_\mora\end{bmatrix},
+                \begin{bmatrix} \mat{D}_\morb&\mat{0}\\ \mat{0}&\mat{D}_\mora\end{bmatrix}}.
+        \end{equation*}
+        Therefore, we have
+        \begin{equation*}
+            \projA((1))=\begin{bmatrix} \prstart_\morb \\ \prstart_\mora \end{bmatrix}.
+        \end{equation*}
+        Furthermore, we have:
+        \begin{equation*}
+            \begin{aligned}
+                \projB((1)) & =\begin{bmatrix} \mat{A}_\morb&\mat{0}\\ \mat{0}&\mat{A}_\mora\end{bmatrix}+
+                \begin{bmatrix} \mat{0}\\ \rowscols{\mat{B}_\mora}{:}{i+1:i+k} \end{bmatrix}\mat{F} \begin{bmatrix} \mat{0}&\rowscols{\mat{C}_\mora}{j+1:j+k}{:}\end{bmatrix} \\
+                            & =\begin{bmatrix}\mat{A}_\morb & \mat{0}                                                                                         \\
+               \mat{0}       & \mat{A}_\mora + \rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{C}_\mora}{j+1:j+k}{:}
+                               \end{bmatrix}
+            \end{aligned}
+        \end{equation*}
+        where
+        \begin{equation*}
+            \mat{F}=\left(\idmat - \rowscols{\mat{D}_\mora}{j+1:j+k}{i+1:i+k}\right)^{-1}.
+        \end{equation*}
+        Furthermore:
+        \begin{equation*}
+            \begin{aligned}
+                \projC((1)) & =\begin{bmatrix} \mat{B}_\morb&\mat{0}\\ \mat{0}&\rowscols{\mat{B}_\mora}{:}{1:i}\end{bmatrix}
+                + \begin{bmatrix} \mat{0}\\ \rowscols{\mat{B}_\mora}{:}{i+1:i+k} \end{bmatrix}\mat{F}\begin{bmatrix} \mat{0}&\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}\end{bmatrix} \\
+                            & =\begin{bmatrix}
+                                   \mat{B}_\morb & \mat{0}                                                                                                             \\
+                                   \mat{0}       & \rowscols{\mat{B}_\mora}{:}{1:i}+ \rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}
+                               \end{bmatrix},
+            \end{aligned}
+        \end{equation*}
+        %
+        \begin{equation*}
+            \begin{aligned}
+                \projD((1)) & =\begin{bmatrix} \mat{C}_\morb&\mat{0}\\ \mat{0}&\rowscols{\mat{C}_\mora}{1:j}{:}\end{bmatrix}
+                + \begin{bmatrix}\mat{0}\\ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\end{bmatrix}\mat{F}\begin{bmatrix} \mat{0}&\rowscols{\mat{C}_\mora}{j+1:j+k}{:}\end{bmatrix} \\
+                            & =\begin{bmatrix}
+                                   \mat{C}_\morb & \mat{0}                                                                                                             \\
+                                   \mat{0}       & \rowscols{\mat{C}_\mora}{1:j}{:}+\rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{C}_\mora}{j+1:j+k}{:},
+                               \end{bmatrix}
+            \end{aligned}
+        \end{equation*}
+        and
+        \begin{equation*}
+            \begin{aligned}
+                \projE((1)) & =\begin{bmatrix} \mat{D}_\morb&\mat{0}\\ \mat{0}&\rowscols{\mat{D}_\mora}{1:j}{1:i}\end{bmatrix}
+                +\begin{bmatrix}\mat{0}\\ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\end{bmatrix}\mat{F}\begin{bmatrix} \mat{0}&\rowscols{\mat{D}_\mora}{:}{1:i}\end{bmatrix} \\
+                            & =\begin{bmatrix}
+                                   \mat{D}_\morb & \mat{0}                                                                                                          \\
+                                   \mat{0}       & \rowscols{\mat{D}_\mora}{1:j}{1:i}+\rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{:}{1:i}
+                               \end{bmatrix}.
+            \end{aligned}
+        \end{equation*}
+        We are now ready to look at the right-hand side of the axiom, referred to as (2).
+        First, we have:
+        \begin{equation*}
+            \begin{aligned}
+                \Tr_{i,j}^{k}(\mora)=\langle\prstart_\mora, & \mat{A}_\mora + \rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{C}_\mora}{j+1:j+k}{:}, \\
+                                                            & \rowscols{\mat{B}_\mora}{:}{1:i}+\rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}, \\
+                                                            & \rowscols{\mat{C}_\mora}{1:j}{:}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k} \mat{F} \rowscols{\mat{C}_\mora}{j+1:j+k}{:}, \\
+                                                            & \rowscols{\mat{D}_\mora}{1:j}{1:i}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}\rangle.
+            \end{aligned}
+        \end{equation*}
+        Clearly:
+        \begin{equation*}
+            \projA((2))=\begin{bmatrix} \prstart_\morb \\ \prstart_\mora \end{bmatrix}=\projA((1)).
+        \end{equation*}
+        Furthermore:
+        \begin{equation*}
+            \begin{aligned}
+                \projB((2)) & =\begin{bmatrix}\mat{A}_\morb&\mat{0}\\ \mat{0}& \mat{A}_\mora + \rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{C}_\mora}{j+1:j+k}{:}\end{bmatrix}=\projB((1)),
+            \end{aligned}
+        \end{equation*}
+        %
+        \begin{equation*}
+            \begin{aligned}
+                \projC((2)) & =\begin{bmatrix}\mat{B}_\morb&\mat{0}\\ \mat{0}& \rowscols{\mat{B}_\mora}{:}{1:i}+\rowscols{\mat{B}_\mora}{:}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}\end{bmatrix}=\projC((1)),
+            \end{aligned}
+        \end{equation*}
+        %
+        \begin{equation*}
+            \begin{aligned}
+                \projD((2)) & =\begin{bmatrix}\mat{C}_\morb&\mat{0}\\ \mat{0}& \rowscols{\mat{C}_\mora}{1:j}{:}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k} \mat{F} \rowscols{\mat{C}_\mora}{j+1:j+k}{:}\end{bmatrix}=\projC((1)),
+            \end{aligned}
+        \end{equation*}
+        and
+        \begin{equation*}
+            \begin{aligned}
+                \projE((2)) & =\begin{bmatrix}\mat{D}_\morb&\mat{0}\\ \mat{0}& \rowscols{\mat{D}_\mora}{1:j}{1:i}+ \rowscols{\mat{D}_\mora}{1:j}{i+1:i+k}\mat{F}\rowscols{\mat{D}_\mora}{j+1:j+k}{1:i}\end{bmatrix}=\projC((1)),
+            \end{aligned}
+        \end{equation*}
+        proving the axiom.
+
+        \paragraph*{Yanking}
 
     \end{example}}
 

@@ -135,16 +135,16 @@
 \end{definition}
 
 \begin{definition}\label{def:trace-lti}
-Let $\mora = \genericlti{}$ be a LTI system from $\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$.
-Given factorizations $\styleobj{l} = \styleobj{i} + \styleobj{k}$ and $\styleobj{m} = \styleobj{j} + \styleobj{k}$, we define the LTI system $\Tr_{\styleobj{i},\styleobj{j}}^{\styleobj{k}}\mora$ as
-\begin{equation}
-\begin{aligned}
-\langle\prstart,\mat{A} + \rowscols{\mat{B}}{:}{i+1:i+k}\mat{E} \rowscols{\mat{C}}{j+1:j+k}{:}, & \rowscols{\mat{C}}{1:j}{:}+\rowscols{\mat{D}}{1:j}{i+1:i+k}\mat{E}\rowscols{\mat{C}}{j+1:j+k}{:}, \\
-& \rowscols{\mat{D}}{1:j}{1:i}+\rowscols{\mat{D}}{1:j}{i+1:i+k}\mat{E} \rowscols{\mat{D}}{j+1:j+k}{1:i}\rangle,
-\end{aligned}
-\end{equation}
-where $\mat{E}=(\idmat-\rowscols{\mat{D}}{j+1:j+k}{i+1:i+k})^{-1}$ and $\mat{D}$ is chosen to make the expression invertible.
-\begin{comment}
+    Let $\mora = \genericlti{}$ be a LTI system from $\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$.
+    Given factorizations $\styleobj{l} = \styleobj{i} + \styleobj{k}$ and $\styleobj{m} = \styleobj{j} + \styleobj{k}$, we define the LTI system $\Tr_{\styleobj{i},\styleobj{j}}^{\styleobj{k}}\mora$ as
+    \begin{equation}
+        \begin{aligned}
+            \langle\prstart,\mat{A} + \rowscols{\mat{B}}{:}{i+1:i+k}\mat{E} \rowscols{\mat{C}}{j+1:j+k}{:}, & \rowscols{\mat{C}}{1:j}{:}+\rowscols{\mat{D}}{1:j}{i+1:i+k}\mat{E}\rowscols{\mat{C}}{j+1:j+k}{:}, \\
+                                                                                                            & \rowscols{\mat{D}}{1:j}{1:i}+\rowscols{\mat{D}}{1:j}{i+1:i+k}\mat{E} \rowscols{\mat{D}}{j+1:j+k}{1:i}\rangle,
+        \end{aligned}
+    \end{equation}
+    where $\mat{E}=(\idmat-\rowscols{\mat{D}}{j+1:j+k}{i+1:i+k})^{-1}$ and $\mat{D}$ is chosen to make the expression invertible.
+    \begin{comment}
     where $\mat{B}_\styleobj{i}$ and $\mat{B}_\styleobj{k}$ are such that
     \begin{equation}
         \mat{B} = \begin{bmatrix}
@@ -160,84 +160,73 @@ where $\mat{E}=(\idmat-\rowscols{\mat{D}}{j+1:j+k}{i+1:i+k})^{-1}$ and $\mat{D}$
     \end{comment}
 \end{definition}
 
-
 \begin{example}
-Let's consider the simple signal-flow diagram reported in \cref{fig:lti-ex-signalflow}.
-Note that the represented signals are scalar.
-In basic engineering classes, you learn that you can find an expression of the output $y(t)$ as a function of the input $u(t)$, by following the diagram.
-In particular, one can write
-\begin{equation*}
-\begin{aligned}
-K(u(t)-Cy(t))=y &\Leftrightarrow Ku(t)-KCy(t)=y\\
-&\Leftrightarrow Ku(t)=y(t)+KCy(t)\\
-&\Leftrightarrow Ku(t)=y(t)(1+KC)\\
-&\Leftrightarrow y(t)=\frac{K}{1+KC}u(t).
-\end{aligned}
-\end{equation*}
-Now, we want to get the same expression, but interpreting the presented system as a composition of LTI systems, and leveraging the newly introduced concept of trace.
+    Let's consider the simple signal-flow diagram reported in \cref{fig:lti-ex-signalflow}.
+    Note that the represented signals are scalar.
+    In basic engineering classes, you learn that you can find an expression of the output $y(t)$ as a function of the input $u(t)$, by following the diagram.
+    In particular, one can write
+    \begin{equation}
+        \label{exa:lti-input-output-gain}
+        \begin{aligned}
+            K(u(t)-Cy(t))=y & \Leftrightarrow Ku(t)-KCy(t)=y \\
+                            & \Leftrightarrow Ku(t)=y(t)+KCy(t) \\
+                            & \Leftrightarrow Ku(t)=y(t)(1+KC) \\
+                            & \Leftrightarrow y(t)=\frac{K}{1+KC}u(t).
+        \end{aligned}
+    \end{equation}
+    Now, we want to get the same expression, but interpreting the presented system as a composition of LTI systems, and leveraging the newly introduced concept of trace.
 
-This can be visualized as in \cref{fig:lti-ex-signalflow-bis}.
-The systems are given by
+    This can be visualized as in \cref{fig:lti-ex-signalflow-bis}.
+    The systems are given by
 
-\begin{equation*}
-\begin{aligned}
-\mora &= \langle\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, \begin{bmatrix} {1} & {-1}\end{bmatrix}\rangle\\
-\morb&=\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, K}\\
-\morc&=\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, \begin{bmatrix} 1\\ 1\end{bmatrix}}\\
-\mord&=\langle\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, 
-\begin{bmatrix}
-    1&0\\
-    0&C
-    \end{bmatrix}\rangle
-\end{aligned}
-\end{equation*}
+    \begin{equation*}
+        \begin{aligned}
+            \mora & = \langle\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, \begin{bmatrix} {1} & {-1}\end{bmatrix}\rangle \\
+            \morb & =\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, K} \\
+            \morc & =\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, \begin{bmatrix} 1\\ 1\end{bmatrix}} \\
+            \mord & =\langle\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0},
+            \begin{bmatrix}
+                1 & 0 \\
+                0 & C
+            \end{bmatrix}\rangle
+        \end{aligned}
+    \end{equation*}
+    Intuitively, $\mora$ is acting as the subtraction, $\morb$ as the gain $K$, $\morc$ is splitting the signal in two identical copies, one of which is used by the controller, expressed via $\mord$.
+    All of these LTI systems are described by their last component, and are therefore explicit input-output relationships.
+    We can compose the LTI systems.
+    We just look at the last component of the composition, given by:
+    \begin{equation*}
+        \begin{aligned}
+            \mat{D} & =\mat{D}_\mord \mat{D}_\morc \mat{D}_\morb \mat{D}_\mora \\
+                    & =\begin{bmatrix}1 & 0\\ 0 & {C}\end{bmatrix} \begin{bmatrix} 1\\ 1 \end{bmatrix}  K \begin{bmatrix} 1 & -1 \end{bmatrix} \\
+                    & =\begin{bmatrix}K \\ {KC}\end{bmatrix}\begin{bmatrix} 1 & -1 \end{bmatrix} \\
+                    & =\begin{bmatrix}
+                           K  & -K  \\
+                           CK & -CK
+                       \end{bmatrix}
+        \end{aligned}
+    \end{equation*}
+    We can now apply the formula for the trace and we get:
+    \begin{equation*}
+        \begin{aligned}
+            \projE(\Tr_{1,1}^{w}) & =K - K(1+CK)^{-1}CK \\
+                                  & =\frac{K}{1+CK}.
+        \end{aligned}
+    \end{equation*}
+    From this we get the LTI system from \cref{exa:lti-input-output-gain} (in other words, a direct input-output dependency).
 
-We can compose the LTI systems.
-For simplicity, we just look at the last component of the composition, given by:
-\begin{equation*}
-\begin{aligned}
-D&=\mat{D}_\mord \mat{D}_\morc \mat{D}_\morb \mat{D}_\mora\\
-&=\begin{bmatrix}1 & 0\\ 0 & {C}\end{bmatrix} \begin{bmatrix} 1\\ 1 \end{bmatrix}  K \begin{bmatrix} 1 & -1 \end{bmatrix}\\
-&=\begin{bmatrix}K \\ {KC}\end{bmatrix}\begin{bmatrix} 1 & -1 \end{bmatrix}\\
-&=\begin{bmatrix}
-K&-K\\
-CK&-CK
-\end{bmatrix}
-\end{aligned}
-\end{equation*}
-We can now apply the formula for the trace and we get:
-\begin{equation*}
-\begin{aligned}
-\projE(\Tr_{1,1}^{w})&=
-\end{aligned}
-\end{equation*}
-
-\todo{finish}
-
-
-\begin{marginfigure}
-\begin{center}
-\begin{tikzpicture}[auto,node distance=1.25cm]
-\node [input, name=input] {};
-\node [sum, right of=input] (sum){};
-\node [blockk, right of=sum] (gain) {$K$};
-\node [blockk, below of=gain] (cont) {$C$};
-\draw [->] (input) -- node[] {$u(t)$}(sum);
-\draw [->] (sum) -- (gain);
-\draw [->] ($(gain.east)+(0,0)$) -- ($(gain.east)+(1.5,0)$)-| ($(cont.east)+(1.5,0)$)|- ($(cont.east)+(0,0)$);
-\draw [->] ($(gain.east)+(0,0)$) -- node[] {$y(t)$} ($(gain.east)+(2.5,0)$);
-\draw [->] ($(cont.west)+(0,0)$) -- ($(cont.west)+(0,0)$)-| node[pos=0.9] {$-$} ($(sum.south)+(0,0)$);
-\end{tikzpicture}
-\caption{Standard feedback control system structure. \label{fig:std_ctr}}
-\end{center}
-\caption{Example with signal-flow diagram.}
-\label{fig:lti-ex-signalflow}
-\end{marginfigure}
+    \begin{marginfigure}
+        \begin{center}
+            \includesag{signal-flow-trace}
+        \end{center}
+        \caption{Example with signal-flow diagram.}
+        \label{fig:lti-ex-signalflow}
+    \end{marginfigure}
 \end{example}
 
-
 \begin{figure}
-\todo{do it}
-\caption{Todo.}
-\label{fig:lti-ex-signalflow-bis}
+    \centering
+    \includesag{signal-flow-to-lti}
+    \caption{Signal-flow diagram transformed into composition of LTI systems.}
+    \label{fig:lti-ex-signalflow-bis}
 \end{figure}
