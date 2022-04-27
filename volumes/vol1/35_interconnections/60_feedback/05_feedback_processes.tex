@@ -191,9 +191,10 @@
             \end{bmatrix}\rangle
         \end{aligned}
     \end{equation*}
-
+    Intuitively, $\mora$ is acting as the subtraction, $\morb$ as the gain $K$, $\morc$ is splitting the signal in two identical copies, one of which is used by the controller, expressed via $\mord$.
+    All of these LTI systems are described by their last component, and are therefore explicit input-output relationships.
     We can compose the LTI systems.
-    For simplicity, we just look at the last component of the composition, given by:
+    We just look at the last component of the composition, given by:
     \begin{equation*}
         \begin{aligned}
             \mat{D} & =\mat{D}_\mord \mat{D}_\morc \mat{D}_\morb \mat{D}_\mora \\
@@ -216,18 +217,7 @@
 
     \begin{marginfigure}
         \begin{center}
-            \begin{tikzpicture}[auto,node distance=1.25cm]
-                \node [input, name=input] {};
-                \node [sum, right of=input] (sum){};
-                \node [blockk, right of=sum] (gain) {$K$};
-                \node [blockk, below of=gain] (cont) {$C$};
-                \draw [->] (input) -- node[] {$u(t)$}(sum);
-                \draw [->] (sum) -- (gain);
-                \draw [->] ($(gain.east)+(0,0)$) -- ($(gain.east)+(1.5,0)$)-| ($(cont.east)+(1.5,0)$)|- ($(cont.east)+(0,0)$);
-                \draw [->] ($(gain.east)+(0,0)$) -- node[] {$y(t)$} ($(gain.east)+(2.5,0)$);
-                \draw [->] ($(cont.west)+(0,0)$) -- ($(cont.west)+(0,0)$)-| node[pos=0.9] {$-$} ($(sum.south)+(0,0)$);
-            \end{tikzpicture}
-            \caption{Standard feedback control system structure. \label{fig:std_ctr}}
+            \includesag{signal-flow-trace}
         \end{center}
         \caption{Example with signal-flow diagram.}
         \label{fig:lti-ex-signalflow}
@@ -235,19 +225,8 @@
 \end{example}
 
 \begin{figure}
-    \begin{tikzpicture}
-        \node[block] (minus) at (0,0) {$\mora$};
-        \node[block, right=1cm of minus] (k) {$\morb$};
-        \node[block, right=1cm of k] (delta) {$\morc$};
-        \node[block] (cont) at (6.5,-0.5) {$\mord$};
-        \draw[-Triangle, styleobjects] (minus) -- (k);
-        \draw[-Triangle, styleobjects] (k) -- (delta);
-        \draw[-Triangle, styleobjects] (delta) -- node[pos=0.5,below] {$y(t)$} (cont);
-        \draw[-Triangle, styleobjects] ($(delta.east)+(0,0.2)$) -- node[pos=1,above] {$y(t)$} ($(delta.east)+(3.5,0.2)$);
-        \draw[-Triangle, styleobjects] ($(minus.west)+(-1,0.2)$) -- node[pos=-0.2,above] {$u(t)$} ($(minus.west)+(0,0.2)$);
-        \draw[-Triangle, styleobjects] ($(cont.east)+(0,0.0)$) -- node[pos=1,above] {$w(t)$} ($(cont.east)+(1.25,0.0)$)-| ($(cont.east)+(1.25,-1)$) -- ($(minus.west)+(-1,-1.5)$)|-($(minus.west)+(-1,-0.2)$)|- ($(minus.west)+(0,-0.2)$);
-        \draw[draw=morphisms, thick] (-1.4,-1) rectangle ++(9.2,1.7);
-    \end{tikzpicture}
-    \caption{Todo.}
+    \centering
+    \includesag{signal-flow-to-lti}
+    \caption{Signal-flow diagram transformed into composition of LTI systems.}
     \label{fig:lti-ex-signalflow-bis}
 \end{figure}
