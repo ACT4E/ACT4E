@@ -583,9 +583,35 @@ This is shown in~\cref{fig:effect-stacking}.
 }
 
 
+\subsection{\Moore is associative stacking}
+When considering Moore machines, we can define stacking operations and show that \Moore forms a stacking \SY{semicategory} (\cref{def:simple-stacking-semi-cat}).
+The objects of \Moore are objects of \SetL, and therefore the stacking operation for objects corresponds to the ``multiplication in \SetL'', denoted by $\cprod$.
+
+The operation on morphisms ``stacks'' Moore machines onto each other.
+Formally:
+
+\begin{equation*}
+    \prfcomma{\mora\colon \prin_\mora \mtoin{\Moore} \prout_\mora}{\mora\colon \prin_\morb \mtoin{\Moore} \prout_\morb}
+    {\mora \mtimescatmor \morb=\tup{\prin_\mora \cprod \prin_\morb, \prst_\mora \cprod \prst_\morb,\prout_\mora \cprod \prout_\morb, \prdyn_{\mora \mtimescatmor \morb},\prreadout_{\mora \mtimescatmor \morb}, \prstart_\mora \tupconcat \prstart_\morb}}
+\end{equation*}
+with
+\begin{equation*}
+    \defmapcomma{\prdyn_{\mora \mtimescatmor \morb}}{\prin_\mora \cprod \prin_\morb \cprod \prst_\mora \cprod \prst_\morb}
+    {\sto}{\prst_\mora \cprod \prst_\morb}{\prinel_\mora \tupconcat \prinel_\morb \tupconcat \prstel_\mora \tupconcat \prstel_\morb}
+    {\prdyn_\mora(\prinel_\mora \tupconcat \prstel_\mora)\tupconcat \prdyn_\morb(\prinel_\morb \tupconcat \prstel_\morb)}
+\end{equation*}
+and
+\begin{equation*}
+    \defmapperiod{\prreadout_{\mora \mtimescatmor \morb}}
+    {\prst_\mora \cprod \prst_\morb}{\sto}{\prout_\mora \cprod \prout_\morb}
+    {\prstel_\mora \tupconcat \prstel_\morb}{\prreadout(\prstel_\mora)\tupconcat \prreadout(\prstel_\morb)}
+\end{equation*}
+While we have already proved that the operation $\cprod$ is associative, it is also easy to see that the stacking of Moore machines is associative.
+Therefore, \Moore equipped with the described stacking operations forms an \SY{associative stacking} \SY{semicategory}.
+
 \subsection{LTI is associative stacking}
-When considering LTI systems, we can define stacking operations and show that it forms a stacking \SY{semicategory} (\cref{def:simple-stacking-semi-cat}).
-The stacking operation on objects is just addition of natural numbers:
+When considering LTI systems, we can define stacking operations and show that \LTI forms a stacking \SY{semicategory} (\cref{def:simple-stacking-semi-cat}).
+The stacking operation on objects is just addition on the natural numbers:
 \begin{equation}
     \defmapperiod{
         \mtimescatob
@@ -719,7 +745,7 @@ Given that the resulting LTI system is described by diagonal block matrices, it 
 
 \begin{ctdefinition}[Strict monoidal stacking category]
     \label{def:strict-monoidal-stacking-cat}
-    A \maindef{strict monoidal stacking category} is a \SY{strict monoidal stacking semicategory} for which all identity morphisms exist. 
+    A \maindef{strict monoidal stacking category} is a \SY{strict monoidal stacking semicategory} for which all identity morphisms exist.
 \end{ctdefinition}
 
 \todotext{Show that  LTI is a strict monoidal stacking category, with monoidal unit given by the object $0$}
@@ -890,12 +916,183 @@ This property is somewhat strong.
 % \end{comment}
 
 \begin{example}
-    We show that \LTI, as defined, is almost a \SY{functorial stacking semicategory}, but not quite.
-    Given morphisms~$\mora\colon \styleobj{l}\mto \styleobj{m}$,~$\morc\colon \styleobj{m}\mto \styleobj{n}$,~$\morb\colon \styleobj{o}\mto \styleobj{p}$,~$\mord\colon \styleobj{p}\mto \styleobj{q}$, we would need to have
-    \begin{equation}
+    We want to show that \Moore, equipped with the defined stacking operations, is almost a \SY{functorial stacking semicategory},
+    but not quite.
+    Consider four Moore machines:
+    \begin{equation*}
+        \mora\colon \prin_\mora \mto \prout_\mora,\quad \morb\colon \prin_\morb \mto \prout_\morb, \quad \morc\colon \prout_\mora \mto \prout_\morc,\quad \mord\colon \prout_\morb \mto \prout_\mord.
+    \end{equation*}
+    We need to show:
+    \begin{equation*}
         (\mora \mthen \morc)
         \mtimescatmor (\morb\mthen \mord)=(\mora\mtimescatmor \morb)\mthen (\morc\mtimescatmor \mord).
-    \end{equation}
+    \end{equation*}
+    Let's start from the left-hand side.
+    First, we have:
+    \begin{equation*}
+        \begin{aligned}
+            \mora \mthen \morc & =\tup{\prin_\mora, \prst_\mora \cprod \prst_\morc, \prout_\morc, \prdyn_{\mora\mthen \morc},\prreadout_{\mora\mthen \morc}, \prstart_\mora\tupconcat \prstart_\morc}, \\
+            \morb \mthen \mord & =\tup{\prin_\morb, \prst_\morb \cprod \prst_\mord, \prout_\mord, \prdyn_{\morb\mthen \mord},\prreadout_{\morb\mthen \mord}, \prstart_\morb\tupconcat \prstart_\mord},
+        \end{aligned}
+    \end{equation*}
+    with
+    \begin{equation*}
+        \defmapcomma{\prdyn_{\mora\mthen \morc}}
+        {\prin_\mora\cprod \prst_\mora \cprod \prst_\morc}
+        {\sto}
+        {\prst_\mora \cprod \prst_\morc}
+        {\prinel_\mora\tupconcat \prstel_\mora \tupconcat \prstel_\morc}
+        {\prdyn_\mora(\prinel_\mora \tupconcat \prstel_\mora)\tupconcat \prdyn_\morc(\prreadout_\mora(\prstel_\mora)\tupconcat \prstel_\morc)}
+    \end{equation*}
+    %
+    \begin{equation*}
+        \defmapcomma{\prdyn_{\morb\mthen \mord}}
+        {\prin_\morb\cprod \prst_\morb \cprod \prst_\mord}
+        {\sto}
+        {\prst_\morb \cprod \prst_\mord}
+        {\prinel_\morb\tupconcat \prstel_\morb \tupconcat \prstel_\mord}
+        {\prdyn_\morb(\prinel_\morb \tupconcat \prstel_\morb)\tupconcat \prdyn_\mord(\prreadout_\morb(\prstel_\morb)\tupconcat \prstel_\mord)}
+    \end{equation*}
+    %
+    \begin{equation*}
+        \defmapcomma{\prreadout_{\mora\mthen \morc}}
+        {\prst_\mora \cprod \prst_\morc}
+        {\sto}
+        {\prout_\morc}
+        {\prstel_\mora \tupconcat \prstel_\morc}
+        {\prreadout_\morc(\prstel_\morc)}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \defmapperiod{\prreadout_{\morb\mthen \mord}}
+        {\prst_\morb \cprod \prst_\mord}
+        {\sto}
+        {\prout_\mord}
+        {\prstel_\morb \tupconcat \prstel_\mord}
+        {\prreadout_\mord(\prstel_\mord)}
+    \end{equation*}
+
+    Furthermore:
+    \begin{widepar}
+        \begin{equation*}
+            (\mora \mthen \morc)\mtimescatmor (\morb \mthen \mord)=\tup{\prin_\mora\cprod \prin_\morb, \prst_\mora \cprod \prst_\morc\cprod \prst_\morb \cprod \prst_\mord, \prout_\morc\cprod \prout_\mord,
+                \prdyn_{(\mora\mthen \morc)\mtimescatmor(\morb\mthen \mord)}, \prreadout_{(\mora\mthen \morc)\mtimescatmor(\morb\mthen \mord)}, \prstart_\mora\tupconcat \prstart_\morc\tupconcat \prstart_\morb\tupconcat \prstart_\mord},
+        \end{equation*}
+    \end{widepar}
+    with
+    \begin{widepar}
+        \begin{equation*}
+            \defmapcomma{\prdyn_{(\mora\mthen \morc)\mtimescatmor(\morb\mthen \mord)}}
+            {\prin_\mora\cprod \prin_\morb\cprod \prst_\mora \cprod \prst_\morc\cprod \prst_\morb \cprod \prst_\mord}
+            {\sto}
+            {\prst_\morc\cprod \prst_\morb \cprod \prst_\mord}
+            {\prinel_\mora\tupconcat \prinel_\morb \tupconcat \prstel_\mora \tupconcat \prstel_\morc \tupconcat \prstel_\morb \tupconcat \prstel_\mord}
+            {\underbrace{\prdyn_{\mora\mthen \morc}(\prinel_\mora\tupconcat \prstel_\mora \tupconcat \prstel_\morc)\tupconcat \prdyn_{\morb\mthen \mord}(\prinel_\morb\tupconcat \prstel_\morb \tupconcat \prstel_\mord)}_{(1)}}
+        \end{equation*}
+    \end{widepar}
+    where
+    \begin{equation*}
+        (1)=\prdyn_\mora(\prinel_\mora \tupconcat \prstel_\mora)\tupconcat \prdyn_\morc(\prreadout_\mora(\prstel_\mora)\tupconcat \prstel_\morc) \tupconcat
+        \prdyn_\morb(\prinel_\morb \tupconcat \prstel_\morb)\tupconcat \prdyn_\mord(\prreadout_\morb(\prstel_\morb)\tupconcat \prstel_\mord),
+    \end{equation*}
+    and
+    \begin{equation*}
+        \defmapcomma{\prreadout_{(\mora\mthen \morc)\mtimescatmor(\morb\mthen \mord)}}
+        {\prst_\mora \cprod \prst_\morc\cprod \prst_\morb \cprod \prst_\mord}
+        {\sto}
+        {\prout_\morc\cprod \prout_\mord}
+        {\prstel_\mora \tupconcat \prstel_\morc \tupconcat \prstel_\morb \tupconcat \prstel_\mord}
+        {\underbrace{\prreadout_{\mora\mthen \morc}(\prstel_\mora \tupconcat \prstel_\morc)\tupconcat \prreadout_{\morb\mthen \mord}(\prstel_\morb \tupconcat \prstel_\mord)}_{(2)}}
+    \end{equation*}
+    where
+    \begin{equation*}
+        (2)=\prreadout_\morc(\prstel_\morc)\tupconcat \prreadout_\mord(\prstel_\mord).
+    \end{equation*}
+    On the other hand, we have:
+    \begin{equation*}
+        \begin{aligned}
+            \mora \mtimescatmor \morb & =\tup{\prin_\mora \cprod \prin_\morb, \prst_\mora \cprod \prst_\morb, \prout_\mora \cprod \prout_\morb, \prdyn_{\mora\mtimescatmor \morb},\prreadout_{\mora\mtimescatmor \morb}, \prstart_\mora\tupconcat \prstart_\morb}, \\
+            \morc \mtimescatmor \mord & =\tup{\prin_\morc \cprod \prin_\mord, \prst_\morc \cprod \prst_\mord, \prout_\morc \cprod \prout_\mord, \prdyn_{\morc\mtimescatmor \mord},\prreadout_{\morc\mtimescatmor \mord}, \prstart_\morc\tupconcat \prstart_\mord},
+        \end{aligned}
+    \end{equation*}
+    with
+    \begin{equation*}
+        \defmapcomma{\prdyn_{\mora \mtimescatmor \morb}}{\prin_\mora \cprod \prin_\morb \cprod \prst_\mora \cprod \prst_\morb}
+        {\sto}{\prst_\mora \cprod \prst_\morb}
+        {\prinel_\mora \tupconcat \prinel_\morb \tupconcat \prstel_\mora \tupconcat \prstel_\morb}
+        {\prdyn_\mora(\prinel_\mora \tupconcat \prstel_\mora)\tupconcat \prdyn_\morb(\prinel_\morb \tupconcat \prstel_\morb)}
+    \end{equation*}
+    %
+    \begin{equation*}
+        \defmapcomma{\prdyn_{\morc \mtimescatmor \mord}}{\prin_\morc \cprod \prin_\mord \cprod \prst_\morc \cprod \prst_\mord}
+        {\sto}{\prst_\morc \cprod \prst_\mord}
+        {\prinel_\morc \tupconcat \prinel_\mord \tupconcat \prstel_\morc \tupconcat \prstel_\mord}
+        {\prdyn_\morc(\prinel_\morc \tupconcat \prstel_\morc)\tupconcat \prdyn_\mord(\prinel_\mord \tupconcat \prstel_\mord)}
+    \end{equation*}
+    %
+    \begin{equation*}
+        \defmapcomma{\prreadout_{\mora \mtimescatmor \morb}}
+        {\prst_\mora \cprod \prst_\morb}{\sto}{\prout_\mora \cprod \prout_\morb}
+        {\prstel_\mora \tupconcat \prstel_\morb}{\prreadout_\mora(\prstel_\mora)\tupconcat \prreadout_\morb(\prstel_\morb)}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \defmapperiod{\prreadout_{\morc \mtimescatmor \mord}}
+        {\prst_\morc \cprod \prst_\mord}{\sto}{\prout_\morc \cprod \prout_\mord}
+        {\prstel_\morc \tupconcat \prstel_\mord}{\prreadout_\morc(\prstel_\morc)\tupconcat \prreadout_\mord(\prstel_\mord)}
+    \end{equation*}
+
+    Furthermore:
+    \begin{widepar}
+        \begin{equation*}
+            (\mora \mtimescatmor \morb)\mthen (\morc \mtimescatmor \mord)=\tup{\prin_\mora\cprod \prin_\morb, \prst_\mora \cprod \prst_\morb\cprod \prst_\morc \cprod \prst_\mord, \prout_\morc\cprod \prout_\mord,
+                \prdyn_{(\mora\mtimescatmor \morb)\mtimescatmor(\morc\mtimescatmor \mord)}, \prreadout_{(\mora\mtimescatmor \morb)\mthen(\morc\mtimescatmor \mord)}, \prstart_\mora\tupconcat \prstart_\morb\tupconcat \prstart_\morc\tupconcat \prstart_\mord},
+        \end{equation*}
+    \end{widepar}
+    with
+    \begin{widepar}
+        \begin{equation*}
+            \defmapcomma{\prdyn_{(\mora\mtimescatmor \morb)\mthen(\morc\mtimescatmor \mord)}}
+            {\prin_\mora\cprod \prin_\morb\cprod \prst_\mora \cprod \prst_\morb\cprod \prst_\morc \cprod \prst_\mord}
+            {\sto}
+            {\prst_\mora \cprod \prst_\morb\cprod \prst_\morc \cprod \prst_\mord}
+            {\prinel_\mora \tupconcat \prinel_\morb\tupconcat \prstel_\mora \tupconcat \prstel_\morb \tupconcat \prstel_\morc \tupconcat \prstel_\mord}
+            {\underbrace{\prdyn_{\mora \mtimescatmor \morb}(\prinel_\mora \tupconcat \prinel_\morb \tupconcat \prstel_\mora \tupconcat \prstel_\morb)
+                    \tupconcat \prdyn_{\morc\mtimescatmor \mord}(\prreadout_{\mora \mtimescatmor\morb}(\prstel_\mora \tupconcat \prstel_\morb)\tupconcat \prstel_\morc \tupconcat \prstel_\mord)}_{(3)}}
+        \end{equation*}
+    \end{widepar}
+    with
+    \begin{widepar}
+        \begin{equation*}
+            \begin{aligned}
+                (3) & =\prdyn_\mora(\prinel_\mora \tupconcat \prstel_\mora)\tupconcat \prdyn_\morb(\prinel_\morb \tupconcat \prstel_\morb)
+                \tupconcat \prdyn_{\morc\mtimescatmor \mord}(\prreadout_\mora(\prstel_\mora)\tupconcat \prreadout_\morb(\prstel_\morb)\tupconcat \prstel_\morc \tupconcat \prstel_\mord) \\
+                    & =\prdyn_\mora(\prinel_\mora \tupconcat \prstel_\mora)\tupconcat \underbrace{\prdyn_\morb(\prinel_\morb \tupconcat \prstel_\morb)}_{(*)}
+                \tupconcat \underbrace{\prdyn_{\morc}(\prreadout_\mora(\prstel_\mora)\tupconcat \prstel_\morc)}_{(**)}\tupconcat \prdyn_\mord(\prreadout_\morb(\prstel_\morb)\tupconcat \prstel_\mord)
+            \end{aligned}
+        \end{equation*}
+    \end{widepar}
+    and
+    \begin{equation*}
+        \defmapcomma{\prreadout_{(\mora\mtimescatmor \morb)\mthen(\morc\mtimescatmor \mord)}}
+        {\prst_\mora \cprod \prst_\morb\cprod \prst_\morc \cprod \prst_\mord}
+        {\sto}
+        {\prout_\morc\cprod \prout_\mord}
+        {\prstel_\mora \tupconcat \prstel_\morb \tupconcat \prstel_\morc \tupconcat \prstel_\mord}
+        {\prreadout_{\morc\mtimescatmor \mord}(\prstel_\morc \tupconcat \prstel_\mord)=\prreadout_\morc(\prstel_\morc)\tupconcat \prreadout_\mord(\prstel_\mord)}
+    \end{equation*}
+    As one can see from the expression for (3), the two terms ($*$) and ($**$) are switched compared to (1).
+    Apart from this switch (and the corresponding switch in the signatures of the dynamics maps), we can see that there is a moral correspondence between the Moore machines in the functorial stacking axiom.
+
+\end{example}
+
+\begin{example}
+    We want to show that \LTI, equipped with the defined stacking operations, is almost a \SY{functorial stacking semicategory}, but not quite.
+    Given morphisms~$\mora\colon \styleobj{l}\mto \styleobj{m}$,~$\morc\colon \styleobj{m}\mto \styleobj{n}$,~$\morb\colon \styleobj{o}\mto \styleobj{p}$,~$\mord\colon \styleobj{p}\mto \styleobj{q}$, we would need to have
+    \begin{equation*}
+        (\mora \mthen \morc)
+        \mtimescatmor (\morb\mthen \mord)=(\mora\mtimescatmor \morb)\mthen (\morc\mtimescatmor \mord).
+    \end{equation*}
     This, however, is not true.
     Let's see this by looking at the first matrix component of the LTI system.
     On one hand we have:
@@ -960,14 +1157,13 @@ This property is somewhat strong.
         (\mora \mtimescatmor \morb )
         \mthen (\morc \mtimescatmor \mord )
     \end{equation}
-    it is now also the case that $\mtimescat$ is compatible with identity morphisms: 
+    it is now also the case that $\mtimescat$ is compatible with identity morphisms:
     \begin{equation}
 \catidat{\Obja} \mtimescatmor \catidat{\Objb} = \catidat{\Obja \mtimescatob \Objb}
     \end{equation}
-    for all objects $\Obja$, $\Objb$ of $\CatC$. 
+    for all objects $\Obja$, $\Objb$ of $\CatC$.
 \end{ctdefinition}
 
 \begin{remark}
-Note that a functorial stacking category is \emph{not} the same thing as a functorial stacking semicategory where the semicategory in question happens to be a category. 
+Note that a functorial stacking category is \emph{not} the same thing as a functorial stacking semicategory where the semicategory in question happens to be a category.
 \end{remark}
-
