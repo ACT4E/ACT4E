@@ -582,7 +582,6 @@ This is shown in~\cref{fig:effect-stacking}.
     Need to show \SY{semigroup}.
 }
 
-
 \subsection{\Moore is associative stacking}
 When considering Moore machines, we can define stacking operations and show that \Moore forms a stacking \SY{semicategory} (\cref{def:simple-stacking-semi-cat}).
 The objects of \Moore are objects of \SetL, and therefore the stacking operation for objects corresponds to the ``multiplication in \SetL'', denoted by $\cprod$.
@@ -710,9 +709,7 @@ with
 % if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\morb}$ is~$\styleobj{n}\mto \styleobj{o}$,~$\genericlti{}$ is~$\styleobj{l}+\styleobj{n}\mto \styleobj{m}+\styleobj{o}$.
 Given that the resulting LTI system is described by diagonal block matrices, it is evident that the defined operations are \SY{associative}, and therefore \LTI is an \SY{associative stacking} \SY{semicategory}.
 
-
 \subsection{Monoidal stacking}
-
 
 \begin{ctdefinition}[Strict monoidal stacking semicategory]
     \label{def:strict-monoidal-stacking-semicat}
@@ -738,18 +735,104 @@ Given that the resulting LTI system is described by diagonal block matrices, it 
     \end{enumerate}
 \end{ctdefinition}
 
-
 \todotext{make a remark about why we use the word ``strict'' here}
 
-\todotextjira{752}{\alphubel: @GZ write up Moore as an example of a strict monoidal stacking semicat, where the monoidal unit is built using the empty tuples sets, and show that the monoidal unit indeed does have an identity}
+\begin{example}
+    We can look at \Moore and ask whether it is a strict monoidal semicategory.
+    The monoidal unit is given by $\cObj{}$.
+    Its identity morphism is the Moore machine
+    \begin{equation*}
+        \catid_\idmoncat=\tup{\cObj{},\cObj{},\cObj{},\prdyn_\idmoncat, \prreadout_\idmoncat, \tup{}},
+    \end{equation*}
+    where
+    \begin{equation*}
+        \defmapcomma{\prdyn_{\idmoncat}}
+        {\cObj{} \cprod \cObj{}}
+        {\sto}
+        {\cObj{}}
+        {\tup{}\tupconcat \tup{}}
+        {\tup{}}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \defmapperiod{\prreadout_{\idmoncat}}
+        {\cObj{}}
+        {\sto}
+        {\cObj{}}
+        {\tup{}}
+        {\tup{}}
+    \end{equation*}
+    Clearly, $\prObja \cprod \cObj{}=\cObj{}\cprod \prObja=\prObja$ for every $\prObja\setin \Ob_\Moore$.
+    Furthermore, consider a Moore machine $\mora\colon \prin \mto \prout$ with
+    \begin{equation*}
+        \mora=\tup{\prin,\prst, \prout, \prdyn,\prreadout,\prstart}.
+    \end{equation*}
+    One has:
+    \begin{equation*}
+        \begin{aligned}
+            \mora \mtimescatmor \catid_\idmoncat & =\tup{\prin \cprod \cObj{},\prst \cprod \cObj{},\prout \cprod \cObj{},\prdyn_{\mora \mtimescatmor\catid_\idmoncat}, \prreadout_{\mora \mtimescatmor\catid_\idmoncat}, \prstart\tupconcat \tup{}} \\
+                                                 & =\tup{\prin,\prst ,\prout,\prdyn, \prreadout, \prstart}=\mora,
+        \end{aligned}
+    \end{equation*}
+    where we used
+    \begin{equation*}
+        \begin{aligned}
+            \prdyn_{\mora \mtimescatmor\catid_\idmoncat}\colon \prin \cprod \cObj{}\cprod \prst \cprod \cObj{} & \sto \prst \cprod \cObj{} \\
+            \prinel \tupconcat \tup{}\tupconcat \prstel \tupconcat \tup{}                                      & \mapsto \prdyn(\prinel,\prstel)\tupconcat \prdyn_\idmoncat(\tup{},\tup{})=\prdyn(\prinel,\prstel)
+        \end{aligned}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{aligned}
+            \prreadout_{\mora \mtimescatmor\catid_\idmoncat}\colon \prst \cprod \cObj{} & \sto \prout \cprod \cObj{} \\
+            \prstel \tupconcat \tup{}                                                   & \mapsto \prreadout(\prstel)\tupconcat \prreadout_\idmoncat(\tup{})=\prreadout(\prstel)
+        \end{aligned}
+    \end{equation*}
+    to show the equivalences $\prdyn=\prdyn_{\mora \mtimescatmor \catid_\idmoncat}$ and $\prreadout=\prreadout_{\mora \mtimescatmor \catid_\idmoncat}$.
+    The argument for $\catid_\idmoncat \mtimescatmor \mora$ follows analogously.
+\end{example}
 
 \begin{ctdefinition}[Strict monoidal stacking category]
     \label{def:strict-monoidal-stacking-cat}
     A \maindef{strict monoidal stacking category} is a \SY{strict monoidal stacking semicategory} for which all identity morphisms exist.
 \end{ctdefinition}
 
-\todotext{Show that  LTI is a strict monoidal stacking category, with monoidal unit given by the object $0$}
+\begin{example}
+    \LTI, equipped with previously described stacking operations and an appropriate unit, is a strict monoidal stacking category.
+    The unit is given by the object 0, and its identity morphism is given by the LTI system
+    \begin{equation*}
+        \catid_\idmoncat=\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0},\mat{0}^{0\times 0}}.
+    \end{equation*}
+    On the side of objects, clearly $l+0=0+l=l$ for any object $l\setin \Ob_\LTI$.
+    Consider $\mora\colon l\mto m$.
+    On the side of morphisms we have:
+    \begin{equation*}
+        \begin{aligned}
+            \mora \mtimescatmor \catid_\idmoncat & =
+            \langle\begin{bmatrix}\prstart \\ \mat{0}^{0\times 1}\end{bmatrix},
+            \begin{bmatrix}\mat{A}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
+            \begin{bmatrix}\mat{B}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
+            \begin{bmatrix}\mat{C}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
+            \begin{bmatrix}\mat{D}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix}\rangle \\
+                                                 & =\genericlti{}
+        \end{aligned}
+    \end{equation*}
+    Similarly:
+    \begin{equation*}
+        \begin{aligned}
+            \catid_\idmoncat \mtimescatmor \mora & =
+            \langle\begin{bmatrix}\mat{0}^{0\times 1}\\ \prstart\end{bmatrix},
+            \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{A}\end{bmatrix},
+            \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{B}\end{bmatrix},
+            \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{C}\end{bmatrix},
+            \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{D}\end{bmatrix}\rangle \\
+                                                 & =\genericlti{}
+        \end{aligned}
+    \end{equation*}
+\end{example}
 
+\todo{solve $\tup{}$ over multiple lines.
+    .}
 
 \section{Functorial stacking semicategories}
 
@@ -835,7 +918,9 @@ This property is somewhat strong.
     \label{fig:effects-non-functorial}
 \end{figure*}
 
-\todotextjira{751}{\alphubel  @GZ: There is a typo in the above diagrams -- U and Z are switched from where they should be placed. Also, the right hand diagram should have *two* boxes with dotted lines, not just one.}
+\todotextjira{751}{\alphubel  @GZ: There is a typo in the above diagrams -- U and Z are switched from where they should be placed.
+    Also, the right hand diagram should have *two* boxes with dotted lines, not just one.
+}
 
 \begin{example}[\SetL is functorial stacking]
     \label{ex:setfunstack}
@@ -856,19 +941,17 @@ This property is somewhat strong.
         =
         (\mora \mthen \morc ) \mtimescatmor (\morb \mthen \mord ),
     \end{equation}
-    We show this by showing that, for any $\tup{\setAel,\setBel}\setin \setA\cartprod\setB$:
+    We show this by showing that, for any $\setAel\tupconcat \setBel\setin \setA\cprod\setB$:
     \begin{equation}
         \begin{aligned}
-             & ((\mora \mtimescatmor \morb )\mthen (\morc \mtimescatmor \mord ))(\tup{\setAeln{},\setDeln{}}) \\
+            ((\mora \mtimescatmor \morb )\mthen (\morc \mtimescatmor \mord ))(\setAeln{}\tupconcat \setDeln{})
              & = (\morc \mtimescatmor \mord)(\mora(\setAeln{})\tupconcat \morb(\setDeln{})) \\
              & =\morc(\mora(\setAeln{}))\tupconcat \mord(\morb(\setDeln{})) \\
              & =(\mora \mthen \morc)(\setAeln{})\tupconcat (\morb\mthen \mord)(\setDeln{}) \\
-             & =((\mora \mthen \morc ) \mtimescatmor (\morb \mthen \mord ))(\tup{\setAeln{}, \setDeln{}}).
+             & =((\mora \mthen \morc ) \mtimescatmor (\morb \mthen \mord ))(\setAeln{}\tupconcat  \setDeln{}).
         \end{aligned}
     \end{equation}
 \end{example}
-
-\todomistake{J: This example has incorrect notation and mistakes I think (seems to be written for Set and not SetL)}
 % \begin{comment}
 % \devel{
 %
@@ -1135,22 +1218,18 @@ This property is somewhat strong.
             0 & 0 & 0 & 1
         \end{bmatrix}.
     \end{equation}
-    It turns out that $(\mora \mthen \morc)\mtimescatmor (\morb\mthen \mord)$ and~$(\mora\mtimescatmor \morb)\mthen (\morc\mtimescatmor \mord)$ are equivalent systems (\cref{def:equivalence_lti}), even though they are not equal. In particular, although \LTI is not a \SY{functorial stacking semicategory}, by \cref{lem:equivsystequivact}~$(\mora \mthen \morc)\mtimescatmor (\morb\mthen \mord)$ and~$(\mora\mtimescatmor \morb)\mthen (\morc\mtimescatmor \mord)$ have the same action, and hence \LTI is, in one sense, ``morally'' functorial.
+    It turns out that $(\mora \mthen \morc)\mtimescatmor (\morb\mthen \mord)$ and~$(\mora\mtimescatmor \morb)\mthen (\morc\mtimescatmor \mord)$ are equivalent systems (\cref{def:equivalence_lti}), even though they are not equal.
+    In particular, although \LTI is not a \SY{functorial stacking semicategory}, by \cref{lem:equivsystequivact}~$(\mora \mthen \morc)\mtimescatmor (\morb\mthen \mord)$ and~$(\mora\mtimescatmor \morb)\mthen (\morc\mtimescatmor \mord)$ have the same action, and hence \LTI is, in one sense, ``morally'' functorial.
 \end{example}
 
-
-\todotextjira{750}{\alphubel: Do Moore machines form a functorial stacking semicategory? A statement and proof of it would be nice to have in this section.}
-
-
 \subsection{Functorial stacking categories}
-
 
 \begin{ctdefinition}[Functorial stacking category]
     \label{def:functorial-stacking-cat}
     A \maindef{functorial stacking category} is a stacking \SY{category} where the two stacking operations~$\mtimescatob$ and~$\mtimescatmor$ are the two components of a \SY{functor} \begin{equation}
         \mtimescat\colon \CatC \Ctimes \CatC \to \CatC.
     \end{equation}
-   In infix notation, this means that, in addition to the equation
+    In infix notation, this means that, in addition to the equation
     \begin{equation}
         (\mora \mthen \morc )
         \mtimescatmor (\morb \mthen \mord )
@@ -1160,11 +1239,11 @@ This property is somewhat strong.
     \end{equation}
     it is now also the case that $\mtimescat$ is compatible with identity morphisms:
     \begin{equation}
-\catidat{\Obja} \mtimescatmor \catidat{\Objb} = \catidat{\Obja \mtimescatob \Objb}
+        \catidat{\Obja} \mtimescatmor \catidat{\Objb} = \catidat{\Obja \mtimescatob \Objb}
     \end{equation}
     for all objects $\Obja$, $\Objb$ of $\CatC$.
 \end{ctdefinition}
 
 \begin{remark}
-Note that a functorial stacking category is \emph{not} the same thing as a functorial stacking semicategory where the semicategory in question happens to be a category.
+    Note that a functorial stacking category is \emph{not} the same thing as a functorial stacking semicategory where the semicategory in question happens to be a category.
 \end{remark}
