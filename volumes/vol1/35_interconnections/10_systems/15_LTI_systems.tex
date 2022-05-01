@@ -3,7 +3,6 @@
 \section{LTI systems}
 \label{sec:LTI-systems}
 
-
 We now define LTI systems.
 
 \todotext{J: do we want to make a remark that the definition of LTI below is for continuous time, and that there is also a version for discrete time?}
@@ -18,87 +17,90 @@ We now define LTI systems.
     \end{align}
     and an \emph{initial state}~$\prstart\setin \prst$, where~$t \setin \nonNegReals$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}$,~$\mat{B}$,~$\mat{C}$,~$\mat{D}$ are real matrices of appropriate dimension.
 \end{definition}
-
-\todotextjira{755}{\alphubel: @GZ: we need a brief definition and discussion of for matrices with 0 dimension here and a remark that this case is included in the definition.}
-
-We compactly refer to an LTI system by writing it as a tuple~$\genericlti{}$. 
-
-The equations \cref{eq:LTI-system-dyn} describe the dynamics. The equations \cref{eq:LTI-system-ro} describe the output, or, one might say, the variables that are ``exposed'' or externally visible.
-
-The matrix $\mat{D}$ is called the \emph{feedthrough term}. We will call an LTI system \emph{proper} if~$\mat{D}=\mat{0}^{\matdim{l}{m}}$.
-
 \begin{remark}
-When using state-space LTI systems as models, it is typical that the equations \cref{eq:LTI-system-dyn} are chosen using physical laws and first principles reasoning, while the matrices $\mat{C}$ and $\mat{D}$ in \cref{eq:LTI-system-ro} are rather chosen based on what information from our model is explicitly relevant or accessible. 
+    \cref{def:LTI_syst} includes the particular case of matrices with 0 dimension.
+    For instance, in a system with $\prin=\reals^l$ and $\prout=\reals^m$, we could have $\mat{A}\setin \reals^{0\times 0}$ (in other words, no state).
+    This would imply $\mat{B}\setin \reals^{0\times l}$, $\mat{C}\setin \reals^{m\times 0}$, and $\mat{D}\setin \reals^{m\times l}$.
+    Matrices with zero rows and/or zero columns multiply exactly as other matrices.
+    For instance, the multiplication of a $\reals^{0\times 0}$ matrix with a $\reals^{0\times l}$ matrix, will return a $\reals^{0\times l}$ matrix.
 \end{remark}
 
-\todotext{J: @Andrea @Gioele: does the above remark seems reasonable? I want to justify why, in the following examples, we only really care, for the time being, about the dynamics equations.}
+We compactly refer to an LTI system by writing it as a tuple~$\genericlti{}$.
 
+The equations \cref{eq:LTI-system-dyn} describe the dynamics.
+The equations \cref{eq:LTI-system-ro} describe the output, or, one might say, the variables that are ``exposed'' or externally visible.
 
+The matrix $\mat{D}$ is called the \emph{feedthrough term}.
+We will call an LTI system \emph{proper} if~$\mat{D}=\mat{0}^{\matdim{l}{m}}$.
+
+\begin{remark}
+    When using state-space LTI systems as models, it is typical that the equations \cref{eq:LTI-system-dyn} are chosen using physical laws and first principles reasoning, while the matrices $\mat{C}$ and $\mat{D}$ in \cref{eq:LTI-system-ro} are rather chosen based on what information from our model is explicitly relevant or accessible.
+\end{remark}
 
 \begin{example}
-Consider a mass $m$ lying on a frictionless surface, and attached to two springs as depicted in  \cref{fig:LTI-example_two-springs-one-mass}. 
+    \label{exa:sping-mass-lti}
+    Consider a mass $m$ lying on a frictionless surface, and attached to two springs as depicted in  \cref{fig:LTI-example_two-springs-one-mass}.
 
-\begin{figure}[h]\label{fig:LTI-example_two-springs-one-mass}
-\centering
-\includegraphics[width=0.4\linewidth]{LTI-example_two-springs-one-mass}
-\end{figure}
+    \begin{figure}[h]\label{fig:LTI-example_two-springs-one-mass}
+        \centering
+        \includesag{mass-spring-lti}
+        %\includegraphics[width=0.4\linewidth]{LTI-example_two-springs-one-mass}
+    \end{figure}
 
+    The coordinate $q(t)$ describes position of the mass along one horizontal dimension, $F$ denotes a force that is applied to $m$ in that horizontal direction, and $k_1$ and $k_2$ are the spring constants of the respective springs.
 
-The coordinate $q$ describes position of the mass along one horizontal dimension, $F$ denotes a force that is applied to $m$ in that horizontal direction, and $k_1$ and $k_2$ are the spring constants of the respective springs. 
+    The dynamics of the position coordinate $q(t)$ as a function of time is described by the differential equation:
+    \begin{equation}
+        (k_1 + k_2)q(t) + m \ddot{q}(t) = F.
+    \end{equation}
 
-The dynamics of the position coordinate $q$ as a function of time is described by the differential equation
-\begin{equation}
-(k_1 + k_2)q + m \ddot q = F. 
-\end{equation}
-
-We may rewrite this as a proper LTI system in a state-space representation by choosing the state-variable to be
-\begin{equation}
-\mat{x} = 
-\begin{bmatrix}
-q \\
-\dot q
-\end{bmatrix}.
-\end{equation}
-Then 
-\begin{equation}
-\dot{\mat{x}} = 
-\begin{bmatrix}
-0 & 1 \\
-\tfrac{-(k_1 + k_2)}{m} & 0 
-\end{bmatrix}
-\mat{x} + 
-\begin{bmatrix}
-0 \\
-1
-\end{bmatrix} 
-F
-\end{equation}
-describes the dynamics, and as output we might choose
-\begin{equation}
-\mat{y} =
-\begin{bmatrix}
-1 & 0 
-\end{bmatrix}
-\mat{x} +
-\begin{bmatrix}
-0
-\end{bmatrix} 
-F.
-\end{equation}
+    We may rewrite this as a proper LTI system in a state-space representation by choosing the state-variable to be
+    \begin{equation}
+        \mat{x} =
+        \begin{bmatrix}
+            q(t) \\
+            \dot{q}(t)
+        \end{bmatrix}.
+    \end{equation}
+    Then
+    \begin{equation}
+        \dot{\mat{x}}(t) =
+        \begin{bmatrix}
+            0                       & 1 \\
+            \tfrac{-(k_1 + k_2)}{m} & 0
+        \end{bmatrix}
+        \mat{x}(t) +
+        \begin{bmatrix}
+            0 \\
+            1
+        \end{bmatrix}
+        F
+    \end{equation}
+    describes the dynamics, and as output we might choose
+    \begin{equation}
+        \mat{y}(t) =
+        \begin{bmatrix}
+            1 & 0
+        \end{bmatrix}
+        \mat{x}(t) +
+        \begin{bmatrix}
+            0
+        \end{bmatrix}
+        F.
+    \end{equation}
 \end{example}
 
 \todotext{J: the above example is Example 4.3.1 from the Polderman Willems books ``Introduction to mathematical systems theory''}
 
 \devel{
 
-\begin{example}
-[INSERT EXAMPLE 4.3.2 from Polderman Willems]
-\end{example}
+    \begin{example}
+        [INSERT EXAMPLE 4.3.2 from Polderman Willems]
+    \end{example}
 
-
-\begin{example}
-[INSERT EXAMPLE regarding predatory prey models, take the one from Jaz Meyers book]
-\end{example}
+    \begin{example}
+        [INSERT EXAMPLE regarding predatory prey models, take the one from Jaz Meyers book]
+    \end{example}
 
 }
 
@@ -107,7 +109,7 @@ F.
 \begin{definition}[Equivalence of LTI systems]
     \label{def:equivalence_lti}
     \SYNDEF{equivalence of LTI systems}
-    Two systems~$\genericlti{\mora}$ and~$\genericlti{\morb}$ are \emph{equivalent} if and only if there exists an invertible linear transformation~$\mat{x}_\morb(t)=T\mat{x}_\mora(t)$ such that
+    Two systems~$\genericlti{\mora}$ and~$\genericlti{\morb}$ are \emph{equivalent} if and only if there exists an invertible linear transformation~$\mat{x}_\morb(t)=\mat{T}\mat{x}_\mora(t)$ such that
     \begin{equation}
         \mat{A}_\morb = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \ \mat{B}_\morb = \mat{T}\mat{B}_\mora, \ \mat{C}_\morb =\mat{C}_\mora\mat{T}^{-1},\ \mat{D}_\morb=\mat{D}_\mora, \ \prstart_\morb=\mat{T}\prstart_\mora.
     \end{equation}
@@ -162,7 +164,35 @@ We define a category of LTI systems \LTI.
     \end{enumerate}
 \end{ctdefinition}
 
-\todotextjira{756}{\alphubel: @GZ: we need a remark and discussion of the case of matrices with 0 dimension, in particular the rules for multiplying them and forming block matrices.}
+\begin{remark}
+    Again, all of this works with matrices with zero rows and/or zero columns.
+    Let's see practically how via a simple instance.
+    Consider the system $\mora\colon a \mto b$ given by $\genericlti{\mora}$ and the system $\morb\colon b\mto c$ given by $\tupp{\mat{0}^{0\times 1},\mat{0}^{0\times 0}, \mat{0}^{0\times b}, \mat{0}^{c\times 0}, \mat{0}^{c\times b}}$.
+    Their composition $\mora\mthen \morb\colon a\mto c$ is a system $\genericlti{}$ with:
+    \begin{equation*}
+        \prstart=\begin{bmatrix} \prstart_\mora \\ \mat{0}^{0\times 1}\end{bmatrix}=\prstart_\mora.
+    \end{equation*}
+    How could we write the above equation?
+    $\prstart_\mora$ has $s$ rows and 1 column, and $\mat{0}^{0\times 1}$ has 0 rows and 1 column (it has to have 1 column for us to be able to write the above block matrix), allowing us to write the expression as $\prstart_\mora$.
+    We can now write:
+    \begin{equation*}
+        \mat{A}=\begin{bmatrix}
+            \mat{A}_\mora                    & \mat{0}^{s\times 0} \\
+            \mat{0}^{0\times b}\mat{C}_\mora & \mat{0}^{0\times 0}
+        \end{bmatrix}=
+        \begin{bmatrix}
+            \mat{A}_\mora       & \mat{0}^{s\times 0} \\
+            \mat{0}^{0\times s} & \mat{0}^{0\times 0}
+        \end{bmatrix}=\begin{bmatrix}
+            \mat{A}_\mora \\
+            \mat{0}^{0\times s}\end{bmatrix}=\mat{A}_\mora,
+    \end{equation*}
+    The above equality teaches us how to manipulate matrices with zero rows and/or zero columns.
+    First, since $\mat{C}_\mora$ has $b$ rows and $s$ columns, the multiplication $\mat{0}^{0\times b}\mat{C}_\mora$ is well defined and gives the zero matrix with 0 rows and $s$ columns.
+    Once we realize this, we see that we end up with a matrix made of four block matrices.
+    Given their zero rows/columns, one can then simplify as shown.
+    Similar arguments can be made for the other matrices resulting from the composition.
+\end{remark}
 
 \begin{exercise}
     Prove that \LTI is indeed a category.
@@ -291,8 +321,65 @@ We define a category of LTI systems \LTI.
     Therefore, \LTI is a category.
 \end{solution}
 
-\todotext{J: @J: do an example here of LTI composition -- perhaps predatory prey example would work? hmm maybe not actually, because i think it involves trace or re-wirings. Other examples? Perhaps look at the Guzzella book for examples.}
+\begin{example}
+    Consider the LTI for the spring-mass system from \cref{exa:sping-mass-lti}, and define the LTI
+    \begin{equation*}
+        \begin{aligned}
+            \dot{\mat{z}}(t) & =p(t)+Cq(t) \\
+            \mat{w}(t)       & =p(t),
+        \end{aligned}
+    \end{equation*}
+    taking as input the output produced by the spring-mass system (the position of the mass along the horizontal dimension)  and transforms it by a factor $C$.
+    We can compose the two systems, obtaining the system $\genericplti{}$ with
+    \begin{equation*}
+        \mat{A}=\begin{bmatrix}0                  & 1 & 0 \\
+               -\frac{k_1+k_2}{m} & 0 & 0 \\
+               C                  & 0 & 1\end{bmatrix},\quad
+        \mat{B}=\begin{bmatrix}
+            0 \\
+            1 \\
+            0
+        \end{bmatrix},
+        \quad
+        \mat{C}=\begin{bmatrix}
+            0 & 0 & 1
+        \end{bmatrix}.
+    \end{equation*}
+    This can be visualized more intuitively with the explicit composed dynamics:
+    \begin{equation*}
+        \begin{aligned}
+            \begin{bmatrix}
+                \dot{q}(t)  \\
+                \ddot{q}(t) \\
+                \dot{p}(t)
+            \end{bmatrix} & =
+            \begin{bmatrix}0                  & 1 & 0 \\
+               -\frac{k_1+k_2}{m} & 0 & 0 \\
+               C                  & 0 & 1\end{bmatrix} \begin{bmatrix}
+                                                                            {q}(t)     \\
+                                                                            \dot{q}(t) \\
+                                                                            {p}(t)
+                                                                        \end{bmatrix}+
+            \begin{bmatrix}
+                0 \\
+                1 \\
+                0
+            \end{bmatrix} F \\
+            w(t)                            & =\begin{bmatrix}
+                                                   0 & 0 & 1
+                                               \end{bmatrix}\begin{bmatrix}
+                                                                {q}(t)     \\
+                                                                \dot{q}(t) \\
+                                                                {p}(t)
+                                                            \end{bmatrix}
+        \end{aligned}
+    \end{equation*}
+    Given an input force, I will get a transformed horizontal position as an output.
+\end{example}
 
+\todotext{J: @J: do an example here of LTI composition -- perhaps predatory prey example would work? hmm maybe not actually, because i think it involves trace or re-wirings.
+    Other examples? Perhaps look at the Guzzella book for examples.
+}
 
 \subsection{Standard action of LTI systems}
 
@@ -337,36 +424,34 @@ We define a category of LTI systems \LTI.
               \end{equation}
               where~$\mat{s}_\mora$ is the unique solution of the initial value problem
               \begin{align}
-              \begin{cases}
-                  \dot{\mat{x}}(t) & = \mat{A}_\mora \mat{x}(t) + \mat{B}_\mora\mat{u}(t) \\
-                  \mat{x}(0)       & = \prstart_\mora.
-              \end{cases}
+                  \begin{cases}
+                      \dot{\mat{x}}(t) & = \mat{A}_\mora \mat{x}(t) + \mat{B}_\mora\mat{u}(t) \\
+                      \mat{x}(0)       & = \prstart_\mora.
+                  \end{cases}
               \end{align}
     \end{itemize}
 \end{definition}
 
-
 \todotextjira{754}{\alphubel: @Gioele:  we need to check and remark on the special cases involving zero-dimensional spaces}
 
-
 \begin{remark}
-The initial value problem 
- \begin{align}\label{eq:LTI-Cauchy-problem}
- \begin{cases}
-                  \dot{\mat{x}}(t) & = \mat{A} \mat{x}(t) + \mat{B} \mat{u}(t) \\
-                  \mat{x}(0)       & = \prstart
-\end{cases}
-\end{align}
-is a system of linear first-order non-homogenous differential equations. It does \emph{not} have constant coefficients, because the inhomogenous term $\mat{B}_\mora\mat{u}(t)$ is not constant (it depends on the independent variable $t$).
+    The initial value problem
+    \begin{align}\label{eq:LTI-Cauchy-problem}
+        \begin{cases}
+            \dot{\mat{x}}(t) & = \mat{A} \mat{x}(t) + \mat{B} \mat{u}(t) \\
+            \mat{x}(0)       & = \prstart
+        \end{cases}
+    \end{align}
+    is a system of linear first-order non-homogenous differential equations.
+    It does \emph{not} have constant coefficients, because the inhomogenous term $\mat{B}_\mora\mat{u}(t)$ is not constant (it depends on the independent variable $t$).
 
-The theorem of Picard-Lindelöf guarantees that initial value problems of the form \cref{eq:LTI-Cauchy-problem} always have a unique solution. There is general formula for the solution $\mat{s}(t)$ of \cref{eq:LTI-Cauchy-problem}, namely
-\begin{equation}
-\mat{s}(t) = e^{\mat{A} t} \prstart + \int_{0}^{t} e^{\mat{A} (t - \tau)}\mat{B}\mat{u}(s)d\tau.
-\end{equation}
+    The theorem of Picard-Lindelöf guarantees that initial value problems of the form \cref{eq:LTI-Cauchy-problem} always have a unique solution.
+    There is general formula for the solution $\mat{s}(t)$ of \cref{eq:LTI-Cauchy-problem}, namely
+    \begin{equation}
+        \mat{s}(t) = e^{\mat{A} t} \prstart + \int_{0}^{t} e^{\mat{A} (t - \tau)}\mat{B}\mat{u}(s)d\tau.
+    \end{equation}
 
-              
 \end{remark}
-
 
 \begin{lemma}\label{lem:lti_cat_action}
     \cref{def:lti_cat_action} indeed defines a category action.
@@ -393,7 +478,7 @@ The theorem of Picard-Lindelöf guarantees that initial value problems of the fo
         \label{eq:lti_action_1}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\morab}\mat{x}(t)+\mat{B}_{\morab}\mat{u}(t), \\
-            \mat{x}(0)        & = \prstart_{\morab},
+            \mat{x}(0)       & = \prstart_{\morab},
         \end{aligned}
     \end{equation}
     and
@@ -450,7 +535,7 @@ The theorem of Picard-Lindelöf guarantees that initial value problems of the fo
     \begin{equation}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}(t), \\
-            \mat{x}(0)           & = \prstart_{\mora},
+            \mat{x}(0)       & = \prstart_{\mora},
         \end{aligned}
     \end{equation}
     and by looking at~$\funmorspace{\act}(\morb)$ we have
@@ -472,7 +557,7 @@ The theorem of Picard-Lindelöf guarantees that initial value problems of the fo
     \begin{equation}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\morb}\mat{x}(t)+\mat{B}_{\morb}\mat{u}(t), \\
-           \mat{x}(0)           & = \prstart_{\morb}.
+            \mat{x}(0)       & = \prstart_{\morb}.
         \end{aligned}
     \end{equation}
     Clearly, considering~$\funmorspace{\act}(\mora)\mthen \funmorspace{\act}(\morb)$ is equivalent to considering~$\mat{u}_\morb=\funmorspace{\act}(\mora)(\mat{u}_\mora)$.
@@ -513,7 +598,7 @@ The theorem of Picard-Lindelöf guarantees that initial value problems of the fo
         \label{eq:first_lti_equiv}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}(t), \\
-            \mat{x}(0)            & = \prstart_\mora.
+            \mat{x}(0)       & = \prstart_\mora.
         \end{aligned}
     \end{equation}
     Let~$\mat{s}(t)$ be the solution of \cref{eq:first_lti_equiv}.
