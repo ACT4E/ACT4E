@@ -1,0 +1,26 @@
+\begin{tikzpicture}[mass/.style={draw,thick},
+        spring/.style={thick,decorate,decoration={coil,pre length=0.2cm,post
+                        length=0.2cm,segment length=3}},
+        ground/.style={fill,pattern=north east lines,draw=none,minimum
+                width=0.75cm,minimum height=0.3cm},
+        dampic/.pic={\fill[white] (-0.1,-0.3) rectangle (0.3,0.3);
+                \draw (-0.3,0.3) -| (0.3,-0.3) -- (-0.3,-0.3);
+                \draw[line width=1mm] (-0.1,-0.3) -- (-0.1,0.3);}]
+
+    \node[mass,minimum width=1cm,minimum height=1cm] (m1) {$M$};
+    \node[left=1.5cm of m1,ground,minimum width=3mm,minimum height=2.5cm] (g1){};
+    \node[right=1.5cm of m1,ground,minimum width=3mm,minimum height=2.5cm] (g2){};
+    \draw (g1.north east) -- (g1.south east);
+    \draw (g2.north west) -- (g2.south west);
+
+    \draw[spring] ([yshift=0mm]g1.east) coordinate(aux)-- (m1.west|-aux) node[midway,above=1mm]{$k_1$};
+    \draw[spring] ([yshift=0mm]m1.east) coordinate(aux)-- (g2.west|-aux) node[midway,above=1mm]{$k_2$};
+    \draw[-latex] ($(m1.east)+(0,-0.3)$) -- node[pos=0.5,below]{$F$} ($(m1.east)+(1,-0.3)$);
+
+    \foreach \X in {1}
+        {\draw[thin,dashed] (m\X.south) -- ++ (0,-1) coordinate[pos=0.85](aux'\X);
+            \draw[latex-] (aux'\X) -- ++ (-1,0) node[midway,above]{$q_\X$}
+            node[left,ground,minimum height=7mm,minimum width=1mm] (g'\X){};
+            \draw[thick] (g'\X.north east) -- (g'\X.south east);
+        }
+\end{tikzpicture}
