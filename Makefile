@@ -1,15 +1,10 @@
-all:
-	@echo do
-	@echo 	make -B ACT4E-vol1.pdf
-	@echo 	make -B ACT4E-vol1-final.pdf
-	@echo 	make -B ACT4E-vol2.pdf
-	@echo Create the cached tikz using \"make tikz\".
 
-all-new:
-	@echo do
-	@echo 	make -B ACT4E-devel-slow.pdf
-	@echo 	make -B ACT4E-public-slow.pdf
-	@echo 	make -B ACT4E-instructors-slow.pdf
+all:
+	@echo do one of the following:
+	@echo 	make -B ACT4E-devel-fast.pdf
+	@echo 	make -B ACT4E-public-fast.pdf
+	@echo 	make -B ACT4E-instructors-fast.pdf
+	@echo or the "slow" variant.
 	@echo Create the cached tikz using \"make tikz\".
 
 tmpdir=tmp
