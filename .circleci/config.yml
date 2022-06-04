@@ -32,8 +32,8 @@ jobs:
       max_print_line: "1000"
       error_line: "254"
       half_error_line: "238"
-    docker:
-    - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
+    docker: &DOCKER
+    - image: act4e/act4e-build:alphubel
       auth:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
@@ -80,11 +80,7 @@ jobs:
   build-instructors:
     resource_class: small
     environment: *environment
-    docker:
-    - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
-      auth:
-        username: $DOCKER_USERNAME
-        password: $DOCKER_PASSWORD
+    docker: *DOCKER
     steps:
     - checkout
     - store_artifacts:
@@ -121,11 +117,7 @@ jobs:
   build-devel-slides:
     resource_class: large
     environment: *environment
-    docker:
-    - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
-      auth:
-        username: $DOCKER_USERNAME
-        password: $DOCKER_PASSWORD
+    docker: *DOCKER
     steps:
     - checkout
     - run:
@@ -164,11 +156,7 @@ jobs:
   build-public:
     resource_class: small
     environment: *environment
-    docker:
-    - image: ${DOCKER_REGISTRY}/act4e/act4e-build:alphubel
-      auth:
-        username: $DOCKER_USERNAME
-        password: $DOCKER_PASSWORD
+    docker: *DOCKER
     steps:
     - checkout
     - run: *check_no_tabs
