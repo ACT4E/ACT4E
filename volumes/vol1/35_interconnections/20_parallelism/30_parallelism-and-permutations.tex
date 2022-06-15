@@ -22,7 +22,7 @@ If, for instance, $\permmap \in \Perms(3)$ is the permutation
     3               & \mapsto 1
 \end{align*}
 then we indicate this by writing $\permmap = (3, 1, 2)$.
-One way to think of this notation is that we start with $(1, 2, 3)$ and then apply $\permmap$ to each entry.
+The way we think of this notation is that we start with $(1, 2, 3)$ and then apply $\permmap$ to each entry.
 In other words, in general, our notation for some $\permmap \in \Perms(n)$ is $(\permmap(1), \dots, \permmap(n))$.
 
 To help us talk about permuting inputs and output of morphisms in stacking semicategories, we make the following definitions.
@@ -33,7 +33,7 @@ To help us talk about permuting inputs and output of morphisms in stacking semic
         \item \emph{Objects}: the natural numbers $\natnumbers$;
         \item \emph{Morphisms}: permutations in $\Perms(n)$, for all $n \in \natnumbers$.
         \item \emph{Composition}: composition of permutations;
-        \item \emph{Identities}: identity functions (which are permutations).
+        \item \emph{Identities}: identity functions (which are permutations). We will denote the identity permutation in $\Perms(n)$ by $1_n$. 
     \end{enumerate}
 \end{definition}
 
@@ -60,7 +60,24 @@ To help us talk about permuting inputs and output of morphisms in stacking semic
 
 \todotext{\alphubel: prove the lemma}
 
-\todotext{\alphubel: J: @J: define refinement of permutations..}
+
+\subsection{Block permutations}
+
+We will also need to describe permutations that permute ``blocks'' of elements of $\makeset{1, \dots, n}$. Suppose we are given natural numbers $k_1, \dots, k_r$ such that $k_1 + \dots + k_r = n$. We think of these as corresponding to a partitioning of $\makeset{1, \dots, n}$ into blocks of size $k_j$, $1 \leq j \leq r$.
+
+Given a permutation $\sigma \in  \Perms(r)$, there is a way to turn it into a \emph{block permutation} $\sigma_*(k_1, \dots, k_r) \in \Perms(r)$. 
+
+
+We'll start with an example, then give a general formula. Suppose $n = 5$, $r=2$, and $k_1 = 3$ and $k_2 = 2$. Let $\sigma = (2, 1) \in \Perms(2)$. Then 
+$$
+\sigma_*(k_1, k_2) = \sigma_*(3,2) = (4,5,1,2,3) \in \Perms(5). 
+$$
+What is happening is that we start with $(1,2,3,4,5)$, we split it into the blocks $((1,2,3),(4,5))$ of length $3$ and $2$ respectively, we apply $\sigma$ to the blocks to get $((4,5),(1,2,3))$, and then we forget the subdivision into blocks, obtaining $(4,5,1,2,3)$. 
+
+The general formula to compute $\sigma_*(k_1,\dots, k_r)$ is that, for each $j = 1, \dots, r$, in the sequence $(\sigma(1), \dots, \sigma(r))$ we replace $\sigma(j)$ with the sequence
+$$
+k_1 + \dots + k_{j-1} + 1, \quad k_1 + \dots + k_{j-1} + 2, \quad \dots, \quad k_1 + \dots + k_{j-1} + k_j.
+$$
 
 \subsection{Symmetric stacking semicategories}
 
@@ -79,7 +96,7 @@ For example,~$\mora, \morb, \morc, \mord$ might be systems, represented graphica
 The stacked system~$\mora \mtimescatmor \morb$ will have output wires for~$\Objc$ and $\Objd$, and the stacked system~$\morc \mtimescatmor \mord$ will have input wires for~$\Objd$ and~$\Objc$.
 In some applications we are often indeed able to connect the one output wire labeled with~$\Objc$ to the input wire also labeled with~$\Objc$, and similarly for~$\Objd$.
 
-To model this for stacking \SY{semicategories}, we introduce operations that correspond to crossing (or permuting) wires, both on the input and output sides of morphism.
+To model this for stacking \SY{semicategories}, we introduce operations that correspond to crossing (or permuting) wires, both on the input and output sides of a morphism.
 Recall that, for each~$n \setin \natnumbers$, the symmetric group $S_n$ is the group of \SY{bijections} of the set~$\makeset{1, 2, \ldots, n }$ with itself.
 
 \begin{marginfigure}
@@ -136,13 +153,7 @@ Recall that, for each~$n \setin \natnumbers$, the symmetric group $S_n$ is the g
 
     \begin{itemize}
 
-        \item \emph{Compatibility with semicategory composition:}
-
-              For all $\mora \setin \HomSet{\CatC}{\Obja}{\mtimescatob_{i=1}^n \Objbn{i}}$ and $\morb \setin \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objb_{\permmap(i)}}{\Objc}$
-              \begin{equation}
-                  \label{eq:perm-compatibility-with-composition}
-                  \targetperm{\permmap} (\mora) \mthen \morb = \mora \mthen \sourceperm{\permmap}(\morb).
-              \end{equation}
+      
 
         \item \emph{Compatibility with permutation composition:}
 
@@ -154,6 +165,28 @@ Recall that, for each~$n \setin \natnumbers$, the symmetric group $S_n$ is the g
                   \targetperm{\permmap} \mthen \targetperm{\pi} = \targetperm{(\permmap \mthen \pi)}
               \end{equation}
               hold for all~$\permmap, \pi \setin \Perms(n)$,~$n \geq 2$.
+              
+        \item \emph{Compatibility with permutation identities:}
+
+              For any $n \in \natnumbers$, if $\permmap = 1_n$ is the identity permutation in $\Perms(n)$, then 
+              \begin{equation}
+                  \label{eq:perm-compatibility-with-perm-identity-1}
+                  \sourceperm{(1_n)} \colon \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objan{i}}{\Objb} \to \HomSet{\CatC}{\mtimescatob_{i=1}^n \Obja_{i}}{\Objb}
+              \end{equation}
+              and 
+              \begin{equation}
+                  \label{eq:perm-compatibility-with-perm-identity-2}
+                  \targetperm{(1_n)} \colon \HomSet{\CatC}{\Obja}{\mtimescatob_{i=1}^n \Objbn{i}} \to \HomSet{\CatC}{\Obja}{\mtimescatob_{i=1}^n \Objb_i}
+              \end{equation}
+              are the identity functions. 
+
+        \item \emph{Compatibility with semicategory composition:}
+
+              For all $\mora \setin \HomSet{\CatC}{\Obja}{\mtimescatob_{i=1}^n \Objbn{i}}$ and $\morb \setin \HomSet{\CatC}{\mtimescatob_{i=1}^n \Objb_{\permmap(i)}}{\Objc}$
+              \begin{equation}
+                  \label{eq:perm-compatibility-with-composition}
+                  \targetperm{\permmap} (\mora) \mthen \morb = \mora \mthen \sourceperm{\permmap}(\morb).
+              \end{equation}
 
         \item \emph{Compatibility with stacking:}
 
