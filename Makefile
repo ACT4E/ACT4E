@@ -200,7 +200,7 @@ compile-equations:
 .PHONY: .FORCE
 
 
-BUILD_IMAGE ?= reg-stage.zuper.ai/act4e/act4e-build:alphubel
+BUILD_IMAGE ?= act4e/act4e-build:alphubel
 
 pull:
 	docker pull $(BUILD_IMAGE)
