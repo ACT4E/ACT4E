@@ -3,12 +3,20 @@ import itertools
 import sys
 from pathlib import Path
 from typing import List, Tuple
+import fnmatch
+import os.path
 
-import termcolor
+try:
+    import termcolor
+except ImportError:
+    def colored(text: str, color=None, on_color=None) -> str:
+        return text 
+else:
+    from termcolor import colored
 
 directories = sys.argv[1:]
 if not directories:
-    print("Need to pass directories to check on the command line.")
+    print("Need to pass directories or files to check on the command line.")
     raise SystemExit(1)
 
 patterns = ["*.tex", "*.tikz", "*.py", "*.sh"]
@@ -16,9 +24,13 @@ patterns = ["*.tex", "*.tikz", "*.py", "*.sh"]
 files = []
 
 for d, p in itertools.product(directories, patterns):
-    for fn in Path(d).rglob(p):
-        files.append(fn)
-
+    if os.path.isdir(d):
+        for fn in Path(d).rglob(p):
+            files.append(fn)
+    else:
+        if fnmatch.fnmatch(d, p):
+            files.append(d)
+            
 errors: List[Tuple[Path, int, str, int]] = []
 
 for fn in files:
@@ -43,17 +55,17 @@ s = (
     f"contained."
 )
 
-print(termcolor.colored(s, "red"))
+print(colored(s, "red"))
 
 for fn in files_with_errors:
     its = [(i, line) for path, i, line, ntabs in errors if path == fn]
-    print(termcolor.colored(str(fn), "green"))
+    print(colored(str(fn), "green"))
     for i, line in its:
-        tab_highlight = termcolor.colored(">---", "red", "on_white")
+        tab_highlight = colored(">---", "red", "on_white")
         line_highlight = line.replace("\t", tab_highlight)
         print(f"line {i + 1:3d}: {line_highlight}")
 # print(files)
 
-print(termcolor.colored(s, "red"))
+print(colored(s, "red"))
 
 raise SystemExit(1)
