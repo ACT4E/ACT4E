@@ -186,6 +186,13 @@ remake:
 find-equations:
 	lsm_equations --search volumes/vol1 --output equations/vol1
 
+find-equations-playground:
+	lsm_equations --search volumes/vol-playground --output equations/vol-playground
+
+find-equations-Paper_NegResults:
+	lsm_equations --search volumes/vol-playground/10_dp/Paper_NegResults --output equations/vol-playground/10_dp/Paper_NegResults
+
+
 #find-equations-vol2:
 #	lsm_equations --search volumes/vol2 --output equations/vol2
 
