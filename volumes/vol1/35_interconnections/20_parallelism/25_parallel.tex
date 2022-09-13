@@ -216,9 +216,39 @@ In particular, in an \SY{associative stacking} \SY{semicategory}, and stacking o
     \label{def:assoc-stacking-cat}
     An \maindef{associative stacking category} is a \SY{associative stacking semicategory} $\tup{\CatC, \mtimescatob, \mtimescatmor}$ where $\CatC$ is in fact a category.
      \end{ctdefinition}
+     
+\begin{example}\label{ex:assoc-stacking-semicat-integers-max}
+We let the integers $\wnumbers$ to be the set of objects of an associative stacking semicategory, and we say that there exists a unique morphism $\Obja \mto \Objb$ if and only if $\Obja \leq \Objb$. (We have already seen that this forms a semicategory; in fact, a category.) As our stacking operation for objects we set
+\begin{equation}
+\Obja \mtimescatob \Objb := \max(\Obja, \Objb)
+\end{equation}
+and for stacking morphisms we say that if $\mora \colon \Obja \mto \Objb$ and $\morb \colon \Objc \mto \Objd$ exist, then there exists a unique morphism
+\begin{equation}
+\mora \mtimescatmor \morb \colon \Obja \mtimescatob \Objc \mto \Objb \mtimescatob \Objd
+\end{equation}
+which corresponds to (and is consistent with) the inequality 
+\begin{equation}
+\max(\Obja, \Objc) \leq \max(\Objb, \Objd).
+\end{equation}
+\end{example}
+
+\begin{example}\label{ex:assoc-stacking-semicat-lists-concat}
+Let $\setA$ be a non-empty set and consider a semicategory where the collection of objects is $ \listsof \setA$, the set of non-empty lists of elements of $\setA$. We can define a pre-order on $\listsof \setA$ by setting, for any lists $\Obja, \Objb$, 
+\begin{equation}
+\Obja \leq \Objb \definedas \text{length}(\Obja) \leq \text{length}(\Objb).
+\end{equation}
+Then we view this pre-order as a semicategory, and define the following stacking operations. Given lists $\Obja, \Objb$, let $\Obja \mtimescatob \Objb$ be the concatenation of $\Obja$ and $\Objb$, and given morphisms $\mora \colon \Obja \mto \Objb$ and $\morb \colon \Objc \mto \Objd$ representing inequalities, we let $\mora \mtimescatmor \morb \colon \Obja \mtimescatob \Objc \mto \Objb \mtimescatob \Objd$ represent the inequality
+\begin{equation}
+\text{length}(\Obja \mtimescatob \Objc) \leq \text{length}(\Objb \mtimescatob \Objd).
+\end{equation}
 
 
-\clearpage
+
+
+\end{example}
+
+
+
 \begin{lemma}
     \label{lem:SetL-is-associative-stacking}
     \SetL is  \SY{associative stacking} using the structure that arises from tuple concatenation.
@@ -460,9 +490,29 @@ In particular, in an \SY{associative stacking} \SY{semicategory}, and stacking o
 %    An  \SY{associative stacking} semicategory is called \emph{commutative} if its two stacking operations make the collections of objects and morphisms, respectively, into commutative semigroups.
 %\end{definition}
 
+\subsection{One-object associative stacking semicategories}
+
+Consider a special kind of a stacking semicategory $\tup{\CatC, \mtimescatob, \mtimescatmor}$ where the semicategory $\CatC$ has only one object (call it $\Obja$, say). 
+
+In this special case, we have $\mtimescatob_{i=1}^n \Objan{i} = \Obja$ for any $n \in \natnumbers$. The only hom-set is $\Hom_\CatC(\Obja, \Obja)$ and this is equipped with the stacking operation
+\begin{equation}
+\mtimescatmor \colon \Hom_\CatC(\Obja, \Obja) \cartprod \Hom_\CatC(\Obja, \Obja) \to \Hom_\CatC(\Obja, \Obja)
+\end{equation}
+which makes $\Hom_\CatC(\Obja, \Obja)$ into a semigroup. In other words, this means that an associative stacking semicategory with one object may equivalently be described as set together with two operations -- serial composition and stacking -- that equip said set with two semigroup structures. 
+
+\begin{example}
+The integers $\wnumbers$, equipped with addition and multiplication as serial composition and stacking respectively, specify an associative stacking category with one object. Alternatively, we may also choose multiplication as our serial composition, and addition as our stacking. 
+\end{example}
+
+
+
+
+
+
+
 \subsection{The \SY{semicategory} \Effects}
 
-We now construct a non-trivial \SY{semicategory} that will serve as an example of a stacking \SY{semicategory} that is not functorial.
+We now construct a non-trivial \SY{semicategory} that will serve as an example of a stacking \SY{semicategory} that is associative but, as we will show later, is not functorial.
 
 There are two types of computation: ``functional'', or ``pure'', or free of side effects, and \emph{effectful}.
 In functional programming, functions are very much like mathematical functions: they need an input and produce and output.
@@ -732,7 +782,7 @@ with
 % if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\morb}$ is~$\styleobj{n}\mto \styleobj{o}$,~$\genericlti{}$ is~$\styleobj{l}+\styleobj{n}\mto \styleobj{m}+\styleobj{o}$.
 Given that the resulting LTI system is described by diagonal block matrices, it is evident that the defined operations are \SY{associative}, and therefore \LTI is an \SY{associative stacking} \SY{semicategory}.
 
-\subsection{Monoidal stacking}
+\section{Monoidal stacking}\label{sec:moinoidal-stacking}
 
 \begin{ctdefinition}[Strict monoidal stacking semicategory]
     \label{def:strict-monoidal-stacking-semicat}
@@ -748,17 +798,26 @@ Given that the resulting LTI system is described by diagonal block matrices, it 
 
     \begin{enumerate}
         \item For any object $\Obja$ of \CatC,
-              \begin{equation}
+              \begin{equation}\label{eq:strict-mon-stacking-semicat-cond1}
                   \Obja \mtimescatob \idmoncat = \Obja \qquad \text{and} \qquad \idmoncat \mtimescatob \Obja = \Obja.
               \end{equation}
         \item The monoidal unit $\idmoncat$ has an \SY{identity morphism} $\catid_\idmoncat$, and for any morphism $\mora \colon \Obja \mto \Objb$,
-              \begin{equation}
+              \begin{equation}\label{eq:strict-mon-stacking-semicat-cond2}
                   \mora \mtimescatmor \catid_\idmoncat = \mora \qquad \text{and} \qquad \catid_\idmoncat \mtimescatmor  \mora = \mora.
               \end{equation}
     \end{enumerate}
 \end{ctdefinition}
 
 \todotext{make a remark about why we use the word ``strict'' here}
+
+\begin{example}
+Consider the associative stacking category from \cref{ex:assoc-stacking-semicat-integers-max}, where objects are integers and stacking of objects is taking their maximum. There is no possible monoidal unit here: it would have to be a neutral element for the operation ``max'', but such does not exist for $\wnumbers$. However, we could modify this example, and replace $\wnumbers$ with a bounded set of numbers, such as $\natnumbers$. Then the smallest number in $\natnumbers$, namely $0$, serves a neutral element for ``max'' and provides a monoidal unit $\idmoncat$.
+\end{example}
+
+\begin{example}
+Consider the associative stacking category from \cref{ex:assoc-stacking-semicat-lists-concat}. 
+A monoidal unit would need to be a neutral element for list concatenation. This would be the empty list. In \cref{ex:assoc-stacking-semicat-lists-concat} we specified that objects are only non-empty lists, hence we do not have a strict monoidal semicategory. However, this example can the be easily adjusted to include also the empty list, in which case we \emph{do} obtain a strict monoidal semicategory. 
+\end{example}
 
 \begin{example}
     We can look at \Moore and ask whether it is a strict monoidal semicategory.
