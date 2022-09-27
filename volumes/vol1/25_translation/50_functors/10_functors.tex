@@ -65,6 +65,8 @@ The diagram with this overloaded ``synthetic notation'' is in \cref{fig:functor_
 
 \vspace{2cm}
 
+
+
 \section{Functors}
 \label{sec:functors}
 \linkvideo{spring2021-functors:semi-and-fun:fun-def} % Definition of functor
@@ -83,10 +85,157 @@ Categories have identities, and \SY{functors} are required to preserve the ident
     for all objects $\Obja$ in $\CatC$.
 \end{ctdefinition}
 
-\todotextjira{493}{@JL: we need some pedagogical examples here}
+
+\begin{example}[Powerset functor]
+    \label{ex:powerset_functor}
+    We define a \SY{functor}~$\funa\colon \Set \fto \Set$ which maps each set to its power set. In other words, $\funaob(\setA) = \powerset \setA$ for any set $\setA$. On the level of morphisms, given a function $\mora \colon \setA \mto \setB$, we define
+    \begin{equation}\label{eq:powerset-function-def}
+        \begin{aligned}
+            \funamor(\mora)\colon \powersetof \setA & \to \powersetof \setB \\
+            \setC                                   & \mapsto \makeset{\mora(\setCel) \mid \setCel \setin \setC}.
+        \end{aligned}
+    \end{equation}
+    Here is a concrete illustration.
+    Consider the two sets~$\setA = \makeset{\sfondue, \sbretzel, \schoco}$ and~$\setB = \makeset{\scheese,\sgrapes,\sapple}$.
+    Applying the \SY{functor} to~\setA gives
+    \begin{equation}\label{eq:powerset-functor-example-1a}
+        \funaob(\setA)
+        =
+        \makeset{
+            \Emptyset,
+            \makeset{\sfondue},
+            \makeset{\sbretzel},
+            \makeset{\schoco},
+            \makeset{\sfondue,\sbretzel},
+            \makeset{\sfondue,\schoco},
+            \makeset{\sbretzel,\schoco},
+            \makeset{\sfondue,\sbretzel,\schoco}
+        }
+    \end{equation}
+    and applying it to $\setB$ gives
+    \begin{equation}\label{eq:powerset-functor-example-1b}
+        \funaob(\setB)
+        =
+        \makeset{
+            \Emptyset,
+            \makeset{\scheese},
+            \makeset{\sgrapes},
+            \makeset{\sapple},
+            \makeset{\scheese,\sgrapes},
+            \makeset{\scheese,\sapple},
+            \makeset{\sgrapes,\sapple},
+            \makeset{\scheese,\sgrapes,\sapple}
+        }.
+    \end{equation}
+    Furthermore, consider the map
+    %
+    \begin{equation}\label{eq:powerset-functor-example-2}
+        \begin{aligned}
+            \mora \colon \setA & \sto \setB, \\
+            \sfondue           & \mapsto \scheese, \\
+            \sbretzel          & \mapsto \sgrapes, \\
+            \schoco            & \mapsto \sapple.
+        \end{aligned}
+    \end{equation}
+    %
+    This would for instance give~$\funamor(\mora)(\makeset{\sfondue,\sbretzel})=\makeset{\mora(\sfondue),\mora(\sbretzel)}=\makeset{\scheese,\sgrapes}$.
+
+    Now let us check that $\funa$ so-defined really is a functor. 
+    
+    First let us check that it is compatible with composition. Consider functions~$\mora\colon \setA\fto \setB$,~$\morb\colon \setB \fto \setC$.
+    On the one hand we have
+    \begin{equation}\label{eq:powerset-functor-example-3}
+        \begin{aligned}
+            \funa(\morab)(\setC) & =\makeset{ \morb(\mora(\setCel))\mid \setCel \setin \setC},
+        \end{aligned}
+    \end{equation}
+    and on the other hand
+    \begin{equation}\label{eq:powerset-functor-example-4}
+        \begin{aligned}
+            (\funa(\mora)\mthen \funa(\morb))(\setC)
+             & =\makeset{ \mora(\setCel) \mid \setCel \setin \setC}\mthen \funa(\morb) \\
+             & =\makeset{g(\setDel)\mid \setDel \setin \makeset{\mora(\setCel)\mid \setCel\setin \setC}} \\
+             & =\makeset{ \morb(\mora(\setCel))\mid \setCel \setin \setC}.
+        \end{aligned}
+    \end{equation}
+    Second, let us check that $\funa$ is compatible with identity morphisms. We have
+    \begin{equation}\label{eq:powerset-functor-example-5}
+        \begin{aligned}
+            \funa(\catidat\setA)(\setC) & = \makeset{\catidat\setA(\setCel)\mid \setCel \setin \setC} \\
+                                        & =\catidat{\funa(\setC)}.
+        \end{aligned}
+    \end{equation}
+\end{example}
+
+\begin{example} There is a \SY{functor}
+\begin{equation}\label{eq:list-functor-intro}
+    \listfun\colon \Set \fto \Mon
+\end{equation}
+from the \SY{category of sets} to the \SY{category of monoids}, defined as follows.
+
+Given a set~\setA, the \SY{functor} returns a specific \SY{monoid}
+\begin{equation}\label{eq:list-functor-on-objects}
+    \listfun(\setA)\definedas\tupp{\listsof{\setA},\emptylist_\setA, \listconcat}.
+\end{equation}
+
+Given a map~$\mapa\colon \setA \sto \setB$, we have
+% \begin{equation}
+%     \defmapcomma{
+%         \listfun(\mapa)
+%     }{
+%         \listsof{\setA}
+%     }{
+%         \to
+%     }{
+%         \listsof{\setB}
+%     }{
+%         \makelist{\setAel_1, \ldots, \setAel_n}
+%     }{
+%         \makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}
+%     }
+% \end{equation}
+\begin{equation}\label{eq:list-functor-on-morphisms}
+    \defmapcomma{
+        \listfun(\mapa)
+    }{
+        \listsof{\setA}
+    }{
+        \to
+    }{
+        \listsof{\setB}
+    }{
+        \makegenlist{ \setAel_i }
+    }{
+        \makegenlist{ \mapa(\setAeln{i}) }
+    }
+\end{equation}
+which applies~$\mapa$ entry-wise in the list.
+The empty list in~$\listsof{\setA}$ is mapped to the empty list in~$\listsof{\setB}$.
+    {}
+$\listfun$ is a \SY{functor}, because identity functions in $\Set$ are mapped to the corresponding identity morphisms on lists, and 
+% \begin{equation}
+%     \begin{aligned}
+%         \listfun(\mapa \mthen \mapb)(\makelist{\setAeln{1},\ldots,\setAeln{n}}) & =\makelist{(\mapa \mthen \mapb)(\setAeln{1}), \ldots, (\mapa \mthen \mapb)(\setAeln{n})} \\
+%                                                                                 & =\listfun(\mapb)(\makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}) \\
+%                                                                                 & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makelist{\setAeln{1}, \ldots, \setAeln{n}}).
+%     \end{aligned}
+% \end{equation}
+\begin{equation}\label{eq:list-functor-compositionality}
+    \begin{aligned}
+        \listfun(\mapa \mthen \mapb)(\makegenlist{\setAeln{i}}) & =\makegenlist{ (\mapa \mthen \mapb)(\setAeln{i})} \\
+                                                                & =\makegenlist{  \mapb ( \mapa (\setAeln{i}))} \\
+                                                                & =\listfun(\mapb)(\makegenlist{\mapa(\setAeln{i})}) \\
+                                                                & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makegenlist{\setAeln{i}}).
+    \end{aligned}
+\end{equation}
+\end{example}
+
+
 
 A \SY{functor} from a category to itself is called an \maindef{endofunctor}.
 The simplest example of an \SY{endofunctor} is the \SY{identity functor}.
+
+\subsection{Identity functor}
 
 \begin{definition}[Identity (semi)functor]\label{def:identity-semifunctor}
     \SYNDEF{identity semifunctor}
