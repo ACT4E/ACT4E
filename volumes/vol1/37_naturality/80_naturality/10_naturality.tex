@@ -172,8 +172,6 @@ In \cref{fig:two-naturality-squares} we have illustrated a situation involving t
 We have ``glued'' the two squares together since they share an edge (this a more compact way of drawing them).
 Note that because each of the two component squares in the diagram commute, so does the entire diagram.
 
-
-
 \linkvideo{spring2021-nat-trafos:natural-trafos:nat-trafo-def} % Definition of natural transformation
 \linkvideo{spring2021-nat-trafos:natural-trafos:nattrafos-as-mor} % Natural transformations are morphisms between functors
 
@@ -200,8 +198,9 @@ Note that because each of the two component squares in the diagram commute, so d
     \end{enumerate}
 \end{ctdefinition}
 
-To reiterate: a \SY{natural transformation} $\ntrafoa$ is a \emph{collection} $(\ntrafoa_\Obja)_{\Obja \setin \ObC}$ of morphisms (called the \emph{components} of the natural transformation) which satisfy the naturality conditions. The name ``components'' is analogous to how a vector $v = (v_1, .
-    .., v_n)$ has \emph{components} or a sequence $a = (a_n)_{n \setin \natnumbers}$ has \emph{terms}. 
+To reiterate: a \SY{natural transformation} $\ntrafoa$ is a \emph{collection} $(\ntrafoa_\Obja)_{\Obja \setin \ObC}$ of morphisms (called the \emph{components} of the natural transformation) which satisfy the naturality conditions.
+The name ``components'' is analogous to how a vector $v = (v_1, .
+    .., v_n)$ has \emph{components} or a sequence $a = (a_n)_{n \setin \natnumbers}$ has \emph{terms}.
 
 The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality squares}, and a \SY{natural transformation}~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely in this manner:
 \equationsag{55_natural_1}{eq:55_natural_1}
@@ -219,7 +218,6 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
     \label{fig:nat_trans_graphically}
 \end{figure*}
 
-
 \begin{example}
     Consider the \SY{powerset} \SY{functor} from \cref{ex:powerset_functor}, and denote it~$\funa$.
     As a reminder, the \SY{functor} maps a set $\setA$ to its \SY{powerset}, and a function $\mora \colon \setA \mto \setB$ to the map which sends each subset of $\setA$ to its image under $\mora$.
@@ -227,11 +225,11 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
     \begin{equation}
         \begin{aligned}
             \ntrafoa_\setA\colon \funid_\Set(\setA) = \setA & \mto \funa(\setA) = \powerset(\setA) \\
-            \setAel                                 & \mapsto \makeset{\setAel}.
+            \setAel                                         & \mapsto \makeset{\setAel}.
         \end{aligned}
     \end{equation}
     In other words, the \SY{natural transformation} embeds each element of~\setA into the power set~$\powerset(\setA)$.
-    To check that this is a  \SY{natural transformation}, consider $\mora\colon \setA\mto \setB$.
+    To check that this is a \SY{natural transformation}, consider $\mora\colon \setA\mto \setB$.
     We have
     \begin{equation}
         \begin{aligned}
@@ -244,55 +242,113 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
     \end{equation}
 \end{example}
 
+\begin{example}
+Consider the following two functors $\funa, \funb \colon \Set \Ctimes \Set \Ctimes \Set \fto \Set$.
+We define $\funa$ on objects by
+\begin{equation}
+\funa(\tup{\setA, \setB, \setC}) = (\setA \cartprod \setB) \cartprod \setC
+\end{equation}
+and define $\funb$ on objects by
+\begin{equation}
+\funb(\tup{\setA, \setB, \setC}) = \setA \cartprod (\setB \cartprod \setC).
+\end{equation}
+For their actions on morphisms, consider a morphism
+\begin{equation}
+\tup{\mora, \morb, \morc} \colon \tup{\setA, \setB, \setC} \mto \tup{\setAprime, \setBprime, \setCprime}
+\end{equation}
+in $\Set \Ctimes \Set \Ctimes \Set$. Its image under $\funa$ is
+\begin{equation}
+\tup{\tup{\mora, \morb}, \morc} \colon (\setA \cartprod \setB) \cartprod \setC \mto (\setAprime \cartprod \setBprime) \cartprod \setCprime
+\end{equation}
+and its image under $\funb$ is
+\begin{equation}
+\tup{\mora, \tup{\morb, \morc}} \colon \setA \cartprod (\setB \cartprod \setC) \mto \setAprime \cartprod (\setBprime \cartprod \setCprime).
+\end{equation}
+
+
+
+One way to see that $\funa$ is indeed a functor is to note that it is equal to the following composition of functors
+\begin{equation}
+\begin{aligned}
+\Set \Ctimes \Set \Ctimes \Set & \fto \Set \Ctimes \Set   \fto   \Set, \\
+\tup{\setA, \setB, \setC}  & \mapsto  \tup{\setA \cartprod \setB, \setC}   \mapsto   (\setA \cartprod \setB) \cartprod \setC
+\end{aligned}
+\end{equation}
+and recall from \cref{ex:CartProdAsFunctor} that ``$\cartprod$'' is a functor. An analogous remark applies to $\funb$.
+
+Now we define a natural transformation $\ntrafoa \colon \funa \nto \funb$ by specifying its components to be the functions
+\begin{equation}
+\ntrafoa_{\tup{\setA, \setB, \setC}} \colon (\setA \cartprod \setB) \cartprod \setC \fto \setA \cartprod (\setB \cartprod \setC), \ \tup{\tup{\ela, \elb}, \elc} \mapsto \tup{\ela, \tup{\elb, \elc}},
+\end{equation}
+indexed by triples of sets $\tup{\setA, \setB, \setC}$.
+
+For the family of morphisms $\ntrafoa_{\tup{\setA, \setB, \setC}}$ to be a natural transformation, we need to check that the diagrams
+\begin{equation}
+\label{eq:ntrafo_associator_cart_prod}
+\middlesag{ntrafo_associator_cart_prod}
+\end{equation}
+in $\Set$ commute for all morphisms $\tup{\mora, \morb, \morc}$ in $\Set \Ctimes \Set \Ctimes \Set$. It is easily checked that this is true.
+
+This natural transformation is an example of something called an $\emph{associator}$, which we will discuss  later when we define monoidal categories. The idea here is that the cartesian product of sets is not quite an  associative operation, but almost: instead of an ``equality'' symbol in the usual equation for the associative law, we have the components of this associator natural transformation.
+\end{example}
+
+\begin{example}
+For any two sets $\setA, \setB$, consider the function
+\begin{equation}\label{eq:symmetry-nat-trafo}
+\ntrafoa_{\tup{\setA, \setB}} \colon \setA \cartprod \setB \mto \setB \cartprod \setA, \ \tup{\ela, \elb} \mapsto \tup{\elb, \ela}.
+\end{equation}
+When we think of \cref{eq:symmetry-nat-trafo} as a family of functions parametrized by $\tup{\setA, \setB}$, they are in fact the components of a natural transformation $\ntrafoa$. Can you write down what the functors are that are the source and target of this natural transformation?
+\end{example}
+
+
 \section{Natural transformations are morphisms between functors}
 
-\begin{ctdefinition}
-Let $\CatC, \CatD$ be categories and let $\funa, \funb, \func \colon \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$. Suppose we are given natural transformations 
-$$\ntrafoa \colon \funa \nto \funb $$
-and 
-$$ \ntrafob \colon \funb \nto \func. $$
-Their composition $\ntrafoa \nthen \ntrafob$ is a natural transformation 
-$$ \ntrafoa \nthen \ntrafob \colon \funa \nto \func $$
-defined in components by
-\begin{equation}\label{eq:nat-trafo-composition}
-(\ntrafoa \nthen \ntrafob)_\Obja \definedas \ntrafoa_\Obja \mthen \ntrafob_\Obja \quad \quad \forall \  \Obja \in \Ob_\CatC.
-\end{equation}
+\begin{ctdefinition}[Compositions of natural transformations]\label{def:composition-of-naturali-tranformations}
+    Let $\CatC, \CatD$ be categories and let $\funa, \funb, \func \colon \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$.
+    Suppose we are given natural transformations
+    $$\ntrafoa \colon \funa \nto \funb $$
+    and
+    $$ \ntrafob \colon \funb \nto \func.
+    $$
+    Their composition $\ntrafoa \nthen \ntrafob$ is a natural transformation
+    $$ \ntrafoa \nthen \ntrafob \colon \funa \nto \func $$
+    defined in components by
+    \begin{equation}\label{eq:nat-trafo-composition}
+        (\ntrafoa \nthen \ntrafob)_\Obja \definedas \ntrafoa_\Obja \mthen \ntrafob_\Obja \quad \quad \forall \  \Obja \in \Ob_\CatC.
+    \end{equation}
 \end{ctdefinition}
 
-\begin{ctdefinition}
-Let $\CatC, \CatD$ be categories and let $\funa \colon \CatC \fto \CatD$ be a functor. The identity natural transformation at $\funa$ is the natural transformation $\natid_\funa \colon \funa \nto \funa$ defined in components by 
-\begin{equation}\label{eq:identity-nat-trafo-def}
-(\natid_\funa)_\Obja \definedas \catid_\Obja \quad \quad \forall \ \Obja \in \Ob_\CatC.
-\end{equation}
+\begin{ctdefinition}[Identity natural transformation]\label{def:identity-natural-transformation}
+    Let $\CatC, \CatD$ be categories and let $\funa \colon \CatC \fto \CatD$ be a functor.
+    The identity natural transformation at $\funa$ is the natural transformation $\natid_\funa \colon \funa \nto \funa$ defined in components by
+    \begin{equation}\label{eq:identity-nat-trafo-def}
+        (\natid_\funa)_\Obja \definedas \catid_\Obja \quad \quad \forall \ \Obja \in \Ob_\CatC.
+    \end{equation}
 \end{ctdefinition}
 
-
-\begin{ctdefinition}
-Let $\CatC, \CatD$ be categories. The category $[\CatC, \CatD]$ of functors from $\CatC$ to $\CatD$ is  
-\begin{enumerate}
-\item \emph{Objects}: functors $\CatC \fto \CatD$.
-\item \emph{Morphisms}: natural transformations between functors $\CatC \fto \CatD$.
-\item \emph{Composition}: composition of natural transformations.
-\item \emph{Identities}: identity natural transformations.
-\end{enumerate}
+\begin{ctdefinition}\label{def:category-of-functors}
+    Let $\CatC, \CatD$ be categories.
+    The category $[\CatC, \CatD]$ of functors from $\CatC$ to $\CatD$ is
+    \begin{enumerate}
+        \item \emph{Objects}: functors $\CatC \fto \CatD$.
+        \item \emph{Morphisms}: natural transformations between functors $\CatC \fto \CatD$.
+        \item \emph{Composition}: composition of natural transformations.
+        \item \emph{Identities}: identity natural transformations.
+    \end{enumerate}
 \end{ctdefinition}
 
-
-\section{Natural isomorphisms}
+\subsection{Natural isomorphisms}
 
 \begin{ctdefinition}[Natural isomorphism]
     \label{def:natural-isomorphism}
     A \SY{natural transformation}~$\ntrafoa \colon \funa \nto \funb $ is called a \maindef{natural isomorphism} if each component morphism ~$\ntrafoa_\Obja$ in \CatD is an isomorphism.
 \end{ctdefinition}
 
-
 \begin{lemma}
-Let $\CatC, \CatD$ be categories and let $\funa, \funb \colon \CatC \fto \CatD$ be functors. 
-A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in the category of functors $[\CatC, \CatD]$ if and only if $\ntrafoa$ is a natural isomorphism. 
+    Let $\CatC, \CatD$ be categories and let $\funa, \funb \colon \CatC \fto \CatD$ be functors.
+    A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in the category of functors $[\CatC, \CatD]$ if and only if $\ntrafoa$ is a natural isomorphism.
 \end{lemma}
 
-
-\todotextjira{473}{\alphubel: @JL: seems like a lot of things are missing here.}
 \clearpage
 
 \section{More examples}
@@ -333,9 +389,27 @@ A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in t
     \end{equation}
     These form the components of a \SY{natural transformation} from the \SY{identity functor} on $\VectRs$ to the double dual \SY{functor}.
     \equationsag{nat-trafo-ddual}{eq:nat-trafo-ddual}
-
 \end{example}
 
+\begin{example}
+Fix a set $\subA$. There are functors $\funa, \funb: \Set\op \Ctimes \Set \fto \Set$ whose respective actions on objects are
+\begin{equation}
+\funaob \colon \tup{\setA, \setB} \mapsto \Hom_\Set(\setA \cartprod \subA, \setB)
+\end{equation}
+and
+\begin{equation}
+\funbob \colon \tup{\setA, \setB} \mapsto \Hom_\Set(\setA, \setB^\subA).
+\end{equation}
+These functors may be understood as built up using compositions of functors of the kind discussed in \cref{ex:MultiplicationWithASet}, \cref{ex:ExponentiationWithASet} and \cref{exa:hom-functor}.
+
+Recall that we can ``curry'' any function $\mora : \setA \cartprod \subA \mto \setB$ to get a function $\hat \mora \colon \setA \mto \setB^\subA$, where $\hat \mora(\ela)$ may be thought of as a partial evaluation of $\mora$.
+
+There is a natural transformation $\ntrafoa \colon \funa \nto \funb$ whose components are the functions
+\begin{equation}\label{eq:currying-nat-trafo}
+\ntrafoa_{\tup{\setA, \setB}} \colon \Hom_\Set(\setA \cartprod \subA, \setB) \mto \Hom_\Set(\setA, \setB^\subA), \ \mora \mapsto \hat \mora,
+\end{equation}
+where $\hat \mora$ is the ``curried'' version of $\mora$.
+\end{example}
 
 \vfill
 
@@ -345,7 +419,6 @@ A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in t
     \caption{}
     \label{fig:graph-cat-again}
 \end{marginfigure}
-
 
 \begin{gradedexercise}[\exname{NatTrafosGraphs}]
     \label{ex:NatTrafosGraphs}
@@ -376,6 +449,16 @@ A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in t
     \section{Horizontal composition}
 
     \todojira{638}{\bernina: @JL: write this up}
+    
+    \equationsag{horizontal_composition_1}{eq:horizontal_composition_1}
+    
+    \
+    
+    \equationsag{horizontal_composition_2}{eq:horizontal_composition_2}
+    
+    
+    
+    
 
     \section{To add}
     \todojira{141}{\bernina: @JL: Add parts corresponding to listed videos.
@@ -385,4 +468,3 @@ A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in t
     \linkvideo{spring2021-nat-trafos:natural-trafos:rel-mon-maps} % Relating monotone maps
     \linkvideo{spring2021-nat-trafos:natural-trafos:eq-maps-gr-actions} % Equivariant maps between group actions
 }
-
