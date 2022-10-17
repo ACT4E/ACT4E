@@ -360,7 +360,7 @@ In \cref{fig:compatibility-with-stacking} the first equation \cref{eq:perm-compa
 
 \todojira{699}{\alphubel: Example of \LTI with $d=0$ a symmetric semicat}
 
-\devel{
+
     \begin{ctdefinition}[Commutative stacking semicategory]
         \label{def:commutative-stacking-semicat}
         A \maindef{commutative stacking semicategory} is a \SY{stacking semicategory} $\tup{\CatC, \mtimescatob, \mtimescatmor}$ with
@@ -380,7 +380,7 @@ In \cref{fig:compatibility-with-stacking} the first equation \cref{eq:perm-compa
 
     \todotext{J: @J: given an example}
 
-}
+
 % \devel{
 
 %     \section{Strict monoidal semicategories}
@@ -413,7 +413,7 @@ In \cref{fig:compatibility-with-stacking} the first equation \cref{eq:perm-compa
 
 % }
 
-\devel{
+
  \section{Symmetric stacking categories}
  \label{sec:symmetric-stacking-categories}
 
@@ -474,7 +474,7 @@ In \cref{fig:compatibility-with-stacking} the first equation \cref{eq:perm-compa
         \condit
 
         \begin{enumerate}
-            \item \emph{Commuatativity}:
+            \item \emph{Commutativity}:
                   \begin{equation}
                       \Obja \mtimescatob \Objb = \Objb \mtimescatob \Obja
                   \end{equation}
@@ -502,5 +502,60 @@ In \cref{fig:compatibility-with-stacking} the first equation \cref{eq:perm-compa
                   which satisfy the conditions of naturality, compatibility with nesting, and symmetry. 
     \end{ctdefinition}
 
+\section{Props}
 
-}
+
+\begin{ctdefinition}\label{def:prop}
+A \emph{prop} is a symmetric strict monoidal category $\CatC$ where the collection of objects is the natural numbers $\natnumbers$, the monoidal product on objects is addition of natural numbers, and the monoidal unit is $0 \setin \natnumbers$. 
+\end{ctdefinition}
+
+\begin{example}
+There is a prop $\stylecat{FinSet}$ where 
+\begin{itemize}
+\item the set of morphisms from $m$ to $n$ (for $m, n \setin \natnumbers$) is defined to be the set of functions from $\makeset{1, \dots, m}$ to $\makeset{1, \dots, n}$; 
+\item composition is the usual composition of functions; 
+\item identity morphisms are identity functions; 
+\item the monoidal product of functions $\mora \colon \makeset{1, \dots, m} \mto \makeset{1, \dots, n}$ and $\mora\stylemorph{'} \colon \makeset{1, \dots, m'} \mto \makeset{1, \dots, n'}$ is the ``disjoint union''
+\begin{equation}
+\mora + \mora\stylemorph{'} \colon \makeset{1, \dots, m + m'} \mto \makeset{1, \dots, n + n'}.
+\end{equation}
+\end{itemize}
+\end{example}
+
+
+\begin{example}
+The prop $\stylecat{Mat}_\reals$ is: 
+\begin{itemize}
+\item morphisms from $m$ to $n$ are $n \times m$ matrices with entries in $\reals$ (we also allow zero-dimensional matrices);
+\item composition is matrix multiplication ; 
+\item identity morphisms are identity matrices; 
+\item the monoidal product of matrices $\mat{A} \colon \styleobj{m} \mto \styleobj{n}$ and $\mat{B} \colon \styleobj{m'} \mto \styleobj{n'}$ is 
+\begin{equation}
+\begin{bmatrix}
+            \mat{A} & \mat{0} \\
+            \mat{0} & \mat{B}
+        \end{bmatrix}
+        \colon \styleobj{m} \catsumob \styleobj{m'} \mto \styleobj{n} \catsumob \styleobj{n'}.
+\end{equation}
+\end{itemize}
+\end{example}
+
+\begin{definition}\label{def:prop-expressions}
+Let $\stylesets{G}$ be a set and $s, t \colon \stylesets{G} \mto \natnumbers$ functions which specify the source and target of elements of $\stylesets{G}$. The set $E(\stylesets{G})$ of $\stylesets{G}$\emph{-generated prop expressions} (or just \emph{expressions}) is defined inductively as follows.
+\begin{itemize}
+\item The empty morphism $\catid_\styleobj{0} \colon \styleobj{0} \mto \styleobj{0}$, the identity morphism $\catid_\styleobj{1} \colon \styleobj{1} \mto \styleobj{1}$, and the symmetry $\stylenat{\sigma} \colon \styleobj{2} \mto \styleobj{2}$ are expressions.
+\item The generators $g \in \stylesets{G}$ are expressions $g \colon s(g) \mto t(g)$. 
+\item If $\mora \colon \styleobj{a} \mto \styleobj{b}$ and $\morb \colon \styleobj{x} \mto \styleobj{y}$ are expressions, then $\mora + \morb \colon \styleobj{a} + \styleobj{x} \mto \styleobj{b} + \styleobj{y}$ is an expression.
+\item If $\mora \colon \styleobj{a} \mto \styleobj{b}$ and $\morb \colon \styleobj{y} \mto \styleobj{z}$ are expressions, then $\mora \mthen \morb \colon \styleobj{a} \mto \styleobj{c}$ is an expression. 
+\end{itemize}
+The functions $s$ and $t$ are extended from $\stylesets{G}$ to $E(\stylesets{G})$ in the obvious way. If $\mora \colon m \mto n$ is an expression, the pair $\tup{\styleobj{m}, \styleobj{n}}$ is called its \emph{arity}.  
+\end{definition}
+
+
+\begin{definition}\label{def:presentation-of-a-prop}
+A \emph{presentation} $\tup{\stylesets{G}, s, t, \stylesets{R}}$ of a prop is a set $\stylesets{G}$, source and target functions $s, t \colon \stylesets{G} \mto \natnumbers$, and a relation $\stylesets{R} \subseteq E(\stylesets{G}) \cartprod E(\stylesets{G})$ between expressions such that for any $\tup{e_1, e_2} \in \stylesets{R}$, the expressions $e_1$ and $e_2$ have the same arity. 
+
+The prop $\CatC$ \emph{presented} by $\tup{\stylesets{G}, s, t, \stylesets{R}}$ is the prop whose morphisms are elements of $E(\stylesets{G})$ quotiented by the equations (or "relations") $e_1 = e_2$ for $\tup{e_1, e_2} \in \stylesets{R}$, and by the axioms for symmetric strict monoidal categories. 
+\end{definition}
+
+
