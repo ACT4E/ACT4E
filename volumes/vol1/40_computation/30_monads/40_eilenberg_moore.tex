@@ -96,13 +96,18 @@ Its component at \setA,
     \moncomp_\setA : (\funa \fthen \funa)\setA \sto \funa \setA,
 \end{equation}
 is the function which takes a second-order formal expression
-\begin{equation}
-    [[\ela_{11}]* [\ela_{12}] * \cdots * [\ela_{1k_1}]] * \cdots * [[\ela_{n1}]* [\ela_{n2}] * \cdots * [\ela_{nk_n}]]
+\begin{equation}\label{eq:monad-formatl-mult-input}
+    \mF{
+        \MF{ \MFb{\ela_{11}} , \MFb{\ela_{12}} , \mathcolor{level2}{\cdots} , \MFb{\ela_{1k_1}}}
+        , \cdots ,
+        \MF{\MFb{\ela_{n1}}, \MFb{\ela_{n2}}, \mathcolor{level2}{\cdots} , \MFb{\ela_{nk_n}}}
+    }
 \end{equation}
 and ``collapses'' it to the first-order expression
-\begin{equation}
-    [\ela_{11}]
-    * [\ela_{12}] * \cdots * [\ela_{1k_1}] * \cdots * [\ela_{n1}]* [\ela_{n2}] * \cdots * [\ela_{nk_n}].
+\begin{equation}\label{eq:monad-formatl-mult-output}
+    \mF { \MF{\ela_{11}}
+        , \MF{\ela_{12}} , \cdots , \MF{\ela_{1k_1}}, \cdots, \MF{\ela_{n1}} , \MF{\ela_{n2}} * \cdots * \MF{\ela_{nk_n}}.
+    }
 \end{equation}
 In other words, this operation simply ``removes the outer brackets'' from a second-order formal expression.
 
@@ -194,3 +199,145 @@ We will require such evaluation maps to additionally satisfy two coherence condi
     \linkvideo{spring2021-monads-b:comparing-perspectives} % Comparing the two perspectives
     \todotext{@JL: missing section}
 }
+% 1 2 3
+% 6   4
+% 7 8 5   
+\newcommand{\SquareDiagramMorphism}[8]{
+    \begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
+        {#1} \arrow[r, "{#2}"] \arrow[d,left,"{#6}"] \pgfmatrixnextcell {#3} \arrow[d, "{#4}"] \\
+        {#7} \arrow[r, "{#8}"]  \pgfmatrixnextcell {#5}
+    \end{tikzcd}
+}
+
+\SquareDiagramMorphism{1}{2}{3}{4}{5}{6}{7}{8}
+
+\newcommand{\SquareDiagramMapsto}[8]{
+    \begin{tikzcd}[every arrow/.append style={mapsto}]
+        {#1} \arrow[r, "{#2}"] \arrow[d,left,"{#6}"] \pgfmatrixnextcell {#3} \arrow[d, "{#4}"] \\
+        {#7} \arrow[r, "{#8}"]  \pgfmatrixnextcell {#5}
+    \end{tikzcd}
+}
+
+\SquareDiagramMapsto{1}{2}{3}{4}{5}{6}{7}{8}
+
+% 1 2 3
+%  \  4
+% 6   5   
+\newcommand{\TriangleDiagramMorphism}[6]{
+    \begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
+        {#1} \arrow[r, "{#2}"] \arrow[dr, "{#6}"] \pgfmatrixnextcell {#3}  \arrow[d, "{#4}"] \\
+        \pgfmatrixnextcell {#5}
+    \end{tikzcd}
+}
+\newcommand{\monAa}{\monA\Obja}
+\TriangleDiagramMorphism{1}{2}{3}{4}{5}{6}
+
+\begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
+    \Obja \arrow[r, "\monunit_\Obja"] \arrow[dr, "\catid"'] & \monA(\Obja)  \arrow[d, "\monact"] \\
+                                                            & \Obja
+\end{tikzcd}
+
+\TriangleDiagramMorphism{\Obja}{\monunit_\Obja}{\monA(\Obja)}{\monact}{\Obja}{\catid}
+
+\begin{equation}\label{eq:MX-is-formal-product}
+    \monA(\Obja) \definedas \text{``Formal products of elements of $\Obja$''}
+\end{equation}
+
+\begin{equation}\label{eq:a-is-operation-for-evaluating }
+    \monA(\Obja) \stackrel{\monact}{\mto} \Obja \definedas \text{``operation for evaluating formal products in $\Obja$''}
+\end{equation}
+
+\begin{equation}\label{eq:unit-of-the-monad}
+    \defmapset{
+        \monunit_\Obja
+    }{
+        \Obja
+    }{
+        \monAa
+    }{
+        x
+    }{
+        \MF{x}
+    }
+\end{equation}
+\begin{equation}\label{eq:multiplication-of-the-monad}
+    \defmapset{
+        \monunit_\Obja
+    }{
+        \Obja
+    }{
+        \monAa
+    }{
+        x
+    }{
+        \MF{x}
+    }
+\end{equation}
+
+\begin{equation}\label{eq:monad-xy}
+    \SquareDiagramMorphism{\Obja}{\mora}{\Objb}{\monunit_\Objb}{\monA\Objb}%
+    {\monunit_\Obja}{\monA\Obja}{\monA\mora}
+\end{equation}
+\begin{equation}\label{eq:monad-xy-component}
+    \SquareDiagramMapsto{x}{}{\mora x}{}{\MF{\mora x}}%
+    {}{\MF{x}}{}
+\end{equation}
+\begin{equation}\label{eq:monad-multiplication1}
+    \mF{\MF{\MFb{x_1}, \MFb{x_2}},\MF{\MFb{x_3}}} \mapsto \mF{\MF{x_1}, \MF{x_2}, \MF{x_3}}
+\end{equation}
+\begin{equation}\label{eq:monad-multiplication-component}
+    \SquareDiagramMapsto{
+        \mF{
+            \MF{
+                \MFb{\MFc{x_1},\MFc{x_2}}, \MFb{\MFc{x_4}}
+            },
+            \MF{\MFb{\MFc{x_4}}}}
+    }{}{
+        \mF{ \MF{\MFb{x_1}, \MFb{x_2}},  \MF{\MFb{x_3}, \MFb{x_4}}}
+    }{}{
+        \mF{\MF{x_1},\MF{x_2},\MF{x_3},\MF{x_4}}
+    }{}{
+        \mF{\MF{\MFb{x_1}, \MFb{x_2}, \MFb{x_3}}, \MF{\MFb{x_4}}}
+    }{}
+\end{equation}
+
+\begin{equation}\label{eq:monad-ex1-set-1}
+    \Obja = \makeset{1, 2, 3, \dots}
+\end{equation}
+\begin{equation}\label{eq:monad-ex1-set-2}
+    \monAa = \makeset{ \MF{}, \MF{1}, \MF{2}, \cdots, \MF{\MFb{0}, \MFb{1}}, \cdots, \MF{\MFb{\MFc{12}}}, \cdots}
+\end{equation}
+
+\begin{equation}\label{eq:monad-ex1-set-3}
+    \monact \colon \MF{\MFb{1}, \MFb{1}} \mapsto 2  \qquad (= \text{``$1 + 1$''})
+\end{equation}
+
+\begin{equation}\label{eq:monad-ex1-set-3}
+    \monact \colon \MF{\MFb{1}, \MFb{2}, \MFb{3}} \mapsto 6  \qquad (= \text{``$ 1 + 2 + 3$''})
+\end{equation}
+
+\begin{equation}
+    \monAa =  \makeset{\makeset{\sapple},\makeset{\sbanana}}
+\end{equation}
+
+\begin{equation}
+    \monAa =  \MF{\MF{}, \MF{\sapple}, \MF{\sbanana}}
+\end{equation}
+
+\begin{equation}
+    \monact\colon \monA(\Obja) \mto \Obja
+\end{equation}
+
+\begin{proposition}\label{prop:monad-monoid}
+    There is an $\monA$-algebra structure on $\Obja$ if and only if there
+    is a monoidal structure on $\Obja$.
+    The correspondence is as follows:
+    \begin{itemize}
+        \item The neutral element of $\Obja$ corresponds to $\monact(\MF{})$.
+        \item The composition in $\Obja$ corresponds to the action of $\monact$:
+              \begin{equation}
+                  \mF{\MF{x_1}, \MF{x_2}} \stackrel{\monact}{\mto} x_1 ; x_2
+              \end{equation}
+        \item The associativity and unitality of monoid composition are encoded by the $\monA$-algebra axioms.
+    \end{itemize}
+\end{proposition}
