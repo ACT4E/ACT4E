@@ -14,11 +14,11 @@ In the context of Kleisli morphisms, we developed the intuition that \SY{monads}
 In this section we will introduce a different intuition for \SY{monads}: that they can be used to provide coherent way to encode ``formal expressions'', together with a way to ``evaluate'' or ``compute'' such expressions.
 
 Let us explain what we mean using an example.
-Given a set \setA, say
+Given a set \Obja, say
 \begin{equation}
-    \setA = \makeset{ \sapple, \sbanana, \scarrot },
+    \Obja = \makeset{ \sapple, \sbanana, \scarrot },
 \end{equation}
-let's define a certain type of ``formal expressions'', using elements of \setA and using a ``formal composition symbol'', which we choose to be ``$*$''.
+let's define a certain type of ``formal expressions'', using elements of \Obja and using a ``formal composition symbol'', which we choose to be ``$*$''.
 Now, the ``formal expressions'' we consider are all finite expressions which have a form such as
 \begin{equation}
     \label{eq:formal-composition-1}
@@ -31,10 +31,10 @@ or
 \end{equation}
 and so on.
 These expressions are ``formal'' (or ``purely symbolic'') in the sense that, a priori, the symbol ``$*$'' does not have any \emph{meaning} beyond simply being a symbol, a ``marking''.
-After all, so far, \setA is just a set, and we did not assume that it comes equipped with any sort of ``multiplication operation'', for instance.
+After all, so far, \Obja is just a set, and we did not assume that it comes equipped with any sort of ``multiplication operation'', for instance.
 In the following we will discuss a way of giving such formal expressions a ``computational meaning'' by specifying a way to evaluate them.
 
-Before we come to this however, let us introduce a notation to explicitly distinguish when we are thinking about $\sapple$ as an element of \setA, or $\sapple$ as a ``formal expression''.
+Before we come to this however, let us introduce a notation to explicitly distinguish when we are thinking about $\sapple$ as an element of \Obja, or $\sapple$ as a ``formal expression''.
 \todotext{\alphubel: use a macro for the formal expression - also do not use the list brackets.}
 For the latter situation we write ``$[\sapple]$''.
 In other words, the square brackets indicate that $[\sapple]$ is a formal expression.
@@ -68,15 +68,15 @@ For instance, the second-order expression \cref{eq:double-formal-expression-comp
 This whole game can continue ad infinitum: we define third-order formal expressions to be those with three-layers of square brackets, fourth-order formal expressions have four layers of brackets, and so on.
 In the following, we'll probably only ever consider up to three layers.
 
-We started our story just with the set $\setA = \makeset{ \sapple, \sbanana, \scarrot }$.
+We started our story just with the set $\Obja = \makeset{ \sapple, \sbanana, \scarrot }$.
 However, we can do the same construction -- using ``$*$'' and building formal expressions of any order -- with any set.
-In fact, we can define a \SY{functor} $\funa: \Set \fto \Set$ which maps any set \setA to the set $\funa \setA$ whose elements are all finite first-order formal expressions built from elements of \setA.
+In fact, we can define a \SY{functor} $\funa: \Set \fto \Set$ which maps any set \Obja to the set $\funa \Obja$ whose elements are all finite first-order formal expressions built from elements of \Obja.
 We also include this to mean the empty formal expression ``$[ ]$''.
 What might this \SY{functor} do on the level of morphisms?
-For concreteness, let $\setA = \makeset{ \sapple, \sbanana, \scarrot } $ and $\setB = \makeset{ \swater, \stea }$.
-Given a function $\mora \colon \setA \sto \setB$, we define
+For concreteness, let $\Obja = \makeset{ \sapple, \sbanana, \scarrot } $ and $\setB = \makeset{ \swater, \stea }$.
+Given a function $\mora \colon \Obja \sto \setB$, we define
 \begin{equation}
-    \funa(\mora) : \funa(\setA) \to \funa(\setA)
+    \funa(\mora) : \funa(\Obja) \to \funa(\Obja)
 \end{equation}
 to act on (first-order) expressions like so
 \begin{equation}
@@ -85,15 +85,15 @@ to act on (first-order) expressions like so
 It turns out that this \SY{functor} $\funa: \Set \fto \Set$ can be made into a monad!
 
 Let us explain how the unit and multiplication for this monad are defined.
-For any set \setA, the component of the unit at \setA is
+For any set \Obja, the component of the unit at \Obja is
 \todotext{\alphubel: use defmap}
 \begin{equation}
-    \monunit_\setA : \setA \sto \funa \setA, \ela \mapsto [\ela].
+    \monunit_\Obja : \Obja \sto \funa \Obja, \ela \mapsto [\ela].
 \end{equation}
 The multiplication is a bit more of a mouthful.
-Its component at \setA,
+Its component at \Obja,
 \begin{equation}
-    \moncomp_\setA : (\funa \fthen \funa)\setA \sto \funa \setA,
+    \moncomp_\Obja : (\funa \fthen \funa)\Obja \sto \funa \Obja,
 \end{equation}
 is the function which takes a second-order formal expression
 \begin{equation}\label{eq:monad-formatl-mult-input}
@@ -113,17 +113,17 @@ In other words, this operation simply ``removes the outer brackets'' from a seco
 
 \begin{gradedexercise}[\exname{ListMonad}]
     \label{ex:ListMonad}
-    Let $\funa : \Set \fto \Set$ be the \SY{functor} above that sends any set \setA to the set of first-order formal expressions of the form
+    Let $\funa : \Set \fto \Set$ be the \SY{functor} above that sends any set \Obja to the set of first-order formal expressions of the form
     \begin{equation}
         [\ela_1]
-        * [\ela_2] * \cdots * [\ela_n] \quad \quad \ela_i \setin \setA, n \setin \wnumbers_{\geq 0},
+        * [\ela_2] * \cdots * [\ela_n] \quad \quad \ela_i \setin \Obja, n \setin \wnumbers_{\geq 0},
     \end{equation}
-    and let $\moncomp_\setA$ and $\monunit_\setA$ be defined as above.
+    and let $\moncomp_\Obja$ and $\monunit_\Obja$ be defined as above.
 
     Show that:
     \begin{enumerate}
-        \item the components $\moncomp_\setA$ define a \SY{natural transformation} $\moncomp : \funa \fthen \funa \nto \funa$;
-        \item the components $\monunit_\setA$ define a \SY{natural transformation} $\monunit : \stylefunctors{\text{Id}}_{\Set} \fto \funa$;
+        \item the components $\moncomp_\Obja$ define a \SY{natural transformation} $\moncomp : \funa \fthen \funa \nto \funa$;
+        \item the components $\monunit_\Obja$ define a \SY{natural transformation} $\monunit : \stylefunctors{\text{Id}}_{\Set} \fto \funa$;
         \item $\moncomp$ and $\monunit$ satisfy the conditions for $\tup{\funa, \moncomp, \monunit}$ to be a monad.
     \end{enumerate}
 \end{gradedexercise}
@@ -131,7 +131,7 @@ In other words, this operation simply ``removes the outer brackets'' from a seco
 \solutionof{ListMonad}
 
 Now let's finally talk about giving formal expressions a computational meaning: a way to \emph{evaluate} them.
-The way we will do this is to define a notion of ``evaluation map'' $\stylemorph{a}: \funa \setA \sto \setA$ which we will interpret as a way of specifying how any formal expression -- an element of $\funa \setA$ -- should be evaluated (or: computed) to an element of \setA.
+The way we will do this is to define a notion of ``evaluation map'' $\stylemorph{a}: \funa \Obja \sto \Obja$ which we will interpret as a way of specifying how any formal expression -- an element of $\funa \Obja$ -- should be evaluated (or: computed) to an element of \Obja.
 We will require such evaluation maps to additionally satisfy two coherence conditions, and the resulting mathematical structure will be what is called an \emph{algebra} of the monad $\funa$.
 
 \todotextjira{233}{explain further by giving a concrete example of an algebra for this monad}
@@ -202,34 +202,15 @@ We will require such evaluation maps to additionally satisfy two coherence condi
 % 1 2 3
 % 6   4
 % 7 8 5   
-\newcommand{\SquareDiagramMorphism}[8]{
-    \begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
-        {#1} \arrow[r, "{#2}"] \arrow[d,left,"{#6}"] \pgfmatrixnextcell {#3} \arrow[d, "{#4}"] \\
-        {#7} \arrow[r, "{#8}"]  \pgfmatrixnextcell {#5}
-    \end{tikzcd}
-}
 
 \SquareDiagramMorphism{1}{2}{3}{4}{5}{6}{7}{8}
-
-\newcommand{\SquareDiagramMapsto}[8]{
-    \begin{tikzcd}[every arrow/.append style={mapsto}]
-        {#1} \arrow[r, "{#2}"] \arrow[d,left,"{#6}"] \pgfmatrixnextcell {#3} \arrow[d, "{#4}"] \\
-        {#7} \arrow[r, "{#8}"]  \pgfmatrixnextcell {#5}
-    \end{tikzcd}
-}
 
 \SquareDiagramMapsto{1}{2}{3}{4}{5}{6}{7}{8}
 
 % 1 2 3
 %  \  4
 % 6   5   
-\newcommand{\TriangleDiagramMorphism}[6]{
-    \begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
-        {#1} \arrow[r, "{#2}"] \arrow[dr, "{#6}"] \pgfmatrixnextcell {#3}  \arrow[d, "{#4}"] \\
-        \pgfmatrixnextcell {#5}
-    \end{tikzcd}
-}
-\newcommand{\monAa}{\monA\Obja}
+
 \TriangleDiagramMorphism{1}{2}{3}{4}{5}{6}
 
 \begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
@@ -243,8 +224,12 @@ We will require such evaluation maps to additionally satisfy two coherence condi
     \monA(\Obja) \definedas \text{``Formal products of elements of $\Obja$''}
 \end{equation}
 
-\begin{equation}\label{eq:a-is-operation-for-evaluating }
-    \monA(\Obja) \stackrel{\monact}{\mto} \Obja \definedas \text{``operation for evaluating formal products in $\Obja$''}
+\begin{equation}\label{eq:a-is-operation-for-evaluating}
+    \monAa  \stackrel{\monact}{\mto} \Obja \definedas \text{``operation for evaluating formal products in $\Obja$''}
+\end{equation}
+
+\begin{equation}\label{eq:monact2}
+    \monAa  \stackrel{\monact}{\mto} \Obja
 \end{equation}
 
 \begin{equation}\label{eq:unit-of-the-monad}
@@ -261,22 +246,12 @@ We will require such evaluation maps to additionally satisfy two coherence condi
     }
 \end{equation}
 \begin{equation}\label{eq:multiplication-of-the-monad}
-    \defmapset{
-        \monunit_\Obja
-    }{
-        \Obja
-    }{
-        \monAa
-    }{
-        x
-    }{
-        \MF{x}
-    }
+    \moncomp_\Obja : \monA\monA\Obja \sto \monA \Obja
 \end{equation}
 
 \begin{equation}\label{eq:monad-xy}
     \SquareDiagramMorphism{\Obja}{\mora}{\Objb}{\monunit_\Objb}{\monA\Objb}%
-    {\monunit_\Obja}{\monA\Obja}{\monA\mora}
+    {\monunit_\Obja}{\monAa}{\monA\mora}
 \end{equation}
 \begin{equation}\label{eq:monad-xy-component}
     \SquareDiagramMapsto{x}{}{\mora x}{}{\MF{\mora x}}%
@@ -302,17 +277,40 @@ We will require such evaluation maps to additionally satisfy two coherence condi
 \end{equation}
 
 \begin{equation}\label{eq:monad-ex1-set-1}
-    \Obja = \makeset{1, 2, 3, \dots}
+    \Obja = \makeset{\sbanana, \sapple, \scarrot, \dots}
 \end{equation}
 \begin{equation}\label{eq:monad-ex1-set-2}
-    \monAa = \makeset{ \MF{}, \MF{1}, \MF{2}, \cdots, \MF{\MFb{0}, \MFb{1}}, \cdots, \MF{\MFb{\MFc{12}}}, \cdots}
+    \monAa = \makeset{ \MF{}, \MF{}, \MF{2}, \cdots, \MF{\MFb{0}, \MFb{1}}, \cdots, \MF{\MFb{\MFc{12}}}, \cdots}
+\end{equation}
+\begin{equation}\label{eq:monad-ex1-set-2-bis}
+    \monAa = \makeset{ \MF{}, \MF{\sbanana}, \MF{\scarrot}, \cdots, \mF{\MF{\sbanana}, \MF{\scarrot}}, \cdots, \mF{\MF{\sbanana}, \MF{\sbanana}, \MF{\scarrot}}, \cdots}
+\end{equation}
+
+\begin{equation}\label{eq:monad-ex1-functor-1}
+    \mora\colon\Obja\mto\Objb
+\end{equation}
+\begin{equation}\label{eq:monad-ex1-functor-2}
+    \monA\mora\colon\monA\Obja\mto\monA\Objb
+\end{equation}
+\begin{equation}\label{eq:monad-ex1-functor-3}
+    \begin{aligned}
+        \MF{}               & \mapsto \MF{} \\
+        \mF{\MF{a}}         & \mapsto \mF{\MF{\mora(a)}} \\
+        \mF{\MF{a}, \MF{b}} & \mapsto \mF{\MF{\mora(a)}, \MF{\mora(b)}}
+    \end{aligned}
+\end{equation}
+\begin{equation}\label{eq:monad-ex1-functor-4}
+    \mF{\MF{a}} \mapsto \mF{\MF{\mora(a)}}
+\end{equation}
+\begin{equation}\label{eq:monad-ex1-functor-5}
+    \mF{\MF{a}, \MF{b}} \mapsto \mF{\MF{\mora(a)}, \MF{\mora(b)}}
 \end{equation}
 
 \begin{equation}\label{eq:monad-ex1-set-3}
     \monact \colon \MF{\MFb{1}, \MFb{1}} \mapsto 2  \qquad (= \text{``$1 + 1$''})
 \end{equation}
 
-\begin{equation}\label{eq:monad-ex1-set-3}
+\begin{equation}\label{eq:monad-ex1-set-4}
     \monact \colon \MF{\MFb{1}, \MFb{2}, \MFb{3}} \mapsto 6  \qquad (= \text{``$ 1 + 2 + 3$''})
 \end{equation}
 
@@ -324,8 +322,14 @@ We will require such evaluation maps to additionally satisfy two coherence condi
     \monAa =  \MF{\MF{}, \MF{\sapple}, \MF{\sbanana}}
 \end{equation}
 
-\begin{equation}
-    \monact\colon \monA(\Obja) \mto \Obja
+\begin{equation}\label{eq:monact}
+    \monact\colon \monAa \mto \Obja
+\end{equation}
+\begin{equation}\label{eq:monact-without}
+    \monAa \mto \Obja
+\end{equation}
+\begin{equation}\label{eq:monact-without2}
+    \mora \colon \Obja \mto \monAa
 \end{equation}
 
 \begin{proposition}\label{prop:monad-monoid}
@@ -336,8 +340,280 @@ We will require such evaluation maps to additionally satisfy two coherence condi
         \item The neutral element of $\Obja$ corresponds to $\monact(\MF{})$.
         \item The composition in $\Obja$ corresponds to the action of $\monact$:
               \begin{equation}
-                  \mF{\MF{x_1}, \MF{x_2}} \stackrel{\monact}{\mto} x_1 ; x_2
+                  \mF{\MF{x_1}, \MF{x_2}} \stackrel{\monact}{\mto} x_1 \mthen x_2.
               \end{equation}
         \item The associativity and unitality of monoid composition are encoded by the $\monA$-algebra axioms.
     \end{itemize}
 \end{proposition}
+\begin{equation}\label{eq:addition-algebra-1}
+    \Obja = \makeset{0, 1, 2, 3, \dots }
+\end{equation}
+\begin{equation}\label{eq:addition-algebra-2}
+    \begin{aligned}
+        \monact \colon \monAa & \mto \Obja \\
+        \MF{}                 & \mapsto 0 \\
+        \MF{x}                & \mapsto x \\
+        \mF{\MF{x}, \MF{y}}   & \mapsto x + y
+    \end{aligned}
+\end{equation}
+
+\begin{equation}\label{eq:addition-algebra-condition}
+    \TriangleDiagramMapsto{x}{\monunit_\Obja}{\MF{x}}{\monact}{x}{\catid}
+\end{equation}
+
+\begin{equation}\label{eq:addition-algebra-condition-sq}
+    \SquareDiagramMapsto{
+        \mF{\MF{\MFb{1},\MFb{2}},\MF{\MFb{3}}}
+    }{
+        \monA \monact
+    }{
+        \mF{ \MF{\monact(\mFb{\MFb{1},\MFb{2}})},\MF{\monact(\MFb{3})}}
+    }{
+        \monact
+    }{
+        6
+    }{
+        \moncomp_\Obja
+    }{
+        \mF{\MF{1}, \MF{2}, \MF{3}}
+    }{
+        \monact
+    }
+\end{equation}
+
+\begin{equation}\label{eq:writer-1}
+    \writerM \Obja = \Obja \times \monoidAset
+\end{equation}
+
+\begin{equation}\label{eq:writer-2}
+    \defmapset{
+        \writerM \mora
+    }{
+        \Obja \times \monoidAset
+    }{
+        \Objb \times \monoidAset
+    }{
+        \tup{x, m}
+    }{
+        \tup{\mora(x), m}
+    }
+\end{equation}
+\begin{equation}\label{eq:writer-monoid}
+    \monoidA = \tupp{\monoidAset, \mtimes_{\monoidA}, \idmon_{\monoidA}}
+\end{equation}
+\begin{equation}\label{eq:writer-comp}
+    \defmapset{
+        \monunit_\Obja
+    }{
+        \Obja
+    }{
+        \Obja \times \monoidAset
+    }{
+        x
+    }{
+        \tup{x, \idmon_{\monoidAset}}
+    }
+\end{equation}
+
+\begin{equation}\label{eq:writer-comp2}
+    \defmapset{
+        \moncomp_\Obja
+    }{
+        (\Obja \times \monoidAset) \times \monoidAset
+    }{
+        \Obja \times \monoidAset
+    }{
+        \tupp{\tupp{x,m_1 }, m_2}
+    }{
+        \tupp{x, m_1 \mtimes m_2}
+    }
+\end{equation}
+
+% \begin{equation}\label{eq:writer-unit}
+%     \monunit_\Obja \colon  \Obja \sto  \Obja \times \monoidAset
+% \end{equation}
+
+% \begin{equation}\label{eq:writer-unit-diagram}
+% \SquareDiagramMorphism{\Obja}{\mora}{\Objb}{\monunit_\Objb}{\monA\Objb}%
+% {\monunit_\Obja}{\monAa}{\monA\mora}
+% \end{equation}
+
+\begin{equation}\label{eq:writer-algebra-condition-triangle-domain}
+    \TriangleDiagramMorphism{\Obja}{\monunit_\Obja}{\Obja\times\monoidAset}{\monact}{\Obja}{\catid}
+\end{equation}
+\begin{equation}\label{eq:writer-algebra-condition-triangle}
+    \TriangleDiagramMapsto{x}{\monunit_\Obja}{\tup{x, \idmon_{\monoidAset}}}{\monact}{x}{\catid}
+\end{equation}
+
+\begin{equation}\label{eq:writer-algebra-condition-square-domain}
+    \SquareDiagramMorphism{
+        (\Obja \times \monoidAset) \times \monoidAset
+    }{
+        \writerM \monact
+    }{
+        \Obja \times \monoidAset
+    }{
+        \monact
+    }{
+        \Obja
+    }{
+        \moncomp_\Obja
+    }{
+        \Obja \times \monoidAset
+    }{
+        \monact
+    }
+\end{equation}
+
+\begin{equation}\label{eq:writer-algebra-condition-square}
+    \SquareDiagramMapsto{
+        \tup{\tupp{x, m_1}, m_2}
+    }{
+        \writerM \monact
+    }{
+        \tup{\monact(\tupp{x, m_1}), m_2}
+    }{
+        \monact
+    }{
+        \monact(\tup{x, m_1 \mtimes m_2}) = \monact(\tup{\monact(\tupp{x, m_1}), m_2})
+    }{
+        \moncomp_\Obja
+    }{
+        \tup{x, m_1 \mtimes m_2}
+    }{
+        \monact
+    }
+\end{equation}
+
+\begin{equation}\label{eq:writer-is-monoid-action}
+    \monact(\tup{x, m_1 \mtimes m_2}) = \monact(\tup{\monact(\tupp{x, m_1}), m_2})
+\end{equation}
+
+\begin{equation}\label{eq:writer-is-monoid-action-unit}
+    \monact(\tup{x, \idmon_{\monoidAset}}) = x
+\end{equation}
+
+\begin{equation}\label{eq:writer-algebras}
+    \monact \colon \Obja \times \monoidAset \mto \Obja
+\end{equation}
+
+\begin{equation}\label{eq:writer-algebra-morphism-square-domain}
+    \SquareDiagramMorphism{
+        \Obja_1 \times \monoidAset
+    }{
+        \writerM \mora
+    }{
+        \Obja_2 \times \monoidAset
+    }{
+        \monact_2
+    }{
+        \Obja_2
+    }{
+        \monact_1
+    }{
+        \Obja_1
+    }{
+        \mora
+    }
+\end{equation}
+
+\begin{equation}\label{eq:formal-algebra-morphism-square-domain}
+    \SquareDiagramMorphism{
+        \monA \Obja_1
+    }{
+        \monA \mora
+    }{
+        \monA \Obja_1
+    }{
+        \monact_2
+    }{
+        \Obja_2
+    }{
+        \monact_1
+    }{
+        \Obja_1
+    }{
+        \mora
+    }
+\end{equation}
+
+\begin{equation}\label{eq:formal-algebra-morphism-square-1-x}
+    \Obja_1 = \posReals
+\end{equation}
+\begin{equation}\label{eq:formal-algebra-morphism-square-1-a}
+    \begin{aligned}
+        \monact_1 \colon \monA \posReals & \mto \posReals \\
+        \MF{}                            & \mapsto 1 \\
+        \MF{x}                           & \mapsto x \\
+        \mF{\MF{x}, \MF{y}}              & \mapsto x \cdot y
+    \end{aligned}
+\end{equation}
+
+\begin{equation}\label{eq:formal-algebra-morphism-square-2-x}
+    \Obja_2 = \reals
+\end{equation}
+\begin{equation}\label{eq:formal-algebra-morphism-square-2-a}
+    \begin{aligned}
+        \monact_2 \colon \monA \reals & \mto \reals \\
+        \MF{}                         & \mapsto 0 \\
+        \MF{x}                        & \mapsto x \\
+        \mF{\MF{x}, \MF{y}}           & \mapsto x + y
+    \end{aligned}
+\end{equation}
+
+\begin{equation}\label{eq:formal-algebra-morphism-add-square-domain}
+    \SquareDiagramMorphism{
+        \monA \posReals
+    }{
+        \monA \mora
+    }{
+        \monA \reals
+    }{
+        \monact_2
+    }{
+        \reals
+    }{
+        \monact_1
+    }{
+        \posReals
+    }{
+        \mora
+    }
+\end{equation}
+\begin{equation}\label{eq:formal-algebra-morphism-add-square}
+    \SquareDiagramMapsto{
+        \mF{\MF{x}, \MF{y}}
+    }{
+        \monA \mora
+    }{
+        \mF{\MF{\mora{(x)}}, \MF{\mora{(y)}}}
+    }{
+        \monact_2
+    }{
+        \mora(x + y)
+        = \mora(x) \cdot \mora(y)\qquad
+    }{
+        \monact_1
+    }{
+        x + y
+    }{
+        \mora
+    }
+\end{equation}
+
+\begin{equation}
+    \label{eq:monad-fish-associative-2}
+    \prftree{
+        \mora\colon \Obja \mto \mathcal{\stylefunctors{P}} \Objb
+    }{
+        \quad
+    }{
+        \morb\colon \Objb \mto \mathcal{\stylefunctors{P}} \Objc
+    }{
+        \lift_{\Obja,\Objb}(\mora)\mthen\lift_{\Objb,\Objc}(\morb) =  \lift_{\Obja,\Objc}(\morab)
+    }.
+\end{equation}
+
+\begin{equation}\label{eq:formal-algebra-morphism-square-result}
+    \mora(x + y) = \mora(x) \cdot \mora(y) \qquad \Rightarrow \qquad \mora(x) = \exp(x)
+\end{equation}
