@@ -1,90 +1,42 @@
 % !TEX root = chapter-standalone.tex
 
 \section{More examples of functors}
+\label{sec:more-examples-functors}
 
-\begin{example}[Powerset functor]
-    \label{ex:powerset_functor}
-    We consider the powerset \SY{functor}~$\funa\colon \Set \fto \Set$, which maps each set to its power set.
-    The action on morphisms is given by:
-    \begin{equation}\label{eq:powerset-function-def}
-        \begin{aligned}
-            \funamor(\mora)\colon \powersetof \setA & \to \powersetof \setB \\
-            \setC                                   & \mapsto \makeset{\mora(\setCel) \mid \setCel \setin \setC}.
-        \end{aligned}
+\begin{example}[EquivalenceClasses]
+    \label{exa:equivalence-classes-functor}
+    Consider the category $\EquivRel$ from \cref{def:cat-equivalence-relations}.
+    We define a functor
+    \begin{equation}
+        \funa \colon \EquivRel \fto \Set
     \end{equation}
-    Here is a practical example.
-    Consider the two sets~$\setA = \makeset{\sfondue, \sbretzel, \schoco}$ and~$\setB = \makeset{\scheese,\sgrapes,\sapple}$.
-    Applying the \SY{functor} to~\setA give
-    \begin{equation}\label{eq:powerset-functor-example-1a}
-        \funaob(\setA)
-        =
-        \makeset{
-            \Emptyset,
-            \makeset{\sfondue},
-            \makeset{\sbretzel},
-            \makeset{\schoco},
-            \makeset{\sfondue,\sbretzel},
-            \makeset{\sfondue,\schoco},
-            \makeset{\sbretzel,\schoco},
-            \makeset{\sfondue,\sbretzel,\schoco}
-        }
-    \end{equation}
-    and applying it to $\setB$ gives
-    \begin{equation}\label{eq:powerset-functor-example-1b}
-        \funaob(\setB)
-        =
-        \makeset{
-            \Emptyset,
-            \makeset{\scheese},
-            \makeset{\sgrapes},
-            \makeset{\sapple},
-            \makeset{\scheese,\sgrapes},
-            \makeset{\scheese,\sapple},
-            \makeset{\sgrapes,\sapple},
-            \makeset{\scheese,\sgrapes,\sapple}
-        }.
-    \end{equation}
-    Furthermore, consider the map
-    %
-    \begin{equation}\label{eq:powerset-functor-example-2}
-        \begin{aligned}
-            \mora \colon \setA & \sto \setB, \\
-            \sfondue           & \mapsto \scheese, \\
-            \sbretzel          & \mapsto \sgrapes, \\
-            \schoco            & \mapsto \sapple.
-        \end{aligned}
-    \end{equation}
-    %
-    This would for instance give~$\funamor(\mora)(\makeset{\sfondue,\sbretzel})=\makeset{\mora(\sfondue),\mora(\sbretzel)}=\makeset{\scheese,\sgrapes}$.
+    as follows.
 
-    Is the aforementioned structure a functor?
-    It is, let's check it explicitly.
-    First, consider~$\mora\colon \setA\fto \setB$,~$\morb\colon \setB \fto \setC$.
-    First, we have
-    \begin{equation}\label{eq:powerset-functor-example-3}
-        \begin{aligned}
-            \funa(\morab)(\setC) & =\makeset{ \morb(\mora(\setCel))\mid \setCel \setin \setC},
-        \end{aligned}
+    Given an object $\tup{\setA, \sim_\setA}$ of $\EquivRel$ (that is, a set equipped with an equivalence relation), we define $\funaob(\tup{\setA, \sim_\setA}) = \setA/_{\sim_\setA}$ to be the quotient of $\setA$ by $\sim_\setA$.
+
+    Recall that $\setA/_{\sim_\setA}$ is the set of equivalence classes of $\sim_\setA$.
+    Its elements are the subsets of $\setA$ which form the partition of $\setA$ induced by $\sim_\setA$.
+    Each such subset is the set of all elements of $\setA$ which are mutually equivalent to each other according to $\sim_\setA$.
+    For any element $\ela \setin \setA$, the equivalence class it belongs to is denoted $[\ela]$ and in this case $\ela$ is called a \emph{representative} of the equivalence class $[\ela]$.
+
+    To define $\funamor$, let $\mora \colon \tup{\setA, \sim_\setA} \mto \tup{\setB, \sim_\setB}$ be a morphism in $\EquivRel$.
+    We let
+    \begin{equation}
+        \funamor(\mora) \colon \setA/_{\sim_\setA} \mto_\Set \setB/_{\sim_\setB}, \ [\ela] \mapsto [\mora(\ela)].
     \end{equation}
-    and
-    \begin{equation}\label{eq:powerset-functor-example-4}
-        \begin{aligned}
-            (\funa(\mora)\mthen \funa(\morb))(\setC)
-             & =\makeset{ \mora(\setCel) \mid \setCel \setin \setC}\mthen \funa(\morb) \\
-             & =\makeset{g(\setDel)\mid \setDel \setin \makeset{\mora(\setCel)\mid \setCel\setin \setC}} \\
-             & =\makeset{ \morb(\mora(\setCel))\mid \setCel \setin \setC}.
-        \end{aligned}
-    \end{equation}
-    Second, we have
-    \begin{equation}\label{eq:powerset-functor-example-5}
-        \begin{aligned}
-            \funa(\catidat\setA)(\setC) & = \makeset{\catidat\setA(\setCel)\mid \setCel \setin \setC} \\
-                                        & =\catidat{\funa(\setC)}.
-        \end{aligned}
-    \end{equation}
+    It may be readily checked that this function is well-defined, irrespective of the (arbitrary) choice of element $\ela$ used to represent a given equivalence class $[\ela]$.
 \end{example}
 
-\begin{example}[Vector spaces]
+\todotext{Give an illustration of a possible application of the above, for example using rounding of currency...}
+
+\begin{exercise}
+    Prove that the functor defined in \cref{exa:equivalence-classes-functor} is in fact a functor.
+\end{exercise}
+\begin{solution}
+    \todotext{Write this solution}
+\end{solution}
+
+\begin{example}[Double dual]
     \label{exa:double-dual-functor}
     Let~$\VectRs$ be the category whose objects are all real \SY{vector spaces} and whose morphisms are~\reals-linear maps.
     Composition is the usual composition of linear maps.
@@ -101,70 +53,137 @@
     \end{equation}
 \end{example}
 
-\subsection{The list functor}
-In the following, we present a concept related to \SY{monoids}.
+\begin{gradedexercise}[\exname{DoubleDualFunctor}]
+    \label{ex:DoubleDualFunctor}
+    Prove that $\funa$ as defined in \cref{exa:double-dual-functor} is in fact a \SY{functor}.
+\end{gradedexercise}
+\solutionof{DoubleDualFunctor}
 
-There is a \SY{functor}
-\begin{equation}\label{eq:list-functor-intro}
-    \listfun\colon \Set \fto \Mon
-\end{equation}
-from the \SY{category of sets} to the \SY{category of monoids}.
+\begin{example}\label{exa:G-actions-as-functors}
+    Let $\grpA$ be a group.
+    We've seen that we can view $\grpA$ as a category with just a single object (denote that object by $\monoidcatobj$) and where the morphisms are the elements of $\grpAset$ (with composition given by the group's composition operation).
 
-Given a set~\setA, the \SY{functor} returns a specific \SY{monoid}
-\begin{equation}\label{eq:list-functor-on-objects}
-    \listfun(\setA)\definedas\tupp{\listsof{\setA},\emptylist_\setA, \listconcat}.
-\end{equation}
+    We claim that specifying a functor $\grpA \fto \Set$ is ``the same thing'' as specifying a set $\setA$ together with a (covariant) action of $\grpA$ on $\setA$.
+\end{example}
 
-Given a map~$\mapa\colon \setA \sto \setB$, we have
-% \begin{equation}
-%     \defmapcomma{
-%         \listfun(\mapa)
-%     }{
-%         \listsof{\setA}
-%     }{
-%         \to
-%     }{
-%         \listsof{\setB}
-%     }{
-%         \makelist{\setAel_1, \ldots, \setAel_n}
-%     }{
-%         \makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}
-%     }
-% \end{equation}
-\begin{equation}\label{eq:list-functor-on-morphisms}
-    \defmapcomma{
-        \listfun(\mapa)
-    }{
-        \listsof{\setA}
-    }{
-        \to
-    }{
-        \listsof{\setB}
-    }{
-        \makegenlist{ \setAel_i }
-    }{
-        \makegenlist{ \mapa(\setAeln{i}) }
-    }
-\end{equation}
-which applies~$\mapa$ entry-wise in the list.
-The empty list in~$\listsof{\setA}$ is mapped to the empty list in~$\listsof{\setB}$.
-    {}
-$\listfun$ is a \SY{functor}, given that the identity map is mapped to the identity map on lists, and that
-% \begin{equation}
-%     \begin{aligned}
-%         \listfun(\mapa \mthen \mapb)(\makelist{\setAeln{1},\ldots,\setAeln{n}}) & =\makelist{(\mapa \mthen \mapb)(\setAeln{1}), \ldots, (\mapa \mthen \mapb)(\setAeln{n})} \\
-%                                                                                 & =\listfun(\mapb)(\makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}) \\
-%                                                                                 & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makelist{\setAeln{1}, \ldots, \setAeln{n}}).
-%     \end{aligned}
-% \end{equation}
-\begin{equation}\label{eq:list-functor-compositionality}
-    \begin{aligned}
-        \listfun(\mapa \mthen \mapb)(\makegenlist{\setAeln{i}}) & =\makegenlist{ (\mapa \mthen \mapb)(\setAeln{i})} \\
-                                                                & =\makegenlist{  \mapb ( \mapa (\setAeln{i}))} \\
-                                                                & =\listfun(\mapb)(\makegenlist{\mapa(\setAeln{i})}) \\
-                                                                & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makegenlist{\setAeln{i}}).
-    \end{aligned}
-\end{equation}
+\begin{exercise}
+    Prove the claim made in \cref{exa:G-actions-as-functors}.
+\end{exercise}
+\begin{solution}
+    \todotext{Write this solution}
+\end{solution}
+
+%\begin{gradedexercise}[\exname{GActionsAsFunctors}]
+%    \label{ex:GActionsAsFunctors}
+% 
+%\end{gradedexercise}
+%\solutionof{GActionsAsFunctors}
+
+\begin{gradedexercise}[\exname{MultiplicationWithASet}]
+    \label{ex:MultiplicationWithASet}
+    Let $\subA$ be a fixed set.
+    We define a functor $\funa \colon \Set \fto \Set$ which acts on objects by
+    \begin{equation}
+        \funa(\setA) = \setA \cartprod \subA
+    \end{equation}
+    and on morphisms by
+    \begin{equation}
+        \funa(\mora) = \mora \funcprod \catid_{\subA}.
+    \end{equation}
+    Prove that this is indeed a functor.
+\end{gradedexercise}
+\solutionof{MultiplicationWithASet}
+
+\begin{gradedexercise}[\exname{ExponentiationWithASet}]
+    \label{ex:ExponentiationWithASet}
+    Let $\subA$ be a fixed set.
+    We can define a functor $\funa \colon \Set \fto \Set$ which acts on objects by
+    \begin{equation}
+        \funa(\setA) = \setA^\subA.
+    \end{equation}
+    (Recall that $\setA^\subA$ denotes the set of functions from $\subA$ to $\setA$.)
+    For the action on morphisms, suppose we have a function $\funa \colon \setA \mto \setB$.
+    Then
+    \begin{equation}
+        \funa(\mora) \colon \setA^\subA \mto \setB^\subA, \ \stylemorph{\varphi} \mapsto \stylemorph{\varphi} \mthen \mora.
+    \end{equation}
+    Prove that this does really define a functor.
+\end{gradedexercise}
+\solutionof{ExponentiationWithASet}
+
+\begin{gradedexercise}[\exname{GraphsViaFunctors}]
+    \label{ex:GraphsViaFunctors}
+    Consider the following category, which has two objects,~$\styleobj{V}$ and~$\styleobj{A}$, and four morphisms: besides the \SY{identity morphisms}, there are two morphisms,~$\stylemorph{s}$ and~$\stylemorph{t}$, from~$\styleobj{A}$ to~$\styleobj{V}$.
+    See \cref{fig:graph-cat}.
+    Call this category~$\CatSymbol{G}$.
+
+    Can you explain the following statement?
+    ``Specifying a \SY{functor}~$\CatSymbol{G} \fto \Set$ is the ``same thing'' as specifying a directed graph''.
+\end{gradedexercise}
+\solutionof{GraphsViaFunctors}
+
+\begin{marginfigure}
+    \centering
+    \includesag{graph-cat}
+    \caption{}
+    \label{fig:graph-cat}
+\end{marginfigure}
+
+\begin{gradedexercise}[\exname{UpperSetsViaFunctors}]
+    \label{ex:UpperSetsViaFunctors}
+    Recall that~$\Bool$ denotes the category with two objects,~$\true$ and~$\false$, and with precisely one non-identity morphism which goes from~$\false$ to~$\true$.
+    Let~\posA be a poset.
+    View it as a category~$\CatSymbol{P}$, and let~$\funa \colon \CatSymbol{P} \mto \Bool$ be a \SY{functor}.
+    In other words,~$\funaMap = \funaob$ is a \SY{monotone function}.
+    Prove that the set
+    \begin{equation}
+        \subA \definedas \makeset{ \posAel \setin \posAset \mid \funaMap(\posAel) = \true } \setsubseteq \posA
+    \end{equation}
+    is an \SY{upper set}.
+\end{gradedexercise}
+\solutionof{UpperSetsViaFunctors}
+
+\begin{gradedexercise}[\exname{CartProdAsFunctor}]
+    \label{ex:CartProdAsFunctor}
+
+    Recall that, given categories $\CatC$ and $\CatD$, we can form the product category $\CatC \times \CatD$.
+    In this exercise we will use this construction in a situation where we consider the product of the category $\Set$ with itself.
+
+    Your task in this exercise is to show that there is a functor $\funa \colon \Set \times \Set \fto \Set$ which is defined by the operation of ``taking the cartesian product of sets and functions''.
+
+    Concretely, given any two sets $\setA$, $\setB$, let
+    $$\funa(\tup{\setA, \setB}) \definedas \setA \cartprod \setB$$
+    (this defines $\funa$ on the level of objects) and given any two functions $\mora \colon \setA \mto \setC$, $\morb \colon \setB \mto \setD$, let
+    $$\funa(\tup{\mora, \morb}) \definedas \mora \catprodmor \morb$$
+    (this defines $\funa$ on the level of morphisms).
+
+    To show that $\funa$ is in fact a functor, check the two conditions in the defintion of a functor, namely that $\funa$ is compatible with composition and with identities.
+\end{gradedexercise}
+\solutionof{CartProdAsFunctor}
+
+\begin{example}\label{exa:hom-functor}
+    Let $\CatC$ be any category.
+    There is a functor
+    \begin{equation}\label{eq:hom-functor-type}
+        \funa \colon \CatC\op \Ctimes \CatC \fto \Set
+    \end{equation}
+    defined on objects by
+    \begin{equation}\label{eq:hom-functor-on-objects}
+        \funaob(\tup{\Obja, \Objb}) = \Hom_\CatC(\Obja, \Objb).
+    \end{equation}
+    To see how $\funa$ is defined on morphisms, let $\mora\op \colon \Objd \mtoin{\CatC\op} \Obja$ and $\morb \colon \Objb \mtoin{\CatC} \Objc$ be morphisms in $\CatC\op$ and $\CatC$, respectively, and recall that $\mora\op \colon \Objd \mtoin{\CatC\op} \Obja$ is, by definition, a morphism $\mora \colon \Obja \mtoin{\CatC} \Objd$.
+    We define $\funamor(\tup{\mora\op, \morb})$ to be the function
+    \begin{equation}\label{eq:hom-functor-on-morphisms}
+        \Hom_\CatC(\Obja, \Objb) \to \Hom_\CatC(\Objd, \Objc), \ \stylemorph{\varphi} \mapsto \mora \mthen \stylemorph{\varphi} \mthen \morb.
+    \end{equation}
+
+\end{example}
+
+\begin{gradedexercise}[\exname{HomFunctor}]
+    \label{ex:HomFunctor}
+    Prove that the hom-functor defined in \cref{exa:hom-functor} is in fact a functor.
+\end{gradedexercise}
+\solutionof{HomFunctor}
 
 \devel{
 
@@ -176,10 +195,11 @@ $\listfun$ is a \SY{functor}, given that the identity map is mapped to the ident
 
 }
 
-\subsection{Planning as the search of a functor}
+\subsection{Planning as the search for a functor}
+\label{sec:planning-as-functor}
 
 \begin{example}
-    \label{ex:planning-as-search-functor}
+    \label{exa:planning-as-search-functor}
     Recall the category \Berg introduced in \cref{sec:trekking} and define a category \Plans where objects are activities and morphisms describe activities order constraints, illustrated in \cref{fig:plans_functor} (left).
 
     For instance, there is a morphism from ``mountain lodge'' to ``panoramic lake'', which describes the plan of going from the lodge area to the lake area.
@@ -209,43 +229,5 @@ $\listfun$ is a \SY{functor}, given that the identity map is mapped to the ident
 \vfill
 \clearpage
 \vfill
-
-\begin{gradedexercise}[\exname{DoubleDualFunctor}]
-    \label{ex:DoubleDualFunctor}
-    Prove that $\funa$ as defined in \cref{exa:double-dual-functor} is in fact a \SY{functor}.
-\end{gradedexercise}
-\solutionof{DoubleDualFunctor}
-
-\begin{marginfigure}
-    \centering
-    \includesag{graph-cat}
-    \caption{}
-    \label{fig:graph-cat}
-\end{marginfigure}
-
-\begin{gradedexercise}[\exname{GraphsViaFunctors}]
-    \label{ex:GraphsViaFunctors}
-    Consider the following category, which has two objects,~$\styleobj{V}$ and~$\styleobj{A}$, and four morphisms: besides the \SY{identity morphisms}, there are two morphisms,~$\stylemorph{s}$ and~$\stylemorph{t}$, from~$\styleobj{A}$ to~$\styleobj{V}$.
-    See \cref{fig:graph-cat}.
-    Call this category~$\CatSymbol{G}$.
-
-    Can you explain the following statement?
-    ``Specifying a \SY{functor}~$\CatSymbol{G} \fto \Set$ is the ``same thing'' as specifying a directed graph''.
-\end{gradedexercise}
-\solutionof{GraphsViaFunctors}
-
-\begin{gradedexercise}[\exname{UpperSetsViaFunctors}]
-    \label{ex:UpperSetsViaFunctors}
-    Recall that~$\Bool$ denotes the category with two objects,~$\true$ and~$\false$, and with precisely one non-identity morphism which goes from~$\false$ to~$\true$.
-    Let~\posA be a poset.
-    View it as a category~$\CatSymbol{P}$, and let~$\funa \colon \CatSymbol{P} \mto \Bool$ be a \SY{functor}.
-    In other words,~$\funaMap = \funaob$ is a \SY{monotone function}.
-    Prove that the set
-    \begin{equation}
-        \subA \definedas \makeset{ \posAel \setin \posAset \mid \funaMap(\posAel) = \true } \setsubseteq \posA
-    \end{equation}
-    is an \SY{upper set}.
-\end{gradedexercise}
-\solutionof{UpperSetsViaFunctors}
 
 \todojira{484}{\alphubel: @Gioele: Show that there is a \SY{functor} from reals to cat, which maps an alpha to the category bergalpha}

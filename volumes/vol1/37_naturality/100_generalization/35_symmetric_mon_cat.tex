@@ -1,5 +1,7 @@
 % !TEX root = chapter-standalone.tex
 
+\section{Symmetric monoidal categories}
+
 \linkvideo{spring2021-par-feedback:braided-moncat} % Braided monoidal categories
 
 \begin{ctdefinition}[Braided monoidal category]
@@ -30,7 +32,6 @@
     \equationsag{50_sym_2}{eq:50_sym_2}
 \end{remark}
 
-\section{Symmetric monoidal categories}
 
 \linkvideo{spring2021-par-feedback:symmetric-moncat} % Symmetric monoidal categories
 \begin{ctdefinition}[Symmetric monoidal category]
@@ -44,5 +45,136 @@
 \end{ctdefinition}
 
 \begin{remark}
-    If~$\braiding$ is a \SY{natural isomorphism} such that it is a candidate to be a braiding on a given \SY{monoidal category}, and if, additionally, it satisfies \cref{eq:braiding_symmetry}, then the two hexagon identities are equivalent, and so only one of them needs to be checked.
+    If~$\braiding$ is a \SY{natural isomorphism} such that it is a candidate to be a braiding on a given \SY{monoidal category}, and if, additionally, it satisfies \cref{eq:braiding-symmetry}, then the two hexagon identities are equivalent, and so only one of them needs to be checked.
 \end{remark}
+
+\subsubsection*{\DP is a symmetric monoidal category}
+
+We define a monoidal product $\mtimescat$ for $\DP$ on objects by 
+\begin{equation}\label{eq:DP-mon-prod-objects}
+\posA \mtimescat \posB = \posA \Ptimes \posB
+\end{equation}
+and on morphisms by
+\begin{equation}
+            \label{eq:dp-mon-prod-morphisms}
+            \prfperiod{
+                \adpa\colon \posAop\Ptimes \posC \toinPos \Bool
+            }{\qquad}{
+                \adpb\colon \posB\posop\Ptimes \posD \toinPos \Bool
+            }{
+                \defmapcomma{
+                    \adpa \mtimescat \adpb
+                }{
+                    (\posA \Ptimes \posB)\op
+                    \Ptimes
+                    \pars{\posC \Ptimes \posD}
+                }{
+                    \toinPos
+                }{
+                    \Bool
+                }{
+                    \tup{\tup{a, c}^*, \tup{b, d}}
+                }{
+                    \adpa(a^*,c) \booland \adpb(c^*, d)
+                }
+            }
+        \end{equation}
+
+
+
+\begin{lemma}
+    \label{lem:symmetricmonoidaldp}
+    There is a \SY{symmetric monoidal category} $\tup{\DP, \mtimescat, \singleton, \associator, \leftunitor, \rightunitor, \braiding}$ where the braiding is given by the \SY{design problem}~$\braiding_{\posA,\posB}\colon \F{\posgenA} \Ptimes \F{\posgenB} \profto \R{\posgenB} \Ctimes \R{\posgenA}$ with
+    \begin{equation}
+        \braiding_{\posA,\posB}(\tup{\F{\posgenAel_1},\F{\posgenBel_1}}\Fop, \tup{\R{\posgenBel_2},\R{\posgenAel_2}})\definedas \pars{\F{\posgenAel_1}\posleqof\posA \R{\posgenAel_2}}\booland \pars{\F{\posgenBel_1}\posleqof\posB \R{\posgenBel_2}}
+    \end{equation}
+    for any~$\posA,\posB \setin\Obof\DP$.
+\end{lemma}
+
+\devel{
+
+\todotext{J: various things with the below proof are strange / fishy!}
+\begin{proof}
+    In this proof, given two elements~$\posAel_1,\posBel_2$ of a poset~\posA, we denote for brevity~$\posAel_\styleelements{1} \posleqof\posA \posAel_\styleelements{2}$ by~$\posAel_\styleelements{1} \posleq \posAel_\styleelements{2}$.
+    To prove that~$\braiding_{\posA,\posB}$ is an isomorphism, we use \cref{def:monoidal-cat} and show~$\braiding_{\posA,\posB}\mthen \braiding_{\posB,\posA}=\catidat{\posA\Ptimes \posB}$.
+    We have
+    \begin{equation}
+        \begin{aligned}
+             & \pars{ \braiding_{\posA,\posB}\fthen \braiding_{\posB,\posA}} \pars{ \tup{\F{\posgenAel_1},\F{\posgenBel_1}}\Fop, \tup{\R{\posgenAel_2},\R{\posgenBel_2}}} \\
+             & =\bigvee_{\tup{\posBel,\posAel}\setin \posB\Ptimes \posA}\braiding_{\posA,\posB}(\tup{\F{\posgenAel_1},\F{\posgenBel_1}}\Fop, \tup{\RposgenBel,\R{\posgenAel}})\booland \braiding_{\posB,\posA}(\tup{\FposgenBel,\FposgenAel}\Fop, \tup{\R{\posgenAel_2},\R{\posgenBel_2}}) \\
+             & =\pars{ (\F{\posgenAel_1}\posleq \R{\posgenAel}) \booland (\F{\posgenBel_1}\posleq \RposgenBel)}\booland \pars{(\FposgenAel\posleq \R{\posgenAel_2}) \booland (\FposgenBel\posleq \R{\posgenBel_2})} \\
+             & =(\F{\posgenAel_1}\posleq \R{\posgenAel_2})\booland (\F{\posgenBel_1}\posleq \R{\posgenBel_2}) \\
+             & =\catidat{\posA\Ptimes \posB}(\tup{\F{\posgenAel_1},\F{\posgenBel_1}}\Fop, \tup{\R{\posgenAel_2},\R{\posgenBel_2}}).
+        \end{aligned}
+    \end{equation}
+    This also shows the second triangle identity:~$\braiding_{\posA,\posB}$ is its own identity.
+    For naturality, consider two morphisms (design problems)~$\adpa\colon \funposA_\F{1}\profto \resposB_\R{1}$ and $\adpb\colon \funposA_\F{2}\profto \resposB_\R{2}$.
+    For brevity, denote~$\braiding_{\posB_\stylepos{1}\cartprod \posB_\stylepos{2},\posB_\stylepos{2}\cartprod \posB_\stylepos{1}}$ by~$\braiding_\posB$ and~$\braiding_{\posA_\stylepos{1}\cartprod \posA_\stylepos{2},\posA_\stylepos{2}\cartprod \posA_\stylepos{1}}$ by~$\braiding_\posA$.
+    We have
+    \begin{equation}
+        \begin{aligned}
+             & \pars{(\adpa\mtimescat \adpb)\fthen \braiding_\posgenB }\pars{ \tup{\F{\posgenAel_1},\F{\posgenAel_2}}\Fop, \tup{\R{\posgenBel_2},\R{\posgenBel_1}}} \\
+             & =\bigvee_{\tup{\posBel,\posBel\elprime}\setin \posB_\stylepos{1}\cartprod \posB_\stylepos{2}} \pars{\adpa\mtimescat \adpb} \pars{ \tup{\F{\posgenAel_1},\F{\posgenAel_2}}\Fop, \tup{\RposgenBel,\R{\posgenBel'}}}\booland \braiding_\posB\pars{\tup{\FposgenBel,\F{\posgenBel'}}\Fop, \tup{\R{\posgenBel_2},\R{\posgenBel_1}} } \\
+             & =\bigvee_{\tup{\posBel,\posBel\elprime}\setin \posB_\stylepos{1}\cartprod \posB_\stylepos{2}}(\adpa(\F{\posgenAel_1^*},\RposgenBel)\booland \adpb(\F{\posgenAel_2^*},\R{\posgenBel'}))\booland (\pars{\FposgenBel\posleq \R{\posgenBel_1}} \booland \pars{\F{\posgenBel'}\posleq \R{\posgenBel_2}}) \\
+             & = \adpa(\F{\posgenAel_1^*},\R{\posgenBel_1}) \booland \adpb(\F{\posgenAel_2^*},\R{\posgenBel_2}),
+        \end{aligned}
+    \end{equation}
+    where the last step comes from the monotonicity of~$\adpa$ and~$\adpb$.
+    Similarly,
+    \begin{equation}
+        \begin{aligned}
+             & \pars{ \braiding_\posA \fthen (\adpb\mtimescat \adpa)}\pars{ \tup{\F{\posgenAel_1},\F{\posgenAel_2}}\Fop, \tup{\R{\posgenBel_2},\R{\posgenBel_1}}} \\
+             & =\bigvee_{\tup{\posAel,\posAel\elprime}\setin \posA_\stylepos{2}\cartprod \posA_\stylepos{1}}\braiding_\posgenA\pars{\tup{\F{\posgenAel_1},\F{\posgenAel_2}}\Fop, \tup{\R{\posgenAel},\R{\posgenAel}'} }\booland \pars{\adpb\mtimescat \adpa} \pars{ \tup{\FposgenAel,\F{\posgenAel'}}\Fop, \tup{\R{\posgenBel_2},\R{\posgenBel_1}}} \\
+             & =\bigvee_{\tup{\posAel,\posAel\elprime}\setin \posA_\stylepos{2}\cartprod \posA_\stylepos{1}}(\pars{\F{\posgenAel_1}\posleq \R{\posgenAel'}}\booland \pars{\F{\posgenAel_2}\posleq \R{\posgenAel}}) \booland (\adpb(\FposgenAelop,\R{\posgenBel_2})\booland \adpa(\F{\posgenAel'^*},\R{\posgenBel_1})) \\
+             & = \adpb(\F{\posgenAel_1^*},\R{\posgenBel_1}) \booland \adpa(\R{\posgenAel_2^*},\R{\posgenBel_2}).
+        \end{aligned}
+    \end{equation}
+    To show the first triangle identity, we write
+    \begin{equation}
+        \begin{aligned}
+             & \pars{\braiding_{\singleton \cartprod \posA}\fthen \rightunitor_\posA}\pars{ \tup{\F{\singletonel},\F{\posgenAel_1}}\Fop,\R{\posgenAel_2}} \\
+             & =\bigvee_{\tup{\F{\posgenAel'},\R{\singletonel}}\setin \posA\Ptimes \singleton}\braiding_{\singleton \cartprod \posA}\pars{ \tup{\F{\singletonel},\F{\posgenAel_1}}\Fop, \tup{\R{\posgenAel'},\R{\singletonel}}}\booland \rightunitor_\posA\pars{ \tup{\F{\posgenAel'},\F{\singletonel}}\Fop,\R{\posgenAel_2}} \\
+             & =\bigvee_{\tup{\posAel\elprime,\singletonel}\setin \posA\Ptimes \singleton} \pars{\F{\singletonel}\posleq \R{\singletonel}} \booland \pars{\F{\posgenAel_1}\posleq \R{\posgenAel'}}\booland \pars{\F{\posgenAel'}\posleq \R{\posgenAel_2}} \\
+             & =\F{\posgenAel_1}\posleq \R{\posgenAel_2} \\
+             & =\leftunitor_\posA\pars{ \tup{\F{\singletonel},\F{\posgenAel_1}}\Fop,\R{\posgenAel_2}}.
+        \end{aligned}
+    \end{equation}
+    The hexagon identities are more verbose.
+    Consider~$\posA,\posB,\posC\setin \Obof\DP$.
+    For brevity, we denote~$\associator_{\posA,\posB,\posC}$ by~$\associator$,~$\braiding_{\posA,\posB}\mtimescatmor \catid_\posC$ by~$\braiding'$,~$\catid_\posB \mtimescatmor \braiding_{\posA,\posC}$ by~$\braiding''$,~$(\posB\Ptimes \posA)\Ptimes \posC$ as~$\Diamond$, and~$\posB\Ctimes (\posA\Ptimes \posC)$ as~$\Delta$.
+
+    Recall that
+    \begin{equation}
+        \begin{aligned}
+            \braiding' \pars{\tup{\tup{\F{\posgenAel_1},\F{\posgenBel_1}},\F{\posgenCel_1}}\Fop, \tup{\R{\posgenBel_2}, \tup{\R{\posgenAel_2},\R{\posgenCel_2}}} } & =
+            \pars{ (\F{\posgenAel_1}\posleq \R{\posgenAel_2}) \booland (\F{\posgenBel_1}\posleq \R{\posgenBel_2})}\booland (\F{\posgenCel_1}\posleq \R{\posgenCel_2}) \\
+                                                                                                                                                                   & = (\F{\posgenAel_1}\posleq \R{\posgenAel_2}) \booland (\F{\posgenBel_1}\posleq \R{\posgenBel_2}) \booland (\F{\posgenCel_1}\posleq \R{\posgenCel_2}).
+        \end{aligned}
+    \end{equation}
+    We have
+    \begin{equation}
+        \begin{aligned}
+             & \pars{\braiding' \fthen \associator } \pars{\tup{\tup{\F{\posgenAel_1},\F{\posgenBel_1}},\F{\posgenCel_1}}\Fop, \tup{\R{\posgenBel_2}, \tup{\R{\posgenAel_2},\R{\posgenCel_2}}} } \\
+             & =\bigvee_{\tup{\tup{\posBel,\posAel},\posCel}\setin \Diamond}\braiding' \pars{ \tup{\tup{\F{\posgenAel_1},\F{\posgenBel_1}},\F{\posgenCel_1}}\Fop, \tup{\tup{\RposgenBel,\R{\posgenAel}},\R{\posgenCel}}}\booland \associator \pars{ \tup{\tup{\FposgenBel,\FposgenAel},\F{\posgenCel}}\Fop, \tup{\R{\posgenBel_2}, \tup{\R{\posgenAel_2},\R{\posgenCel_2}}}} \\
+             & =\bigvee_{\tup{\tup{\posBel,\posAel},\posCel}\setin \Diamond} \pars{\pars{\F{\posgenAel_1}\posleq \R{\posgenAel} }\booland \pars{ \F{\posgenBel_1}\posleq \RposgenBel}\booland \pars{\F{\posgenCel_1}\posleq \R{\posgenCel}}}\booland \\
+             & \pars{\pars{\FposgenBel\posleq \R{\posgenBel_2}}\booland \pars{ \FposgenAel\posleq \R{\posgenAel_2}}\booland \pars{\F{\posgenCel}\posleq \R{\posgenCel_2}}} \\
+             & =\pars{\F{\posgenBel_1}\posleq \R{\posgenBel_2} }\booland \pars{\F{\posgenAel_1}\posleq \R{\posgenAel_2} }\booland \pars{ \F{\posgenCel_1}\posleq \R{\posgenCel_2}} \\
+             & =\underbrace{\associator\pars{\tup{\tup{\F{\posgenBel_1},\F{\posgenAel_1}},\F{\posgenCel_1}}^*, \tup{\R{\posgenBel_2}, \tup{\R{\posgenAel_2},\R{\posgenCel_2}}}}}_{\star}.
+        \end{aligned}
+    \end{equation}
+    Furthermore, consider
+    \begin{equation}
+        \begin{aligned}
+             & \pars{ \star \fthen \braiding''}\pars{ \tup{\tup{\F{\posgenAel_1},\F{\posgenBel_1}},\F{\posgenCel_1}}\Fop, \tup{\R{\posgenBel_3}, \tup{\R{\posgenCel_3},\R{\posgenAel_3}}}} \\
+             & =\bigvee_{\tup{\posBel_\styleelements{2}, \tup{\posAel_\styleelements{2},\posCel_\styleelements{2}}}\setin \Delta} \star \pars{\tup{\tup{\F{\posgenAel_1},\F{\posgenBel_1}},\F{\posgenCel_1}}\Fop, \tup{\R{\posgenBel_2}, \tup{\R{\posgenAel_2},\R{\posgenCel_2}}} }\booland \\
+             & \braiding'' \pars{\tup{\F{\posgenBel_2}, \tup{\F{\posgenAel_2},\F{\posgenCel_2}}}^*, \tup{\R{\posgenBel_3}, \tup{\R{\posgenCel_3},\R{\posgenAel_3}}} } \\
+             & =\bigvee_{\tup{\posgenBel_\styleelements{2}, \tup{\posgenAel_\styleelements{2},\posgenCel_\styleelements{2}}}\setin \Delta}(\pars{\F{\posgenBel_1}\posleq \R{\posgenBel_2} }\booland \pars{\F{\posgenAel_1}\posleq \R{\posgenAel_2} }\booland \pars{ \F{\posgenCel_1}\posleq \R{\posgenCel_2}}) \booland \\
+             & \pars{\pars{\F{\posgenBel_2}\posleq \R{\posgenBel_3}}\booland \pars{\F{\posgenAel_2}\posleq \R{\posgenAel_3}} \booland \pars{\F{\posgenCel_2}\posleq \R{\posgenCel_3}}} \\
+             & =(\F{\posgenAel_1}\posleq \R{\posgenAel_3}) \booland (\F{\posgenBel_1}\posleq \R{\posgenBel_3}) \booland (\F{\posgenCel_1}\posleq \R{\posgenCel_3}).
+        \end{aligned}
+    \end{equation}
+    It is easy to see that the other direction in the hexagon commutative diagram commutes as well.
+    With this we have proved that~$\braiding$ is a valid braiding operation and hence that~$\tup{\DP, \mtimescat, \singleton, \braiding}$ is a \SY{symmetric monoidal category}.
+\end{proof}
+}
+

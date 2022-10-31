@@ -193,7 +193,7 @@ compile-equations:
 .FORCE:
 .PHONY: .FORCE
 
-tag=reg-stage.zuper.ai/act4e/act4e-build:z7
+tag=act4e/act4e-build:z7
 pull:
 	docker pull $(tag)
 
