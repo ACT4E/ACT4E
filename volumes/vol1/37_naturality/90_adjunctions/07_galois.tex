@@ -145,6 +145,8 @@ Let $\posA = \tup{\posAset, \posleq}$ be poset. A \emph{closure operator} on $\p
 \item \text{Idempotence:} \ $\mora (\mora(\ela)) =  \mora(\ela) \quad \forall \ela \setin \posAset$. 
 \end{enumerate}
 
+
+
 \end{definition}
 
 \begin{lemma}
@@ -183,7 +185,7 @@ as desired.
 Closure operators arise in various contexts in mathematics. Often we are interested in the elements which are in the image of a closure operator. These are called \emph{closed elements}. 
 
 \begin{definition}
-Let $\posA = \tup{\posAset, \posleq}$ be poset and  $\mora \colon \posA \mto \posA$ a closure operator. An element $\ela \setin \posAset$ is called \emph{closed} if $\mora(\ela) = \ela$. 
+Let $\posA = \tup{\posAset, \posleq}$ be poset, $\mora \colon \posA \mto \posA$ a closure operator, and $\ela \setin \posAset$ an arbitrary element of $\posA$. The element $\mora(\ela) \setin \posAset$ is called the \emph{closure} of $\ela$, and $\ela$ is called \emph{closed} if $\mora(\ela) = \ela$. 
 \end{definition}
 
 \begin{remark}
@@ -194,9 +196,39 @@ Note that if $\mora \colon \posA \mto \posA$ is a closure operator, then for any
 by the idempotence property of closure operators. 
 \end{remark}
 
-Returning to formal concept analysis, let's look at what closed elements for the closure operator $
-\incidence_* \mthen \incidence^* \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}$ are in terms of our simple example. 
+Returning to formal concept analysis, let's look at closures and closed elements for the closure operators 
+$$\incidence_* \mthen \incidence^* \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}$$  
+and 
+$$\incidence^* \mthen \incidence_* \colon \tup{\powerset \attributes, \subseteq} \mto \tup{\powerset \attributes, \subseteq}$$ 
+in terms of our simple example. 
 
+For example, let $\setA = \makeset{\text{classic car}, \text{electric car}}$. Then 
+\begin{equation}
+\incidence_*(\setA) = \makeset{\text{fast}}
+\end{equation}
+and 
+\begin{equation}
+\incidence^*(\incidence_*(\setA)) = \incidence^*(\makeset{\text{fast}}) = \makeset{\text{classic car}, \text{hybrid car}, \text{electric car}}.
+\end{equation}
+So $\setA = \makeset{\text{classic car}, \text{electric car}}$ is not a closed element of $\tup{\powerset \things, \subseteq}$. Its closure contains the element ``$\text{hybrid car}$'' which is not in $\setA$.
+
+Or consider $\setB = \makeset{\text{electric}, \text{muscle}}$. Then
+\begin{equation}
+\incidence^*(\setB) = \makeset{\text{hybrid bike}}
+\end{equation}
+and 
+\begin{equation}
+\incidence_*(\incidence^*(\setB)) = \incidence_*(\makeset{\text{hybrid bike}}) = \makeset{\text{electric}, \text{muscle}} = \setB.
+\end{equation}
+We find here that $\makeset{\text{hybrid bike}}$ \emph{is} a closed element of $\tup{\powerset \attributes, \subseteq}$. 
+
+In general, given a set $\setA$ of things, its closure $(\incidence_* \mthen \incidence^*)(\setA)$ is the largest set of things that share the attributes in $\incidence_*(\setA)$. And $\incidence_*(\setA)$ is the largest set of attributes shared by $\setA$. Thus we may say:
+
+ ``\emph{$(\incidence_* \mthen \incidence^*)(\setA)$ is the maximal set of things that share the same attributes as are shared by $\setA$}.'' 
+ 
+Or, put another way, taking the closure of $\setA$ is a way of enlarging $\setA$ without decreasing the set of associated shared attributes. Closing $\setA$ is adding those things to $\setA$ that come ``for free'' in the sense that, by adding them, we are not losing shared attributes. 
+
+A similar point of view of course also applies to closing sets of attributes with respect to the closure operator $\incidence^* \mthen \incidence_*$.
 
 
 \section{Galois connections}\label{sec:galois-connections}
