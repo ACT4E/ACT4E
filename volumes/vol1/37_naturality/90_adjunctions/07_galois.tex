@@ -2,7 +2,6 @@
 
 % \section{The duality of design}
 
-\devel{
     \section{Formal concept analysis}
     \todojira{143}{\bernina:
         An example of a Galois connection between functionalities and resources could be treated here to motivate the \SY{adjunction} discussion}
@@ -111,7 +110,15 @@ or, equivalently, a monotone map
 \incidence^* \colon \tup{\powerset \attributes, \subseteq}\op \mto \tup{\powerset \things, \subseteq}.
 \end{equation}
 
-In the following, we will find it convenient to use the notations $\incidence_*$ and $\incidence^*$, irrespective of whether we are thinking of there being an ``$( - )\op $'' on the target or source poset (it will be convenient to switch seamlessly between these different points of view). In particular, we can think of the compositions $\incidence_* \mthen \incidence^*$ and $\incidence^* \mthen \incidence_*$ as monotone maps 
+In the following, we will find it convenient to use the notations $\incidence_*$ and $\incidence^*$, irrespective of whether we are thinking of there being an ``$( - )\op $'' on the target or source poset (it will be convenient to switch seamlessly between these different points of view). 
+
+A key observation is that $\incidence_*$ and $\incidence^*$ are ``complementary'' in the following sense. For any $\setA \subseteq \things$ and any $\setB \subseteq \attributes$ we have 
+\begin{equation}\label{eq:concept-adjunction}
+\incidence_*(\setA) \supseteq \setB \quad \Leftrightarrow \quad \setA \subseteq \incidence^*(\setB).
+\end{equation}
+This equivalence formalizes the (nearly tautological-seeming) statement that a set $\setB$ is contained in the largest set of attributes which apply to all members of $\setA$ (meaning: the attributes $\setB$ apply to all elements of $\setA$) if, and only if, $\setA$ is contained in the largest set of things to which all attributes $\setB$ apply (again meaning: the attributes $\setB$ apply to all elements of $\setA$). 
+
+Despite seeming tautological, we can use the equivalence \cref{eq:concept-adjunction} to make non-trivial observations. One consequence of \cref{eq:concept-adjunction} is that the monotone maps 
 \begin{equation}
 \incidence_* \mthen \incidence^* \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}
 \end{equation}
@@ -119,7 +126,7 @@ and
 \begin{equation}
 \incidence^* \mthen \incidence_* \colon \tup{\powerset \attributes, \subseteq} \mto \tup{\powerset \attributes, \subseteq}.
 \end{equation}
-These two maps are examples of what are called \emph{closure operators}.
+are examples of what are called \emph{closure operators}.
 
 
 \subsection{Closure operators}
@@ -140,27 +147,39 @@ Let $\posA = \tup{\posAset, \posleq}$ be poset. A \emph{closure operator} on $\p
 
 \end{definition}
 
-Let's check that $\incidence_* \mthen \incidence^*$ is a closure operator. 
-
-
-Given a set $\setA \subseteq \things$ of things, the set $(\incidence_* \mthen \incidence^*)(\setA)$ is the largest set of things for which all the attributes in $\incidence_*(\setA)$ apply. By definition, the attributes $\incidence_*(\setA)$ apply to all elements of $\setA$. Since $(\incidence_* \mthen \incidence^*)(\setA)$ is the \emph{largest} set for which all attributes in $\incidence_*(\setA)$ apply, we may conclude that $\setA \subseteq (\incidence_* \mthen \incidence^*)(\setA)$. 
-
-Now let's consider $(\incidence_* \mthen \incidence^* \mthen \incidence_* \mthen \incidence^*)(\setA)$. Applying $\incidence_* \mthen \incidence^*$ to the relation $\setA \subseteq (\incidence_* \mthen \incidence^*)(\setA)$, we find that 
+\begin{lemma}
+The monotone maps 
 \begin{equation}
-(\incidence_* \mthen \incidence^* \mthen \incidence_* \mthen \incidence^*)(\setA) \supseteq (\incidence_* \mthen \incidence^*)(\setA). 
+\incidence_* \mthen \incidence^* \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}
 \end{equation}
-Thus we are finished when we show the inclusion in the other direction. The set $\incidence_*(\incidence^* (\incidence_* (\setA)))$ is the set of attributes that apply to all elements of $(\incidence_* \mthen \incidence^*)(\setA) = \incidence^* (\incidence_* (\setA))$, which was the \emph{largest} set for which all attributes in $\incidence_*(\setA)$ apply. Thus, at least the attributes $\incidence_*(\setA)$ must apply to the things in the set $\incidence^* (\incidence_* (\setA))$. In other words, 
+and 
 \begin{equation}
-\incidence_*(\incidence^* (\incidence_* (\setA)))) \supseteq \incidence_* (\setA).
+\incidence^* \mthen \incidence_* \colon \tup{\powerset \attributes, \subseteq} \mto \tup{\powerset \attributes, \subseteq}.
 \end{equation}
-Since $\incidence^*$ is order-reversing, we find 
-\begin{equation}
-\incidence^*(\incidence_*(\incidence^* (\incidence_* (\setA))))) \subseteq \incidence^*(\incidence_* (\setA)),
-\end{equation}
-which was what we wished to show. 
+are closure operators. 
+\end{lemma}
+
+\begin{proof}
+Let's check that $\incidence_* \mthen \incidence^* \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}$ is a closure operator, using \cref{eq:concept-adjunction}. We omit the proof for $\incidence^* \mthen \incidence_*$, which may be done analogously. 
 
 
-}
+To show the first condition in the definition of closure operator, fix a set of things $\setA \subseteq \things$. In the situation of \cref{eq:concept-adjunction}, choose $\setB = \incidence_*(\setA)$. Since $\incidence_*(\setA) \supseteq \incidence_*(\setA)$ is true, \cref{eq:concept-adjunction} implies that $\setA \subseteq \incidence^*(\incidence_*(\setA))  = (\incidence_* \mthen \incidence^*)(\setA)$. 
+
+Now let's consider the second condition. Applying the monotone map $\incidence_* \mthen \incidence^*$ to the relation $\setA \subseteq (\incidence_* \mthen \incidence^*)(\setA)$, we have
+\begin{equation}
+(\incidence_* \mthen \incidence^*)(\setA)  \subseteq  (\incidence_* \mthen \incidence^* \mthen \incidence_* \mthen \incidence^*)(\setA).
+\end{equation}
+Thus we are finished when we show the inclusion in the other direction. By the first condition, we know that 
+\begin{equation}
+\incidence_*(\setA) \subseteq \incidence_*( \incidence^* (\incidence_*(\setA))) = (\incidence_* \mthen \incidence^* \mthen \incidence_*)(\setA).
+\end{equation}
+Applying the order-reversing map $\incidence^*$ to both sides of this inclusion then gives 
+\begin{equation}
+(\incidence_* \mthen \incidence^*)(\setA) \supseteq (\incidence_* \mthen \incidence^* \mthen \incidence_* \mthen \incidence^*)(\setA)
+\end{equation}
+as desired. 
+\end{proof}
+
 
 \section{Galois connections}\label{subsec:galois-connections}
 
