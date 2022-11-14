@@ -1,34 +1,39 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Enriched categories}
+\section{Enriched category theory}
 % \linkvideo{spring2021-enrichment:intro-exa-enrich} % Introductory example about routing
 % \linkvideo{spring2021-enrichment:recap-monoidal} % Recap on monoidal categories
 \linkvideo{spring2021-enrichment:enrich-cat-def} % Definition of enriched category
 \label{sec:enrichment-enriched-categories}
 
-\begin{ctdefinition}[Enrichment structure]
+\begin{ctdefinition}[$\CatV$-enriched category]
     \label{def:enrichment-structure}
-    Let~$\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor,\rightunitor}$ be a \SY{monoidal category}.
-    We say that a category \CatC ``has an enrichment $\tup{\engamma,\enm,\enid}$ over \CatV'' if:
-    %
+    Let~$\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor, \braiding}$ be a \SY{symmetric monoidal category}.
+    A $\CatV$-enriched category $\CatE$ is:
+    
+    \constit
     \begin{enumerate}
-        \item For each pair of objects $\Obja,\Objb$ of \CatC, there exists an object
-              \begin{equation}
-                  \engammaof\Obja\Objb \setin \Obof{\CatV}.
+    \item A collection of objects $\Obof{\CatE}$.
+    \item For every pair of objects $\tup{\Obja, \Objb}$ of $\CatE$, a \emph{hom-object}
+             \begin{equation}
+                  \engammaof\Obja\Objb \setin \Obof{\CatV}
               \end{equation}
               % \item For all~$\Obja,\Objb\setin \Ob_\CatC$, an object~$\HomSet{\CatC}{\Obja}{\Objb} \setin \Ob_{\CatV}$, called the \emph{hom-object} from~$\Obja$ to~$\Objb$.
-        \item For all~$\Obja, \Objb, \Objc\setin \ObC$, there exists a morphism~$\enm_{\Obja,\Objb,\Objc}$ of~\CatV:
+        \item For every triple of objects~$\tup{\Obja, \Objb, \Objc}$ of $\CatE$, a morphism of~$\CatV$
               \begin{equation}
-                  \enm_{\Obja,\Objb,\Objc}\colon \engammaof\Obja\Objb \mtimescatob \engammaof\Objb\Objc \mtoin\CatV \engammaof\Obja\Objc.
+                  \encomp_{\Obja,\Objb,\Objc}\colon \engammaof\Obja\Objb \mtimescatob \engammaof\Objb\Objc \mtoin\CatV, \engammaof\Obja\Objc.
               \end{equation}
-              This is called \emph{composition morphism}.
-        \item For each~$\Obja\setin \ObC$, there exists a morphism of~\CatV:
+             which we call a \emph{composition morphism}.
+        \item For each object $\Obja$ of $\CatE$, a morphism of~\CatV
               \begin{equation}
                   \enidof\Obja \colon \idmoncat \mtoin{\CatV} \engammaof\Obja\Obja.
               \end{equation}
               %  called \emph{identity element}.
+               \end{enumerate}
+               
+               \condit
+             
               Moreover, for any~$\Obja,\Objb,\Objc,\Objd\setin \ObC$, the following diagrams must commute.
-    \end{enumerate}
     \equationsag{enrichment_assoc2}{eq:enrichment_assoc2}
     \equationsag{enrichment_unital2}{eq:enrichment_unital2}
 \end{ctdefinition}
@@ -42,7 +47,7 @@
 % \end{widepar}
 
 \begin{ctdefinition}\label{def:enriched_cat}
-    We say that the category \CatC is ``enriched over \CatV'' if its enrichment $\tup{\engamma,\enm,\enid}$ satisfies
+    We say that the category \CatC is ``enriched over \CatV'' if its enrichment $\tup{\engamma,\encomp,\enid}$ satisfies
     \begin{equation}
         \engammaof\Obja\Objb = \HomSet\CatC\Obja\Objb,
     \end{equation}
@@ -50,7 +55,7 @@
         \enidof\Obja = \catidat\Obja,
     \end{equation}
     \begin{equation}
-        \enmof\Obja\Objb\Objc(\mora, \morb) = \mora \mthenof\CatV \morb.
+        \encompof\Obja\Objb\Objc(\mora, \morb) = \mora \mthenof\CatV \morb.
     \end{equation}
 \end{ctdefinition}
 
@@ -272,7 +277,7 @@
     \begin{solution}
         We show one direction.
         Suppose that we are given a $\Set$-enriched category as a tuple
-        $\tupp{\Ob, \HomSet{}{}{}, \enm, \enid_{}}.
+        $\tupp{\Ob, \HomSet{}{}{}, \encomp, \enid_{}}.
         $
         We can define a locally small category $\CatC$  as follows:
         \begin{compactitem}
@@ -280,11 +285,11 @@
             \item For each $\Obja,\Objb\setin\ObC$, let $\HomSet{\CatC}{\Obja}{\Objb} \definedas \engammaof{\Obja}{\Objb}$.
             \item For each $\Obja,\Objb,\Objc \setin \ObC$, we know a function
                   \begin{equation}
-                      \enmof{\Obja}{\Objb}{\Objc}:\HomSet{\CatC}{\Obja}{\Objb}\mtimescat \HomSet{\CatC}{\Objb}{\Objc}\mtoin{\Set} \HomSet{\CatC}{\Obja}{\Objc}.
+                      \encompof{\Obja}{\Objb}{\Objc}:\HomSet{\CatC}{\Obja}{\Objb}\mtimescat \HomSet{\CatC}{\Objb}{\Objc}\mtoin{\Set} \HomSet{\CatC}{\Obja}{\Objc}.
                   \end{equation}
 
                   The diagrams constraints imply that this function is associative.
-                  \\Therefore, we use it to define morphism composition in $\CatC$, setting $\mthen_{\Obja,\Objb,\Objc}\definedas \enmof{\Obja}{\Objb}{\Objc}$.
+                  \\Therefore, we use it to define morphism composition in $\CatC$, setting $\mthen_{\Obja,\Objb,\Objc}\definedas \encompof{\Obja}{\Objb}{\Objc}$.
                   %\todo[inline]{Does it follow that it is associative from the diagrams?}
             \item For each $\Obja\setin\ObC$ we know a function $\enidof{\CatE}{\Obja}\colon\singleton\mtoin{\Set} \HomSet{\CatC}{\Obja}{\Obja}$ that selects a morphism.\\
                   The diagrams constraints imply that such morphism satisfies unitality
