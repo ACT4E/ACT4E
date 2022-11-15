@@ -16,27 +16,66 @@
     \item A collection of objects $\Obof{\CatE}$.
     \item For every pair of objects $\tup{\Obja, \Objb}$ of $\CatE$, a \emph{hom-object}
              \begin{equation}
-                  \engammaof\Obja\Objb \setin \Obof{\CatV}
+                  \enhomob{\CatE}{\Obja}{\Objb} \setin \Obof{\CatV}
               \end{equation}
               % \item For all~$\Obja,\Objb\setin \Ob_\CatC$, an object~$\HomSet{\CatC}{\Obja}{\Objb} \setin \Ob_{\CatV}$, called the \emph{hom-object} from~$\Obja$ to~$\Objb$.
         \item For every triple of objects~$\tup{\Obja, \Objb, \Objc}$ of $\CatE$, a morphism of~$\CatV$
               \begin{equation}
-                  \encomp_{\Obja,\Objb,\Objc}\colon \engammaof\Obja\Objb \mtimescatob \engammaof\Objb\Objc \mtoin\CatV, \engammaof\Obja\Objc,
+                  \encomp_{\Obja,\Objb,\Objc}\colon \enhomob{\CatE}{\Obja}{\Objb} \mtimescatob \enhomob{\CatE}{\Objb}{\Objc} \mtoin\CatV, \enhomob{\CatE}{\Obja}{\Objc},
               \end{equation}
-            a \emph{composition morphism}.
+            called \emph{composition morphism}.
         \item For each object $\Obja$ of $\CatE$, a morphism of~\CatV
               \begin{equation}
-                  \enidof\Obja \colon \idmoncat \mtoin{\CatV} \engammaof\Obja\Obja.
+                  \enidof\Obja \colon \idmoncat \mtoin{\CatV} \engammaof\Obja\Obja,
               \end{equation}
+              called \emph{identity-choosing morphism}.
               %  called \emph{identity element}.
                \end{enumerate}
                
                \condit
-             
-              Moreover, for any~$\Obja,\Objb,\Objc,\Objd\setin \ObC$, the following diagrams must commute.
-    \equationsag{enrichment_assoc2}{eq:enrichment_assoc2}
+             \begin{enumerate}
+\item Associativity: for any~$\Obja,\Objb,\Objc,\Objd\setin \ObC$, the diagram 
+\equationsag{enrichment_assoc2}{eq:enrichment_assoc2}
+must commute;
+\item Neutrality: for any $\Obja,\Objb,\Objc \setin \ObC$ the diagram 
     \equationsag{enrichment_unital2}{eq:enrichment_unital2}
+must commute. 
+\end{enumerate}
 \end{ctdefinition}
+
+\begin{ctdefinition}
+    \label{def:prod_enriched_cat}
+    Let \CatA and \CatB be categories enriched in a \SY{symmetric monoidal category}~\CatV.
+    Their \emph{product} is a~\CatV-enriched category~$\CatA\Ctimes \CatB$ with:
+    \begin{enumerate}
+        \item $\Obof{\CatA\Ctimes \CatB}\definedas \Obof\CatA \Ctimes \Obof\CatB$;
+        \item For two objects~$\tup{\Obja,\Objb}$ and~$\tup{\Obja',\Objb'}$ in~$\Obof{\CatA\Ctimes \CatB}$,
+        \begin{equation}
+\HomSet{\CatA\Ctimes \CatB}{\tup{\Obja,\Objb}}{\tup{\Obja',\Objb'}}\definedas \HomSet{\CatA}{\Obja}{\Obja'}\mtimescat \HomSet{\CatB}{\Objb}{\Objb'}.
+\end{equation}
+\end{enumerate}
+\end{ctdefinition}
+
+
+
+\linkvideo{spring2021-enrichment:enriched-functors} % Enriched functors
+\begin{ctdefinition}[$\CatV$-Enriched functor]
+    \label{def:enrichedfunctor}
+    Given two categories \CatC and \CatD enriched in the same \SY{monoidal category} \CatV, an \maindef{enriched functor}~$\funa\colon \CatC \to \CatD$ consists of:
+    \begin{enumerate}
+        \item A function~$\funa\colon \ObC \sto \ObD$ that maps objects of~\CatC to objects of~\CatD.
+        \item For each~$\Obja, \Objb$ in $\ObC$, there exists a morphism in \CatV given by
+              \begin{equation}
+                  \funa_{\Obja, \Objb} \colon \HomSet\CatC{\Obja}{\Objb} \mto \HomSet\CatD{\funa(\Obja)}{\funa(\Objb)},
+              \end{equation}
+              such that composing maps ``across~$\funa$'' respects the composition in \CatC and the unit of \CatV in the obvious ways:
+              \equationsag{77_enriched_functor}{eq:77_enriched_functor}
+              and
+              \equationsag{77_enriched_functor_2}{eq:77_enriched_functor_2}
+              where~$\mtimescat$ and~$\idmoncat$ are the monoidal product and monoidal unit in \CatV.
+    \end{enumerate}
+\end{ctdefinition}
+
 
 % \begin{widepar}
 % \begin{center}
@@ -47,15 +86,6 @@
 % \end{widepar}
 
 
-\begin{definition}
-    \label{def:prod_enriched_cat}
-    Let \CatA and \CatB be categories enriched in a \SY{symmetric monoidal category}~\CatV.
-    Their \emph{product} is a~\CatV-enriched category~$\CatA\Ctimes \CatB$ with:
-    \begin{enumerate}
-        \item $\Obof{\CatA\Ctimes \CatB}\definedas \Obof\CatA \Ctimes \Obof\CatB$;
-        \item $\HomSet{\CatA\Ctimes \CatB}{\tup{\Obja,\Objb}}{\tup{\Obja',\Objb'}}\definedas \HomSet{\CatA}{\Obja}{\Obja'}\mtimescat \HomSet{\CatB}{\Objb}{\Objb'}$, for two objects~$\tup{\Obja,\Objb}$ and~$\tup{\Obja',\Objb'}$ in~$\Obof{\CatA\Ctimes \CatB}$.
-    \end{enumerate}
-\end{definition}
 
 \todotextjira{247}{\bernina: @Gioele: put contents of lecture on enriched categories}
 
