@@ -1,6 +1,6 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Enriched category theory}
+\section{Enriched categories}
 % \linkvideo{spring2021-enrichment:intro-exa-enrich} % Introductory example about routing
 % \linkvideo{spring2021-enrichment:recap-monoidal} % Recap on monoidal categories
 \linkvideo{spring2021-enrichment:enrich-cat-def} % Definition of enriched category
@@ -43,18 +43,6 @@ must commute.
 \end{enumerate}
 \end{ctdefinition}
 
-\begin{ctdefinition}
-    \label{def:prod_enriched_cat}
-    Let \CatE and \CatF be categories enriched in a \SY{symmetric monoidal category}~\CatV.
-    Their \emph{product} is a~\CatV-enriched category~$\CatE\Ctimes \CatF$ with:
-    \begin{enumerate}
-        \item $\Obof{\CatE\Ctimes \CatF}\definedas \Obof\CatE \Ctimes \Obof\CatF$;
-        \item For two objects~$\tup{\Obja,\Objb}$ and~$\tup{\Obja',\Objb'}$ in~$\Obof{\CatE\Ctimes \CatF}$,
-        \begin{equation}
-\HomSet{\CatE\Ctimes \CatF}{\tup{\Obja,\Objb}}{\tup{\Obja',\Objb'}}\definedas \HomSet{\CatE}{\Obja}{\Obja'}\mtimescat \HomSet{\CatF}{\Objb}{\Objb'}.
-\end{equation}
-\end{enumerate}
-\end{ctdefinition}
 
 
 
@@ -62,7 +50,7 @@ must commute.
 \begin{ctdefinition}[$\CatV$-enriched functor]
     \label{def:enrichedfunctor}
 
-    Let \CatE and \CatF be categories enriched in a monoidal category $\CatV$. A $\CatV$-enriched functor~$\funa\colon \CatE \to \CatF$ is:
+    Let \CatE and \CatF be categories enriched in a monoidal category $\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}$. A $\CatV$-enriched functor~$\funa\colon \CatE \to \CatF$ is:
     
     \constit
     \begin{enumerate}
@@ -77,13 +65,90 @@ must commute.
       \begin{enumerate}
 \item Compatibility with composition: the diagram
               \equationsag{77_enriched_functor}{eq:77_enriched_functor}
-              commutes.
+              must commute.
  \item Compatibility with identity-choosing morphisms: the diagram
               \equationsag{77_enriched_functor_2}{eq:77_enriched_functor_2}
-              commutes, where~$\mtimescat$ and~$\idmoncat$ are the monoidal product and monoidal unit in \CatV.
+             must commute.
+\end{enumerate}
+\end{ctdefinition}
 
+\begin{ctdefinition}
+    \label{def:prod_enriched_cat}
+    Let \CatE and \CatF be categories enriched in a \SY{symmetric monoidal category}~$\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}.$
+    Their \emph{product} is the~\CatV-enriched category~$\CatE\Ctimes \CatF$ with:
+    \begin{enumerate}
+        \item $\Obof{\CatE\Ctimes \CatF}\definedas \Obof\CatE \Ctimes \Obof\CatF$;
+        \item For any two objects~$\tup{\Obja,\Objb}$ and~$\tup{\Obja',\Objb'}$ in~$\Obof{\CatE\Ctimes \CatF}$,
+        \begin{equation}
+\HomSet{\CatE\Ctimes \CatF}{\tup{\Obja,\Objb}}{\tup{\Obja',\Objb'}}\definedas \HomSet{\CatE}{\Obja}{\Obja'}\mtimescat \HomSet{\CatF}{\Objb}{\Objb'};
+\end{equation}
+\item ...
+\item ...
+\end{enumerate}
+\end{ctdefinition}
+
+
+\begin{ctdefinition}
+\label{def:opposite_enriched_cat}
+    Let \CatE be category enriched in a \SY{symmetric monoidal category}~$\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}.$
+    Its \emph{opposite} is the~\CatV-enriched category~$\CatE\op$ with:
+    \begin{enumerate}
+        \item $\Obof{\CatE\op}\definedas \Obof\CatE$;
+        \item For two objects~$\Obja,\Objb$,
+        \begin{equation}
+\enhomob{\CatE\op}{\Obja}{\Objb} \definedas \enhomob{\CatE\op}{\Objb}{\Obja};
+\end{equation}
+\item ... 
+\item ...
+\end{enumerate}
+\end{ctdefinition}
+
+
+\subsection{Internal hom}
+
+\begin{ctdefinition}
+\label{def:left-internal-hom}
+Let~$\CatC = \tup{\CatC, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}$ a monoidal category. A left internal-hom structure on $\CatC$ is:
+
+\constit
+\begin{enumerate}
+\item A functor $\leftinthom{\ }{\ } \colon \CatC\op \Ctimes \CatC \fto \CatC$; 
 \end{enumerate}
 
+\condit
+\begin{enumerate}
+\item For every object $\Obja$ of $\CatC$, we have an adjunction 
+\begin{equation}
+\Obja \mtimescat ( - ) \quad  \adjunction \quad \leftinthom{\Obja}{( - )}.
+\end{equation}
+\end{enumerate}
+A monoidal category equipped with a left internal-hom structure is called \emph{left closed}.
+\end{ctdefinition}
+
+\begin{remark}
+\label{rem:left-internal-hom-unpacked}
+For fixed $\Obja \setin \Ob_\CatC$, the adjunction 
+\begin{equation}
+\Obja \mtimescat ( - ) \quad  \adjunction \quad \leftinthom{\Obja}{( - )}
+\end{equation}
+means that for all $\Objb, \Objc \setin \Ob_\CatC$, we have a natural isomorphism
+\begin{equation}
+\Obja \mtimescat \Objb \posleq \Objc  \quad \text{if and only if} \quad \Objb \posleq \leftinthom{\Obja}{\Objc},
+\end{equation}
+or, alternatively and equivalently, that for all $\elb \setin \posAset$,
+\begin{equation}
+\elb \posleq \leftinthom{\ela}{(\ela \mtimescat \elb)} \quad \text{and} \quad \ela \mtimescat (\leftinthom{\ela}{\elb}) \posleq \elb.
+\end{equation}
+\end{remark}
+
+
+\subsection{Enriched profunctors}
+\begin{ctdefinition}
+\label{def:enriched_profunctor}
+    Let $\CatE$ and $\CatF$ be categories enriched in a \SY{closed symmetric monoidal category}~$\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}$. A $\CatV$-profunctor from $\CatE$ to $\CatF$ is a $\CatV$-functor
+    \begin{equation}
+\CatE\op \Ctimes \CatF \fto \CatV.
+\end{equation}
 \end{ctdefinition}
 
 
