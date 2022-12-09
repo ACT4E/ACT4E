@@ -29,10 +29,10 @@ defs: $(PDFGraphics_defs)
 	@cat head.txt $*.texi foot.txt > $*-page.tex
 	@cd $(shell dirname $@) && $(PDFLATEX) -interaction=batchmode $(shell basename $*-page) ||  $(PDFLATEX) $(shell basename $*-page)
 
-	@$(PDFCROP) --margins 2  $*-page.pdf $*.tmp1.pdf 2>/dev/null
+	@$(PDFCROP) --margins 2 --clip  $*-page.pdf $*.tmp1.pdf 2>/dev/null
 	@cpdf $*.tmp1.pdf  -scale-page "3.2 3.2" -o  $*.tmp2.pdf  2>/dev/null
 	@cpdf -set-metadata-date 2010-01-01 $*.tmp2.pdf -o $*.tmp3.pdf 2>/dev/null
-	@rm -f  $*.tmp1.pdf $*.tmp2.pdf  $*-page.* $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc* $*.mw $*.idx
+	@rm -f  $*.tmp1.pdf $*.tmp2.pdf   $**.aux $**.bak $**.bbl $**.blg $**.log $**.run.xml $**blx.bib  $**.out $**.toc $**.tdo $*_region.* $*.maf $*.mtc* $*.mw $*.idx  $*-page.*
 	@mv $*.tmp3.pdf $@
 
 
