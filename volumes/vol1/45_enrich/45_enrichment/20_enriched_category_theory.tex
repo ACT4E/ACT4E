@@ -6,31 +6,181 @@
 \linkvideo{spring2021-enrichment:enrich-cat-def} % Definition of enriched category
 \label{sec:enrichment-enriched-categories}
 
-\begin{ctdefinition}[Enrichment structure]
-    \label{def:enrichment-structure}
-    Let~$\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor,\rightunitor}$ be a \SY{monoidal category}.
-    We say that a category \CatC ``has an enrichment $\tup{\engamma,\enm,\enid}$ over \CatV'' if:
-    %
+\begin{ctdefinition}[$\CatV$-enriched category]
+    \label{def:enriched_cat}
+    Let~$\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}$ be a \SY{monoidal category}.
+    A $\CatV$-enriched category $\CatE$ is:
+
+    \constit
     \begin{enumerate}
-        \item For each pair of objects $\Obja,\Objb$ of \CatC, there exists an object
+        \item A collection of objects $\Obof{\CatE}$.
+        \item For every pair of objects $\tup{\Obja, \Objb}$ of $\CatE$, a \emph{hom-object}
               \begin{equation}
-                  \engammaof\Obja\Objb \setin \Obof{\CatV}.
+                  \enhomob{\CatE}{\Obja}{\Objb} \setin \Obof{\CatV}
               \end{equation}
               % \item For all~$\Obja,\Objb\setin \Ob_\CatC$, an object~$\HomSet{\CatC}{\Obja}{\Objb} \setin \Ob_{\CatV}$, called the \emph{hom-object} from~$\Obja$ to~$\Objb$.
-        \item For all~$\Obja, \Objb, \Objc\setin \ObC$, there exists a morphism~$\enm_{\Obja,\Objb,\Objc}$ of~\CatV:
+        \item For every triple of objects~$\tup{\Obja, \Objb, \Objc}$ of $\CatE$, a morphism of~$\CatV$
               \begin{equation}
-                  \enm_{\Obja,\Objb,\Objc}\colon \engammaof\Obja\Objb \mtimescatob \engammaof\Objb\Objc \mtoin\CatV \engammaof\Obja\Objc.
+                  \encomp_{\Obja,\Objb,\Objc}\colon \enhomob{\CatE}{\Obja}{\Objb} \mtimescatob \enhomob{\CatE}{\Objb}{\Objc} \mtoin\CatV, \enhomob{\CatE}{\Obja}{\Objc},
               \end{equation}
-              This is called \emph{composition morphism}.
-        \item For each~$\Obja\setin \ObC$, there exists a morphism of~\CatV:
+              called \emph{composition morphism}.
+        \item For each object $\Obja$ of $\CatE$, a morphism of~\CatV
               \begin{equation}
-                  \enidof\Obja \colon \idmoncat \mtoin{\CatV} \engammaof\Obja\Obja.
+                  \enidof\Obja \colon \idmoncat \mtoin{\CatV} \CatE(\Obja,\Obja),
               \end{equation}
+              called \emph{identity-choosing morphism}.
               %  called \emph{identity element}.
-              Moreover, for any~$\Obja,\Objb,\Objc,\Objd\setin \ObC$, the following diagrams must commute.
     \end{enumerate}
-    \equationsag{enrichment_assoc2}{eq:enrichment_assoc2}
-    \equationsag{enrichment_unital2}{eq:enrichment_unital2}
+
+    \condit
+    \begin{enumerate}
+        \item Associativity: for any~$\Obja,\Objb,\Objc,\Objd\setin \ObC$, the diagram in \cref{fig:enrichment_assoc2} commutes.
+        \item Neutrality: for any $\Obja,\Objb,\Objc \setin \ObC$ the diagram in \cref{fig:enrichment_unital2} commutes.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{figure*}[h!]
+    \subfloat[\label{fig:enrichment_assoc2}
+        Associativity]{
+        \begin{minipage}{1.4\textwidth}
+            \begin{ctdefinitionshade}
+                \centering
+                \includesag{enrichment_assoc2}
+            \end{ctdefinitionshade}
+        \end{minipage}
+    }\\
+    \subfloat[\label{fig:enrichment_unital2}Neutrality]{
+        \begin{minipage}{1.4\textwidth}
+            \begin{ctdefinitionshade}
+                \centering
+                \includesag{enrichment_unital2}
+            \end{ctdefinitionshade}
+        \end{minipage}
+    }
+    \caption{Coherence diagrams for enriched categories}
+    \label{fig:diagrams-enriched-category}
+\end{figure*}
+
+\linkvideo{spring2021-enrichment:enriched-functors} % Enriched functors
+\begin{ctdefinition}[$\CatV$-enriched functor]
+    \label{def:enrichedfunctor}
+
+    Let \CatE and \CatF be categories enriched in a monoidal category $\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}$.
+    A $\CatV$-enriched functor~$\funa\colon \CatE \to \CatF$ is:
+
+    \constit
+    \begin{enumerate}
+        \item A function~$\funa\colon \ObC \sto \ObD$;
+        \item For each pair of objects~$\Obja, \Objb$ in $\ObC$, a morphism in $\CatV$
+              \begin{equation}
+                  \funa_{\Obja, \Objb} \colon \enhomob{\CatE}{\Obja}{\Objb} \mto \enhomob{\CatF}{\funa \Obja}{\funa \Objb}.
+              \end{equation}
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item Compatibility with composition: the diagram
+              \equationsag{77_enriched_functor}{eq:77_enriched_functor}
+              must commute.
+        \item Compatibility with identity-choosing morphisms: the diagram
+              \equationsag{77_enriched_functor_2}{eq:77_enriched_functor_2}
+              must commute.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{ctdefinition}
+    \label{def:opposite_enriched_cat}
+    Let \CatE be category enriched in a \SY{symmetric monoidal category} $\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}.
+    $
+    Its \emph{opposite} is the~\CatV-enriched category~$\CatE\op$ with:
+    \begin{enumerate}
+        \item $\Obof{\CatE\op}\definedas \Obof\CatE$;
+        \item For any pair of objects~$\Obja,\Objb$, the associated hom-object
+              \begin{equation}
+                  \enhomob{\CatE\op}{\Obja}{\Objb} \definedas \enhomob{\CatE}{\Objb}{\Obja};
+              \end{equation}
+        \item Composition morphisms $\encomp^{\CatE\op}_{\Obja,\Objb,\Objc}$ defined by
+              \begin{equation}
+                  \enhomob{\CatE\op}{\Obja}{\Objb} \mtimescat \enhomob{\CatE\op}{\Objb}{\Objc}  \overset{\braiding}{\mto} \enhomob{\CatE\op}{\Objb}{\Objc} \mtimescat \enhomob{\CatE\op}{\Obja}{\Objb}   \overset{\encomp^{\CatE}_{\Objc,\Objb,\Obja}}{\mto} \enhomob{\CatE\op}{\Obja}{\Objc};
+              \end{equation}
+        \item Identity-choosing morphisms $\enidof{\Obja}^{\CatE\op}$ defined by
+              \begin{equation}
+                  \idmoncat \overset{\enidof{\Obja}^{\CatE}}{\mto} \enhomob{\CatE}{\Obja}{\Obja} = \enhomob{\CatE\op}{\Obja}{\Obja}.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{ctdefinition}
+    \label{def:prod_enriched_cat}
+    Let \CatE and \CatF be categories enriched in a \SY{symmetric monoidal category} $\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}.
+    $
+    Their \emph{product} is the~\CatV-enriched category~$\CatE\Ctimes \CatF$ with:
+    \begin{enumerate}
+        \item $\Obof{\CatE\Ctimes \CatF}\definedas \Obof\CatE \Ctimes \Obof\CatF$;
+        \item For any two objects~$\tup{\Obja,\Objb}$ and~$\tup{\Obja',\Objb'}$ in~$\Obof{\CatE\Ctimes \CatF}$,
+              \begin{equation}
+                  \HomSet{\CatE\Ctimes \CatF}{\tup{\Obja,\Objb}}{\tup{\Obja',\Objb'}}\definedas \HomSet{\CatE}{\Obja}{\Obja'}\mtimescat \HomSet{\CatF}{\Objb}{\Objb'};
+              \end{equation}
+        \item The composition morphisms are defined using the composition morphisms in $\CatE$ and $\CatF$ in a straightforward way (we omit the formula).
+        \item The identity-choosing morphisms $\enidof{\Obja}^{\CatE \Ctimes \CatF}$ are defined by
+              \begin{equation}
+                  \idmoncat \overset{\leftunitor^{-1}_\idmoncat}{\mto} \idmoncat \mtimescat \idmoncat \overset{\enidof{\Obja}^{\CatE} \Ctimes \enidof{\Obja}^{\CatF}}{\mto} \enhomob{\CatE}{\Obja}{\Obja} \mtimescat \enhomob{\CatF}{\Obja}{\Obja}.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\todotext{J: @G: enter the missing formula in point 3. in the above definition.
+    It can be found for example on p.
+    306 of "Handbook of categorical algebra II" by Borceux.}
+
+\subsection{Internal hom}
+
+\begin{ctdefinition}
+    \label{def:left-internal-hom}
+    Let~$\CatC = \tup{\CatC, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}$ a monoidal category.
+    A left internal-hom structure on $\CatC$ is:
+
+    \constit
+    \begin{enumerate}
+        \item A functor $\leftinthom{\ }{\ } \colon \CatC\op \Ctimes \CatC \fto \CatC$;
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item For every object $\Obja$ of $\CatC$, we have an adjunction
+              \begin{equation}
+                  \Obja \mtimescat ( - ) \quad \adjunction \quad \leftinthom{\Obja}{( - )}.
+              \end{equation}
+    \end{enumerate}
+    A monoidal category equipped with a left internal-hom structure is called \emph{left closed}.
+\end{ctdefinition}
+
+\begin{remark}
+    \label{rem:left-internal-hom-unpacked}
+    For fixed $\Obja \setin \Ob_\CatC$, the adjunction
+    \begin{equation}
+        \Obja \mtimescat ( - ) \quad \adjunction \quad \leftinthom{\Obja}{( - )}
+    \end{equation}
+    means that for all $\Objb, \Objc \setin \Ob_\CatC$, we have an isomorphism
+    \begin{equation}
+        \adjtau_{\Objb,\Objc} \colon \HomSet{\CatC}{\Obja \mtimescat \Objb}{\Objc} \mto \HomSet{\CatC}{\Objb}{\leftinthom{\Obja}{\Objc}}
+    \end{equation}
+    which is natural in $\Objb$ and $\Objc$.
+    Alternatively and equivalently, we have, for all $\Objb \setin \Ob_\CatC$, morphisms
+    \begin{equation}
+        \equivunit_\Objb \colon \Objb \mto \leftinthom{\Obja}{(\Obja \mtimescat \Objb)} \quad \text{and} \quad \equivcounit_\Objb \colon \Obja \mtimescat (\leftinthom{\Obja}{\Objb}) \mto \Objb
+    \end{equation}
+    which are the components of natural transformations and satisfy the triangle identities.
+\end{remark}
+
+\subsection{Enriched profunctors}
+\begin{ctdefinition}
+    \label{def:enriched_profunctor}
+    Let $\CatE$ and $\CatF$ be categories enriched in a \SY{closed symmetric monoidal category}~$\tup{\CatV, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}$.
+    A $\CatV$-profunctor from $\CatE$ to $\CatF$ is a $\CatV$-functor
+    \begin{equation}
+        \CatE\op \Ctimes \CatF \fto \CatV.
+    \end{equation}
 \end{ctdefinition}
 
 % \begin{widepar}
@@ -41,182 +191,7 @@
 % \end{center}
 % \end{widepar}
 
-\begin{ctdefinition}\label{def:enriched_cat}
-    We say that the category \CatC is ``enriched over \CatV'' if its enrichment $\tup{\engamma,\enm,\enid}$ satisfies
-    \begin{equation}
-        \engammaof\Obja\Objb = \HomSet\CatC\Obja\Objb,
-    \end{equation}
-    \begin{equation}
-        \enidof\Obja = \catidat\Obja,
-    \end{equation}
-    \begin{equation}
-        \enmof\Obja\Objb\Objc(\mora, \morb) = \mora \mthenof\CatV \morb.
-    \end{equation}
-\end{ctdefinition}
-
-\begin{definition}
-    \label{def:prod_enrich_cat}
-    Let \CatA and \CatB be categories enriched in a \SY{symmetric monoidal category}~\CatV.
-    Their \emph{product} is a~\CatV-enriched category~$\CatA\Ctimes \CatB$ with:
-    \begin{enumerate}
-        \item $\Obof{\CatA\Ctimes \CatB}\definedas \Obof\CatA \Ctimes \Obof\CatB$;
-        \item $\HomSet{\CatA\Ctimes \CatB}{\tup{\Obja,\Objb}}{\tup{\Obja',\Objb'}}\definedas \HomSet{\CatA}{\Obja}{\Obja'}\mtimescat \HomSet{\CatB}{\Objb}{\Objb'}$, for two objects~$\tup{\Obja,\Objb}$ and~$\tup{\Obja',\Objb'}$ in~$\Obof{\CatA\Ctimes \CatB}$.
-    \end{enumerate}
-\end{definition}
-
 \todotextjira{247}{\bernina: @Gioele: put contents of lecture on enriched categories}
-
-\showslides{
-    \begin{forslides}
-
-        \begin{equation}
-            \label{eq:upos_lat_1}
-            h_{d_1}(\fun)\setunion h_{d_2}(\fun)
-        \end{equation}
-        \begin{equation}
-            \label{eq:upos_lat_2}
-            h_{d_1}(\fun)\setintersection h_{d_2}(\fun)
-        \end{equation}
-        \begin{equation}
-            \label{eq:upos_lat_3}
-            d_1\join d_2
-        \end{equation}
-        \begin{equation}
-            \label{eq:upos_lat_4}
-            d_1\meet d_2
-        \end{equation}
-        \begin{equation}
-            \label{eq:upos_lat_5}
-            \posbot_{\UPos(\F{A},\R{B})}\colon \F{a}\mapsto \Emptyset
-        \end{equation}
-        \begin{equation}
-            \label{eq:upos_lat_6}
-            \top_{\UPos(\F{A},\R{B})}\colon \F{a}\mapsto \R{B}
-        \end{equation}
-    \end{forslides}
-}
-\showslides{
-    \begin{forslides}
-
-        % \begin{definition}[Lattice homomorphism]
-        %     \label{def:lattice_homo}
-        %     Given two \SY{bounded lattices}~$\posA, \posB$, a \emph{lattice homomorphism} is a map~$\mora\colon \posA\to \posB$ which preserves meets, joins, top, and bottom:
-        %     \begin{equation}
-        %         \begin{aligned}
-        %             \mora(\posAel \meet_\posA \posBel) & = \mora(\posAel) \meet_\posB \mora(\posBel) \\
-        %             \mora(\posAel \join_\posA \posBel) & = \mora(\posAel) \join_\posB \mora(\posBel) \\
-        %             \mora(\posbot_\posA)               & =\posbot_\posB \\
-        %             \mora(\postop_\posA)               & =\postop_\posB
-        %         \end{aligned}
-        %     \end{equation}
-        % \end{definition}
-        \begin{equation}
-            \label{eq:poset_bool_a}
-            \tup{\posA,{\posleq}}
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_b}
-            \postop,\posbot
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_c}
-            \posbot\mto \posbot, \quad \posbot\mto \postop, \quad \postop\mto \postop
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_d}
-            \mtimescatof\Bool \definedas \booland
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_e}
-            \posAel\posleq \posBel
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_f}
-            \posAel,\posBel \setin \posA
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_g}
-            \HomSet{\CatC}{\Obja}{\Objb}\setin \Obof\Bool
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_h}
-            \stylemorph{m}_{\Obja,\Objb,\Objc}\colon \HomSet{\CatC}{\Obja}{\Objb}\mtimescat \HomSet{\CatC}{\Objb}{\Objc}\mto \HomSet{\CatC}{\Obja}{\Objc}.
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_i}
-            \idmoncat_{\Bool} \definedas \postop
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_k}
-            \stylemorph{j}_\Obja\colon \idmoncat \mto \HomSet{\CatC}{\Obja}{\Obja}
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_j}
-            \tup{\Set, \cartprod, \singleton}
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_l}
-            \HomSet{\CatC}{\Obja}{\Objb}\setin \Obof\Set
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_bool_m}
-            \prftree{\mora \setin \HomSet{\CatC}{\Obja}{\Objb}}{\morb \setin \HomSet{\CatC}{\Objb}{\Objc}}{{\morab \setin \HomSet{\CatC}{\Obja}{\Objc}}}
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_pos_a}
-            \prfdouble{
-                \mora \posleqof\Pos \morb}{\mora(\posAel)\posleqof\posB \morb(\posAel), \quad \forall \posAel \setin \posA}
-        \end{equation}
-        \begin{equation}
-            \label{eq:poset_pos_b}
-            \mora,\morb\colon \posA\toinPos \posB
-        \end{equation}
-    \end{forslides}
-}
-\showslides{
-    \begin{forslides}
-
-        \begin{definition}[Metric space]
-            \label{def:metric_space}
-            A \emph{metric space}~$\tup{\setA,\stylemaps{d}}$ consists of:
-            \begin{enumerate}
-                \item A set~\setA, elements of which are called \emph{points};
-                \item A map~$\stylemaps{d}\colon \setA\cartprod \setA \sto \nonNegReals$, called \emph{distance}.
-            \end{enumerate}
-            The constituents must satisfy:
-            \begin{itemize}
-                \item $\stylemaps{d}(\setAel,\setAel)=0$, for all~$\setAel\setin \setA$;
-                \item If~$\stylemaps{d}(\setAel, \setBel)=0$, then~$\setAel=\setBel$, for all~$\setAel,\setBel\setin \setA$;
-                \item $\stylemaps{d}(\setAel, \setBel)=\stylemaps{d}(\setBel, \setAel)$, for all~$\setAel,\setBel\setin \setA$;
-                \item $\stylemaps{d}(\setAel, \setBel)+\stylemaps{d}(\setBel, \setCel)\geq \stylemaps{d}(\setAel, \setCel)$, for all~$\setAel,\setBel,\setCel\setin \setA$.
-            \end{itemize}
-        \end{definition}
-        \begin{equation}
-            \label{eq:r_with_inft}
-            \nonNegReals \setunion \makeset{\infty}
-        \end{equation}
-        \begin{equation}
-            \label{eq:cost_cat}
-            \CatSymbol{Cost}=\tup{[0,\infty], \geq, 0, +}
-        \end{equation}
-        \begin{equation}
-            \label{eq:enriched_fun_a}
-            \funa_{\Obja, \Objb} \colon \HomSet\CatC{\Obja}{\Objb} \mto \HomSet\CatD{\funa(\Obja)}{\funa(\Objb)}
-        \end{equation}
-    \end{forslides}
-}
-\showslides{
-    \begin{forslides}
-
-        \begin{definition}
-            \label{def:cost_enrich_a}
-            Given two metric spaces~$\tup{X,d_X}$,~$\tup{Y,d_Y}$, a function~$f\colon X\to Y$ is \emph{Lipschitz} if there exists a~$K>0$ such that
-            \begin{equation}
-                d_Y(f(x),f(y))\leq Kd_X(x,y),\quad \forall x\setin X,y\setin Y.
-            \end{equation}
-        \end{definition}
-    \end{forslides}
-}
 
 \devel{
     % A locally-posetal 2-category is also known as a category enriched over posets.
@@ -224,6 +199,7 @@
     %A \emph{locally-posetal 2-category} is a category \CatC, with an additional pre-order structure $\leq$ on the hom-set $\CatC(p,q)$, for every two objects $p,q\setin\CatC$, which additionally satisfies the condition that if $f\leq g$ in $\Hom(p,q)$ and $j\leq k$ in $\Hom(q,r)$, then $f;j\leq g;k$ in $\Hom(p,r)$.
     %\end{definition}
     %
+
     The following is obvious, but we record it anyway.
     \begin{lemma}
         \label{lem:loc_pos_op}
@@ -272,7 +248,7 @@
     \begin{solution}
         We show one direction.
         Suppose that we are given a $\Set$-enriched category as a tuple
-        $\tupp{\Ob, \HomSet{}{}{}, \enm, \enid_{}}.
+        $\tupp{\Ob, \HomSet{}{}{}, \encomp, \enid_{}}.
         $
         We can define a locally small category $\CatC$  as follows:
         \begin{compactitem}
@@ -280,11 +256,11 @@
             \item For each $\Obja,\Objb\setin\ObC$, let $\HomSet{\CatC}{\Obja}{\Objb} \definedas \engammaof{\Obja}{\Objb}$.
             \item For each $\Obja,\Objb,\Objc \setin \ObC$, we know a function
                   \begin{equation}
-                      \enmof{\Obja}{\Objb}{\Objc}:\HomSet{\CatC}{\Obja}{\Objb}\mtimescat \HomSet{\CatC}{\Objb}{\Objc}\mtoin{\Set} \HomSet{\CatC}{\Obja}{\Objc}.
+                      \encompof{\Obja}{\Objb}{\Objc}:\HomSet{\CatC}{\Obja}{\Objb}\mtimescat \HomSet{\CatC}{\Objb}{\Objc}\mtoin{\Set} \HomSet{\CatC}{\Obja}{\Objc}.
                   \end{equation}
 
                   The diagrams constraints imply that this function is associative.
-                  \\Therefore, we use it to define morphism composition in $\CatC$, setting $\mthen_{\Obja,\Objb,\Objc}\definedas \enmof{\Obja}{\Objb}{\Objc}$.
+                  \\Therefore, we use it to define morphism composition in $\CatC$, setting $\mthen_{\Obja,\Objb,\Objc}\definedas \encompof{\Obja}{\Objb}{\Objc}$.
                   %\todo[inline]{Does it follow that it is associative from the diagrams?}
             \item For each $\Obja\setin\ObC$ we know a function $\enidof{\CatE}{\Obja}\colon\singleton\mtoin{\Set} \HomSet{\CatC}{\Obja}{\Obja}$ that selects a morphism.\\
                   The diagrams constraints imply that such morphism satisfies unitality
