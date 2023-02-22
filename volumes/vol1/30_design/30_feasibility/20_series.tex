@@ -246,3 +246,172 @@ In the diagrammatic notation, we represent~$\dpidat\posA$ as:
     \end{equation}
     and hence~$\adpa(\funposAopel,\resposBel)=\true$.
 \end{proof}
+
+\begin{gradedexercise}[\exname{ComposingDesignProblems}]
+    \label{ex:ComposingDesignProblems}
+
+    Consider the following posets, given in terms of Hasse diagrams:
+    \begin{itemize}
+        \item $\speed$:
+              \begin{center}
+                  %\includegraphics[width=0.2\linewidth]{pics/ExamDPPoset1.png}
+                  \includesag{exam_pos_speed}
+              \end{center}
+        \item $\size$:
+              \begin{center}
+                  %\includegraphics[width=0.2\linewidth]{pics/ExamDPPoset2.png}
+                  \includesag{exam_pos_size}
+              \end{center}
+        \item $\money$:
+
+              \begin{center}
+                  %\includegraphics[width=0.2\linewidth]{pics/ExamDPPoset3.png}
+                  \includesag{exam_pos_money}
+              \end{center}
+
+        \item $\ttime$:
+
+              \begin{center}
+                  %\includegraphics[width=0.2\linewidth]{pics/ExamDPPoset4.png}
+                  \includesag{exam_pos_time}
+              \end{center}
+    \end{itemize}
+    Furthermore let the poset~$\speed \times \size$ be equipped with the standard product partial ordering.
+
+    Consider the design problem given by the monotone function
+    \begin{equation}
+        \mapa\colon (\F{\speed \times \size})\op \times \R{\money} \mto \Bool
+    \end{equation}
+    \begin{center}
+        \includesag{exam_dp_veh}
+    \end{center}
+    with
+    \begin{align*}
+        \mora^{-1}(\true) = & \ \left\{ \ \tup{\tup{\F{\slow}, \F{\ssmall}}, \R{\cheap}}, \tup{\tup{\F{\slow}, \F{\ssmall}}, \R{\midprice}}, \tup{\tup{\F{\slow}, \F{\ssmall}}, \R{\expensive}},\right.
+        \\
+                            & \tup{\tup{\F{\slow}, \F{\llarge}}, \R{\midprice}}, \tup{\tup{\F{\slow}, \F{\llarge}}, \R{\expensive}} \\
+                            & \left. \tup{\tup{\F{\fast}, \F{\ssmall}}, \R{\expensive}} \ \right\}
+    \end{align*}
+    along with the design problem given by the monotone function
+    \begin{equation}
+        \mapb\colon \F{\money}\op \times \R{\ttime} \mto \Bool
+    \end{equation}
+    \begin{center}
+        \includesag{exam_dp_saving}
+    \end{center}
+    with
+    \begin{align*}
+        \mapb^{-1}(\true) = & \ \{ \ \tup{\F{\cheap}, \R{\sshort}}, \tup{\F{\cheap}, \R{\llong}}, \\
+                            & \tup{\F{\midprice}, \R{\llong}} \ \}.
+    \end{align*}
+
+    \begin{enumerate}
+        \item Compute the series composition~$\mapa \mthenof\DP \mapb$ in the category of design problems.
+              The result should be a design problem described in terms of a monotone function~$(\F{\speed} \times \F{\size})\op \times \R{\ttime} \mto \Bool$.
+        \item We interpret elements of~$\speed \times \size$ as properties of cars that Alice considers buying.
+              $\money$ represents the amounts of money that she would need to buy one of said cars, and $\ttime$ represents the amounts of time Alice could spend saving money.
+              The feasibility relations $\mapa$ and~$\mapb$ describe what is possible for Alice.
+              According to~$\mapa \mthenof\DP \mapb$, is it feasible for Alice to buy a fast small car?
+              If yes, will she have to work, at minimum, a long or a short amount of time in order to save enough money to buy it?
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{ComposingDesignProblems}
+
+\begin{gradedexercise}[\exname{DPComposition}]
+    \label{ex:DPComposition}
+
+    Consider the following posets, given in terms of Hasse diagrams:
+    \begin{itemize}
+        \item $\ttime$:
+
+              \begin{center}
+                  %\includegraphics[width=0.2\linewidth]{pics/ExamDPPoset1.png}
+                  \begin{tikzcd}
+                      \llong \\
+                      \sshort \arrow[u,dash]
+                  \end{tikzcd}
+              \end{center}
+
+        \item $\money$:
+
+              \begin{center}
+                  %\includegraphics[width=0.2\linewidth]{pics/ExamDPPoset2.png}
+                  \begin{tikzcd}
+                      100 \text{K} \\
+                      20 \text{K} \arrow[u,dash]
+                  \end{tikzcd}
+              \end{center}
+
+        \item $\textbf{Tech complexity}$:
+
+              \begin{center}
+                  %\includegraphics[width=0.2\linewidth]{pics/ExamDPPoset3.png}
+                  \begin{tikzcd}
+                      \text{fancy} \\
+                      \text{simple} \arrow[u,dash]
+                  \end{tikzcd}
+              \end{center}
+
+        \item $\textbf{Task complexity}$:
+
+              \begin{center}
+                  %\includegraphics[width=0.2\linewidth]{pics/ExamDPPoset4.png}
+                  \begin{tikzcd}
+                      \text{high} \\
+                      \text{medium} \arrow[u,dash] \\
+                      \text{low} \arrow[u,dash]
+                  \end{tikzcd}
+              \end{center}
+    \end{itemize}
+    Let the poset~$\ttime \times \money$ be equipped with the standard product partial ordering.
+
+    You are in charge of an engineering team that should develop a robotic system.
+    It is not yet clear what strategy you wish follow for realizing the project, and you wish to do a preliminary feasibility study.
+    You will potentially need to make some tradeoffs between the \emph{time} that your team works on the project and the \emph{money} that you invest.
+    Furthermore, you will need to decide between implementing either a cutting edge \emph{fancy} robotic system, or a \emph{simple} one.
+    This will have an impact on the \emph{complexity of the tasks} that the system will be able to handle.
+
+    Design problems capture feasibility relations.
+    In your case, the feasibility relation between \textbf{Task complexity} and \textbf{Tech complexity} is given by the design problem
+    \begin{equation}
+        \mapa\colon \F{\textbf{Task complexity}}\op \times \R{\textbf{Tech complexity}} \mto \Bool
+    \end{equation}
+    \begin{center}
+        \begin{tikzpicture}[DP, dp port sep=3pt]
+            \node[dp={1}{1}, dp port sep=6pt] (save) {\quad \mora \quad \ };
+            \draw[funconn, funame={\textbf{Task complexity}}] (save_fun1){};
+            \draw[runconn, runame={\textbf{Tech complexity}}] (save_res1){};
+        \end{tikzpicture}
+    \end{center}
+    with
+    \begin{align*}
+        \mora^{-1}(\true) = & \ \{ \ \tup{\F{\text{high} }, \R{ \text{fancy} }}, \tup{\F{\text{medium} }, \R{ \text{fancy} }}, \tup{\F{\text{low} }, \R{ \text{fancy} }}, \tup{\F{\text{low} }, \R{ \text{simple} }} \ \}
+    \end{align*}
+    and the feasibility relation between \textbf{Tech complexity} and $\ttime \times \money$ is given by the design problem
+    \begin{equation}
+        \mapb \colon \F{\textbf{Tech complexity}}\op \times (\R{\ttime \times \money}) \mto \Bool
+    \end{equation}
+    \begin{center}
+        \begin{tikzpicture}[DP, dp port sep=3pt]
+            \node[dp={1}{2}, dp port sep=6pt] (car) {\quad \morb \quad \ };
+            \draw[funconn, funame={\textbf{Tech complexity}}] (car_fun1){};
+            \draw[runconn, runame={\textbf{\ttime}}] (car_res1){};
+            \draw[runconn, runame={\money}] (car_res2){};
+        \end{tikzpicture}
+    \end{center}
+    with
+    \begin{align*}
+        \morb^{-1}(\true) = & \ \{ \ \tup{\F{\text{fancy} }, \R{ \tup{\text{long}, \text{100K}} }}, \tup{\F{\text{simple} }, \R{ \tup{\text{long}, \text{100K}} }}, \tup{\F{\text{simple} }, \R{ \tup{\text{long}, \text{20K}} }}, \tup{\F{\text{simple} }, \R{ \tup{\text{short}, \text{100K}} }} \ \}.
+    \end{align*}
+
+    \
+
+    Your tasks in this exercise:
+    \begin{enumerate}
+        \item Compute the series composition~$\mapa \mthenof\DP \mapb$ in the category of design problems.
+        \item Based on the previous calculation, would it be feasible to build a robotic system that can handle medium-complexity tasks if your team works only a short time on the project but invests 100K?
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{DPComposition}
