@@ -190,7 +190,10 @@ find-equations-playground:
 	lsm_equations --search volumes/vol-playground --output equations/vol-playground
 
 find-equations-Paper_NegResults:
-	lsm_equations --search volumes/vol-playground/10_dp/Paper_NegResults --output equations/vol-playground/10_dp/Paper_NegResults
+	lsm_equations \
+		--search volumes/vol-playground/10_dp/Paper_NegResults \
+		--output equations/vol-playground/10_dp/Paper_NegResults \
+		--add-preamble volumes/vol-playground/10_dp/Paper_NegResults/symbols.tex
 
 
 #find-equations-vol2:

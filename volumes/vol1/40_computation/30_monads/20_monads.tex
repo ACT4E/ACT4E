@@ -4,31 +4,30 @@
 \label{sec:monads}
 
 \devel{
-In the previous section we considered the operation of taking the \SY{powerset} of a set.
-This was used to think about generalized sets and generalized functions: given a set \setA, we thought of its \SY{powerset} $\powerset \setA$ as a set whose elements -- subsets of \setA -- are ``generalized elements of \setA''.
-Furthermore, we saw that it was possible to generalize a function $\mora \colon \setA \mto \setB$ to a function $\widehat \mora \colon \setA \mto \powerset \setB$, and that such generalized functions could be composed.
-In this section we will see that this construction is possible because the operation of ``taking the \SY{powerset}'' has a special structure to it: it is an example of a \emph{monad}.
+    In the previous section we considered the operation of taking the \SY{powerset} of a set.
+    This was used to think about generalized sets and generalized functions: given a set \setA, we thought of its \SY{powerset} $\powerset \setA$ as a set whose elements -- subsets of \setA -- are ``generalized elements of \setA''.
+    Furthermore, we saw that it was possible to generalize a function $\mora \colon \setA \mto \setB$ to a function $\widehat \mora \colon \setA \mto \powerset \setB$, and that such generalized functions could be composed.
+    In this section we will see that this construction is possible because the operation of ``taking the \SY{powerset}'' has a special structure to it: it is an example of a \emph{monad}.
 
-Before introducing the general definition, let us approach this concept by listing some of the properties that make the ``powerset operation'' a monad.
+    Before introducing the general definition, let us approach this concept by listing some of the properties that make the ``powerset operation'' a monad.
 
-Firstly, note that the ``powerset operation'' can be viewed as \SY{functor}
-\begin{equation}
-    \powersetfunctor\colon \Set \fto \Set.
-\end{equation}
-For each object -- that is, for each set \setA -- it produces a new set, $\powerset \setA$.
-For each function $\mora \colon \setA \mto \setB$ we define $\powersetfunctor \mora \colon \powerset \setA \mto \powerset \setB$ by
-\begin{equation}
-    \label{eq:powerset-functor}
-    \subA \longmapsto \bigsetunion_{\ela \setin \subA} \mora(\ela).
-\end{equation}
-In other words, $\powerset \mora$ maps a subset $\subA \setsubseteq \setA$ to its image under $\mora$, which is a subset of \setB.
+    Firstly, note that the ``powerset operation'' can be viewed as \SY{functor}
+    \begin{equation}
+        \powersetfunctor\colon \Set \fto \Set.
+    \end{equation}
+    For each object -- that is, for each set \setA -- it produces a new set, $\powerset \setA$.
+    For each function $\mora \colon \setA \mto \setB$ we define $\powersetfunctor \mora \colon \powerset \setA \mto \powerset \setB$ by
+    \begin{equation}
+        \label{eq:powerset-functor}
+        \subA \longmapsto \bigsetunion_{\ela \setin \subA} \mora(\ela).
+    \end{equation}
+    In other words, $\powerset \mora$ maps a subset $\subA \setsubseteq \setA$ to its image under $\mora$, which is a subset of \setB.
 
-\begin{gradedexercise}[\exname{PowersetImageFunctor}]
-    \label{ex:PowersetImageFunctor}
-    Prove that ``taking the \SY{powerset}'' defines a \SY{functor} $\powersetfunctor : \Set \fto \Set$ if we define its component on morphisms as in \cref{eq:powerset-functor}.
-\end{gradedexercise}
-\solutionof{PowersetImageFunctor}
-
+    \begin{gradedexercise}[\exname{PowersetImageFunctor}]
+        \label{ex:PowersetImageFunctor}
+        Prove that ``taking the \SY{powerset}'' defines a \SY{functor} $\powersetfunctor : \Set \fto \Set$ if we define its component on morphisms as in \cref{eq:powerset-functor}.
+    \end{gradedexercise}
+    \solutionof{PowersetImageFunctor}
 
     Second, as noted in the previous section, each element $\ela \setin \setA$ can be viewed as a ``generalized element'' $\makeset{ \ela } \setin \powerset \setA$.
     So we have, for each set, a function $\monunit_\setA : \setA \sto \powerset \setA, \ela \mapsto \makeset{ \ela }$.
@@ -139,104 +138,127 @@ In other words, $\powerset \mora$ maps a subset $\subA \setsubseteq \setA$ to it
         %
         \begin{equation}
             \label{eq:fruit-sum-1}
-            [ \sapple ]   *   [\sbanana ] *   [\scarrot ]
+            \mF{ \MF {\sapple} ,   \MF{\sbanana} , \MF  {\scarrot} }
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-2}
-            [ \sapple ]   *  [\sbanana  ]
+            \mF{\MF{\sapple} , \MF{\sbanana } }
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-3}
-            [\sbanana ] * [\scarrot]
+            \mF{ \MF{\sbanana},  \MF{\scarrot} }
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-4}
-            [ [\sapple]   *  [ \sbanana ] * [ \scarrot] ]
+            \MF{\MFb{\sapple}   , \MFb{\sbanana} , \MFb{\scarrot}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-5}
-            [ [ \sapple ] ]
+            \MF{\MFb{\sapple}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-6}
-            [ [ \sapple]   *  [\sbanana ] ]
+            \mF {\MF{\sapple}  ,  \MF{\sbanana}}
+        \end{equation}
+        \begin{equation}
+            \label{eq:fruit-sum-6a}
+            \MF{\sapple}
+        \end{equation}
+        \begin{equation}
+            \label{eq:fruit-sum-6b}
+            \MF{\MFb{\sapple}}
+        \end{equation}
+        \begin{equation}
+            \label{eq:fruit-sum-6-bis}
+            \MF{\MFb{\sapple}  , \MFb{\sbanana}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-7}
-            [ [ \sapple ] ] * [[ \sbanana ] ]  *  [[\scarrot]]
+            \mF {\MF{\MFb{\sapple}} , \MF{\MFb{\sbanana}}  , \MF{\MFb{\scarrot}}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-7-bis}
-            [ [ \sapple ]  * [ \sbanana ] ] *  [[\scarrot]]
+            \mF{[\MFb{\sapple}  , \MFb{\sbanana}] ,  [\MFb{\scarrot}]}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-8}
-            [ \sapple ]   *  [[ \sbanana ]  * [ \scarrot ]]
+            \mF{\MFb{\sapple}   , [\MFb{\sbanana}  * \MFb{\scarrot}]}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-9}
-            [[ \sapple ]]  * [[ \sbanana ]] *  [[ \scarrot ]]
+            \mF{\MF{\MFb{\sapple}}  , \MF{\MFb{\sbanana}} ,  \MF{\MFb{\scarrot}}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-10}
-            [ \sapple ]   *  [ \sapple ]  *  [\sapple]
+            \mF{\MF{\sapple}   ,  \MF{\sapple}  ,  \MF{\sapple}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-11}
-            [ \sapple ]   *  [ \sapple ]  * [ \scarrot ]
+            \mF{\MF{\sapple}   , \MF{\sapple}  ,\MF{\scarrot}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-12}
-            [\sbanana ] * [ \sapple ]
+            \mF{\MF{\sbanana} , \MF{\sapple}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-13}
-            [ \sapple ]   *  [ \sbanana ]  *  [ \scarrot ]
+            \mF{\MF{\sapple}   ,  \MF{\sbanana}  ,  \MF{\scarrot}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-14}
-            [ [ \sapple ]   *  [ \sbanana ]  *  [ \scarrot ] ]
+            \MF{\MFb{\sapple}   ,  \MFb{\sbanana}  ,  \MFb{\scarrot}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-15}
-            [ [ \sapple ]  *  [\sbanana]  *  [\scarrot ]  ]
+            \MF{\MFb{\sapple}  ,  \MFb{\sbanana}  ,  \MFb{\scarrot}}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-16}
-            [ \sapple ]
+            \MF{\sapple}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-17}
-            [ \sbanana ]
+            \MF{\sbanana}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-18}
-            [ \scarrot ]
+            \MF{\scarrot}
         \end{equation}
         %
         \begin{equation}
             \label{eq:fruit-sum-20}
-            [ [ \sapple ]   * [ \sbanana] ] *  [[ \sapple ]   *  [ \sapple ] *  [\scarrot ] ]   *  [[ \sapple ] ]
+            \mF{
+                \MF{\MFb{\sapple}  , \MFb{\sbanana}},
+                \MF{\MFb{\sapple}   , \MFb{\MFc{\sapple}, \MFc{\sbanana}} ,  \MFb{\scarrot}},
+                \MF{\MFb{\MFc{\sapple}}}
+            }
         \end{equation}
-
+        \begin{equation}
+            \label{eq:fruit-sum-21-empty}
+            \MF{}
+        \end{equation}
+        \begin{equation}
+            \label{eq:fruit-sum-22-empty}
+            \MF{\MFb{\MFc{}}}
+        \end{equation}
         \begin{equation}
             \label{eq:monad-power-functor}
             \defmapset{
