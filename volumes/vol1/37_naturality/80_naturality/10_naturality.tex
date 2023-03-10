@@ -352,7 +352,7 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
     Let $\CatC, \CatD$ be categories and let $\funa \colon \CatC \fto \CatD$ be a functor.
     The identity natural transformation at $\funa$ is the natural transformation $\natid_\funa \colon \funa \nto \funa$ defined in components by
     \begin{equation}\label{eq:identity-nat-trafo-def}
-        (\natid_\funa)_\Obja \definedas \catid_\Obja \quad \quad \forall \ \Obja \in \Ob_\CatC.
+        (\natid_\funa)_\Obja \definedas \catid_{\funa(\Obja)} \quad \quad \forall \ \Obja \in \Ob_\CatC.
     \end{equation}
 \end{ctdefinition}
 
@@ -477,6 +477,75 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
 \end{gradedexercise}
 
 \solutionof{UpperSetsNatTrafos}
+
+\begin{gradedexercise}[\exname{DoubleDualNatTrafo}]
+    \label{ex:DoubleDualNatTrafo}
+    This exercise builds on \cref{ex:DoubleDualFunctor}.
+    Consider the category~$\VectR$ whose objects are real \SY{vector spaces} and whose morphisms are linear maps.
+
+    For any \SY{vector space}~$V$, there is a ``canonical'' or ``natural'' map
+    \begin{equation}
+        \ntrafoa_V \colon V \nto V^{**}
+    \end{equation}
+    defined by
+    \begin{equation}
+        \ntrafoa_V(v)(l) = l(v), \quad v \setin V, l \setin V^*.
+    \end{equation}
+
+    Your tasks in this exercise:
+    \begin{enumerate}
+        \item Check that the operation of ``taking the double dual'' (see \cref{eq:double-dual-functor} above) defines a functor.
+        \item Verify that these components define a \SY{natural transformation} from the \SY{identity functor} on $\VectRs$ to the double dual \SY{functor}.
+    \end{enumerate}
+    \equationsag{nat-trafo-ddual}{eq:ex:nat-trafo-ddual}
+\end{gradedexercise}
+
+\solutionof{DoubleDualNatTrafo}
+
+\begin{gradedexercise}[\exname{NaturalCurry}]
+    \label{ex:NaturalCurry}
+    Fix a set $\subA$.
+    There are functors $\funa, \funb: \Set\op \Ctimes \Set \fto \Set$ whose respective actions on objects are
+    \begin{equation}
+        \funaob \colon \tup{\setA, \setB} \mapsto \Hom_\Set(\setA \cartprod \subA, \setB)
+    \end{equation}
+    and
+    \begin{equation}
+        \funbob \colon \tup{\setA, \setB} \mapsto \Hom_\Set(\setA, \setB^\subA).
+    \end{equation}
+
+    On morphisms, $\funa$ acts as follows.
+    Given a morphism $\tup{\mora\op, \morb} \colon \tup{\setA, \setB} \mto \tup{\setAprime, \setBprime}$ in $\Set\op \Ctimes \Set$, the function
+    $$\funa(\tup{\mora\op, \morb}) \colon \Hom_\Set(\setA \cartprod \subA, \setB) \mto \Hom_\Set(\setAprime \cartprod \subA, \setBprime)$$
+    takes any function $\stylemorph{\varphi} \colon \setA \cartprod \subA \mto \setB$ and maps it to the function
+    \begin{equation}
+        \tup{\mora, \catid_{\subA}} \mthen \stylemorph{\varphi} \mthen \morb \colon \setAprime \cartprod \subA \mto \setBprime.
+    \end{equation}
+
+    Let us also define the action of $\funb$ on morphisms.
+    Given again a morphism $\tup{\mora\op, \morb} \colon \tup{\setA, \setB} \mto \tup{\setAprime, \setBprime}$ in $\Set\op \Ctimes \Set$, the function
+    $$\funb(\tup{\mora\op, \morb}) \colon \Hom_\Set(\setA, \setB^\subA) \mto \Hom_\Set(\setAprime, \setBprime^\subA)$$
+    takes any function $\stylemorph{\varphi} \colon \setA \mto \setB^\subA$ and maps it to the function
+    \begin{equation}
+        \mora \mthen \stylemorph{\varphi} \mthen \morb_{\stylemorph{*}} \colon \setAprime \mto \setBprime^\subA
+    \end{equation}
+    where $\morb_{\stylemorph{*}}$ is the function
+    \begin{equation}
+        \morb_{\stylemorph{*}} \colon \setB^\subA \mto \setBprime^\subA, \ \stylemorph{\psi} \mapsto \stylemorph{\psi} \mthen \morb.
+    \end{equation}
+
+    %These functors may be understood as built up using compositions of functors of the kind discussed in \cref{ex:MultiplicationWithASet}, \cref{ex:ExponentiationWithASet} and \cref{exa:hom-functor}.
+
+    Now, recall that we can ``curry'' any function $\mora : \setA \cartprod \subA \mto \setB$ to get a function $\stylemorph{\overline{{\mora}}} \colon \setA \mto \setB^\subA$, where $\stylemorph{\overline{{\mora}}}(\ela)$ may be thought of as a partial evaluation of $\mora$.
+
+    Your task in this exercise: show that the functions
+    \begin{equation}
+        \ntrafoa_{\tup{\setA, \setB}} \colon \Hom_\Set(\setA \cartprod \subA, \setB) \mto \Hom_\Set(\setA, \setB^\subA), \ \mora \mapsto \stylemorph{\overline{{\mora}}},
+    \end{equation}
+    where $\stylemorph{\overline{{\mora}}}$ is the ``curried'' version of $\mora$, are the components of a natural transformation $\ntrafoa \colon \funa \nto \funb$.
+\end{gradedexercise}
+
+\solutionof{NaturalCurry}
 
 \devel{
 
