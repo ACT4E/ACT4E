@@ -195,6 +195,11 @@ find-equations-Paper_NegResults:
 		--output equations/vol-playground/10_dp/Paper_NegResults \
 		--add-preamble volumes/vol-playground/10_dp/Paper_NegResults/symbols.tex
 
+find-equations-ll:
+	lsm_equations \
+		--search volumes/vol1/50_opera \
+		--output equations/vol1/50_opera
+
 
 #find-equations-vol2:
 #	lsm_equations --search volumes/vol2 --output equations/vol2
