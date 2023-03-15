@@ -26,7 +26,9 @@ defs: $(PDFGraphics_defs)
 
 #pages: $(patsubst %.texi,%-page.tex,$(Sources))
 %.pdf : %.texi
+	@echo "Compiling $< to $@"
 	@cat head.txt $*.texi foot.txt > $*-page.tex
+	@echo "Created $*-page.tex"
 	@cd $(shell dirname $@) && $(PDFLATEX) -interaction=batchmode $(shell basename $*-page) ||  $(PDFLATEX) $(shell basename $*-page)
 
 	@$(PDFCROP) --margins 2 --clip  $*-page.pdf $*.tmp1.pdf 2>/dev/null
