@@ -1,83 +1,23 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Data migration}
+\section{Visual Example}
+Since \SY{mappings between functors} may be rather abstract, we will first start with a concrete example. Consider two categories of 
+images: those that are not square $\CatC$ and those that are square $\CatD$.
 
-The name ``natural transformation'' has historical roots -- do not worry if the concept itself does not seem ``natural'' to you at first.
-% We will try to explain it in a way that is hopefully at least clear.
-To give motivation and a concrete illustration, we start with an example.
+A picture $\Obja \setin \ObC$ can be transformed in two ways: we can first apply a mask on it to render it monochromatic (black and white)
+and crop it to a square, or first crop it and then apply a mask.
 
-\paragraph{An alumni database}
+Notice that the mask being applied in the first case differs from the one used in the second, since the dimensions are different. Thus, 
+we see that there is a mask for every different picture, which brings it to its black and white version. If we consider the diagram of transformations
+(masks / cropping) onto images, then the diagram is \SY{commutative} (see \ref{def:commutative-diagram}). This means that going either way -- mask then crop or crop then mask --
+is equivalent. This is the main idea of natural transformations.
 
-Suppose a university is keeping a database of its alumni.
-The database contains a list of all the students that ever attended the university (each of them has a unique student ID number), as well as for example information about students' names, discipline of study, date of graduation, \etc
-
-We have seen that an instance of a database can be modeled as a \SY{functor} whose target is the category of sets, and whose source is a category encoding the abstract architecture of the database.
-\todotext{Seen where? link}
-
-%
-\begin{marginfigure}
-    \centering
-    \includesag{student_database_schema}
-    \caption{The schema of an alumni database.}
-    \label{fig:student_database_schema}
-\end{marginfigure}
-%
-
-The architecture of the database in our example might be encoded by a category with four objects and three non-identity morphisms, as depicted in \cref{fig:student_database_schema}.
-The object~$\styleobj{S}$ stands for \emph{Student},~$\styleobj{D}$ stands for \emph{Discipline},~$\styleobj{N}$ stands for \emph{Name}, and~$\styleobj{Y}$ stands for \emph{Year}.
-Call this category~\CatC.
-A database instance~$\funa \colon \CatC \fto \Set$ entails specifying a set~$\funa(\styleobj{S})$ of all student IDs, a set~$\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, \etc
-It also entails defining functions for each of the arrows in~\CatC.
-For example,~$\funa(\stylemorph{\text{studied}}) \colon \funa(\styleobj{S}) \mto \funa(\styleobj{D})$ is the function that assigns to each student ID the name of the discipline that that student studied.
-
-\paragraph{Updating the database}
-
-For simplicity, we focus on two aspects of the data: student ID numbers and the disciplines of study.
-We assume that the university updates its alumni database once a year.
-This means, for example, adding the graduates of that year to the total list of graduates.
-
-To model the situation, let~$\funa \colon \CatC \fto \Set$ be the database instance for the year 2021, and let~$\funb \colon \CatC \fto \Set$ be the database instance for the year 2022.
-For concreteness, suppose the student IDs are in some standardized format, for example a code of the kind 17-371-802, where each of the three parts of the code are calculated/assigned by some rule (\text{e.g.}, the ``17'' here stands for 2017, the year the student registered with the university, \etc)
-.
-
-Since new students register to the university each year, the set~$\funa(\styleobj{S})$ of all student IDs registered up to the end of 2020 is a subset of the set~$\funb(\styleobj{S})$ of student IDs up to the end of 2022.
-This means there is an inclusion function~$\ntrafoa_{\styleobj{S}} \colon \funa(\styleobj{S}) \mto \funb(\styleobj{S})$.
-
-Now suppose that in 2022 the university decides to simplify the way it attributes disciplines to students in the database.
-
-For instance, instead of the discipline names~$\funa(\styleobj{D}) = \makeset{ \text{mechanical engineering}, \text{civil}\ \text{engineering}, \text{applied}\ \text{physics}, \text{theoretical}\ \text{physics}, \text{pure}\ \text{math}, \linebreak[1]\text{applied}\ \text{math} }$, the new discipline names are just
-%
-\begin{equation}
-    \funb(\styleobj{D}) = \makeset{ \text{engineering}, \text{physics}, \text{math} }.
-\end{equation}
-%
-In order to implement these changes, we use a function~$\ntrafoa_{\styleobj{D}}\colon \funa(\styleobj{D}) \mto \funb(\styleobj{D})$ which maps the old discipline names to the corresponding new ones in an obvious way:
-\begin{equation}
-    \ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
-\end{equation}
-\todographics{\bernina: Would be nice to draw this function as a diagram (like we did in the chapter about sets)}
-The functions~$\ntrafoa_\styleobj{S}$ and~$\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance~$\funb$ relates coherently with the older database instance~$\funa$.
-Concretely, we want that if a student ID in~$\funb(\styleobj{S})$ is inherited from~$\funa(\styleobj{S})$ -- in other words, if it is in the image of~$\ntrafoa_{\styleobj{S}}$ -- then we want that its associated discipline in the database instance~$\funb$ is the same as if we first computed the student's discipline in the older database instance~$\funa$, and then mapped it to~$\funb$ using the function~$\ntrafoa_{\styleobj{D}}$.
-
-%
-\begin{marginfigure}
-    \centering
-    \includesag{student_database_square}
-    \caption{}
-    \label{fig:student_database_square}
-\end{marginfigure}
-%
-
-This can be formulated succinctly by saying that we want the diagram in figure \cref{fig:student_database_square} to commute.
-
-What we have defined is a collection of morphisms: for each object $\Obja$ in~$\CatC$, we have a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Obja)$ that obeys the commutativity property corresponding to the diagram.
-Such transformations appear in many places and are formalized by the notion of \SY{natural transformations}.
 
 \section{Natural transformations}
 \linkvideo{spring2021-nat-trafos:diagrams} % Diagrams
 %\linkvideo{spring2021-nat-trafos:natural-trafos} % Natural transformations
 
-To define \SY{natural transformations}, the general situation we will start from is when we have two \SY{functors}~$\funa \colon \CatC \fto \CatD$ and~$\funb \colon \CatC \fto \CatD$, sharing the same source and target, respectively.
+To formally define \SY{natural transformations}, the general situation we will start from is when we have two \SY{functors}~$\funa \colon \CatC \fto \CatD$ and~$\funb \colon \CatC \fto \CatD$, sharing the same source and target, respectively.
 In the previous example above,~$\funa$ and~$\funb$ were database instances.
 
 A \SY{natural transformation} from~$\funa$ to~$\funb$ is then a kind of ``map'' that relates the two \SY{functors}.
@@ -116,7 +56,7 @@ Under the \SY{functor}~$\funa$ it will be mapped to some morphism~$\funa(\mora)\
     % \label{fig:two-functors-connected-diagram}
 \end{marginfigure}
 
-We can think of~$\funa(\mora)\colon \funa(\Obja) \mto \funb(\Objb)$ and~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in~\CatD.
+We can think of~$\funa(\mora)\colon \funa(\Obja) \mto \funa(\Objb)$ and~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in~\CatD.
 If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \funb(\Obja)$ and~$\ntrafoa_\Objb\colon \funa(\Objb) \mto \funb(\Objb)$ in~\CatD, then these will connect the two diagrams, as depicted in the figure to the side.
 % \equationsag{diagram_two_functors_conn}{eq:two-functors-connected-diagram}
 % \begin{figure}[h!]
@@ -205,31 +145,31 @@ The name ``components'' is analogous to how a vector $v = (v_1, .
 The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality squares}, and a \SY{natural transformation}~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely in this manner:
 \equationsag{55_natural_1}{eq:55_natural_1}
 
-\showslides{
-    \begin{forslides}
-        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-            \CatC \ar[r, bend left=40, "\funa"]\ar[r, bend right=40, "\funb"'] &
-            \CatD\ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa"]
-        \end{tikzcd}
+%\showslides{
+%    \begin{forslides}
+%        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+%            \CatC \ar[r, bend left=40, "\funa"]\ar[r, bend right=40, "\funb"'] &
+%            \CatD\ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa"]
+%        \end{tikzcd}
 
-        \equationsag{55_natural_3}{eq:55_natural_3}
+%        \equationsag{55_natural_3}{eq:55_natural_3}
 
-        \equationsag{55_natural_4}{eq:55_natural_4}
+%        \equationsag{55_natural_4}{eq:55_natural_4}
 
-        \equationsag{55_natural_5}{eq:55_natural_5}
+%        \equationsag{55_natural_5}{eq:55_natural_5}
 
-        \equationsag{55_natural_6}{eq:55_natural_6}
-        \equationsag{55_natural_7}{eq:55_natural_7}
-        \equationsag{55_natural_8}{eq:55_natural_8}
-        \equationsag{55_natural_9}{eq:55_natural_9}
-        \equationsag{55_natural_10}{eq:55_natural_10}
-        \equationsag{55_natural_11}{eq:55_natural_11}
-        \equationsag{55_natural_12}{eq:55_natural_12}
-        \equationsag{55_natural_13}{eq:55_natural_13}
-        \equationsag{55_natural_14}{eq:55_natural_14}
-        \equationsag{55_natural_15}{eq:55_natural_15}
-    \end{forslides}
-}
+%        \equationsag{55_natural_6}{eq:55_natural_6}
+%        \equationsag{55_natural_7}{eq:55_natural_7}
+%        \equationsag{55_natural_8}{eq:55_natural_8}
+%        \equationsag{55_natural_9}{eq:55_natural_9}
+%        \equationsag{55_natural_10}{eq:55_natural_10}
+%        \equationsag{55_natural_11}{eq:55_natural_11}
+%        \equationsag{55_natural_12}{eq:55_natural_12}
+%        \equationsag{55_natural_13}{eq:55_natural_13}
+%        \equationsag{55_natural_14}{eq:55_natural_14}
+%       \equationsag{55_natural_15}{eq:55_natural_15}
+%    \end{forslides}
+%}
 
 \Cref{fig:nat_trans_graphically} shows a diagram that describes the property of functors and of natural transformations.
 The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
@@ -331,7 +271,30 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
 
 \section{Natural transformations are morphisms between functors}
 
-\begin{ctdefinition}[Compositions of natural transformations]\label{def:composition-of-naturali-tranformations}
+We have seen that natural transformations between two functors $\funa, \funb \colon \CatC \fto \CatD$ map objects in $\CatC$ to 
+morphisms in $\CatD$, and map morphisms in $\CatC$ to commutative diagrams. This is quite similar to the effect of functors on category
+objects and moprhisms. What if there were a category where objects are functors, and morphisms are natural transformations? 
+
+As for any category, we would need to define the morphism composition law and the identity morphisms. The former would look like this:
+
+\begin{equation}
+    % https://q.uiver.app/?q=WzAsMixbMCwwLCJcXGJ1bGxldCJdLFs0LDAsIlxcYnVsbGV0Il0sWzAsMSwiIiwwLHsiY3VydmUiOi01fV0sWzAsMSwiIiwyLHsiY3VydmUiOjV9XSxbMCwxXSxbMiw0LCIiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9fV0sWzQsMywiIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfX1dXQ==
+    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+        \CatC &  &  &  & \CatD
+        \arrow[""{name=0, anchor=center, inner sep=0}, "\funa" shift left=1, bend left=60, from=1-1, to=1-5]
+        \arrow[""{name=1, anchor=center, inner sep=0}, "\func"', shift right=1, bend right=60, from=1-1, to=1-5]
+        \arrow[""{name=2, anchor=center, inner sep=0}, "\funb"{description}, from=1-1, to=1-5]
+        \arrow[shorten <=4pt, shorten >=4pt, from=0, to=2, phantom, "\stylenat{\Downarrow} \ntrafoa"]
+        \arrow[shorten <=4pt, shorten >=4pt, from=2, to=1, phantom, "\stylenat{\Downarrow} \ntrafob"]
+    \end{tikzcd}
+    \xrightarrow[\text{composition}]{\text{morphism}}
+    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+        \CatC \ar[rrrr, bend left=50, "\funa"] \ar[rrrr, bend right=50, "\func"'] &                                                                                                          &  &
+                                                                                    & \CatD \ar[llll, shorten <=6pt, shorten >=6pt, phantom, "\stylenat{\Downarrow} \ntrafoa \nthen \ntrafob"]
+    \end{tikzcd}
+\end{equation}
+Due to its diagrammatic form, we call this type of composition \SY{vertical composition}. 
+\begin{ctdefinition}[Vertical Composition of natural transformations]\label{def:composition-of-naturali-tranformations}
     Let $\CatC, \CatD$ be categories and let $\funa, \funb, \func \colon \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$.
     Suppose we are given natural transformations
     \begin{equation}
@@ -349,6 +312,7 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
         (\ntrafoa \nthen \ntrafob)_\Obja \definedas \ntrafoa_\Obja \mthen \ntrafob_\Obja \quad \quad \forall \ \Obja \in \Ob_\CatC.
     \end{equation}
 \end{ctdefinition}
+Next up, we can trivially define the \SY{identity natural transformations}.
 
 \begin{ctdefinition}[Identity natural transformation]\label{def:identity-natural-transformation}
     Let $\CatC, \CatD$ be categories and let $\funa \colon \CatC \fto \CatD$ be a functor.
@@ -357,6 +321,8 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
         (\natid_\funa)_\Obja \definedas \catid_{\funa(\Obja)} \quad \quad \forall \ \Obja \in \Ob_\CatC.
     \end{equation}
 \end{ctdefinition}
+
+This is exactly what we were looking for! We can now define a \SY{category of functors}. 
 
 \begin{ctdefinition}\label{def:category-of-functors}
     Let $\CatC, \CatD$ be categories.
@@ -368,6 +334,9 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
         \item \emph{Identities}: identity natural transformations.
     \end{enumerate}
 \end{ctdefinition}
+
+
+
 
 \subsection{Natural isomorphisms}
 
@@ -381,8 +350,139 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
     A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in the category of functors $[\CatC, \CatD]$ if and only if $\ntrafoa$ is a natural isomorphism.
 \end{lemma}
 
-\clearpage
+\subsection{Horizontal Composition}
+But what about the following case? Suppose we have three categores: $\CatC, \CatD$ and $\CatE$ with functors 
+$\funa_1,\funa_2:\CatC \fto \CatD$ and $\funb_1,\funb_2:\CatD \fto \CatE$ and finally two natural transformations
+$\ntrafoa:\funa_1 \nto \funa_2$ and $\ntrafob:\funb_1 \nto \funb_2$. We would then have the following situation.
 
+\begin{equation}
+    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+        \CatA \ar[r, bend left=40, "\funa_1"]\ar[r, bend right=40, "\funb_1"']                                                    &
+        \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa"]  \ar[r, bend left=40, "\funa_2"]\ar[r, bend right=40, "\funb_2"'] & \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafob"]
+    \end{tikzcd}
+\end{equation}
+This looks suspiciously composable. Since we could compare have a natural transformation between $\funa_1;\funb_1$ and $\funa_2;\funb_2$, 
+why not observe the intermediate steps? 
+
+\begin{ctdefinition}[Horizontal Composition of natural transformations]
+    \label{def:horizontal-composition}
+    Let $\CatC, \CatD$ $\CatE$ be categories and let $\funa_1,\funa_2:\CatC \fto \CatD$ and $\funb_1,\funb_2:\CatD \fto \CatE$ be functors.
+    Suppose we are given the natural transformations
+    \begin{equation}
+        \ntrafoa \colon \funa_1 \nto \funb_1,
+    \end{equation}
+    \begin{equation}
+        \ntrafob \colon \funa_2 \nto \funb_2.
+    \end{equation}
+    Then their horizontal composition is given by the natural transformation
+    \begin{equation}
+        \ntrafoa * \ntrafob: (\funa_1 \fthen \funb_1) \nto (\funb_1 \fthen \funb_2)
+    \end{equation}
+    defined in components by
+    \begin{equation}
+        (\ntrafoa * \ntrafob)_{\Obja} := \ntrafoa_{\Obja} * \ntrafob_{\Obja} \quad \quad \forall \ \Obja \in \Ob_\CatC.
+    \end{equation}
+\end{ctdefinition}
+
+\subsection{Whiskering}
+A variant of horizontal composition is the case where we compose a natural transformation with a functor. We can have two cases:
+right or left whiskering.
+
+\begin{equation}
+    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+        \CatA \ar[r, bend left=40, "\funa"]\ar[r, bend right=40, "\funb"'] &
+        \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa"]
+    \end{tikzcd}
+\end{equation}
+
+\begin{ctdefinition}[Right Whiskering]
+    Let $\CatC, \CatD$ and $\CatE$ be categories, $\funa, \funb: \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$, $\func:\CatD \fto \CatE$ be a functor 
+    from $\CatD$ to $\CatE$ and $\ntrafoa:\funa \nto \funb$ be a natural transformation from $\funa$ to $\funb$.
+
+    The right whiskering of $\func$ and $\ntrafoa$ is given by the natural transformation
+    \begin{equation}
+       \func \ntrafoa : (\funa\fthen\func) \nto (\funb\fthen\func)
+    \end{equation}
+\end{ctdefinition}
+
+\begin{ctdefinition}[Left Whiskering]
+    
+\end{ctdefinition}
+
+
+\clearpage
+\section{Data migration}
+
+The name ``natural transformation'' has historical roots -- do not worry if the concept itself does not seem ``natural'' to you at first.
+% We will try to explain it in a way that is hopefully at least clear.
+To give motivation and a concrete illustration, we start with an example.
+
+\paragraph{An alumni database}
+
+Suppose a university is keeping a database of its alumni.
+The database contains a list of all the students that ever attended the university (each of them has a unique student ID number), as well as for example information about students' names, discipline of study, date of graduation, \etc
+
+We have seen that an instance of a database can be modeled as a \SY{functor} whose target is the category of sets, and whose source is a category encoding the abstract architecture of the database.
+\todotext{Seen where? link}
+
+%
+\begin{marginfigure}
+    \centering
+    \includesag{student_database_schema}
+    \caption{The schema of an alumni database.}
+    \label{fig:student_database_schema}
+\end{marginfigure}
+%
+
+The architecture of the database in our example might be encoded by a category with four objects and three non-identity morphisms, as depicted in \cref{fig:student_database_schema}.
+The object~$\styleobj{S}$ stands for \emph{Student},~$\styleobj{D}$ stands for \emph{Discipline},~$\styleobj{N}$ stands for \emph{Name}, and~$\styleobj{Y}$ stands for \emph{Year}.
+Call this category~\CatC.
+A database instance~$\funa \colon \CatC \fto \Set$ entails specifying a set~$\funa(\styleobj{S})$ of all student IDs, a set~$\funa(\styleobj{D})$ of university disciplines such as mechanical engineering, civil engineering, applied mathematics, pure mathematics, \etc
+It also entails defining functions for each of the arrows in~\CatC.
+For example,~$\funa(\stylemorph{\text{studied}}) \colon \funa(\styleobj{S}) \mto \funa(\styleobj{D})$ is the function that assigns to each student ID the name of the discipline that that student studied.
+
+\paragraph{Updating the database}
+
+For simplicity, we focus on two aspects of the data: student ID numbers and the disciplines of study.
+We assume that the university updates its alumni database once a year.
+This means, for example, adding the graduates of that year to the total list of graduates.
+
+To model the situation, let~$\funa \colon \CatC \fto \Set$ be the database instance for the year 2021, and let~$\funb \colon \CatC \fto \Set$ be the database instance for the year 2022.
+For concreteness, suppose the student IDs are in some standardized format, for example a code of the kind 17-371-802, where each of the three parts of the code are calculated/assigned by some rule (\text{e.g.}, the ``17'' here stands for 2017, the year the student registered with the university, \etc)
+.
+
+Since new students register to the university each year, the set~$\funa(\styleobj{S})$ of all student IDs registered up to the end of 2020 is a subset of the set~$\funb(\styleobj{S})$ of student IDs up to the end of 2022.
+This means there is an inclusion function~$\ntrafoa_{\styleobj{S}} \colon \funa(\styleobj{S}) \mto \funb(\styleobj{S})$.
+
+Now suppose that in 2022 the university decides to simplify the way it attributes disciplines to students in the database.
+
+For instance, instead of the discipline names~$\funa(\styleobj{D}) = \makeset{ \text{mechanical engineering}, \text{civil}\ \text{engineering}, \text{applied}\ \text{physics}, \text{theoretical}\ \text{physics}, \text{pure}\ \text{math}, \linebreak[1]\text{applied}\ \text{math} }$, the new discipline names are just
+%
+\begin{equation}
+    \funb(\styleobj{D}) = \makeset{ \text{engineering}, \text{physics}, \text{math} }.
+\end{equation}
+%
+In order to implement these changes, we use a function~$\ntrafoa_{\styleobj{D}}\colon \funa(\styleobj{D}) \mto \funb(\styleobj{D})$ which maps the old discipline names to the corresponding new ones in an obvious way:
+\begin{equation}
+    \ntrafoa_{\styleobj{D}}(\text{civil engineering}) = \text{engineering}, \ \ntrafoa_{\styleobj{D}}(\text{applied physics}) = \text{physics}, \ \text{etc.}
+\end{equation}
+\todographics{\bernina: Would be nice to draw this function as a diagram (like we did in the chapter about sets)}
+The functions~$\ntrafoa_\styleobj{S}$ and~$\ntrafoa_\styleobj{D}$ allow us to check whether the new database instance~$\funb$ relates coherently with the older database instance~$\funa$.
+Concretely, we want that if a student ID in~$\funb(\styleobj{S})$ is inherited from~$\funa(\styleobj{S})$ -- in other words, if it is in the image of~$\ntrafoa_{\styleobj{S}}$ -- then we want that its associated discipline in the database instance~$\funb$ is the same as if we first computed the student's discipline in the older database instance~$\funa$, and then mapped it to~$\funb$ using the function~$\ntrafoa_{\styleobj{D}}$.
+
+%
+\begin{marginfigure}
+    \centering
+    \includesag{student_database_square}
+    \caption{}
+    \label{fig:student_database_square}
+\end{marginfigure}
+%
+
+This can be formulated succinctly by saying that we want the diagram in figure \cref{fig:student_database_square} to commute.
+
+What we have defined is a collection of morphisms: for each object $\Obja$ in~$\CatC$, we have a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Obja)$ that obeys the commutativity property corresponding to the diagram.
+Such transformations appear in many places and are formalized by the notion of \SY{natural transformations}.
 \section{More examples}
 \linkvideo{spring2021-nat-trafos:natural-trafos:double-dual} % Double dual
 
