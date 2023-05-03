@@ -351,6 +351,8 @@ This is exactly what we were looking for! We can now define a \SY{category of fu
 \end{lemma}
 
 \subsection{Horizontal Composition}
+\linkvideo{spring2021-nat-trafos:natural-trafos:horizontal-composition} % Horizontal composition
+
 But what about the following case? Suppose we have three categores: $\CatC, \CatD$ and $\CatE$ with functors 
 $\funa_1,\funa_2:\CatC \fto \CatD$ and $\funb_1,\funb_2:\CatD \fto \CatE$ and finally two natural transformations
 $\ntrafoa:\funa_1 \nto \funa_2$ and $\ntrafob:\funb_1 \nto \funb_2$. We would then have the following situation.
@@ -380,10 +382,71 @@ why not observe the intermediate steps?
     \end{equation}
     defined in components by
     \begin{equation}
-        (\ntrafoa * \ntrafob)_{\Obja} := \ntrafoa_{\Obja} * \ntrafob_{\Obja} \quad \quad \forall \ \Obja \in \Ob_\CatC.
+        (\ntrafoa * \ntrafob)_{\Obja} := \ntrafoa_{\Obja} * \ntrafob_{\Obja} \quad \quad \forall \ \Obja \in \Ob_\CatC
+    \end{equation}
+    as the composition 
+    \begin{equation}
+        (\ntrafoa * \ntrafob)_{\Obja} : (\funa_2(\funa_1(\Obja))) \nto (\funb_2(\funa_1(\Obja))) \nto (\funb_2(\funb_1(\Obja)))
     \end{equation}
 \end{ctdefinition}
 
+
+\subsection{Interchange Law}
+\linkvideo{spring2021-nat-trafos:natural-trafos:interchange-law} % Interchange law
+
+Consider the case where we have categories $\CatC, \CatD$ and $\CatE$, with functors 
+$\funa_1, \funb_1:\CatC \fto \CatD$ and $\funa_2, \funb_2:\CatD \fto \CatE$ relating them. We can thus have the following four diagrams:
+\begin{equation}
+        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+            \CatA \ar[r, bend left=40, "\funa_1"]\ar[r, bend right=40, "\funb_1"'] &
+            \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_1"]
+        \end{tikzcd}
+        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+            \CatB \ar[r, bend left=40, "\funa_2"]\ar[r, bend right=40, "\funb_2"'] &
+            \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_2"]
+        \end{tikzcd}
+\end{equation}
+
+\begin{equation}
+        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+            \CatA \ar[r, bend left=40, "\funb_1"]\ar[r, bend right=40, "\func_1"'] &
+            \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafob_1"]
+        \end{tikzcd}
+        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+            \CatB \ar[r, bend left=40, "\funb_2"]\ar[r, bend right=40, "\func_2"'] &
+            \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafob_2"]
+        \end{tikzcd}
+\end{equation}
+We are now faced with the choice of either vertically composing first, or horizontally composing. By vertically composing, we get
+
+\begin{equation}
+    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+        \CatA \ar[r, bend left=40, "\funa_1"]\ar[r, bend right=40, "\func_1"'] &
+        \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_1 \nthen \ntrafob_1"]
+    \end{tikzcd}
+    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+        \CatB \ar[r, bend left=40, "\funa_2"]\ar[r, bend right=40, "\func_2"'] &
+        \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_2 \nthen \ntrafob_2"]
+    \end{tikzcd}
+\end{equation}
+Subsequently applying horizontal composition yields 
+\begin{equation}
+    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+        \CatA \ar[rrrrr, bend left=40, "\funa_1 \fthen \funa_2"] \ar[rrrrr, bend right=40, "\func_1 \fthen \func_2"'] &                                                                                                                      &  &  &
+                                                                                                                      & \CatC \ar[lllll, phantom, "\stylenat{\Downarrow} \ (\ntrafoa_1 \nthen \ntrafob_1) * (\ntrafoa_2 \nthen \ntrafob_2)"]
+    \end{tikzcd}
+\end{equation}
+Otherwise, we apply horizontal composition first, yielding
+\begin{equation}
+    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+        \CatC &  &  &  & \CatD
+        \arrow[""{name=0, anchor=center, inner sep=0}, "\funa_1\fthen\funa_2" shift left=1, bend left=60, from=1-1, to=1-5]
+        \arrow[""{name=1, anchor=center, inner sep=0}, "\func_1\fthen\func_2"', shift right=1, bend right=60, from=1-1, to=1-5]
+        \arrow[""{name=2, anchor=center, inner sep=0}, "\funb_1\fthen\funb_2"{description}, from=1-1, to=1-5]
+        \arrow[shorten <=4pt, shorten >=4pt, from=0, to=2, phantom, "\stylenat{\Downarrow} \ntrafoa_1\nthen\ntrafoa_2"]
+        \arrow[shorten <=4pt, shorten >=4pt, from=2, to=1, phantom, "\stylenat{\Downarrow} \ntrafob_1\nthen\ntrafob_2"]
+    \end{tikzcd}
+\end{equation}
 \subsection{Whiskering}
 A variant of horizontal composition is the case where we compose a natural transformation with a functor. We can have two cases:
 right or left whiskering.
@@ -406,24 +469,23 @@ right or left whiskering.
 \end{ctdefinition}
 
 \begin{ctdefinition}[Left Whiskering]
-    
+    Let $\CatC, \CatD$ and $\CatE$ be categories, $\funa, \funb: \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$, $\func:\CatB \fto \CatC$ be a functor 
+    from $\CatB$ to $\CatC$ and $\ntrafob:\funa \nto \funb$ be a natural transformation from $\funa$ to $\funb$.
+
+    The left whiskering of $\ntrafob$ and $\func$ is given by the natural transformation
+    \begin{equation}
+        \ntrafob \func: (\func\fthen\funa) \nto (\func\fthen\funb)
+    \end{equation}
 \end{ctdefinition}
 
 
 \clearpage
 \section{Data migration}
-
-The name ``natural transformation'' has historical roots -- do not worry if the concept itself does not seem ``natural'' to you at first.
-% We will try to explain it in a way that is hopefully at least clear.
-To give motivation and a concrete illustration, we start with an example.
+Now that we have seen some definitons and toy examples, let's observe a real-world example. As mentioned in Categorical Databases (see \ref{sec:functors-categorical-db} for the full context),
+we can model instances of databases due to Spivak [ref / cite] as \SY{functors} from the category of the architecture of the database to the category of sets.
+\todotext{Seen where? link}
 
 \paragraph{An alumni database}
-
-Suppose a university is keeping a database of its alumni.
-The database contains a list of all the students that ever attended the university (each of them has a unique student ID number), as well as for example information about students' names, discipline of study, date of graduation, \etc
-
-We have seen that an instance of a database can be modeled as a \SY{functor} whose target is the category of sets, and whose source is a category encoding the abstract architecture of the database.
-\todotext{Seen where? link}
 
 %
 \begin{marginfigure}
