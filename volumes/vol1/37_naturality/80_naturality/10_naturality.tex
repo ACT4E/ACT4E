@@ -1,17 +1,15 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Visual Example}
-Since \SY{mappings between functors} may be rather abstract, we will first start with a concrete example. Consider two categories of 
-images: those that are not square $\CatC$ and those that are square $\CatD$.
+\section{Visual Example and Warmup}
+Since \SY{mappings between functors} may be rather abstract, we will first start with a concrete example. Imagine you are in Boston, and can go to New York or Providence. We may now define a category $\CatC$ of cities, where morphisms are trips between the cities. Let $\CatD$ be the category of pairs of real numbers under element-wise addition, and $\funa, \funb:\CatC\fto\CatD$ be functors between them. $\funa$ gives us the distance and altitude difference between our starting point (Boston) and our desired destination, and $\funb$ gives us the gas price relative to our starting point.
 
-A picture $\Obja \setin \ObC$ can be transformed in two ways: we can first apply a mask on it to render it monochromatic (black and white)
-and crop it to a square, or first crop it and then apply a mask.
+Now, we can create a mapping $\alpha$ mapping the distances to gas prices. Thinking about it, it relates \SY{the elements of the category of distances to those of the category of prices}. If we write out our categories in typical diarams, we notice that they \SY{commute} (see \cref{def:commutative-diagram}).
 
-Notice that the mask being applied in the first case differs from the one used in the second, since the dimensions are different. Thus, 
-we see that there is a mask for every different picture, which brings it to its black and white version. If we consider the diagram of transformations
-(masks / cropping) onto images, then the diagram is \SY{commutative} (see \ref{def:commutative-diagram}). This means that going either way -- mask then crop or crop then mask --
-is equivalent. This is the main idea of natural transformations.
+\begin{figure}[h]
+    \includegraphics[width=6cm]{warmup-NTs}
+\end{figure}
 
+In other words, for each pair of (distance, altitude) relative to Boston, we can compute the gas price of the trip. 
 
 \section{Natural transformations}
 \linkvideo{spring2021-nat-trafos:diagrams} % Diagrams
@@ -174,7 +172,7 @@ The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality s
 \Cref{fig:nat_trans_graphically} shows a diagram that describes the property of functors and of natural transformations.
 The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
 
-\begin{figure*}[h!]
+\begin{figure*}[h]
     \centering
     \begin{ctdefinitionshade}
         \small
@@ -184,6 +182,25 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
     \label{fig:nat_trans_graphically}
 \end{figure*}
 
+But perhaps this prism is better explained with a few simple examples:
+
+\begin{example}[Constant Functors and Cones]
+Let $\CatC, \CatD$ be categories, and $\funa, \funb:\CatC\fto\CatD$ be functors, where $\funa$ is constant. That means that $\funa$ maps 
+all objects $\Obja_i$ of $\CatC$ to a single object $\Objb \setin \CatD$. Clearly the image of $\funa$ is a single object. The natural transformation from $\funa(\Obja)$ to $\funb(\Objb)$ thus forms what we call the cone over $\funb$.
+
+% TODO : Make diagram
+\begin{figure*}[h]
+    \includegraphics[width=4cm]{cone-under-F}
+\end{figure*}
+Analogously, if we consider $\funb$ to be a constant functor, we talk about the cone under $\funa$ (or cocone).
+\begin{figure*}[h]
+    \includegraphics[width=4cm]{cone-over-G}
+\end{figure*}
+% TODO : Make diagram
+\end{example}
+
+
+% move these to a 'Further examples' section at the end
 \begin{example}
     Consider the \SY{powerset} \SY{functor} from \cref{ex:powerset_functor}, and denote it~$\funa$.
     As a reminder, the \SY{functor} maps a set $\setA$ to its \SY{powerset}, and a function $\mora \colon \setA \mto \setB$ to the map which sends each subset of $\setA$ to its image under $\mora$.
@@ -269,7 +286,10 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
     Can you write down what the functors are that are the source and target of this natural transformation?
 \end{example}
 
-\section{Natural transformations are morphisms between functors}
+
+
+\section{Morphisms in a Category of Functors}
+\subsection{Vertical Composition}
 
 We have seen that natural transformations between two functors $\funa, \funb \colon \CatC \fto \CatD$ map objects in $\CatC$ to 
 morphisms in $\CatD$, and map morphisms in $\CatC$ to commutative diagrams. This is quite similar to the effect of functors on category
@@ -309,7 +329,7 @@ Due to its diagrammatic form, we call this type of composition \SY{vertical comp
     \end{equation}
     defined in components by
     \begin{equation}\label{eq:nat-trafo-composition}
-        (\ntrafoa \nthen \ntrafob)_\Obja \definedas \ntrafoa_\Obja \mthen \ntrafob_\Obja \quad \quad \forall \ \Obja \in \Ob_\CatC.
+        (\ntrafoa \nthen \ntrafob)_\Obja \definedas \ntrafoa_\Obja \mthen \ntrafob_\Obja \quad \quad \forall \ \Obja \setin \Ob_\CatC.
     \end{equation}
 \end{ctdefinition}
 Next up, we can trivially define the \SY{identity natural transformations}.
@@ -394,59 +414,77 @@ why not observe the intermediate steps?
 \subsection{Interchange Law}
 \linkvideo{spring2021-nat-trafos:natural-trafos:interchange-law} % Interchange law
 
-Consider the case where we have categories $\CatC, \CatD$ and $\CatE$, with functors 
-$\funa_1, \funb_1:\CatC \fto \CatD$ and $\funa_2, \funb_2:\CatD \fto \CatE$ relating them. We can thus have the following four diagrams:
-\begin{equation}
-        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-            \CatA \ar[r, bend left=40, "\funa_1"]\ar[r, bend right=40, "\funb_1"'] &
-            \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_1"]
-        \end{tikzcd}
-        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-            \CatB \ar[r, bend left=40, "\funa_2"]\ar[r, bend right=40, "\funb_2"'] &
-            \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_2"]
-        \end{tikzcd}
-\end{equation}
+The following statement is quite powerful. Although perhaps obvious-looking, it allows us to presume associativity of 
+naturakl transformations. 
 
+\begin{proposition}[Interchange]
+Let $\CatC, \CatD, \CatE$ be categories, $\funa_1, \funb_1, \func_1\colon\CatC \fto \CatD$, $\funa_2, \funb_2, \func_2:\CatD \fto \CatE$ be functors and $\ntrafoa_1\colon\funa_1\nto\funb_1$, $\ntrafoa_2\colon\funa_2\nto\funb_2$, $\ntrafob_1\colon\funb_1\nto\func_1$, $\ntrafob_2\colon\funb_2\nto\func_2$ be natural transformations. Then, 
 \begin{equation}
-        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-            \CatA \ar[r, bend left=40, "\funb_1"]\ar[r, bend right=40, "\func_1"'] &
-            \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafob_1"]
-        \end{tikzcd}
-        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-            \CatB \ar[r, bend left=40, "\funb_2"]\ar[r, bend right=40, "\func_2"'] &
-            \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafob_2"]
-        \end{tikzcd}
+    (\ntrafoa_1 \nthen \ntrafob_1) * (\ntrafoa_2 \nthen \ntrafob_2) = 
+    (\ntrafoa_1 * \ntrafoa_2) \nthen (\ntrafob_1 * \ntrafob_2)
 \end{equation}
-We are now faced with the choice of either vertically composing first, or horizontally composing. By vertically composing, we get
+\end{proposition}
 
-\begin{equation}
-    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-        \CatA \ar[r, bend left=40, "\funa_1"]\ar[r, bend right=40, "\func_1"'] &
-        \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_1 \nthen \ntrafob_1"]
-    \end{tikzcd}
-    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-        \CatB \ar[r, bend left=40, "\funa_2"]\ar[r, bend right=40, "\func_2"'] &
-        \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_2 \nthen \ntrafob_2"]
-    \end{tikzcd}
-\end{equation}
-Subsequently applying horizontal composition yields 
-\begin{equation}
-    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-        \CatA \ar[rrrrr, bend left=40, "\funa_1 \fthen \funa_2"] \ar[rrrrr, bend right=40, "\func_1 \fthen \func_2"'] &                                                                                                                      &  &  &
-                                                                                                                      & \CatC \ar[lllll, phantom, "\stylenat{\Downarrow} \ (\ntrafoa_1 \nthen \ntrafob_1) * (\ntrafoa_2 \nthen \ntrafob_2)"]
-    \end{tikzcd}
-\end{equation}
-Otherwise, we apply horizontal composition first, yielding
-\begin{equation}
-    \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
-        \CatC &  &  &  & \CatD
-        \arrow[""{name=0, anchor=center, inner sep=0}, "\funa_1\fthen\funa_2" shift left=1, bend left=60, from=1-1, to=1-5]
-        \arrow[""{name=1, anchor=center, inner sep=0}, "\func_1\fthen\func_2"', shift right=1, bend right=60, from=1-1, to=1-5]
-        \arrow[""{name=2, anchor=center, inner sep=0}, "\funb_1\fthen\funb_2"{description}, from=1-1, to=1-5]
-        \arrow[shorten <=4pt, shorten >=4pt, from=0, to=2, phantom, "\stylenat{\Downarrow} \ntrafoa_1\nthen\ntrafoa_2"]
-        \arrow[shorten <=4pt, shorten >=4pt, from=2, to=1, phantom, "\stylenat{\Downarrow} \ntrafob_1\nthen\ntrafob_2"]
-    \end{tikzcd}
-\end{equation}
+\begin{proof}
+    Consider the case where we have categories $\CatC, \CatD$ and $\CatE$, with functors 
+    $\funa_1, \funb_1\colon\CatC \fto \CatD$ and $\funa_2, \funb_2\colon\CatD \fto \CatE$ relating them. We can thus have the following four diagrams:
+    \begin{equation}
+            \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+                \CatA \ar[r, bend left=40, "\funa_1"]\ar[r, bend right=40, "\funb_1"'] &
+                \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_1"]
+            \end{tikzcd}
+            \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+                \CatB \ar[r, bend left=40, "\funa_2"]\ar[r, bend right=40, "\funb_2"'] &
+                \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_2"]
+            \end{tikzcd}
+    \end{equation}
+
+    \begin{equation}
+            \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+                \CatA \ar[r, bend left=40, "\funb_1"]\ar[r, bend right=40, "\func_1"'] &
+                \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafob_1"]
+            \end{tikzcd}
+            \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+                \CatB \ar[r, bend left=40, "\funb_2"]\ar[r, bend right=40, "\func_2"'] &
+                \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafob_2"]
+            \end{tikzcd}
+    \end{equation}
+    We are now faced with the choice of either vertically composing first, or horizontally composing. By vertically composing, we get
+
+    \begin{equation}
+        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+            \CatA \ar[r, bend left=40, "\funa_1"]\ar[r, bend right=40, "\func_1"'] &
+            \CatB \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_1 \nthen \ntrafob_1"]
+        \end{tikzcd}
+        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+            \CatB \ar[r, bend left=40, "\funa_2"]\ar[r, bend right=40, "\func_2"'] &
+            \CatC \ar[l, phantom, "\stylenat{\Downarrow} \ntrafoa_2 \nthen \ntrafob_2"]
+        \end{tikzcd}
+    \end{equation}
+    Subsequently applying horizontal composition yields 
+    \begin{equation}
+        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+            \CatA \ar[rrrrr, bend left=40, "\funa_1 \fthen \funa_2"] \ar[rrrrr, bend right=40, "\func_1 \fthen \func_2"'] &                                                                                                                      &  &  &
+                                                                                                                          & \CatC \ar[lllll, phantom, "\stylenat{\Downarrow} \ (\ntrafoa_1 \nthen \ntrafob_1) * (\ntrafoa_2 \nthen \ntrafob_2)"]
+        \end{tikzcd}
+    \end{equation}
+    Otherwise, we apply horizontal composition first:
+    \begin{equation}
+        \begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+            \CatC &  &  &  & \CatD
+            \arrow[""{name=0, anchor=center, inner sep=0}, "\funa_1\fthen\funa_2" shift left=1, bend left=60, from=1-1, to=1-5]
+            \arrow[""{name=1, anchor=center, inner sep=0}, "\func_1\fthen\func_2"', shift right=1, bend right=60, from=1-1, to=1-5]
+            \arrow[""{name=2, anchor=center, inner sep=0}, "\funb_1\fthen\funb_2"{description}, from=1-1, to=1-5]
+            \arrow[shorten <=4pt, shorten >=4pt, from=0, to=2, phantom, "\stylenat{\Downarrow} \ntrafoa_1\nthen\ntrafoa_2"]
+            \arrow[shorten <=4pt, shorten >=4pt, from=2, to=1, phantom, "\stylenat{\Downarrow} \ntrafob_1\nthen\ntrafob_2"]
+        \end{tikzcd},
+    \end{equation}
+    ths proving that vertical and horizontal composition are interchangeable.
+\end{proof}
+
+\begin{remark}
+The proof is also interesting to do by observing the commuting squares, and putting them together.
+\end{remark}
 \subsection{Whiskering}
 A variant of horizontal composition is the case where we compose a natural transformation with a functor. We can have two cases:
 right or left whiskering.
@@ -710,6 +748,21 @@ Such transformations appear in many places and are formalized by the notion of \
 \end{gradedexercise}
 
 \solutionof{NaturalCurry}
+
+\section{Yoneda Embedding Theorem \& Lemma}
+Here we will cover one of the most important results in Category Theory. It gives us insight on the role that objects play 
+in a category, and how we can actually 'recognize' what their role is.
+\subsection{Representable Functors}
+\begin{ctdefinition}[Representable Functor]
+Let $\CatC$ be a category, and $\Obja, \Objb \setin \Ob_\CatC$ be objects. A functor $\funa:\CatC \fto \Set$ is said \SY{representable}, of representing object $\Objc\setin\Ob_\CatC$, if there exists a natural isomoprhism between $\funa$ and the functor $\Hom_\CatC[\Objc, -]$. 
+
+That is, for each object $\Obja \setin \Ob_\CatC$, $\funa(\Obja)$ mapst $\Obja$ to a set, which is naturally isomorphic to all the ways to map $\Objc$ to $\Obja$ in $\CatC$.
+\end{ctdefinition}
+
+\begin{figure}
+\includegraphics[width=4cm]{representable-functor}
+\end{figure}
+
 
 \devel{
 
