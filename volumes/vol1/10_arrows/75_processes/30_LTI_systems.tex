@@ -1,0 +1,684 @@
+% !TEX root = chapter-standalone.tex
+
+\section{LTI systems}
+\label{sec:LTI-systems}
+
+We now define LTI systems.
+
+\todotext{J: do we want to make a remark that the definition of LTI below is for continuous time, and that there is also a version for discrete time?}
+
+\todo{Let's just do finite-dimensional systems with matrices}
+\begin{definition}[LTI System]
+    \label{def:LTI_syst}
+    A \emph{linear time-invariant dynamical (LTI) system}, in a so-called state-space representation, is specified by real \SY{vector spaces}~$\prin=\reals^l$ (input space),~$\prout=\reals^m$ (output space), and~$\prst=\reals^n$ (state space), along with a system of equations of the form
+    \begin{align}
+        \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn} \\
+        \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:LTI-system-ro},
+    \end{align}
+    and an \emph{initial state}~$\prstart\setin \prst$, where~$t \setin \nonNegReals$,~$\mat{u}(t) \setin \prin$,~$\mat{y}(t) \setin \prout$,~$\mat{x}(t) \setin \prst$, and where~$\mat{A}$,~$\mat{B}$,~$\mat{C}$,~$\mat{D}$ are real matrices of appropriate dimension.
+\end{definition}
+\begin{remark}
+    \cref{def:LTI_syst} includes the particular case of matrices with 0 dimension.
+    For instance, in a system with $\prin=\reals^l$ and $\prout=\reals^m$, we could have $\mat{A}\setin \reals^{0\times 0}$ (in other words, no state).
+    This would imply $\mat{B}\setin \reals^{0\times l}$, $\mat{C}\setin \reals^{m\times 0}$, and $\mat{D}\setin \reals^{m\times l}$.
+    Matrices with zero rows and/or zero columns multiply exactly as other matrices.
+    For instance, the multiplication of a $\reals^{0\times 0}$ matrix with a $\reals^{0\times l}$ matrix, will return a $\reals^{0\times l}$ matrix.
+\end{remark}
+
+We compactly refer to an LTI system by writing it as a tuple~$\genericlti{}$.
+
+The equations \cref{eq:LTI-system-dyn} describe the dynamics.
+The equations \cref{eq:LTI-system-ro} describe the output, or, one might say, the variables that are ``exposed'' or externally visible.
+
+The matrix $\mat{D}$ is called the \emph{feedthrough term}.
+We will call an LTI system \emph{proper} if~$\mat{D}=\mat{0}^{\matdim{l}{m}}$.
+
+\begin{remark}
+    When using state-space LTI systems as models, it is typical that the equations \cref{eq:LTI-system-dyn} are chosen using physical laws and first principles reasoning, while the matrices $\mat{C}$ and $\mat{D}$ in \cref{eq:LTI-system-ro} are rather chosen based on what information from our model is explicitly relevant or accessible.
+\end{remark}
+
+\begin{example}
+    \label{exa:sping-mass-lti}
+    Consider a mass $m$ lying on a frictionless surface, and attached to two springs as depicted in \cref{fig:LTI-example_two-springs-one-mass}.
+
+    \begin{figure}[h]\label{fig:LTI-example_two-springs-one-mass}
+        \centering
+        \includesag{mass-spring-lti}
+        %\includegraphics[width=0.4\linewidth]{LTI-example_two-springs-one-mass}
+    \end{figure}
+
+    The coordinate $q(t)$ describes position of the mass along one horizontal dimension, $F$ denotes a force that is applied to $m$ in that horizontal direction, and $k_1$ and $k_2$ are the spring constants of the respective springs.
+
+    The dynamics of the position coordinate $q$ as a function of time is described by the differential equation
+    \begin{equation}\label{eq:LTI-exa-double-spring-equation}
+        (k_1 + k_2)q + m \ddot q = F.
+    \end{equation}
+
+    We may rewrite this as a proper LTI system in a state-space representation by choosing the state-variable to be
+    \begin{equation}\label{eq:LTI-exa-double-spring-state}
+        \mat{x} =
+        \begin{bmatrix}
+            q(t) \\
+            \dot{q}(t)
+        \end{bmatrix}.
+    \end{equation}
+    Then
+    \begin{equation}\label{eq:LTI-exa-double-spring-dynamics}
+        \dot{\mat{x}} =
+        \begin{bmatrix}
+            0                       & 1 \\
+            \tfrac{-(k_1 + k_2)}{m} & 0
+        \end{bmatrix}
+        \mat{x}(t) +
+        \begin{bmatrix}
+            0 \\
+            1
+        \end{bmatrix}
+        F
+    \end{equation}
+    describes the dynamics, and as output we might choose
+    \begin{equation}\label{eq:LTI-exa-double-spring-readout}
+        \mat{y} =
+        \begin{bmatrix}
+            1 & 0
+        \end{bmatrix}
+        \mat{x}(t) +
+        \begin{bmatrix}
+            0
+        \end{bmatrix}
+        F.
+    \end{equation}
+\end{example}
+
+\todotext{J: the above example is Example 4.3.1 from the Polderman Willems books ``Introduction to mathematical systems theory''}
+
+\devel{
+
+    \begin{example}
+        [INSERT EXAMPLE 4.3.2 from Polderman Willems]
+    \end{example}
+
+    \begin{example}
+        [INSERT EXAMPLE regarding predatory prey models, take the one from Jaz Meyers book]
+    \end{example}
+
+}
+
+\subsection{Equivalent LTI systems}
+
+\begin{definition}[Equivalence of LTI systems]
+    \label{def:equivalence_lti}
+    \SYNDEF{equivalence of LTI systems}
+    Two systems~$\genericlti{\mora}$ and~$\genericlti{\morb}$ are \emph{equivalent} if and only if there exists an invertible linear transformation~$\mat{x}_\morb(t)=\mat{T}\mat{x}_\mora(t)$ such that
+    \begin{equation}
+        \mat{A}_\morb = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \ \mat{B}_\morb = \mat{T}\mat{B}_\mora, \ \mat{C}_\morb =\mat{C}_\mora\mat{T}^{-1},\ \mat{D}_\morb=\mat{D}_\mora, \ \prstart_\morb=\mat{T}\prstart_\mora.
+    \end{equation}
+    $\mat{T}$ is called an \emph{equivalence transformation}.
+\end{definition}
+
+We think of equivalent LTI-systems as different ways of specifying what is essentially ``the same system''.
+What is different in each specification is only different by a change of coordinates.
+
+\subsection{Category of LTI systems}
+
+We define a category of LTI systems \LTI.
+
+\begin{ctdefinition}[Category \LTI]
+    \SYNDEF{category of finite-dimensional linear time-invariant systems}
+    \label{def:LTICat}
+    The category \LTI of LTI systems is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: natural numbers.
+        \item \emph{Morphisms}: A morphism in \LTI from~$\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$ is a continuous time LTI system~$\genericlti{}$.
+              %where~$\mat{A}\setin \reals^{\ntimesn}$,~$\mat{B}\setin \reals^{n\times l}$,~$\mat{C}\setin \reals^{m\times n}$,~$\mat{D}\setin \reals^{m\times l}$.
+              Note that the dimensions of the input/output are implicit.
+        \item \emph{Composition}: Given morphisms~$\mora \colon \styleobj{a}\mto \styleobj{b}$ and~$\morb\colon \styleobj{b}\mto \styleobj{c}$, described by the LTI systems
+              \begin{equation}
+                  \begin{aligned}
+                       & \genericlti{\mora} \\
+                       & \genericlti{\morb},
+                  \end{aligned}
+              \end{equation}
+              their composition~$(\morab)\colon \styleobj{a}\mto \styleobj{c}$ is the LTI system~$\genericlti{}$, where
+              \begin{equation}
+                  \begin{aligned}
+                      \prstart & =\begin{bmatrix}
+                                      \prstart_\mora \\
+                                      \prstart_\morb \\
+                                  \end{bmatrix},\quad
+                      \mat{A}=\begin{bmatrix}
+                                  \mat{A}_\mora              & \mat{0}       \\
+                                  \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
+                              \end{bmatrix},\quad
+                      \mat{B}=\begin{bmatrix}
+                                  \mat{B}_\mora \\
+                                  \mat{B}_\morb\mat{D}_\mora
+                              \end{bmatrix}, \\
+                      \mat{C}  & =\begin{bmatrix}
+                                      \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+                                  \end{bmatrix}, \quad
+                      \mat{D}=\mat{D}_\morb\mat{D}_\mora.
+                  \end{aligned}
+              \end{equation}
+        \item \emph{Identities}: the identity for~$\styleobj{l}\setin \natnumbers$ is the system~$\tup{\mat{0}^{\matdim{0}{1}},\mat{0}^{\matdim{0}{0}},\mat{0}^{\matdim{0}{l}},\mat{0}^{\matdim{m}{0}},\mathbb{I}^{\matdim{m}{l}}}$.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{remark}
+    Again, all of this works with matrices with zero rows and/or zero columns.
+    Let's see practically how via a simple instance.
+    Consider the system $\mora\colon a \mto b$ given by $\genericlti{\mora}$ and the system $\morb\colon b\mto c$ given by $\tupp{\mat{0}^{0\times 1},\mat{0}^{0\times 0}, \mat{0}^{0\times b}, \mat{0}^{c\times 0}, \mat{0}^{c\times b}}$.
+    Their composition $\mora\mthen \morb\colon a\mto c$ is a system $\genericlti{}$ with:
+    \begin{equation*}
+        \prstart=\begin{bmatrix} \prstart_\mora \\ \mat{0}^{0\times 1}\end{bmatrix}=\prstart_\mora.
+    \end{equation*}
+    How could we write the above equation?
+    $\prstart_\mora$ has $s$ rows and 1 column, and $\mat{0}^{0\times 1}$ has 0 rows and 1 column (it has to have 1 column for us to be able to write the above block matrix), allowing us to write the expression as $\prstart_\mora$.
+    We can now write:
+    \begin{equation*}
+        \mat{A}=\begin{bmatrix}
+            \mat{A}_\mora                    & \mat{0}^{s\times 0} \\
+            \mat{0}^{0\times b}\mat{C}_\mora & \mat{0}^{0\times 0}
+        \end{bmatrix}=
+        \begin{bmatrix}
+            \mat{A}_\mora       & \mat{0}^{s\times 0} \\
+            \mat{0}^{0\times s} & \mat{0}^{0\times 0}
+        \end{bmatrix}=\begin{bmatrix}
+            \mat{A}_\mora \\
+            \mat{0}^{0\times s}\end{bmatrix}=\mat{A}_\mora,
+    \end{equation*}
+    The above equality teaches us how to manipulate matrices with zero rows and/or zero columns.
+    First, since $\mat{C}_\mora$ has $b$ rows and $s$ columns, the multiplication $\mat{0}^{0\times b}\mat{C}_\mora$ is well defined and gives the zero matrix with 0 rows and $s$ columns.
+    Once we realize this, we see that we end up with a matrix made of four block matrices.
+    Given their zero rows/columns, one can then simplify as shown.
+    Similar arguments can be made for the other matrices resulting from the composition.
+\end{remark}
+
+\begin{exercise}
+    Prove that \LTI is indeed a category.
+\end{exercise}
+\begin{solution}
+    We start with associativity.
+    Consider morphism $\mora \colon \styleobj{l}\mto \styleobj{m}$ given by~$\genericlti{\mora}$, and $\morb\colon \styleobj{m}\mto \styleobj{n}$ given by~$\genericlti{\morb}$, and $\morc\colon \styleobj{n}\mto \styleobj{o}$ given by~$\genericlti{\morc}$.
+    The morphism~$\morab$ is described by the LTI
+    \begin{equation}
+        \genericlti{\mora,\morb},
+    \end{equation}
+    where
+    \begin{widepar}
+        \begin{equation}
+            \prstart_{\mora,\morb}=\begin{bmatrix}
+                \prstart_\mora \\
+                \prstart_\morb
+            \end{bmatrix},\quad
+            \mat{A}_{\mora,\morb}=\begin{bmatrix}
+                \mat{A}_\mora              & \mat{0}       \\
+                \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
+            \end{bmatrix},\
+            \mat{B}_{1,2}=\begin{bmatrix}
+                \mat{B}_\mora \\
+                \mat{B}_\morb\mat{D}_\mora
+            \end{bmatrix},\
+            \mat{C}_{\mora,\morb}=\begin{bmatrix}
+                \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+            \end{bmatrix}, \
+            \mat{D}_{\mora,\morb}=\mat{D}_\morb\mat{D}_\mora.
+        \end{equation}
+    \end{widepar}
+    The morphism~$(\morab)\mthen \morc$ is described by
+    \begin{equation}
+        \genericlti{(\mora,\morb),\morc},
+    \end{equation}
+    where:
+    \begin{widepar}
+        \begin{equation}
+            \label{eq:assoc_lti_1}
+            \begin{aligned}
+                \prstart_{(\mora,\morb),\morc} & =\begin{bmatrix}
+                                                      \prstart_\mora \\
+                                                      \prstart_\morb \\
+                                                      \prstart_\morc
+                                                  \end{bmatrix},\quad
+                \mat{A}_{(\mora,\morb),\morc}=\begin{bmatrix}
+                                                  \mat{A}_\mora                           & \mat{0}                    & \mat{0}       \\
+                                                  \mat{B}_\morb\mat{C}_\mora              & \mat{A}_\morb              & \mat{0}       \\
+                                                  \mat{B}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
+                                              \end{bmatrix},\
+                \mat{B}_{(\mora,\morb),\morc}=\begin{bmatrix}
+                                                  \mat{B}_\mora              \\
+                                                  \mat{B}_\morb\mat{D}_\mora \\
+                                                  \mat{B}_\morc\mat{D}_\morb\mat{D}_\mora
+                                              \end{bmatrix}, \\
+                \mat{C}_{(\mora,\morb),\morc}  & =\begin{bmatrix}
+                                                      \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
+                                                  \end{bmatrix}, \
+                \mat{D}_{(\mora,\morb),\morc}=\mat{D}_\morc\mat{D}_\morb\mat{D}_\mora.
+            \end{aligned}
+        \end{equation}
+    \end{widepar}
+    On the other hand, the morphism~$\morb\mthen \morc$ is described by
+    \begin{equation}
+        \genericlti{\morb,\morc},
+    \end{equation}
+    where:
+    \begin{widepar}
+        \begin{equation}
+            \prstart{\morb,\morc}=\begin{bmatrix}
+                \prstart_\morb \\
+                \prstart_\morc
+            \end{bmatrix},\
+            \mat{A}_{\morb,\morc}=\begin{bmatrix}
+                \mat{A}_\morb              & \mat{0}       \\
+                \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
+            \end{bmatrix},\
+            \mat{B}_{\morb,\morc}=\begin{bmatrix}
+                \mat{B}_\morb \\
+                \mat{B}_\morc\mat{D}_\morb
+            \end{bmatrix},\
+            \mat{C}_{\morb,\morc}=\begin{bmatrix}
+                \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
+            \end{bmatrix}, \
+            \mat{D}_{\morb,\morc}=\mat{D}_\morc\mat{D}_\morb.
+        \end{equation}
+    \end{widepar}
+    Furthermore, the morphism~$\mora\mthen (\morb\mthen \morc)$ is described by
+    \begin{equation}
+        \genericlti{\mora,(\morb,\morc)},
+    \end{equation}
+    where:
+    \begin{widepar}
+        \begin{equation}
+            \begin{aligned}
+                \label{eq:assoc_lti_2}
+                \prstart_{(\mora,\morb),\morc} & =\begin{bmatrix}
+                                                      \prstart_\mora \\
+                                                      \prstart_\morb \\
+                                                      \prstart_\morc
+                                                  \end{bmatrix},\quad
+                \mat{A}_{\mora,(\morb,\morc)}=\begin{bmatrix}
+                                                  \mat{A}_\mora                           & \mat{0}                    & \mat{0}       \\
+                                                  \mat{B}_\morb\mat{C}_\mora              & \mat{A}_\morb              & \mat{0}       \\
+                                                  \mat{B}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
+                                              \end{bmatrix},\
+                \mat{B}_{\mora,(\morb,\morc)}=\begin{bmatrix}
+                                                  \mat{B}_\mora              \\
+                                                  \mat{B}_\morb\mat{D}_\mora \\
+                                                  \mat{B}_\morc\mat{D}_\morb\mat{D}_\mora
+                                              \end{bmatrix}, \\
+                \mat{C}_{\mora,(\morb,\morc)}  & =\begin{bmatrix}
+                                                      \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
+                                                  \end{bmatrix}, \
+                \mat{D}_{\mora,(\morb,\morc)}=\mat{D}_\morc\mat{D}_\morb\mat{D}_\mora.
+            \end{aligned}
+        \end{equation}
+    \end{widepar}
+    Clearly, the matrices in \cref{eq:assoc_lti_1} and \cref{eq:assoc_lti_2} coincide, showing associativity.
+
+    We now show unitality.
+    Consider a morphism~$\mora\colon \styleobj{l}\mto \styleobj{m}$, described by~$\genericlti{}$.
+    The morphism~$\catidat{\styleobj{l}} \mthen \mora$ is a morphism~$\styleobj{l}\mto \styleobj{m}$ still given by~$\genericlti{}$.
+    Similarly, the morphism~$\mora\mthen \catidat{\styleobj{m}}$ is a morphism~$\styleobj{l}\mto \styleobj{m}$, given by~$\genericlti{}$.
+    Therefore, \LTI is a category.
+\end{solution}
+
+\begin{example}
+    Consider the LTI for the spring-mass system from \cref{exa:sping-mass-lti}, and define the LTI
+    \begin{equation*}
+        \begin{aligned}
+            \dot{\mat{z}}(t) & =p(t)+Cq(t) \\
+            \mat{w}(t)       & =p(t),
+        \end{aligned}
+    \end{equation*}
+    taking as input the output produced by the spring-mass system (the position of the mass along the horizontal dimension) and transforms it by a factor $C$.
+    We can compose the two systems, obtaining the system $\genericplti{}$ with
+    \begin{equation*}
+        \mat{A}=\begin{bmatrix}0                  & 1 & 0 \\
+               -\frac{k_1+k_2}{m} & 0 & 0 \\
+               C                  & 0 & 1\end{bmatrix},\quad
+        \mat{B}=\begin{bmatrix}
+            0 \\
+            1 \\
+            0
+        \end{bmatrix},
+        \quad
+        \mat{C}=\begin{bmatrix}
+            0 & 0 & 1
+        \end{bmatrix}.
+    \end{equation*}
+    This can be visualized more intuitively with the explicit composed dynamics:
+    \begin{equation*}
+        \begin{aligned}
+            \begin{bmatrix}
+                \dot{q}(t)  \\
+                \ddot{q}(t) \\
+                \dot{p}(t)
+            \end{bmatrix} & =
+            \begin{bmatrix}0                  & 1 & 0 \\
+               -\frac{k_1+k_2}{m} & 0 & 0 \\
+               C                  & 0 & 1\end{bmatrix} \begin{bmatrix}
+                                                                            {q}(t)     \\
+                                                                            \dot{q}(t) \\
+                                                                            {p}(t)
+                                                                        \end{bmatrix}+
+            \begin{bmatrix}
+                0 \\
+                1 \\
+                0
+            \end{bmatrix} F \\
+            w(t)                            & =\begin{bmatrix}
+                                                   0 & 0 & 1
+                                               \end{bmatrix}\begin{bmatrix}
+                                                                {q}(t)     \\
+                                                                \dot{q}(t) \\
+                                                                {p}(t)
+                                                            \end{bmatrix}
+        \end{aligned}
+    \end{equation*}
+    Given an input force, I will get a transformed horizontal position as an output.
+\end{example}
+
+\todotext{J: @J: do an example here of LTI composition -- perhaps predatory prey example would work? hmm maybe not actually, because i think it involves trace or re-wirings.
+    Other examples? Perhaps look at the Guzzella book for examples.
+}
+
+\subsection{Standard action of LTI systems}
+
+\begin{definition}[LTI standard action]
+    \label{def:lti_cat_action}
+    We define a standard action of \LTI via:
+    \begin{itemize}
+        \item A map
+              \begin{equation}\label{eq:LTI-action-objects}
+                  \defmapperiod{
+                      \funobspace{\act}
+                  }{
+                      \Obof\LTI
+                  }{
+                      \to
+                  }{
+                      \Obof\Set
+                  }{
+                      \styleobj{n}
+                  }{
+                      \diffun(\nonNegReals, \reals^\styleobj{n})
+                  }
+              \end{equation}
+        \item A map
+              \begin{equation}\label{eq:LTI-action-morphisms}
+                  \funmorspace{\act} \colon \HomSet{\LTI}{\styleobj{m}}{\styleobj{n}}
+                  \to
+                  \HomSet{\Set}{\diffun(\nonNegReals, \reals^\styleobj{m})}{\diffun(\nonNegReals, \reals^\styleobj{n})}
+              \end{equation}
+              where~$\funmorspace{\act}$ takes an LTI system~$\mora\colon \styleobj{m} \to \styleobj{n}$ given by
+              \begin{equation}
+                  \genericlti{\mora},
+              \end{equation}
+              and returns the function
+              \begin{equation}\label{eq:LTI-action-morphisms-defined}
+                  \defmapcomma{\funmorspace{\act}(\mora)}
+                  {\diffun(\nonNegReals, \reals^\styleobj{m})}
+                  {\to}
+                  {\diffun(\nonNegReals, \reals^\styleobj{n})}
+                  {\mat{u}(t)}
+                  {\mat{C}_\mora\mat{s}_\mora(t) + \mat{D}_\mora\mat{u}(t) }
+              \end{equation}
+              where~$\mat{s}_\mora$ is the unique solution of the initial value problem
+              \begin{align}\label{eq:LTI-action-morphisms-cauchy-problem}
+                  \begin{cases}
+                      \dot{\mat{x}}(t) & = \mat{A}_\mora \mat{x}(t) + \mat{B}_\mora\mat{u}(t) \\
+                      \mat{x}(0)       & = \prstart_\mora.
+                  \end{cases}
+              \end{align}
+    \end{itemize}
+\end{definition}
+
+\todotextjira{754}{\alphubel: @Gioele:  we need to check and remark on the special cases involving zero-dimensional spaces}
+
+\begin{remark}
+    The initial value problem
+    \begin{align}\label{eq:LTI-Cauchy-problem}
+        \begin{cases}
+            \dot{\mat{x}}(t) & = \mat{A} \mat{x}(t) + \mat{B} \mat{u}(t) \\
+            \mat{x}(0)       & = \prstart
+        \end{cases}
+    \end{align}
+    is a system of linear first-order non-homogenous differential equations.
+    It does \emph{not} have constant coefficients, because the inhomogenous term $\mat{B}_\mora\mat{u}(t)$ is not constant (it depends on the independent variable $t$).
+
+    The theorem of Picard-Lindelöf guarantees that initial value problems of the form \cref{eq:LTI-Cauchy-problem} always have a unique solution.
+    There is general formula for the solution $\mat{s}(t)$ of \cref{eq:LTI-Cauchy-problem}, namely
+    \begin{equation}
+        \mat{s}(t) = e^{\mat{A} t} \prstart + \int_{0}^{t} e^{\mat{A} (t - \tau)}\mat{B}\mat{u}(s)d\tau.
+    \end{equation}
+
+\end{remark}
+
+\begin{lemma}\label{lem:lti_cat_action}
+    \cref{def:lti_cat_action} indeed defines a category action.
+\end{lemma}
+\begin{proof}
+    We need to prove that
+    \begin{equation}
+        \funmorspace{\act}(\mora \mthenof\LTI \morb)
+        =
+        \funmorspace{\act}(\mora) \mthenof\Set \funmorspace{\act}(\morb).
+    \end{equation}
+    Consider~$\mora \colon \styleobj{m}\mto \styleobj{n}$ and~$\morb\colon \styleobj{n}\mto \styleobj{o}$.
+    We first look at the map
+    \begin{equation}
+        \defmapcomma{\funmorspace{\act}(\mora \mthenof \LTI \morb)}
+        {\diffun(\nonNegReals,\reals^\styleobj{m})}
+        {\mto}
+        {\diffun(\nonNegReals,\reals^\styleobj{o})}
+        {\mat{u}(t)}
+        {\mat{C}_{\morab}\mat{s}_{\morab}(t)+\mat{D}_{\morab}\mat{u}(t)}
+    \end{equation}
+    where~$\mat{s}_{\morab}$ is the unique solution of the initial value problem
+    \begin{equation}
+        \label{eq:lti_action_1}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\mat{A}_{\morab}\mat{x}(t)+\mat{B}_{\morab}\mat{u}(t), \\
+            \mat{x}(0)       & = \prstart_{\morab},
+        \end{aligned}
+    \end{equation}
+    and
+    \begin{equation}
+        \mat{C}_{\morab}=\begin{bmatrix}
+            \mat{D}_\morb \mat{C}_\mora & \mat{C}_\morb
+        \end{bmatrix}, \quad \mat{D}=\mat{D}_\morb \mat{D}_\mora.
+    \end{equation}
+    From the definition of composition of LTI systems (\cref{def:LTICat}), we know that we can expand \cref{eq:lti_action_1} into
+    \begin{equation}
+        \label{eq:lti_action_12}
+        \begin{aligned}
+            \dot{\mat{x}}(t)=\begin{bmatrix}
+                                 \dot{\mat{x}}_\mora(t) \\
+                                 \dot{\mat{x}}_\morb(t)
+                             \end{bmatrix} & =\begin{bmatrix}
+                                                  \mat{A}_\mora              & \mat{0}       \\
+                                                  \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
+                                              \end{bmatrix}
+            %
+            \begin{bmatrix}
+                \mat{x}_\mora(t) \\
+                \mat{x}_\morb(t)
+            \end{bmatrix}%
+            +%
+            \begin{bmatrix}
+                \mat{B}_\mora \\
+                \mat{B}_\morb\mat{D}_\mora
+            \end{bmatrix}\mat{u}(t) \\
+            %\mat{y}_{\mora \mthen \morb}(t)           & =\begin{bmatrix}
+            %                                                 \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+            %                                             \end{bmatrix} \begin{bmatrix}
+            %                                                               \mat{x}_\mora(t) \\
+            %                                                               \mat{x}_\morb(t)
+            %                                                           \end{bmatrix}+ \mat{D}_\morb\mat{D}_\mora\mat{u}_{\mora \mthen \morb}(t) \\
+            \prstart                                  & =
+            %
+            \begin{bmatrix}
+                \prstart_\mora \\
+                \prstart_\morb
+            \end{bmatrix}.
+        \end{aligned}
+    \end{equation}
+    By instead looking at~$\funmorspace{\act}(\mora)$ we have
+    \begin{equation}
+        \defmapcomma{\funmorspace{\act}(\mora)}
+        {\diffun(\nonNegReals,\reals^\styleobj{m})}
+        {\mto}
+        {\diffun(\nonNegReals,\reals^\styleobj{n})}
+        {\mat{u}}
+        {\mat{C}_\mora \mat{s}_\mora + \mat{D}_\mora \mat{u}}
+    \end{equation}
+    where~$\mat{s}_\mora$ is the unique solution of the initial value problem
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}(t), \\
+            \mat{x}(0)       & = \prstart_{\mora},
+        \end{aligned}
+    \end{equation}
+    and by looking at~$\funmorspace{\act}(\morb)$ we have
+    \begin{equation}
+        \label{eq:lti_action_2}
+        \defmapcomma{
+            \funmorspace{\act}(\morb)
+        }{
+            \diffun(\nonNegReals,\reals^\styleobj{n})
+        }{
+            \mto
+        }{
+            \diffun(\nonNegReals,\reals^\styleobj{o})
+        }{
+            \mat{u}}{\mat{C}_\morb \mat{s}_\morb+\mat{D}_\morb \mat{u}
+        }
+    \end{equation}
+    where~$\mat{s}_\morb$ is the unique solution of the initial value problem
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\mat{A}_{\morb}\mat{x}(t)+\mat{B}_{\morb}\mat{u}(t), \\
+            \mat{x}(0)       & = \prstart_{\morb}.
+        \end{aligned}
+    \end{equation}
+    Clearly, considering~$\funmorspace{\act}(\mora)\mthen \funmorspace{\act}(\morb)$ is equivalent to considering~$\mat{u}_\morb=\funmorspace{\act}(\mora)(\mat{u}_\mora)$.
+    By substitution into \cref{eq:lti_action_2} we obtain
+    \begin{equation}
+        \defmapcomma{
+            \funmorspace{\act}(\mora) \mthen \funmorspace{\act}(\morb)
+        }{
+            \diffun(\nonNegReals,\reals^\styleobj{m})
+        }{
+            \mto
+        }{
+            \diffun(\nonNegReals,\reals^\styleobj{o})
+        }{
+            \mat{u}
+        }{
+            \begin{bmatrix}
+                \mat{D}_\morb \mat{C}_\mora & \mat{C}_\morb
+            \end{bmatrix}\begin{bmatrix}
+                \mat{s}_\mora \\ \mat{s}_\morb
+            \end{bmatrix}+ \mat{D}_\morb \mat{D}_\mora \mat{u}
+        }
+    \end{equation}
+    proving the statement.
+\end{proof}
+
+\begin{lemma}
+    \label{lem:equivsystequivact}
+    Two equivalent systems have the same LTI category action.
+\end{lemma}
+\begin{proof}
+    Consider two equivalent LTI systems
+    \begin{equation}
+        \genericlti{\mora},\quad \genericlti{\morb}.
+    \end{equation}
+    The initial value problem~$\genericlti{\mora}$ poses reads:
+    \begin{equation}
+        \label{eq:first_lti_equiv}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}(t), \\
+            \mat{x}(0)       & = \prstart_\mora.
+        \end{aligned}
+    \end{equation}
+    Let~$\mat{s}(t)$ be the solution of \cref{eq:first_lti_equiv}.
+    Consider the equivalence transformation~$\mat{r}(t)\linebreak[0]=\mat{T}\mat{s}(t)$.
+    Then, we have
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{r}}(t) & =\mat{T}\dot{\mat{s}}(t) \\
+                             & =\mat{T}\mat{A}_\mora \mat{s}(t)+\mat{T}\mat{B}_\mora \mat{u}(t) \\
+                             & =\mat{T}\mat{A}_\mora \mat{T}^{-1}\mat{r}(t)+\mat{T}\mat{B}_\mora \mat{u}(t) \\
+                             & =\mat{A}_\morb\mat{r}(t)+\mat{B}_\morb \mat{u}(t),
+        \end{aligned}
+    \end{equation}
+    and~$ \prstart_\morb=\mat{T} \prstart_\mora$.
+    Therefore, the action of the system~$\genericlti{\morb}$ is:
+    \begin{equation}
+        \begin{aligned}
+            \funmorspace{\act}(\morb)(\mat{u}(t)) & =\mat{C}_\morb \mat{r}(t)+ \mat{D}_\morb \mat{u}(t) \\
+                                                  & =\mat{C}_\mora \mat{T}^{-1}\mat{T}\mat{s}+\mat{D}_\mora \mat{u}(t) \\
+                                                  & =\mat{C}_\mora \mat{s}(t)+\mat{D}_\mora \mat{u}(t) \\
+                                                  & =\funmorspace{\act}(\mora)(\mat{u}(t)).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\begin{remark}
+    Two LTI systems with the same LTI category action are not necessarily equivalent.
+\end{remark}
+\begin{proof}
+    For a simple counterexample, consider the LTI system
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\begin{bmatrix}
+                                    1 & 0 \\ 0& 1
+                                \end{bmatrix} \mat{x}(t)+\begin{bmatrix}
+                                                             1 \\ 0
+                                                         \end{bmatrix} \mat{u}(t) \\
+            \mat{y}(t)       & =\begin{bmatrix}
+                                    1 & 0
+                                \end{bmatrix} \mat{x}(t)+\mat{u}(t).
+        \end{aligned}
+    \end{equation}
+    The LTI category action of this system will be the same as the one of any system
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\begin{bmatrix}
+                                    1 & 0 \\ 0& \alpha
+                                \end{bmatrix} \mat{x}(t)+\begin{bmatrix}
+                                                             1 \\ 0
+                                                         \end{bmatrix} \mat{u}(t) \\
+            \mat{y}(t)       & =\begin{bmatrix}
+                                    1 & 0
+                                \end{bmatrix} \mat{x}(t)+\mat{u}(t),
+        \end{aligned}
+    \end{equation}
+    where~$\alpha \setin \reals$, because the output~$\mat{y}$ generation does not care about the second component of~$\mat{x}$.
+    However, there is no linear, invertible transformation which relates these systems.
+    Note that control theory has developed tools to deal with hidden parts of the dynamics.
+    Examples are the notion of controllability (ability of an actuator/input to control all states of a system) and observability (ability to estimate all states of the system).
+\end{proof}
+
+\devel{
+    \subsection{Descriptor systems}
+    \todo{J:Complete this part with subspaces.}
+
+    Descriptor systems (DLTI systems) are a generalization of LTI systems which differ only in that the defining system of equations has the form
+    \begin{align}
+        \mat{E} \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:DLTI-system-dyn} \\
+        \mat{y}(t)               & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:DLTI-system-ro}
+    \end{align}
+    where~$\mat{E}\colon \prst \to \prst$ is a linear map (again identifying the tangent space of~$\prst$ with~$\prst$).
+    Clearly, a DLTI system is an LTI system when~$\mat{E}$ is the identity map.
+
+    We associate the equation \cref{eq:DLTI-system-dyn} now with the relation
+    \begin{equation}
+        \prdyn \setsubseteq  (\prin \cartprod \prst) \cartprod \prst
+    \end{equation}
+    %given by
+    %\begin{equation}
+    %   \prdyn = \{ \tup{\tup{\mat{u}, \mat{x}} \mat{v}} \mid \mat{E} \mat{v} = \mat{A}\mat{x} + \mat{B}\mat{u} \}.
+    %\end{equation}
+
+}

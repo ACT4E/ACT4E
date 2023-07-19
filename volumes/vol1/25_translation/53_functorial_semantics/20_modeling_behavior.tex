@@ -1,0 +1,167 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Modeling behavior}
+
+We present here a general-purpose formalization of system behaviors, using relations between signals.
+This is certainly not the only way one might model system behaviors; we choose to introduce this model because it provides a flexible yet unified view on many types of behaviors.
+
+\subsection{Models of time}
+
+In order to describe a dynamical system, say, we typically use coordinate systems with some spatial or configuration-space coordinates, as well as a coordinate for keeping track of time.
+For dynamical systems, it is common to model time using the real numbers \reals.
+However, depending on the systems or situations at hand, various other models of time might be appropriate.
+
+For instance, in many real-life situations, time is measured at a certain granularity, and not, as the case with \reals, up to arbitrary precision.
+For example, flight delays might be reported with a precision up to units of 5 minutes, while delays in the local Zurich transport system are reported up-to-the-minute.
+In these cases, the integers $\wnumbers$ might be a more fitting model of time, where the step from one integer to the next corresponds to the smallest unit of time being measured.
+
+In other situations, we might want to measure time as progressing only forward from a fixed starting moment; in these cases models of time such as \nonNegReals or \natnumbers might be appropriate.
+
+Or, if you are the main character from the movie ``Arrival'', then maybe your personal model of time is a circle.
+
+\todotext{include in the margin a circular graphic from the movie arrival}
+
+Except for this last example, all the models of time discussed above have the common feature of coming equipped with a totally ordered \SY{poset} structure ``$\leq$''.
+\footnote{We recall that totally ordered means that for any two elements $\ela$ and $\elb$, it is the case that either $\ela \leq \elb$ or $\elb \leq \ela$.}  (Do you see what fails in the case of the circle?)
+
+In order to accommodate various models of time, we will sometimes simply work with a totally ordered set $\Time = \tup{\Time, \posleq}$ as a generic model of time.
+\todotext{\alphubel: @JL: Here the \SY{poset} and the set should have different colors.}
+
+\subsection{Sequences of events}
+
+When working in a frame of reference with both spatial and temporal coordinates, one might say that an event is something that happens in a specific place or context and at a specific time.
+
+For example, in the case of discrete-time LTI systems, we considered them acting on elements of $\streamsof\prinL$.
+Here, a sequence of events is elements of $\prinL$ indexed by a discrete time variable $t \setin \natnumbers$.
+Or, in the case of continuous LTI systems, we considered actions on continuous streams of events, modeled by some variant of $\prinL^{\reals}$ -- elements of $\prinL$ indexed by a time variable $t \setin \reals$.
+
+Sometimes, however, we don't care about \emph{when} events happen.
+Sometimes we only care about \emph{which} events happen and in what \emph{order}.
+
+For example, consider a simple model of a finite state machine and think of inputs to the machine as events.
+We might care only about the order of the inputs and not at what precise time of day they are received.
+
+In such cases, it may fit best to model the possible finite sequences of inputs by the set $\listsof{\prinL}$, where $\prinL$ is the set of possible inputs.
+Or, if we want to consider infinite sequences of events, we can use $\streamsof\prinL$.
+Note that here, the \natnumbers in $\streamsof\prinL$ is modeling the \emph{order} of events, while in the case of discrete-time LTI systems, the \natnumbers in $\streamsof\prinL$ may be modeling the actually \emph{timing} of events (and from this timing, we can also derive an order).
+
+\subsection{Signals}
+
+We will use the term ``signal'' as a unifying notion for the various types of things that systems might act upon.
+
+When discussing Moore and \SY{More machines}, we considered these machines acting on signals given by sequences of inputs and outputs.
+For instance, \emph{signals valued in} $\prinL$ might be modeled by $\listsof{\prinL}$, $\streamsof\prinL$, or $\prinL^{\wnumbers}$.
+
+For LTI systems, on the other hand, signals valued in $\prinL$ might be modeled by $\streamsof\prinL$ or $\prinL^{\wnumbers}$ in the discrete-time case, or in the continuous-time case by variants of $\prinL^{\nonNegReals}$ or $\prinL^{\reals}$ -- such as $C^1(\reals, \prinL)$ --- which take into account such aspects as differentiability, \etc
+
+All of these cases are different ways to take a set (or other type of space) $\prinL$ and build from it a set of signals valued in $\prinL$.
+And in fact they all do so in a functorial manner.
+We have already seen that
+\begin{equation}
+    \prinL \mapsto \listsof{\prinL}
+\end{equation}
+is part of a \SY{functor} $\Set \fto \Set$.
+Or, for a fixed model of time $\Time$, the operation
+\begin{equation}
+    \prinL \mapsto \prinL^{\Time}
+\end{equation}
+extends to a \SY{functor} $\Set \fto \Set$ by defining its action on morphisms to be
+\begin{equation}
+    \defmapunnamed{
+        \HomSet{\Set}{\Obja}{\Objb}
+    }{
+        \to
+    }{
+        \HomSet{\Set}{\Obja^\Time}{\Objb^\Time}
+    }{
+        \mora
+    }{
+        (\sigma \mapsto \sigma \mthen \mora).
+    }
+\end{equation}
+%
+Similarly,
+%
+\begin{equation}
+    \prinL \mapsto C^1(\reals, \prinL)
+\end{equation}
+%
+can be viewed, for example, as part of a \SY{functor} to \Set from a category whose objects are of the form $\reals^n$, for any $n \setin \natnumbers$, and whose morphisms are $C^1$ functions.
+The action of this \SY{functor} on morphisms is
+\begin{equation}
+    \defmapunnamed{
+        C^1(\styleobj{\reals^m},\styleobj{\reals^n})
+    }{
+        \to
+    }{
+        \HomSet{\Set}{\styleobj{C^1(\reals, \reals^m)}}{\styleobj{C^1(\reals, \reals^n)}}
+    }{
+        \mora
+    }{
+        (\gamma \mapsto \gamma \mthen \mora).
+    }
+\end{equation}
+
+In general, we will work with signal spaces of the form $\signalsin{\prinL}$, where $\signals$ is some (semi)functor which encodes how to build a space of signals from an initial set of space $\prinL$.
+
+\subsection{Behaviors}
+
+\todotext{@JL: rewrite this section}
+
+In the context of \SY{Moore machines}, we said that the behavior of a machine $\prinL \to \proutL$ might be modeled via an action as a function $\streamsof\prinL  \to \streamsof\proutL$ or $\listsof{\prinL} \to \listsof{\proutL}$.
+More generally, we can consider actions which produce a function $\signalsin{\prinL} \to \signalsin{\proutL}$, where $\signals$ is some chosen construction of signal spaces.
+
+In some cases, we will want to not only consider actions (which, by definition are \SY{functors} into the category \Set), but also other categories for modeling notions of behavior.
+In the following we will use categories of relations as general-purpose settings for modeling behaviors of systems.
+
+\begin{definition}\label{def:input-output-beh}
+    Let $\signalsin{\Obja}$ and $\signalsin{\Objb}$ be sets which model signals with values in $\Obja$ and~$\Objb$, respectively.
+    An \emph{input-output behavior}, with input space $\Obja$ and output space $\Objb$, is a relation
+    \begin{equation}
+        \relA \setsubseteq \signalsin{\Obja} \cartprod \signalsin{\Objb}.
+    \end{equation}
+\end{definition}
+
+\begin{definition}
+    \label{def:Beh}
+    Given a \SY{semicategory} \CatC (modeling some systems) and a \SY{semifunctor} $\signals: \CatC \to \Set$ (modeling sets of signals), we define the category~$\Beh_\signals$ of input-output behaviors with respect to $\signals$ as the category where:
+    \begin{enumerate}
+        \item Objects consist of all sets of the form~$\signalsin{\Obja}$, with~$\Obja$ ranging over all objects of \CatC.
+        \item Morphisms from~$\signalsin{\Obja}$ to~$\signalsin{\Objb}$ are relations from~$\signalsin{\Obja}$ to~$\signalsin{\Objb}$:
+              \begin{equation}
+                  \HomSet{\Beh_\signals}{\signalsin{\Obja}}{\signalsin{\Objb}} = \powerset (\signalsin{\Obja} \cartprod \signalsin{\Objb}).
+              \end{equation}
+        \item Composition is the usual composition of relations.
+        \item The \SY{identity morphism} at an object~$\signalsin{\Obja}$ is the usual identity relation from~$\signalsin{\Obja}$ to itself.
+    \end{enumerate}
+\end{definition}
+
+\todotext{J: @JL: explain how the different actions of \SY{Moore machines} discussed so far fit into this picture}
+
+\todotext{J: @JL: include LTI action as an example}
+
+\todotext{J: are there examples where we might want to consider a construction $\signals$ which is distinct from the action \SY{functor} itself?}
+
+\todotext{J: include an example where indeterminacy is involved in the behavior}
+
+\subsection{Linear behaviors}
+
+Let us consider input/output spaces $\Obja$ which are \SY{vector spaces} over some field~$\field$ and consider the signal-space construction $\signalsin{\Obja} = \Obja^\Time$ for some model $\Time$ of time.
+The set $\Obja^\Time$ naturally inherits a~$\field$-vector space structure from~$\Obja$ (by defining addition and scalar multiplication of functions point wise), and so we may consider input-output behaviors
+\begin{equation}
+    \relA \setsubseteq \Obja^\Time \oplus \Objb^\Time
+\end{equation}
+which are~$\field$-linear relations.
+
+\begin{definition}\label{def:linear-io-behavior}
+    Fix a totally ordered set~$\Time = \tup{\Time, {\posleq}}$.
+    The category~$\LBeh_\Time$ of~$\field$-linear input-output behaviors is the category where:
+    \begin{enumerate}
+        \item Objects consist of all~$\field$-vector spaces of the form~$\Obja^\Time$, ranging over all~$\field$-vector spaces~$\Obja$.
+        \item Morphisms from~$\Obja^\Time$ to $\Objb^\Time$ are linear subspaces of~$\Obja^\Time \oplus \Objb^\Time$.
+        \item The \SY{identity morphism} at an object~$\Obja^\Time$ is the usual identity relation from~$\Obja^\Time$ to itself (this is always~$\field$-linear).
+        \item Composition is the usual composition of relations.
+    \end{enumerate}
+\end{definition}
+
+\todotext{J: @JL: remark that LTI action as an example that has linear behaviors}
