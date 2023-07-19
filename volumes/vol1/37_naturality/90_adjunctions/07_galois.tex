@@ -9,7 +9,7 @@
 Formal concept analysis (FCA) is a mathematical theory which formalizes the relationships, and in particular hierarchies, that appear when we consider a set of \emph{things} -- these are called \emph{objects} in FCA -- together with a set of \emph{attributes} that these things may or may not have.
 (We will use the word ``things'' instead of ``objects'', because we are already using the word ``objects'' in the category-theory sense.)
 
-The most basic set-up for formal concept analysis is to start with a triple $\tup{\things, \attributes, \incidence}$, where $\things$ is a set of things (``G'' stands for the German word ``Gegenst\"ande''), $\attributes$ is a set of attributes (``M'' stands for the German word ``Merkmale''), and $\incidence \subseteq \things \cartprod \attributes$ is a relation that encodes which objects are associated with which attributes (``I'' stands for the German word ``Inzidenz'').
+The most basic set-up for formal concept analysis is to start with a triple $\tup{\things, \attributes, \incidence}$, where $\things$ is a set of things (``G'' stands for the German word ``Gegenst\"ande''), $\attributes$ is a set of attributes (``M'' stands for the German word ``Merkmale''), and $\incidence \setsubseteq \things \cartprod \attributes$ is a relation that encodes which objects are associated with which attributes (``I'' stands for the German word ``Inzidenz'').
 The triple $\tup{\things, \attributes, \incidence}$ is called a \emph{formal context}.
 
 Here is a (very simplified) example in the context of ``private means of transportation''.
@@ -32,7 +32,7 @@ which describe aspects such how the means of transportation are powered, their r
 %\begin{equation}
 %\attributes = \makeset{\text{F}, \text{E}, \text{G}, \text{H}, \text{C}}.
 %\end{equation}
-We define the relation $\incidence \subseteq \things \cartprod \attributes$ via the following table
+We define the relation $\incidence \setsubseteq \things \cartprod \attributes$ via the following table
 \begin{center}
     \begin{tabular}{c|c|c|c|c|c}\label{fca-table-private-transportation}
                          & fast     & electric & gas      & muscle   & cheap \\
@@ -64,7 +64,7 @@ For example
     \incidence_\sharp(\makeset{\text{hybrid car}}) = \makeset{\text{fast}, \text{electric}, \text{gas}}.
 \end{equation}
 
-More generally, given a subset $\setA \subseteq \things$, can can consider the largest set $\incidence_\sharp(\setA)$ of attributes which all elements of $\setA$ have in common.
+More generally, given a subset $\setA \setsubseteq \things$, can can consider the largest set $\incidence_\sharp(\setA)$ of attributes which all elements of $\setA$ have in common.
 For example
 \begin{equation}\label{eq:fca-example-pushforward-2}
     \incidence_\sharp(\makeset{\text{hybrid car}, \text{electric car}}) = \makeset{\text{fast}, \text{electric}}.
@@ -77,12 +77,12 @@ Similarly,
 \end{equation}
 Also, we have, for example,
 \begin{equation}\label{eq:fca-example-pushforward-4}
-    \incidence_\sharp(\makeset{\text{classic car}, \text{classic bike}}) = \emptyset
+    \incidence_\sharp(\makeset{\text{classic car}, \text{classic bike}}) = \Emptyset
 \end{equation}
 because ``\text{classic car}'' and ``\text{classic bike}'' have \emph{no} attributes from the set $\attributes$ in common.
 In general we have
 \begin{equation}\label{eq:fca-example-pushforward-5}
-    \incidence_\sharp(\setA) = \bigcap_{\ela \setin \setA} \incidence_\sharp(\makeset{\ela}).
+    \incidence_\sharp(\setA) = \bigsetintersection_{\ela \setin \setA} \incidence_\sharp(\makeset{\ela}).
 \end{equation}
 and the operation ``$\incidence_\sharp$'' defines a function
 \begin{equation}\label{eq:fca-example-pushforward-6}
@@ -92,22 +92,22 @@ and the operation ``$\incidence_\sharp$'' defines a function
 Observe that the larger $\setA$ is, the smaller $\incidence_\sharp(\setA)$ will be.
 Formulated more mathematically, we have
 \begin{equation}\label{eq:fca-example-pushforward-7}
-    \setA \subseteq \setA' \quad \implies \quad \incidence_\sharp(\setA) \supseteq \incidence_\sharp(\setA').
+    \setA \setsubseteq \setA' \quad \implies \quad \incidence_\sharp(\setA) \setsupseteq \incidence_\sharp(\setA').
 \end{equation}
 Another way of saying this is to say that $\incidence_\sharp$ is a monotone map of posets
 \begin{equation}\label{eq:fca-example-pushforward-8}
-    \incidence_\sharp \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \attributes, \supseteq}.
+    \incidence_\sharp \colon \tup{\powerset \things, \setsubseteq} \mto \tup{\powerset \attributes, \setsupseteq}.
 \end{equation}
 Or, equivalently, we can say that $\incidence_\sharp$ is a monotone map
 \begin{equation}\label{eq:fca-example-pushforward-9}
-    \incidence_\sharp \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \attributes, \subseteq}\op.
+    \incidence_\sharp \colon \tup{\powerset \things, \setsubseteq} \mto \tup{\powerset \attributes, \setsubseteq}\op.
 \end{equation}
 
 Note that we can also define a similar map in the other direction: there is a function
 \begin{equation}\label{eq:fca-example-pullback-1}
     \incidence_\flat \colon \powerset \attributes \mto \powerset \things
 \end{equation}
-defined such that for any subset $\setB \subseteq \attributes$, the set $\incidence_\flat(\setB)$ is the largest set of elements of $\things$ such that the attributes in $\setB$ apply to all of the elements of $\incidence_\flat(\setB)$.
+defined such that for any subset $\setB \setsubseteq \attributes$, the set $\incidence_\flat(\setB)$ is the largest set of elements of $\things$ such that the attributes in $\setB$ apply to all of the elements of $\incidence_\flat(\setB)$.
 For example,
 \begin{equation}\label{eq:fca-example-pullback-2}
     \incidence_\flat(\makeset{\text{muscle}, \text{cheap}}) = \makeset{\text{classic bike}, \text{skateboard}}.
@@ -115,30 +115,30 @@ For example,
 The map $\incidence_\flat$ is also order-reversing with respect to inclusion of sets: if we start with a larger set of attributes, then set of things that these all apply to will be smaller.
 Thus we have a monotone map
 \begin{equation}\label{eq:fca-example-pullback-3}
-    \incidence_\flat \colon \tup{\powerset \attributes, \subseteq}\op \mto \tup{\powerset \things, \subseteq}.
+    \incidence_\flat \colon \tup{\powerset \attributes, \setsubseteq}\op \mto \tup{\powerset \things, \setsubseteq}.
 \end{equation}
 We will also want to use its opposite, the monotone map
 \begin{equation}\label{eq:fca-example-pullback-4}
-    \incidence_\flat\op \colon \tup{\powerset \attributes, \subseteq} \mto \tup{\powerset \things, \subseteq}\op.
+    \incidence_\flat\op \colon \tup{\powerset \attributes, \setsubseteq} \mto \tup{\powerset \things, \setsubseteq}\op.
 \end{equation}
 
 In the following, we will try to keep track of when there is an superscript ``$( - )\op $''; however sometimes it will be convenient to use the notations $\incidence_\sharp$ and $\incidence_\flat$ both for these maps \emph{and} their opposites (in particular, on the level of objects they are the same function).
 
 A key observation is that $\incidence_\sharp$ and $\incidence_\flat$ are ``complementary'' in the following sense.
-For any $\setA \subseteq \things$ and any $\setB \subseteq \attributes$ we have
+For any $\setA \setsubseteq \things$ and any $\setB \setsubseteq \attributes$ we have
 \begin{equation}\label{eq:concept-adjunction}
-    \incidence_\sharp(\setA) \supseteq \setB \quad \Leftrightarrow \quad \setA \subseteq \incidence_\flat(\setB).
+    \incidence_\sharp(\setA) \setsupseteq \setB \quad \Leftrightarrow \quad \setA \setsubseteq \incidence_\flat(\setB).
 \end{equation}
 This equivalence formalizes the (nearly tautological-seeming) statement that a set $\setB$ is contained in the largest set of attributes which apply to all members of $\setA$ (meaning: the attributes $\setB$ apply to all elements of $\setA$) if, and only if, $\setA$ is contained in the largest set of things to which all attributes $\setB$ apply (again meaning: the attributes $\setB$ apply to all elements of $\setA$).
 
 Despite seeming tautological, we can use the equivalence \cref{eq:concept-adjunction} to make non-trivial observations.
 One consequence of \cref{eq:concept-adjunction} is that the monotone maps
 \begin{equation}\label{eq:fca-closure-operator-things}
-    \incidence_\sharp \mthen \incidence_\flat \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}
+    \incidence_\sharp \mthen \incidence_\flat \colon \tup{\powerset \things, \setsubseteq} \mto \tup{\powerset \things, \setsubseteq}
 \end{equation}
 and
 \begin{equation}\label{eq:fca-closure-operator-attributes}
-    \incidence_\flat\op \mthen \incidence_\sharp\op \colon \tup{\powerset \attributes, \subseteq} \mto \tup{\powerset \attributes, \subseteq}.
+    \incidence_\flat\op \mthen \incidence_\sharp\op \colon \tup{\powerset \attributes, \setsubseteq} \mto \tup{\powerset \attributes, \setsubseteq}.
 \end{equation}
 are examples of what are called a \emph{closure operator} and \emph{interior operator}, respectively.
 
@@ -187,36 +187,36 @@ In this section, for simplicity, we will work mainly in terms of closure operato
 \begin{lemma}\label{lem:cfa-closure-operators}
     The monotone maps
     \begin{equation}
-        \incidence_\sharp \mthen \incidence_\flat \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}
+        \incidence_\sharp \mthen \incidence_\flat \colon \tup{\powerset \things, \setsubseteq} \mto \tup{\powerset \things, \setsubseteq}
     \end{equation}
     and
     \begin{equation}
-        \incidence_\flat\op \mthen \incidence_\sharp\op \colon \tup{\powerset \attributes, \subseteq} \mto \tup{\powerset \attributes, \subseteq}.
+        \incidence_\flat\op \mthen \incidence_\sharp\op \colon \tup{\powerset \attributes, \setsubseteq} \mto \tup{\powerset \attributes, \setsubseteq}.
     \end{equation}
     are closure operators.
 \end{lemma}
 
 \begin{proof}
-    Let's check that $\incidence_\sharp \mthen \incidence_\flat \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}$ is a closure operator, using \cref{eq:concept-adjunction}.
+    Let's check that $\incidence_\sharp \mthen \incidence_\flat \colon \tup{\powerset \things, \setsubseteq} \mto \tup{\powerset \things, \setsubseteq}$ is a closure operator, using \cref{eq:concept-adjunction}.
     We omit the proof for $\incidence_\flat\op \mthen \incidence_\sharp\op$, which may be done analogously.
 
-    To show the first condition in the definition of closure operator, fix a set of things $\setA \subseteq \things$.
+    To show the first condition in the definition of closure operator, fix a set of things $\setA \setsubseteq \things$.
     In the situation of \cref{eq:concept-adjunction}, choose $\setB = \incidence_\sharp(\setA)$.
-    Since $\incidence_\sharp(\setA) \supseteq \incidence_\sharp(\setA)$ is true, \cref{eq:concept-adjunction} implies that $\setA \subseteq \incidence_\flat(\incidence_\sharp(\setA)) = (\incidence_\sharp \mthen \incidence_\flat)(\setA)$.
+    Since $\incidence_\sharp(\setA) \setsupseteq \incidence_\sharp(\setA)$ is true, \cref{eq:concept-adjunction} implies that $\setA \setsubseteq \incidence_\flat(\incidence_\sharp(\setA)) = (\incidence_\sharp \mthen \incidence_\flat)(\setA)$.
 
     Now let's consider the second condition.
-    Applying the monotone map $\incidence_\sharp \mthen \incidence_\flat$ to the relation $\setA \subseteq (\incidence_\sharp \mthen \incidence_\flat)(\setA)$, we have
+    Applying the monotone map $\incidence_\sharp \mthen \incidence_\flat$ to the relation $\setA \setsubseteq (\incidence_\sharp \mthen \incidence_\flat)(\setA)$, we have
     \begin{equation}
-        (\incidence_\sharp \mthen \incidence_\flat)(\setA) \subseteq (\incidence_\sharp \mthen \incidence_\flat \mthen \incidence_\sharp \mthen \incidence_\flat)(\setA).
+        (\incidence_\sharp \mthen \incidence_\flat)(\setA) \setsubseteq (\incidence_\sharp \mthen \incidence_\flat \mthen \incidence_\sharp \mthen \incidence_\flat)(\setA).
     \end{equation}
     Thus we are finished when we show the inclusion in the other direction.
     By the first condition, we know that
     \begin{equation}
-        \incidence_\sharp(\setA) \subseteq \incidence_\sharp( \incidence_\flat (\incidence_\sharp(\setA))) = (\incidence_\sharp \mthen \incidence_\flat \mthen \incidence_\sharp)(\setA).
+        \incidence_\sharp(\setA) \setsubseteq \incidence_\sharp( \incidence_\flat (\incidence_\sharp(\setA))) = (\incidence_\sharp \mthen \incidence_\flat \mthen \incidence_\sharp)(\setA).
     \end{equation}
     Applying the order-reversing map $\incidence_\flat$ to both sides of this inclusion then gives
     \begin{equation}
-        (\incidence_\sharp \mthen \incidence_\flat)(\setA) \supseteq (\incidence_\sharp \mthen \incidence_\flat \mthen \incidence_\sharp \mthen \incidence_\flat)(\setA)
+        (\incidence_\sharp \mthen \incidence_\flat)(\setA) \setsupseteq (\incidence_\sharp \mthen \incidence_\flat \mthen \incidence_\sharp \mthen \incidence_\flat)(\setA)
     \end{equation}
     as desired.
 \end{proof}
@@ -252,9 +252,9 @@ We will use the term \emph{fixed-points} to refer to both of these cases without
 \end{remark}
 
 Returning now to formal concept analysis, let's look at closures and closed elements for the closure operators
-$$\incidence_\sharp \mthen \incidence_\flat \colon \tup{\powerset \things, \subseteq} \mto \tup{\powerset \things, \subseteq}$$
+$$\incidence_\sharp \mthen \incidence_\flat \colon \tup{\powerset \things, \setsubseteq} \mto \tup{\powerset \things, \setsubseteq}$$
 and
-$$\incidence_\flat\op \mthen \incidence_\sharp\op \colon \tup{\powerset \attributes, \subseteq} \mto \tup{\powerset \attributes, \subseteq} $$
+$$\incidence_\flat\op \mthen \incidence_\sharp\op \colon \tup{\powerset \attributes, \setsubseteq} \mto \tup{\powerset \attributes, \setsubseteq} $$
 in terms of our simple example.
 
 For example, let
@@ -269,7 +269,7 @@ and
 \begin{equation}\label{eq:cfa-closure-example-3}
     \incidence_\flat(\incidence_\sharp(\setA)) = \incidence_\flat(\makeset{\text{fast}}) = \makeset{\text{classic car}, \text{hybrid car}, \text{electric car}}.
 \end{equation}
-So $\setA = \makeset{\text{classic car}, \text{electric car}}$ is not a closed element of $\tup{\powerset \things, \subseteq}$.
+So $\setA = \makeset{\text{classic car}, \text{electric car}}$ is not a closed element of $\tup{\powerset \things, \setsubseteq}$.
 Its closure contains the element ``$\text{hybrid car}$'' which is not in $\setA$.
 
 Or consider
@@ -284,7 +284,7 @@ and
 \begin{equation}\label{eq:cfa-closure-example-6}
     \incidence_\sharp(\incidence_\flat(\setB)) = \incidence_\sharp(\makeset{\text{hybrid bike}}) = \makeset{\text{electric}, \text{muscle}} = \setB.
 \end{equation}
-We find here that $\makeset{\text{hybrid bike}}$ \emph{is} a closed element of $\tup{\powerset \attributes, \subseteq}$.
+We find here that $\makeset{\text{hybrid bike}}$ \emph{is} a closed element of $\tup{\powerset \attributes, \setsubseteq}$.
 
 In general, given a set $\setA$ of things, its closure $(\incidence_\sharp \mthen \incidence_\flat)(\setA)$ is the largest set of things that share the attributes in $\incidence_\sharp(\setA)$.
 And $\incidence_\sharp(\setA)$ is the largest set of attributes shared by $\setA$.
@@ -317,11 +317,11 @@ We set
 \begin{equation}\label{eq:partial-order-concepts}
     \tup{\setA_1, \setB_1} \posleq \tup{\setA_2, \setB_2}
 \end{equation}
-if $\setA_1 \subseteq \setA_2$ and $\setB_1 \supseteq \setB_2$.
+if $\setA_1 \setsubseteq \setA_2$ and $\setB_1 \setsupseteq \setB_2$.
 (In fact, by the definition of a concept, if one of the latter inclusions holds, then so must the other, so we only need to require one of them.) When \cref{eq:partial-order-concepts} holds, we say that $\tup{\setA_1, \setB_1}$ is a \emph{subconcept} of $\tup{\setA_2, \setB_2}$
 
 \begin{lemma}\label{lem:extents-and-intents-are-closed}
-    If $\tup{\setA, \setB}$ is a concept, then $\setA$ and $\setB$ are closed elements of $\tup{\powerset \things, \subseteq}$ and $\tup{\powerset \attributes, \subseteq}$, respectively.
+    If $\tup{\setA, \setB}$ is a concept, then $\setA$ and $\setB$ are closed elements of $\tup{\powerset \things, \setsubseteq}$ and $\tup{\powerset \attributes, \setsubseteq}$, respectively.
 \end{lemma}
 
 \begin{proof}
@@ -334,9 +334,9 @@ if $\setA_1 \subseteq \setA_2$ and $\setB_1 \supseteq \setB_2$.
 \end{proof}
 
 \begin{lemma}\label{lem:closed-elements-define-concepts}
-    If $\setA \in \tup{\powerset \things, \subseteq}$ is closed, then $\incidence_\sharp(\setA)$ is closed and $\tup{\setA, \incidence_\sharp(\setA)}$ is a concept.
+    If $\setA \in \tup{\powerset \things, \setsubseteq}$ is closed, then $\incidence_\sharp(\setA)$ is closed and $\tup{\setA, \incidence_\sharp(\setA)}$ is a concept.
 
-    Similarly, if $\setB \in \tup{\powerset \attributes, \subseteq}$ is closed, then $\incidence_\flat(\setB)$ is closed and $\tup{\incidence_\flat(\setB), \setB)}$ is a concept.
+    Similarly, if $\setB \in \tup{\powerset \attributes, \setsubseteq}$ is closed, then $\incidence_\flat(\setB)$ is closed and $\tup{\incidence_\flat(\setB), \setB)}$ is a concept.
 \end{lemma}
 
 \begin{proof}
@@ -350,7 +350,7 @@ if $\setA_1 \subseteq \setA_2$ and $\setB_1 \supseteq \setB_2$.
 \end{proof}
 
 \begin{lemma}\label{lem:fca-fixed-points-isom-concepts}
-    The posets of fixed points $\tup{\powerset \things_{\text{fix}}, \subseteq}$ and $\tup{\powerset \attributes_{\text{fix}}, \subseteq}\op$ are isomorphic via the restrictions of $\incidence_\sharp$ and $\incidence_\flat$, and each is isomorphic to the poset $\tup{\mathcal{B}\tup{\things, \attributes, \incidence}, \posleq}$ via its projections onto its first and second factors, respectively.
+    The posets of fixed points $\tup{\powerset \things_{\text{fix}}, \setsubseteq}$ and $\tup{\powerset \attributes_{\text{fix}}, \setsubseteq}\op$ are isomorphic via the restrictions of $\incidence_\sharp$ and $\incidence_\flat$, and each is isomorphic to the poset $\tup{\mathcal{B}\tup{\things, \attributes, \incidence}, \posleq}$ via its projections onto its first and second factors, respectively.
 \end{lemma}
 
 \begin{proof}
