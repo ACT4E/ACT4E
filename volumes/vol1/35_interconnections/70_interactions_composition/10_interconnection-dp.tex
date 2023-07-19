@@ -1,6 +1,105 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Lattice interaction with composition}
+\section{Interconnection of DPs}
+\todotext{\alphubel: Better referencing to previous parts.}
+In the previous part, we introduced the concept of order in~\DP, and proved that \SY{hom-sets} of~\DP form a \SY{bounded lattice}.
+In this section, we show that monoidal product and trace (\cref{def:dp-trace}) of \SY{design problems} are order-preserving operations.
+
+\todographicsjira{432}{@Gioele: (polish) These relations are very well explained with diagrams.}
+
+\begin{lemma}
+    \label{lem:tens_pres_order}
+    Given~$\adpa,\adpb \setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc,\adpd \setin \HomSet{\DP}{\F{\posgenC}}{\R{\posgenD}}$, we have:
+
+    \begin{equation}
+        \prfperiod{
+            \adpa\posDPleq \adpb
+        }{
+            \adpc\posDPleq \adpd
+        }{
+            (\adpa\mtimescat \adpc )\posDPleq (\adpb\mtimescat \adpd)
+        }
+    \end{equation}
+    In other words, the monoidal product preserves order on~\DP.
+\end{lemma}
+
+\begin{proof}
+    We have
+    \begin{equation}
+        \label{eq:tens_pres_ord}
+        \begin{aligned}
+            ~ & \pars{ \adpa\mtimescat \adpc} (\tup{\FposgenAel,\F{\posgenCel}}\Fop, \tup{\RposgenBel,\R{\posgenDel}}) \\
+              & = \adpa(\FposgenAelop,\RposgenBel)\booland \adpc(\F{\posgenCel^*},\R{\posgenDel}) \\
+              & \posDPleq \adpb(\FposgenAelop,\RposgenBel)\booland \adpd(\F{\posgenCel^*},\R{\posgenDel}) \\
+              & =\pars{ \adpb\mtimescat \adpc} (\tup{\FposgenAel,\F{\posgenCel}}\Fop, \tup{\RposgenBel,\R{\posgenDel}}).
+        \end{aligned}
+    \end{equation}
+    Therefore,~$\mtimescat$ is order-preserving on \DP.
+\end{proof}
+
+\begin{lemma}
+    \label{lem:trace_pres_order}
+    Given~$\adpa,\adpb\setin \HomSet{\DP}{\F{\posgenC}\Ptimes \F{\posgenA}}{\R{\posgenC}\Ptimes \R{\posgenB}}$, we have:
+
+    \begin{equation}
+        \prfperiod{\adpa\posDPleq \adpb}{\Tr_{\F{\posgenA},\R{\posgenB}}^\posC(\adpa)\posDPleq \Tr_{\F{\posgenA},\R{\posgenB}}^\posC(\adpb)}
+    \end{equation}
+    In other words, trace preserves order on~\DP.
+\end{lemma}
+
+\begin{proof}
+    We have
+    \begin{equation}
+        \label{eq:trace_pres_ord}
+        \begin{aligned}
+            ~ & \Tr_{\F{\posgenA},\R{\posgenB}}^\posC(\adpa)(\FposgenAelop,\RposgenBel) \\
+              & = \bigvee_{\posCel\setin \posC}\adpa(\tup{\F{\posgenCel},\FposgenAel}\Fop, \tup{\R{\posgenCel},\RposgenBel}) \\
+              & \posDPleq \bigvee_{\posCel\setin \posC}\adpb(\tup{\F{\posgenCel},\FposgenAel}\Fop, \tup{\R{\posgenCel},\RposgenBel}) \\
+              & =\Tr_{\F{\posgenA},\R{\posgenB}}^\posC(\adpb)(\FposgenAelop,\RposgenBel).
+        \end{aligned}
+    \end{equation}
+    Therefore,~$\Tr$ is order-preserving on~\DP.
+\end{proof}
+
+\begin{lemma}
+    \label{lem:coprod_mon}
+    Given~$\adpa,\adpb,\adpc,\adpd \setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ we have:
+    \begin{equation}
+        \prfperiod{\adpa\posleqof\DP \adpb\ }{\ \adpc\posleqof\DP\adpd}{(\adpa \dpjoin\adpc)\posleqof\DP (\adpb\dpjoin \adpd)}
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    For any~$\FposgenAel\setin \F{\posgenA}$,~$\RposgenBel\setin \R{\posgenB}$:
+    \begin{equation}
+        \begin{aligned}
+            ~ & (\adpa \dpjoin \adpc)(\FposgenAelop,\RposgenBel) \\
+              & =\adpa(\FposgenAelop,\RposgenBel)\boolor \adpc(\FposgenAelop,\RposgenBel) \\
+              & \posleqof\DP \adpb(\FposgenAelop,\RposgenBel)\boolor \adpc(\FposgenAelop,\RposgenBel) \\
+              & \posleqof\DP \adpb(\FposgenAelop,\RposgenBel)\boolor \adpd(\FposgenAelop,\RposgenBel).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\begin{lemma}
+    \label{lem:intersection_mon}
+    Given~$\adpa,\adpb,\adpc,\adpd \setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ we have:
+    \begin{equation}
+        \prfperiod{\adpa\posleqof\DP \adpb\ }{\ \adpc\posleqof\DP \adpd}{(\adpa \dpmeet \adpc)\posleqof\DP (\adpb\dpmeet \adpd)}
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    For any~$\FposgenAel\setin \F{\posgenA}$,~$\RposgenBel\setin \R{\posgenB}$:
+    \begin{equation}
+        \begin{aligned}
+            ~ & (\adpa \dpmeet \adpc)(\FposgenAel^*,\RposgenBel) \\
+              & =\adpa(\FposgenAelop,\RposgenBel)\booland \adpc(\FposgenAelop,\RposgenBel) \\
+              & \posleqof\DP \adpb(\FposgenAelop,\RposgenBel)\booland \adpc(\FposgenAelop,\RposgenBel) \\
+              & \posleqof\DP \adpb(\FposgenAelop,\RposgenBel)\booland \adpd(\FposgenAelop,\RposgenBel).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\subsection{Lattice interaction with composition}
 
 \todotextjira{627}{\alphubel: @Andrea: description and intro}
 \todojira{628}{\alphubel: reference to previous parts}
@@ -129,3 +228,4 @@
 \end{remark}
 
 \todo{If needed, let's add a specific case}
+
