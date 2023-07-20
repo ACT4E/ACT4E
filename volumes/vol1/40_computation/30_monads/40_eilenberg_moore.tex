@@ -2,7 +2,6 @@
 
 \section{Algebras of a monad}
 \label{sec:Eilenberg-Moore}
-\todotext{@JL: make the arbitrary operation a macro}
 
 \linkvideo{spring2021-monads-b:another-persp-mon} % Another perspective on monads
 \linkvideo{spring2021-monads-b:formal-expressions} % Formal expressions
@@ -14,39 +13,39 @@ In the context of Kleisli morphisms, we developed the intuition that \SY{monads}
 In this section we will introduce a different intuition for \SY{monads}: that they can be used to provide coherent way to encode ``formal expressions'', together with a way to ``evaluate'' or ``compute'' such expressions.
 
 Let us explain what we mean using an example.
-Given a set \Obja, say
+Given a set $\setA$, say
 \begin{equation}
-    \Obja = \makeset{ \sapple, \sbanana, \scarrot },
+    \setA = \makeset{ \sapple, \sbanana, \scarrot },
 \end{equation}
-let's define a certain type of ``formal expressions'', using elements of \Obja and using a ``formal composition symbol'', which we choose to be ``$*$''.
+let's define a certain type of ``formal expressions'', using elements of $\setA$ and using a ``formal composition symbol'', which we choose to be ``$\symboliccomposition$''.
 Now, the ``formal expressions'' we consider are all finite expressions which have a form such as
 \begin{equation}
     \label{eq:formal-composition-1}
-    \sbanana * \sbanana * \sapple,
+    \sbanana \symboliccomposition \sbanana \symboliccomposition \sapple,
 \end{equation}
 or
 \begin{equation}
     \label{eq:formal-composition-2}
-    \sapple * \sbanana * \sapple * \sapple * \sbanana * \sapple,
+    \sapple \symboliccomposition \sbanana \symboliccomposition \sapple \symboliccomposition \sapple \symboliccomposition \sbanana \symboliccomposition \sapple,
 \end{equation}
 and so on.
-These expressions are ``formal'' (or ``purely symbolic'') in the sense that, a priori, the symbol ``$*$'' does not have any \emph{meaning} beyond simply being a symbol, a ``marking''.
-After all, so far, \Obja is just a set, and we did not assume that it comes equipped with any sort of ``multiplication operation'', for instance.
+These expressions are ``formal'' (or ``purely symbolic'') in the sense that, a priori, the symbol ``$\symboliccomposition$'' does not have any \emph{meaning} beyond simply being a symbol, a ``marking''.
+After all, so far, $\setA$ is just a set, and we did not assume that it comes equipped with any sort of ``multiplication operation'', for instance.
 In the following we will discuss a way of giving such formal expressions a ``computational meaning'' by specifying a way to evaluate them.
 
-Before we come to this however, let us introduce a notation to explicitly distinguish when we are thinking about $\sapple$ as an element of \Obja, or $\sapple$ as a ``formal expression''.
-\todotext{\alphubel: use a macro for the formal expression - also do not use the list brackets.}
+Before we come to this however, let us introduce a notation to explicitly distinguish when we are thinking about $\sapple$ as an element of $\setA$, or $\sapple$ as a ``formal expression''.
+\todotext{\alphubel: do not use the list brackets.}
 For the latter situation we write ``$[\sapple]$''.
 In other words, the square brackets indicate that $[\sapple]$ is a formal expression.
-And we'll say that formal expressions can be combined, using $*$, to larger formal expressions.
-So, following this convention, $[\sapple] * [\sbanana]$ is also a formal expression.
+And we'll say that formal expressions can be combined, using $\symboliccomposition$, to larger formal expressions.
+So, following this convention, $[\sapple] \symboliccomposition [\sbanana]$ is also a formal expression.
 And in particular, instead of \cref{eq:formal-composition-2}, we'll write
 \begin{equation}
     \label{eq:formal-composition-bracketed}
-    [\sapple] * [\sbanana] * [\sapple] * [\sapple] * [\sbanana] * [\sapple].
+    [\sapple] \symboliccomposition [\sbanana] \symboliccomposition [\sapple] \symboliccomposition [\sapple] \symboliccomposition [\sbanana] \symboliccomposition [\sapple].
 \end{equation}
 %
-In an expression such as \cref{eq:formal-composition-bracketed} we'll think of the components $[\sapple]$ and $[\sbanana]$ as if they are ``letters'' (but we won't count ``$*$'' as a letter) and we'll think of the whole expression \cref{eq:formal-composition-bracketed} like a ``word''.
+In an expression such as \cref{eq:formal-composition-bracketed} we'll think of the components $[\sapple]$ and $[\sbanana]$ as if they are ``letters'' (but we won't count ``$\symboliccomposition$'' as a letter) and we'll think of the whole expression \cref{eq:formal-composition-bracketed} like a ``word''.
 For any such word, we'll say its \emph{length} is the number of letters it is built from.
 So, for instance, the word in \cref{eq:formal-composition-bracketed} has a length of $6$.
 In our notion of formal expression, we'll choose to include a unique special word of length $0$, which we call the ``empty formal expression'' and denote by ``[ ]''.
@@ -55,12 +54,12 @@ Using square brackets we can also build ``formal expressions of formal expressio
 For example, given the formal expression $[\sapple] * [\sbanana]$, we can turn it into a second-order formal expression by putting brackets around it:
 \begin{equation}
     \label{eq:double-formal-expression}
-    [[\sapple] * [\sbanana]].
+    [[\sapple] \symboliccomposition [\sbanana]].
 \end{equation}
-And given another second-order formal expression, say $[[\sbanana] * [\sbanana] * [\sapple]]$, we can ``compose'' it with the one in \cref{eq:double-formal-expression} like so:
+And given another second-order formal expression, say $[[\sbanana] \symboliccomposition [\sbanana] \symboliccomposition [\sapple]]$, we can ``compose'' it with the one in \cref{eq:double-formal-expression} like so:
 \begin{equation}
     \label{eq:double-formal-expression-comp}
-    [[\sapple] * [\sbanana]] * [[\sbanana] * [\sbanana] * [\sapple]].
+    [[\sapple] \symboliccomposition [\sbanana]] \symboliccomposition [[\sbanana] \symboliccomposition [\sbanana] \symboliccomposition [\sapple]].
 \end{equation}
 The notion of length will also apply to second-order expressions.
 For instance, the second-order expression \cref{eq:double-formal-expression-comp} has length 2, and is composed of one first-order expression of length 2 and one first-order expression of length 3.
@@ -68,32 +67,33 @@ For instance, the second-order expression \cref{eq:double-formal-expression-comp
 This whole game can continue ad infinitum: we define third-order formal expressions to be those with three-layers of square brackets, fourth-order formal expressions have four layers of brackets, and so on.
 In the following, we'll probably only ever consider up to three layers.
 
-We started our story just with the set $\Obja = \makeset{ \sapple, \sbanana, \scarrot }$.
-However, we can do the same construction -- using ``$*$'' and building formal expressions of any order -- with any set.
-In fact, we can define a \SY{functor} $\funa: \Set \fto \Set$ which maps any set \Obja to the set $\funa \Obja$ whose elements are all finite first-order formal expressions built from elements of \Obja.
+We started our story just with the set $\setA = \makeset{ \sapple, \sbanana, \scarrot }$.
+However, we can do the same construction -- using ``$\symboliccomposition$'' and building formal expressions of any order -- with any set.
+In fact, we can define a \SY{functor} $\funa: \Set \fto \Set$ which maps any set $\setA$ to the set $\funa \setA$ whose elements are all finite first-order formal expressions built from elements of $\setA$.
 We also include this to mean the empty formal expression ``$[ ]$''.
 What might this \SY{functor} do on the level of morphisms?
-For concreteness, let $\Obja = \makeset{ \sapple, \sbanana, \scarrot } $ and $\setB = \makeset{ \swater, \stea }$.
-Given a function $\mora \colon \Obja \sto \setB$, we define
+For concreteness, let $\setA = \makeset{ \sapple, \sbanana, \scarrot } $ and $\setB = \makeset{ \swater, \stea }$.
+Given a function $\mora \colon \setA \sto \setB$, we define
 \begin{equation}
-    \funa(\mora) : \funa(\Obja) \to \funa(\Obja)
+    \funa(\mora) : \funa(\setA) \to \funa(\setA)
 \end{equation}
 to act on (first-order) expressions like so
 \begin{equation}
-    \funa(\mora)([\sapple]*[\sbanana]) = [\mora(\sapple)]*[\mora(\sbanana)].
+    \funa(\mora)([\sapple]\symboliccomposition[\sbanana]) = [\mora(\sapple)]\symboliccomposition[\mora(\sbanana)].
 \end{equation}
 It turns out that this \SY{functor} $\funa: \Set \fto \Set$ can be made into a monad!
 
 Let us explain how the unit and multiplication for this monad are defined.
-For any set \Obja, the component of the unit at \Obja is
-\todotext{\alphubel: use defmap}
+For any set $\setA$, the component of the unit at $\setA$ is
+
 \begin{equation}
-    \monunit_\Obja : \Obja \sto \funa \Obja, \ela \mapsto [\ela].
+    \defmapperiod{\monunit_\setA}{\setA}{\sto}{\funa \setA}{\ela}{[\ela]}
 \end{equation}
+
 The multiplication is a bit more of a mouthful.
-Its component at \Obja,
+Its component at $\setA$,
 \begin{equation}
-    \moncomp_\Obja : (\funa \fthen \funa)\Obja \sto \funa \Obja,
+    \moncomp_\setA : (\funa \fthen \funa)\setA \sto \funa \setA,
 \end{equation}
 is the function which takes a second-order formal expression
 \begin{equation}\label{eq:monad-formatl-mult-input}
@@ -113,17 +113,17 @@ In other words, this operation simply ``removes the outer brackets'' from a seco
 
 \begin{gradedexercise}[\exname{ListMonad}]
     \label{ex:ListMonad}
-    Let $\funa : \Set \fto \Set$ be the \SY{functor} above that sends any set \Obja to the set of first-order formal expressions of the form
+    Let $\funa : \Set \fto \Set$ be the \SY{functor} above that sends any set $\setA$ to the set of first-order formal expressions of the form
     \begin{equation}
         [\ela_1]
-        * [\ela_2] * \cdots * [\ela_n] \quad \quad \ela_i \setin \Obja, n \setin \wnumbers_{\geq 0},
+        * [\ela_2] * \cdots * [\ela_n] \quad \quad \ela_i \setin \setA, n \setin \wnumbers_{\geq 0},
     \end{equation}
-    and let $\moncomp_\Obja$ and $\monunit_\Obja$ be defined as above.
+    and let $\moncomp_\setA$ and $\monunit_\setA$ be defined as above.
 
     Show that:
     \begin{enumerate}
-        \item the components $\moncomp_\Obja$ define a \SY{natural transformation} $\moncomp : \funa \fthen \funa \nto \funa$;
-        \item the components $\monunit_\Obja$ define a \SY{natural transformation} $\monunit : \stylefunctors{\text{Id}}_{\Set} \fto \funa$;
+        \item the components $\moncomp_\setA$ define a \SY{natural transformation} $\moncomp : \funa \fthen \funa \nto \funa$;
+        \item the components $\monunit_\setA$ define a \SY{natural transformation} $\monunit : \stylefunctors{\text{Id}}_{\Set} \fto \funa$;
         \item $\moncomp$ and $\monunit$ satisfy the conditions for $\tup{\funa, \moncomp, \monunit}$ to be a monad.
     \end{enumerate}
 \end{gradedexercise}
@@ -131,7 +131,7 @@ In other words, this operation simply ``removes the outer brackets'' from a seco
 \solutionof{ListMonad}
 
 Now let's finally talk about giving formal expressions a computational meaning: a way to \emph{evaluate} them.
-The way we will do this is to define a notion of ``evaluation map'' $\stylemorph{a}: \funa \Obja \sto \Obja$ which we will interpret as a way of specifying how any formal expression -- an element of $\funa \Obja$ -- should be evaluated (or: computed) to an element of \Obja.
+The way we will do this is to define a notion of ``evaluation map'' $\stylemorph{a}: \funa \setA \sto \setA$ which we will interpret as a way of specifying how any formal expression -- an element of $\funa \setA$ -- should be evaluated (or: computed) to an element of $\setA$.
 We will require such evaluation maps to additionally satisfy two coherence conditions, and the resulting mathematical structure will be what is called an \emph{algebra} of the monad $\funa$.
 
 \todotextjira{233}{explain further by giving a concrete example of an algebra for this monad}
@@ -200,10 +200,9 @@ We will require such evaluation maps to additionally satisfy two coherence condi
     \todotext{@JL: missing section}
 }
 
-
-
-
-\todotext{JL: the proposition below appear at the moment without context; it is supposed to be related to the list monad I believe. There needs to be text and context added beforehand.}
+\todotext{JL: the proposition below appear at the moment without context; it is supposed to be related to the list monad I believe.
+    There needs to be text and context added beforehand.
+}
 
 \begin{proposition}\label{prop:monad-monoid}
     There is an $\monA$-algebra structure on $\Obja$ if and only if there
