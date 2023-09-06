@@ -3573,10 +3573,72 @@
 \newcommand{\fvalue}[1]{{\color{functionality}{\str{#1}}}} % XXX
 \newcommand{\rvalue}[1]{{\color{requirements}{\str{#1}}}}
 
-\newcommand{\mcdpposet}[1]{\str{#1}} % color?
+
 
 \newcommand{\Rcpu}[1]{\Rcomp{}[\textrm{#1}]}
+
+\newcommand{\mcdpposetT}[1]{\str{#1}} % color?
+\newcommand{\mcdpposetnpT}[1]{\str{#1}} %  no prettify
 
 
 
 % \DeclareUnicodeCharacter{227C}{\\u227c}
+% \newcounter{mcdpcounter}
+
+% \newcommand{mcdpposet}[1]{%
+%     \stepcounter{mcdpcounter}%
+%     \SaveVerb{Content-\themcdpcounter}|#1|%
+%     % \immediate\write18{mkdir -p \mcdplibdir}%
+%     % \immediate\write18{echo "\UseVerb{Content-\themcdpcounter}" > \mcdplibdir/mcdp_\themcdpcounter.mcdp_poset}%
+%     \py{from mcdp_report import render_mcdp_to_pdf; render_mcdp_to_pdf('\mcdplibdir/mcdp_\themcdpcounter.mcdp_poset', 'posets', '')}%
+% }
+
+
+\setlength{\fboxsep}{0pt}
+
+\newcounter{fileCounter}
+\newwrite\fileWrite
+
+\newcommand{\mcdpposet}[1]{%
+  \stepcounter{fileCounter}%
+  \immediate\openout\fileWrite=\mcdplibdir/generic\thefileCounter.mcdp_poset%
+  \immediate\write\fileWrite{\unexpanded{#1}}%
+  \immediate\closeout\fileWrite%
+  \py{from mcdp_report import render_mcdp_to_pdf; render_mcdp_to_pdf(PYSNIP_BASENAME,'\mcdplibdir/generic\thefileCounter.mcdp_poset', 'posets', inline=True)}%
+  \xspace%
+  }
+
+
+\newcommand{\mcdpposetnp}[1]{%
+  \stepcounter{fileCounter}%
+  \immediate\openout\fileWrite=\mcdplibdir/generic\thefileCounter.mcdp_poset%
+  \immediate\write\fileWrite{\unexpanded{#1}}%
+  \immediate\closeout\fileWrite%
+  \py{from mcdp_report import render_mcdp_to_pdf; render_mcdp_to_pdf(PYSNIP_BASENAME,'\mcdplibdir/generic\thefileCounter.mcdp_poset', 'posets', inline=True, noprettify=True)}%
+  \xspace%
+}
+
+
+
+\newcommand{\mcdpvalue}[1]{%
+  \stepcounter{fileCounter}%
+  \immediate\openout\fileWrite=\mcdplibdir/generic\thefileCounter.mcdp_value%
+  \immediate\write\fileWrite{\unexpanded{#1}}%
+  \immediate\closeout\fileWrite%
+  \py{from mcdp_report import render_mcdp_to_pdf; render_mcdp_to_pdf(PYSNIP_BASENAME,'\mcdplibdir/generic\thefileCounter.mcdp_value', 'values', inline=True)}%
+  \xspace%
+}
+
+
+\newcommand{\mcdpvaluenp}[1]{%
+  \stepcounter{fileCounter}%
+  \immediate\openout\fileWrite=\mcdplibdir/generic\thefileCounter.mcdp_value%
+  \immediate\write\fileWrite{\unexpanded{#1}}%
+  \immediate\closeout\fileWrite%
+  \py{from mcdp_report import render_mcdp_to_pdf; render_mcdp_to_pdf(PYSNIP_BASENAME,'\mcdplibdir/generic\thefileCounter.mcdp_value', 'values', inline=True, noprettify=True)}%
+  \xspace%
+}
+
+\newcommand{\mcdpinline}[1]{%
+    \hspace{-2.5pt}\raisebox{-3pt}{#1}\hspace{-2.5pt}%
+}
