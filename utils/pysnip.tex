@@ -7,6 +7,7 @@
 %\RequirePackage{verbatim}
 \usepackage{ifdraft}
 \usepackage{verbatim}
+\usepackage{chngcntr}
 %\RequirePackage{color}
 
 % Directory containing the snippets
@@ -19,8 +20,10 @@
 % Put the resulting Python code in separate files.
 \newcounter{@PythonEnvironmentCounter}
 \setcounter{@PythonEnvironmentCounter}{1}
-
-\newcommand{\@outname}{\currfilebase\arabic{@PythonEnvironmentCounter}}
+% \@addtoreset{@PythonEnvironmentCounter}{section}
+% \@addtoreset{@PythonEnvironmentCounter}{subsection}
+% \counterwithin{@PythonEnvironmentCounter}{subsection}
+\newcommand{\@outname}{\currfilebase-\arabic{section}-\arabic{subsection}-\arabic{@PythonEnvironmentCounter}}
 
 \newcommand{\py}[2][\@outname]{%
   \def\outdir{\snippetsdir/\currfilebase}%
@@ -66,29 +69,6 @@
   \immediate\stepcounter{@PythonEnvironmentCounter}%
 }
 
-
-%\newcommand{\py}[2][\@outname]{
-%    \immediate\write18{mkdir -p \snippetsdir}
-%    \def\pycode{#2}
-%    \def\prefix{\snippetsdir/#1}
-%    \immediate\openout\@out=\prefix.py%
-%    \immediate\write\@out{\pycode}%
-%    \immediate\closeout\@out
-%    \IfFileExists{\prefix.rc}{%
-%        % Read the return code of the executed Python script.
-%        \immediate\openin\@retcode=\prefix.rc
-%        \immediate\read\@retcode to \rc
-%        \immediate\closein\@retcode
-%        \ifnumequal{\rc}{0}{%
-%            % Everything is fine
-%            \immediate\input\prefix.tex%
-%        }{%
-%            % Some problems
-%            \pyfailed{\prefix}{}{\rc}%
-%        }%
-%    }{\pynotready{\prefix}}%
-%    \immediate\stepcounter{@PythonEnvironmentCounter}%
-%}
 
 
 % Warn that snippet is not ready
