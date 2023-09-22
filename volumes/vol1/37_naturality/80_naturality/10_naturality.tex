@@ -1,18 +1,437 @@
 % !TEX root = chapter-standalone.tex
+\section{Visual Example and Warmup}
+Since \SY{mappings between functors} may be rather abstract, we will first start with a concrete example.
+Imagine you are in Boston, and can go to New York or Providence.
+We may now define a category~$\CatC$ of cities, where morphisms are trips between the cities.
+Let~$\CatD$ be the category of pairs of real numbers under element-wise addition, and~$\funa, \funb\colon\CatC\fto\CatD$ be functors between them.
+$\funa$ gives us the distance and altitude difference between our starting point (Boston) and our desired destination, and~$\funb$ gives us the gas price relative to our starting point.
 
+Now, we can create a mapping~$\ntrafoa$ mapping the distances to gas prices.
+Thinking about it, it relates \SY{the elements of the category of distances to those of the category of prices}.
+If we write out our categories in typical diagrams, we notice that they \SY{commute} (see \cref{def:commutative-diagram}).
+
+\middlesag{diag_boston_nyc}
+
+In other words, for each pair of (distance, altitude) relative to Boston, we can compute the gas price of the trip.
+
+\section{Natural transformations}
+\linkvideo{spring2021-nat-trafos:diagrams} % Diagrams
+%\linkvideo{spring2021-nat-trafos:natural-trafos} % Natural transformations
+
+To formally define \SY{natural transformations}, the general situation we will start from is when we have two \SY{functors}~$\funa \colon \CatC \fto \CatD$ and~$\funb \colon \CatC \fto \CatD$, sharing the same source and target, respectively.
+In the previous example above,~$\funa$ and~$\funb$ were database instances.
+
+A \SY{natural transformation} from~$\funa$ to~$\funb$ is then a kind of ``map'' that relates the two \SY{functors}.
+How might one define such a thing?
+
+First, let's look at the situation only on the level of objects.
+Each object~$\Obja$ of~\CatC is mapped by~$\funa$ and~$\funb$ to an object~$\funa(\Obja)$ and~$\funb(\Obja)$ of~\CatD, respectively.
+One straightforward way to relate~$\funa(\Obja)$ to~$\funb(\Obja)$ is to choose a morphism~$\funa(\Obja) \mto \funb(\Obja)$ in~\CatD.
+We call this morphism~$\ntrafoa_{\Obja}$, using the subscript~$\Obja$ since~$\ntrafoa_{\Obja}$ relates the respective images of the object~$\Obja$ under~$\funa$ and~$\funb$.
+If we choose such a morphism for each object in~\CatC, then we have collection~$\makeset{ \ntrafoa_\Obja }_{\Obja \setin \ObC}$ of morphisms in~\CatD, indexed by the objects of~\CatC.
+
+\begin{marginfigure}
+    \hfill
+    \includesag{diagram_two_functors}
+    % \caption{}
+    % \label{fig:diagram_two_functors}
+\end{marginfigure}
+
+Next, consider a morphism~$\mora \colon \Obja \mto \Objb$ in the category~\CatC.
+Under the \SY{functor}~$\funa$ it will be mapped to some morphism~$\funa(\mora)\colon \funa(\Obja) \mto \funa(\Objb)$ in~\CatD, and under the \SY{functor}~$\funb$ it will be mapped to some other morphism~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$, also in~\CatD.
+
+\begin{marginfigure}
+    \hfill
+    \includesag{diagram_two_functors_conn}
+    % \caption{}
+    % \label{fig:two-functors-connected-diagram}
+\end{marginfigure}
+
+We can think of~$\funa(\mora)\colon \funa(\Obja) \mto \funa(\Objb)$ and~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in~\CatD.
+If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \funb(\Obja)$ and~$\ntrafoa_\Objb\colon \funa(\Objb) \mto \funb(\Objb)$ in~\CatD, then these will connect the two diagrams, as depicted in the figure to the side.
+% \equationsag{diagram_two_functors_conn}{eq:two-functors-connected-diagram}
+% \begin{figure}[h!]
+%     \centering
+%     \includesag{diagram_two_functors_conn}
+%     \caption{}
+%     \label{fig:two-functors-connected-diagram}
+% \end{figure}
+
+%
+\begin{marginfigure}
+    \hfill
+    \includesag{naturality_square}
+    \caption{}
+    \label{fig:naturality-square}
+\end{marginfigure}
+
+In~\CatD, this gives rise to the square diagram shown to the side.
+We'll require, as a condition on the morphisms~$\ntrafoa_\Obja$ and~$\ntrafoa_\Objb$, that they make the diagram commutative:
+\begin{equation}
+    \funa(\mora) \mthen \ntrafoa_\Objb = \ntrafoa_\Obja \mthen \funb(\mora).
+\end{equation}
+
+Now consider not only a single morphism~$\mora \colon \Obja \mto \Objb$ in~\CatC being mapped by~$\funa$ and~$\funb$, respectively, but \emph{all} of the category~\CatC.
+Under~$\funa$, the category~\CatC is mapped to a -- possibly very complicated -- diagram in~\CatD (a directed graph of objects and morphism comprising the image of~$\funa$), and similarly, under~$\funb$, the category~\CatC is mapped to another diagram in~\CatD (the image of~$\funb$).
+
+To relate the image of~$\funa$ to the image of~$\funb$ we can proceed in the same way as above: for each object~$\Obja$ in~\CatC, we choose a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Obja)$ in~\CatD.
+In other words, we have a collection of morphisms~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$ indexed by the objects of~\CatC.
+These gives rise to lots of squares of the kind in \cref{fig:naturality-square}, which we will require to be commutative.
+It is because of this commutativity condition, which is a condition on the collection~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$, that some mathematicians would say that the collection~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$ is a ``coherent'' or ``natural'' way to relate the image of~$\funa$ to the image of~$\funb$.
+(This does not mean, however, that there is at most one \SY{natural transformation} between any two given \SY{functors}---on the contrary, there might be many!)
+
+\begin{marginfigure}
+    \centering
+    \includesag{two_naturality_squares}
+    \caption{}
+    \label{fig:two-naturality-squares}
+\end{marginfigure}
+
+In \cref{fig:two-naturality-squares} we have illustrated a situation involving three objects and two morphisms in~\CatC, giving rise to two squares.
+We have ``glued'' the two squares together since they share an edge (this a more compact way of drawing them).
+Note that because each of the two component squares in the diagram commute, so does the entire diagram.
+
+\linkvideo{spring2021-nat-trafos:natural-trafos:nat-trafo-def} % Definition of natural transformation
+
+\begin{ctdefinition}[Natural transformation]
+    \label{def:natural-transformation}
+    Let \CatC and \CatD be categories, and let~$\funa,\funb\colon \CatC\fto \CatD$ be \SY{functors}.
+    A \maindef{natural transformation}~$\ntrafoa \colon \funa \nto \funb$ is specified by:
+
+    \constit
+    \begin{enumerate}
+        \item For each object~$\Obja\setin \ObC$, a morphism $\ntrafoa_\Obja \colon \funa(\Obja)\mto \funb(\Obja)$ in \CatD, called the $\Obja$\emph{-component} of $\ntrafoa$.
+    \end{enumerate}
+    \condit
+    \begin{enumerate}
+        \item For every morphism~$\mora\colon \Obja\mto \Objb$ in \CatC, the components of $\ntrafoa$ must satisfy the \emph{naturality condition}
+              \begin{equation}
+                  \funa(\mora)\mthen \ntrafoa_\Objb = \ntrafoa_\Obja\mthen \funb(\mora).
+              \end{equation}
+              In other words, the following diagram must commute:
+              \begin{equation}
+                  \label{eq:def-naturality-square}
+                  \middlesag{55_natural_2}
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+To reiterate: a \SY{natural transformation} $\ntrafoa$ is a \emph{collection} $(\ntrafoa_\Obja)_{\Obja \setin \ObC}$ of morphisms (called the \emph{components} of the natural transformation) which satisfy the naturality conditions.
+The name ``components'' is analogous to how a vector $v = (v_1, .
+    .., v_n)$ has \emph{components} or a sequence $a = (a_n)_{n \setin \natnumbers}$ has \emph{terms}.
+
+The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality squares}, and a \SY{natural transformation}~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely in this manner:
+\equationsag{55_natural_1}{eq:55_natural_1}
+
+\Cref{fig:nat_trans_graphically} shows a diagram that describes the property of functors and of natural transformations.
+The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
+
+\begin{figure*}[h]
+    \centering
+    \begin{ctdefinitionshade}
+        \small
+        \includesag{096_natural_graphically}
+    \end{ctdefinitionshade}
+    \caption{}
+    \label{fig:nat_trans_graphically}
+\end{figure*}
+
+But perhaps this prism is better explained with a few simple examples:
+
+\subsection{Basic Examples}
+
+\begin{marginfigure}
+    \centering
+    \includesag{cone-over-G}
+    \caption{Cone over~$\funb$.
+    }
+    \label{fig:cone-over-G}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includesag{cone-over-F}
+    \label{fig:cone-under-F}
+    \caption{Cone under~$\funa$.}
+\end{marginfigure}
+
+% TODO : Make diagram
+\begin{example}[Constant Functors and Cones]
+    Let~$\CatC, \CatD$ be categories, and~$\funa, \funb\colon\CatC\fto\CatD$ be functors, where~$\funa$ is constant.
+    That means that~$\funa$ maps all objects~$\Obja_i$ of~$\CatC$ to a single object~$\Objb \setin \CatD$.
+    Clearly the image of~$\funa$ is a single object.
+    The natural transformation from~$\funa(\Obja)$ to~$\funb(\Objb)$ thus forms what we call the cone over~$\funb$, illustrated in figure \cref{fig:cone-under-F}.
+    Analogously, if we consider~$\funb$ to be a constant functor, we talk about the cone under~$\funa$ (or cocone), as seen in figure \cref{fig:cone-over-G}.
+\end{example}
+
+% move these to a 'Further examples' section at the end
+\begin{example}
+    Consider the \SY{powerset} \SY{functor} from \cref{ex:powerset_functor}, and denote it~$\funa$.
+    As a reminder, the \SY{functor} maps a set $\setA$ to its \SY{powerset}, and a function $\mora \colon \setA \mto \setB$ to the map which sends each subset of $\setA$ to its image under $\mora$.
+    We now look at a \SY{natural transformation}~$\ntrafoa\colon \funid_\Set \nto \funa$ whose components are the functions
+    \begin{equation}
+        \begin{aligned}
+            \ntrafoa_\setA\colon \funid_\Set(\setA) = \setA & \mto \funa(\setA) = \powerset(\setA) \\
+            \setAel                                         & \mapsto \makeset{\setAel}.
+        \end{aligned}
+    \end{equation}
+    In other words, the \SY{natural transformation} embeds each element of~\setA into the power set~$\powerset(\setA)$.
+    To check that this is a \SY{natural transformation}, consider $\mora\colon \setA\mto \setB$.
+    We have
+    \begin{equation}
+        \begin{aligned}
+            (\ntrafoa_\setA \mthen \funa(\mora))(\setAel)
+             & =\makeset{\setAel} \mthen \funa(\mora) \\
+             & =\makeset{\mora(\setAel)} \\
+             & =\mora(\setAel)\mthen \ntrafoa_\setB \\
+             & =(\mora \mthen \ntrafoa_\setB)(\setAel).
+        \end{aligned}
+    \end{equation}
+\end{example}
+
+\begin{example}
+    Consider the following two functors $\funa, \funb \colon \Set \Ctimes \Set \Ctimes \Set \fto \Set$.
+    We define $\funa$ on objects by
+    \begin{equation}
+        \funa(\tup{\setA, \setB, \setC}) = (\setA \cartprod \setB) \cartprod \setC
+    \end{equation}
+    and define $\funb$ on objects by
+    \begin{equation}
+        \funb(\tup{\setA, \setB, \setC}) = \setA \cartprod (\setB \cartprod \setC).
+    \end{equation}
+    For their actions on morphisms, consider a morphism
+    \begin{equation}
+        \tup{\mora, \morb, \morc} \colon \tup{\setA, \setB, \setC} \mto \tup{\setAprime, \setBprime, \setCprime}
+    \end{equation}
+    in $\Set \Ctimes \Set \Ctimes \Set$.
+    Its image under $\funa$ is
+    \begin{equation}
+        \tup{\tup{\mora, \morb}, \morc} \colon (\setA \cartprod \setB) \cartprod \setC \mto (\setAprime \cartprod \setBprime) \cartprod \setCprime
+    \end{equation}
+    and its image under $\funb$ is
+    \begin{equation}
+        \tup{\mora, \tup{\morb, \morc}} \colon \setA \cartprod (\setB \cartprod \setC) \mto \setAprime \cartprod (\setBprime \cartprod \setCprime).
+    \end{equation}
+
+    One way to see that~$\funa$ is indeed a functor is to note that it is equal to the following composition of functors
+    \begin{equation}
+        \begin{aligned}
+            \Set \Ctimes \Set \Ctimes \Set & \fto \Set \Ctimes \Set \fto \Set, \\
+            \tup{\setA, \setB, \setC}      & \mapsto \tup{\setA \cartprod \setB, \setC} \mapsto (\setA \cartprod \setB) \cartprod \setC
+        \end{aligned}
+    \end{equation}
+    and recall from \cref{ex:CartProdAsFunctor} that ``$\cartprod$'' is a functor.
+    An analogous remark applies to $\funb$.
+
+    Now we define a natural transformation $\ntrafoa \colon \funa \nto \funb$ by specifying its components to be the functions
+    \begin{equation}
+        \defmapcomma{ \ntrafoa_{\tup{\setA, \setB, \setC}}}{(\setA \cartprod \setB) \cartprod \setC}{\fto}{\setA \cartprod (\setB \cartprod \setC)}{\tup{\tup{\ela, \elb}, \elc}}{\tup{\ela, \tup{\elb, \elc}}}
+    \end{equation}
+    indexed by triples of sets $\tup{\setA, \setB, \setC}$.
+
+    For the family of morphisms $\ntrafoa_{\tup{\setA, \setB, \setC}}$ to be a natural transformation, we need to check that the diagrams
+    %
+    \equationsag{ntrafo_associator_cart_prod}{eq:ntrafo_associator_cart_prod}
+    %
+    in $\Set$ commute for all morphisms $\tup{\mora, \morb, \morc}$ in $\Set \Ctimes \Set \Ctimes \Set$.
+    It is easily checked that this is true.
+
+    This natural transformation is an example of something called an \emph{associator}, which we will discuss later when we define monoidal categories.
+    The idea here is that the cartesian product of sets is not quite an associative operation, but almost: instead of an ``equality'' symbol in the usual equation for the associative law, we have the components of this associator natural transformation.
+\end{example}
+
+\begin{example}
+    For any two sets $\setA, \setB$, consider the function
+    \begin{equation}\label{eq:symmetry-nat-trafo}
+        \defmapperiod{\ntrafoa_{\tup{\setA, \setB}}}{\setA \cartprod \setB}{\mto }{\setB \cartprod \setA}{\tup{\ela, \elb}}{\tup{\elb, \ela}}
+    \end{equation}
+    When we think of \cref{eq:symmetry-nat-trafo} as a family of functions parametrized by~$\tup{\setA, \setB}$, they are in fact the components of a natural transformation~$\ntrafoa$.
+    Can you write down what the functors are that are the source and target of this natural transformation?
+\end{example}
+
+\section{Morphisms in a Category of Functors}
+\linkvideo{spring2021-nat-trafos:natural-trafos:nattrafos-as-mor} % Natural transformations are morphisms between functors
+We have seen that natural transformations between two functors $\funa, \funb \colon \CatC \fto \CatD$ map objects in $\CatC$ to
+morphisms in $\CatD$, and map morphisms in $\CatC$ to commutative diagrams.
+This is quite similar to the effect of functors on category
+objects and moprhisms.
+What if there were a category where objects are functors, and morphisms are natural transformations?
+
+\subsection{Vertical Composition}
+As for any category, we would need to define the morphism composition law and the identity morphisms.
+The former would look like this:
+
+\equationsag{naturality_vert_comp}{eq:naturality-vert-comp}
+
+Due to its diagrammatic form, we call this type of composition \SY{vertical composition}.
+\begin{ctdefinition}[Vertical Composition of natural transformations]\label{def:composition-of-naturali-tranformations}
+    Let $\CatC, \CatD$ be categories and let $\funa, \funb, \func \colon \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$.
+    Suppose we are given natural transformations
+    \begin{equation}
+        \ntrafoa \colon \funa \nto \funb,
+    \end{equation}
+    \begin{equation}
+        \ntrafob \colon \funb \nto \func.
+    \end{equation}
+    Their composition $\ntrafoa \nthen \ntrafob$ is a natural transformation
+    \begin{equation}
+        \ntrafoa \nthen \ntrafob \colon \funa \nto \func
+    \end{equation}
+    defined in components by
+    \begin{equation}\label{eq:nat-trafo-composition}
+        (\ntrafoa \nthen \ntrafob)_\Obja \definedas \ntrafoa_\Obja \mthen \ntrafob_\Obja \quad \quad \forall \ \Obja \setin \Ob_\CatC.
+    \end{equation}
+\end{ctdefinition}
+Next up, we can trivially define the \SY{identity natural transformations}.
+
+\begin{ctdefinition}[Identity natural transformation]\label{def:identity-natural-transformation}
+    Let $\CatC, \CatD$ be categories and let $\funa \colon \CatC \fto \CatD$ be a functor.
+    The identity natural transformation at $\funa$ is the natural transformation $\natid_\funa \colon \funa \nto \funa$ defined in components by
+    \begin{equation}\label{eq:identity-nat-trafo-def}
+        (\natid_\funa)_\Obja \definedas \catid_{\funa(\Obja)} \quad \quad \forall \ \Obja \setin\Ob_\CatC.
+    \end{equation}
+\end{ctdefinition}
+
+This is exactly what we were looking for! We can now define a \SY{category of functors}.
+
+\begin{ctdefinition}\label{def:category-of-functors}
+    Let $\CatC, \CatD$ be categories.
+    The category $[\CatC, \CatD]$ of functors from $\CatC$ to $\CatD$ is given by
+    \begin{enumerate}
+        \item \emph{Objects}: functors $\CatC \fto \CatD$.
+        \item \emph{Morphisms}: natural transformations between functors $\CatC \fto \CatD$.
+        \item \emph{Composition}: composition of natural transformations.
+        \item \emph{Identities}: identity natural transformations.
+    \end{enumerate}
+\end{ctdefinition}
+
+\subsection{Natural isomorphisms}
+
+\begin{ctdefinition}[Natural isomorphism]
+    \label{def:natural-isomorphism}
+    A \SY{natural transformation}~$\ntrafoa \colon \funa \nto \funb $ is called a \maindef{natural isomorphism} if each component morphism ~$\ntrafoa_\Obja$ in \CatD is an isomorphism.
+\end{ctdefinition}
+
+\begin{lemma}
+    Let $\CatC, \CatD$ be categories and let $\funa, \funb \colon \CatC \fto \CatD$ be functors.
+    A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in the category of functors $[\CatC, \CatD]$ if and only if $\ntrafoa$ is a natural isomorphism.
+\end{lemma}
+
+\subsection{Horizontal Composition}
+\linkvideo{spring2021-nat-trafos:natural-trafos:horizontal-composition} % Horizontal composition
+
+But what about the following case? Suppose we have three categores:~$\CatC, \CatD$ and~$\CatE$ with functors~$\funaA,\funaB\colon\CatC \fto \CatD$ and~$\funbA,\funbB\colon \CatD \fto \CatE$ and finally two natural transformations
+$\ntrafoa\colon \funaA \nto \funaB$ and~$\ntrafob\colon \funbA \nto \funbB$.
+We would then have the following situation.
+
+\equationsag{naturality_horizontal}{eq:naturality-horizontal}
+
+This looks suspiciously composable.
+Since we could compare have a natural transformation between $\funaA \fthen \funbA$ and~$\funaB\fthen \funbB$,
+why not observe the intermediate steps?
+
+\begin{ctdefinition}[Horizontal Composition of natural transformations]
+    \label{def:horizontal-composition}
+    Let~$\CatC, \CatD, \CatE$ be categories and let~$\funaA,\funaB\colon\CatC \fto \CatD$ and $\funbA,\funbB\colon \CatD \fto \CatE$ be functors.
+    Suppose we are given the natural transformations
+    \begin{equation}
+        \ntrafoa \colon \funaA \nto \funbA,
+    \end{equation}
+    \begin{equation}
+        \ntrafob \colon \funaB \nto \funbB.
+    \end{equation}
+    Then their horizontal composition is given by the natural transformation
+    \begin{equation}
+        \ntrafoa \nthenhor \ntrafob\colon (\funaA \fthen \funbA) \nto (\funbA \fthen \funbB)
+    \end{equation}
+    defined in components by
+    \begin{equation}
+        (\ntrafoa \nthenhor \ntrafob)_{\Obja} \definedas \ntrafoa_{\Obja} \nthenhor \ntrafob_{\Obja} \quad \quad \forall \ \Obja \setin \Ob_\CatC
+    \end{equation}
+    as the composition
+    \begin{equation}
+        (\ntrafoa \nthenhor \ntrafob)_{\Obja} \colon (\funaB(\funaA(\Obja))) \nto (\funbB(\funaA(\Obja))) \nto (\funbB(\funbA(\Obja)))
+    \end{equation}
+\end{ctdefinition}
+
+\subsection{Interchange Law}
+\linkvideo{spring2021-nat-trafos:natural-trafos:interchange-law} % Interchange law
+
+The following statement is quite powerful.
+Although perhaps obvious-looking, it allows us to presume associativity of
+natural transformations.
+
+\begin{proposition}[Interchange]
+    Let~$\CatC, \CatD, \CatE$ be categories, $\funaA, \funbA, \funcA\colon\CatC \fto \CatD$, $\funaB, \funbB, \funcB:\CatD \fto \CatE$ be functors and $\ntrafoaA\colon\funaA\nto\funbA$, $\ntrafoaB\colon\funaB\nto\funbB$, $\ntrafobA\colon\funbA\nto\funcA$, $\ntrafobB\colon\funbB\nto\funcB$ be natural transformations.
+    Then,
+    \begin{equation}
+        (\ntrafoaA \nthen \ntrafobA) \nthenhor (\ntrafoaB \nthen \ntrafobB) =
+        (\ntrafoaA \nthenhor \ntrafoaB) \nthen (\ntrafobA \nthenhor \ntrafobB)
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    Consider the case where we have categories~$\CatC, \CatD, \CatE$, with functors~$\funaA, \funbA\colon\CatC \fto \CatD$ and~$\funaB, \funbB\colon\CatD \fto \CatE$ relating them.
+    We can thus have the following four diagrams:
+    %
+    \equationsag{naturality_interchange_a}{eq:nat-interchange-a}
+    %
+    \equationsag{naturality_interchange_b}{eq:nat-interchange-b}
+    %
+    We are now faced with the choice of either vertically composing first, or horizontally composing.
+    By vertically composing, we get
+    %
+    \equationsag{nat-vert-a}{eq:nat-vert-a}
+    %
+    Subsequently applying horizontal composition yields
+    %
+    \equationsag{nat-vert-b}{eq:nat-vert-b}
+    %
+    Otherwise, we apply horizontal composition first:
+    %
+    \equationsag{nat-hor-vert}{eq:nat-hor-vert}
+    %
+    ths proving that vertical and horizontal composition are interchangeable.
+\end{proof}
+
+\begin{remark}
+    The proof is also interesting to do by observing the commuting squares, and putting them together.
+\end{remark}
+\subsection{Whiskering}
+A variant of horizontal composition is the case where we compose a natural transformation with a functor.
+We can have two cases:
+right or left whiskering.
+
+\equationsag{whiskering}{eq:whiskering}
+
+\begin{ctdefinition}[Right Whiskering]
+    Let $\CatC, \CatD$ and $\CatE$ be categories, $\funa, \funb: \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$, $\func:\CatD \fto \CatE$ be a functor
+    from $\CatD$ to $\CatE$ and $\ntrafoa:\funa \nto \funb$ be a natural transformation from $\funa$ to $\funb$.
+
+    The right whiskering of $\func$ and $\ntrafoa$ is given by the natural transformation
+    \begin{equation}
+        \func \ntrafoa : (\funa\fthen\func) \nto (\funb\fthen\func)
+    \end{equation}
+\end{ctdefinition}
+
+\begin{ctdefinition}[Left Whiskering]
+    Let $\CatC, \CatD$ and $\CatE$ be categories, $\funa, \funb: \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$, $\func:\CatB \fto \CatC$ be a functor
+    from $\CatB$ to $\CatC$ and $\ntrafob:\funa \nto \funb$ be a natural transformation from $\funa$ to $\funb$.
+
+    The left whiskering of $\ntrafob$ and $\func$ is given by the natural transformation
+    \begin{equation}
+        \ntrafob \func: (\func\fthen\funa) \nto (\func\fthen\funb)
+    \end{equation}
+\end{ctdefinition}
+
+\clearpage
 \section{Data migration}
-
-The name ``natural transformation'' has historical roots -- do not worry if the concept itself does not seem ``natural'' to you at first.
-% We will try to explain it in a way that is hopefully at least clear.
-To give motivation and a concrete illustration, we start with an example.
+Now that we have seen some definitons and toy examples, let's observe a real-world example.
+As mentioned in Categorical Databases (see \ref{sec:functors-categorical-db} for the full context),
+we can model instances of databases due to Spivak [ref / cite] as \SY{functors} from the category of the architecture of the database to the category of sets.
+\todotext{Seen where? link}
 
 \paragraph{An alumni database}
-
-Suppose a university is keeping a database of its alumni.
-The database contains a list of all the students that ever attended the university (each of them has a unique student ID number), as well as for example information about students' names, discipline of study, date of graduation, \etc
-
-We have seen that an instance of a database can be modeled as a \SY{functor} whose target is the category of sets, and whose source is a category encoding the abstract architecture of the database.
-\todotext{Seen where? link}
 
 %
 \begin{marginfigure}
@@ -72,291 +491,6 @@ This can be formulated succinctly by saying that we want the diagram in figure \
 
 What we have defined is a collection of morphisms: for each object $\Obja$ in~$\CatC$, we have a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Obja)$ that obeys the commutativity property corresponding to the diagram.
 Such transformations appear in many places and are formalized by the notion of \SY{natural transformations}.
-
-\section{Natural transformations}
-\linkvideo{spring2021-nat-trafos:diagrams} % Diagrams
-%\linkvideo{spring2021-nat-trafos:natural-trafos} % Natural transformations
-
-To define \SY{natural transformations}, the general situation we will start from is when we have two \SY{functors}~$\funa \colon \CatC \fto \CatD$ and~$\funb \colon \CatC \fto \CatD$, sharing the same source and target, respectively.
-In the previous example above,~$\funa$ and~$\funb$ were database instances.
-
-A \SY{natural transformation} from~$\funa$ to~$\funb$ is then a kind of ``map'' that relates the two \SY{functors}.
-How might one define such a thing?
-
-First, let's look at the situation only on the level of objects.
-Each object~$\Obja$ of~\CatC is mapped by~$\funa$ and~$\funb$ to an object~$\funa(\Obja)$ and~$\funb(\Obja)$ of~\CatD, respectively.
-One straightforward way to relate~$\funa(\Obja)$ to~$\funb(\Obja)$ is to choose a morphism~$\funa(\Obja) \mto \funb(\Obja)$ in~\CatD.
-We call this morphism~$\ntrafoa_{\Obja}$, using the subscript~$\Obja$ since~$\ntrafoa_{\Obja}$ relates the respective images of the object~$\Obja$ under~$\funa$ and~$\funb$.
-If we choose such a morphism for each object in~\CatC, then we have collection~$\makeset{ \ntrafoa_\Obja }_{\Obja \setin \ObC}$ of morphisms in~\CatD, indexed by the objects of~\CatC.
-
-\begin{marginfigure}
-    \hfill
-    \includesag{diagram_two_functors}
-    % \caption{}
-    % \label{fig:diagram_two_functors}
-\end{marginfigure}
-
-Next, consider a morphism~$\mora \colon \Obja \mto \Objb$ in the category~\CatC.
-Under the \SY{functor}~$\funa$ it will be mapped to some morphism~$\funa(\mora)\colon \funa(\Obja) \mto \funa(\Objb)$ in~\CatD, and under the \SY{functor}~$\funb$ it will be mapped to some other morphism~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$, also in~\CatD.
-
-\vspace{5mm}
-% \equationsag{diagram_two_functors}{eq:diagram_two_functors}
-% %
-% \begin{figure}[h!]
-%     \centering
-%     \includesag{}
-%     \caption{}
-%     \label{fig:two-functors-diagram}
-% \end{figure}
-% %
-\begin{marginfigure}
-    \hfill
-    \includesag{diagram_two_functors_conn}
-    % \caption{}
-    % \label{fig:two-functors-connected-diagram}
-\end{marginfigure}
-
-We can think of~$\funa(\mora)\colon \funa(\Obja) \mto \funb(\Objb)$ and~$\funb(\mora)\colon \funb(\Obja) \mto \funb(\Objb)$ as each being very small diagrams (directed graphs) in~\CatD.
-If we have already chosen morphisms~$\ntrafoa_\Obja\colon \funa(\Obja) \mto \funb(\Obja)$ and~$\ntrafoa_\Objb\colon \funa(\Objb) \mto \funb(\Objb)$ in~\CatD, then these will connect the two diagrams, as depicted in the figure to the side.
-% \equationsag{diagram_two_functors_conn}{eq:two-functors-connected-diagram}
-% \begin{figure}[h!]
-%     \centering
-%     \includesag{diagram_two_functors_conn}
-%     \caption{}
-%     \label{fig:two-functors-connected-diagram}
-% \end{figure}
-%
-
-\vspace{7mm}
-
-%
-\begin{marginfigure}
-    \hfill
-    \includesag{naturality_square}
-    \caption{}
-    \label{fig:naturality-square}
-\end{marginfigure}
-
-In~\CatD, this gives rise to the square diagram shown to the side.
-We'll require, as a condition on the morphisms~$\ntrafoa_\Obja$ and~$\ntrafoa_\Objb$, that they make the diagram commutative:
-\begin{equation}
-    \funa(\mora) \mthen \ntrafoa_\Objb = \ntrafoa_\Obja \mthen \funb(\mora).
-\end{equation}
-
-\vspace{7mm}
-
-% \todojira{630}{\alphubel: @JL: ideally say more here to motivate or explain this.
-%     Perhaps include somewhere this perspective: Natural transformations are meant to capture the idea that a transformation is natural in the sense of not depending on any arbitrary choices.
-%     If a transformation does depend on arbitrary choices, the arrows alpha X and alpha Y would not be reusable but would have to change when f changes.
-% }
-
-%
-
-Now consider not only a single morphism~$\mora \colon \Obja \mto \Objb$ in~\CatC being mapped by~$\funa$ and~$\funb$, respectively, but \emph{all} of the category~\CatC.
-Under~$\funa$, the category~\CatC is mapped to a -- possibly very complicated -- diagram in~\CatD (a directed graph of objects and morphism comprising the image of~$\funa$), and similarly, under~$\funb$, the category~\CatC is mapped to another diagram in~\CatD (the image of~$\funb$).
-
-To relate the image of~$\funa$ to the image of~$\funb$ we can proceed in the same way as above: for each object~$\Obja$ in~\CatC, we choose a morphism~$\ntrafoa_\Obja \colon \funa(\Obja) \mto \funb(\Obja)$ in~\CatD.
-In other words, we have a collection of morphisms~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$ indexed by the objects of~\CatC.
-These gives rise to lots of squares of the kind in \cref{fig:naturality-square}, which we will require to be commutative.
-It is because of this commutativity condition, which is a condition on the collection~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$, that some mathematicians would say that the collection~$(\ntrafoa_\Obja)$, ${\Obja \setin \ObC}$ is a ``coherent'' or ``natural'' way to relate the image of~$\funa$ to the image of~$\funb$.
-(This does not mean, however, that there is at most one \SY{natural transformation} between any two given \SY{functors}---on the contrary, there might be many!)
-
-\begin{marginfigure}
-    \centering
-    \includesag{two_naturality_squares}
-    \caption{}
-    \label{fig:two-naturality-squares}
-\end{marginfigure}
-
-In \cref{fig:two-naturality-squares} we have illustrated a situation involving three objects and two morphisms in~\CatC, giving rise to two squares.
-We have ``glued'' the two squares together since they share an edge (this a more compact way of drawing them).
-Note that because each of the two component squares in the diagram commute, so does the entire diagram.
-
-\linkvideo{spring2021-nat-trafos:natural-trafos:nat-trafo-def} % Definition of natural transformation
-\linkvideo{spring2021-nat-trafos:natural-trafos:nattrafos-as-mor} % Natural transformations are morphisms between functors
-
-\begin{ctdefinition}[Natural transformation]
-    \label{def:natural-transformation}
-    Let \CatC and \CatD be categories, and let~$\funa,\funb\colon \CatC\fto \CatD$ be \SY{functors}.
-    A \maindef{natural transformation}~$\ntrafoa \colon \funa \nto \funb$ is specified by:
-
-    \constit
-    \begin{enumerate}
-        \item For each object~$\Obja\setin \ObC$, a morphism $\ntrafoa_\Obja \colon \funa(\Obja)\mto \funb(\Obja)$ in \CatD, called the $\Obja$\emph{-component} of $\ntrafoa$.
-    \end{enumerate}
-    \condit
-    \begin{enumerate}
-        \item For every morphism~$\mora\colon \Obja\mto \Objb$ in \CatC, the components of $\ntrafoa$ must satisfy the \emph{naturality condition}
-              \begin{equation}
-                  \funa(\mora)\mthen \ntrafoa_\Objb = \ntrafoa_\Obja\mthen \funb(\mora).
-              \end{equation}
-              In other words, the following diagram must commute:
-              \begin{equation}
-                  \label{eq:def-naturality-square}
-                  \middlesag{55_natural_2}
-              \end{equation}
-    \end{enumerate}
-\end{ctdefinition}
-
-To reiterate: a \SY{natural transformation} $\ntrafoa$ is a \emph{collection} $(\ntrafoa_\Obja)_{\Obja \setin \ObC}$ of morphisms (called the \emph{components} of the natural transformation) which satisfy the naturality conditions.
-The name ``components'' is analogous to how a vector $v = (v_1, .
-    .., v_n)$ has \emph{components} or a sequence $a = (a_n)_{n \setin \natnumbers}$ has \emph{terms}.
-
-The diagrams \cref{eq:def-naturality-square} are often called \emph{naturality squares}, and a \SY{natural transformation}~$\ntrafoa \colon \funa\nto \funb$ is often depicted concisely in this manner:
-\equationsag{55_natural_1}{eq:55_natural_1}
-
-\Cref{fig:nat_trans_graphically} shows a diagram that describes the property of functors and of natural transformations.
-The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
-
-\begin{figure*}[h!]
-    \centering
-    \begin{ctdefinitionshade}
-        \small
-        \includesag{096_natural_graphically}
-    \end{ctdefinitionshade}
-    \caption{}
-    \label{fig:nat_trans_graphically}
-\end{figure*}
-
-\begin{example}
-    Consider the \SY{powerset} \SY{functor} from \cref{ex:powerset_functor}, and denote it~$\funa$.
-    As a reminder, the \SY{functor} maps a set $\setA$ to its \SY{powerset}, and a function $\mora \colon \setA \mto \setB$ to the map which sends each subset of $\setA$ to its image under $\mora$.
-    We now look at a \SY{natural transformation}~$\ntrafoa\colon \funid_\Set \nto \funa$ whose components are the functions
-    \begin{equation}
-        \begin{aligned}
-            \ntrafoa_\setA\colon \funid_\Set(\setA) = \setA & \mto \funa(\setA) = \powerset(\setA) \\
-            \setAel                                         & \mapsto \makeset{\setAel}.
-        \end{aligned}
-    \end{equation}
-    In other words, the \SY{natural transformation} embeds each element of~\setA into the power set~$\powerset(\setA)$.
-    To check that this is a \SY{natural transformation}, consider $\mora\colon \setA\mto \setB$.
-    We have
-    \begin{equation}
-        \begin{aligned}
-            (\ntrafoa_\setA \mthen \funa(\mora))(\setAel)
-             & =\makeset{\setAel} \mthen \funa(\mora) \\
-             & =\makeset{\mora(\setAel)} \\
-             & =\mora(\setAel)\mthen \ntrafoa_\setB \\
-             & =(\mora \mthen \ntrafoa_\setB)(\setAel).
-        \end{aligned}
-    \end{equation}
-\end{example}
-
-\begin{example}
-    Consider the following two functors $\funa, \funb \colon \Set \Ctimes \Set \Ctimes \Set \fto \Set$.
-    We define $\funa$ on objects by
-    \begin{equation}
-        \funa(\tup{\setA, \setB, \setC}) = (\setA \cartprod \setB) \cartprod \setC
-    \end{equation}
-    and define $\funb$ on objects by
-    \begin{equation}
-        \funb(\tup{\setA, \setB, \setC}) = \setA \cartprod (\setB \cartprod \setC).
-    \end{equation}
-    For their actions on morphisms, consider a morphism
-    \begin{equation}
-        \tup{\mora, \morb, \morc} \colon \tup{\setA, \setB, \setC} \mto \tup{\setAprime, \setBprime, \setCprime}
-    \end{equation}
-    in $\Set \Ctimes \Set \Ctimes \Set$.
-    Its image under $\funa$ is
-    \begin{equation}
-        \tup{\tup{\mora, \morb}, \morc} \colon (\setA \cartprod \setB) \cartprod \setC \mto (\setAprime \cartprod \setBprime) \cartprod \setCprime
-    \end{equation}
-    and its image under $\funb$ is
-    \begin{equation}
-        \tup{\mora, \tup{\morb, \morc}} \colon \setA \cartprod (\setB \cartprod \setC) \mto \setAprime \cartprod (\setBprime \cartprod \setCprime).
-    \end{equation}
-
-    One way to see that $\funa$ is indeed a functor is to note that it is equal to the following composition of functors
-    \begin{equation}
-        \begin{aligned}
-            \Set \Ctimes \Set \Ctimes \Set & \fto \Set \Ctimes \Set \fto \Set, \\
-            \tup{\setA, \setB, \setC}      & \mapsto \tup{\setA \cartprod \setB, \setC} \mapsto (\setA \cartprod \setB) \cartprod \setC
-        \end{aligned}
-    \end{equation}
-    and recall from \cref{ex:CartProdAsFunctor} that ``$\cartprod$'' is a functor.
-    An analogous remark applies to $\funb$.
-
-    Now we define a natural transformation $\ntrafoa \colon \funa \nto \funb$ by specifying its components to be the functions
-    \begin{equation}
-        \ntrafoa_{\tup{\setA, \setB, \setC}} \colon (\setA \cartprod \setB) \cartprod \setC \fto \setA \cartprod (\setB \cartprod \setC), \ \tup{\tup{\ela, \elb}, \elc} \mapsto \tup{\ela, \tup{\elb, \elc}},
-    \end{equation}
-    indexed by triples of sets $\tup{\setA, \setB, \setC}$.
-
-    For the family of morphisms $\ntrafoa_{\tup{\setA, \setB, \setC}}$ to be a natural transformation, we need to check that the diagrams
-    \begin{equation}
-        \label{eq:ntrafo_associator_cart_prod}
-        \middlesag{ntrafo_associator_cart_prod}
-    \end{equation}
-    in $\Set$ commute for all morphisms $\tup{\mora, \morb, \morc}$ in $\Set \Ctimes \Set \Ctimes \Set$.
-    It is easily checked that this is true.
-
-    This natural transformation is an example of something called an $\emph{associator}$, which we will discuss later when we define monoidal categories.
-    The idea here is that the cartesian product of sets is not quite an associative operation, but almost: instead of an ``equality'' symbol in the usual equation for the associative law, we have the components of this associator natural transformation.
-\end{example}
-
-\begin{example}
-    For any two sets $\setA, \setB$, consider the function
-    \begin{equation}\label{eq:symmetry-nat-trafo}
-        \ntrafoa_{\tup{\setA, \setB}} \colon \setA \cartprod \setB \mto \setB \cartprod \setA, \ \tup{\ela, \elb} \mapsto \tup{\elb, \ela}.
-    \end{equation}
-    When we think of \cref{eq:symmetry-nat-trafo} as a family of functions parametrized by $\tup{\setA, \setB}$, they are in fact the components of a natural transformation $\ntrafoa$.
-    Can you write down what the functors are that are the source and target of this natural transformation?
-\end{example}
-
-\section{Natural transformations are morphisms between functors}
-
-\begin{ctdefinition}[Compositions of natural transformations]\label{def:composition-of-naturali-tranformations}
-    Let $\CatC, \CatD$ be categories and let $\funa, \funb, \func \colon \CatC \fto \CatD$ be functors from $\CatC$ to $\CatD$.
-    Suppose we are given natural transformations
-    \begin{equation}
-        \ntrafoa \colon \funa \nto \funb,
-    \end{equation}
-    \begin{equation}
-        \ntrafob \colon \funb \nto \func.
-    \end{equation}
-    Their composition $\ntrafoa \nthen \ntrafob$ is a natural transformation
-    \begin{equation}
-        \ntrafoa \nthen \ntrafob \colon \funa \nto \func
-    \end{equation}
-    defined in components by
-    \begin{equation}\label{eq:nat-trafo-composition}
-        (\ntrafoa \nthen \ntrafob)_\Obja \definedas \ntrafoa_\Obja \mthen \ntrafob_\Obja \quad \quad \forall \ \Obja \setin\Ob_\CatC.
-    \end{equation}
-\end{ctdefinition}
-
-\begin{ctdefinition}[Identity natural transformation]\label{def:identity-natural-transformation}
-    Let $\CatC, \CatD$ be categories and let $\funa \colon \CatC \fto \CatD$ be a functor.
-    The identity natural transformation at $\funa$ is the natural transformation $\natid_\funa \colon \funa \nto \funa$ defined in components by
-    \begin{equation}\label{eq:identity-nat-trafo-def}
-        (\natid_\funa)_\Obja \definedas \catid_{\funa(\Obja)} \quad \quad \forall \ \Obja \setin\Ob_\CatC.
-    \end{equation}
-\end{ctdefinition}
-
-\begin{ctdefinition}\label{def:category-of-functors}
-    Let $\CatC, \CatD$ be categories.
-    The category $[\CatC, \CatD]$ of functors from $\CatC$ to $\CatD$ is given by
-    \begin{enumerate}
-        \item \emph{Objects}: functors $\CatC \fto \CatD$.
-        \item \emph{Morphisms}: natural transformations between functors $\CatC \fto \CatD$.
-        \item \emph{Composition}: composition of natural transformations.
-        \item \emph{Identities}: identity natural transformations.
-    \end{enumerate}
-\end{ctdefinition}
-
-\subsection{Natural isomorphisms}
-
-\begin{ctdefinition}[Natural isomorphism]
-    \label{def:natural-isomorphism}
-    A \SY{natural transformation}~$\ntrafoa \colon \funa \nto \funb $ is called a \maindef{natural isomorphism} if each component morphism ~$\ntrafoa_\Obja$ in \CatD is an isomorphism.
-\end{ctdefinition}
-
-\begin{lemma}
-    Let $\CatC, \CatD$ be categories and let $\funa, \funb \colon \CatC \fto \CatD$ be functors.
-    A natural isomorphism $\ntrafoa \colon \funa \nto \funb $ is an isomorphism in the category of functors $[\CatC, \CatD]$ if and only if $\ntrafoa$ is a natural isomorphism.
-\end{lemma}
-
-\clearpage
-
 \section{More examples}
 \linkvideo{spring2021-nat-trafos:natural-trafos:double-dual} % Double dual
 
@@ -522,23 +656,86 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
 
 \solutionof{NaturalCurry}
 
+\section{Yoneda Embedding Theorem \& Lemma}
+Here we will cover one of the most important results in Category Theory.
+It gives us insight on the role that objects play
+in a category, and how we can actually 'recognize' what their role is.
+We will first define certain types of functors for any (locally small) category $\CatC$, and see how they actually reveal more hidden stucture on $\CatC$.
+
+\begin{marginfigure}
+    \centering
+    \includegraphics[width=5cm]{representable-functor}
+    %\includesag{diagram_two_functors}
+    \label{fig:representable-functor}
+\end{marginfigure}
+
+\subsection{Representable Functors}
+\begin{ctdefinition}[Hom-Functor]
+    Let $\CatC$ be a category, and $\Obja \setin \Ob_\CatC$.
+    We define the \SY{hom-functor} of $\Obja$ as $\Hom_\CatC(\Obja, -)\colon\CatC\fto\Set$.
+    It maps $\Objd \setin \Ob_\CatC$ to the hom-set $\Hom_\CatC(\Obja, \Objd)$.
+\end{ctdefinition}
+
+\begin{ctdefinition}[Representable Functor]
+    Let $\CatC$ be a category, and $\Obja, \Objb \setin \Ob_\CatC$ be objects.
+    A functor $\funa\colon\CatC \fto \Set$ is said \SY{representable}, of representing object $\Objc\setin\Ob_\CatC$, if there exists a natural isomoprhism between $\funa$ and the functor $\Hom_\CatC[\Objc, -]$.
+    Moreover, any morphism $\mora\colon\Obja\fto\Objb$ gets mapped to $\funa\fthen\mora$.
+
+    That is, for each object $\Obja \setin \Ob_\CatC$, $\funa(\Obja)$ maps $\Obja$ to a set, which is naturally isomorphic to all the ways to map $\Objc$ to $\Obja$ in $\CatC$.
+\end{ctdefinition}
+
+Recall that we have defined a category of functors in the previous section.
+We can now consider the category of representable fucntors in $\CatC$, which we will denote $[\CatC, \Set]$.
+This new category will provide some more insight on 'unicity' of objects within $\CatC$.
+More specifically, we will see that objects are characterized by their ``incoming`` and ``outgoing`` moprhisms.
+
+\begin{theorem}[Yoneda Embedding]
+    Let $\CatC$ be a category, and $\Obja, \Objb \setin \Ob_\CatC$.
+    Then there is a natural bijection of sets between the hom-set $\Hom(\Obja,\Objb)$ and the hom-set  $\Hom_{[\CatC, \Set]}(\Hom_\CatC(\Objb, -), \Hom_\CatC(\Obja, -))$ in the category of represenatble functors.
+\end{theorem}
+Let's break this down a bit.
+We have two objects $\Obja, \Objb$ representing two functors $\Hom_\CatC(\Obja,-), \Hom_\CatC(\Objb,-)$.
+These functors can be also considered as objects in $[\CatC, \Set]$.
+We are essentially saying that the ways to map $\Obja$ to $\Objb$ in $\CatC$ is isomorphic to the ways to map $\Hom_\CatC(\Obja,-)$ to $ \Hom_\CatC(\Objb,-)$ in $[\CatC, \Set]$.
+
+\begin{example}
+    \begin{marginfigure}
+        \centering
+        \includesag{rep-functor-1}
+        %\includegraphics[width=5cm]{rep-functor-1}
+        \caption{\label{fig:rep-functor-1}}
+    \end{marginfigure}
+
+    \begin{marginfigure}
+        \centering
+        \includesag{rep-functor-2}
+        %\includegraphics[width=5cm]{rep-functor-2}
+        \caption{\label{fig:rep-functor-2}}
+    \end{marginfigure}
+    Let us consider~$\Obja, \Objb, \Objd \setin \Ob_\CatC$, with the following hom-sets: $\Hom_\CatC(\Obja, \Objd) = \makeset{\moran{1},\moran{2}}, \Hom_\CatC(\Objb, \Objd) = \makeset{\morbn{1},\morbn{2}}$.
+    We can thus infer that $\Hom_\CatC(\Obja, \Objb) = \makeset{\moran{1}\mthen\morbn{1}, \moran{1}\mthen\morbn{2} \moran{2}\mthen\morbn{1}, \moran{2}\mthen\morbn{2}}$.
+
+    Analogously, the ways to map $\Hom_\CatC(\Objb, \Objd)$ to $\Hom_\CatC(\Obja, \Objd)$ is given by the set $\makeset{\morbn{1} \mapsto \moran{1}, \morbn{1} \mapsto \moran{2}, \morbn{2} \mapsto \moran{1}, \morbn{2} \mapsto \moran{2}}$.
+    Both sets are bijective.
+    Moreover, we see that in this case, both objects $\Obja, \Objb$ have the same number of ``ins`` and ``outs`` with respect to $\Objd$.
+    A general result in Category Theory is that if the hom-sets of $\Obja$ and $\Objb$ are isomorphic for all $\Objd \setin \Ob_\CatC$, then $\Obja$ and $\Objb$ are isomoprhic, and essentially play the same role within $\CatC$.
+\end{example}
+
 \devel{
 
-    \section{Horizontal composition}
+    %\section{Horizontal composition}
 
-    \todojira{638}{\bernina: @JL: write this up}
+    %\todojira{638}{\bernina: @JL: write this up}
 
     \equationsag{horizontal_composition_1}{eq:horizontal_composition_1}
-
-    \
 
     \equationsag{horizontal_composition_2}{eq:horizontal_composition_2}
 
     \section{To add}
     \todojira{141}{\bernina: @JL: Add parts corresponding to listed videos.
     }
-    \linkvideo{spring2021-nat-trafos:natural-trafos:horizontal-composition} % Horizontal composition
-    \linkvideo{spring2021-nat-trafos:natural-trafos:interchange-law} % Interchange law
+    %\linkvideo{spring2021-nat-trafos:natural-trafos:horizontal-composition} % Horizontal composition
+    %\linkvideo{spring2021-nat-trafos:natural-trafos:interchange-law} % Interchange law
     \linkvideo{spring2021-nat-trafos:natural-trafos:rel-mon-maps} % Relating monotone maps
     \linkvideo{spring2021-nat-trafos:natural-trafos:eq-maps-gr-actions} % Equivariant maps between group actions
 }
