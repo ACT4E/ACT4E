@@ -288,3 +288,10 @@ find-unused:
 
 check-no-tabs:
 	./check_no_tabs.py .
+
+
+mcdp-manual:
+	latexmk -synctex=1 -pdf -shell-escape ACT4E-MCDP-devel-slow.tex -g
+	pysnip-make -d volumes/vol-mcdp/generated/snippets -c "parmake"
+	# latexmk -synctex=1 -pdf -shell-escape ACT4E-MCDP-devel-slow.tex -g
+	make ACT4E-MCDP-devel-slow.pdf
