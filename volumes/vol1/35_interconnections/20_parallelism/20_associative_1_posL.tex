@@ -1,0 +1,161 @@
+% !TEX root = chapter-standalone.tex
+
+\subsection{The category~\PosL}
+
+We define a category analogous to~\SetL, but its objects are ``tuple posets''.
+
+Given \SY{posets}~$\posA_1,\ldots, \posA_n$ we define the poset
+\begin{equation}
+    \label{eq:posetoftuples}
+    \cObj{\posA_1,\ldots, \posA_n}\definedas \tup{\cObj{\posAsetn{1},\ldots, \posAsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_n}}},
+\end{equation}
+where~$\cObj{\posAsetn{1},\ldots, \posAsetn{n}}$ is a set of tuples, and we use the product order:
+\begin{equation}
+    \prfdoubleperiod{
+        \tup{\posela_1,\ldots, \posela_n}
+        \posleqof{\cObj{\posA_1,\ldots, \posA_n}}
+        \tup{\poselb_1,\ldots, \poselb_n}
+    }{
+        \posela_i \posleqof{\posA_i} \poselb_i \text{ for all }~i\setin \makeset{1,\ldots, n}
+    }
+\end{equation}
+\begin{definition}[The category~\PosL]
+    \SYNDEF{category of tuple-posets and monotone maps}
+    \label{def:PosL}
+    The category~\PosL is the \SY{subcategory} of \Pos where the objects are tuple posets, \SY{posets} of the form
+    \begin{equation}
+        \cObj{\posA_1,\ldots, \posA_n} = \tup{\cObj{\posAsetn{1},\ldots, \posAsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_n}}}.
+    \end{equation}
+    % \begin{enumerate}
+    %     \item \emph{Objects:} \SY{posets} of the form presented in \cref{eq:posetoftuples}.
+    %     \item \emph{Morphisms:}
+    %           Monotone functions between \SY{posets} of the form presented in \cref{eq:posetoftuples}.
+    %     \item \emph{Composition:}
+    %           Composition is the usual composition of functions.
+    %     \item \emph{Identities:}
+    %           Identity functions.
+    % \end{enumerate}
+\end{definition}
+
+\begin{lemma}\label{lem:PosL-associative-stacking}
+    \PosL is  \SY{associative stacking} using the structure induced by tuple concatenation.
+\end{lemma}
+\begin{proof}
+    Analogously to what we did for \SetL, we can define a multiplication operation $\mtimescatob$ in \PosL.
+    \todotext{JL: the definition below is incorrect -- the objects in our category are not posets!}
+
+    Given two objects $\posA = \cObj{\posA_1,\ldots, \posA_n}$ and $\posB = \cObj{\posB_1,\ldots, \posB_n}$, we define
+    \begin{equation}
+        \label{eq:multposstack}
+        % \begin{aligned}
+        \cObj{\posA_1,\ldots, \posA_n} \mtimescatob \cObj{\posB_1,\ldots, \posB_n} \definedas
+        % \tup{\cObj{\posAsetn{1},\ldots, \posAsetn{m}} \cprod \cObj{\posBsetn{1},\ldots, \posBsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_m}\cprod \cObj{\posB_1,\ldots, \posB_n}}} \\
+        \cObj{\posA_1,\ldots, \posA_n, \posB_1,\ldots, \posB_n}.
+    \end{equation}
+    %    where the order is defined as
+    %    \begin{equation}\label{eq:PosL-order}
+    %        \prfdoubleperiod{
+    %            \pars{\maketupconcat{\posAnel{1}, \posBnel{1}}}
+    %            \ %
+    %            \posleqof{\posA\mtimescatob \posB}
+    %            \ %
+    %            \pars{\maketupconcat{\posAnel{2}, \posBnel{2}}}
+    %        }{
+    %            \pars{\posAnel{1}\posleqof\posA\posAnel{2}}
+    %            \ \booland\ %
+    %            \pars{\posBnel{1}\posleqof\posB\posBnel{2}}
+    %        }
+    %    \end{equation}
+    For the multiplication on morphisms, we define
+    \begin{equation}
+        \prfperiod{
+            \mora\colon \posA \mto \posB
+        }{
+            \quad
+        }{
+            \mora\colon \posC \mto \posD
+        }{
+            \defmap{
+                \pars{
+                    \mora
+                    \mtimescatmor
+                    \morb
+                }
+            }{
+                \posA\mtimescatob\posC
+            }{
+                \mto
+            }{
+                \posB\mtimescatob\posD
+            }{
+                \maketupconcat{\posAel, \posCel}
+            }{
+                \maketupconcat{\mora(\posAel), \morb(\posCel)}
+            }
+        }
+    \end{equation}
+    We need to check that the expression $\maketupconcat{\mora(\posAel), \morb(\posCel)}$ is monotone.
+    This can be easily seen because the order on $\posB\mtimescatob\posD$ is akin to a product order.
+    The proof for associativity of $\mtimescatmor$ is the same as in the proof of $\SetL$ (\cref{lem:SetL-is-associative-stacking}).
+\end{proof}
+% ~$\tup{\posAnel{1},\ldots, \posAnel{m},\posBnel{1},\ldots, \posBnel{n}} \posleqof{\cObj{\posA_1,\ldots, \posA_m}\mtimescatob \cObj{\posB_1,\ldots, \posB_n}} \tup{\posAnel{1}',\ldots, \posAnel{m}',\posBnel{1}',\ldots, \posBnel{n}'}$ if and only if~$\posAnel{i}\posleqof{\posA_i}\posAnel{i}'$ and~$\posBnel{j}\posleqof{\posB_j}\posBnel{j}'$ for all~$i\setin \makeset{1,\ldots, m}$,~$j\setin \makeset{1,\ldots, n}$.
+% % Note that this construction is analogous to the product poset.
+% The resulting \SY{poset} of tuples is written as~$\cObj{\posA_1,\ldots, \posA_m,\posB_1,\ldots, \posB_n}$.
+% We now want to show that one can define a structure for which~\PosL is  \SY{associative stacking}.
+% To do so, we define the stacking operation on objects as the multiplication operation~$\cprod$ defined in \cref{eq:multposstack}.
+
+% The stacking operation on morphisms is defined as
+% \begin{equation}
+%     \defmapcomma{
+%         \mtimescatmor
+%     }{
+%         \Mor_{\PosL} \cartprod \Mor_{\PosL}
+%     }{
+%         \mto
+%     }{
+%         \Mor_{\PosL}
+%     }{
+%         \tup{\mora,\morb}
+%     }{
+%         \mora \cprod \morb
+%     }
+% \end{equation}
+% where~$(\mora \mtimescatmor \morb)(\tup{\posAnel{1},\ldots, \posAnel{m}} \tupconcat \tup{\posBnel{1},\ldots, \posBnel{n}})\definedas \mora(\tup{\posAnel{1},\ldots, \posAnel{m}})\tupconcat \morb(\tup{\posBnel{1},\ldots, \posBnel{n}})$.
+
+% \begin{lemma}[\PosL is associative stacking]\label{lem:PosL-associative-stacking}
+%     \PosL, equipped with the aforementioned stacking operations on objects and morphisms, is  \SY{associative stacking}.
+% \end{lemma}
+
+% \begin{proof}
+%     % We show that~\PosL is an  \SY{associative stacking} semicategory.
+%     We first show that it is a stacking category, by showing that the stacking operations fulfill \cref{def:simple-stacking-semi-cat}, and then showing the compatibility condition.
+%     The stacking operation on objects fulfills \cref{def:simple-stacking-semi-cat}, since, given two \SY{posets} of tuples it returns a \SY{poset} of tuples.
+%     To show that the stacking operation on morphism fulfills \cref{def:simple-stacking-semi-cat}, we need to show that given monotone~$\mora,\morb$, the map~$\mapa \mtimescatmor \mapb$ is monotone.
+%     This is easy to show, by leveraging the monotonicity of~$\mora$ and~$\morb$.
+%     For brevity, in the following we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$,~$\posAnel{}'=\tup{\posAnel{1}',\ldots, \posAnel{m}'}$,~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$, and~$\posBnel{}'=\tup{\posBnel{1}',\ldots, \posBnel{n}'}$.
+%     We have
+%     \begin{equation}
+%         \prfcomma{\posAnel{}\tupconcat \posBnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m,\posB_1,\ldots, \posB_n}} \posAnel{}'\tupconcat \posBnel{}'}
+%         {\prftree{
+%                 \left(\posAnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m}} \posAnel{}'\right) \booland \left(\posBnel{} \posleqof{\cObj{\posB_1,\ldots, \posB_n}} \posBnel{}'\right)}
+%             {
+%                 \prftree{
+%                     \left(\mora(\posAnel{}) \posleqof{\cObj{\posC_1,\ldots, \posC_o}} \mora(\posAnel{}')\right) \booland \left(\morb(\posBnel{})\posleqof{\cObj{\posD_1,\ldots, \posD_t}} \morb(\posBnel{}')\right)}
+%                 {
+%                     \prftree{
+%                         {\mora(\posAnel{}) \tupconcat \morb(\posBnel{})  \posleqof{\cObj{\posC_1,\ldots, \posC_o, \posD_1,\ldots, \posD_t}} \mora(\posAnel{}') \tupconcat \morb(\posBnel{}')}}
+%                     {(\mora \mtimescatmor \morb)(\posAnel{}\tupconcat \posBnel{}) \posleqof{\cObj{\posC_1,\ldots, \posC_o,\posD_1,\ldots, \posD_t}} (\mora \mtimescatmor \morb)(\posAnel{}'\tupconcat \posBnel{}')
+%                     }}}
+%         }
+%     \end{equation}
+%     which shows monotonicity.
+%     Furthermore, the two stacking operations are compatible:
+%     \begin{equation}
+%         \prfperiod{\mora\colon \cObj{\posA_1,\ldots,\posA_m}\mto \cObj{\posC_1,\ldots,\posC_o}}
+%         {\morb\colon \cObj{\posB_1,\ldots,\posB_n}\mto \cObj{\posD_1,\ldots,\posD_t}}
+%         {\mora \mtimescatmor \morb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n} \mto \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}}
+%     \end{equation}
+%     %
+%     The proof of associativity is parallel to the proof for~\SetL.
+% \end{proof}
+%
