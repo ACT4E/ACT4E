@@ -122,80 +122,98 @@ We can make this more formal and say that there exists a \SY{forgetful semifunct
 \end{proof}
 
 In the other direction, we can take a DP and find a corresponding DPI.
-We obtain another \SY{semifunctor}.
 
-\begin{definition}
-    \label{def:dptodpisemi}
-    The \SY{semifunctor}~$\dptodpi\colon \DP\fto \DPI$ is given by:
-    \begin{enumerate}
-        \item Identity on the objects:~$\dpitodpob(\posA)=\posA$.
-        \item Given~$\adp\colon \funspop \Ptimes \ressp \toinPos \Bool$, the action on morphisms is given by
-              \begin{equation}
-                  \dptodpimor(\adp)=\tup{\funsp,\ressp, \impsp,\prov,\req},
-              \end{equation}
-              where
-              \begin{equation}
-                  \begin{aligned}
-                      \impsp & =\makeset{\tup{\fun,\res}\setin \funsp \cartprod \ressp \colon \adp(\fun\F{\opel},\res)}, \\
-                      \prov  & \colon \tup{\fun,\res}\mapsto \fun, \\
-                      \req   & \colon \tup{\fun,\res}\mapsto \res,
-                  \end{aligned}
-              \end{equation}
-    \end{enumerate}
-\end{definition}
+Given a DP~$\adp\colon \funspop \Ptimes \ressp \toinPos \Bool$, we can define a DPI $\tup{\funsp,\ressp, \impsp,\prov,\req}$
+by setting
+\begin{equation}
+    \begin{aligned}
+        \impsp & =\makeset{\tup{\fun,\res}\setin \funsp \cartprod \ressp \colon \adp(\fun\F{\opel},\res)}, \\
+        \prov  & \colon \tup{\fun,\res}\mapsto \fun, \\
+        \req   & \colon \tup{\fun,\res}\mapsto \res,
+    \end{aligned}
+\end{equation}
+However, this operation is not a semifunctor, since it does not preserve composition.
 
-\begin{lemma}
-    \cref{def:dptodpisemi} indeed defines a \SY{semifunctor}.
-\end{lemma}
-\begin{proof}
-    Consider~$\adpa\colon \funposA\Ptimes \resposB \toinPos \Bool$ and~$\adpb\colon \funposB\Ptimes \resposC\toinPos \Bool$.
-    We need to show
-    \begin{equation}
-        \dptodpimor(\adpa \dpthenDP \adpb)=\dptodpimor(\adpa)\dpithenDPI \dptodpimor(\adpb).
-    \end{equation}
-    Let's start with the left term.
-    One has
-    \begin{equation}
-        \dptodpimor(\adpa \dpthenDP \adpb)=\tup{\funposA,\resposC,\impsp,\prov,\req},
-    \end{equation}
-    where
-    \begin{equation}
-        \begin{aligned}
-            \impsp & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon (\adpa \dpthenDP \adpb)(\funposAel,\resposCel)}, \\
-                   & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon \bigvee_{\posBel\setin \posB}\adpa(\funposAopel,\resposBel)\booland \adpb(\funposBopel,\resposCel)} \\
-            \prov  & =\projstart, \\
-            \req   & =\projend,
-        \end{aligned}
-    \end{equation}
-    where~$\projstart$ is the projection mapping returning the first element of a tuple, and~$\projend$ is the projection mapping returning the last element of a tuple.
-    For the right-hand side, instead, one has
-    \begin{equation}
-        \dptodpimor(\adpa) \dpithenDPI \dptodpimor(\adpb)=\tup{\funposA,\resposC,\impsp\colI{'},\prov\F{'},\req\R{'}},
-    \end{equation}
-    where
-    \begin{equation}
-        \begin{aligned}
-            \impsp\colI{'} & =\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}}\mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})} \\
-            \impspn{1}     & =\makeset{\tup{\funposAel,\resposBel}\setin \funposA \cartprod \resposB \colon \adpa(\funposAel,\resposBel)}, \\
-            \impspn{2}     & =\makeset{\tup{\funposBel,\resposCel}\setin \funposB \cartprod \resposC \colon \adpb(\funposBel,\resposCel)}, \\
-            \provn{1}      & =\projstart \\
-            \provn{2}      & =\projstart \\
-            \reqn{1}       & =\projend \\
-            \reqn{2}       & =\projend \\
-            \prov\F{'}     & =\projstart \\
-            \req\R{'}      & =\projend.
-        \end{aligned}
-    \end{equation}
-    One can already notice that~$\prov=\prov\F{'}$ and~$\req=\req\R{'}$.
-    To finish the proof, we can massage~$\impsp\colI{'}$:
-    \begin{equation}
-        \begin{aligned}
-            \impsp\colI{'} & =\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}}\mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})} \\
-                           & =\makeset{\tup{\funposAel,\resposBel,\funposBel\F{'},\resposCel}\setin \funposA \cartprod \resposB\cartprod \funposB\cartprod \resposC \colon \adpa(\funposAel\F{\opel},\resposBel) \booland \adpb(\funposBel\F{\opel},\resposCel)
-            \booland \resposBel \posleqof{\posB}\funposBel\F{'}} \\
-                           & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon \bigvee_{\posBel\setin \posB}\adpa(\funposAopel,\resposBel)\booland \adpb(\funposBopel,\resposCel)} \\
-                           & =\impsp.
-        \end{aligned}
-    \end{equation}
+\devel {
 
-\end{proof}
+    We obtain another \SY{semifunctor}.
+
+    \begin{definition}
+        \label{def:dptodpisemi}
+        The \SY{semifunctor}~$\dptodpi\colon \DP\fto \DPI$ is given by:
+        \begin{enumerate}
+            \item Identity on the objects:~$\dpitodpob(\posA)=\posA$.
+            \item Given~$\adp\colon \funspop \Ptimes \ressp \toinPos \Bool$, the action on morphisms is given by
+                  \begin{equation}
+                      \dptodpimor(\adp)=\tup{\funsp,\ressp, \impsp,\prov,\req},
+                  \end{equation}
+                  where
+                  \begin{equation}
+                      \begin{aligned}
+                          \impsp & =\makeset{\tup{\fun,\res}\setin \funsp \cartprod \ressp \colon \adp(\fun\F{\opel},\res)}, \\
+                          \prov  & \colon \tup{\fun,\res}\mapsto \fun, \\
+                          \req   & \colon \tup{\fun,\res}\mapsto \res,
+                      \end{aligned}
+                  \end{equation}
+        \end{enumerate}
+    \end{definition}
+
+    \begin{lemma}
+        \cref{def:dptodpisemi} indeed defines a \SY{semifunctor}.
+    \end{lemma}
+    \todotext{
+        @Gioele: the last passage in the proof is wrong. (the two sets have different dimensions!)
+    }
+    \begin{proof}
+        Consider~$\adpa\colon \funposA\Ptimes \resposB \toinPos \Bool$ and~$\adpb\colon \funposB\Ptimes \resposC\toinPos \Bool$.
+        We need to show
+        \begin{equation}
+            \dptodpimor(\adpa \dpthenDP \adpb)=\dptodpimor(\adpa)\dpithenDPI \dptodpimor(\adpb).
+        \end{equation}
+        Let's start with the left term.
+        One has
+        \begin{equation}
+            \dptodpimor(\adpa \dpthenDP \adpb)=\tup{\funposA,\resposC,\impsp,\prov,\req},
+        \end{equation}
+        where
+        \begin{equation}
+            \begin{aligned}
+                \impsp & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon (\adpa \dpthenDP \adpb)(\funposAel,\resposCel)}, \\
+                       & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon \bigvee_{\posBel\setin \posB}\adpa(\funposAopel,\resposBel)\booland \adpb(\funposBopel,\resposCel)} \\
+                \prov  & =\projstart, \\
+                \req   & =\projend,
+            \end{aligned}
+        \end{equation}
+        where~$\projstart$ is the projection mapping returning the first element of a tuple, and~$\projend$ is the projection mapping returning the last element of a tuple.
+        For the right-hand side, instead, one has
+        \begin{equation}
+            \dptodpimor(\adpa) \dpithenDPI \dptodpimor(\adpb)=\tup{\funposA,\resposC,\impsp\colI{'},\prov\F{'},\req\R{'}},
+        \end{equation}
+        where
+        \begin{equation}
+            \begin{aligned}
+                \impsp\colI{'} & =\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}}\mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})} \\
+                \impspn{1}     & =\makeset{\tup{\funposAel,\resposBel}\setin \funposA \cartprod \resposB \colon \adpa(\funposAel,\resposBel)}, \\
+                \impspn{2}     & =\makeset{\tup{\funposBel,\resposCel}\setin \funposB \cartprod \resposC \colon \adpb(\funposBel,\resposCel)}, \\
+                \provn{1}      & =\projstart \\
+                \provn{2}      & =\projstart \\
+                \reqn{1}       & =\projend \\
+                \reqn{2}       & =\projend \\
+                \prov\F{'}     & =\projstart \\
+                \req\R{'}      & =\projend.
+            \end{aligned}
+        \end{equation}
+        One can already notice that~$\prov=\prov\F{'}$ and~$\req=\req\R{'}$.
+        To finish the proof, we can massage~$\impsp\colI{'}$:
+        \begin{equation}
+            \begin{aligned}
+                \impsp\colI{'} & =\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}}\mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})} \\
+                               & =\makeset{\tup{\funposAel,\resposBel,\funposBel\F{'},\resposCel}\setin \funposA \cartprod \resposB\cartprod \funposB\cartprod \resposC \colon \adpa(\funposAel\F{\opel},\resposBel) \booland \adpb(\funposBel\F{\opel},\resposCel)
+                \booland \resposBel \posleqof{\posB}\funposBel\F{'}} \\
+                               & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon \bigvee_{\posBel\setin \posB}\adpa(\funposAopel,\resposBel)\booland \adpb(\funposBopel,\resposCel)} \\
+                               & =\impsp.
+            \end{aligned}
+        \end{equation}
+
+    \end{proof}
+}
