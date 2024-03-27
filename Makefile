@@ -300,3 +300,8 @@ mcdp-manual-devel:
 	make ACT4E-MCDP-devel-slow.pdf
 
 
+
+test-simple:
+	make clean
+	pdflatex -shell-escape ACT4E-simple-test.tex
+	pdflatex -shell-escape  ACT4E-simple-test.tex
