@@ -1,5 +1,7 @@
 % !TEX root = chapter-standalone.tex
-\section{Visual Example and Warmup}
+
+\devel{
+\section{Motivation and Warmup}
 Since \SY{mappings between functors} may be rather abstract, we will first start with a concrete example.
 Imagine you are in Boston, and can go to New York or Providence.
 We may now define a category~$\CatC$ of cities, where morphisms are trips between the cities.
@@ -13,13 +15,13 @@ If we write out our categories in typical diagrams, we notice that they \SY{comm
 \middlesag{diag_boston_nyc}
 
 In other words, for each pair of (distance, altitude) relative to Boston, we can compute the gas price of the trip.
+}
 
 \section{Natural transformations}
 \linkvideo{spring2021-nat-trafos:diagrams} % Diagrams
 %\linkvideo{spring2021-nat-trafos:natural-trafos} % Natural transformations
 
 To formally define \SY{natural transformations}, the general situation we will start from is when we have two \SY{functors}~$\funa \colon \CatC \fto \CatD$ and~$\funb \colon \CatC \fto \CatD$, sharing the same source and target, respectively.
-In the previous example above,~$\funa$ and~$\funb$ were database instances.
 
 A \SY{natural transformation} from~$\funa$ to~$\funb$ is then a kind of ``map'' that relates the two \SY{functors}.
 How might one define such a thing?
@@ -136,58 +138,43 @@ The diagram in $\CatD$ is a ``commuting prism'': all faces of the prism commute.
     \label{fig:nat_trans_graphically}
 \end{figure*}
 
-But perhaps this prism is better explained with a few simple examples:
+But perhaps this prism is better explained with with the help of some examples:
 
-\subsection{Basic Examples}
+\subsection{Examples}
 
-\begin{marginfigure}
-    \centering
-    \includesag{cone-over-G}
-    \caption{Cone over~$\funb$.
-    }
-    \label{fig:cone-over-G}
-\end{marginfigure}
 
-\begin{marginfigure}
-    \centering
-    \includesag{cone-over-F}
-    \label{fig:cone-under-F}
-    \caption{Cone under~$\funa$.}
-\end{marginfigure}
 
-% TODO : Make diagram
-\begin{example}[Constant Functors and Cones]
-    Let~$\CatC, \CatD$ be categories, and~$\funa, \funb\colon\CatC\fto\CatD$ be functors, where~$\funa$ is constant.
-    That means that~$\funa$ maps all objects~$\Obja_i$ of~$\CatC$ to a single object~$\Objb \setin \CatD$.
-    Clearly the image of~$\funa$ is a single object.
-    The natural transformation from~$\funa(\Obja)$ to~$\funb(\Objb)$ thus forms what we call the cone over~$\funb$, illustrated in figure \cref{fig:cone-under-F}.
-    Analogously, if we consider~$\funb$ to be a constant functor, we talk about the cone under~$\funa$ (or cocone), as seen in figure \cref{fig:cone-over-G}.
-\end{example}
 
-% move these to a 'Further examples' section at the end
+
+
+
 \begin{example}
-    Consider the \SY{powerset} \SY{functor} from \cref{ex:powerset_functor}, and denote it~$\funa$.
-    As a reminder, the \SY{functor} maps a set $\setA$ to its \SY{powerset}, and a function $\mora \colon \setA \mto \setB$ to the map which sends each subset of $\setA$ to its image under $\mora$.
-    We now look at a \SY{natural transformation}~$\ntrafoa\colon \funid_\Set \nto \funa$ whose components are the functions
+    Consider the \SY{powerset} \SY{functor} $\powerset$ from \cref{ex:powerset_functor}.
+    As a reminder, the \SY{powerset} \SY{functor} $\powerset$ maps a set $\setA$ to its \SY{powerset} $\powerset(\setA)$, and a function $\mora \colon \setA \mto \setB$ to the function $\powerset(\mora) \colon \powerset(\setA) \mto \powerset(\setB)$ which sends each subset of $\setA$ to its image under $\mora$, which is a subset of $\setB$.
+    
+    There is a \SY{natural transformation}~$\ntrafoa\colon \funid_\Set \nto \powerset$ whose components are the functions
     \begin{equation}
         \begin{aligned}
-            \ntrafoa_\setA\colon \funid_\Set(\setA) = \setA & \mto \funa(\setA) = \powerset(\setA) \\
+            \ntrafoa_\setA\colon \setA & \mto \powerset(\setA) \\
             \setAel                                         & \mapsto \makeset{\setAel}.
         \end{aligned}
     \end{equation}
     In other words, the \SY{natural transformation} embeds each element of~\setA into the power set~$\powerset(\setA)$.
-    To check that this is a \SY{natural transformation}, consider $\mora\colon \setA\mto \setB$.
+    To check that this is a \SY{natural transformation}, consider an arbitrary function between sets $\mora\colon \setA\mto \setB$.
     We have
     \begin{equation}
         \begin{aligned}
-            (\ntrafoa_\setA \mthen \funa(\mora))(\setAel)
-             & =\makeset{\setAel} \mthen \funa(\mora) \\
+            (\ntrafoa_\setA \mthen \powerset(\mora))(\setAel)
+             & =\makeset{\setAel} \mthen \powerset(\mora) \\
              & =\makeset{\mora(\setAel)} \\
              & =\mora(\setAel)\mthen \ntrafoa_\setB \\
-             & =(\mora \mthen \ntrafoa_\setB)(\setAel).
+             & =(\mora \mthen \ntrafoa_\setB)(\setAel),
         \end{aligned}
     \end{equation}
+    which means that the condition for $\ntrafoa$ to be a natural transformation is satisfied. 
 \end{example}
+
+\todotext{J: Make a diagram for the above example}
 
 \begin{example}
     Consider the following two functors $\funa, \funb \colon \Set \Ctimes \Set \Ctimes \Set \fto \Set$.
@@ -249,12 +236,11 @@ But perhaps this prism is better explained with a few simple examples:
     Can you write down what the functors are that are the source and target of this natural transformation?
 \end{example}
 
+
 \section{Morphisms in a Category of Functors}
 \linkvideo{spring2021-nat-trafos:natural-trafos:nattrafos-as-mor} % Natural transformations are morphisms between functors
-We have seen that natural transformations between two functors $\funa, \funb \colon \CatC \fto \CatD$ map objects in $\CatC$ to
-morphisms in $\CatD$, and map morphisms in $\CatC$ to commutative diagrams.
-This is quite similar to the effect of functors on category
-objects and moprhisms.
+We have seen that natural transformations between two functors $\funa, \funb \colon \CatC \fto \CatD$ map objects in $\CatC$ to morphisms in $\CatD$, and map morphisms in $\CatC$ to commutative diagrams.
+This is quite similar to the effect of functors on category objects and moprhisms.
 What if there were a category where objects are functors, and morphisms are natural transformations?
 
 \subsection{Vertical Composition}
@@ -656,6 +642,7 @@ Such transformations appear in many places and are formalized by the notion of \
 
 \solutionof{NaturalCurry}
 
+\devel{
 \section{Yoneda Embedding Theorem \& Lemma}
 Here we will cover one of the most important results in Category Theory.
 It gives us insight on the role that objects play
@@ -691,7 +678,7 @@ More specifically, we will see that objects are characterized by their ``incomin
 
 \begin{theorem}[Yoneda Embedding]
     Let $\CatC$ be a category, and $\Obja, \Objb \setin \Ob_\CatC$.
-    Then there is a natural bijection of sets between the hom-set $\Hom(\Obja,\Objb)$ and the hom-set  $\Hom_{[\CatC, \Set]}(\Hom_\CatC(\Objb, -), \Hom_\CatC(\Obja, -))$ in the category of represenatble functors.
+    Then there is a natural bijection of sets between the hom-set $\Hom(\Obja,\Objb)$ and the hom-set $\Hom_{[\CatC, \Set]}(\Hom_\CatC(\Objb, -), \Hom_\CatC(\Obja, -))$ in the category of represenatble functors.
 \end{theorem}
 Let's break this down a bit.
 We have two objects $\Obja, \Objb$ representing two functors $\Hom_\CatC(\Obja,-), \Hom_\CatC(\Objb,-)$.
@@ -720,7 +707,7 @@ We are essentially saying that the ways to map $\Obja$ to $\Objb$ in $\CatC$ is 
     Moreover, we see that in this case, both objects $\Obja, \Objb$ have the same number of ``ins`` and ``outs`` with respect to $\Objd$.
     A general result in Category Theory is that if the hom-sets of $\Obja$ and $\Objb$ are isomorphic for all $\Objd \setin \Ob_\CatC$, then $\Obja$ and $\Objb$ are isomoprhic, and essentially play the same role within $\CatC$.
 \end{example}
-
+}
 \devel{
 
     %\section{Horizontal composition}
