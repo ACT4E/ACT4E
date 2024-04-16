@@ -1,10 +1,8 @@
-# Applied Compositional Thinking for Engineers (ACT4E)
+# Applied Category Theory for Engineering (ACT4E)
 
-This repository contains the sources to the book used in the Applied Compositional Thinking for Engineers class, which is taught at ETH Zürich and online yearly.
+This repository contains the sources to the book used in the Applied Category Theory for Engineering classes which are taught at ETH Zürich and online.
 
-Please see [the website][website] for more information.
-
-The last version of the PDF book can be obtained at [this link (PDF, 400 MB)][pdf].
+A recent version of the PDF book can be obtained at [this link (PDF, 400 MB)][pdf].
 
 Note for instructors: please contact us to obtain a copy that also contains the solutions to all the graded exercises.
 
