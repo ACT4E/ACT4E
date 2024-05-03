@@ -1,0 +1,27 @@
+\scalebox{0.65}{
+    \begin{tikzpicture}
+        \node[blockk] (dyn) at (0,0) {$
+                \begin{aligned}
+                    \D \bm{x}_t & =\mat{A}\bm{x}_t\D t+\mat{B}\bm{u}_t \D t+\mat{E} \D \bm{w}_t \\
+                    \D \bm{y}_t & = \mat{C}\bm{x}_t \D t+\mat{G}\D \bm{v}_t, \\
+                    \mat{W}     & =\mat{E}\mat{E}^*, \mat{V}=\mat{G}\mat{G}^*
+                \end{aligned}
+            $};
+        \node[blockk, left=0.5cm of dyn.west] (zoh) {$\mathrm{ZOH}_\delta$};
+        \node[blockk, below=0.5cm of dyn.south] (del_1) {Delay $d_\mathrm{obs}$};
+        \node[blockk, below=0.5cm of del_1.south] (sam) {$\mathrm{Sampling}_\delta$};
+        \node[blockk, below left=0.25cm and 0.5cm of sam.west, minimum width=0.5cm] (gen) {$p$};
+        \node[blockk, below=0.5cm of sam.south] (cnt) {\begin{tabular}{c}Discrete \\ Controller\end{tabular}};
+        \node[blockk, right=0.75cm of dyn.east,minimum height=2.5cm, minimum width=1.0cm] (cost) {$\mat{Q},\mat{R}$};
+        \node[blockk, left=1cm of cnt.west] (del_2) {Delay $d_\mathrm{comp}$};
+        \draw[-Triangle] ($(dyn.south)+(0,0)$) -- ($(del_1.north)$) node[pos=0.5,right]{$\bm{y}_t$};
+        \draw[-Triangle] ($(del_1.south)+(0,0)$) -- ($(sam.north)$) node[pos=0.5,right]{$\bm{y}_{t-d_\mathrm{obs}}$};
+        \draw[-Triangle] ($(dyn.east)+(0,0)$) -- ($(cost.west)$) node[pos=0.5,above]{$\bm{x}_t$};
+        \draw[-Triangle] ($(zoh.east)+(0,0)$) -- ($(dyn.west)$) node[pos=0.5,below]{};
+        \draw[-Triangle] ($(sam.south)+(0,0)$) -- ($(cnt.north)+(0,0)$) node[pos=0.5,right]{$\gamma_k \bm{y}_{k\delta-d_\mathrm{obs}}$};
+        \draw[-Triangle] ($(cnt.west)+(0,0)$) -- ($(del_2.east)+(0,0)$) node[pos=0.5,right]{};
+        \draw[-] ($(gen.east)+(0,0)$) -- ($(gen.east)+(1.4,0)$) node[pos=0.5,above]{};
+        \draw[-Triangle] ($(zoh.south)+(0,-3.63)$) -- ($(zoh.south)+(0,0)$) node[pos=0.5,right]{$\bm{u}_{k\delta-d_\mathrm{comp}}$};
+        \draw[-Triangle] ($(zoh.east)+(0.25,0)$) -- ($(zoh.east)+(0.25,1)$)|-($(cost.west)+(0,1)$) node[pos=0.96,above]{};
+        \draw[-Triangle] ($(cost.east)$) -- ($(cost.east)+(0.5,0)$)node[pos=0.5,above]{$J_\mathrm{c}$};
+    \end{tikzpicture}}
