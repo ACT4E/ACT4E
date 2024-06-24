@@ -147,14 +147,63 @@ Guess the canonical isomorphism $\distributor \colon (\setA \cartprod \setB) \se
 Next we look at the equation $x^{y \cdot z} = (x^y)^z$, and the corresponding relationship $ \setA^{\setB \cartprod \setC}  \isomorphic \pars{\setA^\setB}^\setC$. What might be a canonical isomorphism proving this latter relationship?
 
 The elements of the set $ \setA^{\setB \cartprod \setC}$ are functions of two variables, of the type
-\begin{equation}
-\mora \colon \setB \cartprod \setC \to \setA,
+\begin{equation}\label{eq:currying-function-of-two-variables}
+\mora \colon \setB \cartprod \setC \to \setA, 
 \end{equation}
 while elements of the set $\pars{\setA^\setB}^\setC$ are functions of the type
-\begin{equation}
+\begin{equation} \label{eq:currying-function-to-functions}
 \morb \colon \setC \to \setA^\setB;
 \end{equation}
-in other words, functions of a single variable but which evaluate, for each input, to a function of the type $\setB \to \setA$. 
+in other words, functions of a single variable but which evaluate, for each input, to a function of the type $\setB \to \setA$. A canonical way to turn a function of the type \cref{eq:currying-function-of-two-variables} into a function of the type \cref{eq:currying-function-to-functoins} is by ``partial evaluation'': if we think of $\mora$ as having two input slots, we can partially evaluate $\mora$ by inserting an element of $\setC$ into the second slot of $\mora$, while leaving the first slot ``open'' or ``variable''. In other words, for any element $\elc \setin \setC$, we can create, from $\mora$, the function 
+\begin{equation}
+ \defmapperiod{
+           \mora( -, \elc)
+        }{
+            \setB 
+        }{
+            \to
+        }{
+           \setA 
+        }{
+            \elb
+        }{
+            \mora (\elb, \elc)
+        }
+\end{equation}
+But since we can do this for any $\elc \in \setC$, we have also just described a function
+\begin{equation}
+\begin{aligned}
+          & \setC & \to & \ \ \setA^\setB, \\
+         & \elc & \mapsto & \ \  \mora ( -, \elc),
+\end{aligned}
+\end{equation}
+or, in other words, an element of $\pars{\setA^\setB}^\setC$. Since this recipe works for any function $\mora \colon \setB \cartprod \setC \to \setA$, we also now have the following function
+\begin{equation}
+\defmapcomma{
+         \curry
+        }{
+           \setA^{\setB \cartprod \setC}
+        }{
+           \to
+        }{
+           \pars{\setA^\setB}^\setC 
+        }{
+           \mora
+        }{
+           (\elc \mapsto \mora ( -, \elc))
+           }
+\end{equation}
+which we call $\curry$. This function has the desired type to be an isomorphism proving that $\setA^{\setB \cartprod \setC}  \isomorphic \pars{\setA^\setB}^\setC$.
+
+\begin{exercise}\label{ex:currying-is-an-iso}
+Prove that  $\curry \colon \setA^{\setB \cartprod \setC} \to \pars{\setA^\setB}^\setC$ is an isomorphism. 
+\end{exercise}
+
+The name ``$\curry$'' stands for ``Curry'', which is the last name of Haskell Curry. 
+
+\begin{solution}
+\todotext{JL: write up
+\end{solution}
 
 
 \subsection{Functions into products}
