@@ -1,0 +1,421 @@
+% !TEX root = chapter-standalone.tex
+\section{Arithmetic with sets}
+\label{sec:arithmetic-with-sets}
+
+
+In our notation for \SY{cartesian product}, \SY{disjoint union}, and function sets we have used notation inspired by basic operations in arithmetic, motivated in part by the following formulas for sizes of finite sets:
+\begin{align}
+    \cardof{\setA \cartprod \setB}     & = \cardof \setA \cdot \cardof \setB, \\
+    \cardof{ \setA \setdisunion \setB} & = \cardof \setA + \cardof \setB, \\
+    \cardmap(\setB^{\setA})            & = {\cardof\setB}^{\cardof\setA}.
+\end{align}
+
+The parallels of these operations to operations in arithmetic go further.
+For example, consider the following identities which hold for any natural numbers $x, y, z$: 
+\begin{align}
+    x \cdot y & = y \cdot x,  \\ 
+    x + y & = y + x, \\
+    x \cdot (y \cdot z) & = (x \cdot y) \cdot z, \\
+    x + (y + z) & = (x + y) + z, \\
+    (x \cdot y) + (x \cdot z)  & = x \cdot (y + z), \\
+    z^{x \cdot y}                    & = \pars{z^y}^x, \\
+    (x \cdot y)^z &= x^z \cdot y^z, \\
+    x^{(y + z)}           & = x^y \cdot x^z, \\
+    (x + y)^z &= \sum_{k = 0}^z {{z}\choose{k}} \ x^k \cdot y^{z - k}. 
+\end{align}
+These identities also hold on the level of sets, before computing their size; we simply need to replace ``$=$'' with the symbol ``$\isomorphic$'' for ``isomorphic'':
+\begin{align}
+    \setA \cartprod \setB & \isomorphic \setB \cartprod \setA,  \\
+    \setB \setdisunion \setA & \isomorphic \setA \setdisunion \setB,   \\
+    (\setA \cartprod \setB) \cartprod \setC & \isomorphic \setA \cartprod (\setB \cartprod \setC), \\
+    (\setA \setdisunion \setB) \setdisunion \setC & \isomorphic \setA \setdisunion (\setB \setdisunion \setC), \\
+    (\setA \cartprod \setB) \setdisunion (\setA \cartprod \setC)  & \isomorphic \setA \cartprod (\setB \setdisunion \setC), \\
+    \setC^{\setA \cartprod \setB}                    & \isomorphic \pars{\setC^\setB}^\setA, \\
+    (\setA \cartprod \setB)^{\setC} & \isomorphic  \setA^\setC \cartprod \setB^\setC, \\
+    \setA^{\setB \setdisunion \setC}           & \isomorphic \setA^\setB \cartprod \setA^\setC, \\
+    (\setA \setdisunion \setB)^{\setC} & \isomorphic \stylesets{\sum_{\subA \setin \powerset \setC}} \setA^\subA \cartprod \setB^{\setC \backslash \subA} 
+\end{align}
+
+\todotext{JL: also talk about empty set and one-element sets acting like zero and one... }
+
+We can say even more: not only do we have the above statements about certain sets being isomorphic, but in fact in each case there exists a particular, special isomorphism which mathematicians might call "natural" or "canonical". These terms are often used in an informal way to describe situations where some mathematical structure, such as a certain function, exists without the need for any particular ``extra'' or ``ad hoc'' choices to be made. Often this situation involves a family of cases, and a ``canonical choice'' is one which is possible to construct for all cases at once, without reference to the details of any particular case. We'll illustrate this idea by describing a canonical isomorphism for each of the ``equations'' above. We also do this we will use many of these ismorphisms over and over again, and hence it makes sense to get to know them and give them names. 
+
+\subsection{Commutativity}
+   
+The equations $x \cdot y = y \cdot x$ and $x + y = y + x$ describe the \emph{commutativity property} of multiplication and of addition, respectively. 
+
+Let us look at the corresponding relationship on the level of sets, for the case of multiplication:
+\begin{equation}
+\setA \cartprod \setB \simeq \setB \cartprod \setA. 
+\end{equation}
+The canonical isomorphism in this case, which gives proof for this relationship, is
+ \begin{equation}
+ \defmapperiod{
+           \braiding
+        }{
+            \setA \cartprod \setB
+        }{
+            \to
+        }{
+            \setB \cartprod \setA
+        }{
+            \tup{\ela, \elb}
+        }{
+            \tup{\elb, \ela}
+        }
+\end{equation}
+This function (which we've called $\braiding$ which is short for "braiding"), is canonical because the "shape" or "recipe" of the function does not depend on the particular sets $\setA$ and $\setB$; this "shape" or "recipe" works for $\emph{any}$ two sets $\setA$ and $\setB$. It is in this sense that it works for "all cases at once" and does not depend on any extra choices that depend on particular sets.
+
+In contrast, for example, if we were to look at the particular sets $\setA = \makeset{0, 1, 2}$ and $\setB = \makeset{\star, \dagger}$, then, besides the canonical function $\braiding \colon \setA \cartprod \setB \to \setB \cartprod \setA$, there are also other isomorphisms possible, such as for instance the function $\setA \cartprod \setB \to \setB \cartprod \setA$ which maps like this: 
+\begin{align}
+\tup{0, \star} \mapsto \tup{\star, 1} \\
+\tup{1, \star} \mapsto \tup{\star, 2} \\
+\tup{2, \star} \mapsto \tup{\star, 3} \\
+\tup{0, \dagger} \mapsto \tup{\dagger, 1} \\
+\tup{1, \dagger} \mapsto \tup{\dagger, 2} \\
+\tup{2, \dagger} \mapsto \tup{\dagger, 3}.
+\end{align}
+It may be written more compactly by the recipe ``$\tup{x, y} \mapsto \tup{y, x +1 \text{ mod } 3}$". However, this recipe still depends on specific features of the  set $\setA$ and would not work for any two arbitrary sets (namely, it uses the fact that the elements of $\setA$ in this example are integers for which the operation ``mod 3'' makes sense). Thus this function is not ``canonical" (while $\braiding$ is). 
+
+The above discussion regards multiplication. A similar situation holds for addition. The statement $\setA \setdisunion \setB \isomorphic \setB \setdisunion \setA$ is the analogue, on the level of sets, of the commutativity property for the operation of addition for natural numbers, and for this relationship there is also proof via a canonical isomorphism. We call this canonical isomorphism also $\braiding$. 
+
+\begin{exercise}\label{ex:braiding-disjoint-union}
+Can you guess the canonical isomorphism $\braiding \colon \setB \setdisunion \setA \to \setA \setdisunion \setB$? Prove that your guess is indeed an isomorphism. 
+\end{exercise}
+
+\begin{solution}
+\todotext{JL: write up}
+\end{solution}
+
+\subsection{Associativity}
+
+The equations $x \cdot (y \cdot z)  = (x \cdot y) \cdot z$ and $x + (y + z) = (x + y) + z$ describe, respectively, the \emph{associativity} property of multiplication and addition of natural numbers. Correspondingly, there are canonical isomorphisms
+\begin{equation}
+\associator \colon (\setA \cartprod \setB) \cartprod \setC \to \setA \cartprod (\setB \cartprod \setC)
+\end{equation}
+and 
+\begin{equation}
+\associator \colon (\setA \setdisunion \setB) \setdisunion \setC \to \setA \setdisunion (\setB \setdisunion \setC)
+\end{equation}
+(which we both call by the same name). For the case of the cartesian product, the isomorphism $\associator$ is
+\begin{equation}
+ \defmapperiod{
+           \associator
+        }{
+            (\setA \cartprod \setB) \cartprod \setC 
+        }{
+            \to
+        }{
+           \setA \cartprod (\setB \cartprod \setC)
+        }{
+            \tup{\tup{\ela, \elb}, \elc}
+        }{
+            \tup{\ela, \tup{\elb, \elc}}
+        }
+\end{equation}
+
+
+\begin{exercise}\label{ex:associator-cart-prod-and-disjoint-union}
+Guess how $\associator$ is defined for the sum (disjoint union) of sets, and check that your guess is indeed an isomorphism.
+\end{exercise}
+
+\begin{solution}
+\todotext{JL: write up}
+\end{solution}
+
+\subsection{Distributivity}
+
+Consider the statement above that 
+\begin{equation}
+(\setA \cartprod \setB) \setdisunion (\setA \cartprod \setC)  \isomorphic \setA \cartprod (\setB \setdisunion \setC).
+\end{equation}
+This is analogous to the \emph{distributivity} property of multiplication and addition of numbers:
+\begin{equation}
+(x \cdot y) + (x \cdot z)  = x \cdot (y + z).
+\end{equation}
+
+\begin{exercise}\label{ex:distributivity-isomorphism}
+Guess the canonical isomorphism $\distributor \colon (\setA \cartprod \setB) \setdisunion (\setA \cartprod \setC) \to \setA \cartprod (\setB \setdisunion \setC)$ and verify that it is indeed an isomorphism. 
+\end{exercise}
+
+\begin{solution}
+\todotext{JL: write up}
+\end{solution}
+
+\subsection{Functions out of products}
+
+Next we look at the equation $z^{x \cdot y} = (z^y)^x$, and the corresponding relationship $ \setC^{\setA \cartprod \setB}  \isomorphic \pars{\setC^\setB}^\setA$. What might be a canonical isomorphism proving this latter relationship?
+
+The elements of the set $ \setC^{\setA \cartprod \setB}$ are functions of two variables, of the type
+\begin{equation}\label{eq:currying-function-of-two-variables}
+\mora \colon \setA \cartprod \setB \to \setC, 
+\end{equation}
+while elements of the set $\pars{\setC^\setB}^\setA$ are functions of the type
+\begin{equation} \label{eq:currying-function-to-functions}
+\morb \colon \setA \to \setC^\setB;
+\end{equation}
+in other words, functions of a single variable but which evaluate, for each input, to a function of the type $\setB \to \setC$. A canonical way to turn a function of the type \cref{eq:currying-function-of-two-variables} into a function of the type \cref{eq:currying-function-to-functions} is by ``partial evaluation'': if we think of $\mora$ as having two input slots, we can partially evaluate $\mora$ by inserting an element of $\setA$ into the first slot of $\mora$, while leaving the second slot ``open'' or ``variable''. In other words, for any element $\ela \setin \setA$, we can create, from $\mora$, the function 
+\begin{equation}
+ \defmapperiod{
+           \mora(\ela, -)
+        }{
+            \setB 
+        }{
+            \to
+        }{
+           \setC 
+        }{
+            \elb
+        }{
+            \mora (\ela, \elb)
+        }
+\end{equation}
+But since we can do this for any $\ela \in \setA$, we have also just described a function
+\begin{equation}
+\begin{aligned}
+          & \setA & \to & \ \ \setC^\setB, \\
+         & \ela & \mapsto & \ \  \mora ( \ela, -),
+\end{aligned}
+\end{equation}
+or, in other words, an element of $\pars{\setC^\setB}^\setA$. Since this recipe works for any function $\mora \colon \setA \cartprod \setB \to \setC$, we also now have the following function
+\begin{equation}
+\defmapcomma{
+         \curry
+        }{
+           \setC^{\setA \cartprod \setB}
+        }{
+           \to
+        }{
+           \pars{\setC^\setB}^\setA 
+        }{
+           \mora
+        }{
+           (\ela \mapsto \mora ( \ela, -))
+           }
+\end{equation}
+which we call $\curry$. This function has the desired type to be an isomorphism proving that $\setC^{\setA \cartprod \setB}  \isomorphic \pars{\setC^\setB}^\setA$.
+
+\begin{exercise}\label{ex:currying-is-an-iso}
+Prove that  $\curry \colon \setC^{\setA \cartprod \setB} \to \pars{\setC^\setB}^\setA$ is an isomorphism. 
+\end{exercise}
+
+\begin{solution}
+\todotext{JL: write up}
+\end{solution}
+
+The name``$\curry$'' stands for ``Curry'' (and the operation of applying it is called ``currying"). Curry is the last name of the mathematician and logician Haskell Curry (\cref{fig:haskell-curry}) who did not discover this operation, but likely made it well-known. It is after his first name that the functional programming language Haskell is named. 
+
+\begin{marginfigure}
+    \includegraphics[width=3cm]{haskell}
+    \caption{Haskell Curry (1900-1982)}
+    \label{fig:haskell-curry}
+\end{marginfigure}
+
+\begin{remark}
+In our discussion of currying above, we started with a function $\mora \colon \setB \cartprod \setA \to \setC$ and partially evaluated it in the first variable, and left the second variable still ``open''. Alternatively, though, we could have partially evaluated $\mora$ in the \emph{second} variable, and left the first variable open, thus producing a function $\mora(-, \elb) \colon \setA \to \setC$ and leading, in a way analogous to the above, to an alternative currying operation 
+\begin{equation}
+\setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB.
+\end{equation}
+In order to distinguish this operation from the currying operation previously defined, we might call this ``co-currying'', or make a distinction between ``left'' and ``right'' currying. Often, mathematicians and computer scientists follow the convention that currying is always done by partially evaluating in the first variable. This is perhaps justified by the fact that the ``co-currying'' isomorphism
+\begin{equation}
+\setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB
+\end{equation}
+arising from partial evaluation in the second variable can be expressed as a composite
+\begin{equation}
+\setC^{\setA \cartprod \setB} \overset{{\setC^{\braiding}}}{\longrightarrow} \setC^{\setB \cartprod \setA} \overset{\curry}{\longrightarrow} \pars{\setC^\setA}^\setB
+\end{equation}
+of the exponentiation of $\braiding \colon \setB \cartprod \setA \to \setA \cartprod \setB$ composed with $\curry \colon \setC^{\setB \cartprod \setA} \to \pars{\setC^\setA}^\setB$.  
+\end{remark}
+
+\subsection{Functions into products}
+
+Now let's consider the analogue of the equation
+\begin{equation}
+(x \cdot y)^z = x^z \cdot y^z
+\end{equation}
+for natural numbers, namely
+\begin{equation}
+ (\setA \cartprod \setB)^{\setC}  \isomorphic  \setA^\setC \cartprod \setB^\setC.
+\end{equation}
+In oder to describe a canonical isomorphism which is a proof of this statement, we make an important observation about the cartesian product of sets. Namely, for any sets $\setA$ and $\setB$, we always have two ``projection functions'' from the cartesian product $\setA \cartprod \setB$ to $\setA$ and $\setB$, respectively. These are defined, respectively, by 
+\begin{equation}
+\begin{aligned}
+    \proj_1 \colon   & \setA \cartprod \setB & \to & \ \ \setA, \\
+         & \tup{\ela, \elb} & \mapsto & \ \  \ela,
+\end{aligned}
+\end{equation}
+and
+\begin{equation}
+\begin{aligned}
+    \proj_2 \colon   & \setA \cartprod \setB & \to & \ \ \setB, \\
+         & \tup{\ela, \elb} & \mapsto & \ \  \elb,
+\end{aligned}
+\end{equation}
+and are called the \emph{canonical projections} associated to the cartesian product. 
+
+With the help of these projections, we define a canonical isomorphism 
+\begin{equation}
+\begin{aligned}
+    \mora \colon   & (\setA \cartprod \setB)^{\setC}  & \to & \ \  \setA^\setC \cartprod \setB^\setC, \\
+         & \phi & \mapsto & \ \  \tup{\phi \mthen \proj_1, \phi \mthen \proj_2}.
+\end{aligned}
+\end{equation}
+Illustrated diagrammatically, what $\mora$ does is, given a function 
+\begin{equation}
+\begin{tikzcd}
+& \setC \arrow[d, "\phi"'] & \\
+& \setA \cartprod \setB &
+\end{tikzcd}
+\end{equation}
+it maps it to the pair of functions $\phi \mthen \proj_1$ and $\phi \mthen \proj_2$
+\begin{equation}
+\begin{tikzcd}
+& \setC \arrow[dl, "\phi \mthen \proj_1"']   \arrow[d, "\phi"'] \arrow[dr, "\phi \mthen \proj_2"] & \\
+\setA & \setA \cartprod \setB  \arrow[l, "\proj_1"] \arrow[r, "\proj_2"'] & \setB
+\end{tikzcd}
+\end{equation}
+obtained by post-composing $\phi$ with the projections $\proj_1$ and $\proj_2$, respectively. 
+
+The inverse to $\mora$ is the function $\morb \colon  \setA^\setC \cartprod \setB^\setC  \to (\setA \cartprod \setB)^{\setC}$ which takes a pair of functions $\tup{\psi_1, \psi _2} \setin \setA^\setC \cartprod \setB^\setC$ and maps it to the element of $(\setA \cartprod \setB)^{\setC}$ which is the function 
+\begin{equation}
+\begin{aligned}
+   & \setC   & \to & \ \ \setA \cartprod \setB, \\
+         & \elc & \mapsto & \ \ \tup{\psi_1(\elc), \psi_2(\elc)}.
+\end{aligned}
+\end{equation}
+
+\begin{gradedexercise}[\exname{CanIsoFunctionsIntoProducts}]
+Check that f and g are indeed mutually inverse. 
+\end{gradedexercise}
+
+\solutionof{CanIsoFunctionsIntoProducts}
+
+\subsection{Functions out of sums}
+
+Here we consider the equation
+\begin{equation}
+x^{(y + z)}           = x^y \cdot x^z
+\end{equation}
+and it's analogue on the level of sets, 
+\begin{equation}
+\setA^{\setB \setdisunion \setC}           \isomorphic \setA^\setB \cartprod \setA^\setC.
+\end{equation}
+
+Similar to the observation that cartesian products come along with canonical projection functions, we make the  observation here that sums of sets come equipped with canonical \emph{inclusion functions}
+\begin{equation}
+\begin{aligned}
+    \inj_1 \colon   & \setB  & \to & \ \ \setB \setdisunion \setC \\
+         & \elb & \mapsto & \ \  \tup{1, \elb},
+\end{aligned}
+\end{equation}
+and
+\begin{equation}
+\begin{aligned}
+    \inj_2 \colon   & \setC & \to & \ \ \setB \setdisunion \setC, \\
+         & \elc & \mapsto & \ \  \tup{2, \elc}.
+\end{aligned}
+\end{equation}
+
+Using these, we construct the following canonical isomorphism:
+\begin{equation}
+\begin{aligned}
+    \mora \colon   & \setA^{\setB \setdisunion \setC} & \to & \ \ \setA^\setB \cartprod \setA^\setC, \\
+         & \phi & \mapsto & \ \  \tup{\inj_1 \mthen \phi, \inj_2 \mthen \phi}.
+\end{aligned}
+\end{equation}
+Illustrated diagrammatically, $\mora$ takes any function 
+\begin{equation}
+\begin{tikzcd}
+&  \setA  & \\
+& \setB \setdisunion \setC \arrow[u, "\phi"] &
+\end{tikzcd}
+\end{equation}
+it maps it to the pair of functions $\inj_1 \mthen \phi$ and $\inj_2 \mthen \phi$
+\begin{equation}
+\begin{tikzcd}
+& \setC    & \\
+\setB \arrow[ur, "\inj_1 \mthen \phi"] \arrow[r, "\inj_1"'] & \setB \setdisunion \setC \arrow[u, "\phi"]     & \setC \arrow[l, "\inj_2"] \arrow[ul, "\inj_2 \mthen \phi"']
+\end{tikzcd}
+\end{equation}
+obtained by pre-composing $\phi$ with the inclusions $\inj_1$ and $\inj_2$, respectively. 
+
+The inverse to $\mora$ is the function $\mapb \colon \setA^\setB \cartprod \setA^\setC \to \setA^{\setB \setdisunion \setC}$ which maps any pair of functions $\tup{\psi_1, \psi _2} \setin \setA^\setB \cartprod \setA^\setC$ to the element of $\setA^{\setB \setdisunion \setC}$ given by the function
+\begin{equation}
+\begin{aligned}
+   & \setB \setdisunion \setC & \to & \ \ \setA , \\
+         & \eld & \mapsto & \begin{cases} \text{ if } \eld = \tup{1,\elb} \text{ for some } \elb \in \setB, \\
+          \text{ if } \eld = \tup{2, \elc}  \text{ for some } \elc \in \setC. \end{cases}
+\end{aligned}
+\end{equation}
+
+\begin{gradedexercise}[\exname{CanIsoFunctionsOutOfSums}]
+Check that f and g are indeed mutually inverse. 
+\end{gradedexercise}
+
+\solutionof{CanIsoFunctionsOutOfSums}
+
+
+\subsection{Functions into sums}
+
+The equation 
+\begin{equation}
+(x + y)^z = \sum_{k = 0}^z {{z}\choose{k}} \ x^k \cdot y^{z - k}
+\end{equation}
+is known as the binomial theorem, and the numbers
+\begin{equation}
+{{z}\choose{k}} = \frac{z!}{(z-k)! \ k!}
+\end{equation}
+are called the binomial coefficients. On the level of sets and functions, the binomial theorem is analogous to the statement
+\begin{equation}
+(\setA \setdisunion \setB)^{\setC}  \isomorphic \stylesets{\sum_{\subA \setin \powerset \setC}} \setA^\subA \cartprod \setB^{\setC \backslash \subA}.
+\end{equation}
+The binomial coefficients are related to combinatorics; the number
+\begin{equation}
+{{z}\choose{k}}
+\end{equation}
+describes the number of different ways that one may choose a $k$-element subset out of a fixed $z$-element set. Using this connection as a guide, we can re-write the right-hand side of our statement about sets and functions into a form that is closer to the right-hand side of the binomial theorem: 
+\begin{equation}
+\stylesets{\sum_{\subA \setin \powerset \setC}} \setA^\subA \cartprod \setB^{\setC \backslash \subA} \simeq \sum_{k = 0}^{\vert \setC \vert} \ \underset{\substack{\subA \setin \powerset \setC \\ \vert \subA \vert = k}}{\stylesets{\sum}} \setA^\subA \cartprod \setB^{\setC \backslash \subA}.
+\end{equation}
+Now, on the right-hand side, for each fixed $k$, the cardinality of the set 
+\begin{equation}
+\underset{\substack{\subA \setin \powerset \setC \\ \vert \subA \vert = k}}{\stylesets{\sum}} \setA^\subA \cartprod \setB^{\setC \backslash \subA}
+\end{equation}
+is precisely 
+\begin{equation}
+{{z}\choose{k}} \ x^k \cdot y^{z - k},
+\end{equation}
+with $z = \vert \setC \vert$. 
+
+
+
+\subsection{The empty set is like the number zero}
+
+\todotext{@JL: write up}
+
+\subsection{Singletons are like the number one}
+
+\todotext{@JL: write up}
+
+\subsection{Arbitrary cartesian products and disjoint unions}
+
+We have seen that, given sets~\setA and~\setB, we can form their \SY{cartesian product}~$\setA \cartprod \setB$ and disjoint union~$\setA \setdisunion \setB$.
+And similarly for any finite number of sets.
+
+What about if we start with a family~$\makeset{ \setA_\setIel }_{\setIel \setin\setI}$ of sets -- can we still take their \SY{cartesian product} or disjoint union?
+The answer is yes.
+
+For the \SY{cartesian product} of families we use the symbol~$\stylesets{\prod}$ instead of the infix notation~$\cartprod$, and for disjoint unions of families we use~$\stylesets{\sum}$ instead of the infix notation~$\setdisunion$.
+(The upper case greek letter sigma $\sum$ stands for ``sum'', the upper case greek letter pi $\prod$ stands for ``product''.)
+
+We define the \SY{cartesian product} of a family~$\makeset{ \setA_{\setIel} }_{\setIel \setin\setI}$ as
+\begin{equation}
+    \underset{\setIel \setin\setI}{\stylesets{\prod}} \setA_{\setIel} \definedas \makeset{ \mapa \colon \setI \to \bigsetunion_{\setIel \setin\setI } \setA_{\setIel} \mid \mapa(\setIel) \setin\setA_{\setIel}}.
+\end{equation}
+
+And for the \SY{disjoint union} of a family~$\makeset{ \setA_{\setIel} }_{\setIel \setin\setI}$ we set
+\begin{equation}
+    \underset{\setIel \setin\setI}{\stylesets{\sum}} \setA_{\setIel} \definedas \bigsetunion_{\setIel \setin\setI} \makeset{ \setIel } \cartprod \setA_{\setIel}.
+\end{equation}
+
+\todojira{659}{\alphubel: Make sure we really need the above.}
