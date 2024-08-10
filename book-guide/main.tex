@@ -85,6 +85,30 @@ or preferably
 \end{itemize}
 You should now have the \texttt{CT4E-solutions} folder inside the \texttt{ACT4E} folder. It's a bit of a mess, but you should have it somewhere in there.
 
+\section{Quick Tour of the Repository}
+\subsection{Structure of the Repository}
+The repository may seem quite daunting and chaotic at first. And while that very well may be the case, I'll provide you here with a basic idea of the structure of the contents.
+\begin{itemize}
+\item The main LaTeX files for the book are in the \texttt{volumes/vol1} directory. Within this directory, the various categories of the book are split into different subdirectories. (I don't know why they're numbered like this or the logic behind TODO). The way they are organized is as follows: the main category of topics has various subfolders, which correspond to a book \textbf{chapter}. You will recognize whether a directory is a category or a chapter by checking if it contains the \texttt{chapter.tex} file.
+\item The \texttt{sag} folder contains all \texttt{.tikz} files used for all LaTex-generated diagrams in the book. Contrast this to the \texttt{pics} folder which contains regular \texttt{.png}s, e.g. for the chapter covers.
+\item \texttt{ACT4E-solutions} is the repository with all the exercises, solutions, exams and past homeworks. Its basically a big folder of \texttt{.tex} files, each corresponding to a solution to an exercise. There are a few subfolders here, corresponding to the homeworks of the respective semesters.
+\end{itemize}
+
+\subsection{CircleCI}
+CircleCI is a continuous integration and continuous delivery (CI/CD) platform that automates the process of building, testing, and deploying code. In the context of our research group's book project, CircleCI is set up to automatically run certain checks whenever you push changes to the repository.
+
+Specifically, when you push your LaTeX code to the repository, CircleCI will:
+\begin{itemize}
+\item Automatically Trigger a Build: Every time you push changes, CircleCI will start a new build process. This process typically involves setting up the environment, installing dependencies, and then running specified tasks.
+
+\item Check if LaTeX Code Compiles: As part of the build process, CircleCI will compile your LaTeX code. This ensures that any errors in the LaTeX files are caught early before they get merged into the main branch.
+
+\item Provide Feedback: If the LaTeX code compiles successfully, the build will pass, and CircleCI will notify you accordingly. If there are errors in the LaTeX code, the build will fail, and CircleCI will provide logs and details about what went wrong, allowing you to quickly identify and fix issues.
+\end{itemize}
+
+By integrating CircleCI with our repository, we ensure that the LaTeX code for the book is always in a working state, which helps maintain the quality and consistency of the content across the team.
+
+
 \section{Compiling \& working with the book}
 To interact with the book you \textbf{must} have Docker open. Just click on the icon, and let the app open. It should say "Docker is running" once it's done. It may take a few minutes to get started. You can now \textbf{from the} \texttt{ACT4E} \textbf{folder} type into the terminal
 \begin{bashcode}
@@ -136,6 +160,10 @@ The \texttt{ACT4E} repo has a bit of a complex structure. Here's a quick breakdo
 \end{itemize}
 The ACT4E-solutions repo is for the solutions to the homework exercises. Each \texttt{.tex} file is a solution we use for corrections. Please don't touch them unless asked. There are also folders containing the homework sheets/exams of past \& current iterations of the course.
 \subsection{Editing with Git}
+The way we work is with \texttt{git}. It's a version control software, allowing us to work remotely, and clump modifications together all at once. A few important things to know before you get started are
+\begin{itemize}
+	\item The branch \texttt{alphubel-prod}
+\end{itemize}
 \subsubsection{Opening your branch}
 Your branch is like your desk. You work on it, and only you. Other people may look, but it would be rude to use it. If you don't have a branch yet, type
 \begin{bashcode}
@@ -145,7 +173,7 @@ and you can verify that you're on it by typing
 \begin{bashcode}
     git branch
 \end{bashcode}
-The above will display the various branches you've opened on your computer. Not all the ones on the repo. The branch \texttt{alhubel-prod} is the publicly available version of the book, and \texttt{alphubel-stage} is where all the changes are sent to, before being double-checked and added to \texttt{alphubel-prod}.
+The above will display the various branches you've opened on your computer. Not all the ones on the repo. The branch \texttt{alhubel-prod} is the publicly available version of the book, and \texttt{alphubel-stage} is where all the changes are sent to and merged into, before being double-checked and added to \texttt{alphubel-prod}. It's basically the 'final draft' branch. We do not work directly from this branch, but we 'pull' from it, to update our branch when needed.
 \subsubsection{Before you start editing}
 Open the terminal in the root repo, and type 
 \begin{bashcode}
@@ -176,6 +204,24 @@ This will 'send' everything to the repo.
 \end{remark}
 
 \section{Exercises}
-Generally, in the book, there are two kinds of exercises: “regular” exercises and “graded” exercises. The regular ones have solutions that are written directly in the \texttt{.tex} files of the book, while the graded exercises have solutions written in a separate \texttt{.tex} file that is in the ACT4E-solutions repo. The graded exercises are used both in the book, and also for homework sheets that are created each semester for the teaching at ETH.
+Generally, in the book, there are two kinds of exercises: “regular” exercises and “graded” exercises. The regular ones have solutions that are written directly in the \texttt{.tex} files of the book, while the graded exercises have solutions written in a separate \texttt{.tex} file that is in the \texttt{ACT4E-solutions} repo. The graded exercises are used both in the book, and also for homework sheets that are created each semester for the teaching at ETH.
+
+\subsection{Compiling the Exercises}
+For the exercise sheets (and this document, additionally), we do not compile lie the book. Instead we use \texttt{pdflatex}. 
+\subsubsection{Installing PDFLaTeX}
+Open your terminal, and if you are on Mac\footnote{This assumes you have \texttt{brew} installed. If you don't, then please do?}, type 
+\begin{bashcode}
+    brew install --cask mactex
+ \end{bashcode}
+ and check that is has been installed by typing 
+ \begin{bashcode}
+    pdflatex --version
+\end{bashcode}
+\subsubsection{Compiling}
+This is much more straightforward. From the directory \textbf{where you wish the .pdf to be produced}, open the terminal (or navigate there) and type the following command
+\begin{bashcode}
+    gpdflatex -shell-escape name-of.document.tex
+\end{bashcode}
+Obviously, if you are not in the directory where your file is, insert the path to the \texttt{.tex} file.
 \newpage
 \end{document}
