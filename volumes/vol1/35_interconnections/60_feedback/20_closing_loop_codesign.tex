@@ -155,3 +155,90 @@ Something that produces~\posC should not use up more of~\posC than it produces.
         \end{equation}
     \end{proof}
 }
+
+\devel{
+\begin{example}
+    TODO(james): 
+    \begin{itemize}
+        \item description of example. Insert graphs of DP
+        \item check if there is a symbol for $+$ and $\widetilde{a}$
+        \item symbol for $v \setin \posV$?
+        \item check symbols in general.
+        \item list of constants : $p_0, d_{<_p}, m_0, d_0, d_\Delta, c, c_0 \ldots$
+    \end{itemize}
+    CHANGES TO ORIGINAL PDF
+    \begin{itemize}
+        \item defined and  gave names to mass poset and cost poset
+        \item typo in def of $d_2$
+        \item added a lot more $\cdot$'s in the equations.
+    \end{itemize}
+
+    The poset $\posV \definedas \defineposet{\nonNegReals \setunion \makeset{\false}}{\posleqof\posV}$, where $\false$ represents "Rover not operating" is defined as follows: 
+    TODO INSERT GRAPH
+    note how $\false \posleqof\posV v$ for all $v \setin \nonNegReals$, and especially $0 \not\posleqof\posV \false$. 
+    We use the symbols $l, \tilde{l}, m, \widetilde{m}$ all in the poset $\stylepos{M} \definedas \defineposet{\nonNegReals}{\posleqof{\stylepos{M}}}$ to represent mass, the symbol $c$ in the poset $\stylepos{C} \definedas \defineposet{\nonNegReals}{\posleqof{\stylepos{C}}}$ to represent Cost and the symbol $p$ in the poset $ \posA \definedas \defineposet{\nonNegReals}{\posleqof\posA}$ to represent power???. 
+    First, we fix some constants that represent ???(our choice in components maybe?) TODO: INSERT LIST OF CONSTANTS AND WHERE THEY LIVE.
+    The DPs are defined as follows:
+    \begin{equation}
+        \styledp{+}(\tup{l,\widetilde{m}}, \tilde{l}) \definedas  (l + \widetilde{m}) \posleqof{\stylepos{M}} \widetilde{m}
+    .\end{equation}
+    For the DP $\adpan{1}$, we will have to treat the cases $v \setin \nonNegReals$ and $v = \false$ separately:
+    \begin{align}
+        \adpan{1}(\tup{\widetilde{v}, \tilde{l}}, p) &= (p_0 + d_{< p}  + \widetilde{v}\cdot(\tilde{l} + l_0)) \posleqof\posV p\\
+        \adpan{1}(\tup{\false, \tilde{l}}, p) &= \true
+    .\end{align}
+    Finally, $\adp_2$ is defined as follows:
+    \begin{equation}
+        \adp_2(p, \tup{c,m}) = \left[p \posleqof\posA (1-\exp\left(-\frac{m}{m_0}\right)\left(d_0 - d_\Delta \exp\left(- \frac{c}{c_0}\right)\right)\right]\booland (c\posgeqof{\stylepos{C}} c_0)
+    .\end{equation}
+    In the next step, we want to calculate the Trace of our DP. For that, we write down the DP in its entirety, which we will do stepwise. First, the parallel composition $\dpidat\posV \mtimescatmor \styledp{+}$ does the following:
+    QUESTION: Usage of red striketrhough $\not\leq$ ? $\geq$? Why mention $\false$ at all?
+    \begin{align}
+        \left[\dpidat\posV\mtimescatmor \styledp{+}\right]\left(\tup{v, l, \widetilde{m}},\tup{\widetilde{v},\tilde{l}}\right) &= (v \posleqof\posV \widetilde{v})\booland\left((l + \widetilde{m})\posleqof{\stylepos{M}} \tilde{l}\right)
+    .\end{align}
+    Composing the above with $\adpan{1}$ yields:  
+    \begin{align}
+        &\left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1}\right]\left(\tup{v, l , \widetilde{m}}, p\right) \notag\\
+        & \quad = \exists \widetilde{v}, \tilde{l}:\bigg[(v \posleqof\posV \widetilde{v})\booland\left(l + \widetilde{m} \posleqof{\stylepos{M}} \tilde{l} \right) \booland\left(p_0 + d_{<_p} \cdot \widetilde{v} \cdot (l + l_0) \right)\biggr]\\
+        &\quad = \left(p_0 + d_{\le_p} \cdot v \cdot (l + \widetilde{m} + l_0) \posleqof\posA  p\right)
+    .\end{align} 
+    Finally, we get the final equation by composing with $\adpan{2}$: VERSION 1
+    \begin{alignat}{2}
+        & \left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right] \left( \tup{v, l,\widetilde{m}}, \tup{c,m}\right) \\
+        &\quad  = \exists p : \Biggl[\left[\left( p_0 + d_{<_p} \cdot v \cdot(m + l + l_0) \right) \posleqof\posA p\right] \notag \\
+        & \qquad\qquad\booland  \left[ p \posleqof\posA \left(1 - \exp\left(-\frac{m}{m_0}\right)\right)\left(d_0 - d_\Delta \exp\left(-\frac{c}{c_0}\right)\right)\right] \notag \\
+        & \qquad\qquad \booland \left[ c \posgeqof{\stylepos{C}} c_0\right]\Biggr]\\
+        & \quad = \left[p_0 + d_{<_p}\cdot v (l + m + l_0) \posleqof\posA \left(1 - \exp\left(-\frac{m}{m_0}\right)\right) \left(d_0 - d_\Delta \exp\left( - \frac{c}{c_0}\right)\right)\right] \notag \\
+        & \qquad \booland (c \posgeqof{\stylepos{C}}c_0)
+    \end{alignat}
+    For ease of notation, we introduce the function
+    \begin{equation}
+        d(c) \definedas d_0 - d_\Delta \cdot \exp\left(-\frac{c}{c_0}\right)
+    .\end{equation}
+    REQUEST: "stylefunsp\{...\}" and "styleressp\{...\}" for functionality spaces and requirement spaces so that we can write this part with the correct colours.
+
+    Our DP is of the form $ (\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}: \makecartprod{\posV, \stylepos{M}, \stylepos{M}} \profto \makecartprod{\stylepos{C}, \stylepos{M}}$, and we can calculate its trace $\Tr_{\makecartprod{V,M}, C}^{\stylepos{M}}\left((\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right)$:
+    \begin{align}
+        &\Tr_{\makecartprod{V,M}, C}^{\stylepos{M}}\left((\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right)\left(\tup{v, l}, c\right) = \notag\\
+        & \quad = \exists m : \left[p_0 + d_{<_p} \cdot   v \cdot (l + m + l_0) \posleqof\posA\left(1 - \exp\left(-\frac{m}{m_0}\right) \cdot d(c) \right)\right] \notag\\
+        & \qquad \qquad\booland (c \posgeqof{\stylepos{C}}c_0) \\
+        & \quad = \Biggl[\exists m : \left[p_0 + d_{<_p} \cdot   v \cdot (l + m + l_0) \posleqof\posA\left(1 - \exp\left(-\frac{m}{m_0}\right) \cdot d(c) \right)\right]\Biggr] \notag\\
+        & \qquad \booland (c \posgeqof{\stylepos{C}}c_0)
+    .\end{align}
+    We turn our attention to the analysis of the first term:
+    TODO: INSERT GRAPH
+    \begin{equation}
+        \exists m: \left[p_0 + d_{<_p} \cdot v \cdot l + d_{<_p} \cdot v \cdot l_0 + d_{<_p} \cdot v \cdot m \posleqof\posA d(c) \cdot \left(1-\exp\left(- \frac{m}{m_0}\right)\right)\right]
+    .\end{equation}
+    Let $\widehat{m}$ be such that $d_{<_p}\cdot v = d(c) \cdot \frac{1}{m_0} \exp\left(-\frac{\widehat{m}}{m_0}\right) $. If we want $\widehat{m}$ to satisfy our constraints, then we will need to have that $\widehat{m} > 0$ and ???
+    \begin{align}
+        p_0 + d_{<_p} \cdot v \cdot l + d_{<_p} \cdot v \cdot l_0 + d_{<_p} \cdot v \cdot \widehat{m} &\posleqof\posA d(c) \cdot \left(1-\exp\left(- \frac{\widehat{m}}{m_0}\right)\right)
+    .\end{align}
+    By rewriting the above, we get
+    \begin{align}
+        \widehat{m} = m_0 \log \left(\frac{d(c)}{d_{<_p} \cdot v \cdot m_0}\right) &> 0\\
+        p_0 + d_{<_p} \cdot v \cdot l + d_{<_p} \cdot v \cdot l_0 + d_{<_p} \cdot v \cdot \widehat{m} &\posleqof\posA d(c) - d_{<_p} \cdot v \cdot m_0
+    ,\end{align}
+    both of which we get by using the definition of $\widehat{m}$. Notice how for both inequalities the constraints can be satisfied if and only if $d(c) > d_{<_p}\cdot v \cdot m_0$. 
+\end{example}
+}
