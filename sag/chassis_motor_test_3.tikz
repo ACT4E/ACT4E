@@ -1,0 +1,73 @@
+\begin{tikzpicture}[DP]
+    \node[dp={2}{1}] (dc) {\begin{tabular}{c}
+            chassis + motor \\ \includegraphics[width=\dpiconwidth]{chassis}
+            \includegraphics[width=\dpiconwidth]{dc_motor}
+        \end{tabular}};
+
+    \node[dp={1}{2}, right=1.25cm of dc] (bat) {\begin{tabular}{c}
+            battery \\ \includegraphics[width=\dpiconwidth]{battery}
+        \end{tabular}};
+
+    \node[dp={2}{1}, left=1.3cm of dc_fun2, minimum height=0.75cm] (sum) {+};
+
+
+    \node[dp={1}{1}, left=2.25cm of dc_fun1] (id) {$\idname$};
+
+
+
+
+    % connection between chassis+motor and battery
+    \draw[rconn, rcname={}, fcname={}, posres=0.5, posfun=0.5, relfun=above, relres=above] (dc_res1) -- (bat_fun1){};
+
+
+    % Left of Chassis+Motor
+    \draw[funconn, funame={}] (id_fun1){};
+    \draw[funconn, runame={}] (sum_fun1){};
+    \draw[rconn, rcname={}, fcname={}, posres=0.5, posfun=0.5, relfun=above, relres=above] (sum_res1) -- (dc_fun2){};
+    \draw[rconn, rcname={}, fcname={}, posres=0.5, posfun=0.5, relfun=above, relres=above] (id_res1) -- (dc_fun1){};
+
+
+
+    % Loop from Plus
+    \node[draw=none,circle,inner sep=0pt,color=black,fill=white,opacity=1.0,line width=0mm, below=1cm of sum_fun2 ] (test1) {};
+
+    \draw[\dpgreen] (sum_fun2.west) to[in=-180,out=-180,looseness=2] (test1.east) {};
+
+    
+
+    % Loop from Battery
+    \node[draw=none,circle,inner sep=0pt,color=black,fill=white,opacity=1.0,line width=0mm, below=1cm of bat_res2] (test2) {};
+
+    \draw[\dpred, dashed] (bat_res2) to[in=0,out=0,looseness=2] (test2) {};
+
+
+    % Connections Right from Battery
+    \draw[runconn, runame={}] (bat_res1){};
+
+    % Feedback loop
+    \node[draw,circle,inner sep=0pt,color=black,fill=white,opacity=1.0,line width=0.2mm, below=1cm of dc_fun2] (node) {$\succeq$};
+    \draw[\dpgreen] (test1.east) to[in=0,out=180,looseness=0] (node.west) {};
+    \draw[\dpred, dashed] (node.east) to[in=0,out=180,looseness=0] (test2.west) {};
+
+
+
+    %\draw[\dpgreen] (dc_fun2) to[in=0,out=-180,looseness=2] (test1) {};
+
+    %\draw[\dpgreen] (dc_fun2.west) to[in=-180,out=-180,looseness=2] (test2) {};
+
+    %\node[draw,circle,inner sep=0.5pt,color=black,fill=white,opacity=1.0,line width=0.2mm, right=2cm of test2 ] (node) {$\succeq$};
+
+    %\draw[\dpgreen] (test2.west) to[in=-90,out=90,looseness=0] node[pos=0.5, below]{\F{\unit[mass]{[g]}}} (node.west);
+
+
+    %\node[draw=none,circle,inner sep=0pt,color=black,fill=white,opacity=1.0,line width=0mm, right=0.5cm of bat_res2 ] (test3) {};
+
+    %\node[draw=none,circle,inner sep=0pt,color=black,fill=white,opacity=1.0,line width=0mm, below=2cm of bat_res2] (test4) {};
+
+    %\draw[\dpred, dashed] (bat_res2.east) to[in=0,out=0,looseness=2] (test4) {};
+
+    %\draw[\dpred, dashed] (test3) to[in=0,out=180,looseness=0] (bat_res2) {}; % flat
+    %\draw[\dpred, dashed] (node.east) to[in=-90,out=-90,looseness=0] (test4.east) {}; % vertical one
+    
+\end{tikzpicture}
+ 
