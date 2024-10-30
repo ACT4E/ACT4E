@@ -202,7 +202,7 @@ Something that produces~\posC should not use up more of~\posC than it produces.
         & \quad = \exists \widetilde{v}, \tilde{l}:\bigg[(v \posleqof\posV \widetilde{v})\booland\left(l + \widetilde{m} \posleqof{\stylepos{M}} \tilde{l} \right) \booland\left(p_0 + d_{<_p} \cdot \widetilde{v} \cdot (l + l_0) \right)\biggr]\\
         &\quad = \left(p_0 + d_{\le_p} \cdot v \cdot (l + \widetilde{m} + l_0) \posleqof\posA  p\right)
     .\end{align} 
-    Finally, we get the final equation by composing with $\adpan{2}$: VERSION 1
+    Finally, we get the final equation by composing with $\adpan{2}$: 
     \begin{alignat}{2}
         & \left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right] \left( \tup{v, l,\widetilde{m}}, \tup{c,m}\right) \\
         &\quad  = \exists p : \Biggl[\left[\left( p_0 + d_{<_p} \cdot v \cdot(m + l + l_0) \right) \posleqof\posA p\right] \notag \\
@@ -247,5 +247,33 @@ Something that produces~\posC should not use up more of~\posC than it produces.
         & \qquad \booland \widehat{m} > 0 \text{ alternative version} \notag\\
         & \qquad \booland p_0 + d_{<_p} \cdot v \cdot l + d_{<_p} \cdot v \cdot l_0 + d_{<_p} \cdot v \cdot \widehat{m} \posleqof\posA d(c) - d_{<_p} \cdot v \cdot m_0
     \end{align*}
+    Notice that in case $p_0 < d(c) = d_0 - d_\Delta \exp\left(-\frac{c}{c_0}\right)$, the DP will always evaluate to False, even if the Rover is not moving ($v=0$). This is a special case where the Rover can not operate, which we cover seperately. Recall that the state "Rover not operating" is represented by $\false \setin \posV$. Furthermore, for all $\widetilde{v} \setin \posV$ we have $\dpidat\posV(\tup{\false, \widetilde{v}}) = \true$. We repeat the above steps with $v =\false$
+    \begin{align}
+        \left[\dpidat\posV\mtimescatmor \styledp{+}\right]\left(\tup{\false, l, \widetilde{m}},\tup{\widetilde{v},\tilde{l}}\right) &= \true \booland\left((l + \widetilde{m})\posleqof{\stylepos{M}} \tilde{l}\right)\\
+        &= (l + \widetilde{m})\posleqof{\stylepos{M}} \tilde{l}
+    .\end{align}
+    Composing the above with $\adpan{1}$ yields:  
+    \begin{align}
+        &\left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1}\right]\left(\tup{\false, l , \widetilde{m}}, p\right) \notag\\
+        & \quad = \exists \widetilde{v}, \tilde{l} : \bigg((l+m \posleqof{\stylepos{M}} \tilde{l} \booland d_1\left(\tup{\widetilde{v},\tilde{l}},p\right) \bigg)\\
+        & \quad = \exists \widetilde{v}, \tilde{l}:\bigg[\left(l + \widetilde{m} \posleqof{\stylepos{M}} \tilde{l} \right) \booland\left(p_0 + d_{<_p} \cdot \widetilde{v} \cdot (l + l_0) \right)\biggr] \notag\\
+        & \qquad \qquad \boolor\left[(\tilde{v} = \false \booland (l + m \posleqof{\stylepos{M}} \tilde{l}\right]\\
+        &\quad = \true
+    .\end{align} 
+    Where the last step is due to the fact that we can choose $\widetilde{v}$ to be $\false$ and $\tilde{l}$ to be $l+m$
+    Finally, we get the final equation by composing with $\adpan{2}$: 
+    \begin{alignat}{2}
+        & \left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right] \left( \tup{\false, l,\widetilde{m}}, \tup{c,m}\right) \\
+        &\quad  = \exists p : \true \booland  \left[ p \posleqof\posA \left(1 - \exp\left(-\frac{m}{m_0}\right)\right)\left(d_0 - d_\Delta \exp\left(-\frac{c}{c_0}\right)\right)\right] \notag \\
+        & \qquad \qquad \booland \left[ c \posgeqof{\stylepos{C}} c_0\right]\Biggr]\\
+        & \quad = (c \posgeqof{\stylepos{C}}c_0)
+    \end{alignat}
+    Where in the last step, we again used the fact that we can choose $p=0$. 
+    The Trace in this case is a lot more manageable:
+    \begin{align}
+        \Tr_{\makecartprod{V,M}, C}^{\stylepos{M}}\left((\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right)(\tup{\false, l}, c) &= \exists m : c \posgeqof{\stylepos{C}} c_0 \notag\\
+        &= c \posgeqof{\stylepos{C}} c_0
+    \end{align}
+    The interpretation here is that if we do not require the Rover to be operatable, then we are only required to pay the minimum cost $c_0$. 
 \end{example}
 }
