@@ -20,7 +20,8 @@ For example, consider the following identities which hold for any natural number
     x \cdot (y \cdot z) & = (x \cdot y) \cdot z, \\ 
     x + (y + z) & = (x + y) + z,  \\ 
     (x \cdot y) + (x \cdot z)  & = x \cdot (y + z), \\ 
-    z^{x \cdot y}                    & = \pars{z^y}^x, \\ 
+    z^{x \cdot y}                    & = \pars{z^y}^x, \\
+    z^{x \cdot y}                    & = \pars{z^x}^y, \\ 
     (x \cdot y)^z &= x^z \cdot y^z, \\ 
     x^{(y + z)}           & = x^y \cdot x^z, \\ 
     (x + y)^z &= \sum_{k = 0}^z {{z}\choose{k}} \ x^k \cdot y^{z - k}. 
@@ -35,6 +36,7 @@ These identities also hold on the level of sets, before computing their size; we
     (\setA \setdisunion \setB) \setdisunion \setC & \isomorphic \setA \setdisunion (\setB \setdisunion \setC), \\ 
     (\setA \cartprod \setB) \setdisunion (\setA \cartprod \setC)  & \isomorphic \setA \cartprod (\setB \setdisunion \setC), \\ 
     \setC^{\setA \cartprod \setB}                    & \isomorphic \pars{\setC^\setB}^\setA, \\ 
+    \setC^{\setA \cartprod \setB}                    & \isomorphic \pars{\setC^\setA}^\setB, \\ 
     (\setA \cartprod \setB)^{\setC} & \isomorphic  \setA^\setC \cartprod \setB^\setC, \\ 
     \setA^{\setB \setdisunion \setC}           & \isomorphic \setA^\setB \cartprod \setA^\setC, \\ 
     (\setA \setdisunion \setB)^{\setC} & \isomorphic \stylesets{\sum_{\subA \setin \powerset \setC}} \setA^\subA \cartprod \setB^{\setC \backslash \subA} 
@@ -204,9 +206,17 @@ Guess the canonical isomorphism $\distributor \colon (\setA \cartprod \setB) \se
 
 \subsection{Functions out of products}
 
-Next we look at the equation $z^{x \cdot y} = (z^y)^x$, and the corresponding relationship $ \setC^{\setA \cartprod \setB}  \isomorphic \pars{\setC^\setB}^\setA$. What might be a canonical isomorphism proving this latter relationship?
+Next we look at the equations $z^{x \cdot y} = (z^y)^x$ and $z^{x \cdot y} = (z^x)^y$, and the respective corresponding relationships 
+\begin{equation}\label{eq:iso-functions-out-of-prods}
+\setC^{\setA \cartprod \setB}  \isomorphic \pars{\setC^\setB}^\setA  
+\end{equation}
+and
+\begin{equation}
+\setC^{\setA \cartprod \setB}  \isomorphic \pars{\setC^\setA}^\setB.
+\end{equation}
+We'll only treat the first relationship \cref{eq:iso-functions-out-of-prods} in detail, since the latter is analogous, except that certain roles are swapped. 
 
-The elements of the set $ \setC^{\setA \cartprod \setB}$ are functions of two variables, of the type
+What might be a canonical isomorphism proving \cref{eq:iso-functions-out-of-prods}? The elements of the set $ \setC^{\setA \cartprod \setB}$ are functions of two variables, of the type
 \begin{equation}\label{eq:currying-function-of-two-variables}
 \mora \colon \setA \cartprod \setB \to \setC, 
 \end{equation}
@@ -238,7 +248,7 @@ But since we can do this for any $\ela \in \setA$, we have also just described a
 \end{aligned}
 \end{equation}
 or, in other words, an element of $\pars{\setC^\setB}^\setA$. Since this recipe works for any function $\mora \colon \setA \cartprod \setB \to \setC$, we also now have the following function
-\begin{equation}
+\begin{equation}\label{eq:left-curry-function}
 \defmapcomma{
          \curry
         }{
@@ -263,7 +273,25 @@ Prove that  $\curry \colon \setC^{\setA \cartprod \setB} \to \pars{\setC^\setB}^
 \todotext{JL: write up}
 \end{solution}
 
-The name``$\curry$'' stands for ``Curry'' (and the operation of applying it is called ``currying"). Curry is the last name of the mathematician and logician Haskell Curry (\cref{fig:haskell-curry}) who did not discover this operation, but likely made it well-known. It is after his first name that the functional programming language Haskell is named. 
+The name ``$\curry$'' stands for ``Curry'', which is the last name of the mathematician and logician Haskell Curry (\cref{fig:haskell-curry}) who did not discover this operation, but likely made it well-known. It is after his first name that the functional programming language Haskell is named. 
+
+The operation given by the function \cref{eq:left-curry-function} is often called ``currying''. When needed for clarity, we call this operation \emph{right currying}, in order to distinguish it from the analogous operation of \emph{left currying} given by the function 
+\begin{equation}\label{eq:right-curry-function}
+\defmapperiod{
+         \curry
+        }{
+           \setC^{\setA \cartprod \setB}
+        }{
+           \to
+        }{
+           \pars{\setC^\setA}^\setB 
+        }{
+           \mora
+        }{
+           (\elb \mapsto \mora ( - , \elb))
+           }
+\end{equation}
+We denote the functions \cref{eq:left-curry-function} and \cref{eq:left-curry-function} both by the same name ``$\curry$'' because we trust that it will be clear from context which of the two functions is being used in any given situation.
 
 \begin{marginfigure}
     \includegraphics[width=3cm]{haskell}
@@ -271,21 +299,23 @@ The name``$\curry$'' stands for ``Curry'' (and the operation of applying it is c
     \label{fig:haskell-curry}
 \end{marginfigure}
 
-\begin{remark}
-In our discussion of currying above, we started with a function $\mora \colon \setB \cartprod \setA \to \setC$ and partially evaluated it in the first variable, and left the second variable still ``open''. Alternatively, though, we could have partially evaluated $\mora$ in the \emph{second} variable, and left the first variable open, thus producing a function $\mora(-, \elb) \colon \setA \to \setC$ and leading, in a way analogous to the above, to an alternative currying operation 
-\begin{equation}
-\setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB.
-\end{equation}
-In order to distinguish this operation from the currying operation previously defined, we might call this ``co-currying'', or make a distinction between ``left'' and ``right'' currying. Often, mathematicians and computer scientists follow the convention that currying is always done by partially evaluating in the first variable. This is perhaps justified by the fact that the ``co-currying'' isomorphism
-\begin{equation}
-\setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB
-\end{equation}
-arising from partial evaluation in the second variable can be expressed as a composite
-\begin{equation}
-\setC^{\setA \cartprod \setB} \overset{{\setC^{\braiding}}}{\longrightarrow} \setC^{\setB \cartprod \setA} \overset{\curry}{\longrightarrow} \pars{\setC^\setA}^\setB
-\end{equation}
-of the exponentiation of $\braiding \colon \setB \cartprod \setA \to \setA \cartprod \setB$ composed with $\curry \colon \setC^{\setB \cartprod \setA} \to \pars{\setC^\setA}^\setB$.  
-\end{remark}
+\todotext{There is a remark (which is commented out in latex) here that could be partially included and useful perhaps, if edited.}
+
+%\begin{remark}
+%In our discussion of currying above, we started with a function $\mora \colon \setB \cartprod \setA \to \setC$ and partially evaluated it in the first variable, and left the second variable still ``open''. Alternatively, though, we could have partially evaluated $\mora$ in the \emph{second} variable, and left the first variable open, thus producing a function $\mora(-, \elb) \colon \setA \to \setC$ and leading, in a way analogous to the above, to an alternative currying operation 
+%\begin{equation}
+%\setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB.
+%\end{equation}
+%In order to distinguish this operation from the currying operation previously defined, we might call this ``co-currying'', or make a distinction between ``left'' and ``right'' currying. Often, mathematicians and computer scientists follow the convention that currying is always done by partially evaluating in the first variable. This is perhaps justified by the fact that the ``co-currying'' isomorphism
+%\begin{equation}
+%\setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB
+%\end{equation}
+%arising from partial evaluation in the second variable can be expressed as a composite
+%\begin{equation}
+%\setC^{\setA \cartprod \setB} \overset{{\setC^{\braiding}}}{\longrightarrow} \setC^{\setB \cartprod \setA} \overset{\curry}{\longrightarrow} \pars{\setC^\setA}^\setB
+%\end{equation}
+%of the exponentiation of $\braiding \colon \setB \cartprod \setA \to \setA \cartprod \setB$ composed with $\curry \colon \setC^{\setB \cartprod \setA} \to \pars{\setC^\setA}^\setB$.  
+%\end{remark}
 
 \subsection{Functions into products}
 
