@@ -13,24 +13,24 @@ We start with a set~\setC of labels for all the currencies we wish to consider:
 
 Now consider two currencies, say~$\USD$ and~$\EUR$.
 How can we describe the process of changing an amount of \USD to an amount of \EUR?
-We model this using two numbers: an exchange rate~$a$ and a commission~$d$ for the transaction.
-A morphism from one currency to another is given by this pair of numbers~$\tup{a,b}$.
+We model this using two numbers: an exchange rate~$r$ and a commission~$c$ for the transaction.
+A morphism from one currency to another is given by this pair of numbers~$\tup{r,c}$.
 Now, for each morphism, there is a function which takes an amount of the source currency and transforms it into an amount of the target currency.
 Given an amount~$x \setin \reals$ of \USD, this function is:
 \begin{equation}
     \label{eq:def_curr_ex}
-    \defmapperiodset{\mapa_{\tup{a,d}}}{\reals}{\reals}{x}{ax-d}
+    \defmapperiodset{\mapa_{\tup{r,c}}}{\reals}{\reals}{x}{rx-c}
 \end{equation}
-Note that the commission~$d$ is to be intended in the target currency.
+Note that the commission~$c$ is to be intended in the target currency.
 Of course, for changing \USD to \EUR, there may be various different banks or agencies which each offer different exchange rates and/or different commissions.
 Each of these corresponds to a different morphism from~$\USD$ to~$\EUR$.
 
 To build our category, we also need to specify how currency exchangers compose.
-Given currencies~$\Obja, \Objb, \Objc$, and given currency exchangers~$\tup{a,d}$ from~$\Obja$ to~$\Objb$ and~$\tup{b,e}$ from~$\Objb$ to~$\Objc$,
-we define the composition~$\tup{a,d} \mthen \tup{b,e}$ to be the currency exchanger from~$\Obja$ to~$\Objc$ given by the pair of numbers
+Given currencies~$\Obja, \Objb, \Objc$, and given currency exchangers~$\tup{r,c}$ from~$\Obja$ to~$\Objb$ and~$\tup{s,d}$ from~$\Objb$ to~$\Objc$,
+we define the composition~$\tup{r,c} \mthen \tup{s,d}$ to be the currency exchanger from~$\Obja$ to~$\Objc$ given by the pair of numbers
 \begin{equation}
     \label{eq:comp-law-curr}
-    \tup{ab, bd+e}.
+    \tup{rs, sc+d}.
 \end{equation}
 In other words, we compose currency exchangers as one would expect: we multiply the first and the second exchange rates together, and we add the commissions (paying attention to first transform the first commission into the units of the final target currency).
 
@@ -44,28 +44,28 @@ the currency exchanger from~$\Obja$ to~$\Obja$ with exchange rate ``1'' and comm
 
 We now want to check that the composition of currency exchangers as defined above obeys unitality and associativity.
 
-Given~$\tup{1,0}$ from~$\Obja$ to~$\Obja$,~$\tup{1,0}$ from~$\Objb$ to~$\Objb$, and~$\tup{a,d}$ from~$\Obja$ to~$\Objb$ we have:
+Given~$\tup{1,0}$ from~$\Obja$ to~$\Obja$,~$\tup{1,0}$ from~$\Objb$ to~$\Objb$, and~$\tup{r,c}$ from~$\Obja$ to~$\Objb$ we have:
 \begin{equation}
     \begin{aligned}
-        \tup{1,0}\mthen\tup{a,d} & =\tup{1\cdot a, a\cdot 0+d} \\
-                                 & =\tup{a,d},
+        \tup{1,0}\mthen\tup{r,c} & =\tup{1\cdot r, r\cdot 0+c} \\
+                                 & =\tup{r,c},
     \end{aligned}
 \end{equation}
 and
 \begin{equation}
     \begin{aligned}
-        \tup{a,d}\mthen \tup{1,0} & =\tup{a\cdot 1, 1\cdot d+0} \\
-                                  & =\tup{a,d},
+        \tup{r,c}\mthen \tup{1,0} & =\tup{r\cdot 1, 1\cdot c+0} \\
+                                  & =\tup{r,c},
     \end{aligned}
 \end{equation}
 This is unitality.
-Furthermore, given~$\tup{b,e}$ from~$\Objb$ to~$\Objc$, and~$\tup{c,f}$ from~$\Objc$ to~$\Objd$ we have:
+Furthermore, given~$\tup{s,d}$ from~$\Objb$ to~$\Objc$, and~$\tup{t,e}$ from~$\Objc$ to~$\Objd$ we have:
 \begin{equation}
     \begin{aligned}
-        \pars{ \tup{a,d}\mthen \tup{b,e}}\mthen \tup{c,f} & =\tup{ab,bd+e}\mthen \tup{c,f} \\
-                                                          & =\tup{abc,c(bd+e)+f} \\
-                                                          & =\tup{a,d}\mthen \tup{bc,ce+f} \\
-                                                          & =\tup{a,d}\mthen \pars{ \tup{b,e}\mthen \tup{c,f}}.
+        \pars{ \tup{r,c}\mthen \tup{s,d}}\mthen \tup{t,e} & =\tup{rs,sc+d}\mthen \tup{t,e} \\
+                                                          & =\tup{rst,t(sc+d)+e} \\
+                                                          & =\tup{r,c}\mthen \tup{st,te+e} \\
+                                                          & =\tup{r,c}\mthen \pars{ \tup{s,d}\mthen \tup{t,e}}.
     \end{aligned}
 \end{equation}
 This is associativity.
@@ -78,7 +78,7 @@ We can formally define the category of currencies \Curr.
     The \maindef{category of currencies} \Curr is specified by:
     \begin{enumerate}
         \item \emph{Objects:} a collection of currencies.
-        \item \emph{Morphisms:} given two currencies~$\Obja, \Objb$, morphisms between them are currency exchangers~$\tup{a,d}$ from~$\Obja$ to~$\Objb$.
+        \item \emph{Morphisms:} given two currencies~$\Obja, \Objb$, morphisms between them are currency exchangers~$\tup{r,c}$ from~$\Obja$ to~$\Objb$.
         \item \emph{Identity morphism:} given a currency~$\Obja$, its \SY{identity morphism} is the currency exchanger~$\tup{1,0}$.
               We also call such morphisms ``trivial currency exchangers''.
         \item \emph{Composition of morphisms:} the composition of morphisms is given by the formula \cref{eq:comp-law-curr}, describing a composed currency exchanger.
