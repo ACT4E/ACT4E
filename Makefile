@@ -243,12 +243,12 @@ ultramagic:
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make remake'
 
 shell:
-	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user)  -it --rm -w "$(PWD)" -v "$(PWD):$(PWD)" \
 		$(BUILD_IMAGE) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: bash'
 
 docker-%:
-	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user) -it --rm -w "$(PWD)" -v "$(PWD):$(PWD)" \
 		$(BUILD_IMAGE) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make $*'
 
