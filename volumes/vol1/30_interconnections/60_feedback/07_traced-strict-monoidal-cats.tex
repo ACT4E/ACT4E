@@ -1,7 +1,7 @@
 % !TEX root = chapter-standalone.tex
 
 \section{Traced symmetric monoidal categories}
-\publictodomessage
+
 
 \begin{ctdefinition}[Traced monoidal category]
     \label{def:traced-monoidal-cat}
@@ -67,11 +67,81 @@
         \Tr_{\Objd\mtimescatob \Obja,\Obje\mtimescatob \Objb}^{\Objc}(\morb \mtimescatmor \mora)=\morb \mtimescatmor \Tr_{\Obja,\Objb}^\Objc(\mora).
     \end{equation}
 \end{lemma}
-\missingproof
+
 
 \todotextjira{165}{\alphubel: @JL: Do the proof.
     Also, this could be made into a graded exercise.
 }
+
+
+\begin{definition}[Trace for $\RelL$ with concatenation as monoidal product]
+    \label{def:tuple-REL-trace}
+    Consider the symmetric strict monoidal category $\RelL$, where the monoidal product is defined via the concatenation operation $\cprod$ for lists of sets.
+    Given a relation $\relA \colon \cObj{\setA, \setC}  \to \cObj{\setB, \setC}$, its \emph{trace} is defined as
+    %
+    \begin{equation}
+        \label{eq:tupel-REL-tracedef}
+        \begin{aligned}
+            \Tr_{\cObj{\setA}, \cObj{\setB}}^{\cObj{\setC}}(\relA) = \{ \tup{\ela, \elb} \in \cObj{\setA} \times \cObj{\setB} \mid \exists \ \elc \in \cObj{\setC} : \tup{\ela \tupconcat \elc, \elb \tupconcat \elc} \in \relA \}
+        \end{aligned}
+    \end{equation}
+\end{definition}
+
+\begin{definition}
+For the symmetric monoidal category $\tup{\Rel, \cartprod, \singleton, \associator, \leftunitor, \rightunitor, \braiding}$, a trace is defined as follows. Given a relation
+\begin{equation}
+\relA \colon \setA \cartprod \setC \to \setB \cartprod \setC,
+\end{equation}
+we set
+\begin{equation}
+\Tr_{\setA,\setB}^\setC (\relA) = \{ \tup{\ela, \elb} \in \setA \cartprod \setB \mid \exists \ \elc \in \setC : \tup{\tup{\ela, \elc}, \tup{\elb, \elc}} \in \relA \}
+\end{equation}
+\end{definition}
+
+\begin{definition}
+Consider the symmetric monoidal category $\tup{\Rel, \setdisunion, \Emptyset, \associator, \leftunitor, \rightunitor, \braiding}$. In $\Rel$, the disjoint union of any two sets always comes with canonical inclusion relations
+    \begin{equation}
+        \begin{aligned}
+            \inj_\setA\colon & \setA \mto \setA\setdisunion\setB \\
+            & \makeset{ \tup{\setAel, \disunionA{\setAel}}},
+        \end{aligned}
+\qquad \qquad
+        \begin{aligned}
+            \inj_\setB\colon & \setB  \mto \setA\setdisunion\setB \\
+            & \makeset{ \tup{\setBel, \disunionB{\setBel}}},
+        \end{aligned}
+    \end{equation}
+and canonical projection relations
+    \begin{equation}
+        \begin{aligned}
+            \proj_\setA\colon & \setA\setdisunion\setB \mto \setA \\
+            &  \makeset{ \tup{\disunionA{\setAel}, \setAel}},
+        \end{aligned}
+\qquad \qquad
+        \begin{aligned}
+            \inj_\setB\colon & \setA\setdisunion\setB  \mto \setB \\
+            & \makeset{ \tup{\disunionA{\setAel}, \setBel}}. 
+        \end{aligned}
+    \end{equation}
+Given any relation of type
+\begin{equation}
+\relA \colon \setA \setdisunion \setC \to \setB \setdisunion \setD,
+\end{equation}
+we can pre-compose it with the inclusion $\inj_\setA \colon \setA \sto \setA\setdisunion\setC$ and post-compose it with the relation $\proj_\setA\colon \setA\setdisunion\setC \sto \setB$ to obtain a relation 
+\begin{equation}
+\relA_{\setA \setB} \colon \setA \overset{\inj_\setA}{\mto} \setA \setdisunion \setC \overset{\relA}{\mto} \setB \setdisunion \setC \overset{\proj_\setB}{\mto} \setB.
+\end{equation}
+In an analogous manner we also obtain relations
+\begin{equation}
+\relA_{\setA \setC} \colon \setA \mto \setB, \qquad \relA_{\setC \setB} \colon \setC \mto \setB, \qquad \relA_{\setC \setC} \colon \setC \mto \setC,
+\end{equation}
+induced from $\relA$. 
+
+Now we set
+\begin{equation}
+\Tr_{\setA,\setB}^\setC (\relA) = \relA_{\setA \setB} \cup \bigcup_{n \geq 0} \relA_{\setA \setC} \mthen \relA_{\setC \setC}^n \mthen \relA_{\setC \setB}.
+\end{equation}
+\end{definition}
 
 \begin{gradedexercise}[\exname{TracingRelations}]
     \label{eq:TracingRelations}
@@ -106,44 +176,108 @@
 
 \solutionof{TracingRelations}
 
-\begin{gradedexercise}[\exname{RelDualsTrace}]
-    \label{ex:RelDualsTrace}
 
-    In this exercise we work with the category $\Rel$ of sets and relations, equipped with the symmetric monoidal structure where the monoidal product is the cartesian product of sets.
-    The braiding is
+\subsection{Trace in co-design}
+\todotextjira{201}{\alphubel: @Gioele: Change example}
+
+
+\begin{marginfigure}
+    \centering
+    \includesag{50_trace}
+    \caption{Design problem with a resource and a functionality of the same type.
+    }
+    \label{fig:extrace_1}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includesag{50_trace2}
+    \caption{Closing the loop in the design problem.}
+    \label{fig:extrace_2}
+\end{marginfigure}
+
+Suppose that we are given a design problem with a resource and a functionality of the same type~$\posgenC$ (\cref{fig:extrace_1}).
+Can we ``close the loop'', as in the diagram reported in~\cref{fig:extrace_2}?
+
+It turns out that we can give a well-defined semantics to this loop-closing operation, which coincides with the notion of a \emph{trace} in category theory.
+
+The following is the formal definition of the trace operation for \SY{design problems}.
+
+\linkvideo{spring2021-functorial-comp-b:solving-queries:solving-loop} % Loop composition
+\begin{definition}[Trace of a design problem]
+    \label{def:dp-trace}
+    Given a \SY{design problem}~$\adpa\colon \funposA \mtimescatob \funposC \profto \resposB \mtimescatob \resposC$, its \emph{trace}
     \begin{equation}
-        \braiding_{\setA, \setB} \colon \makeset{ \tup{\tup{\ela, \elb},\tup{\elb', \ela'}} \setin (\setA \cartprod \setB) \cartprod (\setB \cartprod \setA) \mid \ela = \ela', \elb = \elb' }.
+        \Tr_{\funposA,\resposB}^\posC(\adpa) \colon \funposA \profto \resposB
     \end{equation}
-
-    This symmetric monoidal category is compact closed when we let the dual $\setA \dual$ of any set $\setA$ be the set itself, $\setA \dual = \setA$, and we define evaluation and co-evaluation by
+    is defined as follows:
+    %
     \begin{equation}
-        \ev_\setA \colon \setA \cartprod \setA \mto \singleton, \quad \ev_\setA = \makeset{\tup{\tup{\ela, \elb}, \bullet} \setin(\setA \cartprod \setA) \cartprod \singleton \mid \ela = \elb}
+        \label{eq:tracedef}
+        \begin{aligned}
+            \Tr_{\funposA,\resposB}^\posC(\adpa) \colon \funposA\posop \Ptimes \resposB & \toinPos \Bool, \\
+            \tup{\funposAopel, \RposgenBel}                                             & \mapsto \bigvee_{\posgenCel \setin \posgenC}
+            \adpa(\tup{\FposgenAel, \F{\posgenCel}}\Fop,
+            \tup{\RposgenBel, \R{\posgenCel}}).
+        \end{aligned}
     \end{equation}
-    and
-    \begin{equation}
-        \coev_\setA \colon \singleton \mto \setA \cartprod \setA, \quad \coev_\setA = \makeset{\tup{\bullet, \tup{\ela, \elb}} \setin\singleton \cartprod (\setA \cartprod \setA) \mid \ela = \elb}
-    \end{equation}
-    respectively.
+\end{definition}
 
-    Your tasks:
-    \begin{enumerate}
-        \item
-              Let $\relB \colon \setA \mto \setB$ be a (generic) morphism in $\Rel$.
-              Compute the dual morphism $\relB\dual \colon \setB\dual \mto \setA\dual$.
+Think of drawing a loop as a way of writing down the following requirement:
+Something that produces~\posC should not use up more of~\posC than it produces.
 
-        \item
-              Let $\relA \colon \setA \cartprod \setC \mto \setB \cartprod \setC$ be a morphism in $\Rel$.
-              Show that the trace of $\relA$, given by the composition
-              \begin{equation}
-                  \rightunitor^{-1}_{\setA} \mthen (\catid_\setA \mtimescatmor \coev_\setC) \mthen \associator^{-1}_{\setA, \setC, \setC} \mthen (\relA \mtimescatmor \catid_\setC) \mthen \associator_{\setB, \setC, \setC} \mthen (\catid_\setB \mtimescatmor \braiding_{\setA, \setA}) \mthen (\catid_\setB \mtimescatmor \ev_\setC) \mthen \rightunitor_\setB
-              \end{equation}
-              is equal to the relation
-              \begin{equation}
-                  \makeset{\tup{\ela, \elb} \setin\setA \cartprod \setB \mid \exists \elc \setin \setC \colon \tup{\tup{\ela, \elc},\tup{\elb,\elc}} \setin \relA}.
-              \end{equation}
-    \end{enumerate}
-\end{gradedexercise}
-\solutionof{RelDualsTrace}
+   \begin{lemma}\label{lem:dp-trace-is-trace}
+        Trace as in~\cref{def:dp-trace} satisfies the trace axioms.
+        In other words,~$\tupp{\DP, {{\otimes}}, \singletonpos, \sigma}$ is a \SY{traced monoidal category}, with trace as in~\cref{eq:tracedef}.
+    \end{lemma}
+    \begin{proof}
+        We have already shown that~$\tup{\DP,{{\otimes}},\singletonpos,\sigma}$ is a \SY{symmetric monoidal category} (\cref{lem:symmetricmonoidaldp}).
+        We prove the trace axioms one by one, starting from vanishing (\cref{eq:vanishing_1}, \cref{eq:vanishing_2}).
+        Given any~$\posgenA,\posgenB\setin \Obof\DP$ and~$\adpa\colon \F{\posgenA}\Ptimes \F{\singleton}\profto \R{\posgenB}\Ptimes \R{\singleton}$ in~\DP, we have
+        \begin{equation}
+            \begin{aligned}
+                 & = \Tr_{\F{\posgenA},\R{\posgenB}}^{\singleton}(\adpa)(\FposgenAelop,\RposgenBel) \\
+                 & =\bigvee_{\posCel\setin \singleton}\adpa(\tup{\FposgenAel,\F{\posgenCel}}\Fop, \tup{\RposgenBel,\R{\posgenCel}}) \\
+                 & =\adpa(\tup{\FposgenAel,\F{\singletonel}}\Fop, \tup{\RposgenBel,\R{\singletonel}}) \\
+                 & =\adpa(\FposgenAelop,\RposgenBel).
+            \end{aligned}
+        \end{equation}
+        Furthermore, for any morphism~$\adpa\colon \F{\posgenA}\Ptimes \F{\posgenX}\Ptimes \F{\posgenY} \profto \R{\posgenB}\Ptimes \R{\posgenX} \Ptimes \R{\posgenY}$ in \DP, we have
+        \begin{equation}
+            \begin{aligned}
+                ~ & \Tr_{\F{\posgenA},\R{\posgenB}}^{\posX\Ptimes\posY}(\adpa)(\FposgenAelop,\RposgenBel) \\
+                  & = \bigvee_{\tup{\posXel,\posYel} \setin \posX\Ptimes \posY} \adpa(\tup{\FposgenAel,\F{\posgenXel},\F{\posgenYel}}\Fop, \tup{\RposgenBel,\R{\posgenXel},\R{\posgenYel}}) \\
+                  & =\bigvee_{\posXel \setin \posX}\pars{\bigvee_{\posYel \setin \posY} \adpa(\tup{\FposgenAel,\F{\posgenXel},\F{\posgenYel}}\Fop, \tup{\RposgenBel,\R{\posgenXel},\R{\posgenYel}})} \\
+                  & =\Tr_{\F{\posgenA},\R{\posgenB}}^\posX\pars{
+                    \Tr_{\F{\posgenA}\Ptimes \F{\posgenX},\R{\posgenB}\Ptimes \R{\posgenX}}^\posY(\adpa)(\tup{\FposgenAel,\F{\posgenXel}}\Fop, \tup{\RposgenBel,\R{\posgenXel}})}.
+            \end{aligned}
+        \end{equation}
+        For the superposing axiom (\cref{eq:superposing}), consider~$\adpa\colon \F{\posgenA}\Ptimes \F{\posgenX}\profto \R{\posgenB}\Ptimes \R{\posgenX}$ in \DP.
+        We have
+        \begin{equation}
+            \begin{aligned}
+                {}
+                 & \Tr_{\R{\posgenC}\Ptimes \F{\posgenA},\R{\posgenC}\Ptimes \R{\posgenB}}^{\posX}(\dpidat\posC\mtimescat \adpa)(\tup{\F{\posgenCel_1},\FposgenAel}\Fop, \tup{\R{\posgenCel_2},\RposgenBel}) \\
+                 & = \bigvee_{\posXel \setin \posX} \dpidat\posC(\F{\posgenCel_1^*},\R{\posgenCel_2})\booland \adpa(\tup{\FposgenAel,\F{\posgenXel}}\Fop, \tup{\RposgenBel,\R{\posgenXel}}) \\
+                 & =\dpidat\posC(\F{\posgenCel_1^*},\R{\posgenCel_2}) \booland \bigvee_{\posXel\setin \posX} \adpa(\tup{\FposgenAel,\F{\posgenXel}}\Fop, \tup{\RposgenBel,\R{\posgenXel}}) \\
+                 & =(\dpidat\posC \mtimescat \Tr_{\F{\posgenA},\R{\posgenB}}^\posX(\adpa))(\tup{\F{\posgenCel_1},\FposgenAel}\Fop, \tup{\R{\posgenCel_2},\RposgenBel}).
+            \end{aligned}
+        \end{equation}
+        Finally, for yanking~\cref{eq:yanking} consider~$\sigma_{\posX,\posX}$.
+        We have
+        \begin{equation}
+            \begin{aligned}
+                ~ & \Tr_{\posA,\posA}^{\posA}(\sigma_{\posA,\posA})(\F{\posgenAel_1^*},\R{\posgenAel_2}) \\
+                  & = \bigvee_{\posAel\setin \posA} \sigma_{\posA,\posA}(\tup{\F{\posgenAel_1},\FposgenAel}\Fop, \tup{\R{\posgenAel},\R{\posgenAel_2}}) \\
+                  & =\bigvee_{\posAel\setin \posA} \F{\posgenAel_1} \posleq \R{\posgenAel_2} \booland \FposgenAel\posleq \R{\posgenAel} \\
+                  & =\bigvee_{\posAel\setin \posA} \F{\posgenAel_1} \posleq \R{\posgenAel_2} \\
+                  & =\dpidat\posA(\F{\posgenAel_1^*},\R{\posgenAel_2}).
+            \end{aligned}
+        \end{equation}
+    \end{proof}
+
+
+
 
 \begin{gradedexercise}[\exname{DPSnakeTracePart2}]
     \label{ex:DPSnakeTracePart2}
@@ -264,20 +398,24 @@
 \todotext{JL: diagram for vanishing II is incorrect -- Z and U need to be swapped}
 
 
-\begin{definition}[Trace for $\RelL$ with concatenation as monoidal product]
-    \label{def:tuple-REL-trace}
-    Consider the symmetric strict monoidal category $\RelL$, where the monoidal product is defined via the concatenation operation $\cprod$ for lists of sets.
-    Given a relation $\relA \colon \cObj{\setA, \setC}  \to \cObj{\setB, \setC}$, its \emph{trace} is defined as
-    %
-    \begin{equation}
-        \label{eq:tupel-REL-tracedef}
-        \begin{aligned}
-            \Tr_{\cObj{\setA}, \cObj{\setB}}^{\cObj{\setC}}(\relA) = \{ \tup{\ela, \elb} \in \cObj{\setA} \times \cObj{\setB} \mid \exists \ \elc \in \cObj{\setC} : \tup{\ela \tupconcat \elc, \elb \tupconcat \elc} \in \relA \}
-        \end{aligned}
-    \end{equation}
-\end{definition}
 
-\devel{
+\subsection{Trace of a linear transformation}
+\label{subsec:trace-linear}
+    
+    Consider the category $\FinVectR$ of finite dimensional real \SY{vector spaces}, which has as objects finite dimensional \SY{vector spaces} and as morphisms linear maps between them.
+    Using the tensor product $\otimes$ of real \SY{vector spaces} as monoidal product, we can show $\FinVectR$ is a \SY{monoidal category}.
+    Consider a linear transformation $f\colon B\otimes D\to C\otimes D$, with $B,C,D$ \SY{vector spaces} with bases $\makeset{b_i},\makeset{c_j}$, and $\makeset{d_k}$ respectively.
+    Here, the trace is a linear function $\mattrace_{B,C}
+        ^D(f)\colon B\to C$, given by
+    \begin{equation}
+        \pars{\mattrace_{B,C}
+            ^D(f) }_{i,j}=\sum_{k}f_{i\otimes k,j\otimes k}
+    \end{equation}
+    \todojira{197}{\alphubel: @JL: Explain notation and show the simple case of sum of diagonals.
+        Follow JL's lecture}
+
+    \todojira{198}{\alphubel: @Gioele: Add figure using the graphical notations for tensor operations}
+
 
     \begin{figure}[h!]
         \centering
@@ -310,4 +448,3 @@
         \label{fig:trace-vanishing-ii}
     \end{figure}
 
-}
