@@ -49,7 +49,7 @@ and if $\generictracecat{X\mtimescat Z}{Y\mtimescat Z}{Z'}(f)\downarrow$, then
 \end{definition}
 
 
-\begin{definition}
+\begin{definition}\label{def:trace-for-mat}
 Consider the symmetric strict monoidal category $\mathbf{Mat}_{\reals}$ (objects are natural numbers and a morphism $\styleobj{m} \mto \styleobj{n}$ is a $n \times m$ matrix with entries in $\reals$), with monoidal stacking operation
 \begin{equation}
 \mat{A} \mtimescat \mat{B} = 
@@ -72,6 +72,56 @@ we set
 \end{equation}
 if $\mat{I} - \mat{D}$ is invertible, and otherwise $\Tr_{\styleobj{m},\styleobj{n}}^\styleobj{k} (\mora)$ is undefined. 
 \end{definition}
+
+\begin{remark}
+How might one arrive at the formula for the trace in \cref{def:trace-for-mat}? Here are two informal derivations of why it is a plausible guess for a formula for a (partial) trace. 
+
+One intuition is to treat this case similarly to the case of $\Rel$, equipped with the cartesian product. If we think of a morphism 
+\begin{equation} 
+\mora = \begin{bmatrix} 
+\mat{A} & \mat{B} \\
+\mat{C} & \mat{D}
+ \end{bmatrix}
+ \colon \styleobj{m} + \styleobj{k}  \mto \styleobj{n} + \styleobj{k}
+\end{equation}
+as a function (or: a relation)
+\begin{equation}
+\reals^\styleobj{m} \oplus \reals^\styleobj{k}  \mto \reals^\styleobj{n} \oplus \reals^\styleobj{k}
+\end{equation}
+then a natural condition for feedback is to consider the equation
+\begin{equation} \label{eq:mat-fixpoint-condition}
+\begin{bmatrix} 
+\mat{A} & \mat{B} \\
+\mat{C} & \mat{D}
+ \end{bmatrix}
+ \begin{bmatrix}
+ \mat{u}  \\
+\mat{x} 
+ \end{bmatrix}
+ =
+  \begin{bmatrix}
+ \mat{y} \\
+\mat{x}
+ \end{bmatrix}
+\end{equation}
+and think of $\mat{u}$ as input, $\mat{y}$ as output, and $\mat{x}$ as a state variable. 
+From \cref{eq:mat-fixpoint-condition}, the output $\mat{y}$ is given then by the formula
+\begin{equation}\label{eq:mat-fixpoint-output-equation}
+\mat{y} = \mat{A} \mat{u} + \mat{C}\mat{x}
+\end{equation}
+where $\mat{x}$ is required to satisfy the recursive equation
+\begin{equation}
+\mat{x} = \mat{B}\mat{u} + \mat{D} \mat{x}
+\end{equation}
+which, if $\mat{I} - \mat{D}$ is invertible, maybe be reformulated as 
+\begin{equation}
+\mat{x} = (\mat{I} - \mat{D})^{-1}\mat{B}\mat{u}.
+\end{equation}
+Substituting this formula in \cref{eq:mat-fixpoint-output-equation} we obtain
+\begin{equation}
+\mat{y} = \mat{A}\mat{u} + \mat{C}(\mat{I} - \mat{D})^{-1}\mat{B}\mat{u}
+\end{equation}
+\end{remark}
 
 
 \subsection{LTI systems}
@@ -119,7 +169,7 @@ if $\mat{I} - \mat{D}$ is invertible, and otherwise $\Tr_{\styleobj{m},\styleobj
                 \mat{D}_{21} & \mat{D}_{22}
             \end{bmatrix}
         \end{equation}
-        be the corresponding factorizations of $\mat{B}$, $\mat{C}$, and $\mat{D}$. If the matrix $\mat{I} - \mat{D}_{22}$ is invertible, we define the LTI system $\Tr_{\styleobj{i},\styleobj{j}}^{\styleobj{k}}\mora$ as
+        be the corresponding factorizations of $\mat{B}$, $\mat{C}$, and $\mat{D}$. If the matrix $\mat{I} - \mat{D}_{22}$ is invertible, we define the LTI system $\Tr_{\styleobj{i},\styleobj{j}}^{\styleobj{k}}(\mora)$ as
         \begin{equation}
             \begin{aligned}
                 \langle \prstart,  \ & \mat{A} + \mat{B}_2 (\idmat- \mat{D}_{22})^{-1} \mat{C}_2 , B_1 + D_2(\idmat- \mat{D}_{22})^{-1}
@@ -143,7 +193,7 @@ if $\mat{I} - \mat{D}$ is invertible, and otherwise $\Tr_{\styleobj{m},\styleobj
         \begin{equation}
             \label{eq:lti-input-output-gain}
             \begin{aligned}
-                K(u(t)-Cy(t))=y & \Leftrightarrow Ku(t)-KCy(t)=y \\
+                K(u(t)-Cy(t))=y(t) & \Leftrightarrow Ku(t)-KCy(t)=y(t) \\
                                 & \Leftrightarrow Ku(t)=y(t)+KCy(t) \\
                                 & \Leftrightarrow Ku(t)=y(t)(1+KC) \\
                                 & \Leftrightarrow y(t)=\frac{K}{1+KC}u(t).
