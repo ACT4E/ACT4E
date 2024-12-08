@@ -1,36 +1,120 @@
 % !TEX root = chapter-standalone.tex
 
-\section{The category of  design problems \DP}
+\section{From DPIs to DPs}
+\linkvideo{spring2021-design:design:from-dpi-to-dp} % From DPI to DP
 
-Finally, we can declare that the \SY{design problems} so defined are morphisms in a category that we call~\DP.
+A DPI (\cref{def:DPI}) describes a relation between three sets:~\funsp, \ressp, \impsp.
+If we are not interested in the implementations, but just in the relation between \funsp and \ressp, then we can describe a DPI more compactly as a ``DP''\@.
 
-% We will show that the class of all \SY{design problems} forms a category, which we call~\iindex{\DP}.
 
-\begin{definition}[Category of design problems \DP]
-    \SYNDEF{category of design problems}
-    \label{def:DP}
-    \SYNDEF{design problem}
-    The category of design problems \DP consists of the following constituents:
-    \begin{enumerate}
-        \item \emph{Objects}: The objects of~\DP are \SY{posets}.
-        \item \emph{Morphisms}: The morphisms of~\DP are \SY{design problems} (\cref{def:design-problem}).
-        \item \emph{Identity morphism}: The \SY{identity morphism}~$\dpid_\posgenA \colon \funposA \profto \resposA$ is given by \cref{def:dp-identity}.
-        \item \emph{Composition operation}: Given morphisms~$\adpa \colon  \funposA \profto \resposB$ and~$\adpb \colon \funposB \profto \resposC$, their composition~$\adpa \dpthen \adpb\colon \funposA\profto \resposC$ is given by \cref{def:dp-series}.
-    \end{enumerate}
-\end{definition}
+\begin{remark}
+    \label{rem:DP-from-DPI}
+    Given a DPI~$\tup{\funsp, \ressp, \impsp, \prov,\req}$ it is always possible to obtain from it the following DP
+    \begin{equation}
+        \label{eq:dpi_to_dp_1}
+        \defmapperiod{
+            \adp
+        }{
+            \funspop \Ptimes \ressp
+        }{
+            \toinPos
+        }{
+            \Bool
+        }{
+            \tup{\fun\Fop,\res}
+        }{
+            \exists \imp \setin \impsp \colon (\fun \posleqof\funsp \prov(\imp)) \booland (\req(\imp)\posleqof\ressp \res)
+        }
+        %            \adp\colon \funsp\op \Ctimes \ressp & \toinPos  \Bool \\
+        %            \tup{\fun\Fop,\res}                   & \mapsto \exists \imp \setin \impsp \colon (\fun \posleqof\funsp \prov(\imp)) \booland (\req(\imp)\posleqof\ressp \res).
+    \end{equation}
+    Evaluating this DP is the same as asking whether the set
+    \begin{equation}
+        \label{eq:dpi_to_dp_2}
+        \makeset{ \imp \setin \impsp \colon (\fun \posleqof\funsp \prov(\imp)) \booland (\req(\imp)\posleqof\ressp \res)}
+    \end{equation}
+    is empty or not.
+\end{remark}
+\vfill\pagebreak
+\begin{example}
+    Recall \cref{exa:dpi_elmotor}, with the catalogue of electric motors in \cref{tab:electric_motors_3}.
 
-We have already shown that the composition operator ``$\dpthen$'' is \SY{associative} and \SY{unital}, and that the composition of two \SY{design problems} is a \SY{design problem} (closure).
-Therefore, \DP is a category.
+    \begin{table*}[h]
+        \centering
+        \adjustbox{max width=\textwidth}{%
+            \begin{tabular}{c|c|c|c|c|c}
+                \F{$\unit[\text{Torque}]{[kg\cdot cm]}$} & \colI{Motor ID}        & \R{\unit[Weight]{[g]}} & \R{\unit[Max Power]{[W]}}
+                                                         & \R{\unit[Cost]{[USD]}} \\
+                \hline
+                \F{0.18}                                 & \colI{\textsf{1204}}   & \R{60.0}               & \R{2.34}                  & \R{19.95} \\
+                \F{0.95}                                 & \colI{\textsf{1206}}   & \R{140.0}              & \R{3.00}                  & \R{19.95} \\
+                \F{0.65}                                 & \colI{\textsf{1207}}   & \R{130.0}              & \R{2.07}                  & \R{12.95} \\
+                \F{3.7}                                  & \colI{\textsf{2267}}   & \R{285.0}              & \R{4.76}                  & \R{16.95} \\
+                \F{1.9}                                  & \colI{\textsf{2279}}   & \R{165.0}              & \R{5.40}                  & \R{164.95} \\
+                \F{19.0}                                 & \colI{\textsf{1478}}   & \R{1,000}              & \R{8.96}                  & \R{49.95} \\
+                \F{2.2}                                  & \colI{\textsf{2299}}   & \R{150.0}              & \R{5.90}                  & \R{59.95}
+            \end{tabular}%
+        }
+        \caption{A simplified catalogue of motors.
+        }
+        \label{tab:electric_motors_3}
+    \end{table*}
+    \begin{table*}[h]
+        \centering
+        \adjustbox{max width=\textwidth}{%
+            \begin{tabular}{c|c|c|c|c|c}
+                \F{$\unit[\text{Torque}]{[kg\cdot cm]}$} & \R{\unit[Weight]{[g]}} & \R{\unit[Max Power]{[W]}}
+                                                         & \R{\unit[Cost]{[USD]}} \\
+                \hline
+                \F{0.18}                                 & \R{60.0}               & \R{2.34}                  & \R{19.95} \\
+                \F{0.95}                                 & \R{140.0}              & \R{3.00}                  & \R{19.95} \\
+                \F{0.65}                                 & \R{130.0}              & \R{2.07}                  & \R{12.95} \\
+                \F{3.7}                                  & \R{285.0}              & \R{4.76}                  & \R{16.95} \\
+                \F{1.9}                                  & \R{165.0}              & \R{5.40}                  & \R{164.95} \\
+                \F{19.0}                                 & \R{1,000}              & \R{8.96}                  & \R{49.95} \\
+                \F{2.2}                                  & \R{150.0}              & \R{5.90}                  & \R{59.95}
+            \end{tabular}%
+        }
+        \caption{Feasibility relations for the \SY{design problem} of motors.
+        }
+        \label{tab:electric_motors_dp}
+    \end{table*}
 
-\DP is called \feas or~$\Prof_{\Bool}$ in~\cite{fong2019}.
+    \begin{figure}[tbh]
+        \centering
+        \includesag{520_dp_electric_motor}
+        \caption{Electric motor design problem.}
+        \label{fig:dp_em_2}
+    \end{figure}
 
-% \iflabelexists{sec:DPI-semicat}{
-%     \begin{remark}
-%         We will see in \cref{sec:DPI-semicat} that the DPIs (design problems with implementations) also have a categorical interpretation as a semicategory \DPI and that there is a functor from~\DPI to~\DP.
-%     \end{remark}
-% }
+    The catalogue induces a \SY{design problem}~$\adpan{\mathrm{EM}}$, where each feasibility relation between functionality and resources is reported in \cref{tab:electric_motors_dp}.
+    with diagrammatic form as in \cref{fig:dp_em_2}.
+    In particular, we can query the \SY{design problem} for combinations of \textF{functionalities} and \textR{resources}.
+    For instance:
+    \begin{equation}
+        \adpan{\mathrm{EM}}\pars{\F{\unit[0.2]{kg\cdot cm}}, \R{\tup{\unit[50.0]{g}},\R{\unit[2.0]{W}},\R{\unit[15.0]{USD}}} }=\false,
+    \end{equation}
+    since no listed model can provide~$\F{\unit[0.2]{kg\cdot cm}}$ \textF{torque} by requiring the set of \textR{resources}~$\tup{\R{\unit[50.0]{g}},\R{\unit[2.0]{W}},\R{\unit[15.0]{USD}}}$ or less.
 
-\subsection{Relation between \DPI and \DP}
+\end{example}
+
+\begin{gradedexercise}[\exname{DPsFromMonotoneMaps}]
+    \label{ex:DPsFromMonotoneMaps}
+
+    Given any monotone map~$\mapb\colon \funsp \toinPos \ressp$, we can turn it into a design problem
+    \begin{equation*}
+        \adp_\mapb \colon \funspop \Ptimes \ressp \toinPos \Bool
+    \end{equation*}
+    via the following recipe.
+    Set
+    \begin{equation*}
+        \adp_\mapb (\fun\Fop, \res) = \true \quad \text{if and only if} \quad \mapb(\fun) \posleq \res.
+    \end{equation*}
+
+    Prove that~$\adp_\mapb$, as defined above, is indeed a \SY{design problem} when~$\mapb$ is a \SY{monotone map}.
+\end{gradedexercise}
+
+\solutionof{DPsFromMonotoneMaps}
 
 We have already seen in \cref{rem:DP-from-DPI} that we can obtain a DP from a DPI.
 We can make this more formal and say that there exists a \SY{forgetful semifunctor} from \DPI to \DP.
@@ -217,3 +301,5 @@ However, this operation is not a semifunctor, since it does not preserve composi
 
     \end{proof}
 }
+
+
