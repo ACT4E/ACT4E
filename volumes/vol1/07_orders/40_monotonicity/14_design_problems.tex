@@ -134,6 +134,198 @@ We saw in \cref{rem:rel-three-fun-descriptions} that there is a one-to-one corre
 
 \solutionof{DPsFromMonotoneMaps}
 
+Recall that when working with a relation~$\relA \colon \setA \sto \setB$ between sets, if the sets in question were finite, then we could conveniently draw the relation~\relA using arrows to connect elements of~\setA to those elements of~\setB to which they are related via~\relA.
+Given a \SY{design problem}~$\adp \colon \funspop \Ptimes \ressp\toinPos \Bool$ involving finite \SY{posets}, we can visualize it in a similar fashion.
+We use Hasse diagrams to visualize the \SY{posets} involved, and we use dashed arrows to connect those elements which are related via the feasibility set~$\feasibleset{\adp}$.
+
+\begin{marginfigure}
+    \centering
+    \includesag{example_dp_composition_xy}
+    \caption{}
+    \label{fig:example_dp_graph_xy}
+\end{marginfigure}
+\begin{marginfigure}
+    \centering
+    \includesag{example_dp_graph_xy_feas}
+    \caption{}
+    \label{fig:example_dp_graph_xy_feas}
+\end{marginfigure}
+
+\begin{example}
+    \label{exa:visualize-dp}
+    In \cref{fig:example_dp_graph_xy} we have illustrated this kind of visualization in the case of a \SY{design problem} of the type
+    \begin{equation}
+        \adp \colon \F{\posgenA} \posop \Ptimes \R{\posgenB} \toinPos \Bool,
+    \end{equation}
+    where~$\F{\posgenA} = \tup{\posAset, \posleq}$ and~$ \R{\posgenB} = \tup{\posBset, \posleq}$ are finite \SY{posets}, with
+    \begin{equation}
+        \posAset = \makeset{ \setAeln{1}, \setAeln{2}, \setAeln{3} }
+        \qqand
+        \posBset = \makeset{ \setBeln{1}, \setBeln{2}},
+    \end{equation}
+    and ordered as shown in the figure.
+
+    The relation described by the \SY{design problem} is marked with the dashed arrows;
+    The feasibility set
+    \begin{equation}
+        \feasibleset{\adp} = \makeset{\tup{\setAeln{1}, \setBeln{1}}, \tup{\setAeln{1}, \setBeln{2}}, \tup{\setAeln{2}, \setBeln{2}}, \tup{\setAeln{3}, \setBeln{2}} },
+    \end{equation}
+    is reported in \cref{fig:example_dp_graph_xy_feas}.
+\end{example}
+
+
+
+
+The Boolean-valued \SY{design problems} we are considering in this section do not distinguish between particular implementations: they only tell us if \emph{any} implementation or solution exists for given functionality and resources.
+
+
+    \paragraph{Diagrammatic notation}
+    We represent \SY{design problems} using a diagrammatic notation.
+    One \SY{design problem}~$\adp \colon \funsp \profto \ressp$ is represented as a box with functionality~\funsp on the \emph{left} and resources~\ressp on the \emph{right} (\cref{fig:diagrammaticdp}).
+    \begin{figure}[h!]
+        \centering
+        \includesag{50_diagrammatic}
+        \caption{Diagrammatic representation of a design problem. }
+        \label{fig:diagrammaticdp}
+    \end{figure}
+
+    As we did for DPIs, we will connect these diagrams.
+
+
+\begin{marginfigure}
+    \centering
+    \includesag{50_engine}
+    \caption{Diagram of the engine design problem.}
+    \label{fig:enginedp}
+\end{marginfigure}
+
+    \begin{example}
+        An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100.
+        The engine requires fuel and provides thrust, and so it can be modeled as a \SY{design problem} where \R{fuel} and \F{thrust} are two totally-ordered sets representing their respective resources.
+
+        The corresponding diagram is reported in~\cref{fig:enginedp}.
+
+        Concretely, ``engine'' is represented as a monotone map%
+        %
+        \begin{equation}
+            \text{engine} \colon \Ftext{thrust}\posop \Ptimes \Rtext{fuel} \toinPos \Bool.
+        \end{equation}
+        %
+        Assuming that the \SY{posets} \R{fuel}, \F{thrust}$\op$ are finite, we can think of the ``engine'' \SY{design problem} as a matrix, where each~$(i,j)$-th entry is the answer to the question, ``is the amount of thrust~$\F{f_i}$ feasible with the amount of fuel~$\R{r_j}$?'':
+        %
+        \begin{equation}
+            \begin{blockarray}{ccccccc}
+                &&&& \Rtext{Fuel} \\
+                && \R{r_1} = 0 & \R{r_2} & \R{r_3} & \hdots & \R{r_m} \\
+                \begin{block}{cc(ccccc)}
+                    & \F{f_n}\Fop = 0 & 0 & 0 & 0 & & 0 \\
+                    & \F{f_{n-1}^*} & 0 & 0 & 0 & & 1 \\
+                    \Ftext{thrust}\op & \F{f_{n-2}^*} & 0 & 1 & 1 & & 1 \\
+                    & \vdots & & & & \ddots & \\
+                    & \F{f_1^*} & 1 & 1 & 1 & & 1 \\
+                \end{block}
+            \end{blockarray}
+        \end{equation}
+        %
+        Suppose we have tested or are given the performance data of a few different engines, as possible solutions to the ``engine'' design problem, each with a fixed optimal fuel-thrust value.
+        To illustrate the monotonicity assumption, we can render the data of ``engine'' as a graph, as depicted in~\cref{fig:solenginedp}.
+        \begin{figure}[h!]
+            \centering
+            \includesag{50_engine_graph}
+            \caption{Graphical representation of the possible solutions of the engine design problem. }
+            \label{fig:solenginedp}
+        \end{figure}
+
+        Note that the shaded regions cover the feasible solution set.
+        This feasible solution set is always an \emph{upper set} (\cref{def:upperset}) in~$\Ftext{thrust}\posop \Ptimes \Rtext{fuel}$, which is another way of characterizing the monotonicity of the design problem.
+        The optimal solutions, indicated by dots, form an \emph{antichain} of solutions.
+        We will come back to \SY{antichains} when discussing how to compute optimal solutions of \SY{design problems}.
+
+    \end{example}
+
+
+    
+
+%\JT{Do we need 2 large examples, or can we move the battery example to the notes?}
+%
+%\newcommand{\cCapacity}{\text{Capacity}}
+%\newcommand{\cMass}{\text{Mass}}
+%
+%\begin{example}[Battery]
+%   A battery is a store of elecrical energy.
+%   We are interested in the relation between the capacity of the battery, measured
+%   in joules, and the mass of the battery, measured in grams.
+%   We will model the battery as a design problem
+%   \[
+%       \text{battery} : \cCapacity \profto \cMass,
+%   \]
+%   with the two \SY{posets} $\cCapacity$ and $\cMass$ defined as
+%   $\cCapacity \definedas \langle\mathbb{R}_+^{\text{J}}, \leq\rangle$
+%   and $\cMass \definedas \langle\mathbb{R}_+^{\text{g}}, \leq\rangle$, where ``$\leq$''' is the usual
+%   order on $\mathbb{R}_+$.
+%
+%This is the corresponding diagram:
+%   \[
+%   \centering
+%   \begin{tikzpicture}[oriented WD, bb min width =1.5cm, bby=2ex, bbx=.7cm,bb port length=3pt]
+%       \node[bb port sep=0.8, bb={1}{1}, bb name={battery}] (dp) {};
+%       \node [black, left = 0.2 of dp] {$\cCapacity$};
+%       \node [black, right = 0.2 of dp] {$\cMass$};
+%   \end{tikzpicture}
+%   \]
+%   The concrete representation of the design problem is
+%   \[
+%       \text{battery} \colon\cCapacity\op\times \cMass \toinPos \Bool,
+%   \]
+%%
+%   In this case, the feasibility question is
+%   \[
+%           \text{battery}(c^*, m) = \true \quad \Leftrightarrow  \quad
+%            \text{a battery of mass $m$ is sufficient to provide the capacity $c^*$.}
+%   \]
+%   It is easy to convince oneself that this ``$\text{battery}$'' is monotone from basic physics consideration.
+%   Monotonicity is equivalent to the following two assertions:
+%%
+%   \newcommand{\qsmall}[1]{{\color{blue}#1}}
+%   \newcommand{\qlarge}[1]{{\color{red}#1}}
+%%
+%\begin{enumerate}
+%\item We can provide a smaller capacity with the same mass:
+%   \begin{eqnarray}
+%       \text{For all}\  \qlarge{c_2}  \geq_{\cCapacity} \qsmall{c_1},\quad
+%       \text{a battery of mass $m$ is sufficient to provide the capacity $\qlarge{c_2}$} \\
+%       \Rightarrow
+%       \text{a battery of mass $m$ is sufficient to provide the capacity $\qsmall{c_1}$.}
+%   \end{eqnarray}
+%%
+%\item A battery of larger mass can provide the same capacity:
+%   \begin{eqnarray}
+%       \text{For all}\ \qlarge{m_2} \geq_{\cMass} \qsmall{m_1},\quad
+%       \text{a battery of mass $\qsmall{m_1}$ is sufficient to provide the capacity $c^*$} \\
+%       \Rightarrow
+%       \text{a battery of mass $\qlarge{m_2}$ is sufficient to provide the capacity $c^*$.}
+%   \end{eqnarray}
+%\end{enumerate}
+%
+%   Assume that there is a linear relation between mass and capacity,
+%   and such relation is described by the energy density~$\rho$ [Wh/kg].
+%   Then the minimum mass to provide~$c^*$ is~$m_\text{min} = m_0 + c^* / \rho$.
+%   So we have
+%   \[
+%       \text{battery}(c^*, m) = \true \quad \Leftrightarrow \quad  m \geq m_0 + c^* / \rho.
+%   \]
+%   A visualization of the feasible set $\feasibleset{\text{battery}}$ is in \cref{fig:battery-1}.
+%   Monotonicity means that if we fix one point $\tup{c^*,m}$,
+%   if we increase $c^*$, we can only see at most one transition, from feasible to unfeasible.
+%   Similarly, if we increase $m$, there is at most one transition from unfeasible to feasible.
+%
+%\end{example}
+%
+%\begin{figure}[h!]
+%    \caption{}
+% \label{fig:battery-1}
+%\end{figure}
+
 
 \subsection{Querying}
 \label{sec:dp-querying}
@@ -254,5 +446,19 @@ Which \SY{poset} structure can we cho3ose on~$\setOfUppersets (\ressp)$ and~$\se
 
 \todotextjira{173}{\bernina: Explain how the above discussion connect to querying and intuition of the associated optimization problems.}
 
+\subsection{A note on pre-orders}
+    The theory of \SY{design problems} can be easily generalized to pre-orders.
+    This means that there could be two elements~$\posAel$ and~$\posBel$ such that~$\posAel\posAleq \posBel$ and~$\posAel \posAgeq \posBel$ but~$\posAel \neq \posBel$.
 
+    This is actually common in practice.
+    For example, if the order relation comes from human judgement, such as customer preference, all bets are off regarding the consistency of the relation.
+    We will only refer to \SY{posets} for two reasons:
+    \begin{enumerate}
+        \item The exposition is smoother.
+        \item Given a \SY{pre-order}, computation will always involve passing to the \SY{poset} representation.
+    \end{enumerate}
+    This means that, given a \SY{pre-order}, we can consider the \SY{poset} of its isomorphism classes, by means of the following \SY{equivalence relation}:
+    \begin{equation}
+        \posAel \simeq \posBel \quad \equiv \quad (\posAel \posAleq \posBel) \wedge (\posBel \posAleq \posAel).
+    \end{equation}
 
