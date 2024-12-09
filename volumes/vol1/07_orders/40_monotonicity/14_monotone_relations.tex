@@ -14,20 +14,20 @@ Let $\posAdefinition$ and~$\posBdefinition$ be posets. A monotone relation $\rel
 
 \subsection{Monotone relations and co-design}
 
-A monotone relation33
+A monotone relation
 \begin{equation}
 \adp \colon \funsp \mto \ressp
 \end{equation}
-can be used to model a relationship of``feasability'' between a poset $\funsp$ of ``functionalities'' and a poset $\ressp$ of ``requirements", in the sense that the relation describes whether a resource $\fun \setin \funsp$, seen as a functionality or service or product, is \emph{feasible} to obtain given a certain resource $\res \setin \ressp$, with $\res$ interpreted as a requirement or a cost.
+can be used to model a relationship of ``feasability'' between a poset $\funsp$ of ``functionalities'' and a poset $\ressp$ of ``requirements", in the sense that the relation describes whether a resource $\fun \setin \funsp$, seen as a functionality or service or product, is \emph{feasible} to obtain given a certain resource $\res \setin \ressp$, with $\res$ interpreted as a requirement or a cost.
 
 The condition
-\begin{equation}
+\begin{equation}\label{eq:mon-rel-cond-1}
 \tup{\fun, \res} \in \adp, \ \res \leq_{\ressp} \res' \ \implies \tup{\fun, \res'} \in \adp
 \end{equation}
 says that if $\fun$ is feasible to obtain using $\res$, then it is also feasible to obtain $\fun$ if we use more resources, $\res'$. 
 
 The condition
-\begin{equation}
+\begin{equation}\label{eq:mon-rel-cond-2}
 \tup{\fun, \res} \in \adp, \ \fun' \leq_{\funsp} \fun \ \implies \tup{\fun', \res} \in \adp,
 \end{equation}
 on the other hand, says that if $\fun$ is feasible to obtain using $\res$ amount of resources, then it is also feasible to obtain less, $\fun'$, using the same resources $\res$. 
@@ -38,10 +38,7 @@ on the other hand, says that if $\fun$ is feasible to obtain using $\res$ amount
 \label{sec:dpdefinition}
 \SYNDEF{design problem}
 
-Recall how the problem \Feasibility was defined in \cref{prob:Feasibility}.
-Given a particular functionality~$\fun$ and resource~$\res$, we would like to know if they are feasible.
-
-This is a function from~$\funsp \cartprod \ressp$ to~$\boolset$:
+Here is an alternative way to think about relations of feasibility. Given a particular functionality~$\fun \in \funsp$ and requirement~$\res \in \ressp$, we would like to know a ``true'' or ``false'' answer to the question of whether they form a feasible pair of resources. This situation is described by a function
 %
 \begin{equation}
     \mapb\colon \funsp \cartprod \ressp \sto \boolset.
@@ -49,30 +46,20 @@ This is a function from~$\funsp \cartprod \ressp$ to~$\boolset$:
 \end{equation}
 %
 The value~$\mapb(\fun, \res)$ is the answer to the question ``is the functionality~\fun feasible with resources~\res?''.
-Due to how the problem is defined, we know that%
-\begin{enumerate}
-    \item If~\fun is feasible with~\res, then any~$\funan{2} \funleq \fun$ is feasible with~\res.
-    \item If~\fun is feasible with~\res, then~\fun is feasible with any~$\resan{2} \resgeq \res$.
-\end{enumerate}
-Therefore, we can conclude that~$\mapb$ is monotone in the second argument~\res, and antitone in the first argument~$\fun$.
 
-It is going to be convenient to have functions that are monotone in both arguments, and not mixed monotone/antitone.
-Instead of considering a map from~$\funsp \Ptimes \ressp$ to~$\Bool$, we can turn things around and look at a map~$\adp$ from~$\funspop \Ptimes \ressp$ to~$\Bool$, defined as~$\adp(\fun,\res) = \mapb(\fun\Fop,\res)$.
-Because we use~$\funspop$ rather than \funsp, the map~$\adp$ is monotone.
+The conditions \cref{eq:mon-rel-cond-1} and \cref{eq:mon-rel-cond-2} can now be translated into this formulation: they say, respectively, that $\mapb\colon \funsp \cartprod \ressp \sto \boolset$ is monotone in the variable $\res$ and antitone in the variable $\fun$. Or, equivalently, we can say that we have a monotone map of two variables of the type
+\begin{equation}
+     \funspop \Ptimes \ressp \sto \Bool.
+    % leave cartprod
+\end{equation}
 
-\iflabelexists{def:profunctor}{
-    \begin{remark}[Spoilers]
-        The map $\adp$ has the color of \SY{functors}, because it will be shown to be a particular type of \SY{functor}: a \SY{profunctor}~(\cref{def:profunctor}).
-    \end{remark}
-}
 
-The feasibility map~$\adp$ has now forgotten everything about the implementations; however, it does contain all the information we need to solve co-design feasibility problems.
 
 \linkvideo{spring2021-design:design:bool-prof} % Boolean profunctors
 
 \begin{definition}[Design Problem]
     \label{def:design-problem}
-    A \maindef{design problem} (DP) is a tuple~$\tup{\funsp, \ressp, \adp}$, where~$\funsp, \ressp$ are \SY{posets} and~$\adp$ is a \SY{monotone map} of the form%
+    Given posets $\funsp$ and $\ressp$, a \maindef{design problem} (DP) from $\funsp$ to $\ressp$ is a \SY{monotone map} of the form%
     \begin{equation}
         \label{eq:design_prob_as_monfun}
         \adp \colon \funspop \Ptimes \ressp \toinPos \Bool.
@@ -80,7 +67,6 @@ The feasibility map~$\adp$ has now forgotten everything about the implementation
 \end{definition}
 
 
-We will also use the notation~$\adp \colon \funsp \profto \ressp$ for \SY{design problems}, in order to emphasize how we think of them as morphisms.
 
 
 \begin{gradedexercise}[\exname{DPsFromMonotoneMaps}]
