@@ -1,0 +1,281 @@
+% !TEX root = chapter-standalone.tex
+
+\subsection{The category~$\DPL$}
+
+Analogously, we define the category $\DPL$.
+
+\begin{definition}[The category \DPL]\label{def:DPL}
+    \SYNDEF{category of tuple-posets and design problems}
+    The category~$\DPL$ is the \SY{subcategory} of \DP where the objects are \SY{posets} of tuple posets (objects of $\PosL$).
+    % \begin{enumerate}
+    %     \item \emph{Objects:}
+    %           \SY{posets} of tuples.
+    %     \item \emph{Morphisms:}
+    %           A morphism from~$\posA =\cObj{\posA_1,\ldots, \posA_m}$ to ~$\posB = \cObj{\posB_1,\ldots, \posB_m}$ is design problem:
+    %           \begin{equation}
+    %               \adp\colon \posA\op\cartprod \posB \toinPos \Bool.
+    %           \end{equation}
+    %     \item \emph{Composition:}
+    %           Composition is the usual composition of \SY{design problems}.
+    %     \item \emph{Identities:}
+    %           The identity morphism on an object~$\posA=\cObj{\posA_1,\ldots,\posA_n}$ is given by the identity \SY{design problem}~$\catid_\posA$.
+    % \end{enumerate}
+\end{definition}
+% \begin{remark}
+%     In other words, \DPL is the subcategory of \DP in which objects are of the form presented in \cref{eq:posetoftuples}.
+% \end{remark}
+\begin{lemma}
+    \DPL is \SY{associative stacking} using the structure induced by tuple concatenation.
+\end{lemma}
+\begin{widepar}
+    \begin{proof}
+        For the stacking operation $\mtimescatob$ on objects, we use $\mtimescatobof{\DPL}\definedas\mtimescatobof{\PosL}$.
+        For stacking morphisms, we define $\mtimescatmor$ by
+        % Given two \SY{design problems} % \begin{equation}
+        %     \begin{aligned}
+        %         \adpa\colon \posA\posop \Ptimes \posC & \toinPos \Bool, \\
+        %         \adpb\colon \posB\posop \Ptimes \posD & \toinPos \Bool,
+        %     \end{aligned}
+        % \end{equation}
+        % we define
+        \begin{equation}
+            \label{eq:dpmulti}
+            \prfperiod{
+                \adpa\colon \posAop\Ptimes \posC \mto \Bool
+            }{\qquad}{
+                \adpb\colon \posB\posop\Ptimes \posD \mto \Bool,
+            }{
+                \defmap{
+                    \adpa \mtimescatmor \adpb
+                }{
+                    \pars{\posA \mtimescatob \posB}\op
+                    \Ptimes
+                    \pars{\posC \mtimescatob \posD}
+                }{
+                    \mto
+                }{
+                    \Bool
+                }{
+                    \tup{\maketupconcat{a^*, c^*},\ \maketupconcat{b, d}}
+                }{
+                    \adpa(a^*,c) \booland \adpb(c^*, d)
+                }
+            }
+        \end{equation}
+        Note that this is a valid definition of a \SY{design problem} because the expression $\adpa(a^*,c) \booland \adpb(c^*, d)$ is monotone, as may readily be checked.
+
+        To show associativity, consider three DPs
+        \begin{equation}
+            \adpa\colon \posAop\Ptimes \posC \toinPos \Bool, \qquad
+            \adpb\colon \posB\posop\Ptimes \posD \toinPos \Bool, \qquad
+            \adpc\colon \posE\posop\Ptimes \posF \toinPos \Bool.
+        \end{equation}
+        We compute $(\adpa \mtimescatmor \adpb) \mtimescatmor \adpc$
+        and $\adpa \mtimescatmor (\adpb \mtimescatmor \adpc)$ according to the recipe in~\cref{eq:dpmulti}:
+        \begin{equation}
+            \defmapcomma{
+                \parslight{\adpa \mtimescatmor \adpb} \mtimescatmor \adpc
+            }{
+                \pars{\parslight{\posA \mtimescatob \posB} \mtimescatob \posE}\op
+                \Ptimes
+                \pars{\parslight{\posC \mtimescatob \posD} \mtimescatob \posF}
+            }{
+                \toinPos
+            }{
+                \Bool
+            }{
+                \tup{
+                    \parslight{\maketupconcat{a^*, c^*}} \tupconcat e^*
+                    ,\
+                    \parslight{\maketupconcat{b, d}} \tupconcat f
+                }
+            }{
+                \parslight{
+                    \adpa(a^*,c) \booland \adpb(c^*, d)
+                }
+                \ \booland\
+                \adpc(e^*, f)
+            }
+        \end{equation}
+        \begin{equation}
+            \defmapperiod{
+                \adpa \mtimescatmor \parslight{\adpb \mtimescatmor \adpc}
+            }{
+                \pars{
+                    \posA \mtimescatob
+                    \parslight{
+                        \posB \mtimescatob \posE
+                    }
+                }\op
+                \Ptimes
+                \pars{
+                    \posC \mtimescatob
+                    \parslight{
+                        \posD \mtimescatob \posF
+                    }
+                }
+            }{
+                \toinPos
+            }{
+                \Bool
+            }{
+                \tup{
+                    \maketupconcat{a^*, \parslight{\maketupconcat{c^*, e^*})}},\
+                    \maketupconcat{b, \parslight{\maketupconcat{d, f}}}
+                }
+            }{
+                \adpa(a^*,c)
+                \ \booland\
+                \parslight{
+                    \adpb(c^*, d)
+                    \booland
+                    \adpc(e^*, f)
+                }
+            }
+        \end{equation}
+        Because the operations $\mtimescatob$ and $\booland$ are \SY{associative}, we can erase all the light parentheses in the formulas, and we find that $(\adpa \mtimescatmor \adpb) \mtimescatmor \adpc$ and
+        $\adpa \mtimescatmor (\adpb \mtimescatmor \adpc)$ are equal to the design problem
+        \begin{equation}
+            \defmapperiod{
+                \adpa \mtimescatmor \adpb \mtimescatmor \adpc
+            }{
+                \pars{
+                    \posA \mtimescatob
+                    \posB \mtimescatob \posE
+                }\op
+                \Ptimes
+                \pars{
+                    \posC \mtimescatob
+                    \posD \mtimescatob \posF
+                }
+            }{
+                \toinPos
+            }{
+                \Bool
+            }{
+                \tup{
+                    \maketupconcat{a^*, c^*, e^*},\
+                    \maketupconcat{b, d, f}
+                }
+            }{
+                \adpa(a^*,c)
+                \booland
+                \adpb(c^*, d)
+                \booland
+                \adpc(e^*, f)
+            }
+        \end{equation}
+    \end{proof}
+\end{widepar}
+
+% where
+% \begin{equation}
+%     (\adpa \cproddp \adpb)  (\tup{\posAnel{}\opel,\posBnel{}\opel,\posCnel{},\posDnel{}})
+%     \definedas\adpa(\tup{\posAnel{}\opel,\posCnel{}})\booland
+%     \adpb(\tup{\posBnel{}\opel,\posDnel{}}).
+% \end{equation}
+
+% We now consider the stacking operation on objects we considered for~\PosL, and the stacking operation on morphism defined as
+% \begin{equation}
+%     \defmapcomma{
+%         \mtimescatmor
+%     }{
+%         \Mor_{\DPL} \cartprod \Mor_{\DPL}
+%     }{
+%         \mto
+%     }{
+%         \Mor_{\DPL}
+%     }{
+%         \tup{\adpa,\adpb}
+%     }{
+%         \adpa \cproddp \adpb
+%     },
+% \end{equation}
+
+% \begin{lemma}\label{lem:DPL-associative-stacking}
+%     \DPL, equipped with the aforementioned stacking operations on objects and morphisms, is  \SY{associative stacking}.
+% \end{lemma}
+
+% \begin{proof}
+%     We show that~$\DPL$ is an  \SY{associative stacking} semicategory.
+%     We first show that it is a stacking category, by first showing that the stacking operations indeed fulfill \cref{def:simple-stacking-semi-cat}, and then showing the compatibility condition.
+%     The stacking operation on objects fulfills \cref{def:simple-stacking-semi-cat}, since, given two \SY{posets} of tuples it returns a \SY{poset} of tuples.
+%     To show that the stacking operation on morphism fulfills \cref{def:simple-stacking-semi-cat}, we need to show that given \SY{design problems} ~$\adpa,\adpb$, the morphism~$\adpa \mtimescatmor \adpb$ is a design problem.
+%     This is easy to show, by leveraging the fact that~$\adpa$ and~$\adpb$ are \SY{design problems}.
+%     We know that
+%     \begin{equation}
+%         \prfcomma{\tup{\posAnel{}\opel,\posBnel{}\opel,\posCnel{},\posDnel{}} \posleqof{\posA\posop \Ptimes \posB\posop \Ptimes \posC\Ptimes \posD} \tup{{\posAnel{}'}\opel,{\posBnel{}'}\opel,\posCnel{}',\posDnel{}'}}
+%         {(\posAnel{}\opel \posleqof{\posA\op} {\posAnel{}'}\opel) \booland (\posBnel{}\opel \posleqof{\posB\op} {\posBnel{}'}\opel)\booland (\posCnel{}\posleqof{\posC}\posCnel{}')\booland (\posDnel{}\posleqof{\posD}\posDnel{}')}
+%     \end{equation}
+%     and that~$\booland$ is a monotone operator.
+%     Therefore,~$\adpa \cproddp \adpb$ is a design problem.
+%     Furthermore, the two stacking operations are compatible:
+%     \begin{equation}
+%         \prfperiod{\adpa\colon \posA\posop \Ptimes \posC \toinPos \Bool}
+%         {\adpb\colon \posB\posop \Ptimes \posD\toinPos \Bool}
+%         {\adpa \cproddp \adpb \colon \posA\posop \Ptimes \posB\posop \Ptimes\posC\Ptimes\posD\toinPos \Bool}
+%     \end{equation}
+
+%     \begin{comment}
+%     For brevity, we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$,~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$,~$\posCnel{}=\tup{\posCnel{1},\ldots, \posCnel{o}}$, and~$\posDnel{}=\tup{\posDnel{1},\ldots, \posDnel{t}}$.
+%     We have:
+%     \begin{equation}
+%         \prfperiod{
+%         \posAnel{}\tupconcat \posBnel{}\posleqof{\cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}} \posAnel{}'\tupconcat \posBnel{}'
+%         }
+%         {\prftree{(\posAnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m}} \posAnel{}') \booland (\posBnel{} \posleqof{\cObj{\posB_1,\ldots, \posB_n}} \posBnel{}')}
+%         {\prftree{(\adpa(\posAnel{}\opel,\posCnel{})\posgeqof{\Bool} \adpa({\posAnel{}'}\opel,\posCnel{}))
+%                 \booland
+%                 (\adpb(\posBnel{}\opel,\posDnel{})\posgeqof{\Bool} \adpb({\posBnel{}'}\opel,\posDnel{}))}
+%             {
+%                 \prftree{
+%                     (\adpa({\posAnel{}}\opel,\posCnel{})\booland \adpb(\posBnel{}\opel,\posDnel{}))
+%                     \posgeqof{\Bool}
+%                     (\adpa({\posAnel{}'}\opel,\posCnel{})\booland \adpb({\posBnel{}'}\opel,\posDnel{}))
+%                 }
+%                 {(\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}\tupconcat \posDnel{})\posgeqof{\Bool}
+%                     (\adpa \cprod \adpb)((\posAnel{}'\tupconcat \posBnel{}')\opel,\posCnel{}\tupconcat \posDnel{})} }
+%             }
+%         }
+%     \end{equation}
+%     For the second iteration, we have:
+%     \begin{equation}
+%         \prfperiod{
+%         \posCnel{}\tupconcat \posDnel{}\posleqof{\cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}} \posCnel{}'\tupconcat \posDnel{}'
+%         }
+%         {\prftree{(\posCnel{} \posleqof{\cObj{\posC_1,\ldots,\posC_o}} \posCnel{}') \booland (\posDnel{}\posleqof{\cObj{\posD_1,\ldots, \posD_t}} \posDnel{}')}
+%         {\prftree{(\adpa(\posAnel{}\opel,\posCnel{})\posleqof{\Bool}
+%                 \adpa(\posAnel{}\opel,\posCnel{}'))
+%                 \booland
+%                 (\adpb(\posBnel{}\opel,\posDnel{})\posleqof{\Bool}
+%                 \adpb(\posBnel{}\opel,\posDnel{}'))}
+%             {
+%                 \prftree{
+%                     (\adpa(\posAnel{}\opel,\posCnel{})\booland \adpb(\posBnel{}\opel,\posDnel{}))
+%                     \posleqof{\Bool}
+%                     (\adpa(\posAnel{}\opel,\posCnel{}')\booland \adpb(\posBnel{}\opel,\posDnel{}'))
+%                 }
+%                 {(\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}\tupconcat \posDnel{})
+%                     \posleqof{\Bool}
+%                     (\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}'\tupconcat \posDnel{}')} }
+%             }
+%         }
+%     \end{equation}
+%     Therefore,~$\adpa \cprod \adpb$ is really a design problem.
+%     \end{comment}
+%     Associativity can be shown following what we did for~$\cObj{\Set}$.
+% \end{proof}
+
+\toexclude{
+    \begin{example}
+        After the X101 spontaneously combusted in low Earth orbit, the astronauts at Jeb's Spaceship Parts go on strike.
+        They demand that the engineers take into account safety and living conditions on the future X102.
+        As long as the propulsion and life support systems of the X102 do not interact, we can simply tensor the two \SY{design problems} representing these systems into one, big co-design problem (\cref{fig:examplemonoidal}).
+        \begin{figure}[h!]
+            \centering
+            \includesag{50_engine_tensor_1_2}
+            \caption{Example of tensor of \SY{design problems}. }
+            \label{fig:examplemonoidal}
+        \end{figure}
+    \end{example}
+}

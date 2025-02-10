@@ -1,0 +1,205 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Feedback for systems}
+\label{sec:feedback-processes}
+
+\todotext{write intro to this section}
+
+\subsection{Moore machines}
+
+\todotext{write up this subsection}
+
+%\begin{definition}[Moore machine, 3rd definition]
+%    \label{def:moore-machine}
+%    A Moore machine is a tuple
+%    \begin{equation}
+%        \label{eq:moore-tuple-improved-again}
+%        \tup{\prinL,\prstL,\proutL,\prdyn,\prreadout,\prstart},
+%    \end{equation}
+%    where~$\prinL$,~$\prstL$, and~$\proutL$ are objects of~$\SetL$,~$\prdyn$ is a function of the type
+%    \begin{equation}
+%        \prdyn \colon \prinL \cprod \prstL \mtoin{\SetL} \prstL,
+%    \end{equation}
+%    $\prreadout$ is a function of the type
+%    \begin{equation}
+%        \prreadout \colon \prstL \mtoin{\SetL} \proutL,
+%    \end{equation}
+%    and~$\prstart \setin \prstL$.
+%\end{definition}
+
+\begin{definition}\label{def:trace-moore}
+    Let $\mora = \tup{\prinL \cprod \prObjw,\prstL,\proutL \cprod \prObjw, \prdyn_\mora,\prreadout_\mora,\prstart}$ be a \SY{Moore machine}.
+    The \emph{trace of} $\mora$ \emph{over} $\prObjw$ is the Moore machine
+    \begin{equation}
+        \Tr_{\prinL,\proutL}^\prObjw \mora = \tup{\prinL,\prstL,\proutL, \prdyn_{\Tr \mora}, \prreadout_{\Tr \mora},\prstart}
+    \end{equation}
+    where
+    \begin{equation}
+        \defmapperiodset{
+            \prdyn_{\Tr \mora}
+        }{
+            \prinL \cprod \prstL
+        }{
+            \prstL
+        }{
+            \prinel \tupconcat \prstel
+        }{
+            \prdyn_\mora(\prinel \tupconcat \proj_\prObjw \prreadout (\prstel) \tupconcat \prstel)
+        }
+    \end{equation}
+    and
+    \begin{equation}
+        \defmapperiodset{
+            \prreadout_{\Tr \mora}
+        }{
+            \prstL
+        }{
+            \proutL
+        }{
+            \prstel
+        }{
+            \proj_\proutL \prreadout (\prstel)
+        }
+    \end{equation}
+    %
+    Above, $\pi_\prObjw$ is the projection $\prinL \cprod \prObjw \to \prObjw$ and $\proj_\proutL$ is the projection $\proutL \cprod \prObjw \to \proutL$.
+\end{definition}
+
+\subsection{Proper LTI systems}
+
+\todotext{write up this subsection}
+
+%\begin{ctdefinition}[Category \LTI]
+%    The category  \iindex{\LTI} of LTI systems is defined by:
+%    \begin{enumerate}
+%        \item \emph{Objects}: natural numbers.
+%        \item \emph{Morphisms}: A morphism in \LTI from~$\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$ is a continuous time LTI system~$\genericlti{}$.
+%              %where~$\mat{A}\setin \reals^{\ntimesn}$,~$\mat{B}\setin \reals^{n\times l}$,~$\mat{C}\setin \reals^{m\times n}$,~$\mat{D}\setin \reals^{m\times l}$.
+%              Note that the dimensions of the input/output are implicit.
+%        \item \emph{Composition}: Given morphisms~$\mora \colon \styleobj{a}\mto \styleobj{b}$ and~$\morb\colon \styleobj{b}\mto \styleobj{c}$, described by the LTI systems
+%              \begin{equation}
+%                  \begin{aligned}
+%                       & \genericlti{\mora} \\
+%                       & \genericlti{\morb},
+%                  \end{aligned}
+%              \end{equation}
+%              their composition~$(\mora \mthen \morb)\colon \styleobj{a}\mto \styleobj{c}$ is the LTI system~$\genericlti{}$, where
+%              \begin{equation}
+%                  \begin{aligned}
+%                      \prstart & =\begin{bmatrix}
+%                                      \prstart_\mora \\
+%                                      \prstart_\morb \\
+%                                  \end{bmatrix},\quad
+%                      \mat{A}=\begin{bmatrix}
+%                                  \mat{A}_\mora              & \mat{0}       \\
+%                                  \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
+%                              \end{bmatrix},\quad
+%                      \mat{B}=\begin{bmatrix}
+%                                  \mat{B}_\mora \\
+%                                  \mat{B}_\morb\mat{D}_\mora
+%                              \end{bmatrix}, \\
+%                      \mat{C}  & =\begin{bmatrix}
+%                                      \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+%                                  \end{bmatrix}, \quad
+%                      \mat{D}=\mat{D}_\morb\mat{D}_\mora.
+%                  \end{aligned}
+%              \end{equation}
+%        \item \emph{Identities}: the identity for~$\styleobj{l}\setin \natnumbers$ is the system~$\tup{\mat{0}^{0\times 1},\mat{0}^{0\times 0},\mat{0}^{0\times l},\mat{0}^{l\times 0},\mathbb{I}^{l\times l}}$.
+%
+%    \end{enumerate}
+%\end{ctdefinition}
+
+\begin{definition}\label{def:trace-lti-prop}
+    Let $\mora = \genericplti{}$ be a proper LTI system from $\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$.
+    Given factorizations $\styleobj{l} = \styleobj{i} + \styleobj{k}$ and $\styleobj{m} = \styleobj{j} + \styleobj{k}$, we define the proper LTI system $\Tr_{\styleobj{i},\styleobj{j}}^{\styleobj{k}}\mora$ as
+    \begin{equation}
+        \tupp{\prstart,\mat{A} + \rowscols{\mat{B}}{:}{i+1:k}\rowscols{\mat{C}}{j+1:j+k}{:},\rowscols{\mat{B}}{:}{1:i},\rowscols{\mat{C}}{1:j}{:}}
+    \end{equation}
+    where the notation $\rowscols{\mat{A}}{a:b}{c:d}$ means considering rows $a$ to $b$ and columns $c$ to $d$ of matrix $\mat{A}$.
+    In case only $:$ is given, all rows/column are considered.
+\end{definition}
+
+\devel{
+    \subsection{LTI systems}
+
+    \begin{definition}\label{def:trace-lti}
+        Let $\mora = \genericlti{}$ be a LTI system from $\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$.
+        Given factorizations $\styleobj{l} = \styleobj{i} + \styleobj{k}$ and $\styleobj{m} = \styleobj{j} + \styleobj{k}$, we define the LTI system $\Tr_{\styleobj{i},\styleobj{j}}^{\styleobj{k}}\mora$ as
+        \begin{equation}
+            \begin{aligned}
+                \langle\prstart,\mat{A} + \rowscols{\mat{B}}{:}{i+1:i+k}\mat{E} \rowscols{\mat{C}}{j+1:j+k}{:}, & \rowscols{\mat{C}}{1:j}{:}+\rowscols{\mat{D}}{1:j}{i+1:i+k}\mat{E}\rowscols{\mat{C}}{j+1:j+k}{:}, \\
+                                                                                                                & \rowscols{\mat{D}}{1:j}{1:i}+\rowscols{\mat{D}}{1:j}{i+1:i+k}\mat{E} \rowscols{\mat{D}}{j+1:j+k}{1:i}\rangle,
+            \end{aligned}
+        \end{equation}
+        where $\mat{E}=(\idmat-\rowscols{\mat{D}}{j+1:j+k}{i+1:i+k})^{-1}$ and $\mat{D}$ is chosen to make the expression invertible.
+    \end{definition}
+    \begin{example}
+        Let's consider the simple signal-flow diagram reported in \cref{fig:lti-ex-signalflow}.
+        Note that the represented signals are scalar.
+        In basic engineering classes, you learn that you can find an expression of the output $y(t)$ as a function of the input $u(t)$, by following the diagram.
+        In particular, one can write
+        \begin{equation}
+            \label{eq:lti-input-output-gain}
+            \begin{aligned}
+                K(u(t)-Cy(t))=y & \Leftrightarrow Ku(t)-KCy(t)=y \\
+                                & \Leftrightarrow Ku(t)=y(t)+KCy(t) \\
+                                & \Leftrightarrow Ku(t)=y(t)(1+KC) \\
+                                & \Leftrightarrow y(t)=\frac{K}{1+KC}u(t).
+            \end{aligned}
+        \end{equation}
+        Now, we want to get the same expression, but interpreting the presented system as a composition of LTI systems, and leveraging the newly introduced concept of trace.
+
+        This can be visualized as in \cref{fig:lti-ex-signalflow-bis}.
+        The systems are given by
+
+        \begin{equation*}
+            \begin{aligned}
+                \mora & = \langle\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, \begin{bmatrix} {1} & {-1}\end{bmatrix}\rangle \\
+                \morb & =\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, K} \\
+                \morc & =\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, \begin{bmatrix} 1\\ 1\end{bmatrix}} \\
+                \mord & =\langle\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0},
+                \begin{bmatrix}
+                    1 & 0 \\
+                    0 & C
+                \end{bmatrix}\rangle
+            \end{aligned}
+        \end{equation*}
+        Intuitively, $\mora$ is acting as the subtraction, $\morb$ as the gain $K$, $\morc$ is splitting the signal in two identical copies, one of which is used by the controller, expressed via $\mord$.
+        All of these LTI systems are described by their last component, and are therefore explicit input-output relationships.
+        We can compose the LTI systems.
+        We just look at the last component of the composition, given by:
+        \begin{equation*}
+            \begin{aligned}
+                \mat{D} & =\mat{D}_\mord \mat{D}_\morc \mat{D}_\morb \mat{D}_\mora \\
+                        & =\begin{bmatrix}1 & 0\\ 0 & {C}\end{bmatrix} \begin{bmatrix} 1\\ 1 \end{bmatrix} K \begin{bmatrix} 1 & -1 \end{bmatrix} \\
+                        & =\begin{bmatrix}K \\ {KC}\end{bmatrix}\begin{bmatrix} 1 & -1 \end{bmatrix} \\
+                        & =\begin{bmatrix}
+                               K  & -K  \\
+                               CK & -CK
+                           \end{bmatrix}
+            \end{aligned}
+        \end{equation*}
+        We can now apply the formula for the trace and we get:
+        \begin{equation*}
+            \begin{aligned}
+                \projE(\Tr_{1,1}^{w}) & =K - K(1+CK)^{-1}CK \\
+                                      & =\frac{K}{1+CK}.
+            \end{aligned}
+        \end{equation*}
+        From this we get the LTI system from \cref{eq:lti-input-output-gain} (in other words, a direct input-output dependency).
+
+        \begin{marginfigure}
+            \begin{center}
+                \includesag{signal-flow-trace}
+            \end{center}
+            \caption{Example with signal-flow diagram.}
+            \label{fig:lti-ex-signalflow}
+        \end{marginfigure}
+    \end{example}
+
+    \begin{figure}
+        \centering
+        \includesag{signal-flow-to-lti}
+        \caption{Signal-flow diagram transformed into composition of LTI systems.}
+        \label{fig:lti-ex-signalflow-bis}
+    \end{figure}}

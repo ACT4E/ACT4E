@@ -1,0 +1,156 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Monoidal posets}
+\label{sec:monoidal-posets}
+\linkvideo{spring2021-par-feedback:mon-cat:mon-pos} % Monoidal posets
+
+A \SY{monoidal poset} is a \SY{poset} that is also a \SY{monoid}, and in which the monoidal product is a \SY{monotone map} that is compatible with the order.
+
+% In order to ``warm up'', we first consider the definition of a monoidal structure for a poset.
+% Posets are a simpler special case of categories, and the following definition is a special case of the general definition of a monoidal category.
+\begin{ctdefinition}[Monoidal poset]
+    \label{def:monoidal-poset}
+    \SYNDEF{monoidal poset}
+    A \emph{monoidal structure} on a poset~$\posAdefinition$ is specified by:
+
+    \constit
+    \begin{enumerate}
+        \item A \SY{monotone map}~$\monpostimes \colon \posA \Ptimes \posA \toinPos \posA$, called the \emph{monoidal product}.
+        \item An element~$\idmoncat \setin \posAset$, called the \emph{monoidal unit}.
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item Associativity: for all~$\posela, \poselb, \poselc \setin \posAset$:
+              \begin{equation}
+                  (\posela \monpostimes \poselb)
+                  \monpostimes \poselc =  \posela  \monpostimes ( \poselb \monpostimes \poselc).
+              \end{equation}
+        \item Left and right unitality: for all~$\posela \setin \posAset$:
+              \begin{equation}
+                  \idmoncat \monpostimes \posela = \posela
+                  \qqand
+                  \posela \monpostimes \idmoncat = \posela.
+              \end{equation}
+    \end{enumerate}
+
+    \noindent A \SY{poset} equipped with a monoidal structure is called a \emph{monoidal poset}.
+\end{ctdefinition}
+
+Note that here we are implicitly assuming~$\posA \Ptimes \posA$ as having the \SY{product order} (\cref{def:poset-product}).
+In detail, \SY{monotonicity} means that, for all~$\poselna{1}, \poselna{2}, \poselnb{1}, \poselnb{2} \setin \posAset$:
+\begin{equation}
+    \prfperiod{
+        \poselna{1} \posAleq \poselnb{1}}{\poselna{2} \posAleq \poselnb{2}}{ (\poselna{1} \monpostimes \poselna{2}) \posAleq (\poselnb{1} \monpostimes \poselnb{2})}
+\end{equation}
+
+\begin{ctdefinition}[Symmetric monoidal poset]
+    \label{def:sym-monoidal-poset}
+    A \maindef{symmetric monoidal poset} is a \SY{monoidal poset} $\posA=\tup{\posAset, \posAleq, {\monpostimes}, \idmoncat}$ such that, for all $\posela, \poselb \setin \posAset$,
+    \begin{equation}
+        \posela \monpostimes \poselb = \poselb \monpostimes \posela.
+    \end{equation}
+\end{ctdefinition}
+
+\begin{example}[Reals with addition]
+    \label{ex:monoidal-pos-reals}
+    Consider the real numbers~\reals with the \SY{poset} structure given the usual ordering.
+    Consider 0 as the monoidal unit and the operation~$+\colon \reals\cartprod \reals\sto \reals$ as monoidal product.
+    It is easy to see that the conditions of~\cref{def:monoidal-poset} are satisfied:
+    \begin{enumerate}[(a)]
+        \item Given~$\posAnel{1},\posAnel{2},\posBnel{1},\posBnel{2}\setin \reals$, we know:
+              \begin{equation}
+                  \prfperiod{
+                      \posAnel{1}\Rleq \posAnel{2}
+                  }{\quad}{
+                      \posBnel{1}\Rleq \posBnel{2}
+                  }{
+                      (\posAnel{1}+\posAnel{2}) \Rleq (\posBnel{1}+\posBnel{1})
+                  }
+              \end{equation}
+        \item $0+\posAnel{}=\posAnel{}+0=0$,~$\forall \posAnel{}\setin \reals$.
+        \item $(\posAnel{}+\posBel)+\posCel=\posAel+(\posBel+\posCel)$,~$\forall \posAel,\posBel,\posCel\setin \reals$.
+    \end{enumerate}
+\end{example}
+
+\begin{counterexample}
+    Someone proposes now to substitute the monoidal unit in \cref{ex:monoidal-pos-reals} with 1 and the monoidal product with multiplication ``$\cdot$''.
+    This does not form a \SY{monoidal poset} anymore.
+    To see a simple counterexample, consider the fact that~$\shortminus 5\Rleq 0$ and~$\shortminus 4\Rleq 3$.
+    However,~$(\shortminus 5)\cdot (\shortminus 4) \not{\Rleq} 0 \cdot 3$.
+\end{counterexample}
+
+\begin{margintable}
+    \begin{tabular}{c|cc}
+        $\booland$ & $\false$ & $\true$ \\
+        \hline
+        $\false$   & $\false$ & $\false$ \\
+        $\true$    & $\false$ & $\true$
+    \end{tabular}
+\end{margintable}
+\begin{example}[Boolean monoid]
+    The booleans form a \SY{monoidal poset} $\tupp{\Bool,\posleqof{\Bool},\true,\booland}$
+    with the unit being~$\true$ and the product being $\booland$.
+    The action of the monoidal product ``$\booland$'' can be summarized in the table on the side.
+    From this table, it is clear that given~$\ela_1\posleqof{\Bool}\elb_1$ and~$\ela_2\posleqof{\Bool} \elb_2$, we have~$\ela_1\booland x_2\posleqof{\Bool} \elb_1\booland \elb_2$ (if you do not believe it, try all possible combinations).
+    Furthermore,~$\ela\booland \true=\ela=\true \booland \ela$.
+\end{example}
+
+\begin{gradedexercise}[\exname{HwkMonoidalPosets}]
+    \label{ex:HwkMonoidalPosetsi}
+
+    Prove or disprove that the following are monoidal posets:
+    \begin{enumerate}
+        \item The set $\reals$ equipped with the usual ordering, addition as monoidal product, and $0 \setin \reals$ as monoidal unit.
+        \item The set $\reals$ equipped with the usual ordering, multiplication as monoidal product, and $1 \setin \reals$ as monoidal unit.
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{HwkMonoidalPosets}
+
+\begin{gradedexercise}[\exname{HwkInternalHomCancelling}]
+    \label{ex:HwkInternalHomCancelling}
+    Let $\posgenA = \tup{\posAset, \posleq, \mtimescat, \idmoncat, \leftinthom{\ }{\ }}$ be a closed monoidal poset.
+    Prove that for any $\ela, \elb, \elc \setin \posAset$, we have
+    \begin{equation}
+        (\leftinthom{\ela }{\elb }) \mtimescat (\leftinthom{\elb }{\elc }) \posleq \leftinthom{\ela }{\elc }.
+    \end{equation}
+
+\end{gradedexercise}
+
+\solutionof{HwkInternalHomCancelling}
+
+\begin{gradedexercise}[\exname{HwkInternalLeastUpperBounds}]
+    \label{ex:HwkInternalLeastUpperBounds}
+
+    \begin{enumerate}
+        \item
+              Let $\posgenA = \tup{\posAset, \posleq}$ be a poset, and consider a subset $\subA \setsubseteq \posAset$.
+              A \emph{least upper bound}, or \emph{join}, for $\subA$ is an element $\ela \setin \posAset$ which satisfies the conditions
+              \begin{enumerate}
+                  \item $\elb \posleq \ela \ \forall \elb \setin \subA$;
+                  \item if $\ela' \setin \posAset$ is such that $\elb \posleq \ela' \ \forall \elb \setin \subA$, then $\ela \posleq \ela'$ must hold.
+              \end{enumerate}
+
+              Prove that, if a least upper bound of a subset $\subA$ exists, then it is unique.
+              In this case we use the notation $\bigvee \subA$ to denote it.
+
+              \
+
+        \item
+              Suppose that we have a Galois connection
+              \begin{equation}
+                  \middlesag{globular_galois_connection}
+              \end{equation}
+              between posets $\posgenA = $ and $\posgenB$.
+              Furthermore, assume that $\posgenA$ has all joins, meaning that for any subset $\subA \setsubseteq \posAset$, the least upper bound $\bigvee \subA$ exists and is an element of $\posAset$.
+
+              Prove that for any subset $\subA \setsubseteq \posAset$ it holds that
+              \begin{equation}
+                  \mora (\bigvee \subA) = \bigvee \makeset{\mora(\ela) \mid \ela \setin \subA}.
+              \end{equation}
+
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{HwkInternalLeastUpperBounds}

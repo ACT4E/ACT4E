@@ -1,0 +1,379 @@
+% !TEX root = chapter-standalone.tex
+
+\section[Series composition]{Series composition of  design problems}
+
+We will define several ways to connect \SY{design problems} together.
+The first and most basic way is series composition, or just ``composition''.
+
+\linkvideo{spring2021-functorial-comp-b:solving-queries:solving-series} % Series composition
+
+\begin{definition}[Series composition]
+    \label{def:dp-series}
+    Let~$\adpa \colon \funposA \profto \resposB$ and~$\adpb \colon \funposB \profto \resposC$ be \SY{design problems}.
+    We define their \emph{series composition}~$\adpab \colon \funposA \profto \resposC$ as:
+    \begin{equation}
+        \label{eq:composition2}
+        \defmapperiod{
+            \adpab
+        }{
+            \funposA\posop \Ptimes \resposC
+        }{
+            \toinPos
+        }{
+            \Bool
+        }{
+            \tup{\funposAopel, \resposCel}
+        }{
+            \bigvee_{\posBel \setin \posBset}
+            \adpa(\funposAopel,\resposBel)
+            \booland
+            \adpb(\funposBopel,\resposCel)
+        }
+    \end{equation}
+
+\end{definition}
+The series composition~$\adpab$ judges a pair~$\tup{\funposAopel,\resposCel}$ as feasible if and only if there exists a~$\posBel \setin \posBset$ such that~$\adpa(\funposAopel,\resposBel)$ and~$\adpb(\funposBopel,\resposCel)$ are feasible.
+
+Given a set~\setA and a map~$\stylemaps{s}\colon \setA\sto\boolset$, we can define the boolean~$\bigvee_{\setAel\setin \setA}\stylemaps{s}(\setAel)$ by
+\begin{equation}
+    \bigvee_{\setAel\setin \setA}\stylemaps{s}(\setAel)\definedas
+    \begin{cases}
+        \true  & \text{if there exists }\setAel\setin \setA\text{ for which }\stylemaps{s}(\setAel)=\true,           \\
+        \false & \text{if there exists \emph{no} }\setAel\setin \setA\text{ for which }\stylemaps{s}(\setAel)=\true.
+    \end{cases}
+\end{equation}
+
+In~\cref{eq:composition2} we could have written ``$\exists_{\posBel\setin \posB}$'' instead of ``$\bigvee_{\posBel\setin \posB}$'':
+\begin{equation}
+    % \defmapperiod{
+    %     \adpab
+    % }{
+    %     \funposA\op \Ctimes \resposC
+    % }{
+    %     \toinPos
+    % }{
+    %     \Bool
+    % }{
+    %     \tup{\funposAopel, \resposCel}
+    % }{
+    \exists_{\posBel \setin \posBset}\ \adpa(\funposAopel,\resposBel) \booland \adpb(\funposBopel,\resposCel).
+    % }
+    %                \adpab
+    %                \colon \funposA\op \cartprod \resposC & \toinPos  \Bool, \\
+    %                \tup{\funposAopel, \resposCel}        & \mapsto \bigvee_{\posBel \setin \posB} \adpa(\funposAopel,\resposBel) \booland \adpb(\funposBopel,\resposCel).
+\end{equation}
+Using $\bigvee$ form highlights the connection with an integration operation $\int_\posBel$.
+
+We use the same diagrammatic notation for DPs as for DPIs.
+We represent series composition as
+%
+\equationsag{50_series_diag}{fig:compositiondiagram}
+%
+One can notice the ``co-design constraint'' $\posleq$, which can be interpreted as follows.
+The \textR{resource} required by a component is limited by the \textF{functionality} produced by another component.
+
+When viewing compositions (and larger diagrams) formed from these boxes, it is tempting to interpret the boxes as input-output processes.
+However, that would be misleading.
+The arrows do not represent information flow, materials flow, or energy flow.
+Design problems do not represent input-output processes but rather a static calculus of requirements--a requirements flow.
+
+When the \SY{posets} involved are finite, the series composition of \SY{design problems} can be calculated visually, using the kind of representation discussed in \cref{exa:visualize-dp}.
+
+To explain how this works, consider the design problem
+\begin{equation}
+    \adpa \colon \F{\posgenA} \posop \Ptimes \R{\posgenB} \toinPos \Bool,
+\end{equation}
+from \cref{exa:visualize-dp}, visualized again for convenience in the first row of \cref{fig:example_dp_graph_xyz}.
+
+And consider another \SY{design problem} of the type
+\begin{equation}
+    \adpb \colon \F{\posgenB} \posop \Ptimes \R{\posgenC} \toinPos \Bool,
+\end{equation}
+as given by the visualization in the first row of \cref{fig:example_dp_graph_xyz}.
+
+We can calculate the series composition~$\adpa\dpthen \adpb$ by tracing paths in the ``composite'' visualization given in the second row of \cref{fig:example_dp_graph_xyz}.
+Namely, a pair~$\tup{\setAel, \setCel}$ is in the feasibility set of~$\adp \dpthen \adpb$ if and only if we can trace a path from~$\setAel$ to~$\setCel$ by only moving upwards in the \SY{posets}~\posA, \posB, and~\posC, or crossing from one \SY{poset} to another following dashed arrows in the direction they are pointing.
+Thus, the visualization of the composite~$\adpa\dpthen \adpb$ is as in the third row of \cref{fig:example_dp_graph_xyz}.
+
+\begin{figure}[h!]
+    \centering
+    \begin{tabular}{cc}
+        \includesag{example_dp_composition_xy}\includesag{example_dp_composition_yz} \\
+    \end{tabular}
+    \begin{tabular}{c}
+        \includesag{example_dp_composition_xyz} \\
+        \includesag{example_dp_composition_xz}
+    \end{tabular}
+    \caption{ }
+    \label{fig:example_dp_graph_xyz}
+\end{figure}
+
+\todotextjira{359}{\bernina: @Andrea: Implement material explaining and illustrating the perspective on composing \SY{design problems} in terms of matrices and matrix multiplication.
+}
+
+% \begin{example}
+%     After the Bucket of Boom X100 blew upon re-entry, Jeb's Spaceship Parts is building the X101.
+%     This time, they are making sure to take into account other aspects of the rocket design, such as the choice of propellant and nozzle:
+%     \equationsag{50_X101}{fig:examplecomposition}
+% \end{example}
+
+Let us check that, given \SY{design problems}~$\adpa$ and~$\adpb$, their series composition~$\adpab$ is in fact a design problem.
+\begin{lemma}
+    Series composition as in~\cref{eq:composition2} is monotone in~$\posAel$ and~$\posCel$.
+\end{lemma}
+\begin{proof}
+    We need to show that~$\adpab(\funposAopel,\resposCel)$ is monotone in~$\funposAopel$ and~$\resposCel$.
+    Because~$\adpa$ represents a design problem,~$\adpa(\funposAopel,\resposBel)$ is monotone in~$\funposAopel$, and similarly~$\adpb(\funposBopel,\resposCel)$ is monotone in~$\resposCel$.
+    The conjunction ``$\booland$'' is monotone in both variables, and likewise the ``$\boolor$'' operation.
+\end{proof}
+
+We can show two important properties for the ``$\dpthen$'' operation: associativity and unitality.
+\begin{lemma}
+    The series composition operation as in~\cref{eq:composition2} is associative:
+    \begin{equation}
+        (\adpa\dpthen \adpb)
+        \dpthen \adpc = \adpa\dpthen (\adpb\dpthen \adpc).
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Consider~$\adpa\colon \funposA\profto \resposB$,~$\adpb\colon \funposB \profto \resposC$,~$\adpc\colon \funposC\profto \resposD$.
+    To show that the operation is \SY{associative}, we can use distributivity and commutativity in~\Bool:
+    %
+    \begin{equation}
+        \label{eq:dp_associativity}
+        \begin{aligned}
+            \pars{\adpab \dpthen \adpc} (\funposAopel,\resposDel)
+             & = \bigvee_{\posCel \setin \posC} \pars{\ \bigvee_{\posBel\setin \posB} \adpa(\funposAopel,\resposBel) \booland \adpb(\funposBopel,\resposCel) } \booland \adpc (\funposCopel, \resposDel) \\
+             & = \bigvee_{\posCel \setin \posC} \pars{\ \bigvee_{\posBel\setin \posB} \adpa(\funposAopel,\resposBel)
+                \booland \adpb(\funposBopel,\resposCel) \booland \adpc (\funposCopel, \resposDel)
+            } \\
+             & = \bigvee_{\posBel \setin \posB } \adpa(\funposAopel,\resposBel) \booland \pars{ \bigvee_{\posCel\setin \posC} \adpb(\funposBopel,\resposCel) \booland \adpc (\funposCopel, \resposDel) } \\
+             & = \pars{\adpa\dpthen (\adpb\dpthen \adpc )} (\funposAopel, \resposDel).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+Because of associativity, we can write~$\adpa\dpthen\adpb\dpthen\adpc$ without ambiguity.
+Associativity of composition is represented as:
+\equationsag{50_assoc_1_2_3}{fig:compositionassociativity}
+
+\section{Identity for DP}
+There exists an identity for the ``$\dpthen$'' operation.
+We define the identity~$\dpidat\posA \colon \funposA \profto \resposA$ as follows.
+
+\begin{definition}[Identity design problem]
+    \label{def:dp-identity}
+    For any poset~\posA, the \maindef{identity design problem}~$\dpidat\posA \colon \funposA \profto \resposA$ is a monotone map
+    \begin{equation}
+        \label{eq:identity}
+        \defmapperiod{
+            \dpidat\posA
+        }{
+            \funposA\posop \Ptimes \resposA
+        }{
+            \toinPos
+        }{
+            \Bool
+        }{
+            \tupp{\funposAel_\F{1}^\F{*},\resposAel_\R{2}}
+        }{
+            \funposAel_\F{1} \posleqof{\posA} \resposAel_\R{2}
+        }
+    \end{equation}
+\end{definition}
+\begin{remark}[Monotonicity of the identity]
+    Let's consider~$\funposAel_\F{1}\F{'} \posleqof{\posA} \funposAel_\F{1}$.
+    If it holds~$\funposAel_\F{1}\posleqof{\posA}\resposAel_\R{2}$, then it also holds~$\funposAel_\F{1}\F{'}\posleqof{\posA}\resposAel_\R{2}$.
+    Similarly, now consider~$\resposAel_\R{2}\posleqof{\posA}\resposAel_\R{2}\R{'}$.
+    If it holds~$\funposAel_\F{1} \posleqof{\posA} \resposAel_\R{2}$, then it also holds~$\funposAel_\F{1} \posleqof{\posA} \resposAel_\R{2}\R{'}$.
+\end{remark}
+In the diagrammatic notation, we represent~$\dpidat\posA$ as:
+%
+\equationsag{110_identity}{fig:identitydp}
+
+\begin{lemma}
+    \label{lem:compositionunital}
+    The series composition operation as in~\cref{eq:composition2} satisfies the left and right unit laws (\cref{fig:compositionunital}).
+    \equationsag{50_composition_unitality}{fig:compositionunital}
+\end{lemma}
+
+\begin{proof}
+    Given~$\adpa\colon \funposA\profto \resposB$, we need to show:
+    \begin{equation}
+        \dpidat\posA \dpthen \adpa = \adpa = \adpa \dpthen \dpidat\posB.
+    \end{equation}
+    In the following, we prove~$\dpidat\posA \dpthen \adpa = \adpa$.
+    Proving~$\adpa\dpthen \dpidat\posB=\adpa$ is similar.
+    Consider the poset~\Bool.
+    Since for~$\ela,\elb\setin \boolset$,
+    \begin{equation}
+        \prfcomma{
+            \ela\cong \elb
+        }{
+            \ela=\elb
+        }
+    \end{equation}
+    (also referred to as skeletality~\cite{fong2019}), we just need to show that~$\adpa\posleq \dpidat\posA\dpthen \adpa$ and~$\dpidat\posA\dpthen \adpa\posleq \adpa$.
+    Here,~$\adpa\posleq \adpb$ means~$\adpa(\funposAopel,\resposBel)\posleqof{\Bool}\adpb(\funposAopel,\resposBel)$ for all~$\funposAel\setin \funposA$,~$\resposBel\setin \resposB$.
+    We have
+    \begin{equation}
+        \label{eq:dp_unit_1}
+        \begin{aligned}
+            \adpa(\funposAopel,\resposBel) & =\true \booland \adpa(\funposAopel,\resposBel) \\
+                                           & = \dpidat\posA(\funposAopel,\resposAel) \booland \adpa(\funposAopel,\resposBel) \\
+                                           & \posleq \bigvee_{\posAel\elprime \setin \posAset}\dpidat\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\funposAel\F{'}\F{\opel},\resposBel) \\
+                                           & =(\dpidat\posA\dpthen \adpa)(\funposAopel,\resposBel).
+        \end{aligned}
+    \end{equation}
+    For the other direction, we need to show that~$\dpidat\posA\dpthen \adpa\posleq \adpa$:
+    \begin{equation}
+        \label{eq:dp_unit_2}
+        \bigvee_{\posAel\elprime\setin \posAset}\dpidat\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\F{\posgenAel'^*},\resposBel) \posleq \adpa(\funposAopel,\resposBel).
+    \end{equation}
+    This holds if and only if~$\dpidat\posA(\funposAopel,\R{\posgenAel'})\booland \adpa(\F{\posgenAel'^*},\resposBel) \posleq \adpa(\funposAopel,\resposBel)$ for some~$\posAel\elprime\setin \posAset$.
+    If there is no such~$\posAel\elprime$, then the inequality holds ($\false \posleq \false$ and~$\false \posleq \true$).
+    If there is such an element~$\posAel\elprime$, it means that~$\dpidat\posA(\funposAopel,\R{\posgenAel'})=\true$ and~$\adpa(\F{\posgenAel'^*},\resposBel)=\true$.
+    We know that
+    \begin{equation}
+        \prfdouble{
+            \dpidat\posA(\funposAopel,\R{\posgenAel'})=\true
+        }{
+            \funposAel \posleq \R{\posAel'}
+        }
+    \end{equation}
+    and hence~$\adpa(\funposAopel,\resposBel)=\true$.
+\end{proof}
+
+\begin{gradedexercise}[\exname{ComposingDesignProblems}]
+    \label{ex:ComposingDesignProblems}
+
+    Consider the following posets, given in terms of Hasse diagrams:
+    \begin{itemize}
+        \item $\speed$:
+              \begin{center}
+                  \includesag{exam_pos_speed}
+              \end{center}
+        \item $\size$:
+              \begin{center}
+                  \includesag{exam_pos_size}
+              \end{center}
+        \item $\money$:
+              \begin{center}
+                  \includesag{exam_pos_money}
+              \end{center}
+
+        \item $\ttime$:
+              \begin{center}
+                  \includesag{exam_pos_time}
+              \end{center}
+    \end{itemize}
+    Furthermore let the poset~$\speed \Ptimes \size$ be equipped with the standard product partial ordering.
+
+    Consider the design problem given by the monotone function
+    \begin{equation}
+        \mora\colon (\F{\speed \times \size})\op \Ptimes \R{\money} \mto \Bool
+    \end{equation}
+    \begin{center}
+        \includesag{exam_dp_veh}
+    \end{center}
+    with
+    \todographics{Extend makeset for multiline}
+    \begin{align*}
+        \mora^{-1}(\true) = & \left\{\tup{\tup{\F{\slow}, \F{\ssmall}}, \R{\cheap}}, \tup{\tup{\F{\slow}, \F{\ssmall}}, \R{\midprice}}, \tup{\tup{\F{\slow}, \F{\ssmall}}, \R{\expensive}},\right.
+        \\
+                            & \tup{\tup{\F{\slow}, \F{\llarge}}, \R{\midprice}}, \tup{\tup{\F{\slow}, \F{\llarge}}, \R{\expensive}} \\
+                            & \left. \tup{\tup{\F{\fast}, \F{\ssmall}}, \R{\expensive}} \right\}
+    \end{align*}
+    along with the design problem given by the monotone function
+    \begin{equation}
+        \morb\colon \F{\money}\op \Ptimes \R{\ttime} \mto \Bool
+    \end{equation}
+    \begin{center}
+        \includesag{exam_dp_saving}
+    \end{center}
+    with
+    \begin{equation*}
+        \mapb^{-1}(\true) = \makeset{\tup{\F{\cheap}, \R{\sshort}}, \tup{\F{\cheap}, \R{\llong}}, \tup{\F{\midprice}, \R{\llong}}}.
+    \end{equation*}
+
+    \begin{enumerate}
+        \item Compute the series composition~$\mapa \mthenof\DP \mapb$ in the category of design problems.
+              The result should be a design problem described in terms of a monotone function~$(\F{\speed} \Ptimes \F{\size})\op \Ptimes \R{\ttime} \mto \Bool$.
+        \item We interpret elements of~$\speed \Ptimes \size$ as properties of cars that Alice considers buying.
+              $\money$ represents the amounts of money that she would need to buy one of said cars, and $\ttime$ represents the amounts of time Alice could spend saving money.
+              The feasibility relations $\mapa$ and~$\mapb$ describe what is possible for Alice.
+              According to~$\mapa \mthenof\DP \mapb$, is it feasible for Alice to buy a fast small car?
+              If yes, will she have to work, at minimum, a long or a short amount of time in order to save enough money to buy it?
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{ComposingDesignProblems}
+\begin{gradedexercise}[\exname{DPComposition}]
+    \label{ex:DPComposition}
+
+    Consider the following posets, given in terms of Hasse diagrams:
+    \begin{itemize}
+        \item $\ttime$:
+        \begin{center}
+            \includesag{exam_pos_time}
+        \end{center}
+
+        \item $\money$:
+        \begin{center}
+            \includesag{exam_pos_money_bis}
+        \end{center}
+
+        \item $\textbf{Tech complexity}$:
+        \begin{center}
+            \includesag{exam_pos_tech}
+        \end{center}
+
+        \item $\textbf{Task complexity}$:
+        \begin{center}
+            \includesag{exam_pos_task}
+        \end{center}
+    \end{itemize}
+    Let the poset~$\ttime \Ptimes \money$ be equipped with the standard product partial ordering.
+
+    You are in charge of an engineering team that should develop a robotic system.
+    It is not yet clear what strategy you wish follow for realizing the project, and you wish to do a preliminary feasibility study.
+    You will potentially need to make some tradeoffs between the \emph{time} that your team works on the project and the \emph{money} that you invest.
+    Furthermore, you will need to decide between implementing either a cutting edge \emph{fancy} robotic system, or a \emph{simple} one.
+    This will have an impact on the \emph{complexity of the tasks} that the system will be able to handle.
+
+    Design problems capture feasibility relations.
+    In your case, the feasibility relation between \textbf{Task complexity} and \textbf{Tech complexity} is given by the design problem
+    \begin{equation}
+        \mora\colon \F{\textbf{Task complexity}}\op \Ptimes \R{\textbf{Tech complexity}} \mto \Bool
+    \end{equation}
+    \begin{center}
+        \includesag{exam_dp_tasktech}
+    \end{center}
+    with
+    \begin{equation*}
+        \mora^{-1}(\true) = \makeset{ \ \tup{\F{\text{high} }, \R{ \text{fancy} }}, \tup{\F{\text{medium} }, \R{ \text{fancy} }}, \tup{\F{\text{low} }, \R{ \text{fancy} }}, \tup{\F{\text{low} }, \R{ \text{simple} }}}
+    \end{equation*}
+    and the feasibility relation between \textbf{Tech complexity} and $\ttime \Ptimes \money$ is given by the design problem
+    \begin{equation}
+        \morb \colon \F{\textbf{Tech complexity}}\op \Ptimes (\R{\ttime \times \money}) \mto \Bool
+    \end{equation}
+    \begin{center}
+        \includesag{exam_dp_tasktechmoney}
+    \end{center}
+    with
+    \begin{align*}
+        \morb^{-1}(\true) = & \{ \tup{\F{\text{fancy} }, \R{ \tup{\text{long}, \text{100K}} }}, \tup{\F{\text{simple} }, \R{ \tup{\text{long}, \text{100K}} }}, \tup{\F{\text{simple} }, \R{ \tup{\text{long}, \text{20K}} }},\\
+        & \tup{\F{\text{simple} }, \R{ \tup{\text{short}, \text{100K}} }} \}.
+    \end{align*}
+
+    \
+
+    Your tasks in this exercise:
+    \begin{enumerate}
+        \item Compute the series composition~$\mapa \mthenof\DP \mapb$ in the category of design problems.
+        \item Based on the previous calculation, would it be feasible to build a robotic system that can handle medium-complexity tasks if your team works only a short time on the project but invests 100K?
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{DPComposition}

@@ -1,0 +1,226 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Discrete-time linear systems}
+\todotext{I think the material below is outdated}
+
+\begin{definition}[Discrete-time linear systems]
+    \label{def:discrete-time-linear-system}
+    A \maindef{discrete-time linear time-invariant open system} is defined by three matrices~$\mat{A},\mat{B},\mat{C}$.
+    Together they give a recurrence of the type
+    \begin{equation}
+        \label{eq:discrete-time-dynamics}
+        \begin{aligned}
+            \mat{x}_{k+1} & = \mat{A} \mat{x}_k + \mat{B} \mat{u}_k, \\
+            \mat{y}_{k}   & = \mat{C} \mat{x}_k + \mat{D} \mat{u}_k.
+        \end{aligned}
+    \end{equation}
+    If~$\mat{x}$ has dimension~$n\geq1$,~$\mat{u}$ dimension~$m\geq1$ and~$\mat{y}$ dimension~$p\geq1$, then~$\mat{A}$ has dimension~$\ntimesn$,~$\mat{B}$ has dimension~$\matdim{n}{m}$, and~$\mat{C}$ has dimension~$\matdim{p}{n}$.
+\end{definition}
+
+\begin{marginfigure}
+    \centering
+    \prftree{\includesag{20_dyn_1}}{\includesag{20_dyn_2}}{\includesag{20_dyn_1_2}}
+    \caption{Composition of discrete-time linear systems.}
+    \label{fig:comp_dyn_syst}
+\end{marginfigure}
+
+Consider now the systems where~$m=p$ (but possibly different~$n$):
+these are systems with input and output of the same size.
+Hence, we can compose them in series.
+Series composition is the composition in which the output of a system is the input of another system (\cref{fig:comp_dyn_syst}).
+The composition forms a new discrete-time linear system, which has the input of the first system and the output of the second system.
+Consider the first system~$\mora$:
+%
+\begin{equation}
+    \label{eq:dlin-1}
+    \begin{aligned}
+        \mat{x}_{k+1} & = \mat{A}_\mora \mat{x}_k + \mat{B}_\mora \mat{u}_k, \\
+        \mat{y}_{k}   & = \mat{C}_\mora \mat{x}_k + \mat{D}_\mora \mat{u}_k,
+    \end{aligned}
+\end{equation}
+%
+and the second system (which has~$\mat{y}$ as input)~$\morb$:
+%
+\begin{equation}
+    \label{eq:dlin-2}
+    \begin{aligned}
+        \mat{z}_{k+1} & = \mat{A}_\morb \mat{z}_k + \mat{B}_\morb \mat{y}_k, \\
+        \mat{v}_{k}   & = \mat{C}_\morb \mat{z}_k+ \mat{D}_\morb \mat{y}_k.
+    \end{aligned}
+\end{equation}
+
+We can write their composition~$\mora\mtimes \morb$ compactly as a discrete linear system with input~$\mat{u}$ and output~$\mat{v}$:
+%
+\begin{equation}
+    \label{eq:dlin-3}
+    \begin{aligned}
+        \begin{bmatrix}
+            \mat{x}_{k+1} \\
+            \mat{z}_{k+1}
+        \end{bmatrix} & =
+        \begin{bmatrix}
+            \mat{A}_\mora               & \mat{0}       \\
+            \mat{B}_\morb \mat{C}_\mora & \mat{A}_\morb
+        \end{bmatrix}
+        \begin{bmatrix}
+            \mat{x}_k \\ \mat{z}_k
+        \end{bmatrix}
+        +
+        \begin{bmatrix}
+            \mat{B}_\mora \\ \mat{B}_\morb \mat{D}_\mora
+        \end{bmatrix}\mat{u}_k, \\
+        \mat{v}_k        & =
+        \begin{bmatrix}
+            \mat{D}_\morb \mat{C}_\mora & \mat{C}_\morb
+        \end{bmatrix}
+        \begin{bmatrix}
+            \mat{x}_k \\ \mat{z}_k
+        \end{bmatrix}+ \mat{D}_\morb \mat{D}_\mora \mat{u}_k.
+    \end{aligned}
+\end{equation}
+
+We now want to show that the composition of discrete linear systems is \SY{associative} (graphically reported in \cref{fig:ass_dyn_syst}).
+To do so, we need a third system,~$\morc$, with input~$\mat{v}$ and output~$\mat{w}$:
+\begin{equation}
+    \label{eq:dlin-4}
+    \begin{aligned}
+        \mat{s}_{k+1} & = \mat{A}_\morc \mat{s}_k + \mat{B}_\morc \mat{v}_k, \\
+        \mat{w}_{k}   & = \mat{C}_\morc \mat{s}_k+ \mat{D}_\morc \mat{v}_k.
+    \end{aligned}
+\end{equation}
+
+Furthermore, we want to show that~$(\dtsysa\mtimes \dtsysb)\mtimes \dtsysc=\dtsysa\mtimes (\dtsysb\mtimes \dtsysc)$.
+The check is analogous to the one made for continuous-time LTI systems.
+
+\todojira{649}{\alphubel: @Gioele: J: This equality is maybe not formally true on the nose... but maybe yes... i guess we should try to make a more precise definition?
+    If we want to see these as a special case of \SY{Moore machines} (which seems desireable), then we won't have equality on the nose unless we use the trick AC suggested, using \textbf{SetL}.
+}
+
+% \begin{comment}
+% \begin{equation}
+%     \label{eq:dlin-5}
+%     \begin{aligned}
+%         \begin{bmatrix}
+%             \mat{x}_{k+1} \\
+%             \mat{z}_{k+1} \\
+%             \mat{s}_{k+1}
+%         \end{bmatrix} & =
+%         \begin{bmatrix}
+%             \mat{A}  & \mat{0}  & \mat{0} \\
+%             \mat{FC} & \mat{E}  & \mat{0} \\
+%             \mat{0}  & \mat{IG} & \mat{H}
+%         \end{bmatrix}
+%         \begin{bmatrix}
+%             \mat{x}_k \\ \mat{z}_k\\ \mat{s}_k
+%         \end{bmatrix}+
+%         \begin{bmatrix}
+%             \mat{B} \\ \mat{0}\\ \mat{0}
+%         \end{bmatrix}\mat{u}_k, \\
+%         \mat{w}_k                         & =
+%         \begin{bmatrix}
+%             \mat{0} & \mat{0} & \mat{J}
+%         \end{bmatrix}
+%         \begin{bmatrix}
+%             \mat{x}_k \\ \mat{z}_k\\ \mat{s}_k
+%         \end{bmatrix}.
+%     \end{aligned}
+% \end{equation}
+% We now want to write the composition~$\dtsysa\mtimes (\dtsysb\mtimes \dtsysc)$.
+% To do so, we start by writing~$(\dtsysb\mtimes \dtsysc)$ as:
+% \begin{equation}
+%     \label{eq:dlin-6}
+%     \begin{aligned}
+%         \begin{bmatrix}
+%             \mat{z}_{k+1} \\
+%             \mat{s}_{k+1}
+%         \end{bmatrix} & =
+%         \begin{bmatrix}
+%             \mat{E}  & \mat{0} \\
+%             \mat{IG} & \mat{H}
+%         \end{bmatrix}
+%         \begin{bmatrix}
+%             \mat{z}_k \\ \mat{s}_k
+%         \end{bmatrix}+
+%         \begin{bmatrix}
+%             \mat{F} \\ \mat{0}
+%         \end{bmatrix}\mat{y}_k, \\
+%         \mat{w}_k        & =
+%         \begin{bmatrix}
+%             \mat{0} & \mat{J}
+%         \end{bmatrix}
+%         \begin{bmatrix}
+%             \mat{z}_k \\ \mat{s}_k
+%         \end{bmatrix}.
+%     \end{aligned}
+% \end{equation}
+% From this we can write~$\dtsysa\mtimes (\dtsysb\mtimes \dtsysc)$ as:
+% \begin{equation}
+%     \label{eq:dlin-7}
+%     \begin{aligned}
+%         \begin{bmatrix}
+%             \mat{x}_{k+1} \\
+%             \mat{z}_{k+1} \\
+%             \mat{s}_{k+1}
+%         \end{bmatrix} & =
+%         \begin{bmatrix}
+%             \mat{A}  & \mat{0}  & \mat{0} \\
+%             \mat{FC} & \mat{E}  & \mat{0} \\
+%             \mat{0}  & \mat{IG} & \mat{H}
+%         \end{bmatrix}
+%         \begin{bmatrix}
+%             \mat{x}_k \\ \mat{z}_k\\ \mat{s}_k
+%         \end{bmatrix}+
+%         \begin{bmatrix}
+%             \mat{B} \\ \mat{0}\\ \mat{0}
+%         \end{bmatrix}\mat{u}_k, \\
+%         \mat{w}_k                         & =
+%         \begin{bmatrix}
+%             \mat{0} & \mat{0} & \mat{J}
+%         \end{bmatrix}
+%         \begin{bmatrix}
+%             \mat{x}_k \\ \mat{z}_k\\ \mat{s}_k
+%         \end{bmatrix},
+%     \end{aligned}
+% \end{equation}
+% showing associativity.
+% \end{comment}
+
+\begin{figure}[tbh]
+    \centering
+    \prflinepadbefore=5pt
+    \prflinepadafter=5pt
+    \prfdouble{
+        \prftree{\prftree{\includesag{20_dyn_1}}{\includesag{20_dyn_2}}{\includesag{20_dyn_1_2}}}{\prftree{\includesag{20_dyn_3}}{\includesag{20_dyn_3}}}{\includesag{20_dyn_12_3}}
+    }
+    {\prftree{\prftree{\includesag{20_dyn_1}}{\includesag{20_dyn_1}}}{\prftree{\includesag{20_dyn_2}}{\includesag{20_dyn_3}}{\includesag{20_dyn_2_3}}}{\includesag{20_dyn_1_23}}
+    }
+    \caption{Associativity law for the composition of discrete-time linear systems. }
+    \label{fig:ass_dyn_syst}
+\end{figure}
+
+\
+
+\
+
+\begin{exercise}[Discrete-time linear systems]
+    In \cref{def:discrete-time-linear-system} we have constructed the \SY{semigroup} of linear discrete-time dynamical systems.
+    Does it form a monoid?
+    If not, please explain the reason and suggest an extension to \cref{def:discrete-time-linear-system} so that you can obtain a \SY{monoid}.
+\end{exercise}
+\begin{solution}
+    By considering \cref{def:discrete-time-linear-system}, we are looking for a discrete-time linear system which, pre- or post-composed with another one does not change it.
+    This is a problem for two reasons.
+    First, we need to extend \cref{def:discrete-time-linear-system} to account for cases in which~$n=0$.
+    Indeed, when composing two systems the state space dimension grows by at least 1, which is not acceptable for the identity case.
+    Second, it is not possible to find an identity.
+    One can solve this issue by considering the formalization
+    \begin{equation}
+        \label{eq:discrete-time-dynamics-D}
+        \begin{aligned}
+            x_{k+1} & = \mathbf{A} x_k & + \mathbf{B} u_k, \\
+            y_{k}   & = \mathbf{C} x_k & + \mathbf{D} u_k.
+        \end{aligned}
+    \end{equation}
+    This introduces a direct input/output link that allows to not have delay (introduced by the state dynamics).
+\end{solution}
+

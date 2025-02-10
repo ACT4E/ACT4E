@@ -1,0 +1,304 @@
+\section{Lattice structure of \DP hom-sets}
+
+Given the definitions of~$\dpmeet$ and~$\dpjoin$ in the previous sections, we can prove that every \DP \SY{hom-sets} have a \SY{lattice} structure.
+
+This \SY{lattice} is bounded by a ``true'' and a ``false'' DP.
+
+\begin{definition}[False and true DP]\label{def:false-true-DP}
+    Given any two partial orders $\posA,\posB$, we can define a \emph{false}
+    DP as
+    \begin{equation*}
+        \defmapperiod{\posbot_{\F{\posgenA},\R{\posgenB}}}{\funposA \posop \Ptimes \resposB}{\toinPos}{\Bool}
+        {\tup{\funposAel\opel,\resposBel}}{\false}
+    \end{equation*}
+    We can define a \emph{true} DP as
+    \begin{equation*}
+        \defmapperiod{\postop_{\F{\posgenA},\R{\posgenB}}}{\funposA \posop \Ptimes \resposB}{\toinPos}{\Bool}
+        {\tup{\funposAel\opel,\resposBel}}{\true}
+    \end{equation*}
+\end{definition}
+
+For any functionality-resource pair~$\F{\posgenA},\R{\posgenB}$, these represent the \SY{design problem} which is never (respectively always) feasible.
+
+\begin{lemma}
+    \label{lem:dpboundedlattice}
+    $\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a \SY{bounded lattice} with union~$\dpjoin$ as \SY{join}, intersection~$\dpmeet$ as \SY{meet}, top~$\postop_{\F{\posgenA},\R{\posgenB}}$ and bottom~$\posbot_{\F{\posgenA},\R{\posgenB}}$.
+\end{lemma}
+
+\begin{proof}
+    First, we need to prove that~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a poset.
+    To prove this, we check the following:
+    \begin{itemize}
+        \item \emph{Reflexivity}: Given~$\adpa\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$:
+              \begin{equation}
+                  \prfsemi{
+                      \true
+                  }{
+                      \adpa\posDPleq \adpa
+                  }
+              \end{equation}
+        \item \emph{Antisymmetry}: Given~$\adpa,\adpb\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$:
+              \begin{equation}
+                  \prfsemi{
+                      \adpa\posDPleq \adpb
+                  }{
+                      \adpb\posDPleq \adpa
+                  }{
+                      \adpa=\adpb
+                  }
+              \end{equation}
+        \item \emph{Transitivity}: Given~$\adpa,\adpb,\adpc\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$:
+              \begin{equation}
+                  \prfperiod{
+                      \adpa\posDPleq \adpb
+                  }{
+                      \adpb\posDPleq \adpc
+                  }{
+                      \adpa \posDPleq \adpc
+                  }
+              \end{equation}
+    \end{itemize}
+    Therefore,~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a poset.
+    Furthermore, consider two \SY{design problems}~$\adpa,\adpb\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    Their greatest lower bound (meet) is~$\adpa\dpmeet\adpb$, since it is the greatest \SY{design problem} implying both~$\adpa$ and~$\adpb$.
+    Their least upper bound (join), instead, is~$\adpa\dpjoin \adpb$, since it is the least \SY{design problem} implied by both~$\adpa$ and~$\adpb$.
+    This proves that~$\Hom_\DP$ is a \SY{lattice}.
+    To prove that it is bounded, we identify the \SY{top element} as~$\postop_{\F{\posgenA},\R{\posgenB}}$ (it is implied by all other \SY{design problems}) and the \SY{bottom element} as~$\posbot_{\F{\posgenA},\R{\posgenB}}$ (it implies by all the other \SY{design problems}).
+\end{proof}
+
+We show that a \DP \SY{hom-set} is a \emph{complete lattice}.
+
+\begin{ctdefinition}[Complete Lattice]
+    \label{def:complete-lattice}
+    A poset~$\posAdefinition$ is a \maindef{complete lattice} if every subset~\subA of~\posAset has both a \emph{greatest lower bound} (often referred to as the \emph{infimum, meet}) and a \emph{least upper bound} (often referred to as the \emph{supremum, join}).
+\end{ctdefinition}
+
+\begin{example}
+    Consider the power set of any given set, ordered by inclusion.
+    The \SY{supremum} of any two subsets is given by their union.
+    The infimum of any two subsets is given by their intersection.
+\end{example}
+
+\begin{lemma}[\DP hom-sets are complete lattices]
+    \label{lem:DP-homsets-complete-lattice}
+    Hom-sets of \DP are complete \SY{lattices}.
+\end{lemma}
+
+\begin{proof}
+    Consider any~$\F{\posgenA},\R{\posgenB}\setin \Obof\DP$ and~$\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    We have already shown that $\setA=\HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ is a \SY{bounded lattice} (\cref{lem:dpboundedlattice}).
+    Now, take any subset~\setB of~\setA.
+    We define the following two \SY{design problems}:
+    \begin{equation}
+        \defmapcomma{
+            \bigvee_{\adp \setin \setB} \adp
+        }{
+            \F{\posgenA}\posop \Ptimes \R{\posgenB}
+        }{
+            \toinPos
+        }{
+            \Bool
+        }{
+            \tup{\FposgenAel,\RposgenBel}
+        }{
+            \exists \adp\setin \setB\colon \adp(\FposgenAel^*,\RposgenBel)
+        }
+    \end{equation}
+    and
+    \begin{equation}
+        \defmapperiod{
+            \bigwedge_{\adp \setin \setB} \adp
+        }{
+            \F{\posgenA}\posop \Ptimes \R{\posgenB}
+        }{
+            \toinPos
+        }{
+            \Bool
+        }{
+            \tup{\FposgenAelop,\RposgenBel}
+        }{
+            \forall \adp\setin \setB\colon \adp(\FposgenAelop,\RposgenBel)
+        }
+    \end{equation}
+    These are clearly \SY{design problems} (given that~$\adp$ is a design problem) and given their signature they belong to~\setA.
+    We will now argue that~$\bigvee_{\adp \setin \setB} \adp$ is the \SY{supremum} of~\setB and~$\bigwedge_{\adp \setin \setB} \adp$ is the infimum of~\setB.
+    \paragraph*{$\bigvee_{\adp \setin \setB} \adp$ is the \SY{supremum} of~\setB:}
+    First, for any~$\adpa\setin \setB$, we know that~$\adpa\posleqof\DP \adpa \dpjoin \bigvee_{\adp \setin \setB \setcomplement \adpa} \adp= \bigvee_{\adp \setin \setB} \adp$, proving that~$\bigvee_{\adp \setin \setB} \adp$ is an upper bound of~\setB.
+    We now want to show that~$\bigvee_{\adp \setin \setB} \adp$ is the least upper bound of~\setB: for any upper bound~$\adpb$ of~\setB, we need to show~$\bigvee_{\adp \setin \setB} \adp \posleqof\DP\adpb$.
+    In other words, for any pair~$\tup{\FposgenAelop,\RposgenBel}\setin \F{\posgenA}\posop \Ptimes \R{\posgenB}$, we need to show~$(\bigvee_{\adp \setin \setB} \adp)(\FposgenAelop,\RposgenBel)\posleqof\Bool \adpb(\FposgenAelop,\RposgenBel)$.
+    Fix any~$\tup{\FposgenAelop,\RposgenBel}$.
+    If~$(\bigvee_{\adp \setin \setB} \adp)(\FposgenAelop,\RposgenBel)=\false$, the condition is trivially satisfied.
+
+    If, instead,~$(\bigvee_{\adp \setin \setB} \adp)(\FposgenAelop,\RposgenBel)=\true$, there exists a~$\adp\setin \setB$ such that~$\adp(\FposgenAelop,\RposgenBel)=\true$.
+    Given that~$\adpb$ is an upper bound of~\setB, this implies~$\true=\adp(\FposgenAelop,\RposgenBel)\posleqof\Bool \adpb(\FposgenAel^*,\RposgenBel)=\true$, proving the condition.
+
+    \paragraph*{$\bigwedge_{\adp \setin \setB} \adp$ is the infimum of~\setB:}
+    First, for any~$\adpa\setin \setB$, we know that~$\adpa \dpmeet \bigwedge_{\adp \setin \setB \setcomplement \adpa} \adp= \bigwedge_{\adp \setin \setB} \adp \posleqof\DP \adpa$, proving that~$\bigwedge_{\adp \setin \setB} \adp$ is a lower bound of~\setB.
+    We now want to show that~$\bigwedge_{\adp \setin \setB} \adp$ is the greatest lower bound of~\setB: for any lower bound~$\adpb$ of~\setB, we need to show~$\adpb\posleqof\DP\bigwedge_{\adp \setin \setB} \adp $.
+    In other words, for any pair~$\tup{\FposgenAelop,\RposgenBel}\setin \F{\posgenA}\posop \Ptimes \R{\posgenB}$, we need to show~$\adpb(\FposgenAelop,\RposgenBel) \posleqof\Bool (\bigwedge_{\adp \setin \setB} \adp)(\FposgenAelop,\RposgenBel)$.
+    Fix any~$\tup{\FposgenAelop,\RposgenBel}$.
+    If~$(\bigwedge_{\adp \setin \setB} \adp)(\FposgenAelop,\RposgenBel)=\true$, the condition is trivially satisfied.
+    If, instead,~$(\bigwedge_{\adp \setin \setB} \adp)(\FposgenAelop,\RposgenBel)=\false$, there is at least one~$\adp\setin \setB$ for which~$\adp(\FposgenAelop,\RposgenBel)=\false$.
+    Given that~$\adpb$ is a lower bound of~\setB, this implies~$\false=\adpb(\FposgenAelop,\RposgenBel)\posleqof\Bool \adp(\FposgenAelop,\RposgenBel)=\false$, proving the condition.
+\end{proof}
+
+\begin{definition}[Distributive Lattice]
+    \label{def:distributive-lattice}
+    A \SY{lattice}~$\posA=\tup{\posA,{{\dpmeet}}, {{\dpjoin}}}$ is a \maindef{distributive lattice} if for all~$\posela,\poselb,\poselc\setin \posAset$:
+    \begin{equation}
+        \label{eq:cond_distr_latt}
+        \posela \dpmeet (\poselb \dpjoin \poselc)=(\posela \dpmeet \poselb)\dpjoin (\posela \dpmeet \poselc).
+    \end{equation}
+\end{definition}
+\begin{remark}
+    Note that condition \cref{eq:cond_distr_latt} is equivalent to its dual:
+    \begin{equation}
+        \posela \dpjoin (\poselb\dpmeet \poselc)=(\posela \dpjoin \poselb)\dpmeet (\posela\dpjoin \poselc),
+    \end{equation}
+    for all~$\posela,\poselb,\poselc\setin \posAset$.
+\end{remark}
+
+\begin{lemma}
+    \label{lem:vee_wedge}
+    Consider~$\adpa,\adpb,\adpc\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    We have
+    \begin{equation}
+        (\adpa \dpmeet \adpb)
+        \dpjoin \adpc=(\adpa \dpjoin \adpc) \dpmeet (\adpb\dpjoin \adpc).
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    We have:
+    \begin{equation}
+        \begin{aligned}
+            ~ & ((\adpa \dpmeet \adpb)\dpjoin \adpc)(\FposgenAelop,\RposgenBel) \\
+              & =
+            (\adpa \dpmeet \adpb)(\FposgenAelop,\RposgenBel)\boolor \adpc(\FposgenAelop,\RposgenBel) \\
+              & =(\adpa(\FposgenAelop,\RposgenBel) \booland \adpb(\FposgenAelop,\RposgenBel))\boolor \adpc(\FposgenAelop,\RposgenBel) \\
+              & =(\adpa(\FposgenAelop,\RposgenBel) \boolor \adpc(\FposgenAelop,\RposgenBel)) \booland (\adpb(\FposgenAelop,\RposgenBel)\boolor \adpc(\FposgenAelop,\RposgenBel)) \\
+              & =((\adpa \dpjoin \adpc) \dpmeet (\adpb\dpjoin \adpc))(\FposgenAelop,\RposgenBel).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\begin{lemma}
+    \label{lem:wedge_vee}
+    Consider~$\adpa,\adpb,\adpc\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$.
+    We have
+    \begin{equation}
+        (\adpa \dpjoin \adpb)
+        \dpmeet \adpc=(\adpa \dpmeet \adpc) \dpjoin (\adpb\dpmeet \adpc).
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    We have:
+    \begin{equation}
+        \begin{aligned}
+            ~ & ((\adpa \dpjoin \adpb)\dpmeet \adpc)(\FposgenAelop,\RposgenBel) \\
+              & = (\adpa \dpjoin \adpb)(\FposgenAelop,\RposgenBel)\booland \adpc(\FposgenAelop,\RposgenBel) \\
+              & =(\adpa(\FposgenAelop,\RposgenBel) \boolor \adpb(\FposgenAelop,\RposgenBel))\boolor \adpc(\FposgenAelop,\RposgenBel) \\
+              & =(\adpa(\FposgenAelop,\RposgenBel) \booland \adpc(\FposgenAelop,\RposgenBel)) \boolor (\adpb(\FposgenAelop,\RposgenBel)\booland \adpc(\FposgenAelop,\RposgenBel)) \\
+              & =((\adpa \dpmeet \adpc) \dpjoin (\adpb\dpmeet \adpc))(\FposgenAelop,\RposgenBel).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\begin{lemma}[\DP hom-sets are distributive lattices]
+    Hom-sets of \DP are distributive \SY{lattices}.
+\end{lemma}
+\begin{proof}
+    Either \cref{lem:vee_wedge} or \cref{lem:wedge_vee} prove the statement.
+\end{proof}
+
+\todotextjira{517}{\bernina: Add diagram.}
+
+\section{Interaction with composition}
+Furthermore, we show that all composition operations preserve joins, and all composition operations except trace preserve meets.
+
+\subsection{Series composition}
+\begin{lemma}
+    \label{lem:series_vee}
+    Consider~$\adpa,\adpb\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\setin \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$.
+    We have
+    \begin{equation}
+        (\adpa \dpjoin \adpb)
+        \dpthen \adpc=(\adpa\dpthen \adpc) \dpjoin (\adpb\dpthen \adpc).
+    \end{equation}
+    This is diagrammatically represented in~\cref{fig:series_join_dp}.
+
+    \begin{figure}[h!]
+        \centering
+        \includesag{series_join_dp}
+        \caption{}
+        \label{fig:series_join_dp}
+    \end{figure}
+\end{lemma}
+\begin{proof}
+    We have:
+    \begin{equation}
+        \begin{aligned}
+            ~ & ((\adpa \dpjoin \adpb)\fthen \adpc)(\FposgenAelop,\R{\posgenCel}) \\
+              & =\bigvee_{\posBel\setin \posB} (\adpa \dpjoin \adpb)(\FposgenAelop,\RposgenBel)\booland \adpc(\FposgenBelop,\R{\posgenCel}) \\
+              & =\bigvee_{\posBel\setin \posB} (\adpa(\FposgenAelop,\RposgenBel) \boolor \adpb(\FposgenAelop,\RposgenBel))\booland \adpc(\FposgenBelop,\R{\posgenCel}) \\
+              & =\bigvee_{\posBel\setin \posB} (\adpa(\FposgenAelop,\RposgenBel) \booland \adpc(\FposgenBelop,\R{\posgenCel})) \boolor (\adpb(\FposgenAelop,\RposgenBel)\booland \adpc(\FposgenBelop,\R{\posgenCel})) \\
+              & =\pars{(\adpa\dpthen \adpc) \dpjoin (\adpb\dpthen \adpc)}(\FposgenAelop,\R{\posgenCel}).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\begin{remark}
+    Consider~$\adpa,\adpb\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc,\adpd\setin \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$.
+    In general, we have:
+    \begin{equation}
+        (\adpa\dpjoin \adpb)
+        \fthen (\adpc\dpjoin \adpd) \neq (\adpa\dpthen \adpc)\dpjoin (\adpb\dpthen \adpd).
+    \end{equation}
+    Indeed, consider~$\adpa=\postop_{\F{\posgenA},\R{\posgenB}}$,~$\adpb=\posbot_{\F{\posgenA},\R{\posgenB}}$,~$\adpc=\posbot_{\F{\posgenB},\R{\posgenC}}$, and~$\adpd=\postop_{\F{\posgenB},\R{\posgenC}}$.
+    Clearly:
+    \begin{equation}
+        \begin{aligned}
+            ((\adpa\dpjoin \adpb)\fthen (\adpc\dpjoin \adpd))(\FposgenAelop,\R{\posgenCel}) & =\bigvee_{\posBel\setin \posB} (\adpa\dpjoin \adpb)(\FposgenAelop,\R{\posgenCel})\booland (\adpc\dpjoin \adpd)(\FposgenBelop,\R{\posgenCel}) \\
+                                                                                            & =\true,
+        \end{aligned}
+    \end{equation}
+    but
+    \begin{equation}
+        \begin{aligned}
+            ~ & ((\adpa\dpthen \adpc)\dpjoin (\adpb\dpthen \adpd))(\FposgenAelop,\R{\posgenCel}) \\
+            = & \pars{ \bigvee_{\posBel\setin \posB} \adpa (\FposgenAelop,\RposgenBel) \booland \adpc(\FposgenBelop,\R{\posgenCel})}\boolor
+            \pars{ \bigvee_{\posBel\setin \posB} \adpb (\FposgenAelop,\RposgenBel) \booland \adpd(\FposgenBelop,\R{\posgenCel})} \\
+            = & \false \boolor \false \\
+            = & \false.
+        \end{aligned}
+    \end{equation}
+\end{remark}
+
+\begin{lemma}
+    \label{lem:series_wedge}
+    Consider~$\adpa,\adpb\setin \HomSet{\DP}{\F{\posgenA}}{\R{\posgenB}}$ and~$\adpc\setin \HomSet{\DP}{\F{\posgenB}}{\R{\posgenC}}$.
+    We have
+    \begin{equation}
+        (\adpa \dpmeet \adpb)
+        \dpthen \adpc=(\adpa\dpthen \adpc) \dpmeet (\adpb\dpthen \adpc).
+    \end{equation}
+    This is diagrammatically represented in~\cref{fig:series_meet_dp}.
+    \begin{figure}[h!]
+        \centering
+        \includesag{series_meet_dp}
+        \caption{}
+        \label{fig:series_meet_dp}
+    \end{figure}
+\end{lemma}
+\begin{proof}
+    We have:
+    \begin{equation}
+        \begin{aligned}
+            ~ & ((\adpa \dpmeet \adpb)\fthen \adpc)(\FposgenAelop,\R{\posgenCel}) \\
+              & =\bigvee_{\posBel\setin \posB} (\adpa \dpmeet \adpb)(\FposgenAelop,\RposgenBel)\booland \adpc(\FposgenBelop,\R{\posgenCel}) \\
+              & =\bigvee_{\posBel\setin \posB} (\adpa(\FposgenAelop,\RposgenBel) \booland \adpb(\FposgenAelop,\RposgenBel))\booland \adpc(\FposgenBelop,\R{\posgenCel}) \\
+              & =\bigvee_{\posBel\setin \posB} (\adpa(\FposgenAelop,\RposgenBel) \booland \adpc(\FposgenBelop,\R{\posgenCel})) \booland (\adpb(\FposgenAelop,\RposgenBel)\booland \adpc(\FposgenBelop,\R{\posgenCel})) \\
+              & =((\adpa\dpthen \adpc) \dpmeet (\adpb\dpthen \adpc))(\FposgenAelop,\R{\posgenCel}).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+

@@ -1,0 +1,238 @@
+% !TEX root = chapter-standalone.tex
+
+\section{The category \SetL}
+\label{sec:cartcatset}
+
+We will define a category~\SetL whose objects are ``sets of tuples''.
+
+%\subsection{Lists}
+%
+%Before defining L-sets, let's first recall our notion of lists.
+%Given three things, for example (call them $\ela$, $\elb$, and $\elc$) we can list them in some order:
+%\begin{equation}
+%    [\elb, \elc, \ela].
+%\end{equation}
+%The square brackets are our notation for lists, and recall that the ordering matters for lists (for instance, $[\elc, \ela, \elb]$ is a different list of those same three things).
+%
+%Any list has a length; for example $[\elb, \elc, \ela]$ has length 3.
+%For us, by definition, all lists have finite length.
+%We also define such a thing as an \emph{empty list}, which we denote by $[ \ ]$.
+%It has length zero.
+%
+%The things in a list -- for example, $\elb$, $\elc$, and $\ela$ -- are the \emph{entries} of the list.
+%They each come with an index corresponding to their placement in the list (so we can speak of the 1st entry, 2nd entry, and so on).
+
+Given sets~$\setAn{1}, \setAn{2}, \ldots, \setAn{n}$, where $n \setin \natnumbers$, we define
+\begin{equation}
+    \label{eq:sets-of-tuples}
+    \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} \definedas \makeset{ \tup{\elna{1}, \elna{2}, \ldots, \elna{n}} \mid \elna{1} \setin \setAn{1}, \elna{2} \setin \setAn{2}, \ldots, \elna{n} \setin \setAn{n} }.
+\end{equation}
+So for example,
+\begin{equation}
+    \label{eq:setL-example}
+    \cObj{\wnumbers, \natnumbers, \reals} = \makeset{ \tup{\ela, \elb, \elc} \mid \ela \setin \wnumbers, \elb \setin \natnumbers, \elc \setin \reals }.
+\end{equation}
+
+% A special case is when any of the sets $\setAn{1}, \dots, \setAn{n}$ are the empty set $\Emptyset$; then we have
+% \begin{equation}
+%     \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} = \Emptyset.
+% \end{equation}
+Note the case $n = 0$, where
+\begin{equation}
+    \cObj{} = \makeset{ \tup{} }
+\end{equation}
+is a singleton set whose element is the empty tuple.
+
+% We make the convention that~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$ denotes the empty set if any of the sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$ are equal to the empty set.
+% In particular, we have for example~$\Emptyset = \cObj{\Emptyset}$.
+
+All the objects of~$\SetL$ are in particular just sets, so we can package them into a category whose morphisms are simply functions between such sets.
+
+\begin{ctdefinition}[\SetL]\label{def:SetL}
+    \SYNDEF{category of tuple-sets and functions}
+    The category \SetL is the category whose objects are those sets which are of the form~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$, for any~$n \setin \natnumbers$ and any sets~$\setAn{1}, \setAn{2}, \ldots, \setAn{n}$. Morphisms in \SetL are any functions between such sets, and the composition operations and identities are the usual ones for functions. 
+\end{ctdefinition}
+
+    
+\subsection{From \Set to~\SetL}
+
+Observe that we can turn any set into an object of \SetL: given a set~\setA, there is the associated set
+\begin{equation}
+    \label{eq:setintosetl}
+    \cObj{\setA} = \makeset{ \tup{\ela} \mid \ela \setin \setA }
+\end{equation}
+whose elements are precisely all the tuples of length one whose entry is an element of~\setA.
+This defines a function
+\begin{equation}
+    \label{eq:setintosetlfunction}
+    \begin{aligned}
+        \Obof{\Set} & \to \Obof{\SetL} \\
+        \setA       & \mapsto \cObj{\setA}
+    \end{aligned}
+\end{equation}
+%\Ob_{\Set} \to \Ob_{\SetL}, \setA \mapsto \cObj{\setA}
+which one might call ``bracket''.
+
+Similarly, given a function~$\mapa \colon \setA \sto \setB$ between sets, there is an associated function~$\cMor{ \mapa }\colon \cObj{\setA} \mto \cObj{\setB}$ given by
+\begin{equation}
+    \label{eq:functionintosetlmor}
+    \cMor{ \mapa } ( \tup{\ela }) \definedas \tup{\mapa(\ela)}.
+\end{equation}
+This defines a function
+\begin{equation}
+    \label{eq:functionintosetlmorfun}
+    \Hom_{\Set}(\setA,\setB) \to \Hom_{\SetL}(\cObj{\setA},\cObj{\setB})
+\end{equation}
+for any sets~\setA and~\setB; one might also call it ``bracket''.
+
+\subsection{Concatenation of tuples}
+
+Given tuples~$\tup{\ela, \elb, \elc}$ and~$\tup{\eld, \ele}$ we can stick them together to make the longer tuple~$\tup{\ela, \elb, \elc, \eld, \ele}$, using the already defined \SY{concatenation of tuples}.
+
+%We call this operation \emph{concatenation}, and in the context of \SetL we think of it as a kind of multiplication.
+%Our notation for concatenation of tuples is
+%\begin{equation}\label{eq:concatenation-of-tuples-SetL}
+%    \tup{\ela, \elb, \elc} \tupconcat \tup{\eld, \ele} = \tup{\ela, \elb, \elc, \eld, \ele}.
+%\end{equation}
+%\todotext{\alphubel: We already defined the concatenation of tuples...}
+%For the empty tuple~$\tup{ }$ we set
+%\begin{equation}\label{eq:empty-tuple-concat-1}
+%    \tup{} \tupconcat \tup{\ela, \elb, \elc}  = \tup{\ela, \elb, \elc}
+%\end{equation}
+%and
+%\begin{equation}\label{eq:empty-tuple-concat-2}
+%    \tup{\ela, \elb, \elc}  \tupconcat \tup{} = \tup{\ela, \elb, \elc}.
+%\end{equation}
+
+\subsection{Multiplication in \SetL}
+\label{sec:multiplication-for-SetL}
+We define a multiplication for objects of \SetL.
+The symbol~$\cprod$ will denote this multiplication in infix notation.
+
+Given~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ and~$\cObj{\setBn{1}, \ldots, \setBn{n}}$ we define the operation
+\begin{equation}
+    \label{eq:mult-setl-sign}
+    \cprod \colon \Obof{\SetL} \cartprod \Obof{\SetL} \to \Obof{\SetL}
+\end{equation}
+by
+\begin{equation}
+    \label{eq:strict-monoidal-product-sets}
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{m}},
+        \cObj{\setBn{1}, \ldots, \setBn{n}}
+    } \definedas \cObj{\setAn{1}, \ldots, \setAn{m}, \setBn{1}, \ldots, \setBn{n}}
+\end{equation}
+for any $n, m \setin \natnumbers$.
+
+The elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}}$ are all possible concatenations of elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ with elements of~$\cObj{\setBn{1}, \ldots, \setBn{n}}$.
+
+Equation \cref{eq:strict-monoidal-product-sets} holds in particular also in the cases when~$m = 0$ or~$n =0$:
+\begin{equation}
+    \makecprod{
+        \emptycobj,
+        \cObj{\setBn{1}, \ldots, \setBn{n}}
+    } =
+    \cObj{
+        \setBn{1}, \ldots, \setBn{n}
+    }
+\end{equation}
+and
+\begin{equation}
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{m}},
+        \emptycobj
+    } =
+    \cObj{
+        \setAn{1}, \ldots, \setAn{m}
+    }.
+\end{equation}
+
+% Also, writing $\Emptyset = \cObj{\Emptyset}$ we find that
+% \begin{equation}
+%     \makecprod{
+%         \cObj{\setAn{1}, \ldots, \setAn{m}},
+%         \Emptyset
+%     } = \Emptyset
+% \end{equation}
+% and
+% \begin{equation}
+%     \makecprod{\Emptyset, \cObj{\setBn{1}, \ldots, \setBn{n}}} = \Emptyset.
+% \end{equation}
+
+The multiplication of objects in~\SetL is \SY{associative} (which was our goal with making this construction).
+Indeed, both
+\begin{equation}
+    \makecprod{
+        ( \makecprod{\cObj{\setAn{1}, \ldots, \setAn{l}}, \cObj{\setBn{1}, \ldots, \setBn{m}}})
+        ,
+        \cObj{\setCn{1}, \ldots, \setCn{n}}
+    }
+\end{equation}
+and
+\begin{equation}
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{l}},
+        (
+        \makecprod{
+            \cObj{\setBn{1}, \ldots, \setBn{m}},
+            \cObj{\setCn{1}, \ldots, \setCn{n}}
+        }
+        )
+    }
+\end{equation}
+are equal to
+\begin{equation}
+    \cObj{\setAn{1}, \ldots, \setAn{l}, \setBn{1}, \ldots, \setBn{m}, \setCn{1}, \ldots, \setCn{n}}.
+\end{equation}
+
+\begin{remark}
+Note that, for any sets $\setA, \setB$, we have 
+\begin{equation}
+\cObj{\setA, \setB} = \setA \cartprod \setB.
+\end{equation}
+In other words, the multiplication operation in $\SetL$ ``coincides'' with the cartesian product operation in the special case when we are multiplying two sets together.  
+
+Because of this, the operation of cartesian product is well-defined for $\SetL$. Namely, given tuples sets $\cObj{\setAn{1}, \ldots, \setAn{l}}$ and $\cObj{\setBn{1}, \ldots, \setBn{m}}$, their cartesian product is again a tuple set:
+\begin{equation}
+\cObj{\setAn{1}, \ldots, \setAn{l}} \cartprod \cObj{\setBn{1}, \ldots, \setBn{m}} = \cObj{\cObj{\setAn{1}, \ldots, \setAn{l}} \cObj{\setBn{1}, \ldots, \setBn{m}}}, 
+\end{equation}
+(which is a ``nested'' tuple set). 
+
+\end{remark}
+
+\showslides{
+    \begin{forslides}
+        \begin{equation}
+            \label{eq:moore-assoc-a-bis}
+            \mora \mthen (\morb \mthen \morc)
+        \end{equation}
+        %
+        \begin{equation}
+            \label{eq:moore-assoc-b-bis}
+            (\mora \mthen \morb) \mthen \morc
+        \end{equation}
+        %
+        \begin{equation}
+            \label{eq:lset}
+            \SetL
+        \end{equation}
+        %
+        \begin{equation}
+            \label{eq:definition-setl}
+            \setAn{1}, \setAn{2}, \ldots, \setAn{n}
+        \end{equation}
+        %
+        \begin{equation}
+            \label{eq:definition-setlbis}
+            n\setin \natnumbers
+        \end{equation}
+        \begin{equation}
+            \label{eq:mult-setl}
+            \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{m}}
+        \end{equation}
+        \begin{equation}
+            \label{eq:mult-setlb}
+            \cObj{\setBn{1}, \setBn{2}, \ldots, \setBn{n}}
+        \end{equation}
+    \end{forslides}
+}

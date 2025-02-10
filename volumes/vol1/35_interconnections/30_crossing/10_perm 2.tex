@@ -1,0 +1,84 @@
+
+\section{A strict monoidal category of permutations}
+\label{sec:parallelism-and-permutations}
+
+\todotext{J: @J: write some brief intro words here}
+
+% \subsection{A strict monoidal category of permutations}
+
+Recall that a \emph{permutation} of order $n \setin\natnumbers$ is a bijective function from the set $\makeset{1,2, \dots , n}$ to itself.
+For fixed $n \setin\natnumbers$, the set of permutations of order $n$ has a group structure, where the composition operation is composition of functions.
+We call this group $\Perms(n)$.
+For the special case of $n = 0$, we interpret $\Perms(0)$ as containing the unique function from the empty set $\emptyset$ to itself; this function is bijective.
+
+There are several typical notations for indicating permutations.
+We will use the following one, and illustrate it by example.
+If, for instance, $\permmap \setin \Perms(3)$ is the permutation
+\begin{align*}
+    \makeset{1,2,3} & \to \makeset{1,2,3} \\
+    1               & \mapsto 2 \\
+    2               & \mapsto 3 \\
+    3               & \mapsto 1
+\end{align*}
+then we indicate this by writing $\permmap = (3, 1, 2)$.
+The way we think of this notation is that we start with $(1, 2, 3)$ and then apply $\permmap$ to each entry.
+In other words, in general, our notation for some $\permmap \setin \Perms(n)$ is $(\permmap(1), \dots, \permmap(n))$.
+
+To help us talk about permuting inputs and output of morphisms in stacking semicategories, we make the following definitions.
+
+\begin{definition}[Permutation category]\label{def:Permcat}
+    The \emph{permutation category} $\Permcat$ is
+    \begin{enumerate}
+        \item \emph{Objects}: the natural numbers $\natnumbers$;
+        \item \emph{Morphisms}: permutations in $\Perms(n)$, for all $n \setin \natnumbers$.
+        \item \emph{Composition}: composition of permutations;
+        \item \emph{Identities}: identity functions (which are permutations).
+              We will denote the identity permutation in $\Perms(n)$ by $1_n$.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}\label{def:Permcat-1}
+    For any two objects $n, m \setin\natnumbers$ of $\Permcat$, let
+    \begin{equation}
+        n \mtimescatob m \definedas n + m,
+    \end{equation}
+    and for any two morphisms $\permmap = (\permmap(1), \dots, \permmap(n))$, $\pi = (\pi(1), \dots, \pi(m))$ of $\Permcat$, let
+    \begin{equation}
+        \permmap \mtimescatmor \pi \definedas (\permmap(1), \dots, \permmap(n), \pi(1) + n, \dots, \pi(m) + n).
+    \end{equation}
+\end{definition}
+
+\begin{lemma}
+    The operations $\mtimescatob$ and $\mtimescatmor$ make $\Permcat$ into a functorial stacking category $\tup{\Permcat, \mtimescat}$.
+\end{lemma}
+
+\todotext{\alphubel: prove the lemma as the solution to a graded exercise}
+
+\begin{lemma}
+    $\tup{\Permcat, \mtimescat}$ is a strict monoidal category, with unit $\idmoncat$ given by $0 \setin \natnumbers$.
+\end{lemma}
+
+\todotext{\alphubel: prove the lemma}
+
+\subsection{Block permutations}
+
+We will also need to describe permutations that permute ``blocks'' of elements of $\makeset{1, \dots, n}$.
+Suppose we are given natural numbers $k_1, \dots, k_r$ such that $k_1 + \dots + k_r = n$.
+We call this a partition of $n$ and we think of it as partitioning the set $\makeset{1, \dots, n}$ into blocks of size $k_j$, $1 \leq j \leq r$.
+
+Given a permutation $\sigma \setin \Perms(r)$, there is a way to turn it into a \emph{block permutation} $\sigma_*(k_1, \dots, k_r) \setin\Perms(r)$.
+
+We'll start with an example, then give a general formula.
+Suppose $n = 5$, $r=2$, and $k_1 = 3$ and $k_2 = 2$.
+Let $\sigma = (2, 1) \setin \Perms(2)$.
+Then
+$$
+    \sigma_*(k_1, k_2) = \sigma_*(3,2) = (4,5,1,2,3) \setin \Perms(5).
+$$
+What is happening is that we start with $(1,2,3,4,5)$, we split it into the blocks $((1,2,3),(4,5))$ of length $3$ and $2$ respectively, we apply $\sigma$ to the blocks to get $((4,5),(1,2,3))$, and then we forget the subdivision into blocks, obtaining $(4,5,1,2,3)$.
+
+The general formula to compute $\sigma_*(k_1,\dots, k_r)$ is that, for each $j = 1, \dots, r$, in the sequence $(\sigma(1), \dots, \sigma(r))$ we replace $\sigma(j)$ with the sequence
+$$
+    k_1 + \dots + k_{j-1} + 1, \quad k_1 + \dots + k_{j-1} + 2, \quad \dots, \quad k_1 + \dots + k_{j-1} + k_j.
+$$
+
