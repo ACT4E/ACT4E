@@ -1,0 +1,61 @@
+\begin{tikzpicture}[oriented WD, bbx = .5cm, bby =.25cm, bb port length=4pt, bb port sep=.75, bb min width=1cm, bb min height=1cm]
+    \node[bb={0}{0}{2}{1},  minimum height=1cm, minimum width=1cm] (A){A}; % ports follor LRUD logic
+    \node[bb={0}{0}{1}{2}, right=of A,  minimum height=1cm, minimum width=1cm] (B){B};
+    \node[bb={0}{0}{0}{3}, right=of B,  minimum height=1cm, minimum width=1cm] (C){C};
+
+    \node[bb={0}{0}{2}{2}, fit={($(A.north west)+(0,2)$)($(C.south east)+(0, -3.5)$)}] (tot){};
+
+
+    \draw[ar, color=violet] (A_top1) to [out=90, in=90] (A_top2);
+    \draw[ar, color=violet] (C_bot2') to [out=-90, in=-90] (C_bot3');
+
+    \draw[ar, color=violet] 
+        let 
+            \p1=(B.south east), % determines (\x1,\y1)
+            \p2=(B.north east), % determines (\x2,\y2)
+            \n1=\bbportlen, 
+            \n2=\bby 
+        in
+        (B_bot2')                                           % The apostrophe is required to mark it as the bot endpoint?
+            to [out=-90, in=-90] (\x1 + \bby, \y1 - \n1)    % passes thru a point to the SE of B_bot2
+            to [out=90, in=-90] (\x2 + \bby, \y2 + \n1) 
+            to [out=90, in=90] (B_top1);
+
+    \draw[ar, color=violet] 
+        let 
+            \p1=(B.south west), 
+            \p2=(B.north west), 
+            \n1=\bbportlen, 
+            \n2=\bby 
+        in
+        (B_top1) 
+            to [out=90, in=90] (\x2 - \bby, \y2 + \n1)
+            to [out=-90, in=90]  (\x1 - \bby, \y1 - \n1) % passes thru a point to the SE of B_bot2, straight line up
+            to [out=-90, in=-90] (B_bot1');               % since bot is a DW facing port we need -90 for wire to fit
+
+
+
+    \draw[ar, color=orange] 
+        let 
+            \p1=(C.south west), 
+            \n1=\bbportlen, 
+            \n2=\bby 
+        in
+        (C_bot1') 
+            to [out=-90, in=90] (tot_bot2);   
+
+    \draw[ar, color=orange] 
+        let 
+            \p1=(A.south east), 
+            \p2=(tot_top1),
+            \n1=\bbportlen, 
+            \n2=\bby 
+        in
+        (A_bot1') 
+            to [out=-90, in=-90] (\x2, \y1-\n1)
+            to [out=90, in=-90] (tot_top1');   
+        
+
+    % 90 means pointing downwards
+    % -90 means pointing upwards
+\end{tikzpicture}
