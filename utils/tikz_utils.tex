@@ -5,6 +5,7 @@
 
 \usetikzlibrary{positioning,
   intersections,
+  automata,
   hobby,
   patterns,
   calc,
@@ -180,18 +181,23 @@ backgrounds}
   bby/.store in=\bby,
   bby = 1.75ex,
   bb port sep/.store in=\bbportsep,
-  bb port sep=2,
+  bb port sep=1.5,
 % bb wire sep/.store in=\bbwiresep,
 % bb wire sep=1.75ex,
+  bb penetrate/.store in=\bbpenetrate,
+  bb penetrate=0,
   bb port length/.store in=\bbportlen,
   bb port length=4pt,
   bb min width/.store in=\bbminwidth,
   bb min width=1cm,
+  bb min height/.store in=\bbminheight,
+  bb min height=1cm,
   bb rounded corners/.store in=\bbcorners,
   bb rounded corners=2pt,
   bb small/.style={bb port sep=1, bb port length=2.5pt, bbx=.4cm, bb min width=.4cm, bby=.7ex},
-  bb/.code 2 args={%When you see this key, run the code below:
+  bb/.code n args={4}{%When you see this key, run the code below:
     \pgfmathsetlengthmacro{\bbheight}{\bbportsep * (max(#1,#2)+1) * \bby}
+    \pgfmathsetlengthmacro{\bbwidth}{\bbportsep * (max(#3,#4)+1) * \bby}
     \pgfkeysalso{draw,minimum height=\bbheight,minimum width=\bbminwidth,outer sep=0pt,
       rounded corners=\bbcorners,thick,
       prefix after command={\pgfextra{\let\fixname\tikzlastnode}},
@@ -199,10 +205,15 @@ backgrounds}
       \ifnum #1=0{} \else foreach \i in {1,...,#1} {
         ($(\fixname.north west)!{\i/(#1+1)}!(\fixname.south west)$) +(-\bbportlen,0) coordinate (\fixname_in\i) -- +(\bbportlen,0) coordinate (\fixname_in\i')}\fi %Define the endpoints of tickmarks
       \ifnum #2=0{} \else foreach \i in {1,...,#2} {
-        ($(\fixname.north east)!{\i/(#2+1)}!(\fixname.south east)$) +(-\bbportlen,0) coordinate (\fixname_out\i') -- +(\bbportlen,0) coordinate (\fixname_out\i)}\fi;
+        ($(\fixname.north east)!{\i/(#2+1)}!(\fixname.south east)$) +(-\bbportlen,0) coordinate (\fixname_out\i') -- +(\bbportlen,0) coordinate (\fixname_out\i)}\fi
+        \ifnum #3=0{} \else foreach \i in {1,...,#3} {
+              ($(\fixname.north west)!{\i/(#3+1)}!(\fixname.north east)$) +(0, \bbportlen) coordinate (\fixname_top\i) -- +(0,-\bbpenetrate) coordinate (\fixname_top\i')}\fi 
+\ifnum #4=0{} \else foreach \i in {1,...,#4} {
+              ($(\fixname.south west)!{\i/(#4+1)}!(\fixname.south east)$) +(0, \bbpenetrate) coordinate (\fixname_bot\i) -- +(0,-\bbportlen) coordinate (\fixname_bot\i')}\fi
+        ;
       }}}
   },
-  bb name/.style={append after command={\pgfextra{\node[anchor=north] at (\fixname.north) {#1};}}}
+  bb name/.style={append after command={\pgfextra{\node[anchor=north] at (\fixname.north){#1};}}}
 }
 
 \tikzset{

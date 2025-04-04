@@ -1,0 +1,42 @@
+\begin{tikzpicture}[every text node part/.style={align=center}, oriented WD, bbx = 1cm, bby =.5cm, bb min width=2cm, bb min height=2cm,bb port length=4pt, bb port sep=1]
+   \node[state, minimum size=.5cm, minimum size=.5cm] (q_0)   {$0$}; 
+   \node[state, minimum size=.5cm, minimum size=.5cm] (q_1) [ right=of q_0] {$1$}; 
+    \path[->] 
+    (q_0) edge [bend left] node[above]{$1$}  (q_1)
+        edge  [loop above] node {$0$} (q_0)
+    (q_1) edge [bend left] node[below] {$1$} (q_0)
+        edge  [loop above] node {$0$} (q_1);
+    
+    \node[bb={0}{0}{1}{0}, fit={($(q_0.north west) + (.5, 1)$) ($(q_1.south east) + (-.5, -.5)$)}] (R) {};
+    
+    
+    \node[state, minimum size=.5cm, right=1cm of R] (q2)   {$0$}; 
+   \node[state, minimum size=.5cm] (q3) [ right=of q2] {$1$}; 
+    \path[->] 
+    (q2) edge [bend left]  (q3)
+    (q3) edge [bend left] (q2);
+    
+    \node[bb={0}{0}{0}{1}, fit={($(q2.north west) + (.5, -.5)$) ($(q3.south east) + (-.5, .5)$)}] (S) {};
+    
+    \draw[ar, color=violet] let \p1=(S.south east), \p2=(R.north west), \n1=\bbportlen, \n2=\bby in
+  		(S_bot1') to [out=-90, in=-90](\x1/2+\x2/2,\y1-\n1) -- (\x1/2+\x2/2,\y2+\n1) to [out=90,in=90](R_top1);
+  		
+  	\node[bb={0}{0}{0}{0}, fit = {($(R.north west)+(.75, 1)$) ($(S.south east) + (-.75, -1)$)}] (tot) {};
+
+  	\node[right=2cm of  tot](x){};
+  	\node[right= .25cm of  tot](){$=$};
+  	
+  	\node[state, minimum size=.5cm, above= 2ex of x](s1){$(0,0)$};
+  	\node[state, minimum size=.5cm, below= 2ex of x](s4){$(1,1)$};
+  	\node[state, minimum size=.5cm, right=of s1](s2){$(0,1)$};)
+  	\node[state, minimum size=.5cm, right=of s4](s3){$(1,0)$};
+
+  	\path[->]
+  	(s1) edge (s2)
+  	(s2) edge (s3)
+  	(s3) edge (s4)
+  	(s4) edge (s1);
+  	
+  	\node[bb={0}{0}{0}{0}, fit={($(s1.north west)+(.5, 0)$)($(s3.south east)+(-.5,0)$)}] (){};
+
+\end{tikzpicture}
