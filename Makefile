@@ -252,8 +252,8 @@ docker-%:
 		$(BUILD_IMAGE) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make $*'
 
-pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
-
+# pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
+pdfdir=/Users/andreacensi/Library/Mobile\ Documents/com\~apple\~CloudDocs/frazzoli-icloud/ACT4E
 latexindent-version:
 	latexindent -v
 
