@@ -44,6 +44,7 @@ chapters-standalones-public-fast=$(subst chapter.tex,chapter-standalone-public-f
 chapters-standalones-noslides-fast=$(subst chapter.tex,chapter-standalone-noslides-fast.tex,$(chapters))
 chapters-pdf        =$(subst chapter.tex,chapter-standalone.pdf,$(chapters))
 chapters-links      =$(subst chapter.tex,chapter-link-snippets, $(chapters))
+chapters-links2      =$(subst chapter.tex,snippets, $(chapters))
 chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
 chapters-makefiles  =$(subst chapter.tex,Makefile,              $(chapters))
 
@@ -64,14 +65,16 @@ clean-links:
 	find volumes -type l -name '*link*'  -delete
 
 %/chapter-link-snippets:
-	cd $*  && ln -f -F -s ../../../../snippets  chapter-link-snippets
+	cd $*  && ln -f  -s ../../../../snippets  chapter-link-snippets
 %/part-link-snippets:
-	cd $*  && ln -f -F -s ../../../snippets  part-link-snippets
+	cd $*  && ln -f  -s ../../../snippets  part-link-snippets
 
 %/chapter-link-minted:
-	cd $*  && ln -f -F -s ../../../../cache-minted  chapter-link-minted
+	cd $*  && ln -f  -s ../../../../cache-minted  chapter-link-minted
+	cd $*  && ln -f  -s ../../../../cache-minted  cache-minted
 %/part-link-minted:
-	cd $*  && ln -f -F -s ../../../cache-minted  part-link-minted
+	cd $*  && ln -f  -s ../../../cache-minted  part-link-minted
+	cd $*  && ln -f  -s ../../../cache-minted  cache-minted
 
 volumes/%/Makefile: templates/template-Makefile.mk
 	cp $< $@
@@ -115,7 +118,7 @@ standalone: \
 	$(chapters-standalones-public-fast) \
 	$(chapters-standalones-noslides-fast)
 
-links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-minted)
+links: $(chapters-links) $(parts-links) $(chapters-link-minted) $(parts-link-minted)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
 recursive: links standalone makefiles
@@ -243,17 +246,17 @@ ultramagic:
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make remake'
 
 shell:
-	docker run $(as_user)  -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user)  -it --rm -w "$(PWD)" -v "$(PWD):$(PWD)" \
 		$(BUILD_IMAGE) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: bash'
 
 docker-%:
-	docker run $(as_user) -it --rm -w $(PWD) -v $(PWD):$(PWD) \
+	docker run $(as_user) -it --rm -w "$(PWD)" -v "$(PWD):$(PWD)" \
 		$(BUILD_IMAGE) \
 		sh -c 'PYTHONPATH=ACT4E-private/src:ACT4E-exercises/src: make $*'
 
-pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
-
+# pdfdir=/Users/andrea/Library/Mobile\ Documents/com~apple~CloudDocs/frazzoli-icloud/ACT4E
+pdfdir=/Users/andreacensi/Library/Mobile\ Documents/com\~apple\~CloudDocs/frazzoli-icloud/ACT4E
 latexindent-version:
 	latexindent -v
 
@@ -289,15 +292,6 @@ find-unused:
 check-no-tabs:
 	./check_no_tabs.py .
 
-
-mcdp-manual-devel-clean:
-	rm -rf volumes/vol-mcdp/generated/snippets
-
-mcdp-manual-devel:
-	latexmk -synctex=1 -pdf -shell-escape ACT4E-MCDP-devel-slow.tex -g
-	pysnip-make -d volumes/vol-mcdp/generated/snippets -c "parmake"
-	latexmk -synctex=1 -pdf -shell-escape ACT4E-MCDP-devel-slow.tex -g
-	make ACT4E-MCDP-devel-slow.pdf
 
 
 
