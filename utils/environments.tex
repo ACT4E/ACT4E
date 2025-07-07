@@ -473,12 +473,39 @@
 
 \definecolor{symbol-underline}{RGB}{232,235,207}
 
+% Helper macros for SYN warning messages (to avoid duplication)
+\newcommand{\SYNwarningcannotmatch}[1]{%
+    \typeoutoncekey{cannotmatch@#1}{SYN: Warning: cannot match the value (#1) to any existing entry.}%
+}
+\newcommand{\SYNwarninglabelnotfound}[1]{%
+    \typeoutoncekey{labelnotfound@\pgfkeysvalueof{/mydefs/#1/label}}{SYN: Warning: label (\pgfkeysvalueof{/mydefs/#1/label}) is not found in this document.}%
+}
+\newcommand{\SYNwarningnolabel}[1]{%
+    \typeoutoncekey{nolabel@#1}{SYN: Warning: there is no label associated to (#1).}%
+}
+
+% Typeout once functionality
+\newcommand{\typeoutonce}[1]{%
+    \expandafter\ifx\csname typeoutonce@#1\endcsname\relax%
+        \typeout{#1}%
+        \expandafter\gdef\csname typeoutonce@#1\endcsname{1}%
+    \fi%
+}
+
+% Alternative version for parameterized messages
+\newcommand{\typeoutoncekey}[2]{%
+    \expandafter\ifx\csname typeoutonce@#1\endcsname\relax%
+        \typeout{#2}%
+        \expandafter\gdef\csname typeoutonce@#1\endcsname{1}%
+    \fi%
+}
+
 \DeclareRobustCommand{\SY}[1]{\SYN{#1}{#1}}
 \DeclareRobustCommand{\SYNDEF}[1]{%
     \pgfkeysifdefined{/mydefs/#1/index}{%
         \index{\pgfkeysvalueof{/mydefs/#1/index}|textbf}%
     }{%
-        \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
+        \SYNwarningcannotmatch{#1}%
     }%
 }
 \DeclareRobustCommand{\SYN}[2]{%
@@ -490,7 +517,7 @@
         \index{\pgfkeysvalueof{/mydefs/#1/index}}%
         \fi%
     }{%
-        \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
+        \SYNwarningcannotmatch{#1}%
     }%
 }
 \DeclareRobustCommand{\SYNinner}[2]{%
@@ -520,11 +547,11 @@
                     #2%
                 }%
             }{%
-                \typeout{SYN: Warning: label (\pgfkeysvalueof{/mydefs/#1/label}) is not found in this document.}%
+                \SYNwarninglabelnotfound{#1}%
                 #2%
             }%
         }{%
-            \typeout{SYN: Warning: there is no label associated to (#1).}%
+            \SYNwarningnolabel{#1}%
             \relax\ifmmode%
             #2%
             \else%
@@ -536,7 +563,7 @@
             \fi%
         }%
     }{%
-        \typeout{SYN: Warning: cannot match the value (#1) to any existing entry.}%
+        \SYNwarningcannotmatch{#1}%
         #2%
     }%
 }
