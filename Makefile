@@ -162,10 +162,10 @@ tablefile=volumes/vol1/00_front/05_developers/table.texi
 
 table: $(tablefile)
 
-$(tablefile): utils/symbols*.tex .FORCE
+$(tablefile): utils/symbols*.tex
 	$(MAKE) generated/used-vol1.yaml -B
-	# lsm_table --verbose --only generated/used-vol1.yaml --style medium $< > $@
-	lsm_table --verbose --only generated/used-vol1.yaml --style full $< > $@
+	# lsm_table --verbose --only generated/used-vol1.yaml --style medium utils/symbols*.tex > $@
+	lsm_table --verbose --only generated/used-vol1.yaml --style full utils/symbols*.tex > $@
 
 #lsm_table --only used.yaml --style full $^ > $@
 #lsm_table --only used.yaml --style small $^ > $@
