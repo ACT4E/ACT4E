@@ -70,6 +70,8 @@
 %:nomenc-exclude:
 \newcommand{\setC}{\makesymbolset{C}}
 %:nomenc-exclude:
+\newcommand{\setL}{\makesymbolset{L}}
+%:nomenc-exclude:
 \newcommand{\setCn}[1]{\makesymbolset{C}_{\color{formulasetcolor}{#1}}}
 %:nomenc-exclude:
 \newcommand{\setLC}{\styleLsets{C}}
@@ -306,7 +308,9 @@
 \newcommand{\posReals}{\EM{\stylesets{\reals_{>0}}}} % Positive real numbers
 \newcommand{\nonNegReals}{\EM{\reals_{\geq0}}} % Non-negative real numbers
 \newcommand{\nonNegRealsComp}{\overline{\reals}_{\geq0}} % Completion of non-negative real numbers.
-
+\newcommand{\realsComp}{\overline{\reals}} % Completion of real numbers with $\infty$ and $-\infty$.
+\newcommand{\pinf}{{\scriptstyle +}\mkern-2mu\infty}
+\newcommand{\minf}{{\scriptstyle -}\mkern-2mu\infty}
 \newcommand{\Rcomp}{\nonNegRealsComp} % Not sure - need to check
 %:nomenc-exclude:
 \newcommand{\singletonsymbol}{{1}}
@@ -782,21 +786,97 @@
 %%% \newcommand{\downitsymbol}{\text{\contourlength{0.02em}\contour{black}{\colUp$\uparrow$}}}
 % \newcommand{\downitsymbol}{\text{\contourlength{0.02em}\contour{downcolor}{\colDown$\downarrow$}}}
 %%% \newcommand{\downitsymbol}{{\bm{\downarrow}}}
-\DeclareMathOperator{\upitop}{{\colUp\upitsymbol}} % upper closure
-\newcommand{\upit}{\upitop}
+\DeclareMathOperator{\upitop}{{\colUp\uparrowcirclefilled}} % upper closure
+\DeclareMathOperator{\upit}{{\colUp\uparrowcirclefilled}}
 %:nomenc:\upit \subA: Upper closure of $\subA$.
 %:def:def:upperclosure
 
-\DeclareMathOperator{\downitop}{{\colDown\downitsymbol}} % lower closure
-\newcommand{\downit}{\downitop} % Lower closure
+\DeclareMathOperator{\downitop}{{\colDown\downarrowcirclefilled}} % lower closure
+\DeclareMathOperator{\downit}{{\colDown\downarrowcirclefilled}} % Lower closure
 %:nomenc:\downit \subA: Lower closure of $\subA$.
 %:def:def:lowerclosure
+
+
+\DeclareMathOperator{\downitset}{{\colDown\downarrowroundrectfilled}} % Lower closure of a set
+\DeclareMathOperator{\upitset}{{\colUp\uparrowroundrectfilled}} % Upper closure of a set
+
+
+\DeclareMathOperator{\strictupit}{{\colUp\uparrowcircle}}
+\DeclareMathOperator{\strictdownit}{{\colDown\downarrowcircle}}
+
+\newcommand{\uparrowcircle}{%
+  \tikz[baseline=-0.60ex]{
+    \node[inner sep=0pt, outer sep=0pt] at (0,0) {$\uparrow$};
+    \draw[fill=white,line width=0.6pt] (0,-0.75ex) circle (0.25ex);
+  }%
+}
+\newcommand{\downarrowcircle}{%
+  \tikz[baseline=-0.60ex]{
+    \node[inner sep=0pt, outer sep=0pt] at (0,0) {$\downarrow$};
+    \draw[fill=white,line width=0.6pt] (0,0.55ex) circle (0.25ex);
+  }%
+}
+
+\newcommand{\uparrowcirclefilled}{%
+  \tikz[baseline=-0.60ex]{
+    \node[inner sep=0pt, outer sep=0pt] at (0,0) {$\uparrow$};
+    \draw[fill=.,line width=0.6pt] (0,-0.75ex) circle (0.22ex);
+  }%
+}
+\newcommand{\downarrowcirclefilled}{%
+  \tikz[baseline=-0.60ex]{
+    \node[inner sep=0pt, outer sep=0pt] at (0,0) {$\downarrow$};
+    \draw[fill=.,line width=0.6pt] (0,0.55ex) circle (0.22ex);
+  }%
+}
+
+\newcommand{\uparrowroundrect}{%
+  \mathord{\tikz[baseline=-0.60ex]{
+    \node[inner sep=0pt, outer sep=0pt] at (0,0) {$\colUp\uparrow$};
+    \draw[fill=white,draw=upcolor,line width=0.6pt,rounded corners=0.15ex] 
+      (-0.35ex,-0.95ex) rectangle (0.35ex,-0.55ex);
+  }}%
+}
+
+\newcommand{\downarrowroundrect}{%
+  \mathord{\tikz[baseline=-0.60ex]{
+    \node[inner sep=0pt, outer sep=0pt] at (0,0) {$\colDown\downarrow$};
+    \draw[fill=white,draw=downcolor,line width=0.6pt,rounded corners=0.15ex] 
+      (-0.35ex,0.35ex) rectangle (0.35ex,0.75ex);
+  }}%
+}
+
+
+\newcommand{\uparrowroundrectfilled}{%
+  \mathord{\tikz[baseline=-0.60ex]{
+    \node[inner sep=0pt, outer sep=0pt] at (0,0) {$\colUp\uparrow$};
+    \draw[fill=.,line width=0.6pt,rounded corners=0.15ex] 
+      (-0.35ex,-0.95ex) rectangle (0.35ex,-0.55ex);
+  }}%
+}
+
+\newcommand{\downarrowroundrectfilled}{%
+  \mathord{\tikz[baseline=-0.60ex]{
+    \node[inner sep=0pt, outer sep=0pt] at (0,0) {$\colDown\downarrow$};
+    \draw[fill=.,line width=0.6pt,rounded corners=0.15ex] 
+      (-0.35ex,0.35ex) rectangle (0.35ex,0.75ex);
+  }}%
+}
+
+
+
 
 %:section:gen/posets/operations-elements:Operations on elements
 \newcommand{\joinsymbol}{{\boldsymbol {\vee}}}
 \newcommand{\join}{\mathbin{\stylepos{\joinsymbol}}} % Join
 %:nomenc:\ela \join \elb: Join of two elements $\ela$, $\elb$
 %:def:def:lattice
+
+\newcommand{\joinmap}{\stylemorph{\joinsymbol}} % Join
+\newcommand{\meetmap}{\stylemorph{\meetsymbol}} % Meet
+\newcommand{\joinmapconst}[1]{\joinmap_{#1}} % Join with constant
+\newcommand{\meetmapconst}[1]{\meetmap_{#1}} % Meet with constant
+
 \newcommand{\meetsymbol}{{\boldsymbol {\wedge}}}
 \newcommand{\meet}{\mathbin{\stylepos{\meetsymbol}}} % Meet
 %:nomenc:\ela \meet \elb: Meet of two elements $\ela$, $\elb$
