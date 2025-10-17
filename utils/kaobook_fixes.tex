@@ -1,0 +1,81 @@
+
+%%% HACKS for kaobook
+
+\let\providelength\relax
+\let\openbox\relax
+
+%\newcommand*\flrow@error[1]{\PackageError\flrow@package{#1}\flrow@eh}
+\makeatletter
+\renewcommand\flrow@error[1]{}
+\makeatother
+
+
+\setcounter{margintocdepth}{\sectiontocdepth}
+
+
+\AtBeginDocument{%
+    \etocsetnexttocdepth{section}%
+}
+
+
+
+\renewpagestyle{scrheadings}{%
+    {\smash{\hspace{-\headmarginparwidth}\hspace{-\headmarginparsep}\makebox[\headtotal][l]{%
+                    \makebox[7\hscale][r]{\thepage}%
+                    \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
+                    \makebox[\headtextwidth][l]{\leftmark}}}}%
+        {\smash{\makebox[0pt][l]{\makebox[\headtotal][r]{%
+                        \makebox[\headtextwidth][r]{\hfill\rightmark}%
+                        \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
+                        \makebox[7\hscale][l]{\thepage}}}}}%
+        {\smash{\makebox[0pt][l]{\makebox[\headtotal][r]{%
+                        \makebox[\headtextwidth][r]{\hfill\rightmark}%
+                        \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
+                        \makebox[7\hscale][l]{\thepage}}}}}%
+}{%
+    {\hspace{-5cm}\draftnotice}% left page
+        {\linkgithub}% right page
+        {}% not showing up
+}
+
+
+
+\RedeclareSectionCommand[
+    beforeskip=10pt,
+    afterskip=0pt,
+    %  headings=normal,
+    style=chapter% no part page
+]{part}
+
+%
+\RedeclareSectionCommand[
+    beforeskip=10pt,
+    afterskip=5pt,
+    %  headings=normal,
+    style=section% no part page
+]{section}
+
+
+
+\AtBeginDocument{
+    \savebox{\urlbox}{}
+    \let\oldsection\section
+    % \renewcommand\section{\FloatBarrier\clearpage\oldsection}
+    %
+    \renewcommand{\section}[2][]{
+        \FloatBarrier\clearpage%
+        \savebox{\urlbox}{%
+            \footnotesize
+            \def\tmpname{\ifemptyarg{#1}{\detokenize{#2}}{\detokenize{#1}}}
+            \def\tmpnameb{\currentchaptername}
+            Something incorrect or unclear or missing?
+            \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter:\urlsp\currentchaptername\urlnl Section:\urlsp\tmpname\urlnl Version:\urlsp\today\urlnl\urlnl Check\urlsp all\urlsp that\urlsp apply:\urlnl\issuecheck Something\urlsp incorrect\urlnl\issuecheck Something\urlsp not\urlsp clear\urlnl\issuecheck Something\urlsp missing\urlnl\urlnl Please\urlsp describe\urlsp more\urlsp in\urlsp detail\urlsp below.\urlsp Feel\urlsp free\urlsp to\urlsp change\urlsp the\urlsp title\urlsp to\urlsp something\urlsp more\urlsp informative.\urlnl;title=\currentchaptername\urlsp/\urlsp\tmpname\urlsp/\urlsp\today}{Report issues on GitHub by clicking here}.
+        }%
+        \ifemptyarg{#1}{%
+            \oldsection{#2}%
+        }{
+            \oldsection[#1]{#2}%
+        }%
+    }
+
+}
