@@ -1,0 +1,135 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Canonical trace}
+\linkvideo{spring2021-par-feedback:feedback} % Feedback
+\todotextjira{199}{\alphubel: @JL: Write something about how we already saw string diagrams, and that (co)evaluation maps allow for bending the wires around to change the their direction, and that we can encode dual objects by adding a ``flow'' direction to the wires.
+    Then motivate the notion of trace in a \SY{monoidal category} by asking what we get when we bend a wire around and let the outout of a morphism flow back and be it's input -- ``closing the loop''}
+
+%\linkvideo{spring2021-par-feedback:mon-cat:string-diag} % String diagrams
+
+\begin{ctdefinition}[Trace of an endomorphism]
+    \label{def:trace_endo}
+    Let~$\tup{\CatC, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor, \braiding}$ be a \SY{symmetric monoidal category}.
+    Let~$\Obja \setin \ObC$ be dualizable and let
+    \begin{equation}
+        \mora \colon \Obja \mto \Obja.
+    \end{equation}
+    The \emph{trace} of~$\mora$ is the morphism
+    \begin{equation}
+        \Tr(\mora) \colon \idmoncat \mto \idmoncat
+    \end{equation}
+    defined by
+    \equationsag{endo_trace}{eq:endo_trace}
+    %\begin{equation}
+    %\label{eq:endomorphism-gen-trace}
+    %\idmoncat \overset{\coev_\Obja}{\mto} \Obja \mtimescatat \Obja^\vee  \overset{\mora \mtimescatmor \catid_{\Obja^\vee}}{\mto} \Obja \mtimescatob \Obja^\vee  \overset{\braiding}{\mto}  \Obja^\vee \mtimescatob \Obja \overset{\ev_\Obja}{\mto} \idmoncat.
+    %\end{equation}
+\end{ctdefinition}
+
+\begin{gradedexercise}[\exname{LinearAlgebraTrace}]
+    \label{ex:LinearAlgebraTrace}
+    Let~\CatC be the category of finite-dimensional real \SY{vector spaces} and~\reals-linear maps.
+    \todotextjira{516}{\alphubel: @JL: Didn't we call this already something different?}
+    We have seen that this category is symmetric monoidal when equipped with the usual tensor product as monoidal product.
+    Furthermore, in \cref{sec:dual-objects} we saw that every object in this category is dualizable.
+
+    Fix a finite-dimensional real \SY{vector space}~$\styleobj{V}$, and let~$\makeset{e_1,\ldots,e_n }$ be a basis of it.
+    We saw that a choice of dual object for~$\styleobj{V}$ is given by~$\styleobj{V}^* = \Hom(\styleobj{V}, \reals)$, together with the evaluation map
+    \begin{equation}
+        \defmapperiod{
+            \ev_\styleobj{V}
+        }{
+            \styleobj{V}^* \otimes \styleobj{V}
+        }{
+            \mto
+        }{
+            \reals
+        }{
+            \tup{l, v}
+        }{
+            l(v)
+        }
+    \end{equation}
+    and the co-evaluation map
+    \begin{equation}
+        \defmapperiod{
+            \coev_\styleobj{V}
+        }{
+            \reals
+        }{
+            \mto
+        }{
+            \styleobj{V} \otimes \styleobj{V}^*
+        }{
+            \lambda
+        }{
+            \lambda \sum_{i=1}^n e_i \otimes e_i^*
+        }
+    \end{equation}
+    where $\makeset{e_1^*,\ldots,e_n^* }$ is the basis dual to the one we chose for~$\styleobj{V}$.
+
+    Let~$\mora\colon \styleobj{V} \mto \styleobj{V}$ be a linear \SY{endomorphism} -- that is,~$\mora \setin \Hom_{\CatC}(\styleobj{V}, \styleobj{V})$.
+    Compute the trace~$\Tr(\mora) \setin \Hom_{\CatC}(\reals, \reals)$ of~$\mora$ according to \cref{def:trace_endo}, and explain why it is the linear map ``multiplication by the trace of~$\mora$'', where ``trace'' in this latter phrase is the usual notion that we know from linear algebra.
+\end{gradedexercise}
+\solutionof{LinearAlgebraTrace}
+
+\begin{gradedexercise}[\exname{DPSnakeTrace}]
+    \label{ex:DPSnakeTrace}
+
+    In this exercise we work with the category $\DP$ of posets and design problems, equipped with the symmetric monoidal structure where the monoidal product is the cartesian product of posets.
+    The braiding
+    $$\braiding_{\posgenA,\posgenB}\colon \F{\posgenA} \Ptimes \F{\posgenB} \profto \R{\posgenB} \Ctimes \R{\posgenA}$$
+    is defined by
+    \begin{equation}
+        \braiding_{\posgenA,\posgenB}(\tup{\F{\posgenAel_1},\F{\posgenBel_1}}\Fop, \tup{\R{\posgenBel_2},\R{\posgenAel_2}})\definedas \pars{\F{\posgenAel_1}\posleqof\posA \R{\posgenAel_2}}\booland \pars{\F{\posgenBel_1}\posleqof\posB \R{\posgenBel_2}}.
+    \end{equation}
+    In the following you are free to use the identification
+    \begin{equation}
+        (\posgenA \Ptimes \posgenB)\op = \posgenA\op \Ptimes \posgenB\op
+    \end{equation}
+    for any posets $\posgenA$, $\posgenB$.
+    Also, recall that $(\posgenA\op)\op = \posgenA$.
+
+    Let us define the following duality data:
+    \begin{itemize}
+        \item $\posgenA\dual \definedas \posgenA\op$
+        \item $\ev_\posgenA \colon \F{(\posgenA\op \Ptimes \posgenA)}\op \Ptimes \R{\makeset{\bullet}} \mto \Bool, \quad \tup{\tup{\ela^*, \elb}^*, \bullet} \mapsto \elb \posleqof\posgenA \ela$
+        \item $\coev_\posgenA \colon \F{\makeset{\bullet}}\op \Ptimes \R{(\posgenA \Ptimes \posgenA\op)} \mto \Bool, \quad \tup{\bullet, \tup{\ela, \elb^*}} \mapsto \elb \posleqof\posgenA \ela$
+    \end{itemize}
+
+    Your tasks:
+
+    \begin{enumerate}
+        \item
+              Guess the definitions of the associator $\associator$ and the unitors $\leftunitor$, $\rightunitor$ for the monoidal category $\DP$, check that each has the correct type, and justify why each of them does indeed define a morphism in the category $\DP$.
+        \item
+              Guess the definitions of $\leftunitor^{-1}$ and $\rightunitor^{-1}$ and check for one of them that it does indeed define the inverse morphism.
+        \item
+              Check that $\ev_\posgenA$ and $\coev_\posgenA$, as defined above, are morphisms in $\DP$.
+        \item
+              For an arbitrary poset $\posgenA$ and the duality data given above, prove that this snake equation
+              \begin{equation}
+                  \leftunitor_{\posgenA}^{-1} \mthen (\coev_\posgenA \mtimescatmor \catidat \posgenA) \mthen \associator_{\posgenA, \posgenA\op, \posgenA} \mthen(\catidat\posgenA \mtimescatmor \ev_\posgenA) \mthen \rightunitor_{\posgenA} = \catidat\posgenA
+              \end{equation}
+              holds.
+    \end{enumerate}
+\end{gradedexercise}
+\solutionof{DPSnakeTrace}
+
+\begin{widepar}
+    \begin{ctdefinition}[Trace of a generalized endomorphism]
+        \label{def:trace_gen_endo}
+        Let~$\tup{\CatC, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor, \braiding}$ be a \SY{symmetric monoidal category}.
+        Let~$\Obja \setin \ObC$ be dualizable and let
+        \begin{equation}
+            \mora \colon (\Objb \mtimescatob \Obja) \mto( \Objc \mtimescatob \Obja).
+        \end{equation}
+        The \emph{trace over}~$\Obja$ of~$\mora$ is the morphism
+        \begin{equation}
+            \Tr_{\Objb, \Objc}^\Obja (\mora) \colon \Objb \mto \Objc
+        \end{equation}
+        defined by
+        \equationsag{endo_trace_gen}{eq:endo_trace_gen}
+    \end{ctdefinition}
+\end{widepar}
+

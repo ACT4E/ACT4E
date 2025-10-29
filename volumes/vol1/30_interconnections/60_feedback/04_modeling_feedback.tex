@@ -5,7 +5,7 @@
 
 \todotext{write intro to this section}
 
-\devel{
+
     \subsection{Feedback of Moore machines}
 
     \todotext{give an example here to illustrate}
@@ -13,7 +13,7 @@
     \subsection{Feedback of LTI systems}
 
     \todotext{give an example here to illustrate}
-}
+
 
 \subsection{Ships and toilets}
 
@@ -29,10 +29,103 @@ This can also be written diagrammatically as
 
 \todotext{give an example here to illustrate}
 
+
+    \begin{example}
+        Consider a vehicle motor that weighs a certain amount but can also carry some weight (\cref{fig:examplefeedback}).
+        \begin{figure}[h!]
+            \centering
+            \includesag{50_motor1}
+            \caption{Example of feedback in \SY{design problems}.}
+            \label{fig:examplefeedback}
+        \end{figure}
+        In the diagram, we haven't added anything to the weight of the motor, so currently the only thing the motor is carrying is itself.
+        Also, note that we are considering~$\text{CO}_2\op$ since we want to optimize toward \emph{less} CO$_2$.
+        Fix a given amount of CO$_2$ and fuel.
+        In that case, closing the loop corresponds to drawing a line~$(c^\ast = c)$ in the graph of~$\text{weight}\op \cartprod \text{weight}$ and taking only solutions under the line in \cref{fig:weightcarrier}.
+
+    \end{example}
+    \begin{figure}[h!]
+        \centering
+        \includesag{50_carrier}
+        \caption{The shaded area marks a portion of the feasibility set of a traced design problem, ``motor''.
+            Note that it is not an \SY{upper set} in the subspace ``weight $\cartprod$ weight'' of ``motor''.
+        }
+
+        \label{fig:weightcarrier}
+
+    \end{figure}
+
+    Note that the shaded area is \emph{not} an \SY{upper set}.
+    This is admissible, since the actual feasible set of ``motor'' is a subset of CO$_2 \cartprod$ fuel, and there, it is an \SY{upper set}.
+
+
 \subsection{Feedback and trace}
 
 In the following we will introduce a category-theoretic formalization of feedback which is called a \emph{trace}.
 The origin of the name is that, in a special case, this notion of feedback corresponds to taking the trace of a matrix.
 
 \todotext{explain better why we call feedback operations by the name traces, detail the situation in terms of linear algebra}
+
+\todotext{write intro to this section}
+
+\subsection{Moore machines}
+
+\todotext{write up this subsection}
+
+%\begin{definition}[Moore machine, 3rd definition]
+%    \label{def:moore-machine}
+%    A Moore machine is a tuple
+%    \begin{equation}
+%        \label{eq:moore-tuple-improved-again}
+%        \tup{\prinL,\prstL,\proutL,\prdyn,\prreadout,\prstart},
+%    \end{equation}
+%    where~$\prinL$,~$\prstL$, and~$\proutL$ are objects of~$\SetL$,~$\prdyn$ is a function of the type
+%    \begin{equation}
+%        \prdyn \colon \prinL \cprod \prstL \mtoin{\SetL} \prstL,
+%    \end{equation}
+%    $\prreadout$ is a function of the type
+%    \begin{equation}
+%        \prreadout \colon \prstL \mtoin{\SetL} \proutL,
+%    \end{equation}
+%    and~$\prstart \setin \prstL$.
+%\end{definition}
+
+\begin{definition}\label{def:trace-moore}
+    Let $\mora = \tup{\prinL \cprod \prObjw,\prstL,\proutL \cprod \prObjw, \prdyn_\mora,\prreadout_\mora,\prstart}$ be a \SY{Moore machine}.
+    The \emph{trace of} $\mora$ \emph{over} $\prObjw$ is the Moore machine
+    \begin{equation}
+        \Tr_{\prinL,\proutL}^\prObjw \mora = \tup{\prinL,\prstL,\proutL, \prdyn_{\Tr \mora}, \prreadout_{\Tr \mora},\prstart}
+    \end{equation}
+    where
+    \begin{equation}
+        \defmapperiodset{
+            \prdyn_{\Tr \mora}
+        }{
+            \prinL \cprod \prstL
+        }{
+            \prstL
+        }{
+            \prinel \tupconcat \prstel
+        }{
+            \prdyn_\mora(\prinel \tupconcat \proj_\prObjw \prreadout (\prstel) \tupconcat \prstel)
+        }
+    \end{equation}
+    and
+    \begin{equation}
+        \defmapperiodset{
+            \prreadout_{\Tr \mora}
+        }{
+            \prstL
+        }{
+            \proutL
+        }{
+            \prstel
+        }{
+            \proj_\proutL \prreadout (\prstel)
+        }
+    \end{equation}
+    %
+    Above, $\pi_\prObjw$ is the projection $\prinL \cprod \prObjw \to \prObjw$ and $\proj_\proutL$ is the projection $\proutL \cprod \prObjw \to \proutL$.
+\end{definition}
+
 
