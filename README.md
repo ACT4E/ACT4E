@@ -2,7 +2,7 @@
 
 This repository contains the sources to the book used in the Applied Category Theory for Engineering classes which are taught at ETH Zürich and online.
 
-A recent version of the PDF book can be obtained at [this link (PDF, 400 MB)][pdf].
+A recent version of the PDF book can be obtained at [this link (PDF, ca. 400 MB)][pdf].
 
 Note for instructors: please contact us to obtain a copy that also contains the solutions to all the graded exercises.
 
