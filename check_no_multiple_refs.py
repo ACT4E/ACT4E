@@ -3,7 +3,7 @@ import sys
 
 where = sys.argv[1]
 
-with open(where) as f:
+with open(where, encoding='utf-8', errors='replace') as f:
     contents = f.read()
 
 lines = contents.splitlines()
