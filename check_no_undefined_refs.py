@@ -6,8 +6,14 @@ where = sys.argv[1]
 with open(where) as f:
     contents = f.read()
 
-if 'undefined on input line' in contents:
-    print('There are undefined references:\n\n'+contents)
-    sys.exit(1)
+lines = contents.splitlines()
+nerrors = 0
+for line in lines:
+    if 'undefined on input line' in line:
+        print(line)
+        nerrors += 1
 
-sys.exit(0)
+if nerrors > 0:
+    sys.exit(1)
+else:
+    sys.exit(0)
