@@ -1,0 +1,288 @@
+% !TEX root = chapter-standalone.tex
+
+\section{From DPIs to DPs}
+\linkvideo{spring2021-design:design:from-dpi-to-dp} % From DPI to DP
+
+A DPI (\cref{def:DPI}) describes a relation between three sets:~\funsp, \ressp, \impsp.
+If we are not interested in the implementations, but just in the relation between \funsp and \ressp, then we can describe a DPI more compactly as a ``DP''\@.
+
+
+\begin{remark}
+    \label{rem:DP-from-DPI}
+    Given a DPI~$\tup{\funsp, \ressp, \impsp, \prov,\req}$ it is always possible to obtain from it the following DP
+    \begin{equation}
+        \label{eq:dpi_to_dp_1}
+        \defmapperiod{
+            \adp
+        }{
+            \funspop \Ptimes \ressp
+        }{
+            \toinPos
+        }{
+            \Bool
+        }{
+            \tup{\fun\Fop,\res}
+        }{
+            \exists \imp \setin \impsp \colon (\fun \posleqof\funsp \prov(\imp)) \booland (\req(\imp)\posleqof\ressp \res)
+        }
+        %            \adp\colon \funsp\op \Ctimes \ressp & \toinPos  \Bool \\
+        %            \tup{\fun\Fop,\res}                   & \mapsto \exists \imp \setin \impsp \colon (\fun \posleqof\funsp \prov(\imp)) \booland (\req(\imp)\posleqof\ressp \res).
+    \end{equation}
+    Evaluating this DP is the same as asking whether the set
+    \begin{equation}
+        \label{eq:dpi_to_dp_2}
+        \makeset{ \imp \setin \impsp \colon (\fun \posleqof\funsp \prov(\imp)) \booland (\req(\imp)\posleqof\ressp \res)}
+    \end{equation}
+    is empty or not.
+\end{remark}
+\vfill\pagebreak
+\begin{example}
+    Recall \cref{exa:dpi_elmotor}, with the catalogue of electric motors in \cref{tab:electric_motors_3}.
+
+    \begin{table*}[h]
+        \centering
+        \adjustbox{max width=\textwidth}{%
+            \begin{tabular}{c|c|c|c|c|c}
+                \F{$\unit[\text{Torque}]{[kg\cdot cm]}$} & \colI{Motor ID}        & \R{\unit[Weight]{[g]}} & \R{\unit[Max Power]{[W]}}
+                                                         & \R{\unit[Cost]{[USD]}} \\
+                \hline
+                \F{0.18}                                 & \colI{\textsf{1204}}   & \R{60.0}               & \R{2.34}                  & \R{19.95} \\
+                \F{0.95}                                 & \colI{\textsf{1206}}   & \R{140.0}              & \R{3.00}                  & \R{19.95} \\
+                \F{0.65}                                 & \colI{\textsf{1207}}   & \R{130.0}              & \R{2.07}                  & \R{12.95} \\
+                \F{3.7}                                  & \colI{\textsf{2267}}   & \R{285.0}              & \R{4.76}                  & \R{16.95} \\
+                \F{1.9}                                  & \colI{\textsf{2279}}   & \R{165.0}              & \R{5.40}                  & \R{164.95} \\
+                \F{19.0}                                 & \colI{\textsf{1478}}   & \R{1,000}              & \R{8.96}                  & \R{49.95} \\
+                \F{2.2}                                  & \colI{\textsf{2299}}   & \R{150.0}              & \R{5.90}                  & \R{59.95}
+            \end{tabular}%
+        }
+        \caption{A simplified catalogue of motors.
+        }
+        \label{tab:electric_motors_3}
+    \end{table*}
+    \begin{table*}[h]
+        \centering
+        \adjustbox{max width=\textwidth}{%
+            \begin{tabular}{c|c|c|c|c|c}
+                \F{$\unit[\text{Torque}]{[kg\cdot cm]}$} & \R{\unit[Weight]{[g]}} & \R{\unit[Max Power]{[W]}}
+                                                         & \R{\unit[Cost]{[USD]}} \\
+                \hline
+                \F{0.18}                                 & \R{60.0}               & \R{2.34}                  & \R{19.95} \\
+                \F{0.95}                                 & \R{140.0}              & \R{3.00}                  & \R{19.95} \\
+                \F{0.65}                                 & \R{130.0}              & \R{2.07}                  & \R{12.95} \\
+                \F{3.7}                                  & \R{285.0}              & \R{4.76}                  & \R{16.95} \\
+                \F{1.9}                                  & \R{165.0}              & \R{5.40}                  & \R{164.95} \\
+                \F{19.0}                                 & \R{1,000}              & \R{8.96}                  & \R{49.95} \\
+                \F{2.2}                                  & \R{150.0}              & \R{5.90}                  & \R{59.95}
+            \end{tabular}%
+        }
+        \caption{Feasibility relations for the \SY{design problem} of motors.
+        }
+        \label{tab:electric_motors_dp}
+    \end{table*}
+
+    \begin{figure}[tbh]
+        \centering
+        \includesag{520_dp_electric_motor}
+        \caption{Electric motor design problem.}
+        \label{fig:dp_em_2}
+    \end{figure}
+
+    The catalogue induces a \SY{design problem}~$\adpan{\mathrm{EM}}$, where each feasibility relation between functionality and resources is reported in \cref{tab:electric_motors_dp}.
+    with diagrammatic form as in \cref{fig:dp_em_2}.
+    In particular, we can query the \SY{design problem} for combinations of \textF{functionalities} and \textR{resources}.
+    For instance:
+    \begin{equation}
+        \adpan{\mathrm{EM}}\pars{\F{\unit[0.2]{kg\cdot cm}}, \R{\tup{\unit[50.0]{g}},\R{\unit[2.0]{W}},\R{\unit[15.0]{USD}}} }=\false,
+    \end{equation}
+    since no listed model can provide~$\F{\unit[0.2]{kg\cdot cm}}$ \textF{torque} by requiring the set of \textR{resources}~$\tup{\R{\unit[50.0]{g}},\R{\unit[2.0]{W}},\R{\unit[15.0]{USD}}}$ or less.
+
+\end{example}
+
+
+We have already seen in \cref{rem:DP-from-DPI} that we can obtain a DP from a DPI.
+We can make this more formal and say that there exists a \SY{forgetful semifunctor} from \DPI to \DP.
+
+\begin{definition}
+    \label{def:dpitodpsemi}
+    The \SY{forgetful semifunctor}~$\dpitodp\colon \DPI\fto \DP$ is given by:
+    \begin{enumerate}
+        \item Identity on the objects:~$\dpitodpob(\posA)=\posA$.
+        \item Given~$\adp=\tup{\funsp,\ressp,\impsp,\prov,\req}$, the action on morphisms is given by
+              \begin{equation}
+                  \defmapperiod{\dpitodpmor(\adp)}
+                  {\funspop \Ptimes \ressp}
+                  {\toinPos}
+                  {\Bool}
+                  {\tup{\fun\opel, \res}}
+                  {\exists \imp \setin \setI\colon (\fun \posleqof{\funsp}\prov(\imp))\booland (\req(\imp)\posleqof{\ressp} \res)}
+              \end{equation}
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    \cref{def:dpitodpsemi} indeed defines a \SY{semifunctor}.
+\end{lemma}
+\begin{proof}
+    Consider
+    \begin{equation}
+        \begin{aligned}
+            \adpa & =\tup{\funposA,\resposB,\impspn{1},\provn{1},\reqn{1}}, \\
+            \adpb & =\tup{\funposB,\resposC,\impspn{2},\provn{2},\reqn{2}},
+        \end{aligned}
+    \end{equation}
+    We need to show
+    \begin{equation}
+        \dpitodpmor(\adpa \dpithenDPI \adpb)=\dpitodpmor(\adpa) \dpthenDP \dpitodpmor(\adpb).
+    \end{equation}
+    Let's start with the left term.
+    One has
+    \begin{equation}
+        \label{eq:dpitodp_a}
+        \begin{aligned}
+            \dpitodpmor(\adpa \dpithenDPI \adpb)(\funposAel\F{\opel},\resposCel) & =
+            \exists \imp \setin \impsp\colon (\funposAel \posleqof{\posA}\provn{1}(\impn{1}))\booland (\reqn{2}(\impn{2})\posleqof{\posC} \resposCel),
+        \end{aligned}
+    \end{equation}
+    where~$\impsp=\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}} \mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})}$.
+
+    On the other hand,
+    \begin{equation}
+        \label{eq:dpitodp_b}
+        \begin{aligned}
+             & (\dpitodpmor(\adpa) \dpthenDP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel) \\
+             & =\bigvee_{\posBel \setin \posBset}\dpitodpmor(\adpa)(\funposAel\F{\opel},\resposBel)\booland \dpitodpmor(\adpb)(\funposBel\F{\opel},\resposCel) \\
+             & =\bigvee_{\posBel \setin \posBset} \pars{{\exists \impn{1} \setin \impspn{1}\colon (\funposAel \posleqof{\posA}\provn{1}(\impn{1}))\booland (\reqn{1}(\impn{1})\posleqof{\posB} \resposBel)}} \\
+             & \booland \pars{{\exists \impn{2} \setin \impspn{2}\colon (\funposBel \posleqof{\posB}\provn{2}(\impn{2}))\booland (\reqn{2}(\impn{2})\posleqof{\posC} \resposCel)}}
+        \end{aligned}
+    \end{equation}
+    Consider the following cases:
+    \begin{itemize}
+        \item If~$\dpitodpmor(\adpa \dpithenDPI \adpb)(\funposAel\F{\opel},\resposCel)=\true$, there exist~$\impn{1}\setin \impspn{1},\impn{2}\setin \impspn{2}$ for which
+              \begin{equation}
+                  \begin{aligned}
+                      \funposAel         & \posleqof{\posA}\provn{1}(\impn{1}), \\
+                      \reqn{2}(\impn{2}) & \posleqof{\posC} \resposCel, \\
+                      \reqn{1}(\impn{1}) & \posleqof{\posB}\provn{2}(\impn{2}).
+                  \end{aligned}
+              \end{equation}
+              The first two terms are clear, and the last term implies that there exists a~$\posBel\setin \posB$ such that
+              \begin{equation}
+                  (\funposBel\posleqof{\posB}\provn{2}(\impn{2}))
+                  \booland (\reqn{1}(\impn{1})\posleqof{\posB}\resposBel),
+              \end{equation}
+              implying~$(\dpitodpmor(\adpa) \dpthenDP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel)=\true$.
+        \item The case
+              \begin{equation}
+                  \prftree{\dpitodpmor(\adpa \dpithenDPI \adpb)(\funposAel\F{\opel},\resposCel)=\false}{(\dpitodpmor(\adpa) \dpthenDP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel)=\false}
+              \end{equation}
+              follows analogously.
+        \item The other direction is easier to show, since clearly
+              \begin{equation}
+                  \prftree{(\dpitodpmor(\adpa) \dpthenDP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel)=\true}{\dpitodpmor(\adpa \dpithenDPI \adpb)(\funposAel\F{\opel},\resposCel)=\true}
+              \end{equation}
+              and
+              \begin{equation}
+                  \prftree{(\dpitodpmor(\adpa) \dpthenDP \dpitodpmor(\adpb))(\funposAel\F{\opel},\resposCel)=\false}{\dpitodpmor(\adpa \dpithenDPI \adpb)(\funposAel\F{\opel},\resposCel)=\false}
+              \end{equation}
+              by inspecting \cref{eq:dpitodp_a} and \cref{eq:dpitodp_b}.
+    \end{itemize}
+\end{proof}
+
+In the other direction, we can take a DP and find a corresponding DPI.
+
+Given a DP~$\adp\colon \funspop \Ptimes \ressp \toinPos \Bool$, we can define a DPI $\tup{\funsp,\ressp, \impsp,\prov,\req}$
+by setting
+\begin{equation}
+    \begin{aligned}
+        \impsp & =\makeset{\tup{\fun,\res}\setin \funsp \cartprod \ressp \colon \adp(\fun\F{\opel},\res)}, \\
+        \prov  & \colon \tup{\fun,\res}\mapsto \fun, \\
+        \req   & \colon \tup{\fun,\res}\mapsto \res,
+    \end{aligned}
+\end{equation}
+However, this operation is not a semifunctor, since it does not preserve composition.
+
+\devel {
+
+    We obtain another \SY{semifunctor}.
+
+    \begin{definition}
+        \label{def:dptodpisemi}
+        The \SY{semifunctor}~$\dptodpi\colon \DP\fto \DPI$ is given by:
+        \begin{enumerate}
+            \item Identity on the objects:~$\dpitodpob(\posA)=\posA$.
+            \item Given~$\adp\colon \funspop \Ptimes \ressp \toinPos \Bool$, the action on morphisms is given by
+                  \begin{equation}
+                      \dptodpimor(\adp)=\tup{\funsp,\ressp, \impsp,\prov,\req},
+                  \end{equation}
+                  where
+                  \begin{equation}
+                      \begin{aligned}
+                          \impsp & =\makeset{\tup{\fun,\res}\setin \funsp \cartprod \ressp \colon \adp(\fun\F{\opel},\res)}, \\
+                          \prov  & \colon \tup{\fun,\res}\mapsto \fun, \\
+                          \req   & \colon \tup{\fun,\res}\mapsto \res,
+                      \end{aligned}
+                  \end{equation}
+        \end{enumerate}
+    \end{definition}
+
+    \begin{lemma}
+        \cref{def:dptodpisemi} indeed defines a \SY{semifunctor}.
+    \end{lemma}
+    \todotext{
+        @Gioele: the last passage in the proof is wrong. (the two sets have different dimensions!)
+    }
+    \begin{proof}
+        Consider~$\adpa\colon \funposA\Ptimes \resposB \toinPos \Bool$ and~$\adpb\colon \funposB\Ptimes \resposC\toinPos \Bool$.
+        We need to show
+        \begin{equation}
+            \dptodpimor(\adpa \dpthenDP \adpb)=\dptodpimor(\adpa)\dpithenDPI \dptodpimor(\adpb).
+        \end{equation}
+        Let's start with the left term.
+        One has
+        \begin{equation}
+            \dptodpimor(\adpa \dpthenDP \adpb)=\tup{\funposA,\resposC,\impsp,\prov,\req},
+        \end{equation}
+        where
+        \begin{equation}
+            \begin{aligned}
+                \impsp & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon (\adpa \dpthenDP \adpb)(\funposAel,\resposCel)}, \\
+                       & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon \bigvee_{\posBel\setin \posB}\adpa(\funposAopel,\resposBel)\booland \adpb(\funposBopel,\resposCel)} \\
+                \prov  & =\projstart, \\
+                \req   & =\projend,
+            \end{aligned}
+        \end{equation}
+        where~$\projstart$ is the projection mapping returning the first element of a tuple, and~$\projend$ is the projection mapping returning the last element of a tuple.
+        For the right-hand side, instead, one has
+        \begin{equation}
+            \dptodpimor(\adpa) \dpithenDPI \dptodpimor(\adpb)=\tup{\funposA,\resposC,\impsp\colI{'},\prov\F{'},\req\R{'}},
+        \end{equation}
+        where
+        \begin{equation}
+            \begin{aligned}
+                \impsp\colI{'} & =\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}}\mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})} \\
+                \impspn{1}     & =\makeset{\tup{\funposAel,\resposBel}\setin \funposA \cartprod \resposB \colon \adpa(\funposAel,\resposBel)}, \\
+                \impspn{2}     & =\makeset{\tup{\funposBel,\resposCel}\setin \funposB \cartprod \resposC \colon \adpb(\funposBel,\resposCel)}, \\
+                \provn{1}      & =\projstart \\
+                \provn{2}      & =\projstart \\
+                \reqn{1}       & =\projend \\
+                \reqn{2}       & =\projend \\
+                \prov\F{'}     & =\projstart \\
+                \req\R{'}      & =\projend.
+            \end{aligned}
+        \end{equation}
+        One can already notice that~$\prov=\prov\F{'}$ and~$\req=\req\R{'}$.
+        To finish the proof, we can massage~$\impsp\colI{'}$:
+        \begin{equation}
+            \begin{aligned}
+                \impsp\colI{'} & =\makeset{\impn{1}\tupconcat \impn{2}\setin \makecprod{\impspn{1}, \impspn{2}}\mid \reqn{1}(\impn{1})\posleqof{\posB}\provn{2}(\impn{2})} \\
+                               & =\makeset{\tup{\funposAel,\resposBel,\funposBel\F{'},\resposCel}\setin \funposA \cartprod \resposB\cartprod \funposB\cartprod \resposC \colon \adpa(\funposAel\F{\opel},\resposBel) \booland \adpb(\funposBel\F{\opel},\resposCel)
+                \booland \resposBel \posleqof{\posB}\funposBel\F{'}} \\
+                               & =\makeset{\tup{\funposAel,\resposCel}\setin \funposA \cartprod \resposC \colon \bigvee_{\posBel\setin \posB}\adpa(\funposAopel,\resposBel)\booland \adpb(\funposBopel,\resposCel)} \\
+                               & =\impsp.
+            \end{aligned}
+        \end{equation}
+
+    \end{proof}
+}
+
+

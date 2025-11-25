@@ -1,7 +1,7 @@
 % !TEX root = ../ACT4E-devel-fast.tex
 
 \usepackage[english]{babel} % Load characters and hyphenation
-\usepackage[style=russian]{csquotes}
+
 
 % Load packages for testing
 % Load the bibliography package
@@ -12,38 +12,14 @@
 
 % \usepackage{styles/kaorefs}
 
-%%% HACKS for kaobook
-
-\let\providelength\relax
-\let\openbox\relax
-
-%\newcommand*\flrow@error[1]{\PackageError\flrow@package{#1}\flrow@eh}
-\makeatletter
-\renewcommand\flrow@error[1]{}
-\makeatother
 
 \usepackage{xr}
-\usepackage[usenames,dvipsnames,table]{xcolor}
+% \usepackage[usenames,dvipsnames,table]{xcolor}
 
 %\WarningsOff[contour]
 \usepackage[outline]{contour}
 
 %
-\RedeclareSectionCommand[
-    beforeskip=10pt,
-    afterskip=0pt,
-    %  headings=normal,
-    style=chapter% no part page
-]{part}
-
-%
-\RedeclareSectionCommand[
-    beforeskip=10pt,
-    afterskip=5pt,
-    %  headings=normal,
-    style=section% no part page
-]{section}
-
 %\usepackage{scrpage2}  %<---
 \usepackage{scrlayer-scrpage}
 
@@ -74,12 +50,10 @@
 \usepackage{marginnote}
 
 \usepackage{fancyvrb}
-\newcommand{\outsnippet}[3]{
+\newcommand{\outsnippet}[3]{%
     \UseVerbatim{#1}
 }
 
-\usepackage[backend=bibtex]{biblatex}
-\addbibresource{\rootdir/dpcatbib.bib}
 
 \usepackage{ifthen}
 \usepackage{iftex}
@@ -89,7 +63,11 @@
     \usepackage[utf8]{inputenc}
 \fi
 
+\usepackage[style=russian]{csquotes}
+
 \usepackage{subcaption}
+\usepackage[backend=bibtex]{biblatex}
+\addbibresource{\rootdir/dpcatbib.bib}
 
 \usepackage{blkarray, array}
 
@@ -277,8 +255,8 @@
     }{}
 }
 \AtBeginDocument{
-    \ifbool{devel}{
-        \overfullrule=10mm
+    \ifbool{devel}{%
+        \overfullrule=10mm%
     }{}
 }
 
@@ -298,10 +276,10 @@
 
 % Typesetting
 
-\newcommand*{\vcenteredhbox}[1]{\begingroup
+\newcommand*{\vcenteredhbox}[1]{\begingroup%
     \setbox0=\hbox{#1}\parbox{\wd0}{\box0}\endgroup}
 
-\newcommand{\captionsideleft}[2]{
+\newcommand{\captionsideleft}[2]{%
     \medskip
     \begin{minipage}{1.8cm}{
             \hfill
@@ -315,14 +293,14 @@
 
 \def\currentchapter{}
 \def\currentchaptername{}
-\newcommand{\chaptersecond}[4]{
-    \ifemptyarg{#3}{
+\newcommand{\chaptersecond}[4]{%
+    \ifemptyarg{#3}{%
         \PackageError{ACT4E}{Empty label argument}{You passed empty label}
     }{}
     \setchapterpreamble[u]{\margintoc}
     \setchapterimage[12cm]{#2.cropped}
     \chapter{#1}
-    \begin{quote}
+    \begin{quote}%
         #4%
     \end{quote}%
     \vfill
@@ -335,8 +313,6 @@
 }
 
 
-\setcounter{margintocdepth}{\sectiontocdepth}
-
 \newlength\tocrulewidth
 \setlength{\tocrulewidth}{1.5pt}
 % \usepackage{eso-pic}
@@ -347,11 +323,11 @@
 %     }%
 %   }%
 % }
-\newcommand{\partfirstb}[4]{
+\newcommand{\partfirstb}[4]{%
     \part{#1}%
-    \ifemptyarg{#3}{
+    \ifemptyarg{#3}{%
         \PackageError{ACT4E}{Empty label argument}{You passed empty label}%
-    }{
+    }{%
         \label{#3}%
     }
     \begin{tikzpicture}
@@ -402,9 +378,9 @@
 
 \makeatother
 
-\newcommand{\partended}{
-    \cleardoublepage
-    \oldsection*{Solutions to selected exercises}
+\newcommand{\partended}{%
+    \cleardoublepage%
+    \oldsection*{Solutions to selected exercises}%
     \printsolutions}
 
 \newenvironment{longcode}{\captionsetup{type=listing,justification=centering}}{}
@@ -421,12 +397,9 @@
 
 \allowdisplaybreaks[4]
 
-\AtBeginDocument{
-    \etocsetnexttocdepth{section}
-}
 
-\newcommand{\punctuate}{
-    \todotextjira{381}{@Gioele: punctuate equations}
+\newcommand{\punctuate}{%
+    \todotextjira{381}{@Gioele: punctuate equations}%
 }
 
 % \usepackage[color=blue,
@@ -464,59 +437,16 @@
 }
 \makeatother
 
-\AtBeginDocument{
-    \savebox{\urlbox}{}
-    \let\oldsection\section
-    % \renewcommand\section{\FloatBarrier\clearpage\oldsection}
-    %
-    \renewcommand{\section}[2][]{
-        \FloatBarrier\clearpage%
-        \savebox{\urlbox}{%
-            \footnotesize
-            \def\tmpname{\ifemptyarg{#1}{\detokenize{#2}}{\detokenize{#1}}}
-            \def\tmpnameb{\currentchaptername}
-            Something incorrect or unclear or missing?
-            \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter:\urlsp\currentchaptername\urlnl Section:\urlsp\tmpname\urlnl Version:\urlsp\today\urlnl\urlnl Check\urlsp all\urlsp that\urlsp apply:\urlnl\issuecheck Something\urlsp incorrect\urlnl\issuecheck Something\urlsp not\urlsp clear\urlnl\issuecheck Something\urlsp missing\urlnl\urlnl Please\urlsp describe\urlsp more\urlsp in\urlsp detail\urlsp below.\urlsp Feel\urlsp free\urlsp to\urlsp change\urlsp the\urlsp title\urlsp to\urlsp something\urlsp more\urlsp informative.\urlnl;title=\currentchaptername\urlsp/\urlsp\tmpname\urlsp/\urlsp\today}{Report issues on GitHub by clicking here}.
-        }%
-        \ifemptyarg{#1}{%
-            \oldsection{#2}%
-        }{
-            \oldsection[#1]{#2}%
-        }%
-    }
-
-}
-
-\newcommand{\linkgithub}{
+\newcommand{\linkgithub}{%
     \ifbool{githublink}{%
         \usebox{\urlbox}%
-    }{}
+    }{}%
 }
-\newcommand{\draftnotice}{
+\newcommand{\draftnotice}{% 
     \ifbool{githublink}{%
         \footnotesize You are reading a draft compiled on \DTMnow%
     }{}%
 }
-
-\renewpagestyle{scrheadings}{%
-    {\smash{\hspace{-\headmarginparwidth}\hspace{-\headmarginparsep}\makebox[\headtotal][l]{%
-                    \makebox[7\hscale][r]{\thepage}%
-                    \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
-                    \makebox[\headtextwidth][l]{\leftmark}}}}%
-        {\smash{\makebox[0pt][l]{\makebox[\headtotal][r]{%
-                        \makebox[\headtextwidth][r]{\hfill\rightmark}%
-                        \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
-                        \makebox[7\hscale][l]{\thepage}}}}}%
-        {\smash{\makebox[0pt][l]{\makebox[\headtotal][r]{%
-                        \makebox[\headtextwidth][r]{\hfill\rightmark}%
-                        \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
-                        \makebox[7\hscale][l]{\thepage}}}}}%
-}{%
-    {\hspace{-5cm}\draftnotice}% left page
-        {\linkgithub}% right page
-        {}% not showing up
-}
-
 % Checkmarks
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
@@ -578,3 +508,16 @@
 % \usepackage{amsbsy}
 % \usepackage{multicol} % added package
 % \usepackage{tcolorbox}
+
+
+% \usepackage{shadowtext}
+% \newcommand{\upitsymbol}{\text{%
+%   \shadowoffset{0pt}%
+%   \shadowcolor{upcolor}%
+%   \shadowtext{\colUp$\uparrow$}%
+% }}
+% \newcommand{\downitsymbol}{\text{%
+%   \shadowoffset{0pt}%
+%   \shadowcolor{downcolor}%
+%   \shadowtext{\colDown$\downarrow$}%
+% }}

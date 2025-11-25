@@ -1,0 +1,400 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Actions}
+\label{sec:actions}
+
+\todotext{Expand this intro a bit to explain the conceptual idea of actions better, and mention the key term ``state space''. }
+
+\subsection{Monoid actions}
+
+\begin{marginfigure}
+    \centering
+    \includesag{semigroup-cov-action}
+    \caption{Compatibility of left-action operation with composition.}
+    \label{fig:semigroup-cov-action}
+\end{marginfigure}
+
+\begin{ctdefinition}
+    [Monoid left action]\label{def:monoid-left-action}
+    A \emph{left action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\setA is:
+
+    \constit
+    \begin{enumerate}
+        \item a function
+              \begin{equation}
+                  \label{eq:lact-monoid}
+                  \act \colon \makecartprod{\monoidAset, \setA} \sto \setA.
+              \end{equation}
+    \end{enumerate}
+    \condit
+    \begin{enumerate}
+        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\monoidAset$,
+              \begin{equation}
+                  \label{eq:monoiad-lact-1cond}
+                  \act(\monela, \act(\monelb, \setAel)) = \act(\monela \mtimesof\monoidA \monelb, \setAel);
+              \end{equation}
+        \item for all~$\setAel \setin \setA$,
+              \begin{equation}
+                  \label{eq:monoiad-lact-2cond}
+                  \act(\idmon_\monoidA, \setAel) = \setAel.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+Equation \cref{eq:monoiad-lact-1cond} says that if we first apply the action of $\monelb$ to $\setAel$ to obtain $\act(\monelb, \setAel)$,
+and then we apply the action of $\monela$ to this result, it is the same thing as applying the action of $\monela \mtimesof\monoidA \monelb$ to~$\setAel$.
+
+\begin{remark}
+    Left actions are often denoted using infix notation of the kind
+    \begin{equation}
+        \makecartprod{\monoidAset, \setA} \sto \setA, \ \tup{\monela, \setAel} \mapsto \monela \cdot \setAel
+    \end{equation}
+    or even simply
+    \begin{equation}
+        \makecartprod{\monoidAset, \setA} \sto \setA, \ \tup{\monela, \setAel} \mapsto \monela \setAel
+    \end{equation}
+    (in regard to the latter, think of the notation often used for multiplication of matrices with vectors).
+    If we write our notation ``$\monela \mtimesof\monoidA \monelb$'' as ``$\monela \star \monelb$'' (or even simply ``$\monela \monelb$''), then \cref{eq:monoiad-lact-1cond} reads as
+    \begin{equation}
+        \monela \cdot (\monelb \cdot \setAel) = (\monela \star \monelb) \cdot \setAel,
+    \end{equation}
+    or simply
+    \begin{equation}
+        \monela (\monelb \setAel) = (\monela  \monelb)  \setAel.
+    \end{equation}
+    In other words, we can view \cref{eq:monoiad-lact-1cond} as a kind of ``associative law'', but where two of the three elements come from $\monoidAset$, while one of the elements comes from $\setA$.
+\end{remark}
+
+\begin{ctdefinition}
+    [Monoid right action]\label{def:monoid-right-action}
+    A \emph{right action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\setA is:
+    
+    \constit
+    \begin{enumerate}
+        \item a function
+              \begin{equation}
+                  \label{eq:ract-monoid}
+                  \act \colon \makecartprod{\setA, \monoidAset} \sto \setA.
+              \end{equation}
+    \end{enumerate}
+    \condit
+    \begin{enumerate}
+        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\monoidAset$,
+              \begin{equation}
+                  \label{eq:monoiad-ract-1cond}
+                  \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb);
+              \end{equation}
+        \item for all~$\setAel \setin \setA$,
+              \begin{equation}
+                  \label{eq:monoiad-ract-2cond}
+                  \act(\setAel, \idmon_\monoidA) = \setAel.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+There is a way to reformulate the notions of left and right monoid actions which leads to a compact definition which we will generalize later.
+To derive this definition, we'll start with the definition \cref{def:monoid-right-action} of a right action, and then apply ``left currying''.
+
+Recall that left currying is done by applying the canonical isomorphism
+\begin{equation}
+    \curry \colon \setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB,
+\end{equation}
+which transforms any function of the type
+\begin{equation}
+    \setA \cartprod \setB \to \setC
+\end{equation}
+into one of the type
+\begin{equation}
+    \setB \to (\setA \to \setC).
+\end{equation}
+Applying this to $\act \colon \makecartprod{\setA, \monoidAset} \sto \setA$ we obtain a function
+\begin{equation}
+    \curry(\act) \colon \monoidAset \to (\setA \to \setA).
+\end{equation}
+Since we can tell the difference between $\act$ and $\curry(\act)$ based on their respective domains and codomains, we now simply use the same name $\act$ for both functions, and drop the ``$\curry$''.
+Furthermore, we will usually write
+\begin{equation}
+    \label{eq:act-to-endo}
+    \act \colon \monoidAset \to \Endof\setA,
+\end{equation}
+using the notation $\Endof\setA$ for functions of type~$\setA \sto \setA$.
+These are the endomorphisms of~\setA.
+
+Now, so far, we have just used currying to produce the function \cref{eq:act-to-endo} from a monoid action operation.
+Is \cref{eq:act-to-endo} really also a homomorphism of monoids?
+
+To see that this is the case, consider first the second condition in the definition of a right action, given by \cref{eq:monoiad-ract-2cond}.
+Translating this to the function \cref{eq:act-to-endo}, this means that
+\begin{equation}
+    \act(\idmon_\monoidA)(\setAel) = \setAel \quad \forall \setAel \setin \setA,
+\end{equation}
+or, in other words, that
+\begin{equation}
+    \act(\idmon_\monoidA) = \idmon_\setA.
+\end{equation}
+Since the identity function $\idmon_\setA$ is the identity element of the monoid $\Endof\setA$, this shows that the function \cref{eq:act-to-endo} respects the identity elements of the monoids which are its source and target.
+
+Now let's take a look at the first condition in the definition of a right action.
+For any $\monela, \monelb \setin \monoidAset$, we have
+%
+\begin{equation}
+    \label{eq:lact1cond2}
+    \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb) \quad \forall \setAel \setin \setA.
+\end{equation}
+%
+If we translate this, via currying, into an equality of functions in $\Endof\setA$, we obtain
+%
+\begin{equation}
+    \label{eq:act-to-endo-properties}
+    \act(\monela) \mtimesof{\Endof\setA} \act(\monelb) = \act(\monela \mtimesof\sgrpA \monelb).
+\end{equation}
+%
+In other words, $\act$ respects the composition operations defined on its source and target.
+In sum, we have found that $\act$ is indeed \SY{monoid homomorphism}~(\cref{def:monoid-mor}), and this leads us to the following compact definition.
+
+\begin{ctdefinition}[Monoid action]
+    \label{def:monoid-cov-action}
+    An \maindef{action} of a \SY{monoid}~$\monoidA$ on a set~\setA is a \SY{monoid homomorphism}
+    \begin{equation}
+        \label{eq:act-monoid}
+        \act \colon \monoidA \fto \Endof\setA.
+    \end{equation}
+\end{ctdefinition}
+
+Observe that this definition makes no reference to ``left'' and ``right'', even though we derived it from the definition of a \emph{right} action operation.
+What about left actions?
+
+\begin{gradedexercise}[\exname{LeftActionCurry}]
+    Show that having a left action of a monoid $\monoidA$ on a set $\setA$ is equivalent to having a monoid homomorphism
+    \begin{equation}
+        \act \colon \monoidA\op \mto \Endof\setA.
+    \end{equation}
+\end{gradedexercise}
+
+\subsection{Group actions}
+
+For defining a group action, we must adapt the definition of a monoid action.
+The endomorphisms~$\Endof\setA$ are not a group, because they also contain non-invertible maps.
+Recall that an invertible \SY{endomorphism} is called an \emph{automorphism}, and that~$\Autof\setA$, the set of \SY{automorphisms} of~\setA, comes naturally equipped with a \SY{group} structure.
+
+\todotextjira{730}{\bernina: @JL: better would be to make examples in the monoid and group sections for End(A) and Aut(A), respectively, and then reference those here.}
+
+\begin{ctdefinition}
+    [Group right action]\label{def:group-right-action-operation}
+    A \emph{right action} of a \SY{group}~$\grpA = \tup{\grpAset, \mtimesof\grpA, \idmon_\grpA}$ on a set~\setA is:
+
+    \constit
+    \begin{enumerate}
+        \item a function
+              \begin{equation}
+                  \label{eq:ract-group}
+                  \act \colon \makecartprod{\setA, \grpAset} \sto \setA.
+              \end{equation}
+    \end{enumerate}
+    \condit
+    \begin{enumerate}
+        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\grpAset$,
+              \begin{equation}
+                  \label{eq:group-ract-1cond}
+                  \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb);
+              \end{equation}
+        \item for all~$\setAel \setin \setA$,
+              \begin{equation}
+                  \label{eq:group-ract-2cond}
+                  \act(\setAel, \idmon_\monoidA) = \setAel.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\todotext{JL: make remark or lemma here that inverses being respected comes for free... and spell out the property in action terms...}
+
+\begin{ctdefinition}[Group action]
+    \label{def:group-cov-action}
+    An \maindef{action} of a \SY{group}~$\grpA$ onto a set~\setA is a \SY{group morphism}
+    \begin{equation}
+        \label{eq:act-group}
+        \act \colon \grpA \fto \Autof\setA.
+    \end{equation}
+\end{ctdefinition}
+
+\todotext{\bernina: @JL: add example of vector spaces as actions of a field on an abelian group; mention concept of a module}
+
+\todotext{lemma commented out here}
+%\begin{lemma}
+%\label{lem:uncurrying-group-actions}
+%The data of a \SY{group action}
+%\begin{equation}
+%\act \colon \grpA \fto \Autof\setA
+%\end{equation}
+%is equivalent to the data of having a function
+%\begin{equation}
+%\stylemaps{\alpha} \colon \grpAset \cartprod \setA \sto \setA,
+%\end{equation}
+%which satisfies the conditions
+%\begin{enumerate}
+%\item $ \stylemaps{\alpha} (\idgrp_\grpA, \setAel) = \setAel \quad \forall \setAel \setin \setA$;
+%\item $ \stylemaps{\alpha} (\grpelb, \stylemaps{\alpha}(\grpela, \setAel)) = \stylemaps{\alpha} (\grpela \mtimes \grpelb, \setAel) \quad \forall \setAel \setin \setA, \forall \grpela, \grpelb \setin \grpAset.
+%      $
+%\end{enumerate}
+%\end{lemma}
+
+\vfill%exercises
+
+\todotextjira{26}{\bernina: @JL: add more exercises}
+
+\todotext{graded exercise commented out here}
+%\begin{gradedexercise}[\exname{UncurryingGroupActions}]
+%    \label{ex:UncurryingGroupActions}
+%    Prove \cref{lem:uncurrying-group-actions}.
+%\end{gradedexercise}
+%\solutionof{UncurryingGroupActions}
+
+\begin{gradedexercise}[\exname{MatrixMultAction}]
+    \label{ex:MatrixMultAction}
+    Let~$\setA = \reals^n$, and let~$\mgGLn$ be the group of invertible~$\ntimesn$ matrices.
+    Let
+    \begin{equation}
+        \label{eq:action-matrix-mult}
+        \defmapset{
+            \alpha
+        }{
+            \mgGLn \cartprod \setA
+        }{
+            \setA
+        }{
+            \tup{\matmor{M}, \vectmor{v}}
+        }{
+            \matmor{M}\vectmor{v}
+        }
+    \end{equation}
+    be the usual multiplication of matrices with vectors.
+    Check that \cref{eq:action-matrix-mult} defines a left group action operation of~$\mgGLn$ on~\setA.
+\end{gradedexercise}
+
+\solutionof{MatrixMultAction}
+
+\devel{
+    \subsection{Contravariant actions}
+
+    There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
+    \footnote{
+        Traditionally, people have used the names ``left'' and ``right'' to describe the two types.
+        However, those names are connected to a particular choice of notation.
+        We name the two versions by highlighting the properties of covariance and contravariance.
+    }
+
+    \begin{marginfigure}
+        \centering
+        \includesag{semigroup-contrav-action}
+        \caption{Commutativity}
+        \label{fig:semigroup-contrav-action}
+    \end{marginfigure}
+    \begin{ctdefinition}
+        [Semigroup contravariant action (preliminary version)]\label{def:semigroup-contra-action-prelim}
+        A \emph{contravariant semigroup action} of a \SY{semigroup}~$\sgrpA$ on a set~\setA is a map
+        \begin{equation}
+            \label{eq:ract}
+            \ract \colon \makecartprod{\sgrpAset, \setA} \sto \setA
+        \end{equation}
+        such that, for all~$\setAel \setin \setA$,
+        \begin{equation}
+            \label{eq:ract1cond}
+            \ract(\monelb, \ract(\monela, \setAel)) = \ract(\monelb \mtimesof\sgrpA \monela, \setAel).
+        \end{equation}
+    \end{ctdefinition}
+
+    In contrast to \cref{eq:lact1cond}, \cref{eq:ract1cond} says that, if we first apply the action of $\monela$ to obtain $\act(\monela, \setAel)$, and then we apply the action of $\monelb$ $\act(\monelb, -)$, it is the same thing as applying the action of $\monelb\mtimes\monela$ (note the inverted order).
+
+    % And what about contravariant actions?
+    A \SY{contravariant semigroup action} can be defined as a covariant action of \emph{the opposite} \SY{semigroup}.
+    And similarly for \SY{monoids} and \SY{groups}.
+
+    \begin{ctdefinition}[Semigroup contravariant action]
+        \label{def:semigroup-cont-action}
+        A \maindef{contravariant semigroup action} of a \SY{semigroup}~$\sgrpA$ onto a set~\setA is a \SY{semigroup} morphism
+        \begin{equation}
+            \ract \colon \sgrpA\op \fto \Endof\setA.
+        \end{equation}
+    \end{ctdefinition}
+
+}
+
+\subsection{Semigroup actions}
+
+% There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
+% \footnote{
+%     Traditionally, people have used the names ``left'' and ``right'' to describe the two types.
+%     However, those names are connected to a particular choice of notation.
+%     We name the two versions by highlighting the properties of covariance and contravariance.
+% }
+
+%\linkvideo{spring2021-actions:semi-actions} % Semigroup actions
+
+\begin{ctdefinition}[Semigroup action operation]%
+    \label{def:semigroup-cov-action-prelim}
+    A \emph{right action} of a \SY{semigroup}~$\sgrpA = \tup{\sgrpAset, \mthen_{\sgrpA}}$ on a set~\setA is a function
+    \begin{equation}
+        \label{eq:lact-semigroup}
+        \act \colon \makecartprod{\setA, \sgrpAset} \sto \setA
+    \end{equation}
+    such that, for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\sgrpAset$,
+    \begin{equation}
+        \label{eq:lact1cond}
+        \act(\act(\setAel, \monela), \monelb) = \act(\setAel, \monela \mtimesof\sgrpA \monelb).
+    \end{equation}
+\end{ctdefinition}
+
+% \begin{ctdefinition}
+%     [Semigroup contravariant action (preliminary version)]\label{def:semigroup-contra-action-prelim}
+%     A \emph{semigroup \textbf{contravariant} action} of a \SY{semigroup}~$\sgrpA$ on a set~$\setA$ is a map
+%     \begin{equation}
+%         \label{eq:ract}
+%         \ract \colon \makecartprod{\sgrpAset, \setA} \to \setA
+%     \end{equation}
+%     such that, for all~$\setAel \setin \setA$,
+%     \begin{equation}
+%         \label{eq:ract1cond}
+%         \ract(\monelb, \ract(\monela, \setAel)) = \ract(\monelb \mthenof\sgrpA  \monela, \setAel).
+%     \end{equation}
+% \end{ctdefinition}
+
+\begin{ctdefinition}[Semigroup action]
+    \label{def:semigroup-cov-action}
+    An \maindef{action} of a \SY{semigroup}~$\sgrpA$ on a set~\setA is a \SY{semigroup} morphism
+    \begin{equation}
+        \label{eq:act-semigroup}
+        \act \colon \sgrpA \fto \Endof\setA.
+    \end{equation}
+\end{ctdefinition}
+
+\subsection{Actions of sets}
+
+\begin{ctdefinition}
+    [Set left action]\label{def:set-left-action-operation}
+    A \emph{left action} of a set~$\sgrpAset$ on a set~\setA is a function
+    \begin{equation}
+        \label{eq:lact-set}
+        \act \colon \makecartprod{\sgrpAset, \setA} \sto \setA.
+    \end{equation}
+\end{ctdefinition}
+
+\begin{ctdefinition}%
+    [Set right action]\label{def:set-right-action-operation}
+    A \emph{right action} of a set~$\sgrpAset$ on a set~\setA is a function
+    \begin{equation}
+        \label{eq:ract-set}
+        \act \colon \makecartprod{\setA, \sgrpAset} \sto \setA.
+    \end{equation}
+\end{ctdefinition}
+
+\todotext{say how we can turn a set action into a semigroup action or a monoid action}
+
+\devel{
+    \section{Homomorphisms of actions}
+    
+    Suppose we are working with a dynamical system modeled as a monoid action of the monoid $\monA = \tup{\wnumbers, +, 0}$ on some set $\setA$, which is the ``state space''. In other words, 
+    
+    
+    
+    
+}

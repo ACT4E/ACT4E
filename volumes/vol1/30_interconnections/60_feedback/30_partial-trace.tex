@@ -1,0 +1,287 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Partial traces}
+
+\begin{definition}
+    Let $\styleobj{X}$ and $\styleobj{Y}$ be sets.
+    A \textbf{partial function} $\stylemorph{f}$ from $\styleobj{X}$ to $\styleobj{Y}$, written $\stylemorph{f}:\styleobj{X}\rightharpoonup\styleobj{Y}$, is a function $\styleobj{f}:\styleobj{U_{f}}\to\styleobj{Y}$ for some subset $\styleobj{U_{f}}\subset\styleobj{X}$.
+    \\
+    For partial functions $\stylemorph{f},\stylemorph{g}:\styleobj{X}\rightharpoonup\styleobj{Y}$ and $x\in\styleobj{X}$ we define the following:
+    \begin{itemize}
+        \item We write $\stylemorph{f}(x)\downarrow$ if $x\in\styleobj{U_{f}}$, i.e. $\stylemorph{f}(x)$ is defined.
+        \item We write $\stylemorph{f}(x)\uparrow$ if $x\notin\styleobj{U_{f}}$, i.e. $\stylemorph{f}(x)$ is undefined.
+        \item We say \textbf{Kleene equality at $x$ holds} and write $\stylemorph{f}(x)\asymp \stylemorph{g}(x)$, if either $\stylemorph{f}(x)=\stylemorph{g}(x)$ and $\stylemorph{f}(x)$ and $\stylemorph{g}(x)$ are defined, or $\stylemorph{f}(x)$ and $\stylemorph{g}(x)$ are undefined.
+        \item We say \textbf{ directed Kleene equality at $x$ holds} and write $\stylemorph{f}(x)\gasymp \stylemorph{g}(x)$, if either $\stylemorph{f}(x)$ is undefined or else $\stylemorph{f}(x)$ and $\stylemorph{g}(x)$ are both defined and $\stylemorph{f}(x)=\stylemorph{g}(x)$.
+              Similarly, we write $\stylemorph{f}(x)\lasymp\stylemorph{g}(x)$ for the case when the roles of $f$ and $g$ are reversed.
+    \end{itemize}
+\end{definition}
+
+\begin{ctdefinition}
+Let $\tupp{\stylecat{C},\mtimescat,\idmat,\braiding}$ be a symmetric strict monoidal category. Then it is called \textbf{partially traced} if it is equipped with family of partial functions
+\begin{equation*}
+\generictracecat{X}{Y}{Z}:\HomSet{\stylecat{C}}{\styleobj{X}\mtimescat \styleobj{Z}}{\styleobj{Y}\mtimescat \styleobj{Z}}\to\HomSet{\stylecat{C}}{\styleobj{X}}{\styleobj{Y}}
+\end{equation*}
+for all objects $\styleobj{X},\styleobj{Y},\styleobj{Z}\in\Ob_{\stylecat{C}}$ such that the following axioms are satisfied:
+\begin{enumerate}
+\item \textbf{Tightening} (naturality in $\styleobj{X},\styleobj{Y}$) For all objects $\styleobj{X},\styleobj{Y},\styleobj{X'},\styleobj{Y'},\styleobj{Z}$ and morphisms $\stylemorph{g}:\styleobj{X'}\to\styleobj{X}$, $\stylemorph{f}:\styleobj{X}\mtimescat\styleobj{Z}\to\styleobj{Y}\mtimescat\styleobj{Z}$ and $\stylemorph{h}:\styleobj{Y}\to\styleobj{Y'}$ it holds that
+\begin{equation*}
+\generictracecat{X'}{Y'}{Z}((\stylemorph{g}\mtimescat\catidof{\styleobj{Z}})\mthen\stylemorph{f}\mthen(\stylemorph{h}\mtimescat\catidof{\styleobj{Z}}))\gasymp\stylemorph{g}\mthen\generictracecat{X}{Y}{Z}(\stylemorph{f})\mthen\stylemorph{h}.
+\end{equation*}
+\item \textbf{Sliding} (naturality in $\styleobj{Z}$) For all objects $\styleobj{X},\styleobj{Y},\styleobj{Z},\styleobj{Z'}$ and morphisms $\stylemorph{f}:\styleobj{X}\mtimescat\styleobj{Z}\to\styleobj{Y}\mtimescat\styleobj{Z'}$ and $\stylemorph{g}:\styleobj{Z'}\to\styleobj{Z}$ it holds that
+\begin{equation*}
+\generictracecat{X}{Y}{Z}(\stylemorph{f}\mthen(\catidof{\styleobj{Y}}\mtimescat\stylemorph{g}))\asymp\generictracecat{X}{Y}{Z'}((\catidof{\styleobj{X}}\mtimescat\stylemorph{g})\mthen\stylemorph{f}).
+\end{equation*}
+\item \textbf{Vanishing} For all objects $\styleobj{X},\styleobj{Y},\styleobj{Z},\styleobj{Z'}$ and morphisms $\stylemorph{g}:\styleobj{X}\to\styleobj{Y}$ and $\stylemorph{f}:\styleobj{X}\mtimescat \styleobj{Z}\mtimescat \styleobj{Z'}\to\styleobj{Y}\mtimescat\styleobj{Z}\mtimescat\styleobj{Z'}$ it holds that
+\begin{equation*}
+\generictracecat{X}{Y}{\idmat}(\stylemorph{g})\asymp\stylemorph{g}
+\end{equation*}
+and if $\generictracecat{X\mtimescat Z}{Y\mtimescat Z}{Z'}(f)\downarrow$, then
+\begin{equation*}
+\generictracecat{X}{Y}{Z\mtimescat Z'}(\stylemorph{f})\asymp\generictracecat{X}{Y}{Z}(\generictracecat{X\mtimescat Z}{Y\mtimescat Z}{Z'}(f)).
+\end{equation*}
+\item \textbf{Strength} For all objects $\styleobj{X},\styleobj{Y},\styleobj{X'},\styleobj{Y'},\styleobj{Z}$ and morphisms $\stylemorph{f}:\styleobj{X'}\mtimescat\styleobj{Z}\to\styleobj{Y'}\mtimescat\styleobj{Z}$ and $\stylemorph{g}:\styleobj{X}\to\styleobj{Y}$ it holds that
+\begin{equation*}
+\generictracecat{X\mtimescat X'}{Y\mtimescat Y'}{Z}(\stylemorph{g}\mtimescat\stylemorph{f})\gasymp\stylemorph{g}\mtimescat\generictracecat{X'}{Y'}{Z}(\stylemorph{f}).
+\end{equation*}
+\item \textbf{Yanking} For all objects $\styleobj{Z}$ it holds that
+\begin{equation*}
+\generictracecat{Z}{Z}{Z}(\braidkk{Z}{Z})\asymp\catidof{\styleobj{Z}}.
+\end{equation*}
+\end{enumerate}
+\end{ctdefinition}
+
+\begin{definition}\label{def:trace-for-mat}
+    Consider the symmetric strict monoidal category $\mathbf{Mat}_{\reals}$ (objects are natural numbers and a morphism $\styleobj{m} \mto \styleobj{n}$ is a $n \times m$ matrix with entries in $\reals$), with monoidal stacking operation
+    \begin{equation}
+        \mat{A} \mtimescat \mat{B} =
+        \begin{bmatrix}
+            \mat{A} & \mat{0} \\
+            \mat{0} & \mat{B}
+        \end{bmatrix}.
+    \end{equation}
+    A partial trace operation is defined as follows.
+    Given
+    \begin{equation}
+        \mora = \begin{bmatrix}
+            \mat{A} & \mat{B} \\
+            \mat{C} & \mat{D}
+        \end{bmatrix}
+        \colon \styleobj{m} + \styleobj{k}  \mto \styleobj{n} + \styleobj{k}
+    \end{equation}
+    we set
+    \begin{equation}\label{eq:mat-trace-formula}
+        \Tr_{\styleobj{m},\styleobj{n}}^\styleobj{k} (\mora) = \mat{A} + \mat{C}(\mat{I} - \mat{D})^{-1}\mat{B}
+    \end{equation}
+    if $\mat{I} - \mat{D}$ is invertible, and otherwise $\Tr_{\styleobj{m},\styleobj{n}}^\styleobj{k} (\mora)$ is undefined.
+\end{definition}
+
+\begin{remark}
+    How might one arrive at the formula for the trace in \cref{def:trace-for-mat}? Here are two informal derivations of why it is a plausible and suitable guess for a formula for a (partial) trace.
+
+    \begin{enumerate}
+        \item
+              One intuition is to treat this case similarly to the case of $\Rel$ when it is equipped with the cartesian product as monoidal product.
+              If we think of a morphism
+              \begin{equation}
+                  \mora = \begin{bmatrix}
+                      \mat{A} & \mat{B} \\
+                      \mat{C} & \mat{D}
+                  \end{bmatrix}
+                  \colon \styleobj{m} + \styleobj{k}  \mto \styleobj{n} + \styleobj{k}
+              \end{equation}
+              as a function (or: a relation)
+              \begin{equation}
+                  \reals^\styleobj{m} \oplus \reals^\styleobj{k}  \mto \reals^\styleobj{n} \oplus \reals^\styleobj{k}
+              \end{equation}
+              then a natural condition for feedback is to consider the equation
+              \begin{equation} \label{eq:mat-fixpoint-condition}
+                  \begin{bmatrix}
+                      \mat{A} & \mat{B} \\
+                      \mat{C} & \mat{D}
+                  \end{bmatrix}
+                  \begin{bmatrix}
+                      \mat{u} \\
+                      \mat{x}
+                  \end{bmatrix}
+                  =
+                  \begin{bmatrix}
+                      \mat{y} \\
+                      \mat{x}
+                  \end{bmatrix}
+              \end{equation}
+              and think of $\mat{u}$ as input, $\mat{y}$ as output, and $\mat{x}$ as a state variable.
+              From \cref{eq:mat-fixpoint-condition}, the output $\mat{y}$ is given then by the formula
+              \begin{equation}\label{eq:mat-fixpoint-output-equation}
+                  \mat{y} = \mat{A} \mat{u} + \mat{C}\mat{x}
+              \end{equation}
+              where $\mat{x}$ is required to satisfy the recursive equation
+              \begin{equation}
+                  \mat{x} = \mat{B}\mat{u} + \mat{D} \mat{x}
+              \end{equation}
+              which, if $\mat{I} - \mat{D}$ is invertible, may be solved thus:
+              \begin{equation}
+                  \mat{x} = (\mat{I} - \mat{D})^{-1}\mat{B}\mat{u}.
+              \end{equation}
+              Substituting this formula in \cref{eq:mat-fixpoint-output-equation}, we obtain
+              \begin{equation}
+                  \mat{y} = \mat{A}\mat{u} + \mat{C}(\mat{I} - \mat{D})^{-1}\mat{B}\mat{u}
+              \end{equation}
+        \item
+              Another way to think of the trace formula \cref{eq:mat-trace-formula} is in analogy to the trace for $\Rel$ equipped with the sum of set as monoidal product.
+              There we noted that a relation of the type
+              \begin{equation}
+                  \relA \colon \setA \setdisunion \setC \mto \setB \setdisunion \setC
+              \end{equation}
+              gives rise to four relations, which we denoted $\relA_{\setA \setB}$, $\relA_{\setC \setB}$, $\relA_{\setA \setC}$, and $\relA_{\setC \setC}$.
+              These are in analogy to the components $\mat{A}$, $\mat{B}$, $\mat{C}$, and $\mat{D}$, respectively, of the matrix
+              \begin{equation}
+                  \begin{bmatrix}
+                      \mat{A} & \mat{B} \\
+                      \mat{C} & \mat{D}
+                  \end{bmatrix}.
+              \end{equation}
+
+              The analogue here to the formula $\cref{eq:trace-rel-sum}$ for the trace of a relation is to set
+              \begin{equation}
+                  \Tr_{\styleobj{m},\styleobj{n}}^\styleobj{k} (\mora) = \mat{A} + \mat{C} \left( \sum_{i=0}^\infty \mat{D}^i \right) \mat{B},
+              \end{equation}
+              which, under suitable assumptions, is well-defined and equal to \cref{eq:mat-trace-formula} because the geometric series $\sum_{i=o}^\infty \mat{D}^i$ then converges to $(\mat{I} - \mat{D})^{-1}$.
+    \end{enumerate}
+\end{remark}
+
+\subsection{LTI systems}
+
+Let $\mora = \genericlti{}$ be a LTI system from $\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$, and suppose we are given factorizations $\styleobj{l} = \styleobj{i} + \styleobj{k}$ and $\styleobj{m} = \styleobj{j} + \styleobj{k}$ of the dimension of the input and output spaces, $\styleobj{U}$ and $\styleobj{Y}$, respectively.
+Then we can think of $\styleobj{U} = \reals^l$ as an (internal) direct sum of the form $\reals^l = \reals^i \oplus \reals^k$, and similarly so for $\styleobj{U} = \reals^m = \reals^j \oplus \reals^k$.
+We will use the notation $\styleobj{U} = \styleobj{U_1} \oplus \styleobj{U_2}$ and $\styleobj{Y} = \styleobj{U_1} \oplus \styleobj{U_2}$, respectively for these factorizations.
+This induces corresponding factorizations of the matrices $\mat{B}$, $\mat{C}$, and $\mat{D}$ as block matrices:
+\begin{equation}
+    \mat{B} =
+    \begin{bmatrix}
+        \mat{B}_1 & \mat{B}_2
+    \end{bmatrix}
+    \qquad
+    \mat{C} =
+    \begin{bmatrix}
+        \mat{C}_1 \\
+        \mat{C}_2
+    \end{bmatrix}
+    \qquad
+    \mat{D} =
+    \begin{bmatrix}
+        \mat{D}_{11} & \mat{D}_{12} \\
+        \mat{D}_{21} & \mat{D}_{22}
+    \end{bmatrix}.
+\end{equation}
+
+\begin{definition}\label{def:trace-lti}
+    Let an LTI system $\mora = \genericlti{}$ and factorizations $\styleobj{l} = \styleobj{i} + \styleobj{k}$ and $\styleobj{m} = \styleobj{j} + \styleobj{k}$ be given, and let
+    \begin{equation}\label{eq:LTI-induced-block-forms}
+        \mat{B} =
+        \begin{bmatrix}
+            \mat{B}_1 & \mat{B}_2
+        \end{bmatrix}
+        \qquad
+        \mat{C} =
+        \begin{bmatrix}
+            \mat{C}_1 \\
+            \mat{C}_2
+        \end{bmatrix}
+        \qquad
+        \mat{D} =
+        \begin{bmatrix}
+            \mat{D}_{11} & \mat{D}_{12} \\
+            \mat{D}_{21} & \mat{D}_{22}
+        \end{bmatrix}
+    \end{equation}
+    be the corresponding factorizations of $\mat{B}$, $\mat{C}$, and $\mat{D}$.
+    If the matrix $\mat{I} - \mat{D}_{22}$ is invertible, we define the LTI system $\Tr_{\styleobj{i},\styleobj{j}}^{\styleobj{k}}(\mora)$ as
+    \begin{equation}
+        \begin{aligned}
+            \langle \prstart,  \  & \mat{A} + \mat{B}_2 (\idmat- \mat{D}_{22})^{-1} \mat{C}_2 , B_1 + D_2(\idmat- \mat{D}_{22})^{-1}
+            D_{21}, \\
+                                  & C_1 + D_{12}(\idmat- \mat{D}_{22})^{-1}C_2, D_{11} + D_{12}(\idmat- \mat{D}_{22})^{-1}D_{21} \rangle.
+        \end{aligned}
+    \end{equation}
+    %        \begin{equation}
+    %            \begin{aligned}
+    %                \langle\prstart,\mat{A} + \rowscols{\mat{B}}{:}{i+1:i+k}\mat{E} \rowscols{\mat{C}}{j+1:j+k}{:}, & \rowscols{\mat{C}}{1:j}{:}+\rowscols{\mat{D}}{1:j}{i+1:i+k}\mat{E}\rowscols{\mat{C}}{j+1:j+k}{:}, \\
+    %                                                                                                                & \rowscols{\mat{D}}{1:j}{1:i}+\rowscols{\mat{D}}{1:j}{i+1:i+k}\mat{E} \rowscols{\mat{D}}{j+1:j+k}{1:i}\rangle,
+    %            \end{aligned}
+    %        \end{equation}
+\end{definition}
+
+\begin{example}
+    Let's consider the simple signal-flow diagram reported in \cref{fig:lti-ex-signalflow}.
+    Note that the represented signals are scalar.
+    In basic engineering classes, you learn that you can find an expression of the output $y(t)$ as a function of the input $u(t)$, by following the diagram.
+    In particular, one can write
+    \begin{equation}
+        \label{eq:lti-input-output-gain}
+        \begin{aligned}
+            K(u(t)-Cy(t))=y(t) & \Leftrightarrow Ku(t)-KCy(t)=y(t) \\
+                               & \Leftrightarrow Ku(t)=y(t)+KCy(t) \\
+                               & \Leftrightarrow Ku(t)=y(t)(1+KC) \\
+                               & \Leftrightarrow y(t)=\frac{K}{1+KC}u(t).
+        \end{aligned}
+    \end{equation}
+    Now, we want to get the same expression, but interpreting the presented system as a composition of LTI systems, and leveraging the newly introduced concept of trace.
+
+    This can be visualized as in \cref{fig:lti-ex-signalflow-bis}.
+    The systems are given by
+
+    \begin{equation*}
+        \begin{aligned}
+            \mora & = \langle\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, \begin{bmatrix} {1} & {-1}\end{bmatrix}\rangle \\
+            \morb & =\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, K} \\
+            \morc & =\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0}, \begin{bmatrix} 1\\ 1\end{bmatrix}} \\
+            \mord & =\langle\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 1}, \mat{0}^{1\times 0},
+            \begin{bmatrix}
+                1 & 0 \\
+                0 & C
+            \end{bmatrix}\rangle
+        \end{aligned}
+    \end{equation*}
+
+    Intuitively, $\mora$ is acting as the subtraction, $\morb$ as the gain $K$, $\morc$ is splitting the signal in two identical copies, one of which is used by the controller, expressed via $\mord$.
+    All of these LTI systems are described by their last component, and are therefore explicit input-output relationships.
+    We can compose the LTI systems.
+
+    We just look at the last component of the composition, given by:
+    \begin{equation*}
+        \begin{aligned}
+            \mat{D} & =\mat{D}_\mord \mat{D}_\morc \mat{D}_\morb \mat{D}_\mora \\
+                    & =\begin{bmatrix}1 & 0\\ 0 & {C}\end{bmatrix} \begin{bmatrix} 1\\ 1 \end{bmatrix} K \begin{bmatrix} 1 & -1 \end{bmatrix} \\
+                    & =\begin{bmatrix}K \\ {KC}\end{bmatrix}\begin{bmatrix} 1 & -1 \end{bmatrix} \\
+                    & =\begin{bmatrix}
+                           K  & -K  \\
+                           CK & -CK
+                       \end{bmatrix}
+        \end{aligned}
+    \end{equation*}
+
+    We can now apply the formula for the trace and we get:
+    \begin{equation*}
+        \begin{aligned}
+            \projE(\Tr_{1,1}^{w}) & =K - K(1+CK)^{-1}
+            CK \\
+                                  & =\frac{K}{1+CK}.
+        \end{aligned}
+    \end{equation*}
+    From this we get the LTI system from \cref{eq:lti-input-output-gain} (in other words, a direct input-output dependency).
+
+    \begin{marginfigure}
+        \begin{center}
+            \includesag{signal-flow-trace}
+        \end{center}
+        \caption{Example with signal-flow diagram.}
+        \label{fig:lti-ex-signalflow}
+    \end{marginfigure}
+\end{example}
+
+\begin{figure}
+    \centering
+    \includesag{signal-flow-to-lti}
+    \caption{Signal-flow diagram transformed into composition of LTI systems.}
+    \label{fig:lti-ex-signalflow-bis}
+\end{figure}
