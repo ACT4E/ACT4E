@@ -9,7 +9,7 @@ import os.path
 try:
     import termcolor
 except ImportError:
-    def colored(text: str, color=None, on_color=None) -> str:
+    def colored(text: str, color: str|None=None, on_color: str | None=None) -> str:
         return text 
 else:
     from termcolor import colored
@@ -21,7 +21,7 @@ if not directories:
 
 patterns = ["*.tex", "*.tikz", "*.py", "*.sh"]
 
-files = []
+files: list[Path | str] = []
 
 for d, p in itertools.product(directories, patterns):
     if os.path.isdir(d):
@@ -31,7 +31,7 @@ for d, p in itertools.product(directories, patterns):
         if fnmatch.fnmatch(d, p):
             files.append(d)
             
-errors: List[Tuple[Path, int, str, int]] = []
+errors: list[tuple[Path | str, int, str, int]] = []
 
 for fn in files:
     with open(fn) as f:

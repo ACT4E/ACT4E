@@ -45,7 +45,7 @@ chapters-standalones-noslides-fast=$(subst chapter.tex,chapter-standalone-noslid
 chapters-pdf        =$(subst chapter.tex,chapter-standalone.pdf,$(chapters))
 chapters-links      =$(subst chapter.tex,chapter-link-snippets, $(chapters))
 chapters-links2      =$(subst chapter.tex,snippets, $(chapters))
-chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
+# chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
 chapters-makefiles  =$(subst chapter.tex,Makefile,              $(chapters))
 
 parts=$(wildcard volumes/vol*/*/part.tex)
@@ -55,7 +55,7 @@ parts-standalones-noslides-fast=$(subst part.tex,part-standalone-noslides-fast.t
 parts-standalones-public-fast=$(subst part.tex,part-standalone-public-fast.tex,$(parts))
 parts-pdf        =$(subst part.tex,part-standalone.pdf,$(parts))
 parts-links      =$(subst part.tex,part-link-snippets, $(parts))
-parts-link-minted=$(subst part.tex,part-link-minted,   $(parts))
+# parts-link-minted=$(subst part.tex,part-link-minted,   $(parts))
 parts-makefiles  =$(subst part.tex,Makefile,           $(parts))
 
 parts-pdf: $(parts-pdf)
@@ -69,12 +69,12 @@ clean-links:
 %/part-link-snippets:
 	cd $*  && ln -f  -s ../../../snippets  part-link-snippets
 
-%/chapter-link-minted:
-	cd $*  && ln -f  -s ../../../../cache-minted  chapter-link-minted
-	cd $*  && ln -f  -s ../../../../cache-minted  cache-minted
-%/part-link-minted:
-	cd $*  && ln -f  -s ../../../cache-minted  part-link-minted
-	cd $*  && ln -f  -s ../../../cache-minted  cache-minted
+# %/chapter-link-minted:
+# 	cd $*  && ln -f  -s ../../../../cache-minted  chapter-link-minted
+# 	cd $*  && ln -f  -s ../../../../cache-minted  cache-minted
+# %/part-link-minted:
+# 	cd $*  && ln -f  -s ../../../cache-minted  part-link-minted
+# 	cd $*  && ln -f  -s ../../../cache-minted  cache-minted
 
 volumes/%/Makefile: templates/template-Makefile.mk
 	cp $< $@
@@ -118,7 +118,8 @@ standalone: \
 	$(chapters-standalones-public-fast) \
 	$(chapters-standalones-noslides-fast)
 
-links: $(chapters-links) $(parts-links) $(chapters-link-minted) $(parts-link-minted)
+# links: $(chapters-links) $(parts-links) $(chapters-link-minted) $(parts-link-minted)
+links: $(chapters-links) $(parts-links)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
 recursive: links standalone makefiles

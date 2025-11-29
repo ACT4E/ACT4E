@@ -12,7 +12,7 @@
 
 % \usepackage{styles/kaorefs}
 
-
+\usepackage{iftex}
 \usepackage{xr}
 % \usepackage[usenames,dvipsnames,table]{xcolor}
 
@@ -77,13 +77,24 @@
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}m{#1}}   % Right, Middle Align
 
 
-\usepackage[T1]{fontenc}
+\ifXeTeX
+\else
+  \usepackage[T1]{fontenc}
+\fi
 \usepackage{lipsum}
 \usepackage{xspace}
-\usepackage{amsmath}
+% For XeTeX, amsmath is loaded by unicode-math, amssymb should not be loaded
+\ifXeTeX
+\else
+  \usepackage{amsmath}
+\fi
 \usepackage{amsthm}
 \usepackage[capitalize]{cleveref} % Note: this needs to be just after amsthm
-\usepackage{amssymb} % conflict with mathdesign
+% amssymb conflicts with unicode-math in XeTeX
+\ifXeTeX
+\else
+  \usepackage{amssymb} % conflict with mathdesign
+\fi
 \usepackage{mathtools}
 
 \usepackage{multirow}
@@ -112,19 +123,27 @@
 \usepackage{array}
 \usepackage{calc}
 
-
 \usepackage{adjustbox}
 % means all figures need to be placed before next section starts
 \usepackage[section]{placeins}
 \usepackage{eso-pic}
-\usepackage{capt-of}
+% \usepackage{capt-of}
 \usepackage{wrapfig}
 \usepackage[normalem]{ulem}
 % \usepackage{newclude} % this broke 2024
 
 % \usepackage{breqn} % doesn't work for us
 %%%% FONTS
-\usepackage[notextcomp]{stix2}
+% For XeTeX, we use fontspec to load STIX Two fonts directly
+% For pdfTeX, we would use \usepackage[notextcomp]{stix2}
+\ifXeTeX
+%   \setmainfont{STIX Two Text}
+%   \setmathfont{STIX Two Math}
+    \else
+  % XeTeX - use fontspec (already loaded in preamble.tex)
+  % pdfTeX
+  \usepackage[notextcomp]{stix2}
+\fi
 
 
 \newboolean{paperslides}
@@ -476,11 +495,17 @@
     % Too strong, applies also to equations
 }
 
-% Disable warning from including SAG
-\pdfsuppresswarningpagegroup=1
-% Speed up compilation by not compressing
-% \pdfcompresslevel=0
-% \pdfobjcompresslevel=0
+% Disable warning from including SAG (pdfTeX only)
+\ifx\pdfsuppresswarningpagegroup\undefined
+\else
+  \pdfsuppresswarningpagegroup=1
+\fi
+% Speed up compilation by not compressing (pdfTeX only)
+% \ifx\pdfcompresslevel\undefined
+% \else
+%   \pdfcompresslevel=0
+%   \pdfobjcompresslevel=0
+% \fi
 
 % https://tex.stackexchange.com/questions/528604/fix-inconsistent-matrix-parentheses-size-in-stix2
 
@@ -521,3 +546,19 @@
 %   \shadowcolor{downcolor}%
 %   \shadowtext{\colDown$\downarrow$}%
 % }}
+
+
+
+\ifXeTeX
+  % Cross-compatible bold commands for XeTeX (using unicode-math)
+  \newcommand{\mbfup}[1]{\symbfup{#1}}      % Bold upright
+  \newcommand{\mbfit}[1]{\symbfit{#1}}      % Bold italic
+  \newcommand{\mup}[1]{\symup{#1}}          % Upright (non-bold)
+  \newcommand{\mitx}[1]{\symit{#1}}         % Italic (non-bold)
+\else
+  % Cross-compatible bold commands for pdfLaTeX
+  \newcommand{\mbfup}[1]{\mathbf{#1}}       % Bold upright
+  \newcommand{\mbfit}[1]{\boldsymbol{#1}}   % Bold italic
+  \newcommand{\mup}[1]{\mathrm{#1}}         % Upright (non-bold)
+  \newcommand{\mitx}[1]{\mathit{#1}}        % Italic (non-bold)
+\fi
