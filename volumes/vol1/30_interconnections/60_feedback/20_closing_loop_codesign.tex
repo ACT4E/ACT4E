@@ -1,2 +1,249 @@
 % !TEX root = chapter-standalone.tex
 
+\section{Trace in co-design}
+
+\begin{marginfigure}
+    \centering
+    \includesag{50_trace}
+    \caption{Design problem with a resource and a functionality of the same type.
+    }
+    \label{fig:extrace_1_copy}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includesag{50_trace2}
+    \caption{Closing the loop in the design problem.}
+    \label{fig:extrace_2_copy}
+\end{marginfigure}
+
+Suppose that we are given a design problem with a resource and a functionality of the same type~$\posgenC$ (\cref{fig:extrace_1}).
+Can we ``close the loop'', as in the diagram reported in~\cref{fig:extrace_2}?
+
+It turns out that we can give a well-defined semantics to this loop-closing operation, which coincides with the notion of a \emph{trace} in category theory.
+
+The following is the formal definition of the trace operation for \SY{design problems}.
+
+\linkvideo{spring2021-functorial-comp-b:solving-queries:solving-loop} % Loop composition
+\begin{definition}[Trace of a design problem]
+    \label{def:dp-trace_copy}
+    Given a \SY{design problem}~$\adpa\colon \funposA \mtimescatob \funposC \profto \resposB \mtimescatob \resposC$, its \emph{trace}
+    \begin{equation}
+        \Tr_{\funposA,\resposB}^\posC(\adpa) \colon \funposA \profto \resposB
+    \end{equation}
+    is defined as follows:
+    %
+    \begin{equation}
+        \label{eq:tracedef_copy}
+        \begin{aligned}
+            \Tr_{\funposA,\resposB}^\posC(\adpa) \colon \funposA\posop \Ptimes \resposB & \toinPos \Bool, \\
+            \tup{\funposAopel, \RposgenBel}                                             & \mapsto \bigvee_{\posgenCel \setin \posgenC}
+            \adpa(\tup{\FposgenAel, \F{\posgenCel}}\Fop,
+            \tup{\RposgenBel, \R{\posgenCel}}).
+        \end{aligned}
+    \end{equation}
+\end{definition}
+
+Think of drawing a loop as a way of writing down the following requirement:
+Something that produces~\posC should not use up more of~\posC than it produces.
+
+\devel{
+    \todotextjira{164}{\alphubel: @Gioele: The following section/paragraph on trace axioms needs attention: we don't use quite the same axioms in our definition of \SY{traced monoidal category} as are used below in the context of DP.
+        I suggest we keep the definition of \SY{traced monoidal category} that we currently have and change/add diagrams below for DP and/or add a remark.
+    }
+
+    \paragraph{Trace axioms}
+    We will show that the loop operation~$\Tr_{\funposA,\resposB}^\posC$ corresponds to the \emph{trace} in~\DP.
+    Intuitively, forming a loop models the idea of feedback in a control-theoretic setting--the output of a process influences the choice of input--
+    while the idea of ``trace'' of a \SY{monoidal category} comes from the trace of a square matrix~$(\Tr\mat{A} = \sum_i a_{ii})$, which defines the categorical trace in the (monoidal) category of \SY{vector spaces}, as previously shown.
+    The connection between the two is more apparent if one decomposes the trace of a square matrix as a set of properties that any linear map from a space to itself should satisfy.
+    One can find the trace axioms in \cite{mac2013categories};
+    these are equivalent to certain diagrammatic conditions \cite{joyal96}, as in \cref{tab:traceaxioms}.
+
+    \begin{table}[h!]
+        \begin{center}
+            \adjustbox{max width=\textwidth}{
+                \begin{tabular}{cc}
+                    Vanishing I                     & Vanishing II \\
+                    \includesag{50_vanishing_1a_1b} & \includesag{50_vanishing_2a_2b} \\
+                    Superposing                     & Yanking \\
+                    \includesag{50_superposing_1_2} & \includesag{50_yanking}
+                \end{tabular}
+            }
+        \end{center}
+        \caption{The trace axioms in diagrammatic form from \cite{joyal96} in \DP.
+            \label{tab:traceaxioms}}
+    \end{table}
+
+    \begin{lemma}\label{lem:dp-trace-is-trace_copy}
+        Trace as in~\cref{def:dp-trace_copy} satisfies the trace axioms.
+        In other words,~$\tupp{\DP, {{\otimes}}, \singletonpos, \sigma}$ is a \SY{traced monoidal category}, with trace as in~\cref{eq:tracedef}.
+    \end{lemma}
+    \begin{proof}
+        We have already shown that~$\tup{\DP,{{\otimes}},\singletonpos,\sigma}$ is a \SY{symmetric monoidal category} (\cref{lem:symmetricmonoidaldp}).
+        We prove the trace axioms one by one, starting from vanishing (\cref{eq:vanishing_1}, \cref{eq:vanishing_2}).
+        Given any~$\posgenA,\posgenB\setin \Obof\DP$ and~$\adpa\colon \F{\posgenA}\Ptimes \F{\singleton}\profto \R{\posgenB}\Ptimes \R{\singleton}$ in~\DP, we have
+        \begin{equation}
+            \begin{aligned}
+                 & = \Tr_{\F{\posgenA},\R{\posgenB}}^{\singleton}(\adpa)(\FposgenAelop,\RposgenBel) \\
+                 & =\bigvee_{\posCel\setin \singleton}\adpa(\tup{\FposgenAel,\F{\posgenCel}}\Fop, \tup{\RposgenBel,\R{\posgenCel}}) \\
+                 & =\adpa(\tup{\FposgenAel,\F{\singletonel}}\Fop, \tup{\RposgenBel,\R{\singletonel}}) \\
+                 & =\adpa(\FposgenAelop,\RposgenBel).
+            \end{aligned}
+        \end{equation}
+        Furthermore, for any morphism~$\adpa\colon \F{\posgenA}\Ptimes \F{\posgenX}\Ptimes \F{\posgenY} \profto \R{\posgenB}\Ptimes \R{\posgenX} \Ptimes \R{\posgenY}$ in \DP, we have
+        \begin{equation}
+            \begin{aligned}
+                ~ & \Tr_{\F{\posgenA},\R{\posgenB}}^{\posX\Ptimes\posY}(\adpa)(\FposgenAelop,\RposgenBel) \\
+                  & = \bigvee_{\tup{\posXel,\posYel} \setin \posX\Ptimes \posY} \adpa(\tup{\FposgenAel,\F{\posgenXel},\F{\posgenYel}}\Fop, \tup{\RposgenBel,\R{\posgenXel},\R{\posgenYel}}) \\
+                  & =\bigvee_{\posXel \setin \posX}\pars{\bigvee_{\posYel \setin \posY} \adpa(\tup{\FposgenAel,\F{\posgenXel},\F{\posgenYel}}\Fop, \tup{\RposgenBel,\R{\posgenXel},\R{\posgenYel}})} \\
+                  & =\Tr_{\F{\posgenA},\R{\posgenB}}^\posX\pars{
+                    \Tr_{\F{\posgenA}\Ptimes \F{\posgenX},\R{\posgenB}\Ptimes \R{\posgenX}}^\posY(\adpa)(\tup{\FposgenAel,\F{\posgenXel}}\Fop, \tup{\RposgenBel,\R{\posgenXel}})}.
+            \end{aligned}
+        \end{equation}
+        For the superposing axiom (\cref{eq:superposing}), consider~$\adpa\colon \F{\posgenA}\Ptimes \F{\posgenX}\profto \R{\posgenB}\Ptimes \R{\posgenX}$ in \DP.
+        We have
+        \begin{equation}
+            \begin{aligned}
+                {}
+                 & \Tr_{\R{\posgenC}\Ptimes \F{\posgenA},\R{\posgenC}\Ptimes \R{\posgenB}}^{\posX}(\dpidat\posC\mtimescat \adpa)(\tup{\F{\posgenCel_1},\FposgenAel}\Fop, \tup{\R{\posgenCel_2},\RposgenBel}) \\
+                 & = \bigvee_{\posXel \setin \posX} \dpidat\posC(\F{\posgenCel_1^*},\R{\posgenCel_2})\booland \adpa(\tup{\FposgenAel,\F{\posgenXel}}\Fop, \tup{\RposgenBel,\R{\posgenXel}}) \\
+                 & =\dpidat\posC(\F{\posgenCel_1^*},\R{\posgenCel_2}) \booland \bigvee_{\posXel\setin \posX} \adpa(\tup{\FposgenAel,\F{\posgenXel}}\Fop, \tup{\RposgenBel,\R{\posgenXel}}) \\
+                 & =(\dpidat\posC \mtimescat \Tr_{\F{\posgenA},\R{\posgenB}}^\posX(\adpa))(\tup{\F{\posgenCel_1},\FposgenAel}\Fop, \tup{\R{\posgenCel_2},\RposgenBel}).
+            \end{aligned}
+        \end{equation}
+        Finally, for yanking~\cref{eq:yanking} consider~$\sigma_{\posX,\posX}$.
+        We have
+        \begin{equation}
+            \begin{aligned}
+                ~ & \Tr_{\posA,\posA}^{\posA}(\sigma_{\posA,\posA})(\F{\posgenAel_1^*},\R{\posgenAel_2}) \\
+                  & = \bigvee_{\posAel\setin \posA} \sigma_{\posA,\posA}(\tup{\F{\posgenAel_1},\FposgenAel}\Fop, \tup{\R{\posgenAel},\R{\posgenAel_2}}) \\
+                  & =\bigvee_{\posAel\setin \posA} \F{\posgenAel_1} \posleq \R{\posgenAel_2} \booland \FposgenAel\posleq \R{\posgenAel} \\
+                  & =\bigvee_{\posAel\setin \posA} \F{\posgenAel_1} \posleq \R{\posgenAel_2} \\
+                  & =\dpidat\posA(\F{\posgenAel_1^*},\R{\posgenAel_2}).
+            \end{aligned}
+        \end{equation}
+    \end{proof}
+}
+
+\devel{
+\begin{example}
+    TODO(james): 
+    \begin{itemize}
+        \item description of example. Insert graphs of DP
+        \item check if there is a symbol for $+$ and $\widetilde{a}$
+        \item symbol for $v \setin \posV$?
+        \item check symbols in general.
+        \item list of constants : $p_0, d_{<_p}, m_0, d_0, d_\Delta, c, c_0 \ldots$
+    \end{itemize}
+    CHANGES TO ORIGINAL PDF
+    \begin{itemize}
+        \item defined and  gave names to mass poset and cost poset
+        \item typo in def of $d_2$
+        \item added a lot more $\cdot$'s in the equations.
+    \end{itemize}
+
+    The poset $\posV \definedas \defineposet{\nonNegReals \setunion \makeset{\false}}{\posleqof\posV}$, where $\false$ represents "Rover not operating" is defined as follows: 
+    TODO INSERT GRAPH
+    note how $\false \posleqof\posV v$ for all $v \setin \nonNegReals$, and especially $0 \not\posleqof\posV \false$. 
+    We use the symbols $l, \tilde{l}, m, \widetilde{m}$ all in the poset $\stylepos{M} \definedas \defineposet{\nonNegReals}{\posleqof{\stylepos{M}}}$ to represent mass, the symbol $c$ in the poset $\stylepos{C} \definedas \defineposet{\nonNegReals}{\posleqof{\stylepos{C}}}$ to represent Cost and the symbol $p$ in the poset $ \posA \definedas \defineposet{\nonNegReals}{\posleqof\posA}$ to represent power???. 
+    First, we fix some constants that represent ???(our choice in components maybe?) TODO: INSERT LIST OF CONSTANTS AND WHERE THEY LIVE.
+    The DPs are defined as follows:
+    \begin{equation}
+        \styledp{+}(\tup{l,\widetilde{m}}, \tilde{l}) \definedas  (l + \widetilde{m}) \posleqof{\stylepos{M}} \widetilde{m}
+    .\end{equation}
+    For the DP $\adpan{1}$, we will have to treat the cases $v \setin \nonNegReals$ and $v = \false$ separately:
+    \begin{align}
+        \adpan{1}(\tup{\widetilde{v}, \tilde{l}}, p) &= (p_0 + d_{< p}  + \widetilde{v}\cdot(\tilde{l} + l_0)) \posleqof\posV p\\
+        \adpan{1}(\tup{\false, \tilde{l}}, p) &= \true
+    .\end{align}
+    Finally, $\adp_2$ is defined as follows:
+    \begin{equation}
+        \adp_2(p, \tup{c,m}) = \left[p \posleqof\posA (1-\exp\left(-\frac{m}{m_0}\right)\left(d_0 - d_\Delta \exp\left(- \frac{c}{c_0}\right)\right)\right]\booland (c\posgeqof{\stylepos{C}} c_0)
+    .\end{equation}
+    In the next step, we want to calculate the Trace of our DP. For that, we write down the DP in its entirety, which we will do stepwise. First, the parallel composition $\dpidat\posV \mtimescatmor \styledp{+}$ does the following:
+    QUESTION: Usage of red striketrhough $\not\leq$ ? $\geq$? Why mention $\false$ at all?
+    \begin{align}
+        \left[\dpidat\posV\mtimescatmor \styledp{+}\right]\left(\tup{v, l, \widetilde{m}},\tup{\widetilde{v},\tilde{l}}\right) &= (v \posleqof\posV \widetilde{v})\booland\left((l + \widetilde{m})\posleqof{\stylepos{M}} \tilde{l}\right)
+    .\end{align}
+    Composing the above with $\adpan{1}$ yields:  
+    \begin{align}
+        &\left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1}\right]\left(\tup{v, l , \widetilde{m}}, p\right) \notag\\
+        & \quad = \exists \widetilde{v}, \tilde{l}:\bigg[(v \posleqof\posV \widetilde{v})\booland\left(l + \widetilde{m} \posleqof{\stylepos{M}} \tilde{l} \right) \booland\left(p_0 + d_{<_p} \cdot \widetilde{v} \cdot (l + l_0) \right)\biggr]\\
+        &\quad = \left(p_0 + d_{\le_p} \cdot v \cdot (l + \widetilde{m} + l_0) \posleqof\posA  p\right)
+    .\end{align} 
+    Finally, we get the final equation by composing with $\adpan{2}$: 
+    \begin{alignat}{2}
+        & \left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right] \left( \tup{v, l,\widetilde{m}}, \tup{c,m}\right) \\
+        &\quad  = \exists p : \Biggl[\left[\left( p_0 + d_{<_p} \cdot v \cdot(m + l + l_0) \right) \posleqof\posA p\right] \notag \\
+        & \qquad\qquad\booland  \left[ p \posleqof\posA \left(1 - \exp\left(-\frac{m}{m_0}\right)\right)\left(d_0 - d_\Delta \exp\left(-\frac{c}{c_0}\right)\right)\right] \notag \\
+        & \qquad\qquad \booland \left[ c \posgeqof{\stylepos{C}} c_0\right]\Biggr]\\
+        & \quad = \left[p_0 + d_{<_p}\cdot v (l + m + l_0) \posleqof\posA \left(1 - \exp\left(-\frac{m}{m_0}\right)\right) \left(d_0 - d_\Delta \exp\left( - \frac{c}{c_0}\right)\right)\right] \notag \\
+        & \qquad \booland (c \posgeqof{\stylepos{C}}c_0)
+    \end{alignat}
+    For ease of notation, we introduce the function
+    \begin{equation}
+        d(c) \definedas d_0 - d_\Delta \cdot \exp\left(-\frac{c}{c_0}\right)
+    .\end{equation}
+  
+
+    Our DP is of the form $ (\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}: \makecartprod{\posV, \stylepos{M}, \stylepos{M}} \profto \makecartprod{\stylepos{C}, \stylepos{M}}$, and we can calculate its trace $\Tr_{\makecartprod{V,M}, C}^{\stylepos{M}}\left((\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right)$:
+    \begin{align}
+        &\Tr_{\makecartprod{V,M}, C}^{\stylepos{M}}\left((\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right)\left(\tup{v, l}, c\right) = \notag\\
+        & \quad = \exists m : \left[p_0 + d_{<_p} \cdot   v \cdot (l + m + l_0) \posleqof\posA\left(1 - \exp\left(-\frac{m}{m_0}\right) \cdot d(c) \right)\right] \notag\\
+        & \qquad \qquad\booland (c \posgeqof{\stylepos{C}}c_0) \\
+        & \quad = \Biggl[\exists m : \left[p_0 + d_{<_p} \cdot   v \cdot (l + m + l_0) \posleqof\posA\left(1 - \exp\left(-\frac{m}{m_0}\right) \cdot d(c) \right)\right]\Biggr] \notag\\
+        & \qquad \booland (c \posgeqof{\stylepos{C}}c_0)
+    .\end{align}
+    We turn our attention to the analysis of the first term:
+    TODO: INSERT GRAPH
+    \begin{equation}
+        \exists m: \left[p_0 + d_{<_p} \cdot v \cdot l + d_{<_p} \cdot v \cdot l_0 + d_{<_p} \cdot v \cdot m \posleqof\posA d(c) \cdot \left(1-\exp\left(- \frac{m}{m_0}\right)\right)\right]
+    .\end{equation}
+    Let $\widehat{m}$ be such that $d_{<_p}\cdot v = d(c) \cdot \frac{1}{m_0} \exp\left(-\frac{\widehat{m}}{m_0}\right) $. If we want $\widehat{m}$ to satisfy our constraints, then we will need to have that $\widehat{m} > 0$ and ???
+    \begin{align}
+        p_0 + d_{<_p} \cdot v \cdot l + d_{<_p} \cdot v \cdot l_0 + d_{<_p} \cdot v \cdot \widehat{m} &\posleqof\posA d(c) \cdot \left(1-\exp\left(- \frac{\widehat{m}}{m_0}\right)\right)
+    .\end{align}
+    By rewriting the above, we get
+    \begin{align}
+        \widehat{m} \definedas m_0 \log \left(\frac{d(c)}{d_{<_p} \cdot v \cdot m_0}\right) &> 0\\
+        p_0 + d_{<_p} \cdot v \cdot l + d_{<_p} \cdot v \cdot l_0 + d_{<_p} \cdot v \cdot \widehat{m} &\posleqof\posA d(c) - d_{<_p} \cdot v \cdot m_0
+    ,\end{align}
+    both of which we get by using the definition of $\widehat{m}$. Notice how for both inequalities the constraints can be satisfied if and only if $d(c) > d_{<_p}\cdot v \cdot m_0$. Having done all that, we can rewrite the trace as follows:
+    \begin{align*}
+        &\Tr_{\makecartprod{V,M}, C}^{\stylepos{M}}\left((\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right)\left(\tup{v, l}, c\right)  \notag \\
+        & \quad = (c \posgeqof{\stylepos{C}} c_0) \notag\\
+        & \qquad \booland\widehat{m} = m_0 \log \left(\frac{d(c)}{d_{<_p} \cdot v \cdot m_0}\right) > 0 \notag\\
+        & \qquad \booland \widehat{m} > 0 \text{ alternative version} \notag\\
+        & \qquad \booland p_0 + d_{<_p} \cdot v \cdot l + d_{<_p} \cdot v \cdot l_0 + d_{<_p} \cdot v \cdot \widehat{m} \posleqof\posA d(c) - d_{<_p} \cdot v \cdot m_0
+    \end{align*}
+    Notice that in case $p_0 < d(c) = d_0 - d_\Delta \exp\left(-\frac{c}{c_0}\right)$, the DP will always evaluate to False, even if the Rover is not moving ($v=0$). This is a special case where the Rover can not operate, which we cover seperately. Recall that the state "Rover not operating" is represented by $\false \setin \posV$. Furthermore, for all $\widetilde{v} \setin \posV$ we have $\dpidat\posV(\tup{\false, \widetilde{v}}) = \true$. We repeat the above steps with $v =\false$
+    \begin{align}
+        \left[\dpidat\posV\mtimescatmor \styledp{+}\right]\left(\tup{\false, l, \widetilde{m}},\tup{\widetilde{v},\tilde{l}}\right) &= \true \booland\left((l + \widetilde{m})\posleqof{\stylepos{M}} \tilde{l}\right)\\
+        &= (l + \widetilde{m})\posleqof{\stylepos{M}} \tilde{l}
+    .\end{align}
+    Composing the above with $\adpan{1}$ yields:  
+    \begin{align}
+        &\left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1}\right]\left(\tup{\false, l , \widetilde{m}}, p\right) \notag\\
+        & \quad = \exists \widetilde{v}, \tilde{l} : \bigg((l+m \posleqof{\stylepos{M}} \tilde{l} \booland d_1\left(\tup{\widetilde{v},\tilde{l}},p\right) \bigg)\\
+        & \quad = \exists \widetilde{v}, \tilde{l}:\bigg[\left(l + \widetilde{m} \posleqof{\stylepos{M}} \tilde{l} \right) \booland\left(p_0 + d_{<_p} \cdot \widetilde{v} \cdot (l + l_0) \right)\biggr] \notag\\
+        & \qquad \qquad \boolor\left[(\tilde{v} = \false \booland (l + m \posleqof{\stylepos{M}} \tilde{l}\right]\\
+        &\quad = \true
+    .\end{align} 
+    Where the last step is due to the fact that we can choose $\widetilde{v}$ to be $\false$ and $\tilde{l}$ to be $l+m$
+    Finally, we get the final equation by composing with $\adpan{2}$: 
+    \begin{alignat}{2}
+        & \left[(\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right] \left( \tup{\false, l,\widetilde{m}}, \tup{c,m}\right) \\
+        &\quad  = \exists p : \true \booland  \left[ p \posleqof\posA \left(1 - \exp\left(-\frac{m}{m_0}\right)\right)\left(d_0 - d_\Delta \exp\left(-\frac{c}{c_0}\right)\right)\right] \notag \\
+        & \qquad \qquad \booland \left[ c \posgeqof{\stylepos{C}} c_0\right]\Biggr]\\
+        & \quad = (c \posgeqof{\stylepos{C}}c_0)
+    \end{alignat}
+    Where in the last step, we again used the fact that we can choose $p=0$. 
+    The Trace in this case is a lot more manageable:
+    \begin{align}
+        \Tr_{\makecartprod{V,M}, C}^{\stylepos{M}}\left((\dpidat\posV \mtimescatmor \styledp{+})\dpthen \adpan{1} \dpthen \adpan{2}\right)(\tup{\false, l}, c) &= \exists m : c \posgeqof{\stylepos{C}} c_0 \notag\\
+        &= c \posgeqof{\stylepos{C}} c_0
+    \end{align}
+    The interpretation here is that if we do not require the Rover to be operatable, then we are only required to pay the minimum cost $c_0$. 
+\end{example}
+}

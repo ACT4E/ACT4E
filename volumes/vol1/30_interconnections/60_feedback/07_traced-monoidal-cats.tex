@@ -108,6 +108,8 @@
     Also, this could be made into a graded exercise.
 }
 
+\subsection{Relations with cartesian product as monoidal product}
+
 \begin{definition}
     For the symmetric monoidal category $\tup{\Rel, \cartprod, \singleton, \associator, \leftunitor, \rightunitor, \braiding}$, a trace is defined as follows.
     Given a relation
@@ -120,51 +122,7 @@
     \end{equation}
 \end{definition}
 
-\begin{definition}
-    Consider the symmetric monoidal category $\tup{\Rel, \setdisunion, \Emptyset, \associator, \leftunitor, \rightunitor, \braiding}$.
-    In $\Rel$, the disjoint union of any two sets always comes with canonical inclusion relations
-    \begin{equation}
-        \begin{aligned}
-            \inj_\setA\colon & \setA \mto \setA\setdisunion\setB \\
-                             & \makeset{ \tup{\setAel, \disunionA{\setAel}}},
-        \end{aligned}
-        \qquad \qquad
-        \begin{aligned}
-            \inj_\setB\colon & \setB  \mto \setA\setdisunion\setB \\
-                             & \makeset{ \tup{\setBel, \disunionB{\setBel}}},
-        \end{aligned}
-    \end{equation}
-    and canonical projection relations
-    \begin{equation}
-        \begin{aligned}
-            \proj_\setA\colon & \setA\setdisunion\setB \mto \setA \\
-                              & \makeset{ \tup{\disunionA{\setAel}, \setAel}},
-        \end{aligned}
-        \qquad \qquad
-        \begin{aligned}
-            \inj_\setB\colon & \setA\setdisunion\setB  \mto \setB \\
-                             & \makeset{ \tup{\disunionA{\setAel}, \setBel}}.
-        \end{aligned}
-    \end{equation}
-    Given any relation of type
-    \begin{equation}
-        \relA \colon \setA \setdisunion \setC \to \setB \setdisunion \setD,
-    \end{equation}
-    we can pre-compose it with the inclusion $\inj_\setA \colon \setA \sto \setA\setdisunion\setC$ and post-compose it with the relation $\proj_\setA\colon \setA\setdisunion\setC \sto \setB$ to obtain a relation
-    \begin{equation}
-        \relA_{\setA \setB} \colon \setA \overset{\inj_\setA}{\mto} \setA \setdisunion \setC \overset{\relA}{\mto} \setB \setdisunion \setC \overset{\proj_\setB}{\mto} \setB.
-    \end{equation}
-    In an analogous manner we also obtain relations
-    \begin{equation}
-        \relA_{\setC \setB} \colon \setA \mto \setB, \qquad \relA_{\setA \setC} \colon \setC \mto \setB, \qquad \relA_{\setC \setC} \colon \setC \mto \setC,
-    \end{equation}
-    induced from $\relA$.
 
-    Now we set
-    \begin{equation}\label{eq:trace-rel-sum}
-        \Tr_{\setA,\setB}^\setC (\relA) = \relA_{\setA \setB} \cup \bigcup_{n \geq 0} \relA_{\setA \setC} \mthen \relA_{\setC \setC}^n \mthen \relA_{\setC \setB}.
-    \end{equation}
-\end{definition}
 
 \begin{gradedexercise}[\exname{TracingRelations}]
 
@@ -198,7 +156,71 @@
 
 \solutionof{TracingRelations}
 
-\subsection{Trace in co-design}
+
+\subsection{Relations with sum as monoidal product}
+
+Consider the symmetric monoidal category $\tup{\Rel, \setdisunion, \Emptyset, \associator, \leftunitor, \rightunitor, \braiding}$.
+    In $\Rel$, the disjoint union of any two sets always comes with canonical inclusion relations
+    \begin{equation}
+        \begin{aligned}
+            \inj_1 \colon & \setA \mto \setA\setdisunion\setB \\
+                             & \makeset{ \tup{\setAel, \disunionA{\setAel}}},
+        \end{aligned}
+        \qquad \qquad
+        \begin{aligned}
+            \inj_2 \colon & \setB  \mto \setA\setdisunion\setB \\
+                             & \makeset{ \tup{\setBel, \disunionB{\setBel}}},
+        \end{aligned}
+    \end{equation}
+    and canonical projection relations
+    \begin{equation}
+        \begin{aligned}
+            \proj_1 \colon & \setA\setdisunion\setB \mto \setA \\
+                              & \makeset{ \tup{\disunionA{\setAel}, \setAel}},
+        \end{aligned}
+        \qquad \qquad
+        \begin{aligned}
+            \proj_2 \colon & \setA\setdisunion\setB  \mto \setB \\
+                             & \makeset{ \tup{\disunionA{\setAel}, \setBel}}.
+        \end{aligned}
+    \end{equation}
+    Now suppose we are given a relation of type
+    \begin{equation}
+        \relA \colon \setA \setdisunion \setC \to \setB \setdisunion \setD.
+    \end{equation}
+    We can pre-compose it with the inclusion $\inj_1 \colon \setA \sto \setA\setdisunion\setC$ and post-compose it with the projection $\proj_1 \colon \setB \setdisunion\setD \sto \setB$ to obtain a relation
+    \begin{equation}
+        \relA_{1,1} \colon \setA \overset{\inj_1}{\mto} \setA \setdisunion \setC \overset{\relA}{\mto} \setB \setdisunion \setD \overset{\proj_1}{\mto} \setB.
+    \end{equation}
+    In a similar manner we also obtain relations
+    \begin{equation}
+        \relA_{2, 1} \colon \setC \mto \setB, \qquad \relA_{1, 2} \colon \setA \mto \setD, \qquad \relA_{2, 2} \colon \setC \mto \setD,
+    \end{equation}
+    induced from $\relA$. Together, the four relations obtained in this way contain the same information as the original relation $\relA$, and we can arrange them in a block-matrix notation
+    \begin{equation}
+\begin{bmatrix}
+  \relA_{1,1} & \relA_{2,1} \\
+  \relA_{1,2} & \relA_{2,2}
+\end{bmatrix}
+\end{equation}
+
+which highlights that this decomposition is analogous to block-matrices between vector spaces. 
+
+\begin{definition}
+   For the symmetric monoidal category $\tup{\Rel, \setdisunion, \Emptyset, \associator, \leftunitor, \rightunitor, \braiding}$, a trace is defined as follows.
+
+Given a relation  
+   \begin{equation}
+       \relA \colon \setA \setdisunion \setC \to \setB \setdisunion \setC,
+    \end{equation}
+    we set 
+    \begin{equation}\label{eq:trace-rel-sum}
+        \Tr_{\setA,\setB}^\setC (\relA) = \relA_{1,1} \cup \bigcup_{n \geq 0} ( \relA_{1,2} \mthen \relA_{2,2}^n \mthen \relA_{2,1} ).
+    \end{equation}
+   Here, $\relA_{2,2}^n$ means $\relA_{2,2}$ composed with itself $n$-many times.
+\end{definition}
+
+\subsection{Co-design}
 \todotextjira{201}{\alphubel: @Gioele: Change example}
 
 \begin{marginfigure}
