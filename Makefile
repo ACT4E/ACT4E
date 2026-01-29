@@ -211,7 +211,6 @@ find-equations-ll:
 compile-equations:
 	make -C equations -j -k
 #	rm -rf  equations/vol1/20_orders
-#	rm -rf  equations/vol1/22_operations
 #	rm -rf  equations/vol1/25_translation
 #	rm -rf  equations/vol1/30_design
 #	rm -rf  equations/vol1/40_computation
