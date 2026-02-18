@@ -2,10 +2,9 @@
 
 \section{Interfaces}\label{sec:interfaces}
 
-One way to understand \SY{semicategories} is to see them as a generalization of semigroups.
-In \SY{semigroups}, \SY{monoids}, and \SY{groups} we could take any two elements and compose them: the elements always had a ``compatible'' interface.
+One way to get to know  \SY{semicategories} is to understand them as a generalization of semigroups. 
 
-To motivate the need for interfaces, consider the ropes of~\cref{chap:putting-things-together}, which had this composition rule:
+Here is a little story to illustrate how one might think about this. Consider the ropes (with lengths) of~\cref{chap:putting-things-together}, which had this composition rule:
 %
 \begin{equation}
     \prfperiod{
@@ -17,68 +16,32 @@ To motivate the need for interfaces, consider the ropes of~\cref{chap:putting-th
     }
 \end{equation}
 %
-Two chapters later, we can recognize that we were describing the \SY{monoid}~$\tupp{\nonNegReals,+, 0}$.
-Being a \SY{monoid}, all pieces of rope are compatible and can be composed.
+If we are working with all possible ropes whose lengths may be any natural number, then we could say that this gives a kind of model of the semigroup $\tupp{\natnumbers,+}$, because setting ropes end-to-end means that the resulting length is the sum of the component rope lengths. In this setting, \emph{any} two ropes may be composed by being set end-to-end. 
 
-A first step towards discussing interfaces is to think of things that have a direction.
-For example, consider extension cords.
-Let~$\cordG{c}$ be an extension cord of length~$c$.
-If you have an extension cord of length~$c$ and another of length~$d$, you can plug them together to get an extension cord of length~$c+d$:
-%
+Next, consider electrical chords instead of ropes. Each electrical chord has a socket end and a plug end (and, as with the ropes, also a length):
 \begin{equation}
-    \label{eq:cords}
-    \prfperiod{
-        \cordG{c}
-    }{
-        \cordG{d}
-    }{
-        \cordG{c+d}
-    }
+\cordG{a}
 \end{equation}
-%
-In this form, this is still the same \SY{monoid}.
 
-But suppose now that, reading this book, you fall in love with Switzerland and want to visit.
-As you start to plan your trip, at some point you need to think about electrical adapters.
-Switzerland uses the connector of type~N (\cref{fig:plugs}).
-If you come from Ireland, your appliances use type~G.
-\todographicsjira{383}{\bernina: @Gioele: Make a figure that shows a physical cable and the math representation, and another with an adapter and the math representation.}
-Now when we think of extension cords, we might allow either end to have a plug type.
-%
-These would be Irish and Swiss extension cords of length $\ell$:
-%
-\begin{equation}
-    \label{eq:irish-swiss}
-    {\cord{\TypeIrish}{\ell}{\TypeIrish} \qquad \cord{\TypeSwiss}{\ell}{\TypeSwiss}}.
-\end{equation}
-%
-You might want a cord that has a Swiss male end and an Irish female end:
-%
+Furthermore, worldwide there is a handful of different types of electrical plugs (and sockets). So let's suppose the socket and plug end of our electrical chords are each labeled with a specific type, and that the socket end and the plug end of a given chord don't necessarily have to have the same type (this can be achieved with adapters, for example). For fun, we'll use little country flags as indicators of the types of the plugs and sockets: 
 \begin{equation}
     \label{eq:want}
-    {\cord{\TypeIrish}{\ell}{\TypeSwiss}}.
+    {\cord{\TypeIrish}{a}{\TypeSwiss}}
 \end{equation}
-%
-Unfortunately these devices don't exist.
-What you can buy are adapters, which we can think of extension cord of length zeros:
-\begin{equation}
-    {\cord{\TypeIrish}{0}{\TypeSwiss}}.
-\end{equation}
-%
-If you have an adapter, then you can attach an extension cord to it to obtain~\cref{eq:want}:
-%
+
+As with the ropes, we can also think about composing electric chords together to make longer ones. However, now we can only connect two chords if the type of the plug of one of them has the type of the socket of the other:
 \begin{equation}
     \label{eq:irish-swiss-result}
     \prfperiod{
-        \cord{\TypeIrish}{\ell}{\TypeIrish}
+        \cord{\TypeIrish}{a}{\TypeIrish}
     }{
-        \cord{\TypeIrish}{0}{\TypeSwiss}
+        \cord{\TypeIrish}{b}{\TypeSwiss}
     }{
-        \cord{\TypeIrish}{\ell}{\TypeSwiss}
+        \cord{\TypeIrish}{a + b}{\TypeSwiss}
     }
 \end{equation}
-%
-The general formula to compose cords with generic types~$\Obja, \Objb, \Objc$ is
+
+Or, phrased in a slightly more abstract manner, for any plug/socket types $\Obja, \Objb, \Objc$ the general formula to compose chords is
 %
 \begin{equation}
     \label{eq:cords-generic}
@@ -90,8 +53,13 @@ The general formula to compose cords with generic types~$\Obja, \Objb, \Objc$ is
         \cord{\Obja}{a+b}{\Objc}
     }
 \end{equation}
-%
-This kind of composition of things that have an input and an output interface, like cords, can be modeled by the notions of \SY{semicategory} and category.
+ 
+If we think of the ends of the chords as ``interfaces'', then we can say that two chords are only then composable at a pair of interfaces when those interfaces match. Here there are in fact two conditions at play: for interfaces to match we need 1) that one of the interfaces is a plug and the other is a socket, and 2) we need that both interfaces have the same type. 
+
+Both of these conditions are indicative of how things work generally in semicategories: as we will see shortly in more detail, in semicategories we have \emph{morphisms} (the analogue of electrical chords) which each have a \emph{source} and a \emph{target} (analogous to have a socket end and a plug end). Furthermore, every source and target of a morphism has a \emph{type}, and any two morphisms are composable at a pair of interfaces if 1) the one interface is a target and the other is a source and 2) if the types of the interfaces are the same. 
+
+In summary, we first looked at a specific illustrative model of a semigroup given by ropes with length, and then we generalized this picture by adding ``interfaces'' in order to give a first intuition about semicategories. In the very special case when all interfaces happen to have the same type, we are back to having just a semigroup. It is in this sense that semicategories are a generalization of semigroups. 
+
 
 \todotext{\bernina: Would be nice to continue the example by considering voltages (220 v 110), voltages converters, appliances that can use one or both.}
 
