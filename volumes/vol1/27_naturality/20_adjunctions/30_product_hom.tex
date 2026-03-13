@@ -4,54 +4,98 @@
 We will consider an \SY{adjunction} between the category \Set and itself which is a basic representative of a certain ``type'' of \SY{adjunction} that appears all over mathematics.
 This type of \SY{adjunction} might be called a ``Product-Hom'' \SY{adjunction}.
 
-Fix a set~\setB and consider the \SY{functors}~$\funa$ and~$\funb$ which act as follows.
-Given a set~\setA,
+Fix a set~\setB and consider \SY{functors}~$\funa$ and~$\funb$
+\begin{equation}
+\begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+    {\Set}
+     &  &  &  & \Set
+    \arrow[""{name=0, anchor=center, inner sep=0}, "\funa", bend left=30, from=1-1, to=1-5]
+    \arrow[""{name=1, anchor=center, inner sep=0}, "\funb", bend left=30, from=1-5, to=1-1]
+\end{tikzcd}
+\end{equation}
+which are defined as follows.
+
+On the level of objects -- in this case these are sets -- we define
 \begin{equation}\label{eq:product-with-a-set-functor-objects}
-    \funa(\setA) = \setB \cartprod \setA
+    \funa(\setA) =  \setA \cartprod \setB 
 \end{equation}
 and
 \begin{equation}\label{eq:set-expontiation-functor-objects}
-    \funb(\setA) = \HomSet{\Set}{\setB}{\setA} \eqqcolon \setA^\setB.
+    \funb(\setA) =  \setA^\setB
 \end{equation}
+(recall that  $\setA^\setB= \HomSet{\Set}{\setB}{\setA}$ denotes the set of functions from $\setB$ to $\setA$.)
+
 \todotextjira{474}{\alphubel: @JL: too synthentic, not readable}
-Given a morphism~$\mora\colon \setA \mto \setAprime$,
+Now let's define $\funa$ and $\funb$ on the level of morphisms (which, in this case, are functions). Given a function~$\mora\colon \setA \mto \setAprime$, we define
 \begin{equation}\label{eq:product-with-a-set-functor-morphisms}
-    \funa(\mora) = \catidat\setB \funcprod \mora
+    \begin{aligned}
+        \funa(\mora)\colon \quad \setA \cartprod \setB \quad & \sto \quad \setAprime \cartprod \setB \\
+        \tup{\ela, \elb}  \quad          & \mapsto \quad \tup{\mora(\ela), \elb} .
+    \end{aligned}
 \end{equation}
+%\begin{equation}\label{eq:product-with-a-set-functor-morphisms}
+%    \funa(\mora) =   \mora \funcprod \catidat\setB
+%\end{equation}
 and
 \begin{equation}\label{eq:set-exponentiation-functor-morphisms}
     \begin{aligned}
-        \funb(\mora)\colon \setA^\setB & \sto \setAprime^\setB \\
-        \morb                          & \mapsto \morb \mthen \mora.
+        \funb(\mora)\colon \quad \setA^\setB \quad & \sto \quad \setAprime^\setB \\
+        \morb \quad                         & \mapsto \quad \morb \mthen \mora.
     \end{aligned}
 \end{equation}
+
+A useful shorthand notation for these functors is $\funa = ( - ) \cartprod \setB$ and $\funb = ( - )^\setB$. 
 %
-These \SY{functors} are part of an adjunction
-%
-\equationsag{091_adjunctions_prod_hom}{eq:prod-hom-adjunction-diagram}
-%
-In terms of \cref{def:adj-iso}, there is a natural isomorphism
+They form an adjunction
+\begin{equation}
+\begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+    {\Set}
+     &  &  &  & \Set
+    \arrow[""{name=0, anchor=center, inner sep=0}, "{( - ) \cartprod \setB}", bend left=30, from=1-1, to=1-5]
+    \arrow[""{name=1, anchor=center, inner sep=0}, "{( - )^\setB}", bend left=30, from=1-5, to=1-1]
+    \arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+\end{tikzcd}
+\end{equation}
+Let's see how, according to each of the two different definitions of adjunction. 
+
+\subsection{Checking the hom-set definition of adjunction}
+
+Consider \cref{def:adj-iso}. In the present example, there is a natural isomorphism
 \begin{equation}\label{eq:prod-hom-adjunction-transpose-nat-iso}
-    \stylenat{\tau}\colon \HomSet{\Set}{\funa(- )}{-} \ntolong \HomSet{\Set}{-}{\funb( - )}
+    \stylenat{\tau}\colon \quad \HomSet{\Set}{\funa(- )}{-} \quad \ntolong \quad \HomSet{\Set}{-}{\funb( - )}
 \end{equation}
 whose component at~$\tup{\setA,\setC}$ is the isomorphism
 \begin{equation}\label{eq:prod-hom-adjunction-transpose-components}
-    \stylenat{\tau}_{\setA,\setC} \colon \HomSet\Set{\setB\cartprod \setA}{\setC} \mto \HomSet{\Set}{\setA}{\setC^\setB}
+    \stylenat{\tau}_{\setA,\setC} \colon \quad  \HomSet\Set{ \setA \cartprod \setB}{\setC} \quad \mto \quad \HomSet{\Set}{\setA}{\setC^\setB}
 \end{equation}
 given by ``partial evaluation''.
-Namely, given~$\mora \colon \setB \cartprod \setA \mto \setC$, this is mapped by~$\stylenat{\tau}_{\setA,\setC}$ to the function~$\stylenat{\tau}\mora \colon \setA \sto \setC^\setB$,~$\setAel \mapsto f( -, \setAel)$.
+Namely, given~$\mora \colon   \setA \cartprod \setB \mto \setC$, this is mapped by~$\stylenat{\tau}_{\setA,\setC}$ to the function
+\begin{equation}
+    \begin{aligned}
+        \stylenat{\tau}_{\setA,\setC}(\mora) \colon \quad \setA \quad & \to \quad  \setC^\setB \\
+        \setAel          \quad             & \mapsto \quad \mora(\setAel, - ).
+    \end{aligned}
+\end{equation}
 
-In terms of \cref{def:adj-counit}, the component at~\setA of the unit and co-unit, respectively, are
+\subsection{Checking the (co)unit definition of adjunction}
+
+Now consider the (co)unit definition of adjunctions. In the present example, we claim that unit and co-unit natural transformations 
+\begin{equation}
+    \funid_\Set \ \overset{\equivunit}{\ntolong}\ \funa \fthen \funb \qqand \funb \fthen \funa \ \overset{\equivcounit}{\ntolong}\ \funid_\Set.
+\end{equation}
+are defined as follows. In components, for any set \setA, we define
 \begin{equation}\label{eq:prod-hom-adjunction-unit}
     \begin{aligned}
-        \equivunit_\setA \colon \setA & \to  (\setB \cartprod \setA)^\setB \\
-        \setAel                       & \mapsto (\setBel \mapsto \tup{\setAel,\setBel})
+        \equivunit_\setA \colon \quad \setA \quad & \to  \quad (  \setA \cartprod \setB)^\setB \\
+        \setAel     \quad                  & \mapsto \quad (\setBel \mapsto \tup{\setAel,\setBel})
     \end{aligned}
 \end{equation}
 and
 \begin{equation}\label{eq:prod-hom-adjunction-co-unit}
     \begin{aligned}
-        \equivcounit_\setA \colon \setB \cartprod (\setA^\setB) & \sto \setA \\
-        \tup{\setBel,\mora}                                     & \mapsto \mora(\setBel)
+        \equivcounit_\setA \colon \quad  (\setA^\setB) \cartprod \setB \quad & \sto \quad \setA \\
+        \tup{\mora,\setBel} \quad                                    & \mapsto \quad \mora(\setBel).
     \end{aligned}
 \end{equation}
+
+
