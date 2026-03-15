@@ -378,12 +378,84 @@ if $\setA_1 \setsubseteq \setA_2$ and $\setB_1 \setsupseteq \setB_2$.
 \end{ctdefinition}
 
 \begin{lemma}\label{lem:alternative-def-Galois-connection}
-    Monotone maps $\mapa\colon \posA\to \posB$ and~$\mapb\colon \posB\to \posA$ form a Galois connection if and only if the following hold:
+    Monotone functions $\mapa\colon \posA\to \posB$ and~$\mapb\colon \posB\to \posA$ form a Galois connection if and only if the following hold:
     \begin{enumerate}
         \item $\posAel\posAleq \mapb(\mapa(\posAel)) \quad \forall \posAel\setin \posA$;
         \item $\mapa(\mapb(\posBel)) \posBleq \posBel \quad \forall \posBel\setin \posB$.
     \end{enumerate}
 \end{lemma}
+
+\todotext{write here the intuition / perspective on galois connections in terms of optimization, where on poset contains parameters, and the other variables}
+
+An interesting and useful intuition about Galois connections is to think about them in terms of ``constrained optimization''. Let us explain this perspective. Suppose we are given a Galois connection
+\begin{center}
+\begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+    {\posA}
+     &  &  &  & \posB
+    \arrow[""{name=0, anchor=center, inner sep=0}, "{\mora}", bend left=30, from=1-1, to=1-5]
+    \arrow[""{name=1, anchor=center, inner sep=0}, "{\morb}", bend left=30, from=1-5, to=1-1]
+    \arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+\end{tikzcd}
+\end{center}
+Let us think of the elements of one of the posets -- say $\posA$ -- as ``parameters'', and lets us think of the elements of the other poset -- in this case $\posB$ -- as ``variables''. Now let's fix a parameter $\posAel \in \posA$. We then think of the inequality
+\begin{equation}
+\posAel \posAleq \mapb(\posBel)
+\end{equation}
+as a condition on variables $\posBel \in \posB$, a condition that may be satisfied or not. 
+
+The optimization setting then is this: we are interested in the set of variables
+\begin{equation}
+\makeset{ \posBel \in \posB \mid \posAel \posAleq \mapb(\posBel)}
+\end{equation}
+that satisfy this condition, and furthermore we wish to find the minimal elements of this set. 
+
+In this situation, the value $\mora(\posAel))$ of the left adjoint $\mora$ at the parameter $\posAel$ is then precisely such a minimal element. That is precisely what the definition of Galois connection says. In other words, given the ``constraint function'' $\morb$, its left adjoint $\mora$ is such that, for \emph{every} parameter $\posAel$, the value $\mora(\posAel)$ is a solution to the optimization problem posed in terms of $\posAel$ and $\morb$. 
+
+\subsection{Examples}
+
+\begin{example}
+Let $\mora \colon \setA \mto \setB$ be any function between sets, and let's fix it for the entirety of this example. There is a pair (!) of Galois connections induced from $\mora$. They translate between the posets $\tup{\powerset \setA, \subseteq}$ and $\tup{\powerset \setB, \subseteq}$. The overall situation is that we have monotone functions
+
+\begin{center}
+\begin{tikzcd}[every arrow/.append style={arrowfunctorstyle}]
+    {\powerset \setA}
+     &  &  & & & & {\powerset \setB}
+    \arrow[""{name=-1, anchor=center, inner sep=0}, "{\stylemorph{\exists}_\mora}", bend left=50, from=1-1, to=1-7]
+    \arrow[""{name=0, anchor=center, inner sep=6}, "{\stylemorph{\mora^*}}"', from=1-7, to=1-1]
+    \arrow[""{name=1, anchor=center, inner sep=0}, "{\stylemorph{\forall}_\mora}"', bend right=50, from=1-1, to=1-7]
+    \arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=0, to=1]
+    \arrow["\dashv"{anchor=center, rotate=-90}, draw=none, from=-1, to=0]
+\end{tikzcd}
+\end{center}
+
+with $\stylemorph{\exists}_\mora \dashv \stylemorph{\mora^*}$ and $\stylemorph{\mora^*} \dashv \stylemorph{\forall}_\mora$. 
+
+How are the three monotone functions denoted above defined? 
+
+First, $\stylemorph{\mora^*}$ is the function
+\begin{equation}
+\defmap{\stylemorph{\mora^*}}{\powerset \setB}{\mto}{\powerset \setA}{\subB}{ \makeset{ \ela \setin \setA \mid \mora(\ela) \setin \subB} }
+\end{equation}
+which computes the preimage under $\mora$ of any subset $\subB \subseteq \setB$. 
+
+Next, the functions $\stylemorph{\exists}_\mora$ and $\stylemorph{\forall}_\mora$ are defined, respectively, as 
+\begin{equation}
+\defmap{\stylemorph{\exists}_\mora}{\powerset \setA}{\mto}{\powerset \setB}{\subA}{ \makeset{ \elb \setin \setB \mid  \exists \ela \setin \stylemorph{\mora^*}(\makeset{\elb}) : \ela \setin \subA} }
+\end{equation}
+and
+\begin{equation}
+\defmap{\stylemorph{\forall}_\mora}{\powerset \setA}{\mto}{\powerset \setB}{\subA}{ \makeset{ \elb \setin \setB \mid \forall \ela \setin \stylemorph{\mora^*}(\makeset{\elb}) : \ela \setin \subA} }
+\end{equation}
+Note how these two functions are defined in precisely the same way, except for in which quantifier, ``$\exists$'' or ``$\forall$'', is used. 
+
+\end{example}
+
+\todotext{Fill this section}
+
+\todotext{@J: add the forall / exists adjunction between powersets, e.g. as described well and concisely in spivak's CT for the sciences book}
+
+
+\subsection{Antitone Galois connections}
 
 \begin{ctdefinition}[Antitone Galois Connection]\label{def:antitone-galois-connection}
     An \maindef{antitone Galois connection} between~\posA and~\posB is a pair of \SY{antitone maps} $\mapa\colon \posA\to \posB$ and $\mapb \colon \posB\to \posA$ such that for all~$\posAel\setin \posA$, $\posBel\setin \posB$:
@@ -409,16 +481,11 @@ However, it is useful to be aware of the antitone definition, since it is someti
     \end{enumerate}
 \end{lemma}
 
-\subsection{Examples}
-
-\todotext{Fill this section}
-
-\todotext{@J: add the forall / exists adjunction between powersets, e.g. as described well and concisely in spivak's CT for the sciences book}
 
 \subsection{Induced closure and interior operators}
 
 \begin{lemma}\label{lem:closure-interior-operators-from-Galois-connection}
-    If $\mapa \colon \posA \to \posB$ and~$\mapb \colon \posB \to \posA$ form a Galois connection, then
+    If $\mapa \colon \posA \to \posB$ and~$\mapb \colon \posB \to \posA$ form a Galois connection $\mora \vdash \morb$, then
     \begin{equation}\label{eq:closure-from-Galois}
         \mapa \mthen \mapb \colon \posA \to \posA
     \end{equation}
