@@ -3,7 +3,7 @@
 \section{Comonads}
 \label{sec:comonads}
 
-In this section we study the notion of a \emph{comonad}, which is the categorical dual of the notion of a monad. While monads capture the idea of ``wrapping up'' or ``enriching'' values with additional structure (effects, possibilities, context), comonads capture the idea of ``extracting'' values from a structured context and ``extending'' computations over that context. We will see the formal definition, give examples, and introduce the co-Kleisli construction.
+In this section we study the notion of a \emph{comonad}, which is the categorical dual of the notion of a monad. While monads capture the idea of ``wrapping up'' or ``enriching'' values with additional structure (effects, possibilities, context), comonads capture the idea of ``extracting'' values from a structured context and ``extending'' computations over that context. We will see the formal definition, give examples, introduce the co-Kleisli construction and discuss coalgebras.
 
 \begin{ctdefinition}[Comonad]
     \label{def:comonad}
@@ -137,7 +137,7 @@ Both sides are equal, confirming coassociativity.
 \begin{example}[Stream co-monad]
 \label{exa:stream-comonad}
 
-Given a set $\setA$, an \emph{$\setA$-stream} (or simply a \emph{stream}) is an infinite sequence of elements of $\setA$, that is, a function $\natnumbers \mto \setA$. We write $\streamsof{\setA}$ for the set of all $\setA$-streams. We will denote a stream $\styleelements{\sigma} \setin \streamsof{\setA}$ by listing its values:
+Given a set $\setA$, an \emph{$\setA$-stream} (or simply a \emph{stream}) is an infinite sequence of elements of $\setA$, that is, a function $\natnumbers \mto \setA$. Thus, $\setA^\natnumbers$ is the set of all $\setA$-streams. We will denote a stream $\styleelements{\sigma} \setin \setA^\natnumbers$ by listing its values:
 \begin{equation}
     \styleelements{\sigma} = (\styleelements{\sigma}_0, \styleelements{\sigma}_1, \styleelements{\sigma}_2, \ldots),
 \end{equation}
@@ -145,16 +145,24 @@ where $\styleelements{\sigma}_n = \styleelements{\sigma}(n)$ for each $n \setin 
 
 We define the \emph{stream functor} $\streamfun \colon \Set \fto \Set$ as follows.
 
-On the level of objects, for any set $\setA$:
+On the level of objects, for any set $\setA$, we define
 \begin{equation}
     \streamsof{\setA} = \setA^{\natnumbers}.
 \end{equation}
-On the level of morphisms, given a function $\mora \colon \setA \mto \setB$, we define $\streamfun(\mora) \colon \streamsof{\setA} \mto \streamsof{\setB}$ by applying $\mora$ pointwise:
+On the level of morphisms, given any function $\mora \colon \setA \mto \setB$, we define 
 \begin{equation}
+\streamfun(\mora) \colon \streamsof{\setA} \mto \streamsof{\setB}
+\end{equation}
+ by applying $\mora$ pointwise:
+ \begin{equation}
     \streamfun(\mora)(\styleelements{\sigma})_n = \mora(\styleelements{\sigma}_n).
 \end{equation}
+Or, put differently, 
+\begin{equation}
+    \streamfun(\mora)(\styleelements{\sigma}) \colon \natnumbers \overset{\styleelements{\sigma}}{\mto} \setA \overset{\mora}{\mto} \setB.
+\end{equation}
 
-This functor becomes a co-monad when equipped with the following extraction and duplication. The extraction $\comonex_\setA \colon \streamsof{\setA} \mto \setA$ returns the first element (the ``head'') of a stream:
+The functor $\streamfun$ becomes a co-monad when equipped with the following extraction and duplication. The extraction $\comonex_\setA \colon \streamsof{\setA} \mto \setA$ returns the first element (the ``head'') of a stream:
 \begin{equation}\label{eq:stream-comonad-extraction}
     \comonex_\setA(\styleelements{\sigma}) = \styleelements{\sigma}_0.
 \end{equation}
@@ -209,13 +217,13 @@ For right counitality, we need to show that $\comondu_\setA \mthen \streamfun(\c
 
 Let $\subA$ be a fixed set, which we think of as a set of ``positions'' or ``indices''. We define the \emph{store functor} $\stylefunctors{\aword{Store}} \colon \Set \fto \Set$ as follows.
 
-On the level of objects, for any set $\setA$:
+On the level of objects, for any set $\setA$,
 \begin{equation}
     \stylefunctors{\aword{Store}}(\setA) = \setA^{\subA} \cartprod \subA,
 \end{equation}
-that is, a pair consisting of a function $\subA \mto \setA$ (a ``lookup table'') and a distinguished element of $\subA$ (the ``current position''). On the level of morphisms, given a function $\mora \colon \setA \mto \setB$:
+that is, a pair consisting of a function $\subA \mto \setA$ (a ``lookup table'') and a distinguished element of $\subA$ (the ``current position''). On the level of morphisms, given any function $\mora \colon \setA \mto \setB$, we define
 \begin{equation}
-    \stylefunctors{\aword{Store}}(\mora)(\morb, \styleelements{s}) = (\mora \after \morb,\; \styleelements{s}),
+    \stylefunctors{\aword{Store}}(\mora)(\morb, \styleelements{s}) = (\morb \mthen \mora,\; \styleelements{s}),
 \end{equation}
 where $\morb \colon \subA \mto \setA$ and $\styleelements{s} \setin \subA$.
 
@@ -266,7 +274,7 @@ For right counitality, we need $\comondu_\setA \mthen \stylefunctors{\aword{Stor
 \end{example}
 
 
-\begin{example}[Cowriter co-monad]
+\begin{example}[Cowriter comonad]
 \label{exa:cowriter-comonad}
 
 Let $\monoidAdefinition$ be a monoid.
