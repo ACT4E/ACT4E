@@ -163,14 +163,36 @@ In summary, a $\stylefunctors{\aword{Store}}$-co-algebra on $\setA$ is a pair of
 \begin{example}[$\stylefunctors{\aword{Cowrite}}$-co-algebras for the cowriter co-monad]
 \label{exa:coalgebra-cowriter-comonad}
 
-Recall from \cref{exa:cowriter-comonad} that the cowriter co-monad (first variant) has $\stylefunctors{\aword{Cowrite}}(\setA) = \setA \cartprod \monoidAset$, with extraction $\comonex_\setA(\ela, \styleelements{m}) = \ela$ and duplication $\comondu_\setA(\ela, \styleelements{m}) = ((\ela, \styleelements{m}), \styleelements{m})$.
+Recall from \cref{exa:cowriter-comonad} that the cowriter co-monad has $\stylefunctors{\aword{Cowrite}}(\setA) = \setA^{\monoidAset}$, with extraction $\comonex_\setA(\morb) = \morb(\idmon_\monoidA)$ and duplication $\comondu_\setA(\morb)(\styleelements{m}_1)(\styleelements{m}_2) = \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2)$.
 
-Since the underlying functor and duplication are the same as for the product/environment co-monad (\cref{exa:coalgebra-product-comonad}), a $\stylefunctors{\aword{Cowrite}}$-co-algebra on a set $\setA$ is a function $\comoncoact \colon \setA \mto \setA \cartprod \monoidAset$. Writing $\comoncoact(\ela) = (\ela', \styleelements{m}_\ela)$, the counit condition gives $\ela' = \ela$, and the cocomposition condition is automatically satisfied (see \cref{exa:coalgebra-product-comonad}).
+A $\stylefunctors{\aword{Cowrite}}$-co-algebra on a set $\setA$ is a function $\comoncoact \colon \setA \mto \setA^{\monoidAset}$. In other words, each element $\ela \setin \setA$ is assigned a function $\comoncoact(\ela) \colon \monoidAset \mto \setA$.
 
-So a $\stylefunctors{\aword{Cowrite}}$-co-algebra on $\setA$ is a function $\morc \colon \setA \mto \monoidAset$, with $\comoncoact(\ela) = (\ela, \morc(\ela))$, exactly as in the product co-monad case. The monoid structure on $\monoidAset$ does not impose additional constraints on the co-algebra, but it enriches the interpretation: one can think of $\morc$ as a ``measurement'' or ``observation'' that assigns a monoid value to each element of $\setA$.
+The counit condition requires $\comoncoact \mthen \comonex_\setA = \catid_\setA$, i.e.\ for all $\ela \setin \setA$:
+\begin{equation*}
+    \comonex_\setA(\comoncoact(\ela)) = \comoncoact(\ela)(\idmon_\monoidA) = \ela.
+\end{equation*}
+So the function $\comoncoact(\ela)$, evaluated at the identity element, must return $\ela$ itself.
+
+The cocomposition condition requires $\comoncoact \mthen \comondu_\setA = \comoncoact \mthen \stylefunctors{\aword{Cowrite}}(\comoncoact)$. On the one hand:
+\begin{align*}
+(\comoncoact \mthen \comondu_\setA)(\ela)(\styleelements{m}_1)(\styleelements{m}_2)
+& = \comondu_\setA(\comoncoact(\ela))(\styleelements{m}_1)(\styleelements{m}_2) \\
+& = \comoncoact(\ela)(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2).
+\end{align*}
+On the other hand:
+\begin{align*}
+(\comoncoact \mthen \stylefunctors{\aword{Cowrite}}(\comoncoact))(\ela)(\styleelements{m}_1)(\styleelements{m}_2)
+& = \comoncoact(\comoncoact(\ela)(\styleelements{m}_1))(\styleelements{m}_2).
+\end{align*}
+So the cocomposition condition says: $\comoncoact(\ela)(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2) = \comoncoact(\comoncoact(\ela)(\styleelements{m}_1))(\styleelements{m}_2)$.
+
+If we write $\ela \cdot \styleelements{m} = \comoncoact(\ela)(\styleelements{m})$ for the ``action'' of $\monoidAset$ on $\setA$, the two conditions become:
+\begin{align*}
+    \ela \cdot \idmon_\monoidA & = \ela, \\
+    \ela \cdot (\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2) & = (\ela \cdot \styleelements{m}_1) \cdot \styleelements{m}_2.
+\end{align*}
+In other words, a $\stylefunctors{\aword{Cowrite}}$-co-algebra is precisely a \emph{right action} of the monoid $\monoidA$ on the set $\setA$.
 \end{example}
-
-
 
 
 \begin{ctdefinition}[$\comonW$-co-algebra morphism]
