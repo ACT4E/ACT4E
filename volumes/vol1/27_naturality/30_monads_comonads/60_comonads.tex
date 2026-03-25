@@ -183,27 +183,27 @@ For the duplication and extraction of the stream comonad, verify that the coasso
 \begin{example}[Store comonad]
 \label{exa:store-comonad}
 
-Let $\subA$ be a fixed set, which we think of as a set of ``positions'' or ``indices''. We define the \emph{store functor} $\stylefunctors{\aword{Store}} \colon \Set \fto \Set$ as follows.
+Let $\positions$ be a fixed set, which we think of as a set of ``positions'' or ``indices''. We define the \emph{store functor} $\stylefunctors{\aword{Store}} \colon \Set \fto \Set$ as follows.
 
 On the level of objects, for any set $\setA$,
 \begin{equation}
-    \stylefunctors{\aword{Store}}(\setA) = \setA^{\subA} \cartprod \subA,
+    \stylefunctors{\aword{Store}}(\setA) = \setA^{\positions} \cartprod \positions.
 \end{equation}
-that is, a pair consisting of a function $\subA \mto \setA$ (a ``lookup table'') and a distinguished element of $\subA$ (the ``current position''). On the level of morphisms, given any function $\mora \colon \setA \mto \setB$, we define
+Elements of $\setA^{\positions} \cartprod \positions$ are pairs which consist of a function $\tau \colon \positions \mto \setA$ (a ``lookup table'') and a distinguished element of $\styleelements{p} \setin \positions$ (the ``current position''). On the level of morphisms, given any function $\mora \colon \setA \mto \setB$, we define
 \begin{equation}
-    \stylefunctors{\aword{Store}}(\mora)(\morb, \styleelements{s}) = (\morb \mthen \mora,\; \styleelements{s}),
+    \stylefunctors{\aword{Store}}(\mora)(\morb, \styleelements{p}) = (\morb \mthen \mora,\; \styleelements{p}),
 \end{equation}
-where $\morb \colon \subA \mto \setA$ and $\styleelements{s} \setin \subA$.
+where $\morb \colon \positions \mto \setA$ and $\styleelements{p} \setin \positions$.
 
-This functor becomes a comonad when equipped with the following extraction and duplication. The extraction $\comonex_\setA \colon \setA^{\subA} \cartprod \subA \mto \setA$ evaluates the lookup table at the current position:
+This functor becomes a comonad when equipped with the following extraction and duplication. The extraction $\comonex_\setA \colon \setA^{\positions} \cartprod \positions \mto \setA$ evaluates the lookup table at the current position:
 \begin{equation}\label{eq:store-comonad-extraction}
-    \comonex_\setA(\morb, \styleelements{s}) = \morb(\styleelements{s}).
+    \comonex_\setA(\morb, \styleelements{p}) = \morb(\styleelements{p}).
 \end{equation}
-The duplication $\comondu_\setA \colon \setA^{\subA} \cartprod \subA \mto (\setA^{\subA} \cartprod \subA)^{\subA} \cartprod \subA$ produces a store of stores, keeping the same lookup table but varying the position:
+The duplication $\comondu_\setA \colon \setA^{\positions} \cartprod \positions \mto (\setA^{\positions} \cartprod \positions)^{\positions} \cartprod \positions$ produces a store of stores, keeping the same lookup table but varying the position:
 \begin{equation}\label{eq:store-comonad-duplication}
-    \comondu_\setA(\morb, \styleelements{s}) = (\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}).
+    \comondu_\setA(\morb, \styleelements{p}) = (\styleelements{p}' \mapsto (\morb, \styleelements{p}'),\; \styleelements{p}).
 \end{equation}
-In other words, duplication does not change the current position or the lookup table. It creates a new lookup table that, given any position $\styleelements{s}' \setin \subA$, returns the original store with its position set to $\styleelements{s}'$.
+In other words, duplication does not change the current position or the lookup table. It creates a new lookup table that, given any position $\styleelements{p}' \setin \positions$, returns the original store with its position set to $\styleelements{p}'$.
 \end{example}
 
 
@@ -216,33 +216,33 @@ Let us verify the coassociativity and counitality conditions.
 
 For coassociativity, we need $\comondu_\setA \mthen \comondu_{\stylefunctors{\aword{Store}}(\setA)} = \comondu_\setA \mthen \stylefunctors{\aword{Store}}(\comondu_\setA)$. On the one hand:
 \begin{align*}
-(\comondu_\setA \mthen \comondu_{\stylefunctors{\aword{Store}}(\setA)})(\morb, \styleelements{s})
-& = \comondu_{\stylefunctors{\aword{Store}}(\setA)}(\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}) \\
-& = (\styleelements{s}'' \mapsto (\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}''),\; \styleelements{s}).
+(\comondu_\setA \mthen \comondu_{\stylefunctors{\aword{Store}}(\setA)})(\morb, \styleelements{p})
+& = \comondu_{\stylefunctors{\aword{Store}}(\setA)}(\styleelements{p}' \mapsto (\morb, \styleelements{p}'),\; \styleelements{p}) \\
+& = (\styleelements{p}'' \mapsto (\styleelements{p}' \mapsto (\morb, \styleelements{p}'),\; \styleelements{p}''),\; \styleelements{p}).
 \end{align*}
 On the other hand:
 \begin{align*}
-(\comondu_\setA \mthen \stylefunctors{\aword{Store}}(\comondu_\setA))(\morb, \styleelements{s})
-& = \stylefunctors{\aword{Store}}(\comondu_\setA)(\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}) \\
-& = (\comondu_\setA \after (\styleelements{s}' \mapsto (\morb, \styleelements{s}')),\; \styleelements{s}) \\
-& = (\styleelements{s}'' \mapsto \comondu_\setA(\morb, \styleelements{s}''),\; \styleelements{s}) \\
-& = (\styleelements{s}'' \mapsto (\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}''),\; \styleelements{s}).
+(\comondu_\setA \mthen \stylefunctors{\aword{Store}}(\comondu_\setA))(\morb, \styleelements{p})
+& = \stylefunctors{\aword{Store}}(\comondu_\setA)(\styleelements{p}' \mapsto (\morb, \styleelements{p}'),\; \styleelements{p}) \\
+& = (\comondu_\setA \after (\styleelements{p}' \mapsto (\morb, \styleelements{p}')),\; \styleelements{p}) \\
+& = (\styleelements{p}'' \mapsto \comondu_\setA(\morb, \styleelements{p}''),\; \styleelements{p}) \\
+& = (\styleelements{p}'' \mapsto (\styleelements{p}' \mapsto (\morb, \styleelements{p}'),\; \styleelements{p}''),\; \styleelements{p}).
 \end{align*}
 Both sides are equal, confirming coassociativity.
 
 For left counitality, we need $\comondu_\setA \mthen \comonex_{\stylefunctors{\aword{Store}}(\setA)} = \catid$:
 \begin{align*}
-(\comondu_\setA \mthen \comonex_{\stylefunctors{\aword{Store}}(\setA)})(\morb, \styleelements{s})
-& = \comonex_{\stylefunctors{\aword{Store}}(\setA)}(\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}) \\
-& = (\morb, \styleelements{s}).
+(\comondu_\setA \mthen \comonex_{\stylefunctors{\aword{Store}}(\setA)})(\morb, \styleelements{p})
+& = \comonex_{\stylefunctors{\aword{Store}}(\setA)}(\styleelements{p}' \mapsto (\morb, \styleelements{p}'),\; \styleelements{p}) \\
+& = (\morb, \styleelements{p}).
 \end{align*}
 For right counitality, we need $\comondu_\setA \mthen \stylefunctors{\aword{Store}}(\comonex_\setA) = \catid$:
 \begin{align*}
-(\comondu_\setA \mthen \stylefunctors{\aword{Store}}(\comonex_\setA))(\morb, \styleelements{s})
-& = \stylefunctors{\aword{Store}}(\comonex_\setA)(\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}) \\
-& = (\comonex_\setA \after (\styleelements{s}' \mapsto (\morb, \styleelements{s}')),\; \styleelements{s}) \\
-& = (\styleelements{s}' \mapsto \morb(\styleelements{s}'),\; \styleelements{s}) \\
-& = (\morb, \styleelements{s}).
+(\comondu_\setA \mthen \stylefunctors{\aword{Store}}(\comonex_\setA))(\morb, \styleelements{p})
+& = \stylefunctors{\aword{Store}}(\comonex_\setA)(\styleelements{p}' \mapsto (\morb, \styleelements{p}'),\; \styleelements{p}) \\
+& = (\comonex_\setA \after (\styleelements{p}' \mapsto (\morb, \styleelements{p}')),\; \styleelements{p}) \\
+& = (\styleelements{p}' \mapsto \morb(\styleelements{p}'),\; \styleelements{p}) \\
+& = (\morb, \styleelements{p}).
 \end{align*}
 \end{solution}
 
