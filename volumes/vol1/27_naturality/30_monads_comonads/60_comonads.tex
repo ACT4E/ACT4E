@@ -12,8 +12,8 @@ In this section we study the notion of a \emph{comonad}, which is the categorica
     \constit
     \begin{enumerate}
         \item A \SY{functor}~$\comonW \colon \CatC \fto \CatC$;
-        \item A \SY{natural transformation}~$\comonex \colon \comonW \nto \funidC$, called the \emph{counit} or \emph{extraction};
-        \item A \SY{natural transformation}~$\comondu \colon \comonW \nto \comonWW$, called the \emph{comultiplication} or \emph{duplication}.
+                \item A \SY{natural transformation}~$\comondu \colon \comonW \nto \comonWW$, called the \emph{comultiplication} or \emph{duplication};
+        \item A \SY{natural transformation}~$\comonex \colon \comonW \nto \funidC$, called the \emph{counit} or \emph{extraction}.
     \end{enumerate}
     \condit
     \begin{enumerate}
@@ -64,7 +64,7 @@ One may observe that this definition is obtained from the definition of a monad 
 \end{tikzcd}
 \qquad \qquad
 \begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
-    \comonW(\Obja) \arrow[r, "\comondu_\Obja"] \arrow[dr, "\catid_{\comonW(\Obja)}"'] & (\comonWW)(\Obja) \arrow[d, "\comonW\comonex_\Obja"] \\
+    \comonW(\Obja) \arrow[r, "\comondu_\Obja"] \arrow[dr, "\catid_{\comonW(\Obja)}"'] & (\comonWW)(\Obja) \arrow[d, "\comonW(\comonex_\Obja)"] \\
     & \comonW(\Obja)
 \end{tikzcd}
 \end{equation}
@@ -173,44 +173,11 @@ The duplication $\comondu_\setA \colon \streamsof{\setA} \mto \streamsof{(\strea
 \end{equation}
 In other words, if we write $\comondu_\setA(\styleelements{\sigma}) = (\styleelements{\tau}_0, \styleelements{\tau}_1, \styleelements{\tau}_2, \ldots)$ where each $\styleelements{\tau}_n \setin \streamsof{\setA}$, then $(\styleelements{\tau}_n)_k = \styleelements{\sigma}_{n+k}$.
 
-\
-
-Let us verify the coassociativity and counitality conditions.
-
-For coassociativity, we need to show that $\comondu_\setA \mthen \comondu_{\streamsof{\setA}} = \comondu_\setA \mthen \streamfun(\comondu_\setA)$. On the one hand:
-\begin{align*}
-(\comondu_\setA \mthen \comondu_{\streamsof{\setA}})(\styleelements{\sigma})_n
-& = \comondu_{\streamsof{\setA}}(\comondu_\setA(\styleelements{\sigma}))_n \\
-& = (\comondu_\setA(\styleelements{\sigma})_n, \comondu_\setA(\styleelements{\sigma})_{n+1}, \ldots).
-\end{align*}
-This is a stream of streams, whose $k$-th element at position $n$ is $\comondu_\setA(\styleelements{\sigma})_{n+k}$, which equals $(\styleelements{\sigma}_{n+k}, \styleelements{\sigma}_{n+k+1}, \ldots)$.
-
-On the other hand:
-\begin{align*}
-(\comondu_\setA \mthen \streamfun(\comondu_\setA))(\styleelements{\sigma})_n
-& = \comondu_\setA(\comondu_\setA(\styleelements{\sigma})_n) \\
-& = \comondu_\setA((\styleelements{\sigma}_{n}, \styleelements{\sigma}_{n+1}, \ldots)).
-\end{align*}
-The $k$-th element of this stream is $(\styleelements{\sigma}_{n+k}, \styleelements{\sigma}_{n+k+1}, \ldots)$.
-
-Both sides are equal, confirming coassociativity.
-
-For left counitality, let $\styleelements{\sigma} \setin \streamsof{\setA}$. We need to show that $\comondu_\setA \mthen \comonex_{\streamsof{\setA}} = \catid_{\streamsof{\setA}}$:
-\begin{align*}
-(\comondu_\setA \mthen \comonex_{\streamsof{\setA}})(\styleelements{\sigma})
-& = \comonex_{\streamsof{\setA}}(\comondu_\setA(\styleelements{\sigma})) \\
-& = \comondu_\setA(\styleelements{\sigma})_0 \\
-& = (\styleelements{\sigma}_0, \styleelements{\sigma}_1, \styleelements{\sigma}_2, \ldots) \\
-& = \styleelements{\sigma}.
-\end{align*}
-For right counitality, we need to show that $\comondu_\setA \mthen \streamfun(\comonex_\setA) = \catid_{\streamsof{\setA}}$:
-\begin{align*}
-(\comondu_\setA \mthen \streamfun(\comonex_\setA))(\styleelements{\sigma})_n
-& = \comonex_\setA(\comondu_\setA(\styleelements{\sigma})_n) \\
-& = \comonex_\setA((\styleelements{\sigma}_{n}, \styleelements{\sigma}_{n+1}, \ldots)) \\
-& = \styleelements{\sigma}_n.
-\end{align*}
 \end{example}
+
+\begin{gradedexercise}
+For the duplication and extraction of the stream comonad, verify that the coassociativity and counitality conditions are satisfied. 
+\end{gradedexercise}
 
 
 \begin{example}[Store co-monad]
@@ -237,9 +204,14 @@ The duplication $\comondu_\setA \colon \setA^{\subA} \cartprod \subA \mto (\setA
     \comondu_\setA(\morb, \styleelements{s}) = (\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}).
 \end{equation}
 In other words, duplication does not change the current position or the lookup table. It creates a new lookup table that, given any position $\styleelements{s}' \setin \subA$, returns the original store with its position set to $\styleelements{s}'$.
+\end{example}
 
-\
 
+\begin{exercise}
+For the duplication and extraction of the store comonad, verify that the coassociativity and counitality conditions are satisfied. 
+\end{exercise}
+
+\begin{solution}
 Let us verify the coassociativity and counitality conditions.
 
 For coassociativity, we need $\comondu_\setA \mthen \comondu_{\stylefunctors{\aword{Store}}(\setA)} = \comondu_\setA \mthen \stylefunctors{\aword{Store}}(\comondu_\setA)$. On the one hand:
@@ -272,8 +244,7 @@ For right counitality, we need $\comondu_\setA \mthen \stylefunctors{\aword{Stor
 & = (\styleelements{s}' \mapsto \morb(\styleelements{s}'),\; \styleelements{s}) \\
 & = (\morb, \styleelements{s}).
 \end{align*}
-\end{example}
-
+\end{solution}
 
 \begin{example}[Cowriter co-monad]
 \label{exa:cowriter-comonad}
@@ -298,46 +269,11 @@ The duplication $\comondu_\setA \colon \setA^{\monoidAset} \mto (\setA^{\monoidA
 \end{equation}
 In other words, $\comondu_\setA(\morb)$ is a function $\monoidAset \mto \setA^{\monoidAset}$ that, given $\styleelements{m}_1 \setin \monoidAset$, returns the function $\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2)$.
 
-\
-
-Let us verify the coassociativity and counitality conditions.
-
-For coassociativity, we need $\comondu_\setA \mthen \comondu_{\setA^{\monoidAset}} = \comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comondu_\setA)$. Let $\morb \colon \monoidAset \mto \setA$. On the one hand:
-\begin{align*}
-(\comondu_\setA \mthen \comondu_{\setA^{\monoidAset}})(\morb)(\styleelements{m}_1)(\styleelements{m}_2)(\styleelements{m}_3)
-& = \comondu_{\setA^{\monoidAset}}(\comondu_\setA(\morb))(\styleelements{m}_1)(\styleelements{m}_2)(\styleelements{m}_3) \\
-& = \comondu_\setA(\morb)(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2)(\styleelements{m}_3) \\
-& = \morb((\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2) \mtimesof\monoidA \styleelements{m}_3).
-\end{align*}
-On the other hand:
-\begin{align*}
-(\comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comondu_\setA))(\morb)(\styleelements{m}_1)(\styleelements{m}_2)(\styleelements{m}_3)
-& = \comondu_\setA(\comondu_\setA(\morb)(\styleelements{m}_1))(\styleelements{m}_2)(\styleelements{m}_3) \\
-& = \comondu_\setA(\morb)(\styleelements{m}_1)(\styleelements{m}_2 \mtimesof\monoidA \styleelements{m}_3) \\
-& = \morb(\styleelements{m}_1 \mtimesof\monoidA (\styleelements{m}_2 \mtimesof\monoidA \styleelements{m}_3)).
-\end{align*}
-These are equal by associativity of the monoid multiplication, confirming coassociativity.
-
-For left counitality, we need $\comondu_\setA \mthen \comonex_{\setA^{\monoidAset}} = \catid$:
-\begin{align*}
-(\comondu_\setA \mthen \comonex_{\setA^{\monoidAset}})(\morb)(\styleelements{m})
-& = \comonex_{\setA^{\monoidAset}}(\comondu_\setA(\morb))(\styleelements{m}) \\
-& = \comondu_\setA(\morb)(\idmon_\monoidA)(\styleelements{m}) \\
-& = \morb(\idmon_\monoidA \mtimesof\monoidA \styleelements{m}) \\
-& = \morb(\styleelements{m}).
-\end{align*}
-This uses the left identity law of the monoid.
-
-For right counitality, we need $\comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comonex_\setA) = \catid$:
-\begin{align*}
-(\comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comonex_\setA))(\morb)(\styleelements{m})
-& = \comonex_\setA(\comondu_\setA(\morb)(\styleelements{m})) \\
-& = \comondu_\setA(\morb)(\styleelements{m})(\idmon_\monoidA) \\
-& = \morb(\styleelements{m} \mtimesof\monoidA \idmon_\monoidA) \\
-& = \morb(\styleelements{m}).
-\end{align*}
-This uses the right identity law of the monoid.
-
-Note how the three monoid axioms (associativity, left identity, right identity) correspond exactly to the three co-monad axioms (coassociativity, left counitality, right counitality).
 \end{example}
+
+\begin{gradedexercise}[\exname{CowriterComonadConditions}]
+For the duplication and extraction of the cowriter comonad, verify that the coassociativity and counitality conditions are satisfied. 
+\end{gradedexercise}
+
+\solutionof{CowriterComonadConditions}
 
