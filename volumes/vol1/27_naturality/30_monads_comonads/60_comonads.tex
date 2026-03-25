@@ -3,7 +3,7 @@
 \section{Comonads}
 \label{sec:comonads}
 
-In this section we study the notion of a \emph{comonad}, which is the categorical dual of the notion of a monad. While monads capture the idea of ``wrapping up'' or ``enriching'' values with additional structure (effects, possibilities, context), comonads capture the idea of ``extracting'' values from a structured context and ``extending'' computations over that context. We will see the formal definition, give examples, and introduce the co-Kleisli construction.
+In this section we study the notion of a \emph{comonad}, which is the categorical dual of the notion of a monad. While monads capture the idea of ``wrapping up'' or ``enriching'' values with additional structure (effects, possibilities, context), comonads capture the idea of ``extracting'' values from a structured context and ``extending'' computations over that context. We will see the formal definition, give examples, introduce the co-Kleisli construction and discuss coalgebras.
 
 \begin{ctdefinition}[Comonad]
     \label{def:comonad}
@@ -50,8 +50,8 @@ One may observe that this definition is obtained from the definition of a monad 
     %
 \begin{equation}\label{eq:comonad-coassociativity-components}
 \begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
-    \comonW(\Obja) \arrow[r, "\comonW\comondu_\Obja"] \arrow[d, "\comondu_{\comonW(\Obja)}"'] & (\comonWW)(\Obja) \arrow[d, "\comondu_\Obja"] \\
-    (\comonWW)(\Obja) \arrow[r, "\comondu_\Obja"'] & \comonW(\Obja)
+    \comonW(\Obja) \arrow[r, "\comondu_\Obja"] \arrow[d, "\comondu_\Obja"'] & (\comonWW)(\Obja) \arrow[d, "\comonW(\comondu_\Obja)"] \\
+    (\comonWW)(\Obja) \arrow[r, "\comondu_{\comonW(\Obja)}"'] & (\comonWWW)(\Obja)
 \end{tikzcd}
 \end{equation}
     %
@@ -105,9 +105,21 @@ In words: the extraction forgets the environment and returns only the value, whi
 
 \
 
-Let us verify the counitality and coassociativity conditions.
+Let us verify the coassociativity and counitality conditions.
 
-For left counitality, let $\tup{\ela, \styleelements{s}} \in \setA \cartprod \subA$:
+For coassociativity, let $\tup{\ela, \styleelements{s}} \in \setA \cartprod \subA$:
+\begin{align*}
+(\comondu_\setA \mthen \comondu_{\setA \cartprod \subA})(\tup{\ela, \styleelements{s}})
+& = \comondu_{\setA \cartprod \subA}(\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}) \\
+& = \tup{\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}, \styleelements{s}}, \\[6pt]
+(\comondu_\setA \mthen \readerfunctor(\comondu_\setA))(\tup{\ela, \styleelements{s}})
+& = \readerfunctor(\comondu_\setA)(\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}) \\
+& = \tup{\comondu_\setA(\tup{\ela, \styleelements{s}}), \styleelements{s}} \\
+& = \tup{\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}, \styleelements{s}}.
+\end{align*}
+Both sides are equal, confirming coassociativity.
+
+For left counitality:
 \begin{align*}
 (\comondu_\setA \mthen \comonex_{\setA \cartprod \subA})(\tup{\ela, \styleelements{s}})
 & = \comonex_{\setA \cartprod \subA}(\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}) \\
@@ -120,24 +132,13 @@ For right counitality:
 & = \tup{\comonex_\setA(\tup{\ela, \styleelements{s}}), \styleelements{s}} \\
 & = \tup{\ela, \styleelements{s}}.
 \end{align*}
-For coassociativity:
-\begin{align*}
-(\comondu_\setA \mthen \comondu_{\setA \cartprod \subA})(\tup{\ela, \styleelements{s}})
-& = \comondu_{\setA \cartprod \subA}(\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}) \\
-& = \tup{\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}, \styleelements{s}}, \\[6pt]
-(\comondu_\setA \mthen \readerfunctor(\comondu_\setA))(\tup{\ela, \styleelements{s}})
-& = \readerfunctor(\comondu_\setA)(\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}) \\
-& = \tup{\comondu_\setA(\tup{\ela, \styleelements{s}}), \styleelements{s}} \\
-& = \tup{\tup{\tup{\ela, \styleelements{s}}, \styleelements{s}}, \styleelements{s}}.
-\end{align*}
-Both sides are equal, confirming coassociativity.
 \end{example}
 
 
 \begin{example}[Stream co-monad]
 \label{exa:stream-comonad}
 
-Given a set $\setA$, an \emph{$\setA$-stream} (or simply a \emph{stream}) is an infinite sequence of elements of $\setA$, that is, a function $\natnumbers \mto \setA$. We write $\streamsof{\setA}$ for the set of all $\setA$-streams. We will denote a stream $\styleelements{\sigma} \setin \streamsof{\setA}$ by listing its values:
+Given a set $\setA$, an \emph{$\setA$-stream} (or simply a \emph{stream}) is an infinite sequence of elements of $\setA$, that is, a function $\natnumbers \mto \setA$. Thus, $\setA^\natnumbers$ is the set of all $\setA$-streams. We will denote a stream $\styleelements{\sigma} \setin \setA^\natnumbers$ by listing its values:
 \begin{equation}
     \styleelements{\sigma} = (\styleelements{\sigma}_0, \styleelements{\sigma}_1, \styleelements{\sigma}_2, \ldots),
 \end{equation}
@@ -145,16 +146,24 @@ where $\styleelements{\sigma}_n = \styleelements{\sigma}(n)$ for each $n \setin 
 
 We define the \emph{stream functor} $\streamfun \colon \Set \fto \Set$ as follows.
 
-On the level of objects, for any set $\setA$:
+On the level of objects, for any set $\setA$, we define
 \begin{equation}
     \streamsof{\setA} = \setA^{\natnumbers}.
 \end{equation}
-On the level of morphisms, given a function $\mora \colon \setA \mto \setB$, we define $\streamfun(\mora) \colon \streamsof{\setA} \mto \streamsof{\setB}$ by applying $\mora$ pointwise:
+On the level of morphisms, given any function $\mora \colon \setA \mto \setB$, we define 
 \begin{equation}
+\streamfun(\mora) \colon \streamsof{\setA} \mto \streamsof{\setB}
+\end{equation}
+ by applying $\mora$ pointwise:
+ \begin{equation}
     \streamfun(\mora)(\styleelements{\sigma})_n = \mora(\styleelements{\sigma}_n).
 \end{equation}
+Or, put differently, 
+\begin{equation}
+    \streamfun(\mora)(\styleelements{\sigma}) \colon \natnumbers \overset{\styleelements{\sigma}}{\mto} \setA \overset{\mora}{\mto} \setB.
+\end{equation}
 
-This functor becomes a co-monad when equipped with the following extraction and duplication. The extraction $\comonex_\setA \colon \streamsof{\setA} \mto \setA$ returns the first element (the ``head'') of a stream:
+The functor $\streamfun$ becomes a co-monad when equipped with the following extraction and duplication. The extraction $\comonex_\setA \colon \streamsof{\setA} \mto \setA$ returns the first element (the ``head'') of a stream:
 \begin{equation}\label{eq:stream-comonad-extraction}
     \comonex_\setA(\styleelements{\sigma}) = \styleelements{\sigma}_0.
 \end{equation}
@@ -209,13 +218,13 @@ For right counitality, we need to show that $\comondu_\setA \mthen \streamfun(\c
 
 Let $\subA$ be a fixed set, which we think of as a set of ``positions'' or ``indices''. We define the \emph{store functor} $\stylefunctors{\aword{Store}} \colon \Set \fto \Set$ as follows.
 
-On the level of objects, for any set $\setA$:
+On the level of objects, for any set $\setA$,
 \begin{equation}
     \stylefunctors{\aword{Store}}(\setA) = \setA^{\subA} \cartprod \subA,
 \end{equation}
-that is, a pair consisting of a function $\subA \mto \setA$ (a ``lookup table'') and a distinguished element of $\subA$ (the ``current position''). On the level of morphisms, given a function $\mora \colon \setA \mto \setB$:
+that is, a pair consisting of a function $\subA \mto \setA$ (a ``lookup table'') and a distinguished element of $\subA$ (the ``current position''). On the level of morphisms, given any function $\mora \colon \setA \mto \setB$, we define
 \begin{equation}
-    \stylefunctors{\aword{Store}}(\mora)(\morb, \styleelements{s}) = (\mora \after \morb,\; \styleelements{s}),
+    \stylefunctors{\aword{Store}}(\mora)(\morb, \styleelements{s}) = (\morb \mthen \mora,\; \styleelements{s}),
 \end{equation}
 where $\morb \colon \subA \mto \setA$ and $\styleelements{s} \setin \subA$.
 
@@ -269,69 +278,66 @@ For right counitality, we need $\comondu_\setA \mthen \stylefunctors{\aword{Stor
 \begin{example}[Cowriter co-monad]
 \label{exa:cowriter-comonad}
 
-Let $\monoidAdefinition$ be a monoid.
-We define the \emph{cowriter functor} $\stylefunctors{\aword{Cowrite}} \colon \Set \fto \Set$ as follows. On the level of objects:
+Let $\monoidAdefinition$ be a monoid. We define the \emph{cowriter functor} $\stylefunctors{\aword{Cowrite}} \colon \Set \fto \Set$ as follows. On the level of objects, for any set $\setA$:
 \begin{equation}
-    \stylefunctors{\aword{Cowrite}}(\setA) = \setA \cartprod \monoidAset.
+    \stylefunctors{\aword{Cowrite}}(\setA) = \setA^{\monoidAset},
 \end{equation}
-On the level of morphisms, given $\mora \colon \setA \mto \setB$:
+that is, the set of all functions from $\monoidAset$ to $\setA$. On the level of morphisms, given $\mora \colon \setA \mto \setB$:
 \begin{equation}
-    \stylefunctors{\aword{Cowrite}}(\mora)(\ela, \styleelements{m}) = (\mora(\ela), \styleelements{m}).
+    \stylefunctors{\aword{Cowrite}}(\mora)(\morb) = \mora \after \morb,
 \end{equation}
+where $\morb \colon \monoidAset \mto \setA$.
 
-Note that the underlying functor $\setA \mapsto \setA \cartprod \monoidAset$ is the same as for the product/environment co-monad (\cref{exa:product-comonad}), but the monoid structure on $\monoidAset$ allows us to define a different, richer duplication.
-
-The extraction $\comonex_\setA \colon \setA \cartprod \monoidAset \mto \setA$ is the same as before --- it discards the monoid element:
+This functor becomes a co-monad when equipped with the following extraction and duplication. The extraction $\comonex_\setA \colon \setA^{\monoidAset} \mto \setA$ evaluates the function at the identity element of the monoid:
 \begin{equation}\label{eq:cowriter-comonad-extraction}
-    \comonex_\setA(\ela, \styleelements{m}) = \ela.
+    \comonex_\setA(\morb) = \morb(\idmon_\monoidA).
 \end{equation}
-The duplication $\comondu_\setA \colon \setA \cartprod \monoidAset \mto (\setA \cartprod \monoidAset) \cartprod \monoidAset$ now uses the monoid multiplication to ``split'' the monoid element between the two layers:
+The duplication $\comondu_\setA \colon \setA^{\monoidAset} \mto (\setA^{\monoidAset})^{\monoidAset}$ uses the monoid multiplication to ``split'' the argument between two levels:
 \begin{equation}\label{eq:cowriter-comonad-duplication}
-    \comondu_\setA(\ela, \styleelements{m}) = ((\ela, \styleelements{m}), \styleelements{m}).
+    \comondu_\setA(\morb)(\styleelements{m}_1)(\styleelements{m}_2) = \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2).
 \end{equation}
-
-Actually, let us compare this with the product co-monad. The duplication of the product co-monad was defined as $\comondu_\setA(\ela, \styleelements{s}) = ((\ela, \styleelements{s}), \styleelements{s})$, which is the same formula. The key difference is conceptual: in the cowriter setting, we emphasize that $\monoidAset$ carries monoid structure, which is relevant for defining a different co-Kleisli composition in \cref{exa:cokleisli-cowriter}.
-
-However, there is an alternative definition of the cowriter co-monad, where the duplication makes genuine use of the monoid operation. In this variant, the underlying functor maps $\setA$ to $\setA^{\monoidAset}$ (the set of functions from $\monoidAset$ to $\setA$), with:
-\begin{align*}
-    \comonex_\setA(\morb) & = \morb(\idmon_\monoidA), \\
-    \comondu_\setA(\morb)(\styleelements{m}_1)(\styleelements{m}_2) & = \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2).
-\end{align*}
-This variant, sometimes called the \emph{reader co-monad}, maps the monoid multiplication to a ``splitting'' of the argument between two levels.
+In other words, $\comondu_\setA(\morb)$ is a function $\monoidAset \mto \setA^{\monoidAset}$ that, given $\styleelements{m}_1 \setin \monoidAset$, returns the function $\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2)$.
 
 \
 
-Let us verify the coassociativity and counitality conditions for the first variant.
+Let us verify the coassociativity and counitality conditions.
 
-For coassociativity, we need $\comondu_\setA \mthen \comondu_{\setA \cartprod \monoidAset} = \comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comondu_\setA)$. On the one hand:
+For coassociativity, we need $\comondu_\setA \mthen \comondu_{\setA^{\monoidAset}} = \comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comondu_\setA)$. Let $\morb \colon \monoidAset \mto \setA$. On the one hand:
 \begin{align*}
-(\comondu_\setA \mthen \comondu_{\setA \cartprod \monoidAset})(\ela, \styleelements{m})
-& = \comondu_{\setA \cartprod \monoidAset}((\ela, \styleelements{m}), \styleelements{m}) \\
-& = (((\ela, \styleelements{m}), \styleelements{m}), \styleelements{m}).
+(\comondu_\setA \mthen \comondu_{\setA^{\monoidAset}})(\morb)(\styleelements{m}_1)(\styleelements{m}_2)(\styleelements{m}_3)
+& = \comondu_{\setA^{\monoidAset}}(\comondu_\setA(\morb))(\styleelements{m}_1)(\styleelements{m}_2)(\styleelements{m}_3) \\
+& = \comondu_\setA(\morb)(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2)(\styleelements{m}_3) \\
+& = \morb((\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2) \mtimesof\monoidA \styleelements{m}_3).
 \end{align*}
 On the other hand:
 \begin{align*}
-(\comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comondu_\setA))(\ela, \styleelements{m})
-& = \stylefunctors{\aword{Cowrite}}(\comondu_\setA)((\ela, \styleelements{m}), \styleelements{m}) \\
-& = (\comondu_\setA(\ela, \styleelements{m}), \styleelements{m}) \\
-& = (((\ela, \styleelements{m}), \styleelements{m}), \styleelements{m}).
+(\comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comondu_\setA))(\morb)(\styleelements{m}_1)(\styleelements{m}_2)(\styleelements{m}_3)
+& = \comondu_\setA(\comondu_\setA(\morb)(\styleelements{m}_1))(\styleelements{m}_2)(\styleelements{m}_3) \\
+& = \comondu_\setA(\morb)(\styleelements{m}_1)(\styleelements{m}_2 \mtimesof\monoidA \styleelements{m}_3) \\
+& = \morb(\styleelements{m}_1 \mtimesof\monoidA (\styleelements{m}_2 \mtimesof\monoidA \styleelements{m}_3)).
 \end{align*}
-Both sides are equal, confirming coassociativity.
+These are equal by associativity of the monoid multiplication, confirming coassociativity.
 
-For left counitality, we need $\comondu_\setA \mthen \comonex_{\setA \cartprod \monoidAset} = \catid$:
+For left counitality, we need $\comondu_\setA \mthen \comonex_{\setA^{\monoidAset}} = \catid$:
 \begin{align*}
-(\comondu_\setA \mthen \comonex_{\setA \cartprod \monoidAset})(\ela, \styleelements{m})
-& = \comonex_{\setA \cartprod \monoidAset}((\ela, \styleelements{m}), \styleelements{m}) \\
-& = (\ela, \styleelements{m}).
+(\comondu_\setA \mthen \comonex_{\setA^{\monoidAset}})(\morb)(\styleelements{m})
+& = \comonex_{\setA^{\monoidAset}}(\comondu_\setA(\morb))(\styleelements{m}) \\
+& = \comondu_\setA(\morb)(\idmon_\monoidA)(\styleelements{m}) \\
+& = \morb(\idmon_\monoidA \mtimesof\monoidA \styleelements{m}) \\
+& = \morb(\styleelements{m}).
 \end{align*}
+This uses the left identity law of the monoid.
+
 For right counitality, we need $\comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comonex_\setA) = \catid$:
 \begin{align*}
-(\comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comonex_\setA))(\ela, \styleelements{m})
-& = \stylefunctors{\aword{Cowrite}}(\comonex_\setA)((\ela, \styleelements{m}), \styleelements{m}) \\
-& = (\comonex_\setA(\ela, \styleelements{m}), \styleelements{m}) \\
-& = (\ela, \styleelements{m}).
+(\comondu_\setA \mthen \stylefunctors{\aword{Cowrite}}(\comonex_\setA))(\morb)(\styleelements{m})
+& = \comonex_\setA(\comondu_\setA(\morb)(\styleelements{m})) \\
+& = \comondu_\setA(\morb)(\styleelements{m})(\idmon_\monoidA) \\
+& = \morb(\styleelements{m} \mtimesof\monoidA \idmon_\monoidA) \\
+& = \morb(\styleelements{m}).
 \end{align*}
+This uses the right identity law of the monoid.
+
+Note how the three monoid axioms (associativity, left identity, right identity) correspond exactly to the three co-monad axioms (coassociativity, left counitality, right counitality).
 \end{example}
-
-
 

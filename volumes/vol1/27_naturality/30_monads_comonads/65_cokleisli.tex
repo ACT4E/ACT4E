@@ -109,16 +109,21 @@ So the composition feeds $\morc$ a new lookup table whose value at any position 
 
 Let us spell out co-Kleisli composition for the cowriter co-monad from \cref{exa:cowriter-comonad}, with $\comonW = \stylefunctors{\aword{Cowrite}}$ and a monoid $\monoidAdefinition$.
 
-Since the underlying functor and the duplication are the same as for the product/environment co-monad (\cref{exa:product-comonad}), a co-Kleisli morphism $\setA \mto \setB$ is a function $\mora \colon \setA \cartprod \monoidAset \mto \setB$, and the co-Kleisli composition works the same way:
+A co-Kleisli morphism $\setA \mto \setB$ is a function $\mora \colon \setA^{\monoidAset} \mto \setB$. In other words, given a function $\morb \colon \monoidAset \mto \setA$, it produces a value in $\setB$. One can think of $\mora$ as a computation that has access to an ``$\setA$-valued environment indexed by the monoid $\monoidAset$''.
+
+Given co-Kleisli morphisms $\mora \colon \setA^{\monoidAset} \mto \setB$ and $\morc \colon \setB^{\monoidAset} \mto \setC$, their co-Kleisli composition proceeds as follows. For $\morb \colon \monoidAset \mto \setA$:
 \begin{equation*}
-    (\mora \mthen_{\stylefunctors{\aword{Cowrite}}} \morb)(\ela, \styleelements{m}) = \morb(\mora(\ela, \styleelements{m}), \styleelements{m}).
+\begin{split}
+\morb
+& \overset{\comondu_\setA}{\longmapsto} \bigl(\styleelements{m}_1 \mapsto (\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2))\bigr) \\
+& \overset{\stylefunctors{\aword{Cowrite}}(\mora)}{\longmapsto} \bigl(\styleelements{m}_1 \mapsto \mora(\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2))\bigr) \\
+& \overset{\morc}{\longmapsto} \morc\bigl(\styleelements{m}_1 \mapsto \mora(\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2))\bigr).
+\end{split}
 \end{equation*}
-The monoid element $\styleelements{m}$ is shared between both stages of the computation.
+So the co-Kleisli composition feeds $\morc$ a new $\setB$-valued environment where the value at position $\styleelements{m}_1$ is obtained by applying $\mora$ to the ``shifted'' environment $\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2)$. The monoid multiplication governs how the positions are shifted.
 
-Although the co-Kleisli composition is formally the same as for the plain product co-monad, the monoid structure on $\monoidAset$ provides a richer interpretation. We can think of co-Kleisli morphisms as computations that take a value and a ``log'' or ``accumulator'' in the monoid $\monoidAset$, and produce a result. This is dual to the writer monad, where the monoid accumulates output; here the monoid provides input context.
+This is dual to the writer monad, where the monoid accumulates output; here, the monoid parametrizes input context, and co-Kleisli composition shifts the context using the monoid operation.
 \end{example}
-
-
 
 
 \begin{gradedexercise}[\exname{ProductComonadCoKleisli}]
