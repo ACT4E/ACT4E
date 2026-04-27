@@ -1,0 +1,165 @@
+% !TEX root = chapter-standalone.tex
+
+\section[Dynamical systems]{Dynamical systems}
+\label{sec:cat-dyn}
+
+
+
+\subsection{Moore machines}
+
+\todotext{To do...}
+
+
+Let us consider composing \SY{Moore machines} serially by letting the output of one machine be the input of the next.
+We'd like the result to again be a \SY{Moore machine}.
+
+\begin{marginfigure}
+    \centering
+    \includesag{10_moore_comp_seq}
+    \caption{Composition of \SY{Moore machines} (first version).}
+    \label{fig:comp_moore_1}
+\end{marginfigure}
+
+In other words, given Moore machines
+%
+\begin{equation}
+    \label{eq:moore-mora}
+    \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
+\end{equation}
+%
+and
+%
+\begin{equation}
+    \label{eq:moore-morb}
+    \morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
+\end{equation}
+with~$\prout_{\mora} = \prin_{\morb}$, we'd like to define their composition as a Moore machine
+\begin{equation}
+    \label{eq:moore-morab-comp}
+    \morab = \tupp{\prin_{\morab},\prst_{\morab},\prout_{\morab},\prdyn_{\morab},\prreadout_{\morab},\prstart_{\morab}}.
+\end{equation}
+The situation is illustrated in \cref{fig:comp_moore_1}.
+
+Here is one way to do it: we set
+%
+\begin{equation}
+    \label{eq:moore-comp-naive-1}
+    \begin{aligned}
+        \prin_{\morab}    & \definedas \prin_{\mora}, \\
+        \prst_{\morab}    & \definedas \prst_{\mora} \cartprod \prst_{\morb}, \\
+        \prout_{\morab}   & \definedas \prout_{\morb}, \\
+        \prstart_{\morab} & \definedas \tupp{\prstart_{\mora}, \prstart_{\morb}},
+    \end{aligned}
+\end{equation}
+%
+we define the composite dynamics to be
+%
+\begin{equation}
+    \label{eq:moore-comp-naive-2}
+    \defmapcommaset{
+        \prdyn_{\morab}
+    }{
+        \prin_{\mora} \cartprod (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        \tupp{\prinel, \tupp{\prsteln{\mora}, \prsteln{\morb}}}
+    }{
+        \tupp{ \prdyn_{\mora} (\prinel, \prsteln{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(\prsteln{\mora}), \prsteln{\morb})}
+    }
+\end{equation}
+%
+and we define the composite readout to be
+%
+\begin{equation}
+    \label{eq:moore-comp-naive-3}
+    \defmapperiodset{
+        \prreadout_{\morab}
+    }{
+        (\prst_{\mora} \cartprod \prst_{\morb})
+    }{
+        \prout_{\morb}
+    }{
+        \tupp{\prsteln{\mora}, \prsteln{\morb}}
+    }{
+        \prreadout_{\morb}(\prsteln{\morb})
+    }
+\end{equation}
+%
+
+This formalization works very nicely -- it models composition using the output of one machine as the input of the next, and result of composition is again a \SY{Moore machine}.
+
+However, there is one aspect which we wish were different: this composition operation is not \SY{associative}.
+It \emph{almost} is, but not quite.
+We explain why below.
+
+The reason we wish it \emph{were} \SY{associative} is that \SY{Moore machines} would then form a \SY{semicategory}, and we could integrate them nicely into the mathematics we have been developing thus far.
+
+The culprit for associativity failing is the \SY{cartesian product} that we use to define the state space $\prst_{\mora} \cartprod \prst_{\morb}$ of a composite \SY{Moore machine} $\morab$.
+Consider three composable systems~$\mora$,~$\morb$, and~$\morc$.
+If we compose them in the two ways~$(\morab) \mthen \morc$ and~$\mora \mthen (\morb \mthen \morc)$, then their respective state spaces are~$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and~$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$.
+These sets are \emph{isomorphic}, but they are not equal on the nose, and hence also the \SY{Moore machines} $(\mora \mthen \morb) \mthen \morc$ and $\mora \mthen (\morb \mthen \morc)$ are very close to being equal, but are not quite.
+
+To see why
+\begin{equation}
+    \label{eq:assoc-fails1}
+    (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc} \neq \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}),
+\end{equation}
+recall that the elements of~$(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ are nested tuples of the form
+\begin{equation}
+    \tupp{ \tupp{\prsteln{\mora}, \prsteln{\morb}}, \prsteln{\morc} }
+\end{equation}
+while the elements of~$\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$ are nested tuples of the form
+\begin{equation}
+    \tupp{\prsteln{\mora}, \tupp{\prsteln{\morb}, \prsteln{\morc}} }.
+\end{equation}
+
+An isomorphism between the two sets is given by the following function
+\begin{equation}
+    \label{eq:assoc-fails2}
+    \begin{aligned}
+        (\prst_{\mora} \cartprod \prst_{\morb})
+        \cartprod \prst_{\morc}                                           & \to \prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc}) \\
+        \tupp{ \tupp{\prsteln{\mora}, \prsteln{\morb}}, \prsteln{\morc} } & \mapsto \tupp{\prsteln{\mora}, \tupp{\prsteln{\morb}, \prsteln{\morc}} }
+    \end{aligned}
+\end{equation}
+which simply re-brackets the tuples.
+
+In the next section we will introduce a technical construction for defining a product similar to the \SY{cartesian product}, but which is \SY{associative} on the nose - not just ``up to an isomorphism''.
+This construction will allow us to make a new, modified formalization of \SY{Moore machines} which form a bona fide \SY{semicategory}, and it will prove useful in other respects further down the road.
+
+\todotext{The above needs editing -- it is no longer current}
+
+\subsection{Mealy machines}
+
+\todotext{the following fails to be a category on the nose, because associativity fails....}
+
+\begin{ctdefinition}[Category $\MealyMod$]
+\label{def:MealyCat}
+The category $\MealyMod$ is:
+\begin{enumerate}
+    \item \emph{Objects}: All sets.
+    \item \emph{Morphisms}: A morphism in $\MealyMod$ from a set~$\setA$ to a set~$\setB$ is an equivalence class of Mealy machines from $\setA$ to $\setB$.
+    
+    ~$\tupp{\prstart, \prdyn, \prreadout}$, where~$\prstart \setin \setS$ is an initial state in some set~$\setS$ (for some non-fixed set~$\setS$, the \emph{state set}), $\prdyn \colon \setS \cartprod \setA \mto \setS$ is the \emph{dynamics} (or \emph{update}) function, and~$\prreadout \colon \setS \cartprod \setA \mto \setB$ is the \emph{readout} function.
+    \item \emph{Composition}: Given morphisms~$\equivmora \colon \setA \mto \setB$ and~$\equivmorb\colon \setB \mto \setC$ represented by the Mealy machines
+    \begin{equation}
+        \begin{aligned}
+             & \mora = \tupp{\prstart_\mora, \prdyn_\mora, \prreadout_\mora} \\
+             & \morb = \tupp{\prstart_\morb, \prdyn_\morb, \prreadout_\morb},
+        \end{aligned}
+    \end{equation}
+    with state sets~$\setS_\mora$ and~$\setS_\morb$ respectively, their composition~$(\equivmora \mthen \equivmorb)\colon \setA \mto \setC$ is represented by the Mealy machine~$\mora \mthen \morb = \tupp{\prstart, \prdyn, \prreadout}$ with state set~$\setS_\mora \cartprod \setS_\morb$, where
+    \begin{equation}
+        \begin{aligned}
+            \prstart &= \tup{\prstart_\mora, \prstart_\morb}, \\
+            \prdyn\bigl(\tup{s_\mora, s_\morb},\, a\bigr) &= \tup{\prdyn_\mora(s_\mora, a),\; \prdyn_\morb\bigl(s_\morb,\, \prreadout_\mora(s_\mora, a)\bigr)}, \\
+            \prreadout\bigl(\tup{s_\mora, s_\morb},\, a\bigr) &= \prreadout_\morb\bigl(s_\morb,\, \prreadout_\mora(s_\mora, a)\bigr).
+        \end{aligned}
+    \end{equation}
+    \item \emph{Identities}: the identity for a set~$\setA$ is the Mealy machine~$\tupp{\ast, \prdyn, \prreadout}$ with state set~$\{\ast\}$ (a singleton), where~$\prdyn(\ast, a) = \ \ast$ and~$\prreadout(\ast, a) = a$ for all~$a \setin \setA$.
+\end{enumerate}
+\end{ctdefinition}
+
+
+
