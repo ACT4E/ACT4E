@@ -5,6 +5,63 @@
 
 \todotext{write this up}
 
+\subsection{Motivation: strict versus non-strict}
+
+In a \SY{strict monoidal category}~$\tup{\CatC, \mtimescat, \idmoncat}$, one has equalities such as
+\begin{equation}
+    (\Obja \mtimescatob \Objb) \mtimescatob \Objc = \Obja \mtimescatob (\Objb \mtimescatob \Objc) \qqand \Obja \mtimescatob \idmoncat = \Obja = \idmoncat \mtimescatob \Obja
+\end{equation}
+for all objects~$\Obja, \Objb, \Objc$.
+This is very convenient: it means we never have to worry about how we parenthesize a monoidal product of several objects, nor about inserting or removing monoidal units.
+
+In a general (non-strict) \SY{monoidal category}, these equalities are replaced by \SY{natural isomorphisms}: the \SY{associator}~$\associator_{\Obja,\Objb,\Objc}$, the \SY{left unitor}~$\leftunitor_\Obja$, and the \SY{right unitor}~$\rightunitor_\Obja$.
+These are not equalities but rather morphisms that we must compose with whenever we want to ``re-parenthesize'' or ``insert/remove the unit''.
+While the \SY{pentagon identities} and \SY{triangle identities} ensure that everything is coherent (roughly: any two ways of re-parenthesizing give the same result), keeping track of all the associators and unitors can be quite cumbersome.
+
+This raises a natural question: can we simply ``pretend'' that every \SY{monoidal category} is strict, and not worry about associators and unitors at all?
+
+\subsection{Mac Lane's strictification theorem}
+
+The answer, remarkably, is essentially yes.
+The key result is due to Mac Lane, and it says that every \SY{monoidal category} is ``equivalent'' to a \SY{strict monoidal category}, in a sense that respects the monoidal structure.
+Let us make this precise.
+
+We first need to say what it means for an \SY{equivalence of categories} to be compatible with the monoidal structures on both sides.
+
+\begin{ctdefinition}[Monoidal equivalence]
+    \label{def:monoidal-equivalence}
+    Let~$\tupp{\CatC,\mtimesC,\idmoncat_{\CatC}}$ and~$\tupp{\CatD,{{\mtimesD}},\idmoncat_{\CatD}}$ be \SY{monoidal categories}.
+    A \maindef{monoidal equivalence} between them is an \SY{equivalence of categories} between \CatC and \CatD in which both functors~$\funl \colon \CatC \fto \CatD$ and~$\funr \colon \CatD \fto \CatC$ are \SY{strong monoidal functors}.
+
+    If a \SY{monoidal equivalence} exists between \CatC and \CatD, we say that they are \emph{monoidally equivalent}.
+\end{ctdefinition}
+
+The idea is that monoidally equivalent categories have ``the same'' monoidal structure, even though the categories themselves may look quite different.
+In particular, any categorical construction or property that can be expressed purely in terms of the monoidal structure will transfer from one to the other.
+
+\begin{theorem}[Mac Lane's strictification theorem]
+    \label{thm:maclane-strictification}
+    For every \SY{monoidal category}~$\tup{\CatC, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor}$, there exists a \SY{strict monoidal category}~$\tup{\CatC', \mtimescat', \idmoncat'}$ and a \SY{monoidal equivalence} between~\CatC and~$\CatC'$.
+\end{theorem}
+
+The strict monoidal category~$\CatC'$ is called a \emph{strictification} of~\CatC.
+The proof, which we omit here, is constructive: given~\CatC, one can explicitly build~$\CatC'$ along with the monoidal equivalence.
+We will see concrete examples of such constructions in the next section.
+
+\begin{remark}
+    Mac Lane's strictification theorem is the formal justification for a common practice in the literature: when working with monoidal categories, one often suppresses the associators and unitors from the notation and writes expressions like~$\Obja \mtimescatob \Objb \mtimescatob \Objc$ without specifying the parenthesization.
+    The theorem guarantees that this informal practice does not lead to errors, because any result proved in the strict setting transfers, via the monoidal equivalence, to the non-strict one.
+\end{remark}
+
+\begin{remark}
+    The same result holds in the symmetric case: every \SY{symmetric monoidal category} is monoidally equivalent to a \emph{symmetric} \SY{strict monoidal category}, where the strictification also preserves the symmetry.
+    However, note that strictification only makes the associator and unitors into equalities.
+    The braiding~$\braiding_{\Obja,\Objb} \colon \Obja \mtimescatob \Objb \mtoiso \Objb \mtimescatob \Obja$ in general remains a non-trivial isomorphism even in the strictified version (unless~$\braiding$ is itself the identity, which would mean that the monoidal product is commutative on the nose).
+\end{remark}
+
+
+
+
 
 \section{Some practical strictifications}
 
@@ -693,7 +750,146 @@ Now that we have shown that composition of \SY{Moore machines} is \SY{associativ
 \todotext{\alphubel: Add a remark showing that \SY{Moore machines} do not have identities, and are hence do not form a category.}
 
 
+\subsection{The category~\RelL}
+We define a category~\RelL where the objects are sets of tuples (as in~\SetL).
 
+\begin{definition}[The category~\RelL]
+    \label{def:RelL}
+    \SYNDEF{category of tuple-sets and relations}
+    The category~\RelL is the \SY{subcategory} of~\Rel where the objects are tuples sets (objects of \SetL).
+    % \begin{enumerate}
+    %     \item \emph{Objects:} sets of tuples (as in~\SetL)
+    %     \item \emph{Morphisms:}
+    %           relations between sets of tuples.
+    %     \item \emph{Composition:}
+    %           Composition is the usual composition of relations.
+    %     \item \emph{Identities:}
+    %           The identity morphism on an object~$\cObj{\setAn{1},\ldots, \setAn{m}}$ is given by the identity relation~$\catid_{\cObj{\setAn{1},\ldots, \setAn{m}}}$.
+    % \end{enumerate}
+\end{definition}
+
+\begin{lemma}\label{lem:RelL-associative-stacking}
+    \RelL is  \SY{associative stacking} with the structure induced by tuple concatenation.
+\end{lemma}
+\begin{proof}
+    The multiplication $\mtimescatob$ is $\cprod$, the same as the one defined for $\SetL$.
+
+    The multiplication $\mtimescatmor$ is defined as follows:
+    \begin{equation}
+        \prf{
+            \relA\setsubseteq \setA \cartprod \setB
+        }{
+            \quad
+        }{
+            \relB\setsubseteq \setC\cartprod \setD
+        }{
+            \pars{\relA\mtimescatmor\relB} \setsubseteq
+            \pars{\makecprod{\setA,\setC}} \cartprod
+            \pars{\makecprod{\setB,\setD}}
+        }
+    \end{equation}
+    where
+    \begin{equation}
+        \pars{
+            \relA
+            \mtimescatmor
+            \relB
+        }
+        =
+        \makesett{
+            \tup{\setAeln{}\tupconcat \setCeln{},\setBeln{}\tupconcat \setDeln{}}
+            \mid
+            % \setAeln{} \setin \setA,
+            % \setBeln{} \setin \setB,
+            % \setCeln{} \setin \setC,
+            % \setDeln{} \setin \setD:
+            (\inrel{\setAeln{}}\relA{\setBeln{}})
+            \booland
+            (\inrel{\setCeln{}}\relB{\setDeln{}})
+        }.
+    \end{equation}
+    The rest of the proof is left as an exercise.
+\end{proof}
+
+% What is a relation in this context?
+% Given two sets of tuples~$\cObj{\setAn{1},\ldots, \setAn{m}}$ and~$\cObj{\setBn{1},\ldots, \setBn{n}}$, a relation between them is given by
+% \begin{equation}
+%     \relA \setsubseteq \cObj{\setAn{1},\ldots, \setAn{m}} \cartprod \cObj{\setBn{1},\ldots, \setBn{n}}.
+% % \end{equation}
+% We can define a multiplication operation for relations.
+% Consider
+% \begin{equation}
+%     \begin{aligned}
+%         \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} & \mtoin{\RelL}\cObj{\setBn{1},\ldots, \setBn{n}}, \\
+%         \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} & \mtoin{\RelL}\cObj{\setDn{1},\ldots, \setDn{p}}.
+%     \end{aligned}
+% \end{equation}
+% We have
+% \begin{equation}
+%     \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mtoin{\RelL}
+%     \cObj{\setBn{1},\ldots, \setBn{n}}\cprod \cObj{\setDn{1},\ldots, \setDn{p}}.
+% \end{equation}
+% Specifically, the multiplication is given by:
+% \begin{equation}
+%     \label{eq:multiofrels}
+%     \defmapperiod{
+%         \mtimescatmor
+%     }{
+%         \Mor_{\RelL}\cartprod \Mor_{\RelL}
+%     }{
+%         \mto
+%     }{
+%         \Mor_{\RelL}
+%     }{
+%         \tup{\relA,\relB}
+%     }{
+%         \makeset{
+%             \tup{\setAeln{}\tupconcat \setCeln{},\setBeln{}\tupconcat \setDeln{}}
+%             \mid
+%             (\inrel{\setAeln{}}\relA{\setBeln{}}) \booland (\inrel{\setCeln{}}\relB{\setDeln{}})
+%         }
+%     }
+% \end{equation}
+
+\begin{exercise}
+    \label{ex:relassocstack}
+    Consider the stacking operations on objects and on morphisms introduced in this section.
+    Prove that~\RelL is \SY{associative stacking}.
+\end{exercise}
+
+\begin{solution}
+    To prove the statement we first check that the stacking operations satisfy \cref{def:simple-stacking-semi-cat}, we then show that they are compatible, and finally show associativity.
+    The stacking operation on objects was already checked for~\SetL.
+    The stacking operation on morphisms clearly returns a valid relation.
+    Furthermore, compatibility is satisfied:
+    \begin{equation}
+        \prfperiod{
+            \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} \mtoin{\RelL}\cObj{\setBn{1},\ldots, \setBn{n}}
+        }
+        {
+            \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} \mtoin{\RelL}\cObj{\setDn{1},\ldots, \setDn{p}}
+        }
+        {
+            \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mtoin{\RelL}
+            \cObj{\setBn{1},\ldots, \setBn{n}}\cprod \cObj{\setDn{1},\ldots, \setDn{p}}
+        }
+    \end{equation}
+    Finally, associativity for the operation on objects was already shown for~\SetL.
+    % The stacking operation on morphisms follows directly from \cref{eq:multiofrels}.
+\end{solution}
+
+\begin{ctdefinition}[Trace for $\RelL$ with concatenation as monoidal product]
+    \label{def:tuple-REL-trace}
+    Consider the symmetric strict monoidal category $\RelL$, where the monoidal product is defined via the concatenation operation $\cprod$ for lists of sets.
+    Given a relation $\relA \colon \cObj{\setA, \setC}  \to \cObj{\setB, \setC}$, its \emph{trace} is defined as
+    %
+    \begin{equation}
+        \label{eq:tupel-REL-tracedef}
+        \begin{aligned}
+            \Tr_{\cObj{\setA}, \cObj{\setB}}^{\cObj{\setC}}(\relA) = \{ \tup{\ela, \elb} \in \cObj{\setA} \times \cObj{\setB} \mid \exists \ \elc \in \cObj{\setC} : \tup{\ela \tupconcat \elc, \elb \tupconcat \elc} \in \relA \}
+        \end{aligned}
+    \end{equation}
+\end{ctdefinition}
 
 
 \subsection{The category~\PosL}
@@ -856,135 +1052,9 @@ where~$\cObj{\posAsetn{1},\ldots, \posAsetn{n}}$ is a set of tuples, and we use 
 % \end{proof}
 %
 
-\subsection{The category~\RelL}
-We define a category~\RelL where the objects are sets of tuples (as in~\SetL).
 
-\begin{definition}[The category~\RelL]
-    \label{def:RelL}
-    \SYNDEF{category of tuple-sets and relations}
-    The category~\RelL is the \SY{subcategory} of~\Rel where the objects are tuples sets (objects of \SetL).
-    % \begin{enumerate}
-    %     \item \emph{Objects:} sets of tuples (as in~\SetL)
-    %     \item \emph{Morphisms:}
-    %           relations between sets of tuples.
-    %     \item \emph{Composition:}
-    %           Composition is the usual composition of relations.
-    %     \item \emph{Identities:}
-    %           The identity morphism on an object~$\cObj{\setAn{1},\ldots, \setAn{m}}$ is given by the identity relation~$\catid_{\cObj{\setAn{1},\ldots, \setAn{m}}}$.
-    % \end{enumerate}
-\end{definition}
 
-\begin{lemma}\label{lem:RelL-associative-stacking}
-    \RelL is  \SY{associative stacking} with the structure induced by tuple concatenation.
-\end{lemma}
-\begin{proof}
-    The multiplication $\mtimescatob$ is $\cprod$, the same as the one defined for $\SetL$.
-
-    The multiplication $\mtimescatmor$ is defined as follows:
-    \begin{equation}
-        \prf{
-            \relA\setsubseteq \setA \cartprod \setB
-        }{
-            \quad
-        }{
-            \relB\setsubseteq \setC\cartprod \setD
-        }{
-            \pars{\relA\mtimescatmor\relB} \setsubseteq
-            \pars{\makecprod{\setA,\setC}} \cartprod
-            \pars{\makecprod{\setB,\setD}}
-        }
-    \end{equation}
-    where
-    \begin{equation}
-        \pars{
-            \relA
-            \mtimescatmor
-            \relB
-        }
-        =
-        \makesett{
-            \tup{\setAeln{}\tupconcat \setCeln{},\setBeln{}\tupconcat \setDeln{}}
-            \mid
-            % \setAeln{} \setin \setA,
-            % \setBeln{} \setin \setB,
-            % \setCeln{} \setin \setC,
-            % \setDeln{} \setin \setD:
-            (\inrel{\setAeln{}}\relA{\setBeln{}})
-            \booland
-            (\inrel{\setCeln{}}\relB{\setDeln{}})
-        }.
-    \end{equation}
-    The rest of the proof is left as an exercise.
-\end{proof}
-
-% What is a relation in this context?
-% Given two sets of tuples~$\cObj{\setAn{1},\ldots, \setAn{m}}$ and~$\cObj{\setBn{1},\ldots, \setBn{n}}$, a relation between them is given by
-% \begin{equation}
-%     \relA \setsubseteq \cObj{\setAn{1},\ldots, \setAn{m}} \cartprod \cObj{\setBn{1},\ldots, \setBn{n}}.
-% % \end{equation}
-% We can define a multiplication operation for relations.
-% Consider
-% \begin{equation}
-%     \begin{aligned}
-%         \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} & \mtoin{\RelL}\cObj{\setBn{1},\ldots, \setBn{n}}, \\
-%         \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} & \mtoin{\RelL}\cObj{\setDn{1},\ldots, \setDn{p}}.
-%     \end{aligned}
-% \end{equation}
-% We have
-% \begin{equation}
-%     \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mtoin{\RelL}
-%     \cObj{\setBn{1},\ldots, \setBn{n}}\cprod \cObj{\setDn{1},\ldots, \setDn{p}}.
-% \end{equation}
-% Specifically, the multiplication is given by:
-% \begin{equation}
-%     \label{eq:multiofrels}
-%     \defmapperiod{
-%         \mtimescatmor
-%     }{
-%         \Mor_{\RelL}\cartprod \Mor_{\RelL}
-%     }{
-%         \mto
-%     }{
-%         \Mor_{\RelL}
-%     }{
-%         \tup{\relA,\relB}
-%     }{
-%         \makeset{
-%             \tup{\setAeln{}\tupconcat \setCeln{},\setBeln{}\tupconcat \setDeln{}}
-%             \mid
-%             (\inrel{\setAeln{}}\relA{\setBeln{}}) \booland (\inrel{\setCeln{}}\relB{\setDeln{}})
-%         }
-%     }
-% \end{equation}
-
-\begin{exercise}
-    \label{ex:relassocstack}
-    Consider the stacking operations on objects and on morphisms introduced in this section.
-    Prove that~\RelL is \SY{associative stacking}.
-\end{exercise}
-
-\begin{solution}
-    To prove the statement we first check that the stacking operations satisfy \cref{def:simple-stacking-semi-cat}, we then show that they are compatible, and finally show associativity.
-    The stacking operation on objects was already checked for~\SetL.
-    The stacking operation on morphisms clearly returns a valid relation.
-    Furthermore, compatibility is satisfied:
-    \begin{equation}
-        \prfperiod{
-            \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} \mtoin{\RelL}\cObj{\setBn{1},\ldots, \setBn{n}}
-        }
-        {
-            \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} \mtoin{\RelL}\cObj{\setDn{1},\ldots, \setDn{p}}
-        }
-        {
-            \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mtoin{\RelL}
-            \cObj{\setBn{1},\ldots, \setBn{n}}\cprod \cObj{\setDn{1},\ldots, \setDn{p}}
-        }
-    \end{equation}
-    Finally, associativity for the operation on objects was already shown for~\SetL.
-    % The stacking operation on morphisms follows directly from \cref{eq:multiofrels}.
-\end{solution}
-
-subsection{The category~$\DPL$}
+\subsection{The category~$\DPL$}
 
 Analogously, we define the category $\DPL$.
 
