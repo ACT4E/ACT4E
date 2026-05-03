@@ -20,10 +20,6 @@ defined for some, or all, morphisms of the above types. In terms of string diagr
         wirelabel/.style={objects, font=\bfseries},
         tracebox/.style={draw=black, dashed, thick, fill=graphcolor, rounded corners=2pt},
     ]
-        % Trace boundary (drawn first so it's behind everything)
-        \fill[graphcolor, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
-        \draw[black, dashed, thick, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
-
         % Morphism box f
         \node[morbox] (f) at (2,0) {};
         \node[morphisms, font=\large\itshape] at (2,0) {$f$};
@@ -54,23 +50,144 @@ defined for some, or all, morphisms of the above types. In terms of string diagr
 and incorporate it into the existing string diagram language with the help of the axioms in the definition of the trace. 
 
 
-In the following we will get to know a special kind of symmetric monoidal category which is called compact closed, and in this case we will be able to add two new symbols to the string diagram language of symmetric strict monoidal categories. These new symbols are often called `cup' and `cap' and they are drawn thus: 
+In the following we will get to know a special kind of symmetric monoidal category which is called compact closed, and in this case we will be able to add two new symbols to the string diagram language of symmetric strict monoidal categories. These new symbols represent special morphisms called `coevaluation', draw thus
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.5, every node/.style={transform shape},
+        wire/.style={objects, thick},
+    ]
+        % Coevaluation: C-shape opening to the right
+        \draw[wire] (0, 1.2) -- (1.5, 1.2);
+        \draw[wire] (0, 1.2) -- (0, -1.2);
+        \draw[wire] (0, -1.2) -- (1.5, -1.2);
+    \end{tikzpicture}
+    \caption{Coevaluation.}
+    \label{fig:coev-string}
+\end{figure}
 
-\
+and `evaluation', drawn thus:
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.5, every node/.style={transform shape},
+        wire/.style={objects, thick},
+    ]
+        % Evaluation: reversed C-shape, opening to the left
+        \draw[wire] (-1.5, 1.2) -- (0, 1.2);
+        \draw[wire] (0, 1.2) -- (0, -1.2);
+        \draw[wire] (-1.5, -1.2) -- (0, -1.2);
+    \end{tikzpicture}
+    \caption{Evaluation.}
+    \label{fig:ev-string}
+\end{figure}
 
 
-\
 
+With these symbols added to string diagrams, we will be able to `build' a trace in a canonical way from smaller building blocks:
 
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
+        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.4cm, minimum height=2.0cm},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\bfseries\small},
+        shadebox/.style={fill=graphcolor, draw=graphcolorbord, thin, dashed, rounded corners=1pt},
+    ]
+        % --- Left-hand side: the trace diagram ---
 
-With these symbols added to string diagrams, we will be able to `build' a trace in a canonical way from smaller building blocks: 
+        % Yellow shaded background for the trace operation
+        \fill[graphcolor, rounded corners=2pt] (-0.2,-1.8) rectangle (3.2,1.2);
+        \draw[graphcolorbord, dashed, thin, rounded corners=2pt] (-0.2,-1.8) rectangle (3.2,1.2);
 
+        % Morphism box f
+        \node[morbox] (fL) at (1.5,0) {};
+        \node[morphisms, font=\itshape] at (1.5,0) {$f$};
 
-\
+        % X wire
+        \draw[wire] (-1.0, 0.5) -- (fL.west |- 0,0.5);
+        \node[wirelabel, above] at (-0.7, 0.5) {$\Obja$};
 
-...
+        % Y wire
+        \draw[wire] (fL.east |- 0,0.5) -- (4.0, 0.5);
+        \node[wirelabel, above] at (3.7, 0.5) {$\Objb$};
 
-\
+        % Z feedback loop
+        \draw[wire] (0.2, -1.5) -- (0.2, -0.5) -- (fL.west |- 0,-0.5);
+        \draw[wire] (fL.east |- 0,-0.5) -- (2.8, -0.5) -- (2.8, -1.5);
+        \draw[wire] (0.2, -1.5) -- (2.8, -1.5);
+        \node[wirelabel, left] at (0.2, -0.9) {$\Objc$};
+        \node[wirelabel, right] at (2.8, -0.9) {$\Objc$};
+
+        % Equals sign
+        \node[font=\Large] at (5.0, -0.2) {$=$};
+
+        % --- Right-hand side: the canonical construction ---
+
+        % Shaded boxes (drawn first, behind everything)
+        % Consistent coordinates:
+        %   top row (id_X, id_Y): y = 0.3 to 0.75
+        %   middle row (coev, f, braiding, eval): y = -0.6 to 0.2 for top; full: -0.6 to -2.2
+        %   bottom row (id Z-dual): y = -2.2 to -1.75
+        %
+        % 1) id_X — aligned with coev (x: 5.8 to 7.0)
+        \fill[graphcolor, rounded corners=1pt] (5.8,0.3) rectangle (7.0,0.75);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (5.8,0.3) rectangle (7.0,0.75);
+        % 2) Coevaluation (x: 5.8 to 7.0)
+        \fill[graphcolor, rounded corners=1pt] (5.8,-2.2) rectangle (7.0,-0.6);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (5.8,-2.2) rectangle (7.0,-0.6);
+        % 3) f box shading — extended for breathing room (x: 7.4 to 9.4)
+        \fill[graphcolor, rounded corners=1pt] (7.4,-1.2) rectangle (9.4,1.0);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (7.4,-1.2) rectangle (9.4,1.0);
+        % 4) id Z-dual — aligned with f (x: 7.4 to 9.4)
+        \fill[graphcolor, rounded corners=1pt] (7.4,-2.2) rectangle (9.4,-1.75);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (7.4,-2.2) rectangle (9.4,-1.75);
+        % 5) Braiding (x: 10.0 to 11.2) — same top/bottom as coev and eval
+        \fill[graphcolor, rounded corners=1pt] (10.0,-2.2) rectangle (11.2,-0.6);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (10.0,-2.2) rectangle (11.2,-0.6);
+        % 6) Evaluation (x: 11.3 to 12.5) — same top/bottom as coev and braiding
+        \fill[graphcolor, rounded corners=1pt] (11.3,-2.2) rectangle (12.5,-0.6);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (11.3,-2.2) rectangle (12.5,-0.6);
+        % 7) id_Y — spans braiding to evaluation (x: 10.0 to 12.5)
+        \fill[graphcolor, rounded corners=1pt] (10.0,0.3) rectangle (12.5,0.75);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (10.0,0.3) rectangle (12.5,0.75);
+
+        % X wire straight through
+        \draw[wire] (5.8, 0.5) -- (7.6, 0.5);
+        \draw[wire] (9.2, 0.5) -- (13.5, 0.5);
+        \node[wirelabel, above] at (6.1, 0.5) {$\Obja$};
+        \node[wirelabel, above] at (13.2, 0.5) {$\Objb$};
+
+        % Coevaluation C-shape
+        \draw[wire] (6.3, -0.85) -- (7.6, -0.85);
+        \draw[wire] (6.3, -0.85) -- (6.3, -1.9);
+        \draw[wire] (6.3, -1.9) -- (10.0, -1.9);
+        \node[wirelabel, left] at (6.2, -1.5) {\scriptsize coev};
+
+        % Morphism box f
+        \node[morbox] (fR) at (8.4, 0) {};
+        \node[morphisms, font=\itshape] at (8.4,0) {$f$};
+
+        % Z labels near f
+        \node[wirelabel] at (7.3, -0.75) {$\Objc$};
+        \node[wirelabel] at (9.5, -0.75) {$\Objc$};
+
+        % Z out of f to braiding
+        \draw[wire] (9.2, -0.85) -- (10.0, -0.85);
+
+        % Braiding: straight X-crossing, no gap (symmetric case)
+        \draw[wire] (10.0, -0.85) -- (11.2, -1.9);
+        \draw[wire] (10.0, -1.9) -- (11.2, -0.85);
+
+        % Evaluation reversed-C
+        \draw[wire] (11.2, -0.85) -- (11.9, -0.85);
+        \draw[wire] (11.9, -0.85) -- (11.9, -1.9);
+        \draw[wire] (11.2, -1.9) -- (11.9, -1.9);
+        \node[wirelabel, right] at (12.0, -1.5) {\scriptsize ev};
+
+    \end{tikzpicture}
+    \caption{The canonical trace, built from coevaluation, the morphism~$f$, braiding, and evaluation.}
+    \label{fig:canonical-trace-construction}
+\end{figure}
 
 
 In particular, when given a compact closed category, there is a theorem that guarantees for us that this construction gives a trace, and we then don't need to go and check the many axioms in the definition of trace. 
