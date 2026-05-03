@@ -7,6 +7,45 @@
 
 \begin{figure}[h!]
     \centering
+    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
+        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.6cm, minimum height=2.2cm},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\bfseries},
+        tracebox/.style={draw=black, dashed, thick, fill=graphcolor, rounded corners=2pt},
+    ]
+        % Trace boundary (drawn first so it's behind everything)
+        \fill[graphcolor, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
+        \draw[black, dashed, thick, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
+
+        % Morphism box f
+        \node[morbox] (f) at (2,0) {};
+        \node[morphisms, font=\large\itshape] at (2,0) {$f$};
+
+        % X wire: input from left
+        \draw[wire] (-1.8, 0.55) -- (f.west |- 0,0.55);
+        \node[wirelabel, above] at (-1.2, 0.55) {$\Obja$};
+
+        % Y wire: output to right
+        \draw[wire] (f.east |- 0,0.55) -- (5.8, 0.55);
+        \node[wirelabel, above] at (5.2, 0.55) {$\Objb$};
+
+        % Z wire: input side (from feedback loop up to f)
+        \draw[wire] (0.6, -1.8) -- (0.6, -0.55) -- (f.west |- 0,-0.55);
+        \node[wirelabel, left] at (0.6, -1.1) {$\Objc$};
+
+        % Z wire: output side (from f down to feedback loop)
+        \draw[wire] (f.east |- 0,-0.55) -- (3.4, -0.55) -- (3.4, -1.8);
+        \node[wirelabel, right] at (3.4, -1.1) {$\Objc$};
+
+        % Feedback loop: bottom horizontal segment
+        \draw[wire] (0.6, -1.8) -- (3.4, -1.8);
+    \end{tikzpicture}
+    \caption{The trace operator: given a morphism~$\mora \colon \Obja \mtimescatob \Objc \mto \Objb \mtimescatob \Objc$, its trace~$\Tr_{\Obja,\Objb}^\Objc(\mora) \colon \Obja \mto \Objb$ is obtained by ``closing the loop'' on the~$\Objc$ wire.}
+    \label{fig:trace-operator}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
     \includegraphics[width=10cm]{trace-naturality-x}
     \caption{Naturality in $\Obja$}
     \label{fig:trace-naturality-x}

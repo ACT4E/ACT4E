@@ -3,9 +3,181 @@
 \section{Canonical trace, duality}
 \label{sec:canonical-trace-dual-objects}
 \todotextjira{420}{\bernina: @JL: Seems like that here string diagrams would help.}
-There is a concept of ``duality'' for objects in a \SY{monoidal category} which we will introduce with an illustrative example.
 
-\linkvideo{spring2021-par-feedback:dualizability} % Dualizability
+
+\
+
+So far, when considering traces (or feedback) on a symmetric monoidal category, the trace has been modeled as an operation of the following kind
+\begin{equation*}
+\generictracecat{X}{Y}{Z}:\HomSet{\stylecat{C}}{\styleobj{X}\mtimescat \styleobj{Z}}{\styleobj{Y}\mtimescat \styleobj{Z}}\to\HomSet{\stylecat{C}}{\styleobj{X}}{\styleobj{Y}}
+\end{equation*}
+defined for some, or all, morphisms of the above types. In terms of string diagrams, we have seen that we are able to draw this operation as a loop 
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
+        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.6cm, minimum height=2.2cm},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\bfseries},
+        tracebox/.style={draw=black, dashed, thick, fill=graphcolor, rounded corners=2pt},
+    ]
+        % Trace boundary (drawn first so it's behind everything)
+        \fill[graphcolor, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
+        \draw[black, dashed, thick, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
+
+        % Morphism box f
+        \node[morbox] (f) at (2,0) {};
+        \node[morphisms, font=\large\itshape] at (2,0) {$f$};
+
+        % X wire: input from left
+        \draw[wire] (-1.8, 0.55) -- (f.west |- 0,0.55);
+        \node[wirelabel, above] at (-1.2, 0.55) {$\Obja$};
+
+        % Y wire: output to right
+        \draw[wire] (f.east |- 0,0.55) -- (5.8, 0.55);
+        \node[wirelabel, above] at (5.2, 0.55) {$\Objb$};
+
+        % Z wire: input side (from feedback loop up to f)
+        \draw[wire] (0.6, -1.8) -- (0.6, -0.55) -- (f.west |- 0,-0.55);
+        \node[wirelabel, left] at (0.6, -1.1) {$\Objc$};
+
+        % Z wire: output side (from f down to feedback loop)
+        \draw[wire] (f.east |- 0,-0.55) -- (3.4, -0.55) -- (3.4, -1.8);
+        \node[wirelabel, right] at (3.4, -1.1) {$\Objc$};
+
+        % Feedback loop: bottom horizontal segment
+        \draw[wire] (0.6, -1.8) -- (3.4, -1.8);
+    \end{tikzpicture}
+    \caption{String diagram for the trace operator.}
+\end{figure}
+
+
+and incorporate it into the existing string diagram language with the help of the axioms in the definition of the trace. 
+
+
+In the following we will get to know a special kind of symmetric monoidal category which is called compact closed, and in this case we will be able to add two new symbols to the string diagram language of symmetric strict monoidal categories. These new symbols are often called `cup' and `cap' and they are drawn thus: 
+
+\
+
+
+\
+
+
+
+With these symbols added to string diagrams, we will be able to `build' a trace in a canonical way from smaller building blocks: 
+
+
+\
+
+...
+
+\
+
+
+In particular, when given a compact closed category, there is a theorem that guarantees for us that this construction gives a trace, and we then don't need to go and check the many axioms in the definition of trace. 
+
+So what is a compact closed category? As a first slogan, it is a symmetric monoidal category where each object has a `dual object'. 
+
+Next you may wonder what `dual objects' are. Well, glad you asked! Let's have a look. 
+
+
+\
+
+
+
+\
+
+\subsection{Definitions}
+
+\begin{ctdefinition}[Dual object]
+    \label{def:dualizable-object}
+    Let~$\tup{\CatC,\mtimesC,\idmoncat_{\CatC}}$ be a \SY{monoidal category}, and let~$\Obja \setin \ObC$.
+    A \maindef{right dual object} of~$\Obja$ is specified by:
+
+    \constit
+    \begin{enumerate}
+        \item an object $\Objadual \setin \ObC$;
+        \item a morphism $\ev_\Obja\colon \Objadual \mtimescatob \Obja \mto \idmoncat$, called \emph{evaluation}; \label{def:ev1}
+        \item a morphism $\coev_\Obja\colon \idmoncat \mto \Obja \mtimescatob \Objadual$, called \emph{coevaluation};\label{def:coev1}
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item
+              \begin{equation}\label{eq:snake-eq-1}
+                  \leftunitor_{\Obja}^{-1} \mthen (\coev_\Obja \mtimescatmor \catidat\Obja) \mthen \associator_{\Obja, \Objadual, \Obja} \mthen(\catidat\Obja \mtimescatmor \ev_\Obja) \mthen \rightunitor_{\Obja} = \catidat\Obja;
+              \end{equation}
+        \item
+              \begin{equation}\label{eq:snack-eq-2}
+                  \rightunitor_{\Objadual}^{-1} \mthen (\catidat{\Objadual} \mtimescatmor \coev_\Obja) \mthen \associator_{\Objadual, \Obja, \Objadual}^{-1} \mthen (\ev_\Obja \mtimescatmor \catidat{\Objadual}) \mthen \leftunitor_{\Objadual} = \catidat{\Objadual}.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{ctdefinition}\label{def:right-dualizable}
+    An object $\Obja$ in a \SY{monoidal category} is called \maindef{right dualizable} if there exists, in the category, a right dual object of $\Obja$.
+\end{ctdefinition}
+
+\begin{remark}\label{rem:left-dualizability}
+    There is an analogous definition of \maindef{left dual object} and \maindef{left dualizability}.
+    One can show that when the \SY{monoidal category} in question is symmetric, then left dual objects can be seen as right dual objects, and vice versa.
+    In this case, we then speak simply of \maindef{dualizability}.
+\end{remark}
+
+\begin{ctdefinition}[Compact closed category]
+    \label{def:compact-closed-category}
+    A symmetric monoidal category is called \emph{compact closed} if every object is dualizable.
+\end{ctdefinition}
+
+
+\begin{ctdefinition}[Dual morphism]\label{def:dual-morphism}
+    Let $\mora \colon \Obja \mto \Objb$ be a morphism in a monoidal category $\tup{\CatC,\mtimesC,\idmoncat_{\CatC}}$ and suppose that $\Obja$ and $\Objb$ have right duals $\Obja\dual$ and $\Objb\dual$, respectively.
+    The \emph{right dual} of $\mora$ is the morphism $\mora\dual \colon \Objb\dual \mto \Obja\dual$ given by the composition
+    \equationsag{dual_morphism}{eq:dual_morphism}
+\end{ctdefinition}
+
+\begin{gradedexercise}[\exname{RelDualsTrace}]
+    \label{ex:RelDualsTrace}
+
+    In this exercise we work with the category $\Rel$ of sets and relations, equipped with the symmetric monoidal structure where the monoidal product is the cartesian product of sets.
+    The braiding is
+    \begin{equation}
+        \braiding_{\setA, \setB} \colon \makeset{ \tup{\tup{\ela, \elb},\tup{\elb', \ela'}} \setin (\setA \cartprod \setB) \cartprod (\setB \cartprod \setA) \mid \ela = \ela', \elb = \elb' }.
+    \end{equation}
+
+    This symmetric monoidal category is compact closed when we let the dual $\setA \dual$ of any set $\setA$ be the set itself, $\setA \dual = \setA$, and we define evaluation and co-evaluation by
+    \begin{equation}
+        \ev_\setA \colon \setA \cartprod \setA \mto \singleton, \quad \ev_\setA = \makeset{\tup{\tup{\ela, \elb}, \bullet} \setin(\setA \cartprod \setA) \cartprod \singleton \mid \ela = \elb}
+    \end{equation}
+    and
+    \begin{equation}
+        \coev_\setA \colon \singleton \mto \setA \cartprod \setA, \quad \coev_\setA = \makeset{\tup{\bullet, \tup{\ela, \elb}} \setin\singleton \cartprod (\setA \cartprod \setA) \mid \ela = \elb}
+    \end{equation}
+    respectively.
+
+    Your tasks:
+    \begin{enumerate}
+        \item
+              Let $\relB \colon \setA \mto \setB$ be a (generic) morphism in $\Rel$.
+              Compute the dual morphism $\relB\dual \colon \setB\dual \mto \setA\dual$.
+
+        \item
+              Let $\relA \colon \setA \cartprod \setC \mto \setB \cartprod \setC$ be a morphism in $\Rel$.
+              Show that the trace of $\relA$, given by the composition
+              \begin{equation}
+                  \rightunitor^{-1}_{\setA} \mthen (\catid_\setA \mtimescatmor \coev_\setC) \mthen \associator^{-1}_{\setA, \setC, \setC} \mthen (\relA \mtimescatmor \catid_\setC) \mthen \associator_{\setB, \setC, \setC} \mthen (\catid_\setB \mtimescatmor \braiding_{\setA, \setA}) \mthen (\catid_\setB \mtimescatmor \ev_\setC) \mthen \rightunitor_\setB
+              \end{equation}
+              is equal to the relation
+              \begin{equation}
+                  \makeset{\tup{\ela, \elb} \setin\setA \cartprod \setB \mid \exists \elc \setin \setC \colon \tup{\tup{\ela, \elc},\tup{\elb,\elc}} \setin \relA}.
+              \end{equation}
+    \end{enumerate}
+\end{gradedexercise}
+\solutionof{RelDualsTrace}
+
+
+
+\subsection{Why the names ``dual" and ``evaluation''?}
+
 We have seen in \cref{ex:Vect-symmetric-monoidal} that the category $\CatC = \VectR$ of real \SY{vector spaces} is symmetric monoidal, with tensor product as the monoidal product.
 Given a \SY{vector space} $\styleobj{V} $, its \emph{linear dual} is the real vector space
 \begin{equation}
@@ -20,16 +192,8 @@ Recall from linear algebra the following fact about any \SY{vector space} $\styl
     \styleobj{V} \simeq (\styleobj{V} ^{*})^* \text{ if and only if } \dim \styleobj{V} < \infty.
 \end{equation}
 %
-One might say that the finite-dimensional real \SY{vector spaces} are characterizable based on their behavior in this way with respect to the operation of taking the linear dual.
+Thus we may say that the finite-dimensional real \SY{vector spaces} are characterizable based on their behavior in this way with respect to the operation of taking the linear dual. 
 
-We will develop an alternative formulation of this fact, based on the notion of a \emph{dualizable object}.
-This notion will make sense in the setting of any (symmetric) \SY{monoidal category}, and we will see then, that \cref{eq:double-dual-fin-dim} translates to the statement
-\begin{equation}
-    \label{eq:dualizable-fin-dim}
-    \styleobj{V} \setin \Obof{\VectR} \text{ is dualizable if and only if } \dim \styleobj{V} < \infty.
-\end{equation}
-%
-Key protagonists in this reformulation are \emph{evaluation} and \emph{coevaluation} maps.
 
 In the following, $\styleobj{V} $ denotes a \emph{finite-dimensional} real \SY{vector space}.
 The evaluation map $\ev_\styleobj{V} $ associated to $\styleobj{V} $ is
@@ -104,94 +268,9 @@ and
 
 \solutionof{VectSnakeEquations}
 
-The equations \cref{eq:dualizability-cond-1} and \cref{eq:dualizability-cond-2} form the basis for the general notion of dualizability in a \SY{monoidal category}.
+%The equations \cref{eq:dualizability-cond-1} and \cref{eq:dualizability-cond-2} form the basis for the general notion of dualizability in a \SY{monoidal category}.
 
-\begin{ctdefinition}[Dual object]
-    \label{def:dualizable-object}
-    Let~$\tup{\CatC,\mtimesC,\idmoncat_{\CatC}}$ be a \SY{monoidal category}, and let~$\Obja \setin \ObC$.
-    A \maindef{right dual object} of~$\Obja$ is specified by:
 
-    \constit
-    \begin{enumerate}
-        \item an object $\Objadual \setin \ObC$;
-        \item a morphism $\ev_\Obja\colon \Objadual \mtimescatob \Obja \mto \idmoncat$, called \emph{evaluation}; \label{def:ev1}
-        \item a morphism $\coev_\Obja\colon \idmoncat \mto \Obja \mtimescatob \Objadual$, called \emph{coevaluation};\label{def:coev1}
-    \end{enumerate}
-
-    \condit
-    \begin{enumerate}
-        \item
-              \begin{equation}\label{eq:snake-eq-1}
-                  \leftunitor_{\Obja}^{-1} \mthen (\coev_\Obja \mtimescatmor \catidat\Obja) \mthen \associator_{\Obja, \Objadual, \Obja} \mthen(\catidat\Obja \mtimescatmor \ev_\Obja) \mthen \rightunitor_{\Obja} = \catidat\Obja;
-              \end{equation}
-        \item
-              \begin{equation}\label{eq:snack-eq-2}
-                  \rightunitor_{\Objadual}^{-1} \mthen (\catidat{\Objadual} \mtimescatmor \coev_\Obja) \mthen \associator_{\Objadual, \Obja, \Objadual}^{-1} \mthen (\ev_\Obja \mtimescatmor \catidat{\Objadual}) \mthen \leftunitor_{\Objadual} = \catidat{\Objadual}.
-              \end{equation}
-    \end{enumerate}
-\end{ctdefinition}
-
-\begin{ctdefinition}\label{def:right-dualizable}
-    An object $\Obja$ in a \SY{monoidal category} is called \maindef{right dualizable} if there exists, in the category, a right dual object of $\Obja$.
-\end{ctdefinition}
-
-\begin{remark}\label{rem:left-dualizability}
-    There is an analogous definition of \maindef{left dual object} and \maindef{left dualizability}.
-    One can show that when the \SY{monoidal category} in question is symmetric, then left dual objects can be seen as right dual objects, and vice versa.
-    In this case, we then speak simply of \maindef{dualizability}.
-\end{remark}
-
-\begin{ctdefinition}[Compact closed category]
-    \label{def:compact-closed-category}
-    A symmetric monoidal category is called \emph{compact closed} if every object is dualizable.
-\end{ctdefinition}
-
-\todotext{@JL put example of the prop LinRel here}
-
-\begin{ctdefinition}[Dual morphism]\label{def:dual-morphism}
-    Let $\mora \colon \Obja \mto \Objb$ be a morphism in a monoidal category $\tup{\CatC,\mtimesC,\idmoncat_{\CatC}}$ and suppose that $\Obja$ and $\Objb$ have right duals $\Obja\dual$ and $\Objb\dual$, respectively.
-    The \emph{right dual} of $\mora$ is the morphism $\mora\dual \colon \Objb\dual \mto \Obja\dual$ given by the composition
-    \equationsag{dual_morphism}{eq:dual_morphism}
-\end{ctdefinition}
-
-\begin{gradedexercise}[\exname{RelDualsTrace}]
-    \label{ex:RelDualsTrace}
-
-    In this exercise we work with the category $\Rel$ of sets and relations, equipped with the symmetric monoidal structure where the monoidal product is the cartesian product of sets.
-    The braiding is
-    \begin{equation}
-        \braiding_{\setA, \setB} \colon \makeset{ \tup{\tup{\ela, \elb},\tup{\elb', \ela'}} \setin (\setA \cartprod \setB) \cartprod (\setB \cartprod \setA) \mid \ela = \ela', \elb = \elb' }.
-    \end{equation}
-
-    This symmetric monoidal category is compact closed when we let the dual $\setA \dual$ of any set $\setA$ be the set itself, $\setA \dual = \setA$, and we define evaluation and co-evaluation by
-    \begin{equation}
-        \ev_\setA \colon \setA \cartprod \setA \mto \singleton, \quad \ev_\setA = \makeset{\tup{\tup{\ela, \elb}, \bullet} \setin(\setA \cartprod \setA) \cartprod \singleton \mid \ela = \elb}
-    \end{equation}
-    and
-    \begin{equation}
-        \coev_\setA \colon \singleton \mto \setA \cartprod \setA, \quad \coev_\setA = \makeset{\tup{\bullet, \tup{\ela, \elb}} \setin\singleton \cartprod (\setA \cartprod \setA) \mid \ela = \elb}
-    \end{equation}
-    respectively.
-
-    Your tasks:
-    \begin{enumerate}
-        \item
-              Let $\relB \colon \setA \mto \setB$ be a (generic) morphism in $\Rel$.
-              Compute the dual morphism $\relB\dual \colon \setB\dual \mto \setA\dual$.
-
-        \item
-              Let $\relA \colon \setA \cartprod \setC \mto \setB \cartprod \setC$ be a morphism in $\Rel$.
-              Show that the trace of $\relA$, given by the composition
-              \begin{equation}
-                  \rightunitor^{-1}_{\setA} \mthen (\catid_\setA \mtimescatmor \coev_\setC) \mthen \associator^{-1}_{\setA, \setC, \setC} \mthen (\relA \mtimescatmor \catid_\setC) \mthen \associator_{\setB, \setC, \setC} \mthen (\catid_\setB \mtimescatmor \braiding_{\setA, \setA}) \mthen (\catid_\setB \mtimescatmor \ev_\setC) \mthen \rightunitor_\setB
-              \end{equation}
-              is equal to the relation
-              \begin{equation}
-                  \makeset{\tup{\ela, \elb} \setin\setA \cartprod \setB \mid \exists \elc \setin \setC \colon \tup{\tup{\ela, \elc},\tup{\elb,\elc}} \setin \relA}.
-              \end{equation}
-    \end{enumerate}
-\end{gradedexercise}
-\solutionof{RelDualsTrace}
 
 \subsection{Canonical trace}
 \linkvideo{spring2021-par-feedback:feedback} % Feedback
