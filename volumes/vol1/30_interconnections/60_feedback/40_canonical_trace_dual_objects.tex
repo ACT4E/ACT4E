@@ -1,0 +1,590 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Canonical trace, duality}
+\label{sec:canonical-trace-dual-objects}
+\todotextjira{420}{\bernina: @JL: Seems like that here string diagrams would help.}
+
+
+\
+
+So far, when considering traces (or feedback) on a symmetric monoidal category, the trace has been modeled as an operation of the following kind
+\begin{equation*}
+\generictracecat{X}{Y}{Z}:\HomSet{\stylecat{C}}{\styleobj{X}\mtimescat \styleobj{Z}}{\styleobj{Y}\mtimescat \styleobj{Z}}\to\HomSet{\stylecat{C}}{\styleobj{X}}{\styleobj{Y}}
+\end{equation*}
+defined for some, or all, morphisms of the above types. In terms of string diagrams, we have seen that we are able to draw this operation as a loop 
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
+        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.6cm, minimum height=2.2cm},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\bfseries},
+        tracebox/.style={draw=black, dashed, thick, fill=graphcolor, rounded corners=2pt},
+    ]
+        % Morphism box f
+        \node[morbox] (f) at (2,0) {};
+        \node[morphisms, font=\large\itshape] at (2,0) {$f$};
+
+        % X wire: input from left
+        \draw[wire] (-1.8, 0.55) -- (f.west |- 0,0.55);
+        \node[wirelabel, above] at (-1.2, 0.55) {$\Obja$};
+
+        % Y wire: output to right
+        \draw[wire] (f.east |- 0,0.55) -- (5.8, 0.55);
+        \node[wirelabel, above] at (5.2, 0.55) {$\Objb$};
+
+        % Z wire: input side (from feedback loop up to f)
+        \draw[wire] (0.6, -1.8) -- (0.6, -0.55) -- (f.west |- 0,-0.55);
+        \node[wirelabel, left] at (0.6, -1.1) {$\Objc$};
+
+        % Z wire: output side (from f down to feedback loop)
+        \draw[wire] (f.east |- 0,-0.55) -- (3.4, -0.55) -- (3.4, -1.8);
+        \node[wirelabel, right] at (3.4, -1.1) {$\Objc$};
+
+        % Feedback loop: bottom horizontal segment
+        \draw[wire] (0.6, -1.8) -- (3.4, -1.8);
+    \end{tikzpicture}
+    \caption{String diagram for the trace operator.}
+\end{figure}
+
+
+and incorporate it into the existing string diagram language with the help of the axioms in the definition of the trace. 
+
+
+In the following we will get to know a special kind of symmetric monoidal category which is called compact closed, and in this case we will be able to add two new symbols to the string diagram language of symmetric strict monoidal categories. These new symbols represent special morphisms called `coevaluation', draw thus
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.5, every node/.style={transform shape},
+        wire/.style={objects, thick},
+    ]
+        % Coevaluation: C-shape opening to the right
+        \draw[wire] (0, 1.2) -- (1.5, 1.2);
+        \draw[wire] (0, 1.2) -- (0, -1.2);
+        \draw[wire] (0, -1.2) -- (1.5, -1.2);
+    \end{tikzpicture}
+    \caption{Coevaluation.}
+    \label{fig:coev-string}
+\end{figure}
+
+and `evaluation', drawn thus:
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.5, every node/.style={transform shape},
+        wire/.style={objects, thick},
+    ]
+        % Evaluation: reversed C-shape, opening to the left
+        \draw[wire] (-1.5, 1.2) -- (0, 1.2);
+        \draw[wire] (0, 1.2) -- (0, -1.2);
+        \draw[wire] (-1.5, -1.2) -- (0, -1.2);
+    \end{tikzpicture}
+    \caption{Evaluation.}
+    \label{fig:ev-string}
+\end{figure}
+
+
+
+With these symbols added to our string diagram language we will be able to `build' a trace in a canonical way from smaller building blocks, using only series and parallel compositions:
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
+        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.4cm, minimum height=2.0cm},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\bfseries\small},
+        shadebox/.style={fill=graphcolor, draw=graphcolorbord, thin, dashed, rounded corners=1pt},
+    ]
+        % --- Left-hand side: the trace diagram ---
+
+        % Yellow shaded background for the trace operation
+        \fill[graphcolor, rounded corners=2pt] (-0.2,-1.8) rectangle (3.2,1.2);
+        \draw[graphcolorbord, dashed, thin, rounded corners=2pt] (-0.2,-1.8) rectangle (3.2,1.2);
+
+        % Morphism box f
+        \node[morbox] (fL) at (1.5,0) {};
+        \node[morphisms, font=\itshape] at (1.5,0) {$f$};
+
+        % X wire
+        \draw[wire] (-1.0, 0.5) -- (fL.west |- 0,0.5);
+        \node[wirelabel, above] at (-0.7, 0.5) {$\Obja$};
+
+        % Y wire
+        \draw[wire] (fL.east |- 0,0.5) -- (4.0, 0.5);
+        \node[wirelabel, above] at (3.7, 0.5) {$\Objb$};
+
+        % Z feedback loop
+        \draw[wire] (0.2, -1.5) -- (0.2, -0.5) -- (fL.west |- 0,-0.5);
+        \draw[wire] (fL.east |- 0,-0.5) -- (2.8, -0.5) -- (2.8, -1.5);
+        \draw[wire] (0.2, -1.5) -- (2.8, -1.5);
+        \node[wirelabel, left] at (0.2, -0.9) {$\Objc$};
+        \node[wirelabel, right] at (2.8, -0.9) {$\Objc$};
+
+        % Equals sign
+        \node[font=\Large] at (5.0, -0.2) {$=$};
+
+        % --- Right-hand side: the canonical construction (shifted +1.2 for equal spacing from =) ---
+
+        % Shaded boxes (drawn first, behind everything)
+        % 1) id_X — aligned with coev
+        \fill[graphcolor, rounded corners=1pt] (7.0,0.2) rectangle (8.2,1.2);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (7.0,0.2) rectangle (8.2,1.2);
+        % 2) Coevaluation
+        \fill[graphcolor, rounded corners=1pt] (7.0,-2.2) rectangle (8.2,-0.6);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (7.0,-2.2) rectangle (8.2,-0.6);
+        % 3) f box shading
+        \fill[graphcolor, rounded corners=1pt] (8.6,-1.2) rectangle (10.6,1.2);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (8.6,-1.2) rectangle (10.6,1.2);
+        % 4) id Z-dual — aligned with f
+        \fill[graphcolor, rounded corners=1pt] (8.6,-2.2) rectangle (10.6,-1.6);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (8.6,-2.2) rectangle (10.6,-1.6);
+        % 5) Braiding
+        \fill[graphcolor, rounded corners=1pt] (11.2,-2.2) rectangle (12.4,-0.6);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (11.2,-2.2) rectangle (12.4,-0.6);
+        % 6) Evaluation
+        \fill[graphcolor, rounded corners=1pt] (12.5,-2.2) rectangle (13.7,-0.6);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (12.5,-2.2) rectangle (13.7,-0.6);
+        % 7) id_Y — spans braiding to evaluation
+        \fill[graphcolor, rounded corners=1pt] (11.2,0.2) rectangle (13.7,1.2);
+        \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (11.2,0.2) rectangle (13.7,1.2);
+
+        % Morphism box f
+        \node[morbox] (fR) at (9.6, 0) {};
+        \node[morphisms, font=\itshape] at (9.6,0) {$f$};
+
+        % X wire straight through — connects to f box edges
+        \draw[wire] (6.0, 0.5) -- (fR.west |- 0,0.5);
+        \draw[wire] (fR.east |- 0,0.5) -- (14.7, 0.5);
+        \node[wirelabel, above] at (6.3, 0.5) {$\Obja$};
+        \node[wirelabel, above] at (14.4, 0.5) {$\Objb$};
+
+        % Coevaluation C-shape — top wire connects to f box edge
+        \draw[wire] (7.5, -0.85) -- (fR.west |- 0,-0.85);
+        \draw[wire] (7.5, -0.85) -- (7.5, -1.9);
+        \draw[wire] (7.5, -1.9) -- (11.2, -1.9);
+        \node[wirelabel, left] at (7.4, -1.5) {\scriptsize coev};
+
+        % Z labels near f — above the wires
+        \node[wirelabel, above] at (8.5, -0.85) {$\Objc$};
+        \node[wirelabel, above] at (10.7, -0.85) {$\Objc$};
+
+        % Z out of f to braiding — connects from f box edge
+        \draw[wire] (fR.east |- 0,-0.85) -- (11.2, -0.85);
+
+        % Braiding: straight X-crossing, no gap (symmetric case)
+        \draw[wire] (11.2, -0.85) -- (12.4, -1.9);
+        \draw[wire] (11.2, -1.9) -- (12.4, -0.85);
+
+        % Evaluation reversed-C
+        \draw[wire] (12.4, -0.85) -- (13.1, -0.85);
+        \draw[wire] (13.1, -0.85) -- (13.1, -1.9);
+        \draw[wire] (12.4, -1.9) -- (13.1, -1.9);
+        \node[wirelabel, right] at (13.2, -1.5) {\scriptsize ev};
+
+    \end{tikzpicture}
+    \caption{The canonical trace, built from coevaluation, the morphism~$f$, braiding, and evaluation.}
+    \label{fig:canonical-trace-construction}
+\end{figure}
+
+
+In particular, when given a compact closed category, there is a theorem that guarantees for us that this construction gives a trace, and we then don't need to go and check the many axioms in the definition of trace. 
+
+So what is a compact closed category? As a first slogan, it is a symmetric monoidal category where each object has a `dual object'. 
+
+Next you may wonder what `dual objects' are. Well, glad you asked! Let's have a look. 
+
+
+\
+
+
+
+\
+
+\subsection{Definitions}
+
+\begin{ctdefinition}[Dual object]
+    \label{def:dualizable-object}
+    Let~$\tup{\CatC,\mtimesC,\idmoncat_{\CatC}}$ be a \SY{monoidal category}, and let~$\Obja \setin \ObC$.
+    A \maindef{right dual object} of~$\Obja$ is specified by:
+
+    \constit
+    \begin{enumerate}
+        \item an object $\Objadual \setin \ObC$;
+        \item a morphism $\ev_\Obja\colon \Objadual \mtimescatob \Obja \mto \idmoncat$, called \emph{evaluation}; \label{def:ev1}
+        \item a morphism $\coev_\Obja\colon \idmoncat \mto \Obja \mtimescatob \Objadual$, called \emph{coevaluation};\label{def:coev1}
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item
+              \begin{equation}\label{eq:snake-eq-1}
+                  \leftunitor_{\Obja}^{-1} \mthen (\coev_\Obja \mtimescatmor \catidat\Obja) \mthen \associator_{\Obja, \Objadual, \Obja} \mthen(\catidat\Obja \mtimescatmor \ev_\Obja) \mthen \rightunitor_{\Obja} = \catidat\Obja;
+              \end{equation}
+        \item
+              \begin{equation}\label{eq:snack-eq-2}
+                  \rightunitor_{\Objadual}^{-1} \mthen (\catidat{\Objadual} \mtimescatmor \coev_\Obja) \mthen \associator_{\Objadual, \Obja, \Objadual}^{-1} \mthen (\ev_\Obja \mtimescatmor \catidat{\Objadual}) \mthen \leftunitor_{\Objadual} = \catidat{\Objadual}.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{ctdefinition}\label{def:right-dualizable}
+    An object $\Obja$ in a \SY{monoidal category} is called \maindef{right dualizable} if there exists, in the category, a right dual object of $\Obja$.
+\end{ctdefinition}
+
+\begin{remark}\label{rem:left-dualizability}
+    There is an analogous definition of \maindef{left dual object} and \maindef{left dualizability}.
+    One can show that when the \SY{monoidal category} in question is symmetric, then left dual objects can be seen as right dual objects, and vice versa.
+    In this case, we then speak simply of \maindef{dualizability}.
+\end{remark}
+
+\begin{ctdefinition}[Compact closed category]
+    \label{def:compact-closed-category}
+    A symmetric monoidal category is called \emph{compact closed} if every object is dualizable.
+\end{ctdefinition}
+
+
+\begin{example}
+The category $\Rel$ of sets and relations, equipped with the monoidal structure given by the cartesian product of sets, is compact closed. 
+\end{example}
+
+\begin{example}
+The category of monotone relations $\stylecat{mRel}$, equipped with the monoidal structure given by the cartesian product of posets, is compact closed. 
+
+%Here is duality data that shows that every object in $\mRel$ is dualizable. 
+%\begin{enumerate}
+%\item For any poset $\posA$, a dual object is given by the opposite poset $\posA^\op$. 
+%\item Evaluation morphisms are given by the monotone relations
+%\begin{equation}
+%...
+%\end{equation}
+%\item Coevaluation morphisms are given by the monotone relations
+%\begin{equation}
+%...
+%\end{equation}
+%\end{enumerate}
+
+\end{example}
+
+
+\begin{ctdefinition}[Dual morphism]\label{def:dual-morphism}
+    Let $\mora \colon \Obja \mto \Objb$ be a morphism in a monoidal category $\tup{\CatC,\mtimesC,\idmoncat_{\CatC}}$ and suppose that $\Obja$ and $\Objb$ have right duals $\Obja\dual$ and $\Objb\dual$, respectively.
+    The \emph{right dual} of $\mora$ is the morphism $\mora\dual \colon \Objb\dual \mto \Obja\dual$ given by the composition
+    \equationsag{dual_morphism}{eq:dual_morphism}
+\end{ctdefinition}
+
+\begin{gradedexercise}[\exname{RelDualsTrace}]
+    \label{ex:RelDualsTrace}
+
+    In this exercise we work with the category $\Rel$ of sets and relations, equipped with the symmetric monoidal structure where the monoidal product is the cartesian product of sets.
+    The braiding is
+    \begin{equation}
+        \braiding_{\setA, \setB} \colon \makeset{ \tup{\tup{\ela, \elb},\tup{\elb', \ela'}} \setin (\setA \cartprod \setB) \cartprod (\setB \cartprod \setA) \mid \ela = \ela', \elb = \elb' }.
+    \end{equation}
+
+    This symmetric monoidal category is compact closed when we let the dual $\setA \dual$ of any set $\setA$ be the set itself, $\setA \dual = \setA$, and we define evaluation and co-evaluation by
+    \begin{equation}
+        \ev_\setA \colon \setA \cartprod \setA \mto \singleton, \quad \ev_\setA = \makeset{\tup{\tup{\ela, \elb}, \bullet} \setin(\setA \cartprod \setA) \cartprod \singleton \mid \ela = \elb}
+    \end{equation}
+    and
+    \begin{equation}
+        \coev_\setA \colon \singleton \mto \setA \cartprod \setA, \quad \coev_\setA = \makeset{\tup{\bullet, \tup{\ela, \elb}} \setin\singleton \cartprod (\setA \cartprod \setA) \mid \ela = \elb}
+    \end{equation}
+    respectively.
+
+    Your tasks:
+    \begin{enumerate}
+        \item
+              Let $\relB \colon \setA \mto \setB$ be a (generic) morphism in $\Rel$.
+              Compute the dual morphism $\relB\dual \colon \setB\dual \mto \setA\dual$.
+
+        \item
+              Let $\relA \colon \setA \cartprod \setC \mto \setB \cartprod \setC$ be a morphism in $\Rel$.
+              Show that the trace of $\relA$, given by the composition
+              \begin{equation}
+                  \rightunitor^{-1}_{\setA} \mthen (\catid_\setA \mtimescatmor \coev_\setC) \mthen \associator^{-1}_{\setA, \setC, \setC} \mthen (\relA \mtimescatmor \catid_\setC) \mthen \associator_{\setB, \setC, \setC} \mthen (\catid_\setB \mtimescatmor \braiding_{\setA, \setA}) \mthen (\catid_\setB \mtimescatmor \ev_\setC) \mthen \rightunitor_\setB
+              \end{equation}
+              is equal to the relation
+              \begin{equation}
+                  \makeset{\tup{\ela, \elb} \setin\setA \cartprod \setB \mid \exists \elc \setin \setC \colon \tup{\tup{\ela, \elc},\tup{\elb,\elc}} \setin \relA}.
+              \end{equation}
+    \end{enumerate}
+\end{gradedexercise}
+\solutionof{RelDualsTrace}
+
+
+
+\subsection{Why the names ``dual" and ``(co)evaluation''?}
+
+We have seen in \cref{ex:Vect-symmetric-monoidal} that the category $\CatC = \VectR$ of real \SY{vector spaces} is symmetric monoidal, with tensor product as the monoidal product.
+Given a \SY{vector space} $\styleobj{V} $, its \emph{linear dual} is the real vector space
+\begin{equation}
+    \label{eq:lin-dual-vecsp}
+    \styleobj{V} ^{*} := \makeset{ \text{linear maps } \styleobj{V} \mto \reals } = \HomSet{\CatC}{\styleobj{V}}{ \reals}.
+\end{equation}
+%
+Recall from linear algebra the following fact about any \SY{vector space} $\styleobj{V} $:
+%
+\begin{equation}
+    \label{eq:double-dual-fin-dim}
+    \styleobj{V} \simeq (\styleobj{V} ^{*})^* \text{ if and only if } \dim \styleobj{V} < \infty.
+\end{equation}
+%
+Thus we may say that the finite-dimensional real \SY{vector spaces} are characterizable based on their behavior in this way with respect to the operation of taking the linear dual. 
+
+
+In the following, $\styleobj{V} $ denotes a \emph{finite-dimensional} real \SY{vector space}.
+The evaluation map $\ev_\styleobj{V} $ associated to $\styleobj{V} $ is
+\begin{equation}
+    \label{eq:evaluation-vecsp}
+    \defmapperiod{
+        \ev_\styleobj{V}
+    }{
+        \styleobj{V}^* \otimes \styleobj{V}
+    }{
+        \mto
+    }{
+        \reals
+    }{
+        \tup{l, v}
+    }{
+        l(v)
+    }
+\end{equation}
+In other words, given $\tup{l, v}$, the map $\ev_\styleobj{V} $ evaluates $l$ at $v$.
+
+The coevaluation map $\coev_\styleobj{V} $ associated to $\styleobj{V} $ is slightly trickier to describe.
+Let $\makeset{e_1, \dots, e_n }$ be a basis of $\styleobj{V}$, and let $\makeset{e_1^*, \dots, e_n^* }$ be the corresponding dual basis of~$\styleobj{V}^*$.
+Then
+\begin{equation}
+    \label{eq:coevaluation-vecsp}
+    \defmapperiod{
+        \coev_\styleobj{V}
+    }{
+        \reals
+    }{
+        \mto
+    }{
+        \styleobj{V} \otimes \styleobj{V}^*
+    }{
+        \lambda
+    }{
+        \lambda \sum_{i=1}^n e_i \otimes e_i^*
+    }
+\end{equation}
+It turns out that this map is independent of the choice of basis.
+One way to think of this coevaluation map is to recall that $\styleobj{V} \otimes \styleobj{V}^* \simeq \Hom(\styleobj{V}, \styleobj{V})$.
+Under this identification, $\coev_\styleobj{V}$ maps any scalar $\lambda$ to the linear \SY{endomorphism} of $\styleobj{V}$ which is ``multiplication by $\lambda$''.
+(In terms of matrices, this is a diagonal matrix, with $\lambda$ at every entry of the diagonal.)
+
+\begin{proposition}
+Consider the category $\stylecat{FinVect}_\mathbb{R}$ of finite-dimensional real vector spaces, equipped with the standard symmetric monoidal structure where the monoidal product is the tensor product. With coevaluation and evaluation morphisms defined as above, this symmetric monoidal category is compact closed.
+\end{proposition}
+
+
+\begin{gradedexercise}[\exname{VectSnakeEquations}]
+    \label{ex:VectSnakeEquations}
+    Check the snake equations for the compact closed category $\stylecat{FinVect}_\mathbb{R}$ (where the monoidal product is the tensor product, and (co)evaluation morphisms are defined in the standard way). 
+\end{gradedexercise}
+
+\solutionof{VectSnakeEquations}
+
+%The equations \cref{eq:dualizability-cond-1} and \cref{eq:dualizability-cond-2} form the basis for the general notion of dualizability in a \SY{monoidal category}.
+
+
+\todotext{J: Add remark explaining that Vect has duality data only for finite-dimensional vector spaces, even though definition of 'linear dual' works also for finite dimenions. Also we can maybe then make a general remark somewhere that in any CCC the dual of an object X has X itself as its dual and X and its double dual are always isomorphic. Also maybe clarify somewhere the question of existence and uniqueness with respect to definition of CCC.... we just ask for dualizability but not duality data? And how unique is the latter? I think this is currently actually clearly treated in the text, but maybe warrants a remark and some additional further material..}
+
+
+\subsection{Canonical trace}
+\linkvideo{spring2021-par-feedback:feedback} % Feedback
+\todotextjira{199}{\alphubel: @JL: Write something about how we already saw string diagrams, and that (co)evaluation maps allow for bending the wires around to change the their direction, and that we can encode dual objects by adding a ``flow'' direction to the wires.
+    Then motivate the notion of trace in a \SY{monoidal category} by asking what we get when we bend a wire around and let the outout of a morphism flow back and be it's input -- ``closing the loop''}
+
+%\linkvideo{spring2021-par-feedback:mon-cat:string-diag} % String diagrams
+
+\begin{ctdefinition}[Trace of an endomorphism]
+    \label{def:trace_endo}
+    Let~$\tup{\CatC, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor, \braiding}$ be a \SY{symmetric monoidal category}.
+    Let~$\Obja \setin \ObC$ be dualizable and let
+    \begin{equation}
+        \mora \colon \Obja \mto \Obja.
+    \end{equation}
+    The \emph{trace} of~$\mora$ is the morphism
+    \begin{equation}
+        \Tr(\mora) \colon \idmoncat \mto \idmoncat
+    \end{equation}
+    defined by
+    \equationsag{endo_trace}{eq:endo_trace}
+    %\begin{equation}
+    %\label{eq:endomorphism-gen-trace}
+    %\idmoncat \overset{\coev_\Obja}{\mto} \Obja \mtimescatat \Obja^\vee  \overset{\mora \mtimescatmor \catid_{\Obja^\vee}}{\mto} \Obja \mtimescatob \Obja^\vee  \overset{\braiding}{\mto}  \Obja^\vee \mtimescatob \Obja \overset{\ev_\Obja}{\mto} \idmoncat.
+    %\end{equation}
+\end{ctdefinition}
+
+\begin{gradedexercise}[\exname{LinearAlgebraTrace}]
+    \label{ex:LinearAlgebraTrace}
+    Let~\CatC be the category of finite-dimensional real \SY{vector spaces} and~\reals-linear maps.
+    \todotextjira{516}{\alphubel: @JL: Didn't we call this already something different?}
+    We have seen that this category is symmetric monoidal when equipped with the usual tensor product as monoidal product.
+    Furthermore, in \cref{sec:canonical-trace-dual-objects} we saw that every object in this category is dualizable.
+
+    Fix a finite-dimensional real \SY{vector space}~$\styleobj{V}$, and let~$\makeset{e_1,\ldots,e_n }$ be a basis of it.
+    We saw that a choice of dual object for~$\styleobj{V}$ is given by~$\styleobj{V}^* = \Hom(\styleobj{V}, \reals)$, together with the evaluation map
+    \begin{equation}
+        \defmapperiod{
+            \ev_\styleobj{V}
+        }{
+            \styleobj{V}^* \otimes \styleobj{V}
+        }{
+            \mto
+        }{
+            \reals
+        }{
+            \tup{l, v}
+        }{
+            l(v)
+        }
+    \end{equation}
+    and the co-evaluation map
+    \begin{equation}
+        \defmapperiod{
+            \coev_\styleobj{V}
+        }{
+            \reals
+        }{
+            \mto
+        }{
+            \styleobj{V} \otimes \styleobj{V}^*
+        }{
+            \lambda
+        }{
+            \lambda \sum_{i=1}^n e_i \otimes e_i^*
+        }
+    \end{equation}
+    where $\makeset{e_1^*,\ldots,e_n^* }$ is the basis dual to the one we chose for~$\styleobj{V}$.
+
+    Let~$\mora\colon \styleobj{V} \mto \styleobj{V}$ be a linear \SY{endomorphism} -- that is,~$\mora \setin \Hom_{\CatC}(\styleobj{V}, \styleobj{V})$.
+    Compute the trace~$\Tr(\mora) \setin \Hom_{\CatC}(\reals, \reals)$ of~$\mora$ according to \cref{def:trace_endo}, and explain why it is the linear map ``multiplication by the trace of~$\mora$'', where ``trace'' in this latter phrase is the usual notion that we know from linear algebra.
+\end{gradedexercise}
+\solutionof{LinearAlgebraTrace}
+
+\begin{gradedexercise}[\exname{DPSnakeTrace}]
+    \label{ex:DPSnakeTrace}
+
+    In this exercise we work with the category $\DP$ of posets and design problems, equipped with the symmetric monoidal structure where the monoidal product is the cartesian product of posets.
+    The braiding
+    $$\braiding_{\posgenA,\posgenB}\colon \F{\posgenA} \Ptimes \F{\posgenB} \profto \R{\posgenB} \Ctimes \R{\posgenA}$$
+    is defined by
+    \begin{equation}
+        \braiding_{\posgenA,\posgenB}(\tup{\F{\posgenAel_1},\F{\posgenBel_1}}\Fop, \tup{\R{\posgenBel_2},\R{\posgenAel_2}})\definedas \pars{\F{\posgenAel_1}\posleqof\posA \R{\posgenAel_2}}\booland \pars{\F{\posgenBel_1}\posleqof\posB \R{\posgenBel_2}}.
+    \end{equation}
+    In the following you are free to use the identification
+    \begin{equation}
+        (\posgenA \Ptimes \posgenB)\op = \posgenA\op \Ptimes \posgenB\op
+    \end{equation}
+    for any posets $\posgenA$, $\posgenB$.
+    Also, recall that $(\posgenA\op)\op = \posgenA$.
+
+    Let us define the following duality data:
+    \begin{itemize}
+        \item $\posgenA\dual \definedas \posgenA\op$
+        \item $\ev_\posgenA \colon \F{(\posgenA\op \Ptimes \posgenA)}\op \Ptimes \R{\makeset{\bullet}} \mto \Bool, \quad \tup{\tup{\ela^*, \elb}^*, \bullet} \mapsto \elb \posleqof\posgenA \ela$
+        \item $\coev_\posgenA \colon \F{\makeset{\bullet}}\op \Ptimes \R{(\posgenA \Ptimes \posgenA\op)} \mto \Bool, \quad \tup{\bullet, \tup{\ela, \elb^*}} \mapsto \elb \posleqof\posgenA \ela$
+    \end{itemize}
+
+    Your tasks:
+
+    \begin{enumerate}
+        \item
+              Guess the definitions of the associator $\associator$ and the unitors $\leftunitor$, $\rightunitor$ for the monoidal category $\DP$, check that each has the correct type, and justify why each of them does indeed define a morphism in the category $\DP$.
+        \item
+              Guess the definitions of $\leftunitor^{-1}$ and $\rightunitor^{-1}$ and check for one of them that it does indeed define the inverse morphism.
+        \item
+              Check that $\ev_\posgenA$ and $\coev_\posgenA$, as defined above, are morphisms in $\DP$.
+        \item
+              For an arbitrary poset $\posgenA$ and the duality data given above, prove that this snake equation
+              \begin{equation}
+                  \leftunitor_{\posgenA}^{-1} \mthen (\coev_\posgenA \mtimescatmor \catidat \posgenA) \mthen \associator_{\posgenA, \posgenA\op, \posgenA} \mthen(\catidat\posgenA \mtimescatmor \ev_\posgenA) \mthen \rightunitor_{\posgenA} = \catidat\posgenA
+              \end{equation}
+              holds.
+    \end{enumerate}
+\end{gradedexercise}
+\solutionof{DPSnakeTrace}
+
+\begin{widepar}
+    \begin{ctdefinition}[Trace of a generalized endomorphism]
+        \label{def:trace_gen_endo}
+        Let~$\tup{\CatC, \mtimescat, \idmoncat, \associator, \leftunitor, \rightunitor, \braiding}$ be a \SY{symmetric monoidal category}.
+        Let~$\Obja \setin \ObC$ be dualizable and let
+        \begin{equation}
+            \mora \colon (\Objb \mtimescatob \Obja) \mto( \Objc \mtimescatob \Obja).
+        \end{equation}
+        The \emph{trace over}~$\Obja$ of~$\mora$ is the morphism
+        \begin{equation}
+            \Tr_{\Objb, \Objc}^\Obja (\mora) \colon \Objb \mto \Objc
+        \end{equation}
+        defined by
+        \equationsag{endo_trace_gen}{eq:endo_trace_gen}
+    \end{ctdefinition}
+\end{widepar}
+
+\subsection{Canonical trace for linear relations}
+
+We now show that the symmetric monoidal category of finite-dimensional real vector spaces and linear relations, with direct sum as monoidal product, is \SY{compact closed}, and therefore admits a canonical trace.
+
+We consider the category~$\stylecat{LinRel}_\reals$ (\cref{def:cat-of-linear-relations}) whose objects are finite-dimensional real vector spaces and whose morphisms are linear relations (i.e., a morphism from~$\styleobj{V}$ to~$\styleobj{W}$ is a linear subspace~$\relA \subseteq \styleobj{V} \oplus \styleobj{W}$).
+This category is symmetric monoidal with the direct sum~$\oplus$ as monoidal product and the zero vector space~$\makeset{0}$ as monoidal unit.
+
+\subsubsection{Duality in~$\stylecat{LinRel}_\reals$}
+
+We claim that every object in~$\stylecat{LinRel}_\reals$ is \SY{right dualizable}, and therefore the category is \SY{compact closed}.
+In fact, the dual of any vector space is the space itself: for any finite-dimensional real vector space~$\styleobj{V}$, we set
+\begin{equation}
+    \styleobj{V}\dual = \styleobj{V}.
+\end{equation}
+The evaluation and coevaluation are defined as follows.
+The evaluation
+\begin{equation}
+    \ev_\styleobj{V} \colon \styleobj{V} \oplus \styleobj{V} \mto \makeset{0}
+\end{equation}
+is the linear relation
+\begin{equation}
+    \ev_\styleobj{V} = \makeset{ \tup{\tup{v, w}, 0} \setin (\styleobj{V} \oplus \styleobj{V}) \oplus \makeset{0} \mid v + w = 0 }.
+\end{equation}
+In other words,~$\tup{v,w}$ is related to~$0$ if and only if~$w = -v$.
+
+The coevaluation
+\begin{equation}
+    \coev_\styleobj{V} \colon \makeset{0} \mto \styleobj{V} \oplus \styleobj{V}
+\end{equation}
+is the linear relation
+\begin{equation}
+    \coev_\styleobj{V} = \makeset{ \tup{0, \tup{v, w}} \setin \makeset{0} \oplus (\styleobj{V} \oplus \styleobj{V}) \mid v + w = 0 }.
+\end{equation}
+
+\begin{remark}
+    One can verify that~$\ev_\styleobj{V}$ and~$\coev_\styleobj{V}$ are indeed linear subspaces (of the appropriate direct sums), and that the snake equations (\cref{eq:snake-eq-1,eq:snack-eq-2}) are satisfied.
+    The key point is that the condition~$v + w = 0$ defines a linear subspace, and the composition of these relations with the associators and unitors (which in~$\stylecat{LinRel}_\reals$ with~$\oplus$ are the obvious identifications) yields the identity relation.
+\end{remark}
+
+\subsubsection{The canonical trace formula for linear relations}
+
+Since~$\stylecat{LinRel}_\reals$ is \SY{compact closed}, the canonical trace (\cref{def:trace_gen_endo}) is defined.
+Given a linear relation
+\begin{equation}
+    \relA \subseteq (\styleobj{V} \oplus \styleobj{W}) \oplus (\styleobj{V'} \oplus \styleobj{W})
+\end{equation}
+viewed as a morphism~$\relA \colon \styleobj{V} \oplus \styleobj{W} \mto \styleobj{V'} \oplus \styleobj{W}$ in~$\stylecat{LinRel}_\reals$, the trace over~$\styleobj{W}$ is the linear relation
+\begin{equation}
+    \Tr_{\styleobj{V}, \styleobj{V'}}^{\styleobj{W}}(\relA) \colon \styleobj{V} \mto \styleobj{V'}
+\end{equation}
+given by
+\begin{equation}
+    \label{eq:canonical-trace-linrel}
+    \Tr_{\styleobj{V}, \styleobj{V'}}^{\styleobj{W}}(\relA) = \makeset{ \tup{v, v'} \setin \styleobj{V} \oplus \styleobj{V'} \mid \exists\, w \setin \styleobj{W} \colon \tup{\tup{v, w}, \tup{v', w}} \setin \relA }.
+\end{equation}
+
+In other words, the trace identifies the ``input copy'' and the ``output copy'' of~$\styleobj{W}$: one asks for the existence of a vector~$w \setin \styleobj{W}$ that serves simultaneously as the~$\styleobj{W}$-component of both the input and the output.
+
+\begin{remark}
+    Comparing \cref{eq:canonical-trace-linrel} with the trace formula for~$\Rel$ with cartesian product (\cref{sec:canonical-trace-dual-objects}), we see the same pattern: the trace is obtained by ``identifying the feedback wire'', i.e., requiring that the component in~$\styleobj{W}$ on the input side equals (in~$\Rel$) or sums to zero with (in the evaluation for~$\stylecat{LinRel}_\reals$) the component on the output side.
+    In the present case, the condition~$v + w = 0$ in the (co)evaluation means that the feedback wire carries~$w$ on one end and~$-w$ on the other; after composing, this yields the condition that the same~$w$ appears in both slots of~$\relA$.
+\end{remark}
+
