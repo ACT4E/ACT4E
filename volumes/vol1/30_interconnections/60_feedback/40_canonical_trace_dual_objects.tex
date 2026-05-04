@@ -124,7 +124,7 @@ With these symbols added to our string diagram language we will be able to `buil
         % --- Right-hand side: the canonical construction (shifted +1.2 for equal spacing from =) ---
 
         % Shaded boxes (drawn first, behind everything)
-        % 1) id_X — aligned with coev
+        % 1) id_X --aligned with coev
         \fill[graphcolor, rounded corners=1pt] (7.0,0.2) rectangle (8.2,1.2);
         \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (7.0,0.2) rectangle (8.2,1.2);
         % 2) Coevaluation
@@ -133,7 +133,7 @@ With these symbols added to our string diagram language we will be able to `buil
         % 3) f box shading
         \fill[graphcolor, rounded corners=1pt] (8.6,-1.2) rectangle (10.6,1.2);
         \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (8.6,-1.2) rectangle (10.6,1.2);
-        % 4) id Z-dual — aligned with f
+        % 4) id Z-dual --aligned with f
         \fill[graphcolor, rounded corners=1pt] (8.6,-2.2) rectangle (10.6,-1.6);
         \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (8.6,-2.2) rectangle (10.6,-1.6);
         % 5) Braiding
@@ -142,7 +142,7 @@ With these symbols added to our string diagram language we will be able to `buil
         % 6) Evaluation
         \fill[graphcolor, rounded corners=1pt] (12.5,-2.2) rectangle (13.7,-0.6);
         \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (12.5,-2.2) rectangle (13.7,-0.6);
-        % 7) id_Y — spans braiding to evaluation
+        % 7) id_Y --spans braiding to evaluation
         \fill[graphcolor, rounded corners=1pt] (11.2,0.2) rectangle (13.7,1.2);
         \draw[graphcolorbord, dashed, thin, rounded corners=1pt] (11.2,0.2) rectangle (13.7,1.2);
 
@@ -150,23 +150,23 @@ With these symbols added to our string diagram language we will be able to `buil
         \node[morbox] (fR) at (9.6, 0) {};
         \node[morphisms, font=\itshape] at (9.6,0) {$f$};
 
-        % X wire straight through — connects to f box edges
+        % X wire straight through --connects to f box edges
         \draw[wire] (6.0, 0.5) -- (fR.west |- 0,0.5);
         \draw[wire] (fR.east |- 0,0.5) -- (14.7, 0.5);
         \node[wirelabel, above] at (6.3, 0.5) {$\Obja$};
         \node[wirelabel, above] at (14.4, 0.5) {$\Objb$};
 
-        % Coevaluation C-shape — top wire connects to f box edge
+        % Coevaluation C-shape --top wire connects to f box edge
         \draw[wire] (7.5, -0.85) -- (fR.west |- 0,-0.85);
         \draw[wire] (7.5, -0.85) -- (7.5, -1.9);
         \draw[wire] (7.5, -1.9) -- (11.2, -1.9);
         \node[wirelabel, left] at (7.4, -1.5) {\scriptsize coev};
 
-        % Z labels near f — above the wires
+        % Z labels near f --above the wires
         \node[wirelabel, above] at (8.5, -0.85) {$\Objc$};
         \node[wirelabel, above] at (10.7, -0.85) {$\Objc$};
 
-        % Z out of f to braiding — connects from f box edge
+        % Z out of f to braiding --connects from f box edge
         \draw[wire] (fR.east |- 0,-0.85) -- (11.2, -0.85);
 
         % Braiding: straight X-crossing, no gap (symmetric case)
@@ -225,6 +225,93 @@ Next you may wonder what `dual objects' are. Well, glad you asked! Let's have a 
     \end{enumerate}
 \end{ctdefinition}
 
+The two conditions above are called the \emph{snake equations}.
+In terms of string diagrams (suppressing associators and unitors), they say that the following two compositions each equal the identity:
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.6, every node/.style={transform shape},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\small},
+    ]
+        % --- Snake equation 1: S-shape ---
+        % Three levels: top (1.5), middle (0), bottom (-1.5)
+        % Coev on left connects top and middle; ev on right connects middle and bottom.
+        % Input X at bottom-left, output X at top-right.
+
+        % Output X exits at top-right
+        \draw[wire] (0, 1.5) -- (5.0, 1.5);
+        \node[wirelabel, above] at (4.7, 1.5) {$\Obja$};
+
+        % Coev: vertical on left from top to middle
+        \draw[wire] (0, 1.5) -- (0, 0);
+        \node[wirelabel, left] at (-0.1, 0.75) {\scriptsize coev};
+
+        % Horizontal middle wire from coev to ev
+        \draw[wire] (0, 0) -- (3.5, 0);
+
+        % Ev: vertical on right from middle to bottom
+        \draw[wire] (3.5, 0) -- (3.5, -1.5);
+        \node[wirelabel, right] at (3.6, -0.75) {\scriptsize ev};
+
+        % Input X enters at bottom-left
+        \draw[wire] (-1.5, -1.5) -- (3.5, -1.5);
+        \node[wirelabel, above] at (-1.2, -1.5) {$\Obja$};
+
+        % Equals sign
+        \node[font=\Large] at (6.5, 0) {$=$};
+
+        % Straight X wire (identity)
+        \draw[wire] (8.0, 0) -- (10.5, 0);
+        \node[wirelabel, above] at (8.3, 0) {$\Obja$};
+        \node[wirelabel, above] at (10.2, 0) {$\Obja$};
+    \end{tikzpicture}
+    \caption{Snake equation 1.}
+    \label{fig:snake-eq-1-string}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.6, every node/.style={transform shape},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\small},
+    ]
+        % --- Snake equation 2: mirrored S-shape ---
+        % Three levels: top (1.5), middle (0), bottom (-1.5)
+        % Ev on RIGHT connects top and middle; coev on LEFT connects middle and bottom.
+        % Input X-dual at top-left, output X-dual at bottom-right.
+
+        % Input X-dual enters at top-left, goes right to ev
+        \draw[wire] (-1.5, 1.5) -- (3.5, 1.5);
+        \node[wirelabel, above] at (-1.2, 1.5) {$\Objadual$};
+
+        % Ev: vertical on RIGHT from top to middle
+        \draw[wire] (3.5, 1.5) -- (3.5, 0);
+        \node[wirelabel, right] at (3.6, 0.75) {\scriptsize ev};
+
+        % Horizontal middle wire from ev back left to coev
+        \draw[wire] (0, 0) -- (3.5, 0);
+
+        % Coev: vertical on LEFT from middle to bottom
+        \draw[wire] (0, 0) -- (0, -1.5);
+        \node[wirelabel, left] at (-0.1, -0.75) {\scriptsize coev};
+
+        % Output X-dual exits at bottom-right
+        \draw[wire] (0, -1.5) -- (5.0, -1.5);
+        \node[wirelabel, above] at (4.7, -1.5) {$\Objadual$};
+
+        % Equals sign
+        \node[font=\Large] at (6.5, 0) {$=$};
+
+        % Straight X-dual wire (identity)
+        \draw[wire] (8.0, 0) -- (10.5, 0);
+        \node[wirelabel, above] at (8.3, 0) {$\Objadual$};
+        \node[wirelabel, above] at (10.2, 0) {$\Objadual$};
+    \end{tikzpicture}
+    \caption{Snake equation 2.}
+    \label{fig:snake-eq-2-string}
+\end{figure}
+
 \begin{ctdefinition}\label{def:right-dualizable}
     An object $\Obja$ in a \SY{monoidal category} is called \maindef{right dualizable} if there exists, in the category, a right dual object of $\Obja$.
 \end{ctdefinition}
@@ -269,6 +356,52 @@ The category of monotone relations $\stylecat{mRel}$, equipped with the monoidal
     The \emph{right dual} of $\mora$ is the morphism $\mora\dual \colon \Objb\dual \mto \Obja\dual$ given by the composition
     \equationsag{dual_morphism}{eq:dual_morphism}
 \end{ctdefinition}
+
+In terms of string diagrams (suppressing associators and unitors), the dual morphism is illustrated as follows:
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.6, every node/.style={transform shape},
+        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.2cm, minimum height=1.2cm},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\small},
+    ]
+        % Backward S-shape: Y-dual enters top-left, X-dual exits bottom-right.
+        % Three levels: top (1.5), middle (0), bottom (-1.5)
+        % Ev on right connects top to middle; coev on left connects middle to bottom.
+        % f centered at middle level between coev and ev.
+
+        % Y-dual enters at top-left, goes right to ev
+        \draw[wire] (-1.5, 1.5) -- (5.5, 1.5);
+        \node[wirelabel, above] at (-1.2, 1.5) {$\Objb\dual$};
+
+        % Ev: vertical on right from top to middle
+        \draw[wire] (5.5, 1.5) -- (5.5, 0);
+        \node[wirelabel, right, font=\scriptsize] at (5.6, 0.75) {ev};
+
+        % f box at middle level, centered between coev and ev
+        \node[morbox] (f) at (3.0, 0) {};
+        \node[morphisms, font=\itshape] at (3.0, 0) {$\mora$};
+
+        % Y wire from ev goes left into f
+        \draw[wire] (5.5, 0) -- (f.east |- 0,0);
+        \node[wirelabel, above] at (4.5, 0) {$\Objb$};
+
+        % X wire from f goes left to coev
+        \draw[wire] (f.west |- 0,0) -- (0.5, 0);
+        \node[wirelabel, above] at (1.5, 0) {$\Obja$};
+
+        % Coev: vertical on left from middle to bottom
+        \draw[wire] (0.5, 0) -- (0.5, -1.5);
+        \node[wirelabel, left, font=\scriptsize] at (0.4, -0.75) {coev};
+
+        % X-dual exits at bottom-right
+        \draw[wire] (0.5, -1.5) -- (7.0, -1.5);
+        \node[wirelabel, above] at (6.7, -1.5) {$\Obja\dual$};
+    \end{tikzpicture}
+    \caption{String diagram for the dual morphism.}
+    \label{fig:dual-morphism-string}
+\end{figure}
 
 \begin{gradedexercise}[\exname{RelDualsTrace}]
     \label{ex:RelDualsTrace}
