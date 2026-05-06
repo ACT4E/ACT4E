@@ -364,9 +364,41 @@ The same idea applies whenever we have a notion of ``relation'' between structur
     The key point is that by working with a bicategory instead of quotienting, we retain the concrete state spaces and simulations as explicit mathematical data: no information is lost.
 \end{example}
 
+\begin{example}[The bicategory of LTI systems]
+    \label{exa:bicat-lti}
+    In a similar spirit to the Mealy machines example, linear time-invariant (LTI) systems (\cref{def:LTI_syst}) also form a bicategory, where the 2-cells are linear maps between state spaces that are compatible with the system dynamics.
+
+    Recall that we defined a category~$\LTI$ (\cref{def:LTICat}) whose objects are natural numbers (representing input/output dimensions) and whose morphisms from~$\styleobj{l}$ to~$\styleobj{m}$ are LTI systems~$\genericlti{}$ with input space~$\reals^\styleobj{l}$, output space~$\reals^\styleobj{m}$, and state space~$\reals^n$ for some~$n$.
+    The composition of two systems~$\mora$ and~$\morb$ produces a system whose state space is~$\reals^{n_\mora} \oplus \reals^{n_\morb}$, and an exercise in the book verified that this composition is strictly associative (the matrices work out to be equal on the nose).
+
+    However, the strict associativity relied on a particular choice of how to embed the state spaces into the composite.
+    If we want to allow for \emph{changes of coordinates} on the state space --- which is natural from the perspective of systems theory, where the state-space representation is not canonical --- then we are led to a bicategorical structure.
+
+    The bicategory~$\operatorname{\textbf{LTI}}$ has:
+    \begin{itemize}
+        \item \emph{Objects:} natural numbers~$\styleobj{l} \setin \natnumbers$ (representing signal dimensions);
+        \item \emph{1-cells from~$\styleobj{l}$ to~$\styleobj{m}$:} LTI systems~$\genericlti{}$ with input space~$\reals^\styleobj{l}$, output space~$\reals^\styleobj{m}$, and state space~$\reals^n$ for some~$n$;
+        \item \emph{2-cells:} given two LTI systems~$\mora = \genericlti{\mora}$ and~$\morb = \genericlti{\morb}$, both from~$\styleobj{l}$ to~$\styleobj{m}$, a 2-cell from~$\mora$ to~$\morb$ is a linear map~$\mat{T} \colon \reals^{n_\mora} \mto \reals^{n_\morb}$ between the respective state spaces such that
+              \begin{equation}\label{eq:lti-simulation}
+                  \mat{T}\mat{A}_\mora = \mat{A}_\morb\mat{T}, \qquad \mat{T}\mat{B}_\mora = \mat{B}_\morb, \qquad \mat{C}_\mora = \mat{C}_\morb\mat{T}, \qquad \mat{D}_\mora = \mat{D}_\morb, \qquad \mat{T}\prstart_\mora = \prstart_\morb.
+              \end{equation}
+              Such a linear map~$\mat{T}$ can be thought of as a \emph{simulation} or \emph{change of state-space coordinates} from~$\mora$ to~$\morb$: it intertwines the dynamics matrices and is compatible with the input, output, and initial state.
+    \end{itemize}
+    Vertical composition of 2-cells is ordinary matrix multiplication: if~$\mat{T} \colon \mora \nto \morb$ and~$\mat{T}' \colon \morb \nto \morc$ are simulations, then~$\mat{T}' \mat{T} \colon \mora \nto \morc$ is again a simulation.
+    Horizontal composition of 1-cells is the series composition of LTI systems defined in \cref{def:LTICat}, using block matrices on the direct sum of state spaces.
+    The identity 1-cell on~$\styleobj{l}$ is the system with zero-dimensional state space and~$\mat{D} = \mat{1}^{\matdim{l}{l}}$ (the identity matrix).
+
+    When~$\mat{T}$ is invertible, the conditions in \cref{eq:lti-simulation} reduce to~$\mat{A}_\morb = \mat{T}\mat{A}_\mora\mat{T}^{-1}$, $\mat{B}_\morb = \mat{T}\mat{B}_\mora$, $\mat{C}_\morb = \mat{C}_\mora\mat{T}^{-1}$, $\mat{D}_\morb = \mat{D}_\mora$ --- which is precisely the definition of \SY{equivalence of LTI systems} from \cref{def:equivalence_lti}.
+    Thus, the invertible 2-cells in this bicategory are exactly the equivalence transformations (changes of coordinates) studied in systems theory.
+    The non-invertible 2-cells capture a more general notion of simulation, in which state information may be lost.
+\end{example}
+
 \begin{remark}
-    Among the examples above, the bicategories of spans, cospans, and Mealy machines all illustrate the same phenomenon: a natural composition operation (pullback, pushout, or cartesian product of state spaces) that is associative only up to isomorphism.
-    The bicategorical viewpoint gives us a principled way to work with such structures without needing to quotient or to introduce artificial strict replacements.
+    Among the examples above, the bicategories of spans, cospans, Mealy machines, and LTI systems all illustrate how bicategories arise naturally in applied settings.
+    In the case of spans and cospans, a natural composition operation (pullback or pushout) is only associative up to isomorphism.
+    In the case of Mealy machines, the cartesian product of state spaces is only associative up to isomorphism.
+    In the case of LTI systems, while the composition is technically strict, the bicategorical perspective adds value by incorporating state-space transformations as 2-cells, capturing the notion that two LTI systems related by a change of coordinates should be considered ``the same up to a 2-cell''.
+    In all cases, the bicategorical viewpoint gives us a principled way to work with these structures.
 \end{remark}
 
 \subsection{Looking ahead: why bicategories matter for applications}
@@ -374,7 +406,7 @@ The same idea applies whenever we have a notion of ``relation'' between structur
 
 We conclude this section by briefly indicating why bicategories are useful beyond pure mathematics, especially in the context of the engineering applications discussed in this book.
 
-Firstly, many of the structures we have studied --- relations, spans, cospans, and dynamical systems such as Mealy machines --- naturally live in bicategories.
+Firstly, many of the structures we have studied --- relations, spans, cospans, and dynamical systems such as Mealy machines and LTI systems --- naturally live in bicategories.
 The bicategorical perspective gives us a uniform language for discussing composition, identity, and coherence in all of these settings.
 
 Secondly, many important categorical concepts generalize from categories to bicategories.
