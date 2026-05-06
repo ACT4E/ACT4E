@@ -1,0 +1,308 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Bicategories}
+\label{sec:bicats-def}
+
+% \linkvideo{...} % TODO: add video link
+
+Throughout this text, we have encountered many situations in which we have objects, morphisms between objects, and composition of morphisms --- that is, categories.
+But we have also seen, in more than one place, that the story does not end with morphisms: there can also be meaningful \emph{transformations between morphisms}.
+We met this idea when we studied \SY{natural transformations} between \SY{functors}: given two functors~$\funa, \funb \colon \CatC \fto \CatD$, there may exist a natural transformation~$\ntrafoa \colon \funa \nto \funb$.
+
+
+The notion of a \maindef{bicategory} is designed to capture exactly this kind of structure in its full generality.
+A bicategory is a setting in which we have:
+\begin{itemize}
+    \item objects (which we also call \emph{0-cells});
+    \item morphisms between objects (called \emph{1-cells}); and
+    \item transformations between morphisms (called \emph{2-cells}).
+\end{itemize}
+
+The key novelty, compared to an ordinary category, is the presence of the 2-cells and the fact that there are now \emph{two} kinds of composition for them: one that composes 2-cells ``vertically'' (one after the other, when they share a common 1-cell boundary) and one that composes them ``horizontally'' (side by side, when the 1-cells they relate are themselves composable).
+Furthermore, in a bicategory, the composition of 1-cells is only required to be associative and unital \emph{up to coherent isomorphism}, rather than strictly.
+This weakening is crucial: most of the naturally occurring examples of ``categories with an extra layer'' have this weaker structure.
+
+\subsection{Motivation: why bicategories?}
+
+Before giving the formal definition, let us discuss why one might want such a concept in the first place.
+
+There is a simple pattern that recurs in many areas of mathematics and its applications: one has a collection of ``spaces'' of some kind, and between any two of them, there is not just a set of maps, but a \emph{category} of maps --- that is, the maps themselves admit transformations between them.
+
+\begin{example}[Categories, functors, and natural transformations]
+    \label{exa:bicat-motivation-cat}
+    Consider the world of (small) \SY{categories}.
+    The objects are categories, the 1-cells are \SY{functors}, and the 2-cells are \SY{natural transformations}.
+    We know that \SY{functors} can be composed (this was defined in the section on functors), and we also know that \SY{natural transformations} can be composed, both ``vertically'' (yielding a natural transformation between the composite functors) and ``horizontally'' (by whiskering or the Godement product).
+    However, one must be careful: functor composition is strictly associative and unital, so this particular example is actually a \emph{strict} 2-category (meaning a bicategory in which the coherence isomorphisms are all identities).
+\end{example}
+
+\begin{example}[Profunctors]
+    \label{exa:bicat-motivation-prof}
+    Perhaps the most important example for us in this book is the world of \SY{profunctors}.
+    We have already defined profunctor composition (see \cref{def:profunctor-composition}) and noted that it is \emph{not} strictly associative --- it is only associative up to a natural isomorphism.
+    Hence profunctors do not form an ordinary category.
+    This is precisely the situation that bicategories are designed to handle.
+    The bicategory of profunctors has: categories as objects, profunctors as 1-cells, and natural transformations between profunctors as 2-cells.
+\end{example}
+
+\begin{example}[Relations]
+    \label{exa:bicat-motivation-rel}
+    Consider sets as objects and relations~$R \subseteq \setA \cartprod \setB$ as 1-cells from~$\setA$ to~$\setB$.
+    Between two relations~$R, S \subseteq \setA \cartprod \setB$, we can consider the inclusion~$R \subseteq S$ as a 2-cell.
+    Composition of relations (which we have studied earlier) makes this into a bicategory.
+    In fact, since there is at most one 2-cell between any two parallel 1-cells (inclusion is a property, not additional data), this is a \emph{locally posetal} bicategory.
+\end{example}
+
+These examples show that bicategories arise naturally whenever one ``enriches'' the morphisms of a category with extra structure.
+The formal definition below axiomatizes the essential features shared by all of these examples.
+
+\subsection{The definition}
+
+We now state the full definition. It involves a fair amount of data. We recommend reading through it once to get the overall shape, and then revisiting the examples that follow.
+
+\begin{ctdefinition}[Bicategory]
+    \SYNDEF{bicategory}
+    \label{def:bicategory}
+    A \maindef{bicategory}~$\CatB$ consists of:
+
+    \constit
+
+    \begin{enumerate}
+        \item \label{bicat-objects}
+              \emph{Objects (0-cells):}
+              A collection~$\Ob(\CatB)$ of objects.
+
+        \item \label{bicat-hom-cats}
+              \emph{Hom-categories (1-cells and 2-cells):}
+              For every pair of objects~$\Obja, \Objb \setin \Ob(\CatB)$, a category~$\CatB(\Obja, \Objb)$, called a \emph{hom-category}.
+              The objects of~$\CatB(\Obja, \Objb)$ are called \emph{1-cells} (or \emph{morphisms}) and are denoted~$\mora \colon \Obja \mto \Objb$.
+              The morphisms of~$\CatB(\Obja, \Objb)$ are called \emph{2-cells} and are denoted~$\ntrafoa \colon \mora \nto \morb$ for~$\mora, \morb \colon \Obja \mto \Objb$.
+              Composition of 2-cells within a hom-category is called \emph{vertical composition} and is denoted~$\ntrafoa \ntrafothen \ntrafob$ for composable 2-cells~$\ntrafoa$ and~$\ntrafob$.
+              The identity 2-cell on a 1-cell~$\mora$ is denoted~$\catidof{\mora}$.
+
+        \item \label{bicat-horizontal-comp}
+              \emph{Horizontal composition:}
+              For every triple of objects~$\Obja, \Objb, \Objc \setin \Ob(\CatB)$, a functor
+              \begin{equation}\label{eq:bicat-horiz-comp}
+                  \mthenof{\Obja,\Objb,\Objc} \colon \CatB(\Obja, \Objb) \Ctimes \CatB(\Objb, \Objc) \fto \CatB(\Obja, \Objc),
+              \end{equation}
+              called \emph{horizontal composition}.
+              We write~$\mora \mthen \morb$ for the horizontal composite of 1-cells~$\mora\colon \Obja \mto \Objb$ and~$\morb\colon \Objb \mto \Objc$, and~$\ntrafoa \nthenhor \ntrafob$ for the horizontal composite of 2-cells.
+
+        \item \label{bicat-identities}
+              \emph{Identity 1-cells:}
+              For every object~$\Obja \setin \Ob(\CatB)$, a distinguished 1-cell
+              \begin{equation}\label{eq:bicat-identity-cell}
+                  \catidof{\Obja} \colon \Obja \mto \Obja,
+              \end{equation}
+              called the \emph{identity} 1-cell at~$\Obja$.
+
+        \item \label{bicat-associator}
+              \emph{Associator:}
+              For every composable triple of 1-cells~$\mora\colon \Obja \mto \Objb$, $\morb\colon \Objb \mto \Objc$, $\morc\colon \Objc \mto \Objd$, an invertible 2-cell
+              \begin{equation}\label{eq:bicat-associator}
+                  \associator_{\mora,\morb,\morc} \colon (\mora \mthen \morb) \mthen \morc \nto \mora \mthen (\morb \mthen \morc),
+              \end{equation}
+              called the \emph{associator}.
+
+        \item \label{bicat-unitors}
+              \emph{Left and right unitors:}
+              For every 1-cell~$\mora \colon \Obja \mto \Objb$, invertible 2-cells
+              \begin{equation}\label{eq:bicat-left-unitor}
+                  \leftunitor_\mora \colon \catidof{\Obja} \mthen \mora \nto \mora,
+              \end{equation}
+              \begin{equation}\label{eq:bicat-right-unitor}
+                  \rightunitor_\mora \colon \mora \mthen \catidof{\Objb} \nto \mora,
+              \end{equation}
+              called the \emph{left unitor} and \emph{right unitor}, respectively.
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item \label{bicat-naturality}
+              \emph{Naturality:}
+              The associator~$\associator$ and the unitors~$\leftunitor$,~$\rightunitor$ are \SY{natural} in their arguments.
+              (That is, they are natural isomorphisms, not merely families of isomorphisms.)
+
+        \item \label{bicat-pentagon}
+              \emph{Pentagon axiom:}
+              For every composable quadruple of 1-cells~$\mora, \morb, \morc, \mord$, the following diagram of 2-cells commutes:
+              % TODO: \equationsag{bicat_pentagon}{eq:bicat-pentagon}
+              \begin{equation}\label{eq:bicat-pentagon}
+                  \begin{tikzcd}[column sep=small, row sep=large]
+                      & {((\mora \mthen \morb) \mthen \morc) \mthen \mord}
+                      \ar[dl, "{\associator_{\mora,\morb,\morc}\, \nthenhor\, \catidof{\mord}}"']
+                      \ar[dr, "{\associator_{\mora \mthen \morb,\morc,\mord}}"]
+                      & \\
+                      {(\mora \mthen (\morb \mthen \morc)) \mthen \mord}
+                      \ar[d, "{\associator_{\mora,\morb \mthen \morc,\mord}}"']
+                      & &
+                      {(\mora \mthen \morb) \mthen (\morc \mthen \mord)}
+                      \ar[d, "{\associator_{\mora,\morb,\morc \mthen \mord}}"] \\
+                      {\mora \mthen ((\morb \mthen \morc) \mthen \mord)}
+                      \ar[rr, "{\catidof{\mora}\, \nthenhor\, \associator_{\morb,\morc,\mord}}"']
+                      & &
+                      {\mora \mthen (\morb \mthen (\morc \mthen \mord))}
+                  \end{tikzcd}
+              \end{equation}
+
+        \item \label{bicat-triangle}
+              \emph{Triangle axiom:}
+              For every composable pair of 1-cells~$\mora \colon \Obja \mto \Objb$ and~$\morb \colon \Objb \mto \Objc$, the following diagram of 2-cells commutes:
+              % TODO: \equationsag{bicat_triangle}{eq:bicat-triangle}
+              \begin{equation}\label{eq:bicat-triangle}
+                  \begin{tikzcd}[column sep=large]
+                      {(\mora \mthen \catidof{\Objb}) \mthen \morb}
+                      \ar[rr, "{\associator_{\mora, \catidof{\Objb}, \morb}}"]
+                      \ar[dr, "{\rightunitor_\mora\, \nthenhor\, \catidof{\morb}}"']
+                      & &
+                      {\mora \mthen (\catidof{\Objb} \mthen \morb)}
+                      \ar[dl, "{\catidof{\mora}\, \nthenhor\, \leftunitor_\morb}"] \\
+                      & {\mora \mthen \morb} &
+                  \end{tikzcd}
+              \end{equation}
+    \end{enumerate}
+
+\end{ctdefinition}
+
+\begin{remark}
+    Notice that there is a strong resemblance with the definition of \SY{monoidal categories}: a monoidal category also has an associator and unitors satisfying pentagon and triangle axioms.
+    This is no coincidence.
+    A \SY{monoidal category} is precisely a bicategory with exactly one object.
+    Just as a \SY{monoid} is a category with one object, a \SY{monoidal category} is a bicategory with one object.
+    This is an important conceptual point: it means that the theory of monoidal categories is subsumed by the theory of bicategories.
+\end{remark}
+
+\begin{remark}
+    \label{rem:bicat-why-weak}
+    The reason we require associativity and unitality only up to isomorphism (rather than on the nose) is that this is what we encounter in practice.
+    As we noted for \SY{profunctors}, their composition is defined via a colimit (a quotient of a coproduct), and colimits are typically only unique up to isomorphism, not up to equality.
+    More generally, in almost all ``naturally occurring'' higher-categorical structures, the algebraic operations are only well-defined up to a coherent system of isomorphisms.
+    The pentagon and triangle axioms ensure that these isomorphisms fit together consistently, so that one can unambiguously compose any finite sequence of 1-cells.
+    (This is the content of Mac~Lane's coherence theorem for monoidal categories, which extends to bicategories.)
+\end{remark}
+
+\subsection{Vertical and horizontal composition}
+\label{sec:bicat-compositions}
+
+Let us unpack the two kinds of composition that appear in a bicategory.
+
+\emph{Vertical composition.}
+Given 2-cells~$\ntrafoa \colon \mora \nto \morb$ and~$\ntrafob \colon \morb \nto \morc$ in a hom-category~$\CatB(\Obja, \Objb)$, their \emph{vertical composite} is the 2-cell
+\begin{equation}
+    \ntrafoa \ntrafothen \ntrafob \colon \mora \nto \morc.
+\end{equation}
+This is just ordinary composition in the category~$\CatB(\Obja, \Objb)$.
+In particular, it is strictly associative and unital (the identity 2-cells~$\catidof{\mora}$ serve as identities).
+
+\emph{Horizontal composition.}
+Given 2-cells~$\ntrafoa \colon \mora \nto \mora'$ in~$\CatB(\Obja, \Objb)$ and~$\ntrafob \colon \morb \nto \morb'$ in~$\CatB(\Objb, \Objc)$, their \emph{horizontal composite} is the 2-cell
+\begin{equation}
+    \ntrafoa \nthenhor \ntrafob \colon \mora \mthen \morb \nto \mora' \mthen \morb'.
+\end{equation}
+This is well-defined because horizontal composition~$\mthenof{\Obja,\Objb,\Objc}$ is required to be a \emph{functor}, and a functor acts on both objects and morphisms.
+In particular, functoriality implies the \emph{interchange law}: for composable 2-cells~$\ntrafoa, \ntrafoa'$ (vertical) and~$\ntrafob, \ntrafob'$ (vertical), we have
+\begin{equation}\label{eq:bicat-interchange}
+    (\ntrafoa \ntrafothen \ntrafoa') \nthenhor (\ntrafob \ntrafothen \ntrafob') = (\ntrafoa \nthenhor \ntrafob) \ntrafothen (\ntrafoa' \nthenhor \ntrafob').
+\end{equation}
+This says that when we have a grid of 2-cells, the result of composing them does not depend on whether we compose vertically first and then horizontally, or the other way around.
+
+\subsection{Strict 2-categories}
+\label{sec:strict-2cat}
+
+An important special case deserves its own name.
+
+\begin{ctdefinition}[Strict 2-category]
+    \label{def:strict-2-category}
+    A \maindef{strict 2-category} is a bicategory in which the associator and unitors are all identity 2-cells.
+    Equivalently, it is a bicategory in which horizontal composition of 1-cells is strictly associative and strictly unital:
+    \begin{equation}\label{eq:strict-2cat-assoc}
+        (\mora \mthen \morb) \mthen \morc = \mora \mthen (\morb \mthen \morc), \qquad \catidof{\Obja} \mthen \mora = \mora = \mora \mthen \catidof{\Objb}.
+    \end{equation}
+\end{ctdefinition}
+
+Every strict 2-category is, in particular, a bicategory (with all coherence isomorphisms being identities).
+But not every bicategory is equivalent to a strict 2-category --- the weakness is essential.
+
+\subsection{Examples}
+\label{sec:bicat-examples}
+
+We now revisit and expand the motivating examples from the beginning of this section.
+
+\begin{example}[\Category as a strict 2-category]
+    \label{exa:bicat-cat}
+    The strict 2-category~$\Category$ has:
+    \begin{itemize}
+        \item \emph{Objects:} small categories;
+        \item \emph{1-cells:} \SY{functors} between categories;
+        \item \emph{2-cells:} \SY{natural transformations} between functors.
+    \end{itemize}
+    Vertical composition of 2-cells is the usual (componentwise) composition of natural transformations.
+    Horizontal composition is given by the Godement product (horizontal composition of natural transformations).
+    Functor composition is strictly associative and unital, so the associators and unitors are identities, making this a strict 2-category.
+\end{example}
+
+\begin{example}[The bicategory of profunctors]
+    \label{exa:bicat-prof}
+    The bicategory~$\Prof$ has:
+    \begin{itemize}
+        \item \emph{Objects:} small categories;
+        \item \emph{1-cells:} \SY{profunctors}~$\funa \colon \CatC \profto \CatD$;
+        \item \emph{2-cells:} natural transformations between profunctors (viewed as functors~$\CatCop \Ctimes \CatD \fto \Set$).
+    \end{itemize}
+    Horizontal composition of 1-cells is profunctor composition (see~\cref{def:profunctor-composition}), which involves a coend (colimit) construction.
+    The identity 1-cell on a category~$\CatC$ is the hom-functor~$\Hom_\CatC \colon \CatCop \Ctimes \CatC \fto \Set$.
+    Because the coend is only defined up to isomorphism, the associators and unitors are nontrivial --- this is a genuine bicategory, not a strict 2-category.
+\end{example}
+
+\begin{example}[The bicategory of spans]
+    \label{exa:bicat-span}
+    Fix a category~$\CatC$ with pullbacks (for example, $\CatC = \Set$).
+    The bicategory~$\operatorname{Span}(\CatC)$ has:
+    \begin{itemize}
+        \item \emph{Objects:} objects of~$\CatC$;
+        \item \emph{1-cells from~$\Obja$ to~$\Objb$:} spans, i.e., diagrams~$\Obja \leftarrow \Objc \rightarrow \Objb$ in~$\CatC$;
+        \item \emph{2-cells:} morphisms of spans, i.e., morphisms~$\Objc \mto \Objc'$ making the obvious triangles commute.
+    \end{itemize}
+    Composition of spans is given by pullback, which is only defined up to isomorphism.
+    Hence the associator is nontrivial, and this is a genuine bicategory.
+\end{example}
+
+\begin{example}[Monoidal categories as one-object bicategories]
+    \label{exa:bicat-monoidal}
+    Let~$\tup{\CatC, \mtimescat, \idmoncat}$ be a \SY{monoidal category}.
+    We can construct a bicategory~$\mathbf{\Sigma}\CatC$ with:
+    \begin{itemize}
+        \item a single object~$\star$;
+        \item 1-cells: objects of~$\CatC$ (so $\mathbf{\Sigma}\CatC(\star, \star) = \CatC$);
+        \item 2-cells: morphisms of~$\CatC$.
+    \end{itemize}
+    Horizontal composition of 1-cells is the monoidal product~$\mtimescat$.
+    The identity 1-cell is the monoidal unit~$\idmoncat$.
+    The associator and unitors of the bicategory are precisely the associator and unitors of the monoidal category.
+    Conversely, given a bicategory with a single object, the hom-category at that object inherits a monoidal structure.
+    This establishes the precise correspondence: \emph{monoidal categories are one-object bicategories}.
+\end{example}
+
+
+\begin{remark}
+    Among the examples above, the bicategory of profunctors is the most important for the applications discussed in this book.
+    The fact that profunctors do not form a category, but do form a bicategory, was noted at the end of the section on profunctor composition.
+    Bicategories give us the right framework to study profunctors and their composition coherently.
+\end{remark}
+
+\subsection{Looking ahead: why bicategories matter for applications}
+\label{sec:bicat-motivation-applications}
+
+We conclude this section by briefly indicating why bicategories are useful beyond pure mathematics, especially in the context of the engineering applications discussed in this book.
+
+Firstly, many of the structures we have studied --- \SY{design problems}, \SY{profunctors}, relations, and spans --- naturally live in bicategories.
+The bicategorical perspective gives us a uniform language for discussing composition, identity, and coherence in all of these settings.
+
+Secondly, many important categorical concepts generalize from categories to bicategories.
+In particular, the notions of \emph{adjunction} and \emph{monad} make sense in any bicategory, and their bicategorical versions unify several constructions that might otherwise seem unrelated.
+We will explore this in subsequent sections.
+
+Thirdly, the relationship between monoidal categories and one-object bicategories (\cref{exa:bicat-monoidal}) means that any theorem about bicategories automatically gives a theorem about monoidal categories.
+Since monoidal categories are central to many applications (modeling parallel composition, resource theories, type systems, and more), this is a powerful source of general results.
