@@ -36,13 +36,23 @@ There is a simple pattern that recurs in many areas of mathematics and its appli
     However, one must be careful: functor composition is strictly associative and unital, so this particular example is actually a \emph{strict} 2-category (meaning a bicategory in which the coherence isomorphisms are all identities).
 \end{example}
 
-\begin{example}[Profunctors]
-    \label{exa:bicat-motivation-prof}
-    Perhaps the most important example for us in this book is the world of \SY{profunctors}.
-    We have already defined profunctor composition (see \cref{def:profunctor-composition}) and noted that it is \emph{not} strictly associative --- it is only associative up to a natural isomorphism.
-    Hence profunctors do not form an ordinary category.
-    This is precisely the situation that bicategories are designed to handle.
-    The bicategory of profunctors has: categories as objects, profunctors as 1-cells, and natural transformations between profunctors as 2-cells.
+\begin{example}[Spans of sets]
+    \label{exa:bicat-motivation-span}
+    Given two sets~$\setA$ and~$\setB$, a \emph{span} from~$\setA$ to~$\setB$ is a diagram~$\setA \leftarrow \setS \rightarrow \setB$, i.e., a set~$\setS$ together with two functions to~$\setA$ and~$\setB$.
+    Spans can be composed: given a span~$\setA \leftarrow \setS \rightarrow \setB$ and a span~$\setB \leftarrow \setD \rightarrow \setC$, their composite is formed using the pullback of~$\setS \rightarrow \setB \leftarrow \setD$.
+    However, pullbacks are only defined up to isomorphism, so this composition is \emph{not} strictly associative.
+    Hence spans do not form an ordinary category.
+    This is precisely the situation that bicategories are designed to handle: we can take spans as 1-cells and morphisms of spans as 2-cells.
+\end{example}
+
+\begin{example}[Mealy machines]
+    \label{exa:bicat-motivation-mealy}
+    We saw in \cref{sec:cat-dyn} that Mealy machines can be composed by taking the cartesian product of their state spaces.
+    But this composition is not strictly associative: if~$\mora$,~$\morb$,~$\morc$ are three composable Mealy machines with state sets~$\setS_\mora$,~$\setS_\morb$,~$\setS_\morc$, then~$(\mora \mthen \morb) \mthen \morc$ has state set~$(\setS_\mora \cartprod \setS_\morb) \cartprod \setS_\morc$, while~$\mora \mthen (\morb \mthen \morc)$ has state set~$\setS_\mora \cartprod (\setS_\morb \cartprod \setS_\morc)$.
+    These are isomorphic but not equal.
+    One fix is to quotient by an equivalence relation, obtaining the category~$\MealyMod$.
+    But a more informative approach is to keep the machines as they are (without quotienting) and instead allow \emph{simulations} --- maps between state spaces that are compatible with the dynamics and readout --- as 2-cells.
+    The result is a bicategory in which the non-strict associativity is recorded by explicit, invertible 2-cells rather than erased.
 \end{example}
 
 \begin{example}[Relations]
@@ -177,7 +187,7 @@ We now state the full definition. It involves a fair amount of data. We recommen
 \begin{remark}
     \label{rem:bicat-why-weak}
     The reason we require associativity and unitality only up to isomorphism (rather than on the nose) is that this is what we encounter in practice.
-    As we noted for \SY{profunctors}, their composition is defined via a colimit (a quotient of a coproduct), and colimits are typically only unique up to isomorphism, not up to equality.
+    As we saw with the composition of spans (which uses pullbacks) and the composition of Mealy machines (which uses cartesian products of state spaces), the resulting constructions are typically only unique up to isomorphism, not up to equality.
     More generally, in almost all ``naturally occurring'' higher-categorical structures, the algebraic operations are only well-defined up to a coherent system of isomorphisms.
     The pentagon and triangle axioms ensure that these isomorphisms fit together consistently, so that one can unambiguously compose any finite sequence of 1-cells.
     (This is the content of Mac~Lane's coherence theorem for monoidal categories, which extends to bicategories.)
@@ -228,7 +238,36 @@ But not every bicategory is equivalent to a strict 2-category --- the weakness i
 \subsection{Examples}
 \label{sec:bicat-examples}
 
-We now revisit and expand the motivating examples from the beginning of this section.
+We now revisit and expand the motivating examples from the beginning of this section, and present several new ones.
+
+We begin with two examples that are closely analogous to the bicategory of relations from \cref{exa:bicat-motivation-rel}.
+In that example, the 2-cells were given by inclusion of relations, which is a partial order.
+The same idea applies whenever we have a notion of ``relation'' between structured objects and the relations can be ordered by inclusion: the result is always a locally posetal bicategory.
+
+\begin{example}[The bicategory of monotone relations]
+    \label{exa:bicat-monotone-rel}
+    The bicategory~$\operatorname{\textbf{MonRel}}$ has:
+    \begin{itemize}
+        \item \emph{Objects:} \SY{posets};
+        \item \emph{1-cells from~$\posgenA$ to~$\posgenB$:} monotone relations, i.e., relations~$R \subseteq \posgenA \cartprod \posgenB$ that are upward closed: if~$(a, b) \setin R$, $a' \leq a$, and~$b \leq b'$, then~$(a', b') \setin R$;
+        \item \emph{2-cells:} inclusion of relations, i.e., there is a unique 2-cell~$R \nto S$ if and only if~$R \subseteq S$.
+    \end{itemize}
+    Composition of monotone relations is defined in the same way as composition of ordinary relations (by ``relaying'' through an intermediate poset), and the result is again a monotone relation.
+    Since there is at most one 2-cell between any two parallel 1-cells, this is a locally posetal bicategory, just as in \cref{exa:bicat-motivation-rel}.
+    In fact, the bicategory of ordinary relations is a special case: every set can be viewed as a discrete poset, and in that case monotone relations reduce to ordinary relations.
+\end{example}
+
+\begin{example}[The bicategory of linear relations]
+    \label{exa:bicat-linear-rel}
+    The bicategory~$\operatorname{\textbf{LinRel}}$ has:
+    \begin{itemize}
+        \item \emph{Objects:} finite-dimensional vector spaces over~$\reals$ (or more generally, over any field);
+        \item \emph{1-cells from~$V$ to~$W$:} linear relations, i.e., linear subspaces~$R \subseteq V \oplus W$;
+        \item \emph{2-cells:} inclusion of subspaces, i.e., there is a unique 2-cell~$R \nto S$ if and only if~$R \subseteq S$.
+    \end{itemize}
+    Recall that composition of linear relations is defined analogously to composition of ordinary relations.
+    This is again a locally posetal bicategory.
+\end{example}
 
 \begin{example}[\Category as a strict 2-category]
     \label{exa:bicat-cat}
@@ -243,19 +282,6 @@ We now revisit and expand the motivating examples from the beginning of this sec
     Functor composition is strictly associative and unital, so the associators and unitors are identities, making this a strict 2-category.
 \end{example}
 
-\begin{example}[The bicategory of profunctors]
-    \label{exa:bicat-prof}
-    The bicategory~$\Prof$ has:
-    \begin{itemize}
-        \item \emph{Objects:} small categories;
-        \item \emph{1-cells:} \SY{profunctors}~$\funa \colon \CatC \profto \CatD$;
-        \item \emph{2-cells:} natural transformations between profunctors (viewed as functors~$\CatCop \Ctimes \CatD \fto \Set$).
-    \end{itemize}
-    Horizontal composition of 1-cells is profunctor composition (see~\cref{def:profunctor-composition}), which involves a coend (colimit) construction.
-    The identity 1-cell on a category~$\CatC$ is the hom-functor~$\Hom_\CatC \colon \CatCop \Ctimes \CatC \fto \Set$.
-    Because the coend is only defined up to isomorphism, the associators and unitors are nontrivial --- this is a genuine bicategory, not a strict 2-category.
-\end{example}
-
 \begin{example}[The bicategory of spans]
     \label{exa:bicat-span}
     Fix a category~$\CatC$ with pullbacks (for example, $\CatC = \Set$).
@@ -267,6 +293,22 @@ We now revisit and expand the motivating examples from the beginning of this sec
     \end{itemize}
     Composition of spans is given by pullback, which is only defined up to isomorphism.
     Hence the associator is nontrivial, and this is a genuine bicategory.
+\end{example}
+
+\begin{example}[The bicategory of cospans]
+    \label{exa:bicat-cospan}
+    Fix a category~$\CatC$ with pushouts (for example, $\CatC = \Set$).
+    The bicategory~$\operatorname{Cospan}(\CatC)$ has:
+    \begin{itemize}
+        \item \emph{Objects:} objects of~$\CatC$;
+        \item \emph{1-cells from~$\Obja$ to~$\Objb$:} cospans, i.e., diagrams~$\Obja \rightarrow \Objc \leftarrow \Objb$ in~$\CatC$ (note the reversal compared to spans);
+        \item \emph{2-cells:} morphisms of cospans, i.e., morphisms~$\Objc \mto \Objc'$ making the obvious triangles commute.
+    \end{itemize}
+    Composition of cospans is given by pushout, which is dual to pullback and is again only defined up to isomorphism.
+    Hence this is a genuine bicategory.
+
+    The bicategory of cospans is particularly relevant in applications where one thinks of the apex~$\Objc$ of a cospan~$\Obja \rightarrow \Objc \leftarrow \Objb$ as a ``shared boundary'' or ``interface'' through which~$\Obja$ and~$\Objb$ are connected.
+    This perspective appears, for instance, in the compositional modeling of open systems, where the objects represent the ``ports'' or ``boundaries'' of a system and the cospans represent systems that can be composed by gluing along shared boundaries.
 \end{example}
 
 \begin{example}[Monoidal categories as one-object bicategories]
@@ -285,11 +327,46 @@ We now revisit and expand the motivating examples from the beginning of this sec
     This establishes the precise correspondence: \emph{monoidal categories are one-object bicategories}.
 \end{example}
 
+\begin{example}[The bicategory of Mealy machines]
+    \label{exa:bicat-mealy}
+    We have seen (in \cref{sec:cat-dyn}) that Mealy machines can be composed by taking the cartesian product of their state spaces, and that this composition is \emph{not} strictly associative: the state spaces~$(\setS_\mora \cartprod \setS_\morb) \cartprod \setS_\morc$ and~$\setS_\mora \cartprod (\setS_\morb \cartprod \setS_\morc)$ are isomorphic but not equal.
+    One way around this was to quotient by an equivalence relation to obtain the category~$\MealyMod$.
+    But a more natural approach is to recognize that Mealy machines form a \emph{bicategory}, where the associativity isomorphisms are carried as explicit data rather than quotiented away.
+
+    The bicategory~$\operatorname{\textbf{Mealy}}$ has:
+    \begin{itemize}
+        \item \emph{Objects:} sets (thought of as input/output alphabets);
+        \item \emph{1-cells from~$\setA$ to~$\setB$:} Mealy machines, i.e., triples~$(\setS, \prdyn, \prreadout)$ where~$\setS$ is a state set, $\prdyn \colon \setS \cartprod \setA \mto \setS$ is the dynamics, and~$\prreadout \colon \setS \cartprod \setA \mto \setB$ is the readout;
+        \item \emph{2-cells:} simulations.
+              Given two Mealy machines~$\mora = (\setS, \prdyn, \prreadout)$ and~$\mora' = (\setS', \prdyn', \prreadout')$, both from~$\setA$ to~$\setB$, a \emph{simulation} from~$\mora$ to~$\mora'$ is a function~$\sigma \colon \setS \mto \setS'$ such that for all~$s \setin \setS$ and~$a \setin \setA$:
+              \begin{equation}\label{eq:mealy-simulation-dyn}
+                  \sigma(\prdyn(s, a)) = \prdyn'(\sigma(s), a),
+              \end{equation}
+              \begin{equation}\label{eq:mealy-simulation-ro}
+                  \prreadout(s, a) = \prreadout'(\sigma(s), a).
+              \end{equation}
+              In other words, the simulation maps states of~$\mora$ to states of~$\mora'$ in a way that is compatible with both the dynamics and the readout.
+    \end{itemize}
+    Vertical composition of simulations is ordinary function composition (if~$\sigma \colon \setS \mto \setS'$ and~$\tau \colon \setS' \mto \setS''$ are simulations, then so is~$\sigma \mthen \tau$).
+    Horizontal composition of 1-cells is defined by taking the cartesian product of state spaces and combining the dynamics and readout as described in \cref{def:MealyCat}.
+    The identity 1-cell on a set~$\setA$ is the Mealy machine with a singleton state set that copies input to output.
+
+    Now, given three composable Mealy machines~$\mora$,~$\morb$,~$\morc$ with state sets~$\setS_\mora$,~$\setS_\morb$,~$\setS_\morc$ respectively, the associator
+    \begin{equation}
+        \associator_{\mora,\morb,\morc} \colon (\mora \mthen \morb) \mthen \morc \nto \mora \mthen (\morb \mthen \morc)
+    \end{equation}
+    is the simulation given by the re-bracketing isomorphism
+    \begin{equation}
+        (\setS_\mora \cartprod \setS_\morb) \cartprod \setS_\morc \overset{\cong}{\longrightarrow} \setS_\mora \cartprod (\setS_\morb \cartprod \setS_\morc).
+    \end{equation}
+    This is an invertible 2-cell (since the re-bracketing function is a bijection), and it satisfies the pentagon and triangle axioms because the re-bracketing isomorphisms for the cartesian product do.
+
+    The key point is that by working with a bicategory instead of quotienting, we retain the concrete state spaces and simulations as explicit mathematical data: no information is lost.
+\end{example}
 
 \begin{remark}
-    Among the examples above, the bicategory of profunctors is the most important for the applications discussed in this book.
-    The fact that profunctors do not form a category, but do form a bicategory, was noted at the end of the section on profunctor composition.
-    Bicategories give us the right framework to study profunctors and their composition coherently.
+    Among the examples above, the bicategories of spans, cospans, and Mealy machines all illustrate the same phenomenon: a natural composition operation (pullback, pushout, or cartesian product of state spaces) that is associative only up to isomorphism.
+    The bicategorical viewpoint gives us a principled way to work with such structures without needing to quotient or to introduce artificial strict replacements.
 \end{remark}
 
 \subsection{Looking ahead: why bicategories matter for applications}
@@ -297,7 +374,7 @@ We now revisit and expand the motivating examples from the beginning of this sec
 
 We conclude this section by briefly indicating why bicategories are useful beyond pure mathematics, especially in the context of the engineering applications discussed in this book.
 
-Firstly, many of the structures we have studied --- \SY{design problems}, \SY{profunctors}, relations, and spans --- naturally live in bicategories.
+Firstly, many of the structures we have studied --- relations, spans, cospans, and dynamical systems such as Mealy machines --- naturally live in bicategories.
 The bicategorical perspective gives us a uniform language for discussing composition, identity, and coherence in all of these settings.
 
 Secondly, many important categorical concepts generalize from categories to bicategories.
