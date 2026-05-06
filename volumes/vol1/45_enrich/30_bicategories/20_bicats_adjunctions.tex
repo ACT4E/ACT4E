@@ -1,0 +1,129 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Adjunctions in bicategories}
+\label{sec:bicats-adjunctions}
+
+In the previous section we defined bicategories and saw several examples.
+We now show that the notion of \SY{adjunction}, which we defined earlier for ordinary categories (\cref{def:adj-counit}), can be formulated in any bicategory.
+The key observation is that the unit-counit definition of an adjunction between categories only involves 1-cells (functors), 2-cells (natural transformations), and the two kinds of composition --- precisely the ingredients that any bicategory provides.
+
+\subsection{Motivation}
+
+Recall from \cref{def:adj-counit} that an \SY{adjunction} between categories~$\CatC$ and~$\CatD$ consists of functors~$\funl \colon \CatC \fto \CatD$ and~$\funr \colon \CatD \fto \CatC$ together with natural transformations
+\begin{equation}
+    \equivunit \colon \funidC \nto \funl \fthen \funr \qqand \equivcounit \colon \funr \fthen \funl \nto \funid_\CatD,
+\end{equation}
+called the \emph{unit} and \emph{counit}, satisfying the triangle identities (also called the zig-zag identities).
+
+Now, all of this data lives in the strict 2-category~$\Category$ of categories, functors, and natural transformations (\cref{exa:bicat-cat}).
+The objects~$\CatC$ and~$\CatD$ are 0-cells, the functors~$\funl$ and~$\funr$ are 1-cells, and the unit and counit are 2-cells.
+The compositions that appear --- $\funl \fthen \funr$, $\funr \fthen \funl$ --- are horizontal compositions of 1-cells, and the triangle identities involve vertical and horizontal composition of 2-cells.
+None of these ingredients are specific to the 2-category~$\Category$: they make sense in any bicategory.
+
+This means that we can define the notion of adjunction \emph{internally} in any bicategory, simply by replacing ``category'' with ``object'', ``functor'' with ``1-cell'', and ``natural transformation'' with ``2-cell''.
+The resulting concept is remarkably powerful: it specializes to Galois connections in posets, to classical adjunctions between categories, and to many other structures, depending on the bicategory we work in.
+
+\subsection{The definition}
+
+\begin{ctdefinition}[Adjunction in a bicategory]
+    \SYNDEF{adjunction in a bicategory}
+    \label{def:bicat-adjunction}
+    Let~$\CatB$ be a bicategory and let~$\Obja, \Objb \setin \Ob(\CatB)$.
+    An \maindef{adjunction} from~$\Obja$ to~$\Objb$ in~$\CatB$ consists of:
+
+    \constit
+
+    \begin{enumerate}
+        \item A 1-cell~$\funl \colon \Obja \mto \Objb$, called the \emph{left adjoint};
+        \item A 1-cell~$\funr \colon \Objb \mto \Obja$, called the \emph{right adjoint};
+        \item A 2-cell~$\equivunit \colon \catidof{\Obja} \nto \funl \mthen \funr$, called the \emph{unit};
+        \item A 2-cell~$\equivcounit \colon \funr \mthen \funl \nto \catidof{\Objb}$, called the \emph{counit}.
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item \emph{First triangle identity (zig):}
+              The following composite 2-cell equals the identity 2-cell~$\catidof{\funl}$:
+              \begin{equation}\label{eq:bicat-adj-zig}
+                  \funl \overset{\leftunitor_\funl^{-1}}{\ntolong} \catidof{\Obja} \mthen \funl \overset{\equivunit \nthenhor \catidof{\funl}}{\ntolong} (\funl \mthen \funr) \mthen \funl \overset{\associator_{\funl,\funr,\funl}}{\ntolong} \funl \mthen (\funr \mthen \funl) \overset{\catidof{\funl} \nthenhor \equivcounit}{\ntolong} \funl \mthen \catidof{\Objb} \overset{\rightunitor_\funl}{\ntolong} \funl.
+              \end{equation}
+        \item \emph{Second triangle identity (zag):}
+              The following composite 2-cell equals the identity 2-cell~$\catidof{\funr}$:
+              \begin{equation}\label{eq:bicat-adj-zag}
+                  \funr \overset{\rightunitor_\funr^{-1}}{\ntolong} \funr \mthen \catidof{\Obja} \overset{\catidof{\funr} \nthenhor \equivunit}{\ntolong} \funr \mthen (\funl \mthen \funr) \overset{\associator^{-1}_{\funr,\funl,\funr}}{\ntolong} (\funr \mthen \funl) \mthen \funr \overset{\equivcounit \nthenhor \catidof{\funr}}{\ntolong} \catidof{\Objb} \mthen \funr \overset{\leftunitor_\funr}{\ntolong} \funr.
+              \end{equation}
+    \end{enumerate}
+
+    We write~$\funl \adjunction \funr$ to indicate that~$\funl$ is left adjoint to~$\funr$.
+\end{ctdefinition}
+
+\begin{remark}
+    \label{rem:bicat-adj-vs-cat-adj}
+    In a strict 2-category the associators and unitors are identities, so the triangle identities simplify considerably.
+    For instance, in the strict 2-category~$\Category$, the two conditions reduce to exactly the triangle identities from \cref{def:adj-counit}:
+    \begin{equation}
+        (\equivunit \nthenhor \catidof{\funl}) \ntrafothen (\catidof{\funl} \nthenhor \equivcounit) = \catidof{\funl}, \qquad
+        (\catidof{\funr} \nthenhor \equivunit) \ntrafothen (\equivcounit \nthenhor \catidof{\funr}) = \catidof{\funr}.
+    \end{equation}
+    Thus the general bicategorical definition recovers the familiar notion of adjunction between categories as a special case.
+\end{remark}
+
+\begin{remark}
+    \label{rem:bicat-adj-equivalence}
+    An adjunction~$\funl \adjunction \funr$ in a bicategory is called an \emph{adjoint equivalence} if the unit~$\equivunit$ and counit~$\equivcounit$ are both invertible 2-cells.
+    In the 2-category~$\Category$, this recovers the notion of equivalence of categories (\cref{def:cat-equivalence}).
+\end{remark}
+
+\subsection{Examples}
+
+\begin{example}[Adjunctions in \Category]
+    \label{exa:bicat-adj-cat}
+    An adjunction in the strict 2-category~$\Category$ (\cref{exa:bicat-cat}) is precisely an adjunction between categories in the classical sense of \cref{def:adj-counit}.
+    The left and right adjoints are functors, the unit and counit are natural transformations, and the triangle identities are the usual ones.
+\end{example}
+
+\begin{example}[Galois connections as adjunctions in a locally posetal bicategory]
+    \label{exa:bicat-adj-galois}
+    Consider the bicategory of monotone relations (\cref{exa:bicat-monotone-rel}), or more generally any locally posetal bicategory --- that is, a bicategory in which each hom-category is a poset.
+    In such a bicategory, the 2-cells carry no data beyond their existence: a 2-cell~$\mora \nto \morb$ simply asserts that~$\mora \leq \morb$.
+    Since all 2-cells in a poset are unique, the triangle identities are automatic once the unit and counit exist.
+
+    An adjunction~$\funl \adjunction \funr$ in a locally posetal bicategory therefore reduces to:
+    \begin{itemize}
+        \item 1-cells~$\funl \colon \Obja \mto \Objb$ and~$\funr \colon \Objb \mto \Obja$;
+        \item the inequalities~$\catidof{\Obja} \leq \funl \mthen \funr$ and~$\funr \mthen \funl \leq \catidof{\Objb}$.
+    \end{itemize}
+    When the objects are posets and the 1-cells are monotone maps, this is precisely the definition of a \emph{Galois connection} (also known as an adjunction between posets).
+\end{example}
+
+\begin{example}[Adjunctions in the bicategory of spans]
+    \label{exa:bicat-adj-span}
+    In the bicategory~$\operatorname{Span}(\Set)$ (\cref{exa:bicat-span}), an adjunction~$\funl \adjunction \funr$ between sets~$\setA$ and~$\setB$ consists of a span~$\funl \colon \setA \leftarrow \setS \rightarrow \setB$ and a span~$\funr \colon \setB \leftarrow \setD \rightarrow \setA$, together with span morphisms playing the role of unit and counit.
+    The theory of adjunctions in span bicategories is closely related to the theory of bimodules and profunctors; we will not develop this further here, but mention it to illustrate that even in concrete bicategories, the notion of adjunction is a rich one.
+\end{example}
+
+\begin{example}[Adjunctions in a one-object bicategory]
+    \label{exa:bicat-adj-monoidal}
+    Recall from \cref{exa:bicat-monoidal} that a monoidal category~$\tup{\CatC, \mtimescat, \idmoncat}$ is the same thing as a one-object bicategory~$\mathbf{\Sigma}\CatC$.
+    An adjunction in~$\mathbf{\Sigma}\CatC$ consists of objects~$\funl, \funr$ of~$\CatC$ (these are the 1-cells), together with morphisms
+    \begin{equation}
+        \equivunit \colon \idmoncat \mto \funl \mtimescatob \funr \qqand \equivcounit \colon \funr \mtimescatob \funl \mto \idmoncat
+    \end{equation}
+    satisfying the triangle identities (with the associators and unitors of the monoidal category appearing explicitly).
+    This amounts to the notion of \emph{duality} in a monoidal category, given via  coevaluation and  evaluation morphisms, which, in this case, correspond to the unit and counit, respectively. In this example, the conditions in the definition of adjunction (for bicategories) encode precisely the snake equations. 
+\end{example}
+
+\begin{example}[Adjunctions in the bicategory of Mealy machines]
+    \label{exa:bicat-adj-mealy}
+    In the bicategory~$\operatorname{\textbf{Mealy}}$ (\cref{exa:bicat-mealy}), an adjunction~$\funl \adjunction \funr$ between sets~$\setA$ and~$\setB$ consists of Mealy machines~$\funl \colon \setA \mto \setB$ and~$\funr \colon \setB \mto \setA$ together with simulations playing the role of unit and counit, satisfying the triangle identities.
+    Intuitively, this says that the machine~$\funl$ and the machine~$\funr$ are ``inverses up to simulation'': running~$\funl$ followed by~$\funr$ is related to doing nothing (the identity machine on~$\setA$) by a simulation, and similarly for~$\funr$ followed by~$\funl$.
+    When the simulations are invertible, this becomes an adjoint equivalence, expressing that the two machines are equivalent in a strong sense.
+\end{example}
+
+\subsection{Why adjunctions in bicategories matter}
+
+The power of the bicategorical definition of adjunction lies in its generality: a single definition, once instantiated in different bicategories, yields Galois connections (in locally posetal bicategories), classical adjunctions between categories (in $\Category$), dual pairs in monoidal categories (in one-object bicategories), and many other structures.
+Rather than proving theorems about each of these separately, one can prove them once at the level of bicategories and then specialize.
+
+Furthermore, as we shall see in the next section, the notion of adjunction in a bicategory leads directly to the notion of \emph{monad} in a bicategory, via the same construction that produces monads from adjunctions in ordinary category theory.
