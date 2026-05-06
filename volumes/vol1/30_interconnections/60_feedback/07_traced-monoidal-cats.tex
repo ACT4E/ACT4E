@@ -2,42 +2,9 @@
 
 \section{Traced symmetric monoidal categories}
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{trace-naturality-x}
-    \caption{Naturality in $\Obja$}
-    \label{fig:trace-naturality-x}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{trace-naturality-y}
-    \caption{Naturality in $\Objb$}
-    \label{fig:trace-naturality-y}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{trace-dinaturality-z}
-    \caption{Dinaturality in $\Objc$}
-    \label{fig:trace-dinaturality-z}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=6cm]{trace-vanishing-i}
-    \caption{Vanishing I}
-    \label{fig:trace-vanishing-i}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{trace-vanishing-ii}
-    \caption{Vanishing II}
-    \label{fig:trace-vanishing-ii}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=8cm]{trace-yanking}
-    \caption{Yanking}
-    \label{fig:trace-yanking}
-\end{figure}
+
+\todotext{make a remark that without symmetry we would have two distinct concepts of left-trace and right-trace}
+
 
 \begin{ctdefinition}[Traced monoidal category]
     \label{def:traced-monoidal-cat}
@@ -89,6 +56,88 @@
     \end{enumerate}
 \end{ctdefinition}
 
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
+        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.6cm, minimum height=2.2cm},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\bfseries},
+        tracebox/.style={draw=black, dashed, thick, fill=graphcolor, rounded corners=2pt},
+    ]
+        % Trace boundary (drawn first so it's behind everything)
+        \fill[graphcolor, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
+        \draw[black, dashed, thick, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
+
+        % Morphism box f
+        \node[morbox] (f) at (2,0) {};
+        \node[morphisms, font=\large\itshape] at (2,0) {$f$};
+
+        % X wire: input from left
+        \draw[wire] (-1.8, 0.55) -- (f.west |- 0,0.55);
+        \node[wirelabel, above] at (-1.2, 0.55) {$\Obja$};
+
+        % Y wire: output to right
+        \draw[wire] (f.east |- 0,0.55) -- (5.8, 0.55);
+        \node[wirelabel, above] at (5.2, 0.55) {$\Objb$};
+
+        % Z wire: input side (from feedback loop up to f)
+        \draw[wire] (0.6, -1.8) -- (0.6, -0.55) -- (f.west |- 0,-0.55);
+        \node[wirelabel, left] at (0.6, -1.1) {$\Objc$};
+
+        % Z wire: output side (from f down to feedback loop)
+        \draw[wire] (f.east |- 0,-0.55) -- (3.4, -0.55) -- (3.4, -1.8);
+        \node[wirelabel, right] at (3.4, -1.1) {$\Objc$};
+
+        % Feedback loop: bottom horizontal segment
+        \draw[wire] (0.6, -1.8) -- (3.4, -1.8);
+    \end{tikzpicture}
+    \caption{The trace operator: given a morphism~$\mora \colon \Obja \mtimescatob \Objc \mto \Objb \mtimescatob \Objc$, its trace~$\Tr_{\Obja,\Objb}^\Objc(\mora) \colon \Obja \mto \Objb$ is obtained by ``closing the loop'' on the~$\Objc$ wire.}
+    \label{fig:trace-operator}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{trace-naturality-x}
+    \caption{Naturality in $\Obja$}
+    \label{fig:trace-naturality-x}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{trace-naturality-y}
+    \caption{Naturality in $\Objb$}
+    \label{fig:trace-naturality-y}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{trace-dinaturality-z}
+    \caption{Dinaturality in $\Objc$}
+    \label{fig:trace-dinaturality-z}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=6cm]{trace-vanishing-i}
+    \caption{Vanishing I}
+    \label{fig:trace-vanishing-i}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{trace-vanishing-ii}
+    \caption{Vanishing II}
+    \label{fig:trace-vanishing-ii}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=8cm]{trace-yanking}
+    \caption{Yanking}
+    \label{fig:trace-yanking}
+\end{figure}
+
+
 \begin{remark}
     Other variants of the definition of a \SY{traced monoidal category} can be found in the literature.
     For instance, some include a more general version of the superposing law, see \cref{lem:general-superposing-law} below.
@@ -97,7 +146,9 @@
 \begin{lemma}
     \label{lem:general-superposing-law}
     Let~$\tup{\CatC, \mtimescat,\idmoncat_{\CatC}, \braiding, \Tr}$ be a \SY{traced monoidal category}.
-    Then a more general version of the superposing law holds: for any morphisms~$\mora\colon \Obja\mtimescatob \Objc \mto \Objb \mtimescatob \Objc$ and~$\morb \colon \Objd \mto \Obje$,
+    Then a more general version of the superposing law holds: for any morphisms~
+    $$\mora\colon \Obja\mtimescatob \Objc \mto \Objb \mtimescatob \Objc \quad \text{ and } \quad \morb \colon \Objd \mto \Obje,$$
+    we have 
     \begin{equation}
         \label{eq:superposing_2}
         \Tr_{\Objd\mtimescatob \Obja,\Obje\mtimescatob \Objb}^{\Objc}(\morb \mtimescatmor \mora)=\morb \mtimescatmor \Tr_{\Obja,\Objb}^\Objc(\mora).
@@ -110,7 +161,7 @@
 
 \subsection{Relations with cartesian product as monoidal product}
 
-\begin{definition}
+\begin{ctdefinition}
     For the symmetric monoidal category $\tup{\Rel, \cartprod, \singleton, \associator, \leftunitor, \rightunitor, \braiding}$, a trace is defined as follows.
     Given a relation
     \begin{equation}
@@ -120,17 +171,17 @@
     \begin{equation}
         \Tr_{\setA,\setB}^\setC (\relA) = \{ \tup{\ela, \elb} \in \setA \cartprod \setB \mid \exists \ \elc \in \setC : \tup{\tup{\ela, \elc}, \tup{\elb, \elc}} \in \relA \}
     \end{equation}
-\end{definition}
+\end{ctdefinition}
 
 
 
 \begin{gradedexercise}[\exname{TracingRelations}]
 
     Given the symmetric monoidal category $\tup{\Rel, \cartprod, \singleton, \associator, \leftunitor, \rightunitor, \braiding}$, consider the trace operation
-    $$\Tr_{\Obja,\Objb}^\Objc \colon \HomSet{\RelL}{\Obja \cprod \Objc}{\Objb \cprod \Objc}\to \HomSet{\RelL}{\Obja}{\Objb}$$
-    which is defined, for a morphism $\relA \setin\HomSet{\CatC}{\Obja \cprod \Objc}{\Objb\cprod \Objc}$, by
+    $$\Tr_{\Obja,\Objb}^\Objc \colon \HomSet{\Rel}{\Obja \cartprod \Objc}{\Objb \cartprod \Objc}\to \HomSet{\Rel}{\Obja}{\Objb}$$
+    which is defined, for a morphism $\relA \setin\HomSet{\Rel}{\Obja \cartprod \Objc}{\Objb\cartprod \Objc}$, by
     \begin{equation}
-        \Tr_{\Obja,\Objb}^\Objc(\relA) = \makeset{\tup{\ela, \elb} \setin\Obja \cartprod \Objb \mid \exists \elc \setin\Objc \colon \tup{\ela \tupconcat \elc, \elb \tupconcat \elc} \setin\relA}.
+        \Tr_{\Obja,\Objb}^\Objc(\relA) = \makeset{\tup{\ela, \elb} \setin\Obja \cartprod \Objb \mid \exists \elc \setin\Objc \colon \tup{\tup{\ela, \elc}, \tup{\elb, \elc}} \setin\relA}.
     \end{equation}
 
     Your task is to check that this definition satisfies the following two trace axioms:
@@ -139,17 +190,17 @@
 
         \item \emph{Vanishing II}:
 
-              For any relation~$\relA \colon \Obja \cprod \Objc \cprod \Objd \mto \Objb\cprod \Objc \cprod \Objd$ in $\RelL$,
+              For any relation~$\relA \colon (\Obja \cartprod \Objc) \cartprod \Objd \to (\Objb \cartprod \Objc) \cartprod \Objd$ in $\Rel$,
               \begin{equation}
-                  \Tr_{\Obja,\Objb}^{\Objc\cprod \Objd}(\relA) = \Tr_{\Obja,\Objb}^\Objc\pars{
-                      \Tr_{\Obja \cprod \Objc, \Objb \cprod \Objc}^\Objd(\relA)}.
+                  \Tr_{\Obja,\Objb}^\Objc\pars{
+                      \Tr_{\Obja \cartprod \Objc, \Objb \cartprod \Objc}^\Objd(\relA)} = \Tr_{\Obja,\Objb}^{\Objc\cartprod \Objd}\pars{\associator_{\Obja, \Objc, \Objd} \mthen \relA \mthen \associator^{-1}_{\Objb, \Objc, \Objd}}.
               \end{equation}
 
         \item \emph{Superposing}:
 
-              For any relations~$\relA \colon \Obja\cprod \Objc \mto \Objb\cprod \Objc$ and $\relB \colon \Obje \mto \Objf$ in $\RelL$,
+              For any relation~$\relA \colon \Obja\cartprod \Objc \to \Objb\cartprod \Objc$ in $\Rel$,
               \begin{equation}
-                  \Tr_{\Obje\cprod \Obja,\Objf\cprod \Objb}^{\Objc}(\relB \mtimescatmor \relA) = \relB \mtimescatmor \Tr_{\Obja,\Objb}^\Objc(\relA).
+                  \Tr_{\Obje\cartprod \Obja,\Obje\cartprod \Objb}^{\Objc}\pars{\associator_{\Obje, \Obja, \Objc} \mthen \catidat\Obje \cartprod \relA \mthen \associator^{-1}_{\Obje, \Objb, \Objc}} = \catidat\Obje \cartprod \Tr_{\Obja,\Objb}^\Objc(\relA).
               \end{equation}
     \end{enumerate}
 \end{gradedexercise}
@@ -206,7 +257,7 @@ Consider the symmetric monoidal category $\tup{\Rel, \setdisunion, \Emptyset, \a
 
 which highlights that this decomposition is analogous to block-matrices between vector spaces. 
 
-\begin{definition}
+\begin{ctdefinition}
    For the symmetric monoidal category $\tup{\Rel, \setdisunion, \Emptyset, \associator, \leftunitor, \rightunitor, \braiding}$, a trace is defined as follows.
 
 Given a relation  
@@ -217,8 +268,8 @@ Given a relation
     \begin{equation}\label{eq:trace-rel-sum}
         \Tr_{\setA,\setB}^\setC (\relA) = \relA_{1,1} \cup \bigcup_{n \geq 0} ( \relA_{1,2} \mthen \relA_{2,2}^n \mthen \relA_{2,1} ).
     \end{equation}
-   Here, $\relA_{2,2}^n$ means $\relA_{2,2}$ composed with itself $n$-many times.
-\end{definition}
+   Here, ``$\relA_{2,2}^n$'' means ``$\relA_{2,2}$ composed with itself $n$-many times''.
+\end{ctdefinition}
 
 \subsection{Co-design}
 \todotextjira{201}{\alphubel: @Gioele: Change example}
@@ -246,9 +297,9 @@ It turns out that we can give a well-defined semantics to this loop-closing oper
 The following is the formal definition of the trace operation for \SY{design problems}.
 
 \linkvideo{spring2021-functorial-comp-b:solving-queries:solving-loop} % Loop composition
-\begin{definition}[Trace of a design problem]
+\begin{ctdefinition}[Trace of a design problem]
     \label{def:dp-trace}
-    Given a \SY{design problem}~$\adpa\colon \funposA \mtimescatob \funposC \profto \resposB \mtimescatob \resposC$, its \emph{trace}
+    Given a \SY{design problem}~$\adpa\colon \funposA \Ptimes \funposC \profto \resposB \Ptimes \resposC$, its \emph{trace}
     \begin{equation}
         \Tr_{\funposA,\resposB}^\posC(\adpa) \colon \funposA \profto \resposB
     \end{equation}
@@ -263,7 +314,7 @@ The following is the formal definition of the trace operation for \SY{design pro
             \tup{\RposgenBel, \R{\posgenCel}}).
         \end{aligned}
     \end{equation}
-\end{definition}
+\end{ctdefinition}
 
 Think of drawing a loop as a way of writing down the following requirement:
 Something that produces~\posC should not use up more of~\posC than it produces.
@@ -272,6 +323,9 @@ Something that produces~\posC should not use up more of~\posC than it produces.
     Trace as in~\cref{def:dp-trace} satisfies the trace axioms.
     In other words,~$\tupp{\DP, {{\otimes}}, \singletonpos, \sigma}$ is a \SY{traced monoidal category}, with trace as in~\cref{eq:tracedef}.
 \end{lemma}
+
+\todotext{J: some brackets and associators are missing in the proof below; perhaps fine to leave so but then we should make a comment}
+
 \begin{proof}
     We have already shown that~$\tup{\DP,{{\otimes}},\singletonpos,\sigma}$ is a \SY{symmetric monoidal category} (\cref{lem:symmetricmonoidaldp}).
     We prove the trace axioms one by one, starting from vanishing (\cref{eq:vanishing_1}, \cref{eq:vanishing_2}).
@@ -451,17 +505,6 @@ Here, the trace is a linear function $\mattrace_{B,C}
 
 \todojira{198}{\alphubel: @Gioele: Add figure using the graphical notations for tensor operations}
 
-\subsection{Trace for symmetric strict monoidal categories}
 
-\begin{definition}[Trace for $\RelL$ with concatenation as monoidal product]
-    \label{def:tuple-REL-trace}
-    Consider the symmetric strict monoidal category $\RelL$, where the monoidal product is defined via the concatenation operation $\cprod$ for lists of sets.
-    Given a relation $\relA \colon \cObj{\setA, \setC}  \to \cObj{\setB, \setC}$, its \emph{trace} is defined as
-    %
-    \begin{equation}
-        \label{eq:tupel-REL-tracedef}
-        \begin{aligned}
-            \Tr_{\cObj{\setA}, \cObj{\setB}}^{\cObj{\setC}}(\relA) = \{ \tup{\ela, \elb} \in \cObj{\setA} \times \cObj{\setB} \mid \exists \ \elc \in \cObj{\setC} : \tup{\ela \tupconcat \elc, \elb \tupconcat \elc} \in \relA \}
-        \end{aligned}
-    \end{equation}
-\end{definition}
+
+
