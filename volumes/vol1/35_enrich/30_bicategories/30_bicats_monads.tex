@@ -1,0 +1,195 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Monads in bicategories}
+\label{sec:bicats-monads}
+
+Just as the notion of adjunction generalizes from ordinary categories to bicategories, so does the notion of \SY{monad}.
+In fact, the generalization is even more direct: a monad on a category~$\CatC$ involves an endofunctor~$\monA \colon \CatC \fto \CatC$, natural transformations for multiplication and unit, and associativity and unitality conditions --- all of which take place inside the hom-category~$\Category(\CatC, \CatC)$.
+In a bicategory, a monad on an object~$\Obja$ will similarly involve a 1-cell~$\Obja \mto \Obja$ and 2-cells for multiplication and unit, all living in the hom-category~$\CatB(\Obja, \Obja)$.
+
+\subsection{Motivation: from adjunctions to monads}
+
+In ordinary category theory, every \SY{adjunction} gives rise to a \SY{monad}.
+Given an adjunction~$\funl \adjunction \funr$ with~$\funl \colon \CatC \fto \CatD$ and~$\funr \colon \CatD \fto \CatC$, the composite endofunctor~$\monA = \funl \fthen \funr \colon \CatC \fto \CatC$ carries a monad structure: the multiplication is obtained from the counit, and the unit of the monad is the unit of the adjunction.
+
+The same construction works in any bicategory.
+Given an adjunction~$\funl \adjunction \funr$ in a bicategory~$\CatB$ as in \cref{def:bicat-adjunction}, the horizontal composite~$\funl \mthen \funr \colon \Obja \mto \Obja$ is an endo-1-cell, and the unit and counit of the adjunction provide exactly the data needed for a monad structure.
+We will return to this construction after giving the definition.
+
+\subsection{The definition}
+
+\begin{ctdefinition}[Monad in a bicategory]
+    \SYNDEF{monad in a bicategory}
+    \label{def:bicat-monad}
+    Let~$\CatB$ be a bicategory and let~$\Obja \setin \Ob(\CatB)$.
+    A \maindef{monad} on~$\Obja$ in~$\CatB$ is:
+
+    \constit
+
+    \begin{enumerate}
+        \item A 1-cell~$\monA \colon \Obja \mto \Obja$ (an endo-1-cell);
+        \item A 2-cell~$\moncomp \colon \monA \mthen \monA \nto \monA$, called the \emph{multiplication};
+        \item A 2-cell~$\monunit \colon \catidof{\Obja} \nto \monA$, called the \emph{unit}.
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item \emph{Associativity:}
+              The following diagram of 2-cells commutes:
+              \begin{equation}\label{eq:bicat-monad-assoc}
+                  \begin{tikzcd}[column sep=large, row sep=large]
+                      {(\monA \mthen \monA) \mthen \monA}
+                      \ar[r, "{\associator}"]
+                      \ar[d, "{\moncomp \nthenhor \catidof{\monA}}"']
+                      &
+                      {\monA \mthen (\monA \mthen \monA)}
+                      \ar[r, "{\catidof{\monA} \nthenhor \moncomp}"]
+                      &
+                      {\monA \mthen \monA}
+                      \ar[d, "{\moncomp}"] \\
+                      {\monA \mthen \monA}
+                      \ar[rr, "{\moncomp}"']
+                      & &
+                      {\monA}
+                  \end{tikzcd}
+              \end{equation}
+
+        \item \emph{Left unitality:}
+              The following diagram of 2-cells commutes:
+              \begin{equation}\label{eq:bicat-monad-left-unit}
+                  \begin{tikzcd}[column sep=large]
+                      {\catidof{\Obja} \mthen \monA}
+                      \ar[r, "{\monunit \nthenhor \catidof{\monA}}"]
+                      \ar[dr, "{\leftunitor_\monA}"']
+                      &
+                      {\monA \mthen \monA}
+                      \ar[d, "{\moncomp}"] \\
+                      & {\monA}
+                  \end{tikzcd}
+              \end{equation}
+
+        \item \emph{Right unitality:}
+              The following diagram of 2-cells commutes:
+              \begin{equation}\label{eq:bicat-monad-right-unit}
+                  \begin{tikzcd}[column sep=large]
+                      {\monA \mthen \catidof{\Obja}}
+                      \ar[r, "{\catidof{\monA} \nthenhor \monunit}"]
+                      \ar[dr, "{\rightunitor_\monA}"']
+                      &
+                      {\monA \mthen \monA}
+                      \ar[d, "{\moncomp}"] \\
+                      & {\monA}
+                  \end{tikzcd}
+              \end{equation}
+    \end{enumerate}
+
+\end{ctdefinition}
+
+\begin{remark}
+    \label{rem:bicat-monad-vs-cat-monad}
+    In the strict 2-category~$\Category$, a monad on an object~$\CatC$ in the sense of \cref{def:bicat-monad} consists of an endofunctor~$\monA \colon \CatC \fto \CatC$, natural transformations~$\moncomp \colon \monA \fthen \monA \nto \monA$ and~$\monunit \colon \funidC \nto \monA$, satisfying associativity and unitality --- this is exactly \cref{def:monad}.
+    In the strict case the associators and unitors are identities, so the diagrams above simplify to the familiar ones.
+\end{remark}
+
+\begin{remark}
+    \label{rem:bicat-monad-monoid-analogy}
+    Recall that a \SY{monoid} in a \SY{monoidal category}~$\tup{\CatC, \mtimescat, \idmoncat}$ is an object~$M$ equipped with morphisms~$\moncomp \colon M \mtimescatob M \mto M$ and~$\monunit \colon \idmoncat \mto M$ satisfying associativity and unitality.
+    A monad in a bicategory is the same idea, but with ``monoidal category'' replaced by ``hom-category with horizontal composition''.
+    In other words: \emph{a monad on~$\Obja$ in~$\CatB$ is a monoid in the monoidal category~$\CatB(\Obja, \Obja)$}, where the monoidal product is horizontal composition and the monoidal unit is~$\catidof{\Obja}$.
+    This is a useful way to think about monads, as it makes the algebraic structure completely transparent.
+\end{remark}
+
+\subsection{Monads from adjunctions}
+
+We now make precise the construction that was previewed at the beginning of this section.
+
+\begin{proposition}
+    \label{prop:bicat-adj-gives-monad}
+    Let~$\CatB$ be a bicategory and let~$\funl \adjunction \funr$ be an adjunction in~$\CatB$ as in \cref{def:bicat-adjunction}, with~$\funl \colon \Obja \mto \Objb$ and~$\funr \colon \Objb \mto \Obja$.
+    Then the endo-1-cell~$\monA = \funl \mthen \funr \colon \Obja \mto \Obja$ carries the structure of a monad on~$\Obja$, with:
+    \begin{itemize}
+        \item \emph{Unit:} the unit~$\equivunit \colon \catidof{\Obja} \nto \funl \mthen \funr = \monA$ of the adjunction;
+        \item \emph{Multiplication:} the composite 2-cell
+              \begin{equation}\label{eq:bicat-monad-from-adj-mult}
+                  \monA \mthen \monA = (\funl \mthen \funr) \mthen (\funl \mthen \funr) \overset{\associator}{\ntolong} \funl \mthen ((\funr \mthen \funl) \mthen \funr) \overset{\catidof{\funl} \nthenhor (\equivcounit \nthenhor \catidof{\funr})}{\ntolong} \funl \mthen (\catidof{\Objb} \mthen \funr) \overset{\catidof{\funl} \nthenhor \leftunitor_\funr}{\ntolong} \funl \mthen \funr = \monA,
+              \end{equation}
+              where we have suppressed some associators for readability.
+    \end{itemize}
+    The monad axioms (associativity and unitality) follow from the triangle identities of the adjunction.
+\end{proposition}
+
+\begin{remark}
+    This is the bicategorical generalization of the well-known fact that every adjunction between categories gives rise to a monad (see \cref{def:monad}).
+    In the strict 2-category~$\Category$, the proposition above recovers exactly that classical construction: given an adjunction~$\funl \adjunction \funr$ with~$\funl \colon \CatC \fto \CatD$ and~$\funr \colon \CatD \fto \CatC$, the composite~$\funl \fthen \funr \colon \CatC \fto \CatC$ is a monad on~$\CatC$.
+\end{remark}
+
+\subsection{Examples}
+
+\begin{example}[Monads in \Category]
+    \label{exa:bicat-monad-cat}
+    A monad in the strict 2-category~$\Category$ is precisely a monad on a category in the classical sense of \cref{def:monad}: an endofunctor with a multiplication and unit satisfying associativity and unitality.
+    The powerset monad and the maybe monad are standard examples.
+\end{example}
+
+\begin{example}[Monads in a locally posetal bicategory: closure operators]
+    \label{exa:bicat-monad-closure}
+    Consider the locally posetal bicategory where the objects are posets, the 1-cells are monotone maps, and the 2-cells are given by the pointwise ordering (i.e., $\mora \nto \morb$ when~$\mora(x) \leq \morb(x)$ for all~$x$).
+    A monad on a poset~$\posgenA$ in this bicategory is a monotone map~$\monA \colon \posgenA \mto \posgenA$ together with:
+    \begin{itemize}
+        \item a unit:~$\catidof{\posgenA} \leq \monA$, meaning~$x \leq \monA(x)$ for all~$x$ (\emph{extensivity});
+        \item a multiplication:~$\monA \mthen \monA \leq \monA$, meaning~$\monA(\monA(x)) \leq \monA(x)$ for all~$x$ (\emph{idempotency}, when combined with extensivity).
+    \end{itemize}
+    Since the hom-categories are posets, the associativity and unitality conditions are automatic.
+    This is precisely the definition of a \emph{closure operator} on~$\posgenA$.
+    Thus: \emph{closure operators are monads in a locally posetal bicategory}.
+\end{example}
+
+\begin{example}[Monads in a one-object bicategory: monoids in monoidal categories]
+    \label{exa:bicat-monad-monoidal}
+    Recall from \cref{exa:bicat-monoidal} that a monoidal category~$\tup{\CatC, \mtimescat, \idmoncat}$ corresponds to a one-object bicategory~$\mathbf{\Sigma}\CatC$.
+    A monad in~$\mathbf{\Sigma}\CatC$ is an object~$M$ of~$\CatC$ (a 1-cell) equipped with morphisms~$\moncomp \colon M \mtimescatob M \mto M$ and~$\monunit \colon \idmoncat \mto M$ satisfying associativity and unitality.
+    This is precisely a \emph{monoid object} in the monoidal category~$\CatC$.
+
+    For instance, in the monoidal category~$(\Set, \cartprod, \singleton)$ of sets with cartesian product, a monoid object is a monoid in the classical algebraic sense.
+    In the monoidal category of endofunctors on a category~$\CatC$ (with composition as the monoidal product), a monoid object is a monad on~$\CatC$ --- recovering the ordinary notion.
+\end{example}
+
+\begin{example}[Monads in the bicategory of Mealy machines]
+    \label{exa:bicat-monad-mealy}
+    A monad on a set~$\setA$ in the bicategory~$\operatorname{\textbf{Mealy}}$ (\cref{exa:bicat-mealy}) is a Mealy machine~$\monA \colon \setA \mto \setA$ (i.e., a machine that takes inputs from~$\setA$ and produces outputs in~$\setA$) together with simulations
+    \begin{equation}
+        \moncomp \colon \monA \mthen \monA \nto \monA \qqand \monunit \colon \catidof{\setA} \nto \monA,
+    \end{equation}
+    satisfying associativity and unitality.
+    The multiplication simulation~$\moncomp$ maps the product state space of two copies of~$\monA$ (run in series) into the state space of a single copy, in a way that is compatible with the dynamics and readout.
+    The unit simulation maps the trivial state space of the identity machine into the state space of~$\monA$.
+
+    Intuitively, a monad structure on a Mealy machine~$\monA$ says that iterating the machine (composing it with itself) can always be ``collapsed'' back into a single run of the machine in a coherent way.
+\end{example}
+
+\begin{example}[Monads from Galois connections]
+    \label{exa:bicat-monad-from-galois}
+    The construction of \cref{prop:bicat-adj-gives-monad} applied in a locally posetal bicategory yields a familiar result.
+    A Galois connection~$\funl \adjunction \funr$ between posets~$\posgenA$ and~$\posgenB$ (see \cref{exa:bicat-adj-galois}) gives rise to a monad on~$\posgenA$, namely the closure operator~$\funl \mthen \funr \colon \posgenA \mto \posgenA$.
+    This is a well-known fact in order theory: the composite of a Galois connection is always a closure operator.
+    The bicategorical perspective reveals this as a special case of the general principle that ``every adjunction gives rise to a monad''.
+\end{example}
+
+\subsection{Summary: a unified viewpoint}
+
+The following table summarizes how the notions of monad and adjunction specialize across a few different bicategories that we have encountered.
+In each case, a single bicategorical definition recovers a concept that might otherwise require a separate definition.
+
+\begin{center}
+    \begin{tabular}{lll}
+        \textbf{Bicategory} & \textbf{Adjunction} & \textbf{Monad} \\
+        \hline
+        $\Category$ (categories) & adjunction of categories & monad on a category \\
+        locally posetal & Galois connection & closure operator \\
+        one-object ($\mathbf{\Sigma}\CatC$) & dual pair in~$\CatC$ & monoid in~$\CatC$ \\
+        $\operatorname{\textbf{Mealy}}$ (Mealy machines) & machines inverse up to simulation & iterable machine \\
+    \end{tabular}
+\end{center}
+
+This unification is one of the main reasons that bicategories are a valuable conceptual tool: they allow us to see diverse mathematical structures as instances of a single pattern, and to transfer theorems and intuitions between different settings.
