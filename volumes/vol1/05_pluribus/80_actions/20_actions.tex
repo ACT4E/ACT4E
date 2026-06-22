@@ -3,13 +3,14 @@
 \section{Actions}
 \label{sec:actions}
 
-\todotext{Expand this intro a bit to explain the conceptual idea of actions better, and mention the key term ``state space''. }
+\todotext{Expand this intro a bit to explain the conceptual idea of actions better, and mention the key term ``state space''. Maybe move the robot on a grid example up to this intro as a concrete motivating example. Also, maybe we can motivate/explain why it makes sense to abstractly separate the set of ``instructions'' from the functions that model the dynamics... why is this a good idea? what are the benefits? maybe a second example can also underscore this, maybe one from linear algebra?}
 
 \todotext{Because of our semicolon infix notation for function composition, the `more natural' version of actions to prefer is right actions rather than left actions (normally it is the other way around). So maybe we should start with right actions and prefer/emphasize them in our exposition (while of course still mentioning left actions and explaining them...)}
 
 \todotext{This section is to be rewritten, with the 'covariant' (could we also say coordinate free?) version of the definition of action as the main one. Then what is currently called a right action should be 'braided' and then called a left action (but as a remark, no longer as a definition).}
 
 \todotext{Add a remark that explains the term/concept of 'contravariant' action (there is material on this in devel at the moment. If we use the term 'contravarian morphism' somewhere, be sure we define it.)}
+
 
 
 \subsection{Monoid actions}
@@ -131,51 +132,7 @@ Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\m
 \end{enumerate}
 \end{gradedexercise}
 
-
-
-
 \devel{
-\subsection{Monoid actions (old)}
-
-\begin{marginfigure}
-    \centering
-    \includesag{semigroup-cov-action}
-    \caption{Compatibility of left-action operation with composition.}
-    \label{fig:semigroup-cov-action}
-\end{marginfigure}
-
-\begin{ctdefinition}
-    [Monoid left action]\label{def:monoid-left-action}
-    A \emph{left action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\setA is:
-
-    \constit
-    \begin{enumerate}
-        \item a function
-              \begin{equation}
-                  \label{eq:lact-monoid}
-                  \act \colon \makecartprod{\monoidAset, \setA} \sto \setA.
-              \end{equation}
-    \end{enumerate}
-    \condit
-    \begin{enumerate}
-        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\monoidAset$,
-              \begin{equation}
-                  \label{eq:monoiad-lact-1cond}
-                  \act(\monela, \act(\monelb, \setAel)) = \act(\monela \mtimesof\monoidA \monelb, \setAel);
-              \end{equation}
-        \item for all~$\setAel \setin \setA$,
-              \begin{equation}
-                  \label{eq:monoiad-lact-2cond}
-                  \act(\idmon_\monoidA, \setAel) = \setAel.
-              \end{equation}
-    \end{enumerate}
-\end{ctdefinition}
-
-Equation \cref{eq:monoiad-lact-1cond} says that if we first apply the action of $\monelb$ to $\setAel$ to obtain $\act(\monelb, \setAel)$,
-and then we apply the action of $\monela$ to this result, it is the same thing as applying the action of $\monela \mtimesof\monoidA \monelb$ to~$\setAel$.
-
-\todotext{The following remark can maybe be removed; to consider after the actions definition has been rewritten.}
-
 \begin{remark}
     Left actions are often denoted using infix notation of the kind
     \begin{equation}
@@ -196,117 +153,25 @@ and then we apply the action of $\monela$ to this result, it is the same thing a
     \end{equation}
     In other words, we can view \cref{eq:monoiad-lact-1cond} as a kind of ``associative law'', but where two of the three elements come from $\monoidAset$, while one of the elements comes from $\setA$.
 \end{remark}
+}
 
-\begin{ctdefinition}
-    [Monoid right action]\label{def:monoid-right-action}
-    A \emph{right action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\setA is:
+
+
+
+\devel{
+    \subsection{Contravariant actions}
     
-    \constit
-    \begin{enumerate}
-        \item a function
-              \begin{equation}
-                  \label{eq:ract-monoid}
-                  \act \colon \makecartprod{\setA, \monoidAset} \sto \setA.
-              \end{equation}
-    \end{enumerate}
-    \condit
-    \begin{enumerate}
-        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\monoidAset$,
-              \begin{equation}
-                  \label{eq:monoiad-ract-1cond}
-                  \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb);
-              \end{equation}
-        \item for all~$\setAel \setin \setA$,
-              \begin{equation}
-                  \label{eq:monoiad-ract-2cond}
-                  \act(\setAel, \idmon_\monoidA) = \setAel.
-              \end{equation}
-    \end{enumerate}
-\end{ctdefinition}
-
-There is a way to reformulate the notions of left and right monoid actions which leads to a compact definition which we will generalize later.
-To derive this definition, we'll start with the definition \cref{def:monoid-right-action} of a right action, and then apply ``left currying''.
-
-Recall that left currying is done by applying the canonical isomorphism
-\begin{equation}
-    \curry \colon \setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB,
-\end{equation}
-which transforms any function of the type
-\begin{equation}
-    \setA \cartprod \setB \to \setC
-\end{equation}
-into one of the type
-\begin{equation}
-    \setB \to (\setA \to \setC).
-\end{equation}
-Applying this to $\act \colon \makecartprod{\setA, \monoidAset} \sto \setA$ we obtain a function
-\begin{equation}
-    \curry(\act) \colon \monoidAset \to (\setA \to \setA).
-\end{equation}
-Since we can tell the difference between $\act$ and $\curry(\act)$ based on their respective domains and codomains, we now simply use the same name $\act$ for both functions, and drop the ``$\curry$''.
-Furthermore, we will usually write
-\begin{equation}
-    \label{eq:act-to-endo}
-    \act \colon \monoidAset \to \Endof\setA,
-\end{equation}
-using the notation $\Endof\setA$ for functions of type~$\setA \sto \setA$.
-These are the endomorphisms of~\setA.
-
-Now, so far, we have just used currying to produce the function \cref{eq:act-to-endo} from a monoid action operation.
-Is \cref{eq:act-to-endo} really also a homomorphism of monoids?
-
-To see that this is the case, consider first the second condition in the definition of a right action, given by \cref{eq:monoiad-ract-2cond}.
-Translating this to the function \cref{eq:act-to-endo}, this means that
-\begin{equation}
-    \act(\idmon_\monoidA)(\setAel) = \setAel \quad \forall \setAel \setin \setA,
-\end{equation}
-or, in other words, that
-\begin{equation}
-    \act(\idmon_\monoidA) = \idmon_\setA.
-\end{equation}
-Since the identity function $\idmon_\setA$ is the identity element of the monoid $\Endof\setA$, this shows that the function \cref{eq:act-to-endo} respects the identity elements of the monoids which are its source and target.
-
-Now let's take a look at the first condition in the definition of a right action.
-For any $\monela, \monelb \setin \monoidAset$, we have
-%
-\begin{equation}
-    \label{eq:lact1cond2}
-    \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb) \quad \forall \setAel \setin \setA.
-\end{equation}
-%
-If we translate this, via currying, into an equality of functions in $\Endof\setA$, we obtain
-%
-\begin{equation}
-    \label{eq:act-to-endo-properties}
-    \act(\monela) \mtimesof{\Endof\setA} \act(\monelb) = \act(\monela \mtimesof\sgrpA \monelb).
-\end{equation}
-%
-In other words, $\act$ respects the composition operations defined on its source and target.
-In sum, we have found that $\act$ is indeed \SY{monoid homomorphism}~(\cref{def:monoid-mor}), and this leads us to the following compact definition.
-
-\begin{ctdefinition}[Monoid action]
-    \label{def:monoid-cov-action}
-    An \maindef{action} of a \SY{monoid}~$\monoidA$ on a set~\setA is a \SY{monoid homomorphism}
-    \begin{equation}
-        \label{eq:act-monoid}
-        \act \colon \monoidA \fto \Endof\setA.
-    \end{equation}
-\end{ctdefinition}
-
-Observe that this definition makes no reference to ``left'' and ``right'', even though we derived it from the definition of a \emph{right} action operation.
-What about left actions?
-
-\begin{gradedexercise}[\exname{LeftActionCurry}]
+    \begin{gradedexercise}[\exname{LeftActionCurry}]
     Show that having a left action of a monoid $\monoidA$ on a set $\setA$ is equivalent to having a monoid homomorphism
     \begin{equation}
         \act \colon \monoidA\op \mto \Endof\setA.
     \end{equation}
 \end{gradedexercise}
-}
 
 
-\devel{
-    \subsection{Contravariant actions}
+\
+
+\
 
     There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
     \footnote{
@@ -353,6 +218,10 @@ What about left actions?
 
 \devel{
 \subsection{Semigroup actions}
+
+
+
+
 
 % There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
 % \footnote{
