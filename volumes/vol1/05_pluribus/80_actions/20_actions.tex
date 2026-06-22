@@ -11,7 +11,131 @@
 
 \todotext{Add a remark that explains the term/concept of 'contravariant' action (there is material on this in devel at the moment. If we use the term 'contravarian morphism' somewhere, be sure we define it.)}
 
+
 \subsection{Monoid actions}
+
+\begin{ctdefinition}[Monoid action]
+    \label{def:monoid-cov-action}
+    An \maindef{action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\setA is a \SY{monoid homomorphism}
+    \begin{equation}
+        \label{eq:act-monoid}
+        \act \colon \monoidA \fto \Endof\setA.
+    \end{equation}
+\end{ctdefinition}
+
+Unpacked, the above definition means that we have a function
+\begin{equation}
+     \act \colon  \monoidAset \to (\setA \to \setA)
+\end{equation}
+that satisfies the following two conditions.
+ 
+First, 
+\begin{equation}
+    \label{eq:act-to-endo-comp-compatibility}
+    \act(\monela \mtimesof\sgrpA \monelb) = \act(\monela) \mtimesof{\Endof\setA} \act(\monelb), 
+\end{equation}
+which encodes ``compatibility of $\act$ with the composition operations in the source and the target'';
+
+Second, 
+\begin{equation}\label{eq:act-neutral-element-condit}
+    \act(\idmon_\monoidA) = \idmon_\setA,
+\end{equation}
+which encodes ``compatibility of $\act$ with the neutral elements in the source and the target''. 
+
+The latter condition may be unpacked even further; in terms of individual elements of $\setA$ it says
+\begin{equation}
+    \forall \setAel \setin \setA \colon \quad \act(\idmon_\monoidA)(\setAel) = \setAel.
+\end{equation}
+
+
+
+\subsection{Uncurrying actions}
+
+Recall that (right) currying is the operation of applying the canonical isomorphism
+\begin{equation}
+    \curry \colon \setC^{\setA \cartprod \setB} \to \pars{\setC^\setB}^\setA
+\end{equation}
+which transforms any function of the type
+\begin{equation}
+    \setA \cartprod \setB \to \setC
+\end{equation}
+into one of the type
+\begin{equation}
+   \setA \to (\setB \to \setC).
+\end{equation}
+
+A monoid action involves a function of the type
+\begin{equation}
+     \act \colon  \monoidAset \to (\setA \to \setA).
+\end{equation}
+If we apply the inverse $\curry^{-1}$ (so-called ``uncurrying'') to this function, 
+we obtain a function of the type
+\begin{equation}\label{eq:uncurried-action}
+ \makecartprod{\monoidAset, \setA} \sto \setA.
+ \end{equation}
+Throughout mathematics and applications, actions are often presented in this uncurried form. 
+Since we can tell the difference between $\act$ and its uncurried version based on their respective domains and codomains, we will use the same name, ``$\act$'', for both versions.
+
+
+Now, so far, we have just used $\curry^{-1}$ to produce the function \cref{eq:uncurried-action} from a monoid action. However, $\act \colon  \monoidAset \to (\setA \to \setA)$ was not just any function, it was a monoid homomorphism $\act \colon \monoidA \fto \Endof\setA$. What does that condition translate to in the uncurried version $\act \colon  \makecartprod{\monoidAset, \setA} \sto \setA$? The answer is summarized in the following definition.
+
+\begin{ctdefinition}[Monoid action, curried]
+\label{def:uncurried-action}
+   
+    An \emph{uncurried action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\setA is:
+    
+    \constit
+    \begin{enumerate}
+        \item a function
+              \begin{equation}
+                  \label{eq:ract-monoid}
+                  \act \colon \makecartprod{\monoidAset, \setA} \sto \setA.
+              \end{equation}
+    \end{enumerate}
+    \condit
+    \begin{enumerate}
+        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\monoidAset$,
+              \begin{equation}
+                  \label{eq:monoiad-ract-1cond}
+                  \act(\monela \mtimesof\monoidA \monelb, \setAel) = \act(\monelb, \act(\monela, \setAel));
+              \end{equation}
+        \item for all~$\setAel \setin \setA$,
+              \begin{equation}
+                  \label{eq:monoiad-ract-2cond}
+                  \act(\idmon_\monoidA, \setAel) = \setAel.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{gradedexercise}[\exname{UncurriedAction}]
+Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ and~a set $\setA$. 
+\begin{enumerate}
+\item Given a function
+    \begin{equation}
+    \act \colon \makecartprod{\monoidAset, \setA} \sto \setA
+    \end{equation}
+    that satisfies \cref{def:uncurried-action}, prove that the curried function
+    \begin{equation}
+    \curry(\act) \colon  \monoidAset \to (\setA \to \setA)
+    \end{equation}
+    satisfies conditions \cref{eq:act-to-endo-comp-compatibility} and \cref{eq:act-neutral-element-condit} and is hence a monoid action. 
+    \item Given a monoid action 
+    \begin{equation}
+    \act \colon  \monoidAset \to (\setA \to \setA)
+    \end{equation}
+    prove that its uncurried version 
+    \begin{equation}
+    \curry^{-1}(\act) \colon  \makecartprod{\monoidAset, \setA} \sto \setA
+    \end{equation}
+    satisfies \cref{def:uncurried-action}. 
+\end{enumerate}
+\end{gradedexercise}
+
+
+
+
+\devel{
+\subsection{Monoid actions (old)}
 
 \begin{marginfigure}
     \centering
@@ -178,7 +302,7 @@ What about left actions?
         \act \colon \monoidA\op \mto \Endof\setA.
     \end{equation}
 \end{gradedexercise}
-
+}
 
 
 \devel{
