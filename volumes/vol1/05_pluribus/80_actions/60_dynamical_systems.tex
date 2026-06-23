@@ -159,6 +159,45 @@ Thus, in total, a \SY{Moore machine} is specified by a tuple of the following ki
     \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}.
 \end{equation}
 
+\todotext{This example below needs to be edited to be aligned with the treatment at the beginning of the actions section... Also, maybe it would be interesting/nice to do a variation of this example where the state is both position and orientation?}
+
+\begin{example}[Robot on a grid]
+    \label{exa:robot_on_a_grid}
+   
+    We consider a robot moving on a two-dimensional unit grid, represented as $\natnumbers^2_{[0,100]}$ (\cref{fig:robot_example}).
+    \begin{marginfigure}
+        \centering
+        \includesag{120_robotcategory}
+        \caption{Robot on a grid example. }
+        \label{fig:robot_example}
+    \end{marginfigure}
+
+    The state of the robot is described by its position coordinates, as $\prstel \setin \natnumbers^2_{[0,100]}$ (for convenience, consider the first element of the state to be the horizontal coordinate and the second element to be the vertical one).
+    The robot can choose from a set of input actions $\prin=\{\uparrow, \downarrow,\rightarrow,\leftarrow\}$, each representing a movement of 1 unit in the corresponding direction on the grid.
+    We can write the dynamics as
+    \begin{equation}
+        \begin{aligned}
+            \prdyn\colon \prin \cartprod \prst                & \sto \prst \\
+            \tupp{\uparrow, \tup{\prsteln{1},\prsteln{2}}}    & \mapsto \tupp{\prsteln{1}, \min(\prsteln{2}+1,100)}, \\
+            \tupp{\downarrow, \tup{\prsteln{1},\prsteln{2}}}  & \mapsto \tupp{\prsteln{1}, \max(\prsteln{2}-1,0)}, \\
+            \tupp{\rightarrow, \tup{\prsteln{1},\prsteln{2}}} & \mapsto \tupp{\min(\prsteln{1}+1,100), \prsteln{2}}, \\
+            \tupp{\leftarrow, \tup{\prsteln{1},\prsteln{2}}}  & \mapsto \tupp{\max(\prsteln{1}-1,0), \prsteln{2}}, \\
+        \end{aligned}
+    \end{equation}
+    where the ``$\min$'' and ``$\max$'' ensure that the robot stays in within the boundaries of the grid.
+    The readout can be thought of as a sensor measuring the position of the robot (the state).
+    Assuming a perfect sensor, we have:
+    \begin{equation*}
+        \defmapperiod{\prreadout}
+        {\prst}
+        {\sto}
+        {\prout}
+        {\tupp{\prsteln{1},\prsteln{2}}}
+        {\tupp{\prsteln{1},\prsteln{2}}}
+    \end{equation*}
+    The starting position of the robot can be specified as any~$\prstart\setin \natnumbers^2_{[0,100]}$.
+\end{example}
+
 
 
 \paragraph{Moore machines acting on sequences}
