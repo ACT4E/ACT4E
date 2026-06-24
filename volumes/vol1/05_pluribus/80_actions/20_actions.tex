@@ -3,7 +3,7 @@
 \section{Actions}
 \label{sec:actions}
 
-\todotext{Expand this intro a bit to explain the conceptual idea of actions better, and mention the key term ``state space''. }
+\todotext{Expand this intro a bit to explain the conceptual idea of actions better, and mention the key term ``state space''. Maybe move the robot on a grid example up to this intro as a concrete motivating example. Also, maybe we can motivate/explain why it makes sense to abstractly separate the set of ``instructions'' from the functions that model the dynamics... why is this a good idea? what are the benefits? maybe a second example can also underscore this, maybe one from linear algebra?}
 
 \todotext{Because of our semicolon infix notation for function composition, the `more natural' version of actions to prefer is right actions rather than left actions (normally it is the other way around). So maybe we should start with right actions and prefer/emphasize them in our exposition (while of course still mentioning left actions and explaining them...)}
 
@@ -11,101 +11,137 @@
 
 \todotext{Add a remark that explains the term/concept of 'contravariant' action (there is material on this in devel at the moment. If we use the term 'contravarian morphism' somewhere, be sure we define it.)}
 
+\todotext{Throughout this chapter, maybe we should use S as a default letter for the 'state set' rather A?}
+
+
+
+The idea of ``actions'' appears across mathematics and in many areas of application -- for example in the topic of dynamical systems in engineering, or in the topic of automata in computer science. 
+
+Here is the central pattern captured by the concept of an action: on the one hand, a monoid (or some other algebraic gadget) is given which models time or models a sequence of events, and on the other hand that monoid ``acts'' on a set that models the possible states of a system. This action encodes how the system changes over time or changes in reaction to a sequence of events or inputs. Before fitting this idea into mathematical definitions, let us begin with two motivating examples. 
+
+   
+\subsection{Motivating example: a robot on a grid}
+   
+    Consider a robot moving on a two-dimensional grid made up of 16 squares, as illustrated in \cref{fig:robot_example}. To label each of the 16 squares we use simple coordinates: labels that consist of an ``$x_1$-direction'' (horizontal) and an ``$x_2$-direction" (vertical), with each dimension having possible entries $1$, $2$, $3$ or $4$. In other words, the set of 16 squares is labeled by the set
+\begin{equation}
+    \setX = \setX_1 \cartprod \setX_2
+\end{equation}
+with $\setX_1 = \makeset{1, 2, 3, 4}$ and $\setX_2 = \makeset{1, 2, 3, 4}$. 
+
+    \begin{marginfigure}
+        \centering
+        \includesag{120_robotcategory}
+        \caption{Robot on a grid example. }
+        \label{fig:robot_example}
+    \end{marginfigure}
+
+    We consider the position coordinates of the robot to be its ``state''.  For example, in the figure, the state of the robot is that its position is $\tup{1,1} \setin \setX$. 
+    
+    
+    Next, consider the following set of instructions that we may give the robot,
+\begin{equation}
+\prin=\{\uparrow, \downarrow,\rightarrow,\leftarrow\},
+\end{equation}
+where each symbol is a command to ``move one square over'' in the corresponding direction  -- unless the movement would lead the robot to leave the grid, in which case no movement is undertaken. 
+
+
+We can model this situation using the following  ``dynamics function'': 
+    \begin{equation}
+        \begin{aligned}
+            \prdyn\colon \prin \cartprod \prst                & \sto \prst \\
+            \tupp{\uparrow, \tup{\prsteln{1},\prsteln{2}}}    & \mapsto \tupp{\prsteln{1}, \min(\prsteln{2}+1,4)}, \\
+            \tupp{\downarrow, \tup{\prsteln{1},\prsteln{2}}}  & \mapsto \tupp{\prsteln{1}, \max(\prsteln{2}-1,1)}, \\
+            \tupp{\rightarrow, \tup{\prsteln{1},\prsteln{2}}} & \mapsto \tupp{\min(\prsteln{1}+1,4), \prsteln{2}}, \\
+            \tupp{\leftarrow, \tup{\prsteln{1},\prsteln{2}}}  & \mapsto \tupp{\max(\prsteln{1}-1,1), \prsteln{2}}, \\
+        \end{aligned}
+    \end{equation}
+    where the ``$\min$'' and ``$\max$'' ensure that the robot stays in within the boundaries of the grid.
+    
+    \todotext{Rework the above example so that it fits better with the action definition as we now have it...}
+    
+\devel{
+
+\subsection{Motivating example: a discrete-time dynamical system}
+
+\todotext{What is a nice motivating example here??}
+
+}
+
 \subsection{Monoid actions}
 
-\begin{marginfigure}
-    \centering
-    \includesag{semigroup-cov-action}
-    \caption{Compatibility of left-action operation with composition.}
-    \label{fig:semigroup-cov-action}
-\end{marginfigure}
-
-\begin{ctdefinition}
-    [Monoid left action]\label{def:monoid-left-action}
-    A \emph{left action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\setA is:
-
-    \constit
-    \begin{enumerate}
-        \item a function
-              \begin{equation}
-                  \label{eq:lact-monoid}
-                  \act \colon \makecartprod{\monoidAset, \setA} \sto \setA.
-              \end{equation}
-    \end{enumerate}
-    \condit
-    \begin{enumerate}
-        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\monoidAset$,
-              \begin{equation}
-                  \label{eq:monoiad-lact-1cond}
-                  \act(\monela, \act(\monelb, \setAel)) = \act(\monela \mtimesof\monoidA \monelb, \setAel);
-              \end{equation}
-        \item for all~$\setAel \setin \setA$,
-              \begin{equation}
-                  \label{eq:monoiad-lact-2cond}
-                  \act(\idmon_\monoidA, \setAel) = \setAel.
-              \end{equation}
-    \end{enumerate}
+\begin{ctdefinition}[Monoid action]
+    \label{def:monoid-cov-action}
+    An \maindef{action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\stateset is a \SY{monoid homomorphism}
+    \begin{equation}
+        \label{eq:act-monoid}
+        \act \colon \monoidA \fto \Endof\stateset.
+    \end{equation}
 \end{ctdefinition}
 
-Equation \cref{eq:monoiad-lact-1cond} says that if we first apply the action of $\monelb$ to $\setAel$ to obtain $\act(\monelb, \setAel)$,
-and then we apply the action of $\monela$ to this result, it is the same thing as applying the action of $\monela \mtimesof\monoidA \monelb$ to~$\setAel$.
-
-\todotext{The following remark can maybe be removed; to consider after the actions definition has been rewritten.}
-
-\begin{remark}
-    Left actions are often denoted using infix notation of the kind
-    \begin{equation}
-        \makecartprod{\monoidAset, \setA} \sto \setA, \ \tup{\monela, \setAel} \mapsto \monela \cdot \setAel
-    \end{equation}
-    or even simply
-    \begin{equation}
-        \makecartprod{\monoidAset, \setA} \sto \setA, \ \tup{\monela, \setAel} \mapsto \monela \setAel
-    \end{equation}
-    (in regard to the latter, think of the notation often used for multiplication of matrices with vectors).
-    If we write our notation ``$\monela \mtimesof\monoidA \monelb$'' as ``$\monela \star \monelb$'' (or even simply ``$\monela \monelb$''), then \cref{eq:monoiad-lact-1cond} reads as
-    \begin{equation}
-        \monela \cdot (\monelb \cdot \setAel) = (\monela \star \monelb) \cdot \setAel,
-    \end{equation}
-    or simply
-    \begin{equation}
-        \monela (\monelb \setAel) = (\monela  \monelb)  \setAel.
-    \end{equation}
-    In other words, we can view \cref{eq:monoiad-lact-1cond} as a kind of ``associative law'', but where two of the three elements come from $\monoidAset$, while one of the elements comes from $\setA$.
-\end{remark}
-
-\begin{ctdefinition}
-    [Monoid right action]\label{def:monoid-right-action}
-    A \emph{right action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\setA is:
-    
-    \constit
-    \begin{enumerate}
-        \item a function
-              \begin{equation}
-                  \label{eq:ract-monoid}
-                  \act \colon \makecartprod{\setA, \monoidAset} \sto \setA.
-              \end{equation}
-    \end{enumerate}
-    \condit
-    \begin{enumerate}
-        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\monoidAset$,
-              \begin{equation}
-                  \label{eq:monoiad-ract-1cond}
-                  \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb);
-              \end{equation}
-        \item for all~$\setAel \setin \setA$,
-              \begin{equation}
-                  \label{eq:monoiad-ract-2cond}
-                  \act(\setAel, \idmon_\monoidA) = \setAel.
-              \end{equation}
-    \end{enumerate}
-\end{ctdefinition}
-
-There is a way to reformulate the notions of left and right monoid actions which leads to a compact definition which we will generalize later.
-To derive this definition, we'll start with the definition \cref{def:monoid-right-action} of a right action, and then apply ``left currying''.
-
-Recall that left currying is done by applying the canonical isomorphism
+Unpacked, the above definition means that we have a function
 \begin{equation}
-    \curry \colon \setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB,
+     \act \colon  \monoidAset \to (\stateset \to \stateset)
+\end{equation}
+that satisfies the following two conditions.
+ 
+First, 
+\begin{equation}
+    \label{eq:act-to-endo-comp-compatibility}
+    \act(\monela \mtimesof\sgrpA \monelb) = \act(\monela) \mtimesof{\Endof\stateset} \act(\monelb), 
+\end{equation}
+which encodes ``compatibility of $\act$ with the composition operations in the source and the target'';
+
+Second, 
+\begin{equation}\label{eq:act-neutral-element-condit}
+    \act(\idmon_\monoidA) = \idmon_\stateset,
+\end{equation}
+which encodes ``compatibility of $\act$ with the neutral elements in the source and the target''. 
+
+The latter condition may be unpacked even further; in terms of individual elements of $\stateset$ it says
+\begin{equation}
+    \forall \statesetel \setin \stateset \colon \quad \act(\idmon_\monoidA)(\statesetel) = \statesetel.
+\end{equation}
+
+\todotext{Connect to examples now here...}
+
+\devel{
+\begin{example}[robot on a grid]
+\todotext{connect the intro to the definition}
+\end{example}
+}
+
+\todotext{Discuss with AC about how to handle such ``intuitive'' examples that don't fit nicely with our composition notation/convention and our action definition convention? The same issue with be present for any matrix monoids ? If we want to keep our current conventions, maybe this is an example for motivating contravariant actions?}
+\begin{example}[Scalar multiplication]
+Let $\monoidA = \tup{\reals, \cdot, 1}$ be the monoid of real numbers, with multiplication as composition operation and the number $1$ as neutral element. Consider the set $\stateset = \reals^3$ of real 3-dimensional vectors. An action 
+\begin{equation}
+\act \colon \reals \fto \Endof\reals^3
+\end{equation}
+is given by scalar multiplication: for each $\lambda \in \reals$, 
+\begin{equation}
+\defmapperiod{\act(\lambda)}{\reals^3}{\to}{\reals^3}{\begin{pmatrix} x_1 \\ x_2 \\ x_3 \end{pmatrix}}{\begin{pmatrix} x_1 \cdot \lambda \\ x_2 \cdot \lambda \\ x_3 \cdot \lambda \end{pmatrix}}
+\end{equation}
+\end{example}
+
+
+\devel{
+\begin{example}[Plant growing]
+\todotext{connect the example in the semigroups section that describes states of a growing plant}
+\end{example}
+
+
+\todotext{Make a remark/example somewhere that any monoid acts on itself...}
+
+}
+
+
+
+
+
+\subsection{Uncurrying actions}
+
+Recall that (right) currying is the operation of applying the canonical isomorphism
+\begin{equation}
+    \curry \colon \setC^{\setA \cartprod \setB} \to \pars{\setC^\setB}^\setA
 \end{equation}
 which transforms any function of the type
 \begin{equation}
@@ -113,76 +149,119 @@ which transforms any function of the type
 \end{equation}
 into one of the type
 \begin{equation}
-    \setB \to (\setA \to \setC).
+   \setA \to (\setB \to \setC).
 \end{equation}
-Applying this to $\act \colon \makecartprod{\setA, \monoidAset} \sto \setA$ we obtain a function
-\begin{equation}
-    \curry(\act) \colon \monoidAset \to (\setA \to \setA).
-\end{equation}
-Since we can tell the difference between $\act$ and $\curry(\act)$ based on their respective domains and codomains, we now simply use the same name $\act$ for both functions, and drop the ``$\curry$''.
-Furthermore, we will usually write
-\begin{equation}
-    \label{eq:act-to-endo}
-    \act \colon \monoidAset \to \Endof\setA,
-\end{equation}
-using the notation $\Endof\setA$ for functions of type~$\setA \sto \setA$.
-These are the endomorphisms of~\setA.
 
-Now, so far, we have just used currying to produce the function \cref{eq:act-to-endo} from a monoid action operation.
-Is \cref{eq:act-to-endo} really also a homomorphism of monoids?
+A monoid action involves a function of the type
+\begin{equation}
+     \act \colon  \monoidAset \to (\stateset \to \stateset).
+\end{equation}
+If we apply the inverse $\curry^{-1}$ (``uncurrying'') to this function, 
+we obtain a function of the type
+\begin{equation}\label{eq:uncurried-action}
+ \makecartprod{\monoidAset, \stateset} \sto \stateset.
+ \end{equation}
+Throughout mathematics and applications, actions are often presented in this uncurried form. 
+Since we can tell the difference between $\act$ and its uncurried version based on their respective domains and codomains, we will use the same name, ``$\act$'', for both versions.
 
-To see that this is the case, consider first the second condition in the definition of a right action, given by \cref{eq:monoiad-ract-2cond}.
-Translating this to the function \cref{eq:act-to-endo}, this means that
-\begin{equation}
-    \act(\idmon_\monoidA)(\setAel) = \setAel \quad \forall \setAel \setin \setA,
-\end{equation}
-or, in other words, that
-\begin{equation}
-    \act(\idmon_\monoidA) = \idmon_\setA.
-\end{equation}
-Since the identity function $\idmon_\setA$ is the identity element of the monoid $\Endof\setA$, this shows that the function \cref{eq:act-to-endo} respects the identity elements of the monoids which are its source and target.
 
-Now let's take a look at the first condition in the definition of a right action.
-For any $\monela, \monelb \setin \monoidAset$, we have
-%
-\begin{equation}
-    \label{eq:lact1cond2}
-    \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb) \quad \forall \setAel \setin \setA.
-\end{equation}
-%
-If we translate this, via currying, into an equality of functions in $\Endof\setA$, we obtain
-%
-\begin{equation}
-    \label{eq:act-to-endo-properties}
-    \act(\monela) \mtimesof{\Endof\setA} \act(\monelb) = \act(\monela \mtimesof\sgrpA \monelb).
-\end{equation}
-%
-In other words, $\act$ respects the composition operations defined on its source and target.
-In sum, we have found that $\act$ is indeed \SY{monoid homomorphism}~(\cref{def:monoid-mor}), and this leads us to the following compact definition.
+Now, so far, we have just used $\curry^{-1}$ to produce the function \cref{eq:uncurried-action} from a monoid action. However, $\act \colon  \monoidAset \to (\stateset \to \stateset)$ was not just any function, it was a monoid homomorphism $\act \colon \monoidA \fto \Endof\stateset$. What does that condition translate to in the uncurried version $\act \colon  \makecartprod{\monoidAset, \stateset} \sto \stateset$? The answer is summarized in the following definition.
 
-\begin{ctdefinition}[Monoid action]
-    \label{def:monoid-cov-action}
-    An \maindef{action} of a \SY{monoid}~$\monoidA$ on a set~\setA is a \SY{monoid homomorphism}
-    \begin{equation}
-        \label{eq:act-monoid}
-        \act \colon \monoidA \fto \Endof\setA.
-    \end{equation}
+\begin{ctdefinition}[Monoid action, curried]
+\label{def:uncurried-action}
+   
+    An \emph{uncurried action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\stateset is:
+    
+    \constit
+    \begin{enumerate}
+        \item a function
+              \begin{equation}
+                  \label{eq:ract-monoid}
+                  \act \colon \makecartprod{\monoidAset, \stateset} \sto \stateset.
+              \end{equation}
+    \end{enumerate}
+    \condit
+    \begin{enumerate}
+        \item for all~$\statesetel \setin \stateset$ and $\monela,\monelb\setin\monoidAset$,
+              \begin{equation}
+                  \label{eq:monoiad-ract-1cond}
+                  \act(\monela \mtimesof\monoidA \monelb, \statesetel) = \act(\monelb, \act(\monela, \statesetel));
+              \end{equation}
+        \item for all~$\statesetel \setin \stateset$,
+              \begin{equation}
+                  \label{eq:monoiad-ract-2cond}
+                  \act(\idmon_\monoidA, \statesetel) = \statesetel.
+              \end{equation}
+    \end{enumerate}
 \end{ctdefinition}
 
-Observe that this definition makes no reference to ``left'' and ``right'', even though we derived it from the definition of a \emph{right} action operation.
-What about left actions?
-
-\begin{gradedexercise}[\exname{LeftActionCurry}]
-    Show that having a left action of a monoid $\monoidA$ on a set $\setA$ is equivalent to having a monoid homomorphism
+\begin{gradedexercise}[\exname{UncurriedAction}]
+Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ and~a set $\stateset$. 
+\begin{enumerate}
+\item Given a function
     \begin{equation}
-        \act \colon \monoidA\op \mto \Endof\setA.
+    \act \colon \makecartprod{\monoidAset, \stateset} \sto \stateset
     \end{equation}
+    that satisfies \cref{def:uncurried-action}, prove that the curried function
+    \begin{equation}
+    \curry(\act) \colon  \monoidAset \to (\stateset \to \stateset)
+    \end{equation}
+    satisfies conditions \cref{eq:act-to-endo-comp-compatibility} and \cref{eq:act-neutral-element-condit} and is hence a monoid action. 
+    \item Given a monoid action 
+    \begin{equation}
+    \act \colon  \monoidAset \to (\stateset \to \stateset)
+    \end{equation}
+    prove that its uncurried version 
+    \begin{equation}
+    \curry^{-1}(\act) \colon  \makecartprod{\monoidAset, \stateset} \sto \stateset
+    \end{equation}
+    satisfies \cref{def:uncurried-action}. 
+\end{enumerate}
 \end{gradedexercise}
+
+\devel{
+
+\todotext{Rewrite this part to discuss the possibility of writing uncurried action with $\monoidAset$ on the right...}
+
+\begin{remark}
+    Left actions are often denoted using infix notation of the kind
+    \begin{equation}
+        \makecartprod{\monoidAset, \stateset} \sto \stateset, \ \tup{\monela, \statesetel} \mapsto \monela \cdot \statesetel
+    \end{equation}
+    or even simply
+    \begin{equation}
+        \makecartprod{\monoidAset, \stateset} \sto \stateset, \ \tup{\monela, \statesetel} \mapsto \monela \statesetel
+    \end{equation}
+    (in regard to the latter, think of the notation often used for multiplication of matrices with vectors).
+    If we write our notation ``$\monela \mtimesof\monoidA \monelb$'' as ``$\monela \star \monelb$'' (or even simply ``$\monela \monelb$''), then REF reads as
+    \begin{equation}
+        \monela \cdot (\monelb \cdot \statesetel) = (\monela \star \monelb) \cdot \statesetel,
+    \end{equation}
+    or simply
+    \begin{equation}
+        \monela (\monelb \statesetel) = (\monela  \monelb)  \statesetel.
+    \end{equation}
+    In other words, we can view REF as a kind of ``associative law'', but where two of the three elements come from $\monoidAset$, while one of the elements comes from $\stateset$.
+\end{remark}
+}
+
 
 
 
 \devel{
     \subsection{Contravariant actions}
+    
+    \begin{gradedexercise}[\exname{LeftActionCurry}]
+    Show that having a left action of a monoid $\monoidA$ on a set $\stateset$ is equivalent to having a monoid homomorphism
+    \begin{equation}
+        \act \colon \monoidA\op \mto \Endof\stateset.
+    \end{equation}
+\end{gradedexercise}
+
+
+\
+
+\
 
     There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
     \footnote{
@@ -199,19 +278,19 @@ What about left actions?
     \end{marginfigure}
     \begin{ctdefinition}
         [Semigroup contravariant action (preliminary version)]\label{def:semigroup-contra-action-prelim}
-        A \emph{contravariant semigroup action} of a \SY{semigroup}~$\sgrpA$ on a set~\setA is a map
+        A \emph{contravariant semigroup action} of a \SY{semigroup}~$\sgrpA$ on a set~\stateset is a map
         \begin{equation}
             \label{eq:ract}
-            \ract \colon \makecartprod{\sgrpAset, \setA} \sto \setA
+            \ract \colon \makecartprod{\sgrpAset, \stateset} \sto \stateset
         \end{equation}
-        such that, for all~$\setAel \setin \setA$,
+        such that, for all~$\statesetel \setin \stateset$,
         \begin{equation}
             \label{eq:ract1cond}
-            \ract(\monelb, \ract(\monela, \setAel)) = \ract(\monelb \mtimesof\sgrpA \monela, \setAel).
+            \ract(\monelb, \ract(\monela, \statesetel)) = \ract(\monelb \mtimesof\sgrpA \monela, \statesetel).
         \end{equation}
     \end{ctdefinition}
 
-    In contrast to \cref{eq:lact1cond}, \cref{eq:ract1cond} says that, if we first apply the action of $\monela$ to obtain $\act(\monela, \setAel)$, and then we apply the action of $\monelb$ $\act(\monelb, -)$, it is the same thing as applying the action of $\monelb\mtimes\monela$ (note the inverted order).
+    In contrast to \cref{eq:lact1cond}, \cref{eq:ract1cond} says that, if we first apply the action of $\monela$ to obtain $\act(\monela, \statesetel)$, and then we apply the action of $\monelb$ $\act(\monelb, -)$, it is the same thing as applying the action of $\monelb\mtimes\monela$ (note the inverted order).
 
     % And what about contravariant actions?
     A \SY{contravariant semigroup action} can be defined as a covariant action of \emph{the opposite} \SY{semigroup}.
@@ -219,9 +298,9 @@ What about left actions?
 
     \begin{ctdefinition}[Semigroup contravariant action]
         \label{def:semigroup-cont-action}
-        A \maindef{contravariant semigroup action} of a \SY{semigroup}~$\sgrpA$ onto a set~\setA is a \SY{semigroup} morphism
+        A \maindef{contravariant semigroup action} of a \SY{semigroup}~$\sgrpA$ onto a set~\stateset is a \SY{semigroup} morphism
         \begin{equation}
-            \ract \colon \sgrpA\op \fto \Endof\setA.
+            \ract \colon \sgrpA\op \fto \Endof\stateset.
         \end{equation}
     \end{ctdefinition}
 
@@ -229,6 +308,10 @@ What about left actions?
 
 \devel{
 \subsection{Semigroup actions}
+
+
+
+
 
 % There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
 % \footnote{
@@ -241,38 +324,38 @@ What about left actions?
 
 \begin{ctdefinition}[Semigroup action operation]%
     \label{def:semigroup-cov-action-prelim}
-    A \emph{right action} of a \SY{semigroup}~$\sgrpA = \tup{\sgrpAset, \mthen_{\sgrpA}}$ on a set~\setA is a function
+    A \emph{right action} of a \SY{semigroup}~$\sgrpA = \tup{\sgrpAset, \mthen_{\sgrpA}}$ on a set~\stateset is a function
     \begin{equation}
         \label{eq:lact-semigroup}
-        \act \colon \makecartprod{\setA, \sgrpAset} \sto \setA
+        \act \colon \makecartprod{\stateset, \sgrpAset} \sto \stateset
     \end{equation}
-    such that, for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\sgrpAset$,
+    such that, for all~$\statesetel \setin \stateset$ and $\monela,\monelb\setin\sgrpAset$,
     \begin{equation}
         \label{eq:lact1cond}
-        \act(\act(\setAel, \monela), \monelb) = \act(\setAel, \monela \mtimesof\sgrpA \monelb).
+        \act(\act(\statesetel, \monela), \monelb) = \act(\statesetel, \monela \mtimesof\sgrpA \monelb).
     \end{equation}
 \end{ctdefinition}
 
 % \begin{ctdefinition}
 %     [Semigroup contravariant action (preliminary version)]\label{def:semigroup-contra-action-prelim}
-%     A \emph{semigroup \textbf{contravariant} action} of a \SY{semigroup}~$\sgrpA$ on a set~$\setA$ is a map
+%     A \emph{semigroup \textbf{contravariant} action} of a \SY{semigroup}~$\sgrpA$ on a set~$\stateset$ is a map
 %     \begin{equation}
 %         \label{eq:ract}
-%         \ract \colon \makecartprod{\sgrpAset, \setA} \to \setA
+%         \ract \colon \makecartprod{\sgrpAset, \stateset} \to \stateset
 %     \end{equation}
-%     such that, for all~$\setAel \setin \setA$,
+%     such that, for all~$\statesetel \setin \stateset$,
 %     \begin{equation}
 %         \label{eq:ract1cond}
-%         \ract(\monelb, \ract(\monela, \setAel)) = \ract(\monelb \mthenof\sgrpA  \monela, \setAel).
+%         \ract(\monelb, \ract(\monela, \statesetel)) = \ract(\monelb \mthenof\sgrpA  \monela, \statesetel).
 %     \end{equation}
 % \end{ctdefinition}
 
 \begin{ctdefinition}[Semigroup action]
     \label{def:semigroup-cov-action}
-    An \maindef{action} of a \SY{semigroup}~$\sgrpA$ on a set~\setA is a \SY{semigroup} morphism
+    An \maindef{action} of a \SY{semigroup}~$\sgrpA$ on a set~\stateset is a \SY{semigroup} morphism
     \begin{equation}
         \label{eq:act-semigroup}
-        \act \colon \sgrpA \fto \Endof\setA.
+        \act \colon \sgrpA \fto \Endof\stateset.
     \end{equation}
 \end{ctdefinition}
 
@@ -280,19 +363,19 @@ What about left actions?
 
 \begin{ctdefinition}
     [Set left action]\label{def:set-left-action-operation}
-    A \emph{left action} of a set~$\sgrpAset$ on a set~\setA is a function
+    A \emph{left action} of a set~$\sgrpAset$ on a set~\stateset is a function
     \begin{equation}
         \label{eq:lact-set}
-        \act \colon \makecartprod{\sgrpAset, \setA} \sto \setA.
+        \act \colon \makecartprod{\sgrpAset, \stateset} \sto \stateset.
     \end{equation}
 \end{ctdefinition}
 
 \begin{ctdefinition}%
     [Set right action]\label{def:set-right-action-operation}
-    A \emph{right action} of a set~$\sgrpAset$ on a set~\setA is a function
+    A \emph{right action} of a set~$\sgrpAset$ on a set~\stateset is a function
     \begin{equation}
         \label{eq:ract-set}
-        \act \colon \makecartprod{\setA, \sgrpAset} \sto \setA.
+        \act \colon \makecartprod{\stateset, \sgrpAset} \sto \stateset.
     \end{equation}
 \end{ctdefinition}
 
@@ -301,32 +384,3 @@ What about left actions?
 }
 
 
-\section{Homomorphisms of actions}
-
-\todotext{At the moment unclear if we really want to keep this section; to be considered in the future. Great would be to add a number of interesting examples; this topic related in particular to coordinate changes, bisimulation, etc. (dynamical systems topics). Also, we note that it foreshadows natural transformations.}
-
-
-\begin{ctdefinition}[Homomorphism of monoid actions]
-    \label{def:monoid-action-morphism}
-    Let~$\monoidA$ be a \SY{monoid}, and let~$\tup{\setA, \act_\setA}$ and~$\tup{\setB, \act_\setB}$ be two \SY{actions} of~$\monoidA$, where~$\act_\setA \colon \monoidA \fto \Endof\setA$ and~$\act_\setB \colon \monoidA \fto \Endof\setB$.
-
-    A \maindef{homomorphism of monoid actions} (also called an \emph{equivariant map}) from~$\tup{\setA, \act_\setA}$ to~$\tup{\setB, \act_\setB}$ is a function~$\mapa \colon \setA \sto \setB$ such that, for every element~$\monela \setin \monoidAset$,
-    \begin{equation}
-        \label{eq:equivariance}
-        \act_\setA(\monela) \mthen \mapa = \mapa \mthen \act_\setB(\monela).
-    \end{equation}
-\end{ctdefinition}
-
-In other words, condition \cref{eq:equivariance} says that it does not matter whether we first act by~$\monela$ and then apply~$\mapa$, or first apply~$\mapa$ and then act by~$\monela$: the result is the same.
-
-\todotext{@JL: Add a commutative diagram here illustrating the equivariance condition.}
-
-\begin{example}
-    Let~$\monoidA$ be the \SY{monoid}~$\tup{\natnumbers, +, 0}$.
-    An \SY{action} of~$\monoidA$ on a set~$\setA$ amounts to a choice of function~$\mapa \colon \setA \sto \setA$ (the action of~$1 \setin \natnumbers$), since the action of any~$n \setin \natnumbers$ is then determined as the~$n$-fold composition of~$\mapa$ with itself.
-    A homomorphism between two such actions~$\tup{\setA, \mapa}$ and~$\tup{\setB, \mapb}$ is then a function~$\mapc \colon \setA \sto \setB$ satisfying~$\mapa \mthen \mapc = \mapc \mthen \mapb$, which means that~$\mapc$ intertwines the two dynamics.
-\end{example}
-
-    
-    
-    
