@@ -7,14 +7,28 @@ We are writing a book called "Categories and Compositionality, with a view to Ap
 
 ### Related works
 
-(list of books and note want similar or note)
+(list of books and notes about what we want to be similar or not)
+
+- "Category Theory for the Sciences", by David Spivak
+  - Similarities: 
+  - Dissimilarities: 
+- "An Invitation to Applied Category Theory", by Brendan Fong and David Spivak
+  - Similarities: 
+  - Dissimilarities: 
+- "The Joy of Abstraction" by Eugenia Cheng
+  - Similarities: 
+  - Dissimilarities: 
 
 ### Constraints
 
 It must cover these topics:
 
 - categories
-- ...
+- functors
+- natural transformations
+- symmetric monoidal categories
+- monads
+- adjunctions
 
 ### Audience
 
@@ -27,9 +41,10 @@ Its audience is as follows:
 
 ### Prerequireiste for reading
 
-We asusme that the audiecne already knows:
+We assume that the audiecne already knows:
 
-- topic 1, level,
+- Linear algebra at the level of a bachelor student in Engineering
+- Familiarity with mathematical logic and reasoning at the level of a bachelor student in Engineering
 - ...
 
 ### Style
@@ -47,43 +62,54 @@ The style we chose: ...
 
 ## Book structure
 
-The book is divided in parts/chapters/sections.
+The book is divided in parts, parts are divided into chapters, and chapters are divided into sections. Sometimes, but not always, we use subsections or the latex command for paragraphs. 
 
-A part contains 5-8 chapters.
+A part typically contains 4-8 chapters. A chapter typically contains 2-10 sections. Each section is typically 1-7 pages.
 
-A chapter contains ....
+There are various types and subtypes of chapters:
+- intuition chapter
+- mathematical chapter
+  - definition chapter
+  - constructions chapter
+  - commentary chapter
+- applications chapter
 
-Each section is about ... pages
 
-There are various kinds of chapters
+Each type of chapter has a respective goal, tone, and scope, as specified in the following table: 
+
 
 | type of chapter | goal | tone | in scope | out of scope |
 |---|---|---|---|---|
-| Definition chapter | Provide formal mathematical content. | formal | Formal defintiion | Intuition/motivation |
-| Intuition chapter | Provide intuition for why the theme is important. | informal | | |
+| Definition chapter | Provide formal mathematical content. | formal | Formal defintiions | Intuition/motivation |
+| Intuition chapter | Provide intuition for why the theme is important. | informal | | Formal definitions |
 | Constructions chapter | Describe constructions as in: getting new from old | formal | | |
 | Applications chapter | Show how domain things can be defined using CT or do something with CT results | formal | | |
-| Commentary chapter | | formal | | |
+| Commentary chapter | Communicate, and comment on, the categorcal way of thinking on a meta-level; ground this content in specific concepts and examples| formal | | |
 | One level up chapter | | | | |
 
 ## Principles
 
-- [hard] P0 All theory is motivated from the point of view of applications.
-- P-TH-SELF-CONTAINED: The theory is self contained
+- [hard] P_TH-MOTIV-APP: All theory is motivated from the point of view of applications.
+  - Rationale: this validates that the thoery is used for something
+  - Exception: dual concepts only need one of the pair used.
+- [hard] P_TH-SELF-CONTAINED: The theory is self-contained, up to prerequisite knowledge.
+- [soft] P_BOOK-FUNCTIONS: Overall, the book the main function of the book is to serve as a pedagogical introduction that may be used for self-study or as an aide for teaching courses. It should not be thought of mainly as a reference text, even though it is intended, secondarily, to serve as a reference. The structure of the book should not become too rigid in any attempt to be systematic or exhaustive; on the other hand, we want to avoid obscuring inherent systematic structures in category theory (and generally in our covered topics) that are helpful or even essential for readers to see and understand.
+
+- [soft] Keep in mind and include where relevant: underscore the 'why' of why we care about using categories. This will be addressed squarely in the introduction to the book, however it should also appear sporadically, where relevant, throughout the book. 
 -
--
-- [hard] The Simple Examples chapters are understanbale easily with minimum prerequiresites met
--
+- [hard] P_SIMP-EX-ACC: The Simple Examples chapters are understanbale easily with minimum prerequiresites met
+- [soft] P_ONE-MESSAGE: In general, on any given page or short sequence of pages there are not too many main messages being communicated at once. The main point should be clear, and larger distractions from the main line of storytelling and explanation should be avoided. 
 
 ### Consequences.
 
-- P-TH-SELF-CONTAINED => Removing all the applications chapters keeps the book readable.
-- P-TH-SELF-CONTAINED => no dependece of non-applications to applications chapters
+- P_TH-SELF-CONTAINED => Removing all the applications chapters keeps the book readable.
+- P_TH-SELF-CONTAINED => no dependece of non-applications to applications chapters
 - [soft] Every theory construction is recalled/used in either 1) an applied example or 2) an application chapter.
+- [soft] P_TH-MOTIV-APP: => Whenever we supply ``simple mathematical examples'' these should also be illustrated with a "subexample" that is more concrete and applied -- in order to spell out the more concrete implications and possible applied uses of the mathematical examples. These additional concrete examples should be small enough that readers can easily chew on them, but insightful enough to be relevant. Even if the applied examples are relatively simple, this step from generic math to context specific use is often a gap that is valuable (and often nontrivial) to bridge).
+-   
 
-Rationale: this validates that the thoery is used for something.
 
-Exception: dual concepts only need one of the pair used.
+
 
 ## Structure of a part
 
@@ -106,40 +132,45 @@ The order is usually:
 - Section: Mathematical definition
   - Subsection: Formal definition
   - Subsection: Non-examples
+    - goal: to show that the defintiion is non trivial (not always satsified)
 
-    goal: to show that the defintiion is non trivial (not always satsified)
   - Subsection: Simple mathematical examples already known
+     - constraint: accessbile only with basic prerequreists
+     - example: semigroup of positive reals
+       - applied subexample: modeling some kind of error
 
-    constraint: accessbile only with basic prerequreists
-
-    semigroup of Reals +
   - Subsection: Applied examples
+     - example: ...
 
-    example: modeling some kind of error
   - Subsection: Canonical examples
-
-    example: identity as example of eveyrhing, constant functions, singleon sets and
+     - example: identity as example of eveyrhing, constant functions, singleon sets and
   - Subsection: Canonical constructions
+     - example: list construction in the monoid examples
+     - example: end construction in the monoid examples
 
-    example: list in the monoid examples
+  - Subsection: mathematical remarks, consequencies, fragments of relevant theory
+     - example: in groups, statement that an inverse, if exists, is unique
 
-    example: free consturctions
-  - Subsection: matheamtical consequencies
-
-    example: in groups, inverse if exists is unique
   - Interspersed:
 
-    Exercises
+    - Exercises (with solutions appearing at the end of the chapter)
 
-    Graded exercises
-- Section: more complex matheamtical examples
+    - Graded exercises (no solutions in the book)
+
+- Section: more complex mathematical examples
   - Goal: ...
   - Note: this might need more than the basic prerequeistes.
   - example: Hom Functor section
-  - example: Linear algebra in Actions chapter
+  - example: Linear algebra material in the Actions chapter
 - Section: application-inspired examples
   - Goal: show how iefintions capture some real workld phenomeon
   - How: long discussion
   - example: morse code
 - Section: Further theory
   - example:
+
+
+## Structure of an applications chapter
+
+
+  Note: For some applications that would go beyond the scope of the book but are nice to mention, we can still describe them briefly in a short paragraph and point the reader to relevant references.
