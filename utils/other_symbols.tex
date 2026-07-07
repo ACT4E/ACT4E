@@ -65,7 +65,14 @@
 
 
 
-\DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+% AMSa font is only available with pdfTeX + amssymb
+% For XeTeX with unicode-math, we use the Unicode minus sign
+\ifx\XeTeXversion\undefined
+  \DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+\else
+  % With unicode-math, use the Unicode minus sign
+  \newcommand{\shortminus}{-}
+\fi
 \newcommand{\shortplus}{{{+}}} % TODO: need a short plus
 \newcommand{\minusone}{{{\shortminus}}\kern1pt1}
 \newcommand{\plusone}{\shortplus1}
@@ -156,8 +163,16 @@
 }
 
 \DeclareRobustCommand{\makelist}[1]{%
-    \@makelists{[}{\commaspace}{]}{#1}%
+    \@makelists{\llbracket}{\commaspace}{\rrbracket}{#1}%
 }
+
+\newcommand{\smashsepcolor}{\mathcolor{formulasetcolor}\mid}
+\newcommand{\smashseparator}{{\,\smashsepcolor\,}}
+
+\DeclareRobustCommand{\makesmash}[1]{%
+    \@makelists{\cleft[formulasetcolor]{[}}{\smashseparator}{\cright[formulasetcolor]{]}}{#1}%
+}
+
 
 \DeclareRobustCommand{\cObj}[1]{%
     \@makelists{\fatstart}{\commaspace}{\fatend}{#1}%

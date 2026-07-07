@@ -1,7 +1,7 @@
 % !TEX root = ../ACT4E-devel-fast.tex
 
 \usepackage[english]{babel} % Load characters and hyphenation
-\usepackage[style=russian]{csquotes}
+
 
 % Load packages for testing
 % Load the bibliography package
@@ -12,38 +12,14 @@
 
 % \usepackage{styles/kaorefs}
 
-%%% HACKS for kaobook
-
-\let\providelength\relax
-\let\openbox\relax
-
-%\newcommand*\flrow@error[1]{\PackageError\flrow@package{#1}\flrow@eh}
-\makeatletter
-\renewcommand\flrow@error[1]{}
-\makeatother
-
+\usepackage{iftex}
 \usepackage{xr}
-\usepackage[usenames,dvipsnames,table]{xcolor}
+% \usepackage[usenames,dvipsnames,table]{xcolor}
 
 %\WarningsOff[contour]
 \usepackage[outline]{contour}
 
 %
-\RedeclareSectionCommand[
-    beforeskip=10pt,
-    afterskip=0pt,
-    %  headings=normal,
-    style=chapter% no part page
-]{part}
-
-%
-\RedeclareSectionCommand[
-    beforeskip=10pt,
-    afterskip=5pt,
-    %  headings=normal,
-    style=section% no part page
-]{section}
-
 %\usepackage{scrpage2}  %<---
 \usepackage{scrlayer-scrpage}
 
@@ -78,8 +54,6 @@
     \UseVerbatim{#1}
 }
 
-\usepackage[backend=bibtex]{biblatex}
-\addbibresource{\rootdir/dpcatbib.bib}
 
 \usepackage{ifthen}
 \usepackage{iftex}
@@ -89,7 +63,11 @@
     \usepackage[utf8]{inputenc}
 \fi
 
+\usepackage[style=russian]{csquotes}
+
 \usepackage{subcaption}
+\usepackage[backend=bibtex]{biblatex}
+\addbibresource{\rootdir/dpcatbib.bib}
 
 \usepackage{blkarray, array}
 
@@ -99,13 +77,24 @@
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}m{#1}}   % Right, Middle Align
 
 
-\usepackage[T1]{fontenc}
+\ifXeTeX
+\else
+  \usepackage[T1]{fontenc}
+\fi
 \usepackage{lipsum}
 \usepackage{xspace}
-\usepackage{amsmath}
+% For XeTeX, amsmath is loaded by unicode-math, amssymb should not be loaded
+\ifXeTeX
+\else
+  \usepackage{amsmath}
+\fi
 \usepackage{amsthm}
 \usepackage[capitalize]{cleveref} % Note: this needs to be just after amsthm
-\usepackage{amssymb} % conflict with mathdesign
+% amssymb conflicts with unicode-math in XeTeX
+\ifXeTeX
+\else
+  \usepackage{amssymb} % conflict with mathdesign
+\fi
 \usepackage{mathtools}
 
 \usepackage{multirow}
@@ -129,23 +118,32 @@
 \pgfplotsset{compat=1.16}
 % \pgfplotsset{compat=1.17}
 \usepackage[framemethod=TikZ]{mdframed}
+\usepackage{framed}
 \usepackage{graphicx}
 \usepackage{array}
 \usepackage{calc}
-
 
 \usepackage{adjustbox}
 % means all figures need to be placed before next section starts
 \usepackage[section]{placeins}
 \usepackage{eso-pic}
-\usepackage{capt-of}
+% \usepackage{capt-of}
 \usepackage{wrapfig}
 \usepackage[normalem]{ulem}
 % \usepackage{newclude} % this broke 2024
 
 % \usepackage{breqn} % doesn't work for us
 %%%% FONTS
-\usepackage[notextcomp]{stix2}
+% For XeTeX, we use fontspec to load STIX Two fonts directly
+% For pdfTeX, we would use \usepackage[notextcomp]{stix2}
+\ifXeTeX
+%   \setmainfont{STIX Two Text}
+%   \setmathfont{STIX Two Math}
+    \else
+  % XeTeX - use fontspec (already loaded in preamble.tex)
+  % pdfTeX
+  \usepackage[notextcomp]{stix2}
+\fi
 
 
 \newboolean{paperslides}
@@ -334,8 +332,6 @@
 }
 
 
-\setcounter{margintocdepth}{\sectiontocdepth}
-
 \newlength\tocrulewidth
 \setlength{\tocrulewidth}{1.5pt}
 % \usepackage{eso-pic}
@@ -420,9 +416,6 @@
 
 \allowdisplaybreaks[4]
 
-\AtBeginDocument{%
-    \etocsetnexttocdepth{section}%
-}
 
 \newcommand{\punctuate}{%
     \todotextjira{381}{@Gioele: punctuate equations}%
@@ -463,29 +456,6 @@
 }
 \makeatother
 
-\AtBeginDocument{
-    \savebox{\urlbox}{}
-    \let\oldsection\section
-    % \renewcommand\section{\FloatBarrier\clearpage\oldsection}
-    %
-    \renewcommand{\section}[2][]{
-        \FloatBarrier\clearpage%
-        \savebox{\urlbox}{%
-            \footnotesize
-            \def\tmpname{\ifemptyarg{#1}{\detokenize{#2}}{\detokenize{#1}}}
-            \def\tmpnameb{\currentchaptername}
-            Something incorrect or unclear or missing?
-            \href{https://github.com/ACT4E/ACT4E/issues/new?labels=\currentchapter;body=Chapter:\urlsp\currentchaptername\urlnl Section:\urlsp\tmpname\urlnl Version:\urlsp\today\urlnl\urlnl Check\urlsp all\urlsp that\urlsp apply:\urlnl\issuecheck Something\urlsp incorrect\urlnl\issuecheck Something\urlsp not\urlsp clear\urlnl\issuecheck Something\urlsp missing\urlnl\urlnl Please\urlsp describe\urlsp more\urlsp in\urlsp detail\urlsp below.\urlsp Feel\urlsp free\urlsp to\urlsp change\urlsp the\urlsp title\urlsp to\urlsp something\urlsp more\urlsp informative.\urlnl;title=\currentchaptername\urlsp/\urlsp\tmpname\urlsp/\urlsp\today}{Report issues on GitHub by clicking here}.
-        }%
-        \ifemptyarg{#1}{%
-            \oldsection{#2}%
-        }{
-            \oldsection[#1]{#2}%
-        }%
-    }
-
-}
-
 \newcommand{\linkgithub}{%
     \ifbool{githublink}{%
         \usebox{\urlbox}%
@@ -496,26 +466,6 @@
         \footnotesize You are reading a draft compiled on \DTMnow%
     }{}%
 }
-
-\renewpagestyle{scrheadings}{%
-    {\smash{\hspace{-\headmarginparwidth}\hspace{-\headmarginparsep}\makebox[\headtotal][l]{%
-                    \makebox[7\hscale][r]{\thepage}%
-                    \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
-                    \makebox[\headtextwidth][l]{\leftmark}}}}%
-        {\smash{\makebox[0pt][l]{\makebox[\headtotal][r]{%
-                        \makebox[\headtextwidth][r]{\hfill\rightmark}%
-                        \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
-                        \makebox[7\hscale][l]{\thepage}}}}}%
-        {\smash{\makebox[0pt][l]{\makebox[\headtotal][r]{%
-                        \makebox[\headtextwidth][r]{\hfill\rightmark}%
-                        \makebox[3\hscale]{}\rule[-1mm]{0.5pt}{19\vscale-1mm}\makebox[3\hscale]{}%
-                        \makebox[7\hscale][l]{\thepage}}}}}%
-}{%
-    {\hspace{-5cm}\draftnotice}% left page
-        {\linkgithub}% right page
-        {}% not showing up
-}
-
 % Checkmarks
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
@@ -545,11 +495,17 @@
     % Too strong, applies also to equations
 }
 
-% Disable warning from including SAG
-\pdfsuppresswarningpagegroup=1
-% Speed up compilation by not compressing
-% \pdfcompresslevel=0
-% \pdfobjcompresslevel=0
+% Disable warning from including SAG (pdfTeX only)
+\ifx\pdfsuppresswarningpagegroup\undefined
+\else
+  \pdfsuppresswarningpagegroup=1
+\fi
+% Speed up compilation by not compressing (pdfTeX only)
+% \ifx\pdfcompresslevel\undefined
+% \else
+%   \pdfcompresslevel=0
+%   \pdfobjcompresslevel=0
+% \fi
 
 % https://tex.stackexchange.com/questions/528604/fix-inconsistent-matrix-parentheses-size-in-stix2
 
@@ -577,3 +533,32 @@
 % \usepackage{amsbsy}
 % \usepackage{multicol} % added package
 % \usepackage{tcolorbox}
+
+
+% \usepackage{shadowtext}
+% \newcommand{\upitsymbol}{\text{%
+%   \shadowoffset{0pt}%
+%   \shadowcolor{upcolor}%
+%   \shadowtext{\colUp$\uparrow$}%
+% }}
+% \newcommand{\downitsymbol}{\text{%
+%   \shadowoffset{0pt}%
+%   \shadowcolor{downcolor}%
+%   \shadowtext{\colDown$\downarrow$}%
+% }}
+
+
+
+\ifXeTeX
+  % Cross-compatible bold commands for XeTeX (using unicode-math)
+  \newcommand{\mbfup}[1]{\symbfup{#1}}      % Bold upright
+  \newcommand{\mbfit}[1]{\symbfit{#1}}      % Bold italic
+  \newcommand{\mup}[1]{\symup{#1}}          % Upright (non-bold)
+  \newcommand{\mitx}[1]{\symit{#1}}         % Italic (non-bold)
+\else
+  % Cross-compatible bold commands for pdfLaTeX
+  \newcommand{\mbfup}[1]{\mathbf{#1}}       % Bold upright
+  \newcommand{\mbfit}[1]{\boldsymbol{#1}}   % Bold italic
+  \newcommand{\mup}[1]{\mathrm{#1}}         % Upright (non-bold)
+  \newcommand{\mitx}[1]{\mathit{#1}}        % Italic (non-bold)
+\fi

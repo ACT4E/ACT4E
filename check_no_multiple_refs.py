@@ -3,11 +3,18 @@ import sys
 
 where = sys.argv[1]
 
-with open(where) as f:
+with open(where, encoding='utf-8', errors='replace') as f:
     contents = f.read()
 
-if 'multiply defined' in contents:
-    print('There are multiply defined references:\n\n'+contents)
-    sys.exit(1)
+lines = contents.splitlines()
+nerrors = 0
+for line in lines:
+    if 'multiply defined' in line:
+        print(line)
+        nerrors += 1
 
-sys.exit(0)
+if nerrors > 0:
+    sys.exit(1)
+else:
+    sys.exit(0)
+    

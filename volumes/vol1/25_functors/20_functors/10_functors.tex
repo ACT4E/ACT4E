@@ -1,0 +1,297 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Functors}
+\label{sec:functors}
+\label{sec:functors-intro}
+\linkvideo{spring2021-functors:bigpic} % Big picture, zipping
+\linkvideo{spring2021-functors:semi-and-fun:fun-def} % Definition of functor
+
+
+Any given category \CatC is a ``compositional world'': inside \CatC we have objects, morphisms between them, and a way to talk about composing morphisms.
+Now we will zoom out a level, and consider different categories -- different worlds -- simultaneously, and how to relate them to each other.
+
+The most basic notion of how to relate one category to another is given by the concept of a \emph{functor}.
+
+Just like a morphism
+%
+\begin{equation}
+    \mora \colon \Obja \mto \Objb
+\end{equation}
+%
+relates a source object to a target object inside a given category, a functor
+%
+\begin{equation}
+    \funa \colon \CatC \fto \CatD
+\end{equation}
+%
+relates a source category to a target category. In fact, we will see in the next chapters that we can view functors as morphisms inside a \emph{category of categories}.
+
+% \todotextjira{118}{@Andrea: add introduction here, with several examples of translations}
+
+Here is the formal definition of a functor; we'll follow it with many examples to illustrate. 
+
+
+\begin{ctdefinition}[Functor]
+    \label{def:functor}
+    Given \SY{categories}~\CatC and~\CatD, a \maindef{functor}~$\funa\colon \CatC\fto \CatD$ from~\CatC to~\CatD is:
+
+    \constit
+
+    \begin{enumerate}
+        \item A function
+              \begin{equation}
+                  \funaob \colon \ObC \to \ObD.
+              \end{equation}
+        \item For every pair of objects~$\Obja, \Objb\setin \Obof\CatC$, a function
+              \begin{equation}
+                  \funamor\colon \HomSet{\CatC}{\Obja}{\Objb} \to \HomSet{\CatD}{\funaob(\Obja)}{\funaob(\Objb)}.
+              \end{equation}
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item The function $\funamor$ is compatible with the composition operations in the source and target category:
+              \begin{equation}
+                  \prfperiod{
+                      \mora\colon \Obja \mtoin{\CatC} \Objb
+                  }{\quad}{
+                      \morb\colon \Objb \mtoin{\CatC} \Objc
+                  }{
+                      \funamor(\mora \mthenof{\CatC} \morb)=\funamor(\mora) \mthenof{\CatD} \funamor(\morb)
+                  }
+              \end{equation}
+       \item The function $\funamor$ is compatible with identity morphisms in the source and target category:
+       \begin{equation}
+        \label{eq:functor-condition}
+        \funamor(\catidat\Obja)=\catidat{\funaob(\Obja)}
+    \end{equation}
+    for all objects $\Obja$ in $\CatC$.
+
+    \end{enumerate}
+\end{ctdefinition}
+
+
+\begin{example}[Powerset functor]
+    \label{ex:powerset_functor}
+    We define a \SY{functor}~$\funa\colon \Set \fto \Set$ which maps each set to its power set.
+    In other words, $\funaob(\setA) = \powerset \setA$ for any set $\setA$.
+    On the level of morphisms, given any function $\mora \colon \setA \mto \setB$, we define
+    \begin{equation}\label{eq:powerset-function-def}
+        \begin{aligned}
+            \funamor(\mora)\colon \powersetof \setA & \to \powersetof \setB \\
+            \setC                                   & \mapsto \makeset{\mora(\setCel) \mid \setCel \setin \setC}.
+        \end{aligned}
+    \end{equation}
+    Here is a concrete illustration.
+    Consider the two sets~$\setA = \makeset{\sfondue, \sbretzel, \schoco}$ and~$\setB = \makeset{\scheese,\sgrapes,\sapple}$.
+    Applying the \SY{functor} to~\setA gives
+    \begin{equation}\label{eq:powerset-functor-example-1a}
+        \funaob(\setA)
+        =
+        \makeset{
+            \Emptyset,
+            \makeset{\sfondue},
+            \makeset{\sbretzel},
+            \makeset{\schoco},
+            \makeset{\sfondue,\sbretzel},
+            \makeset{\sfondue,\schoco},
+            \makeset{\sbretzel,\schoco},
+            \makeset{\sfondue,\sbretzel,\schoco}
+        }
+    \end{equation}
+    and applying it to $\setB$ gives
+    \begin{equation}\label{eq:powerset-functor-example-1b}
+        \funaob(\setB)
+        =
+        \makeset{
+            \Emptyset,
+            \makeset{\scheese},
+            \makeset{\sgrapes},
+            \makeset{\sapple},
+            \makeset{\scheese,\sgrapes},
+            \makeset{\scheese,\sapple},
+            \makeset{\sgrapes,\sapple},
+            \makeset{\scheese,\sgrapes,\sapple}
+        }.
+    \end{equation}
+    Furthermore, consider the map
+    %
+    \begin{equation}\label{eq:powerset-functor-example-2}
+        \begin{aligned}
+            \mora \colon \setA & \sto \setB, \\
+            \sfondue           & \mapsto \scheese, \\
+            \sbretzel          & \mapsto \sgrapes, \\
+            \schoco            & \mapsto \sapple.
+        \end{aligned}
+    \end{equation}
+    %
+    This would for instance give~$\funamor(\mora)(\makeset{\sfondue,\sbretzel})=\makeset{\mora(\sfondue),\mora(\sbretzel)}=\makeset{\scheese,\sgrapes}$.
+
+    Now let us check that $\funa$, so-defined, really is a functor.
+
+    First let us check that it is compatible with composition.
+    Consider functions~$\mora\colon \setA\fto \setB$,~$\morb\colon \setB \fto \setC$.
+    On the one hand we have
+    \begin{equation}\label{eq:powerset-functor-example-3}
+        \begin{aligned}
+            \funa(\morab)(\setC) & =\makeset{ \morb(\mora(\setCel))\mid \setCel \setin \setC},
+        \end{aligned}
+    \end{equation}
+    and on the other hand
+    \begin{equation}\label{eq:powerset-functor-example-4}
+        \begin{aligned}
+            (\funa(\mora)\mthen \funa(\morb))(\setC)
+             & =\funa(\morb) (\makeset{ \mora(\setCel) \mid \setCel \setin \setC}) \\
+             & =\makeset{g(\setDel)\mid \setDel \setin \makeset{\mora(\setCel)\mid \setCel\setin \setC}} \\
+             & =\makeset{ \morb(\mora(\setCel))\mid \setCel \setin \setC}.
+        \end{aligned}
+    \end{equation}
+    Second, let us check that $\funa$ is compatible with identity morphisms.
+    We have
+    \begin{equation}\label{eq:powerset-functor-example-5}
+        \begin{aligned}
+            \funa(\catidat\setA)(\setC) & = \makeset{\catidat\setA(\setCel)\mid \setCel \setin \setC} \\
+                                        & =\catidat{\funa(\setC)}.
+        \end{aligned}
+    \end{equation}
+\end{example}
+
+\begin{remark}
+\cref{ex:powerset_functor}, the powerset functor, is an example of an \emph{endofunctor}: a functor from a category to itself. 
+\end{remark}
+
+\begin{example}
+    There is a \SY{functor}
+    \begin{equation}\label{eq:list-functor-intro}
+        \listfun\colon \Set \fto \Mon
+    \end{equation}
+    from the \SY{category of sets} to the \SY{category of monoids}, defined as follows.
+
+    Given a set~\setA, the \SY{functor} returns a specific \SY{monoid}
+    \begin{equation}\label{eq:list-functor-on-objects}
+        \listfun(\setA)\definedas\tupp{\listsof{\setA},\emptylist_\setA, \listconcat}.
+    \end{equation}
+
+    Given a map~$\mapa\colon \setA \sto \setB$, we have
+    % \begin{equation}
+    %     \defmapcomma{
+    %         \listfun(\mapa)
+    %     }{
+    %         \listsof{\setA}
+    %     }{
+    %         \to
+    %     }{
+    %         \listsof{\setB}
+    %     }{
+    %         \makelist{\setAel_1, \ldots, \setAel_n}
+    %     }{
+    %         \makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}
+    %     }
+    % \end{equation}
+    \begin{equation}\label{eq:list-functor-on-morphisms}
+        \defmapcomma{
+            \listfun(\mapa)
+        }{
+            \listsof{\setA}
+        }{
+            \to
+        }{
+            \listsof{\setB}
+        }{
+            \makegenlist{ \setAel_i }
+        }{
+            \makegenlist{ \mapa(\setAeln{i}) }
+        }
+    \end{equation}
+    which applies~$\mapa$ entry-wise in the list.
+    The empty list in~$\listsof{\setA}$ is mapped to the empty list in~$\listsof{\setB}$.
+        {}
+    $\listfun$ is a \SY{functor}, because identity functions in $\Set$ are mapped to the corresponding identity morphisms on lists, and
+    % \begin{equation}
+    %     \begin{aligned}
+    %         \listfun(\mapa \mthen \mapb)(\makelist{\setAeln{1},\ldots,\setAeln{n}}) & =\makelist{(\mapa \mthen \mapb)(\setAeln{1}), \ldots, (\mapa \mthen \mapb)(\setAeln{n})} \\
+    %                                                                                 & =\listfun(\mapb)(\makelist{\mapa(\setAeln{1}), \ldots, \mapa(\setAeln{n})}) \\
+    %                                                                                 & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makelist{\setAeln{1}, \ldots, \setAeln{n}}).
+    %     \end{aligned}
+    % \end{equation}
+    \begin{equation}\label{eq:list-functor-compositionality}
+        \begin{aligned}
+            \listfun(\mapa \mthen \mapb)(\makegenlist{\setAeln{i}}) & =\makegenlist{ (\mapa \mthen \mapb)(\setAeln{i})} \\
+                                                                    & =\makegenlist{  \mapb ( \mapa (\setAeln{i}))} \\
+                                                                    & =\listfun(\mapb)(\makegenlist{\mapa(\setAeln{i})}) \\
+                                                                    & =(\listfun(\mapa)\mthen \listfun(\mapb))(\makegenlist{\setAeln{i}}).
+        \end{aligned}
+    \end{equation}
+\end{example}
+
+% To see that this is indeed a \SY{functor}, notice that~$\funidC(\morab)$ is equal to~$\funidC(\mora)\mthen \funidC(\morb)$ because they are both equal to~$\morab$.
+% Moreover, identities are preserved because~$\funidC(\catidof\CatC)=\catidof\CatC$.
+
+
+
+\subsection{Functors generalize monotone functions.}
+\label{sec:posetsarecats}
+
+\linkvideo{spring2021-tradeoffs:tradeoffs:orders:preorder-as-cat} % Pre-order as a category
+\linkvideo{spring2021-tradeoffs:tradeoffs:orders:preorder-poset} % The skeleton of a pre-order is a poset
+
+Recall that a single \SY{poset}~$\posAdefinition$ can be viewed as a category -- let's call it $\poscat{\posA}$ -- in which each element of the poset is an object, and there is exactly one morphism ~$\posela \mto \poselb$ if and only if~$\posela \posAleq \poselb$ (\cref{def:poscat}), and otherwise there is no such morphism.
+
+% \subsection{Monotone maps are functors}
+
+\linkvideo{spring2021-functors:semi-and-fun:mon-functions:mon-fun-as-func} % Monotone functions as functors
+
+\begin{lemma}
+    \label{lem:posetfunctor}
+    Given posets $\posA$ and  $\posB$, a \SY{monotone function} $\posA \mto \posB$ is the ``same thing'' as a \SY{functor} $\poscat{\posA} \mto \poscat{\posB}$.
+\end{lemma}
+
+
+%\begin{proof}
+%    We start by specifying the \SY{functor}~$\funa$ and two posetal categories~$\poscat{\posA}$ and~$\poscat{\posB}$.
+%    We first specify the action of~$\funa$ on objects (elements of a \SY{poset} considered as objects of the posetal category) and on morphisms (order relations considered as morphisms of the posetal category).
+%    A \SY{monotone function} maps each element of a poset~$\posela\setin \posAset$ to~$\funa(\posela) \setin \posBset$, and it guarantees that for every~$\posela,\poselb\setin \posAset$, if~$\posela\posAleq \poselb$ then~$\funa(\posela)\posBleq \funa(\poselb)$.
+%    We now need to check the two conditions that a \SY{functor} must satisfy.
+%    First, consider the \SY{identity morphism} for~$\posela\setin \posAset$, namely~$\posela \posAleq \posela$.
+%    The application of the map~$\funa$ results in the condition~$\funa(\posela)\posBleq \funa(\posela)$, which is the \SY{identity morphism} on~\posB.
+%    Second, morphisms~$\posela\posAleq \poselb$ and~$\poselb\posAleq \poselc$ in~\posA, by applying the map~$\funa$ to the morphism composition~$\posela\posAleq \poselc$ we obtain~$\funa(\posela)\posBleq \funa(\poselc)$, which is the same as the composition of~$\funa(\posela)\posBleq \funa(\poselb)$ and~$\funa(\poselb)\posBleq \funa(\poselc)$.
+%\end{proof}
+
+\todomistake{J: I find the previous version of the lemma statement (which I've rewritten) and also the proof (which I have commented out for now), confusing.
+    In particular, I would not use the word ``isomorphic'' in the statement of the lemma, since I think this cannot be made into a precise/correct statement.
+}
+
+%\devel{\includepdf[scale=0.8,pages={25-26},nup=1x3,frame,pagecommand={}]{ACT4E-06-posets.pdf}} % preorder as category
+
+
+\subsection{Functors generalize monoid morphisms.}
+\label{sec:functors-generalize-monoid-morphisms}
+
+\linkvideo{spring2021-functors:semi-and-fun:ex-semigroup-semifun} % Semigroup morphisms as semi-functors
+
+
+Recall as well that given a monoid $\monoidA$, we can view it as a category -- let's call it $\poscat{\monoidA}$ -- where the elements of the monoid play the role of morphisms.
+
+From this point of view, a functor corresponds to a homomorphism of monoids.
+
+\begin{lemma}
+    \label{lem:monoid-hom-as-functor}
+    Given monoids $\monoidA$ and $\monoidB$, a \SY{monotone function} $\monoidA \mto \monoidB$ is the ``same thing'' as a \SY{functor} $\poscat{\monoidA} \mto \poscat{\monoidB}$.
+\end{lemma}
+
+
+\subsection{Functors generalize graph homomorphisms.}
+
+
+We have seen that given a (directed multi-) graph $\graphA=\tupp{\vertices,\arcs, \source,\target}$, we can turn it into a category -- let's call the result $\poscat{\graphA}$ -- where the vertices of the graph become the objects of $\poscat{\graphA}$ and the morphism in $\poscat{\graphA}$ are paths in $\graphA$.
+
+\begin{lemma}
+    \label{lem:graph-hom-to-functor}
+    Given graphs $\graphA$ and $\graphB$, a \SY{graph homomorphism} $\graphA \mto \graphB$ induces a \SY{functor} $\poscat{\graphA} \mto \poscat{\graphA}$.
+\end{lemma}
+
+\todotext{J: check if there are however functors $\poscat{\graphA} \mto \poscat{\graphA}$ which are *not* induced by graph homomorphisms... my gut feeling is `yes'. And I think this is an interesting point to come back to when discussing adjunctions}
+
+
+\todojira{620}{\alphubel: @JL: let's discuss the ``image'' of a \SY{functor} somewhere}

@@ -44,7 +44,8 @@ chapters-standalones-public-fast=$(subst chapter.tex,chapter-standalone-public-f
 chapters-standalones-noslides-fast=$(subst chapter.tex,chapter-standalone-noslides-fast.tex,$(chapters))
 chapters-pdf        =$(subst chapter.tex,chapter-standalone.pdf,$(chapters))
 chapters-links      =$(subst chapter.tex,chapter-link-snippets, $(chapters))
-chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
+chapters-links2      =$(subst chapter.tex,snippets, $(chapters))
+# chapters-link-minted=$(subst chapter.tex,chapter-link-minted, $(chapters))
 chapters-makefiles  =$(subst chapter.tex,Makefile,              $(chapters))
 
 parts=$(wildcard volumes/vol*/*/part.tex)
@@ -54,7 +55,7 @@ parts-standalones-noslides-fast=$(subst part.tex,part-standalone-noslides-fast.t
 parts-standalones-public-fast=$(subst part.tex,part-standalone-public-fast.tex,$(parts))
 parts-pdf        =$(subst part.tex,part-standalone.pdf,$(parts))
 parts-links      =$(subst part.tex,part-link-snippets, $(parts))
-parts-link-minted=$(subst part.tex,part-link-minted,   $(parts))
+# parts-link-minted=$(subst part.tex,part-link-minted,   $(parts))
 parts-makefiles  =$(subst part.tex,Makefile,           $(parts))
 
 parts-pdf: $(parts-pdf)
@@ -64,14 +65,16 @@ clean-links:
 	find volumes -type l -name '*link*'  -delete
 
 %/chapter-link-snippets:
-	cd $*  && ln -f -F -s ../../../../snippets  chapter-link-snippets
+	cd $*  && ln -f  -s ../../../../snippets  chapter-link-snippets
 %/part-link-snippets:
-	cd $*  && ln -f -F -s ../../../snippets  part-link-snippets
+	cd $*  && ln -f  -s ../../../snippets  part-link-snippets
 
-%/chapter-link-minted:
-	cd $*  && ln -f -F -s ../../../../cache-minted  chapter-link-minted
-%/part-link-minted:
-	cd $*  && ln -f -F -s ../../../cache-minted  part-link-minted
+# %/chapter-link-minted:
+# 	cd $*  && ln -f  -s ../../../../cache-minted  chapter-link-minted
+# 	cd $*  && ln -f  -s ../../../../cache-minted  cache-minted
+# %/part-link-minted:
+# 	cd $*  && ln -f  -s ../../../cache-minted  part-link-minted
+# 	cd $*  && ln -f  -s ../../../cache-minted  cache-minted
 
 volumes/%/Makefile: templates/template-Makefile.mk
 	cp $< $@
@@ -115,7 +118,8 @@ standalone: \
 	$(chapters-standalones-public-fast) \
 	$(chapters-standalones-noslides-fast)
 
-links: $(chapters-links)  $(parts-links) $(chapters-link-minted) $(parts-link-minted)
+# links: $(chapters-links) $(parts-links) $(chapters-link-minted) $(parts-link-minted)
+links: $(chapters-links) $(parts-links)
 makefiles: $(chapters-makefiles) $(parts-makefiles)
 
 recursive: links standalone makefiles
@@ -159,10 +163,10 @@ tablefile=volumes/vol1/00_front/05_developers/table.texi
 
 table: $(tablefile)
 
-$(tablefile): utils/symbols*.tex .FORCE
+$(tablefile): utils/symbols*.tex
 	$(MAKE) generated/used-vol1.yaml -B
-	# lsm_table --verbose --only generated/used-vol1.yaml --style medium $< > $@
-	lsm_table --verbose --only generated/used-vol1.yaml --style full $< > $@
+	# lsm_table --verbose --only generated/used-vol1.yaml --style medium utils/symbols*.tex > $@
+	lsm_table --verbose --only generated/used-vol1.yaml --style full utils/symbols*.tex > $@
 
 #lsm_table --only used.yaml --style full $^ > $@
 #lsm_table --only used.yaml --style small $^ > $@
@@ -207,7 +211,6 @@ find-equations-ll:
 compile-equations:
 	make -C equations -j -k
 #	rm -rf  equations/vol1/20_orders
-#	rm -rf  equations/vol1/22_operations
 #	rm -rf  equations/vol1/25_translation
 #	rm -rf  equations/vol1/30_design
 #	rm -rf  equations/vol1/40_computation
@@ -289,15 +292,6 @@ find-unused:
 check-no-tabs:
 	./check_no_tabs.py .
 
-
-mcdp-manual-devel-clean:
-	rm -rf volumes/vol-mcdp/generated/snippets
-
-mcdp-manual-devel:
-	latexmk -synctex=1 -pdf -shell-escape ACT4E-MCDP-devel-slow.tex -g
-	pysnip-make -d volumes/vol-mcdp/generated/snippets -c "parmake"
-	latexmk -synctex=1 -pdf -shell-escape ACT4E-MCDP-devel-slow.tex -g
-	make ACT4E-MCDP-devel-slow.pdf
 
 
 

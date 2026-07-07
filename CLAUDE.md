@@ -1,0 +1,3 @@
+This folder, which is also a git repository, contains many files that are used, on the one hand, to compile a large textbook about applied category theory, and on the other hand it also contains a bunch of documents that are howemwork sheets and exams for a serie of university courses that are taught based on the book. 
+
+The latex files that make up the book and homework sheets make use of an extensive system of macros, which are themselves defined in various other files (such a symbols.tex, environments.tex, etc.). Furthermore, various python scripts and other auxiliary tools are used for compiling and checking the book. So it is quite a complex system of files and commands, and must be handled with care. 

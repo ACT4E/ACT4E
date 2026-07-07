@@ -1,0 +1,200 @@
+% !TEX root = chapter-standalone.tex
+
+\section[Categories vs graphs]{Categories and directed graphs}
+
+A graph is a data structure with ``points'' and ``arrows'', usually called \emph{no\-des}/\emph{ver\-tices} and \emph{arcs}/\emph{edges}.
+
+\begin{marginfigure}
+    \includegraphics[width=\linewidth]{camod}
+    \caption{Intermodal mobility network of a city.}
+    \label{fig:graph_road_network}
+\end{marginfigure}
+
+Graphs are widely used in many engineering disciplines, to represent, formulate, and solve complex problems.
+For instance, we can represent the intermodal mobility network in a city as a directed graph (\cref{fig:graph_road_network}).
+The word ``intermodal'' means that one can jump from a mobility option to another.
+For instance, in the figure, you can spot the graphs for an autonomous vehicle mobility service, a micromobility service, the subway service, and roads on which you can walk.
+The vertices represent locations, and the edges represent different travel routes connecting the locations.
+
+\subsection{Defining graphs}
+
+The usual definition of directed graph in engineering, which we will \emph{not} use, is as follows:
+
+\begin{ctdefinition}[Directed Graph]
+    \label{def:directed-graph}
+    A \maindef{directed graph} is a pair~$\graphA=\tup{\vertices, \arcs}$, where~$\vertices$ is
+    a set of vertices and $\arcs \setsubseteq \vertices \cartprod \vertices$ is a set of edges.
+\end{ctdefinition}
+In this definition, an edge is a pair of vertices $\tup{\ela,\elb}$ where $\ela$ is the source and $\elb$ is the target.
+One limitation of this notion of graph is that we can only have \emph{one} edge between two vertices in either direction.
+
+The following definition is more expressive, though a bit more abstract.
+
+\begin{ctdefinition}[Directed Multigraph]
+    \label{def:Graph}
+    A \maindef{directed multigraph}~$\graphA=\tupp{\vertices,\arcs, \source,\target}$ consists of a set of vertices~$\vertices$, a set of edges~$\arcs$, and two functions~$\source,\target \colon \arcs \sto \vertices$, called the \emph{source} and \emph{target} functions, respectively.
+    Given~$\arc\setin \arcs$ with~$\source(\arc)=\vertexa$ and~$\target(\arc)=\vertexb$, we say that~$\arc$ is an edge (or arrow) from~$\vertexa$ to~$\vertexb$.
+\end{ctdefinition}
+
+%\begin{remark}[Undirected graph]
+%    We call \emph{undirected} a graph for which each edge is \emph{bidirectional}.
+%    In other words, whenever~$\arc\setin \arcs$ with~$\source(\arc)=\vertexa$ and~$\target(\arc)=\vertexb$, then there is an arc~$\arc'\setin \arcs$ with~$\source(\arc')=\vertexb$ and~$\target(\arc')=\vertexa$.
+%\end{remark}
+
+% \begin{remark}
+Both directed graphs and undirected graphs play a prominent role in many kinds of mathematics.
+In this text, we work primarily with directed multigraphs and so, from now on, we drop the ``directed'' and the ``multi'': unless indicated otherwise, the word ``graph'' will mean ``directed multigraph''.
+
+% \end{remark}
+
+%Another example is the one of \emph{resource graphs} (\cref{fig:resource_graphs}), which describe the architecture of a computing unit.
+%\begin{marginfigure}
+%    \includesag{graph_ex_proc}
+%    \caption{\label{fig:resource_graphs}}
+%\end{marginfigure}
+%Here, vertices represent processors (e.g., CPUs) and arcs represent communication links between them.
+
+\subsection{Paths}
+
+\begin{ctdefinition}[Paths]
+    \label{def:path}
+    \SYNDEF{path in a graph}
+    A \emph{path} in a graph $\graphA=\tupp{\vertices,\arcs, \source,\target}$ is:
+
+    \constit
+
+    \begin{itemize}
+        \item a list of edges $\maketypedlist{e_1, \dots, e_n}{\arcs}$, with $n \setin \natnumbers$.
+              \begin{itemize}
+                  \item If $n \neq 0$, the source of a path $\maketypedlist{e_1, \dots, e_n}{\arcs}$ is defined as $\source(e_1)$ and its target is $\target(e_n)$.
+                  \item If $n = 0$, we speak of a ``trivial path'' or an ``empty path'' and we must additional specify an element $\ela \setin \vertices$ which is designated as both the source and target of the path.
+                        If paths describe a journey, then trivial paths correspond to ``not going anywhere''.
+              \end{itemize}
+    \end{itemize}
+
+    \condit
+
+    \begin{itemize}
+        \item if $n \geq 2$, we require that, for any two subsequent edges $e_i$ and $e_{i+1}$ in $\maketypedlist{e_1, \dots, e_n}{\arcs}$,
+              \begin{equation}
+                  \target(e_i) = \source(e_{i+1}).
+              \end{equation}
+    \end{itemize}
+    The length of $\maketypedlist{e_1, \dots, e_n}{\arcs}$ is called the \emph{length} of the path.
+\end{ctdefinition}
+
+\ 
+
+\ 
+
+\
+
+Categories and directed graphs have a lot of similarities. In this section we discuss the relationship between the two notions. 
+
+\subsection{What's the difference?}
+
+One might now be led to ask: what is actually the difference between a \SY{semicategory} and a directed graph?
+
+With directed graphs we have nodes and directed edges, and with \SY{semicategories} we have objects and morphisms.
+These are the same ingredients, apart from name differences.
+
+A further essential ingredient in the definition of a \SY{semicategory} is the composition operation: for any two morphisms where the target of one is the source of the other, we can compose them to obtain a further morphism.
+
+One might thus say: a \SY{semicategory} corresponds to a special kind of directed graph, where for any two adjacent directed edges there must exist a third edge corresponding to the ``composite'' of those edges.
+This is technically a true statement, however it does not emphasize the key point that, in category theory, we are often interested in comparing composite morphisms which might turn out to be equal, or not.
+
+\iflabelexists{sec:free-forgetful-adjunction-graph-example}{
+    In \cref{sec:free-forgetful-adjunction-graph-example}, we will spell out an elegant and formally detailed way of thinking about the relationship between directed graphs and (semi)categories.}{}
+
+\subsection[Categories from graphs]{From graphs to (semi)categories}
+\label{sec:catsfromgraphs}
+
+We can turn any graph into a (semi)category.
+
+\begin{ctdefinition}[Semicategory generated by a graph]
+    \label{def:free-semicategory}
+    \SYNDEF{free semicategory on a graph}
+
+    Let~$\graphA=\tup{\vertices,\arcs,\source,\target}$ be a graph.
+    The \emph{free semicategory on} $\graphA$, denoted $\pathscat{\graphA}$, has as objects the vertices~$\vertices$ of~$\graphA$, and given vertices~$\vertexa\setin \vertices$ and~$\vertexb\setin \vertices$, morphisms~$\HomSet{\CatSymbol{SC}(\graphA)}{\vertexa}{\vertexb}$ are the non-empty paths from~$\vertexa$ to~$\vertexb$.
+    The composition of morphisms is given by concatenation of paths.
+\end{ctdefinition}
+
+\begin{ctdefinition}[Category generated by a graph]
+    \label{def:free-category}
+    Given~a graph $\graphA=\tup{\vertices,\arcs,\source,\target}$, the \emph{free category on} $\graphA$, denoted~$\pathcat{\graphA}$, is defined analogously to $\pathscat{\graphA}$ but with the modification that $\HomSet{\CatSymbol{C}(\graphA)}{\vertexa}{\vertexb}$ is equal to \emph{all} paths from~$\vertexa$ to~$\vertexb$.
+    Identity morphisms are the trivial paths.
+\end{ctdefinition}
+
+For instance, consider the graph
+%
+\equationsag{graph_cat_1}{eq:graph_cat_1}
+%
+The free category on this graph is given by
+%
+\equationsag{graph_cat_2}{eq:graph_cat_2}
+%
+and has 8 morphisms (each vertex/object has \SY{identity morphisms},~$\arca,\arcb,\arcc$ give rise to three morphisms, and the composition of $\arca,\arcc$ gives rise to a morphism, omitted from the drawing).
+
+Does \cref{def:free-category} define a category?
+We can check it ourselves.
+For it to define a category, unitality and associativity need to be satisfied.
+Given our definition of path, this is easy.
+The concatenation of paths is just list concatenation (which we already proved to be associative).
+Furthermore, a trivial path can be expressed via an empty list, which acts as an identity when composed to any other path.
+%Consider a graph~$\graphA=\tup{\vertices,\arcs,\source,\target}$ and denote a path (\cref{def:path}) by~$p=\tup{\arcan{1},\ldots, \arcan{n}}$, where~$n\setin \natnumbers$,~$\source(p)\definedas\source(\arcan{1})=\vertexa$ is the source of the path,~$\target(\arcan{i})=\source(\arcan{i+1})$ for all~$i\setin \makeset{1,\ldots,n-1}$, and~$\target(p)=\target(\arcan{n})=\vertexb$ which is the target of the path.
+%Note that in case the path has 0 length ($n=0$), the target of the path is simply~$\vertexa$.
+%Now consider two paths~$p=\tup{\arcan{1},\ldots,\arcan{n}}$ and~$q=\tup{\arcbn{1},\ldots,\arcbn{m}}$, with~$m,n\setin \natnumbers$.
+%Paths~$p$ and~$q$ can be concatenated if~$\target(p)=\source(q)$.
+%In this case, the concatenation reads
+%
+%\begin{equation}
+%    p\mthen q\definedas \tup{\arcan{1},\ldots, \arcan{n},\arcbn{1},\ldots,\arcbn{m}}.
+%\end{equation}
+%
+%\todomistake{\alphubel: Wrong - we defined a path as a list of edges.
+%    A trivial path is only an empty list.
+%    Concatenation is just list concatenation.
+%    We already proved it's \SY{associative}.
+%    Very convoluted.
+%}
+%We now check unitality.
+%A trivial path is a path~$\catidat\vertexa$, consisting of a vertex and a trivial arc, starting and ending at~$\vertexa$.
+%Such a path can be concatenated with another path~$q=\tup{\arcbn{1},\ldots,\arcbn{m}}$ in case~$\vertexa=\source(q)$.
+%In this case, we obtain the path~$\catidat\vertexa \mthen q=q$.
+%Similarly,~$p$ can be concatenated with~$\catidat\vertexa$ if~$\target(p)=\vertexa$, obtaining~$p\mthen \catidat\vertexa=p$, and proving unitality.
+%For associativity, consider~$p$ and~$q$ as above, and~$r=\tup{\arccn{1},\ldots,\arccn{l}}$,~$l\setin \natnumbers$.
+%Assuming that concatenations~$p\mthen q$ and~$q\mthen r$ are feasible, we have
+%\begin{equation}
+%    \begin{aligned}
+%        (p\mthen q)
+%        \mthen r & =(\tup{\arcan{1},\ldots, \arcan{n}}\mthen \tup{\arcbn{1},\ldots,\arcbn{m}})\mthen \tup{\arccn{1},\ldots,\arccn{l}} \\
+%                 & =\tup{\arcan{1},\ldots, \arcan{n},\arcbn{1},\ldots,\arcbn{m}}\mthen \tup{\arccn{1},\ldots,\arccn{l}} \\
+%                 & = \tup{\arcan{1},\ldots, \arcan{n},\arcbn{1},\ldots,\arcbn{m}, \arccn{1},\ldots,\arccn{l}} \\
+%                 & =\tup{\arcan{1},\ldots, \arcan{n}} \mthen (\tup{\arcbn{1},\ldots,\arcbn{m}}\mthen \tup{\arccn{1},\ldots,\arccn{l}}) \\
+%                 & =p\mthen (q\mthen r),
+%    \end{aligned}
+%\end{equation}
+%proving associativity.
+
+%\text{\ie } to check that the composition of paths is again a path, and that the \SY{associative law} and the law for identity morphisms hold.
+\vfill\pagebreak
+
+\begin{widepar}
+    \begin{gradedexercise}[\exname{HowManyMorphisms}]
+        \label{ex:HowManyMorphisms}
+        Consider the following five graphs.
+        For each graph~$\graphA$, how many morphisms in total are there in the associated category~$\pathscat{\graphA}$?
+        %
+        \equationsag{20_dpcatfig_example_graphs}{eq:20_dpcatfig_example_graphs}
+    \end{gradedexercise}
+\end{widepar}
+\solutionof{HowManyMorphisms}
+
+
+\subsection[Categories from graphs]{From (semi)categories to graphs}
+\label{sec:graphsfromcats}
+
+\todotext{Add material here. Important to understand that the full trip 'graph -> cat -> graph' doesn't do 'nothing. In particular, this example will be relevant for adjunctions topic. }
+
+

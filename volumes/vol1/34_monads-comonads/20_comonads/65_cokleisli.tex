@@ -1,0 +1,137 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Co-Kleisli construction}
+\label{sec:cokleisli}
+
+
+
+We now introduce the co-Kleisli construction, which is dual to the Kleisli construction for monads (\cref{sec:Kleisli}).
+
+
+\begin{ctdefinition}[Co-Kleisli morphisms]
+    \label{def:cokleisli-morphism}
+    Let~$\tup{\comonW, \comondu, \comonex}$ be a comonad on a category~\CatC, and let~$\Obja, \Objb \setin \ObC$.
+    A \maindef{co-Kleisli morphism}~$\Obja \mto \Objb$ is a morphism of~\CatC of the form~$\comonW(\Obja) \mto \Objb$.
+\end{ctdefinition}
+
+
+\begin{ctdefinition}[Co-Kleisli composition]
+    \label{def:cokleisli-composition}
+    Let~$\tup{\comonW, \comondu, \comonex}$ be a comonad on a category~\CatC, let~$\Obja, \Objb, \Objc \setin \ObC$, and let~$\mora \colon \comonW(\Obja) \mto \Objb$ and $\morb \colon \comonW(\Objb) \mto \Objc$ be morphisms in \CatC (so, they are co-Kleisli morphisms).
+    Their \maindef{co-Kleisli composition} is the morphism in \CatC given by the composition
+    \begin{equation}
+        \comonW(\Obja) \overset{\comondu_\Obja}{\mto} (\comonWW)(\Obja) \overset{\comonW(\mora)}{\mto} \comonW(\Objb) \overset{\morb}{\mto} \Objc.
+    \end{equation}
+\end{ctdefinition}
+
+Observe the duality with Kleisli composition for monads: in the monad case, one first applies the Kleisli morphism, then lifts the second morphism, and finally applies the multiplication. In the comonad case, one first applies the comultiplication, then lifts the first morphism, and finally applies the second co-Kleisli morphism.
+
+
+\begin{ctdefinition}[Co-Kleisli category]
+    \label{def:cokleisli-category}
+    Let~$\tup{\comonW, \comondu, \comonex}$ be a comonad on a category \CatC.
+    The \maindef{co-Kleisli category} $\CatC_\comonW$ of the comonad $\comonW$ is specified by:
+    \begin{enumerate}
+        \item \emph{Objects}:~$\Ob(\CatC_\comonW) \definedas \Ob(\CatC)$;
+        \item \emph{Morphisms}:~$\Hom_{\CatC_\comonW}(\Obja, \Objb) \definedas \Hom_{\CatC}(\comonW(\Obja), \Objb)$;
+        \item \emph{Identities}:~$\catidat\Obja \definedas \comonex_\Obja$;
+        \item \emph{Composition}: co-Kleisli composition.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{example}[Co-Kleisli morphisms for the product comonad]
+\label{exa:cokleisli-product}
+Let us spell out co-Kleisli composition for the product comonad from \cref{exa:product-comonad}, with $\comonW = \readerfunctor$ and $\readerfunctor(\setA) = \setA \cartprod \subA$.
+
+A co-Kleisli morphism $\setA \mto \setB$ is a function $\mora \colon \setA \cartprod \subA \mto \setB$. In other words, it is a function that takes both a value and an environment as input, and produces an output.
+
+Given co-Kleisli morphisms $\mora \colon \setA \cartprod \subA \mto \setB$ and $\morb \colon \setB \cartprod \subA \mto \setC$, their co-Kleisli composition proceeds as follows, for any $\tup{\ela, \styleelements{s}} \in \setA \cartprod \subA$:
+\begin{equation*}
+\begin{split}
+\tup{\ela, \styleelements{s}} & \overset{\comondu_\setA}{\longmapsto} \tup{\tup{\ela, \styleelements{s}}, \styleelements{s}} \\
+& \overset{\readerfunctor(\mora)}{\longmapsto} \tup{\mora(\ela, \styleelements{s}), \styleelements{s}} \\
+& \overset{\morb}{\longmapsto} \morb(\mora(\ela, \styleelements{s}), \styleelements{s}).
+\end{split}
+\end{equation*}
+
+So the co-Kleisli composition maps $\tup{\ela, \styleelements{s}} \mapsto \morb(\mora(\ela, \styleelements{s}), \styleelements{s})$. In words: first apply $\mora$ to the value and the environment to get an intermediate result, then apply $\morb$ to that intermediate result together with the same environment. The environment $\styleelements{s}$ is shared between both stages of the computation.
+\end{example}
+
+
+\begin{example}[Co-Kleisli morphisms for the stream comonad]
+\label{exa:cokleisli-stream}
+Let us spell out co-Kleisli composition for the stream comonad from \cref{exa:stream-comonad}, with $\comonW = \streamfun$.
+
+A co-Kleisli morphism $\setA \mto \setB$ is a function $\mora \colon \streamsof{\setA} \mto \setB$. In other words, it is a function that takes an entire infinite stream as input and produces a single output value. One can think of such a function as a ``context-dependent computation'': the output depends not just on the current value, but on the entire future of the stream.
+
+For instance, if $\setA = \setB = \reals$, the function
+\begin{equation*}
+    \mora(\styleelements{\sigma}) = \frac{1}{3}(\styleelements{\sigma}_0 + \styleelements{\sigma}_1 + \styleelements{\sigma}_2)
+\end{equation*}
+is a co-Kleisli morphism that computes a moving average of the first three entries.
+
+Given co-Kleisli morphisms $\mora \colon \streamsof{\setA} \mto \setB$ and $\morb \colon \streamsof{\setB} \mto \setC$, their co-Kleisli composition proceeds as follows, for any $\styleelements{\sigma} \setin \streamsof{\setA}$:
+\begin{equation*}
+\begin{split}
+\styleelements{\sigma} & \overset{\comondu_\setA}{\longmapsto} (\styleelements{\sigma}^{(0)}, \styleelements{\sigma}^{(1)}, \styleelements{\sigma}^{(2)}, \ldots) \\
+& \overset{\streamfun(\mora)}{\longmapsto} (\mora(\styleelements{\sigma}^{(0)}), \mora(\styleelements{\sigma}^{(1)}), \mora(\styleelements{\sigma}^{(2)}), \ldots) \\
+& \overset{\morb}{\longmapsto} \morb\bigl((\mora(\styleelements{\sigma}^{(0)}), \mora(\styleelements{\sigma}^{(1)}), \mora(\styleelements{\sigma}^{(2)}), \ldots)\bigr),
+\end{split}
+\end{equation*}
+where $\styleelements{\sigma}^{(n)} = (\styleelements{\sigma}_n, \styleelements{\sigma}_{n+1}, \styleelements{\sigma}_{n+2}, \ldots)$ denotes the $n$-th shift of $\styleelements{\sigma}$.
+
+So the co-Kleisli composition first duplicates the stream into a stream of shifted streams, then applies $\mora$ to each shifted stream to produce a $\setB$-stream, and finally applies $\morb$ to the resulting $\setB$-stream to get a value in $\setC$. In the moving-average example above, if we compose two such operations, the second one can observe the moving averages computed at every position of the original stream.
+\end{example}
+
+
+\begin{example}[Co-Kleisli morphisms for the store comonad]
+\label{exa:cokleisli-store}
+
+Let us spell out co-Kleisli composition for the store comonad from \cref{exa:store-comonad}, with $\comonW = \stylefunctors{\aword{Store}}$ and a fixed set of positions $\subA$.
+
+A co-Kleisli morphism $\setA \mto \setB$ is a function $\mora \colon \setA^{\subA} \cartprod \subA \mto \setB$. In other words, given a lookup table $\morb \colon \subA \mto \setA$ and a current position $\styleelements{s} \setin \subA$, it produces a value in $\setB$. One can think of $\mora$ as a computation that can inspect any position in the store, not just the current one.
+
+Given co-Kleisli morphisms $\mora \colon \setA^{\subA} \cartprod \subA \mto \setB$ and $\morc \colon \setB^{\subA} \cartprod \subA \mto \setC$, their co-Kleisli composition $\mora \mthen_{\stylefunctors{\aword{Store}}} \morc$ applied to $(\morb, \styleelements{s})$ proceeds as follows:
+\begin{equation*}
+\begin{split}
+(\morb, \styleelements{s})
+& \overset{\comondu_\setA}{\longmapsto} (\styleelements{s}' \mapsto (\morb, \styleelements{s}'),\; \styleelements{s}) \\
+& \overset{\stylefunctors{\aword{Store}}(\mora)}{\longmapsto} (\styleelements{s}' \mapsto \mora(\morb, \styleelements{s}'),\; \styleelements{s}) \\
+& \overset{\morc}{\longmapsto} \morc(\styleelements{s}' \mapsto \mora(\morb, \styleelements{s}'),\; \styleelements{s}).
+\end{split}
+\end{equation*}
+So the composition feeds $\morc$ a new lookup table whose value at any position $\styleelements{s}'$ is $\mora(\morb, \styleelements{s}')$ --- that is, the result of applying $\mora$ to the original store with its position shifted to $\styleelements{s}'$. This pattern is closely related to the notion of a \emph{lens} in functional programming: the first morphism ``gets'' a derived value from each position, and the second morphism ``gets'' a further value from the derived store.
+\end{example}
+
+
+\begin{example}[Co-Kleisli morphisms for the cowriter comonad]
+\label{exa:cokleisli-cowriter}
+
+Let us spell out co-Kleisli composition for the cowriter comonad from \cref{exa:cowriter-comonad}, with $\comonW = \stylefunctors{\aword{Cowrite}}$ and a monoid $\monoidAdefinition$.
+
+A co-Kleisli morphism $\setA \mto \setB$ is a function $\mora \colon \setA^{\monoidAset} \mto \setB$. In other words, given a function $\morb \colon \monoidAset \mto \setA$, it produces a value in $\setB$. One can think of $\mora$ as a computation that has access to an ``$\setA$-valued environment indexed by the monoid $\monoidAset$''.
+
+Given co-Kleisli morphisms $\mora \colon \setA^{\monoidAset} \mto \setB$ and $\morc \colon \setB^{\monoidAset} \mto \setC$, their co-Kleisli composition proceeds as follows. For $\morb \colon \monoidAset \mto \setA$:
+\begin{equation*}
+\begin{split}
+\morb
+& \overset{\comondu_\setA}{\longmapsto} \bigl(\styleelements{m}_1 \mapsto (\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2))\bigr) \\
+& \overset{\stylefunctors{\aword{Cowrite}}(\mora)}{\longmapsto} \bigl(\styleelements{m}_1 \mapsto \mora(\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2))\bigr) \\
+& \overset{\morc}{\longmapsto} \morc\bigl(\styleelements{m}_1 \mapsto \mora(\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2))\bigr).
+\end{split}
+\end{equation*}
+So the co-Kleisli composition feeds $\morc$ a new $\setB$-valued environment where the value at position $\styleelements{m}_1$ is obtained by applying $\mora$ to the ``shifted'' environment $\styleelements{m}_2 \mapsto \morb(\styleelements{m}_1 \mtimesof\monoidA \styleelements{m}_2)$. The monoid multiplication governs how the positions are shifted.
+
+This is dual to the writer monad, where the monoid accumulates output; here, the monoid parametrizes input context, and co-Kleisli composition shifts the context using the monoid operation.
+\end{example}
+
+
+\begin{gradedexercise}[\exname{ProductComonadCoKleisli}]
+    \label{ex:ProductComonadCoKleisli}
+    Consider the co-Kleisli category $\Set_\readerfunctor$ of the product comonad from \cref{exa:product-comonad}, for a fixed set $\subA$.
+    \begin{enumerate}
+        \item Show that the co-Kleisli composition is associative.
+        \item Show that the co-Kleisli identity $\comonex_\setA$ is indeed a left and right identity for co-Kleisli composition.
+    \end{enumerate}
+\end{gradedexercise}
+\solutionof{ProductComonadCoKleisli}
