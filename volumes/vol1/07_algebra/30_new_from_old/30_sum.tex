@@ -3,13 +3,140 @@
 \section{Sums}
 \label{sec:sums-algebra}
 
-\todotext{J: @J: add material}
+The product of the previous section combines two \SY{monoids} by running them \emph{side by side}: an element is a pair, and the two components never interact.
+In this section we introduce a second fundamental way of combining two \SY{monoids}, called their \emph{sum}, which instead \emph{interleaves} them: an element is a finite sequence of moves, each taken from one structure or the other, performed one after another.
 
+Here is the guiding picture.
+Imagine two machines, and suppose we keep a single shared log in which we record actions of either machine, in the order in which they occur.
+A possible log might read: ``first machine does~$\monela_1$, then second machine does~$\monelb_1$, then first machine does~$\monela_2$, \dots''.
+Two natural simplification rules apply to such logs.
+First, if a machine performs two actions in direct succession, with no action of the other machine in between, we may as well record their composite as a single action.
+Second, recording ``machine did nothing'' (a \SY{neutral element}) adds no information, and can be dropped.
+Beyond these two rules, however, nothing may be simplified: actions of \emph{different} machines are not assumed to interact, or commute, in any way.
+The sum of the two \SY{monoids} is precisely the \SY{monoid} of such logs, composed by concatenation.
 
+The construction of the previous section on generators and relations lets us say this formally, and compactly.
 
+\begin{ctdefinition}[Sum of monoids]
+    \label{def:sum-monoids}
+    Let~$\monoidAdefinition$ and~$\monoidBdefinition$ be \SY{monoids}, and assume for simplicity of notation that~$\monoidAset$ and~$\monoidBset$ are disjoint (otherwise, first replace them by the disjoint union~$\monoidAset \setdisunion \monoidBset$, keeping track of which element comes from where).
+    The \maindef{sum}~$\monoidA + \monoidB$ is the \SY{monoid} presented by:
 
+    \constit
 
+    \begin{enumerate}
+        \item Generators: the set~$\monoidAset \setunion \monoidBset$;
+        \item Relations:
+              \begin{enumerate}
+                  \item $\monela \, \monela' = (\monela \mtimesof{\monoidA} \monela')$, for all~$\monela, \monela' \setin \monoidAset$;
+                  \item $\monelb \, \monelb' = (\monelb \mtimesof{\monoidB} \monelb')$, for all~$\monelb, \monelb' \setin \monoidBset$;
+                  \item $\idmon_\monoidA = \emptylist$ and~$\idmon_\monoidB = \emptylist$.
+              \end{enumerate}
+    \end{enumerate}
 
+    Here, in the relations of type (a), the left-hand side~$\monela \, \monela'$ is a two-element list of generator symbols, while the right-hand side is the one-element list consisting of the single generator that is the composite in~$\monoidA$; similarly for type (b).
+\end{ctdefinition}
 
+In words: we impose \emph{all} equations that already hold inside~$\monoidA$, all equations that already hold inside~$\monoidB$, and we merge the two \SY{neutral elements} with the empty list---and we impose nothing else.
 
+\begin{remark}[Normal form]
+    \label{rem:sum-normal-form}
+    Using the imposed relations, every element of~$\monoidA + \monoidB$ can be brought to exactly one \emph{normal form}: either the class of the empty list, or a class represented by an \emph{alternating} list
+    \begin{equation}
+        \makelist{\elc_1, \elc_2, \dots, \elc_k},
+    \end{equation}
+    where each~$\elc_\setIel$ is a non-neutral element of~$\monoidAset$ or of~$\monoidBset$, and consecutive entries come from \emph{different} \SY{monoids} (if two consecutive entries came from the same \SY{monoid}, we could compose them; if an entry were neutral, we could drop it).
+    Composition of two normal forms is concatenation, followed by re-normalizing at the seam if the last entry of the first list and the first entry of the second list happen to come from the same \SY{monoid}.
 
+    This concrete description is useful to keep in mind: the formal definition via a presentation is compact, but the alternating lists are what the elements ``look like''.
+\end{remark}
+
+\begin{remark}[Terminology]
+    \label{rem:free-product-name}
+    In the algebra literature, the sum of \SY{monoids} (or \SY{groups}) is usually called their \emph{free product}, often written~$\monoidA * \monoidB$.
+    The word ``free'' refers to the fact that no relations are imposed \emph{between} the two structures, echoing the terminology of \cref{sec:generators-relations-algebra}.
+    We will not use the name ``free product'' in this book: as we will see when we study categories, this construction plays a role that is precisely dual to that of the product, and the name \emph{sum}---by analogy with the disjoint union of sets, which we also treat as a ``sum'' of sets---keeps that symmetry visible.
+\end{remark}
+
+\begin{remark}
+    An analogous construction works for \SY{semigroups} (using presentations of \SY{semigroups}, and omitting the relations of type (c), which concern neutral elements) and for \SY{groups} (using presentations of \SY{groups}, which we have only hinted at).
+\end{remark}
+
+\subsection{Examples}
+
+\begin{example}
+    \label{exa:sum-free-monoids}
+    Let~$\setA$ and~$\setB$ be disjoint sets, and consider the free \SY{monoids}~$\listsof{\setA}$ and~$\listsof{\setB}$.
+    Their sum is ``the same'' (in the sense of the discussion of freeness in \cref{sec:generators-relations-algebra}) as the free \SY{monoid} on the union:
+    \begin{equation}
+        \listsof{\setA} + \listsof{\setB} \; = \; \listsof{\pars{\setA \setunion \setB}}.
+    \end{equation}
+    Intuitively: interleaving lists over the alphabet~$\setA$ with lists over the alphabet~$\setB$, with no interaction between the two, is the same as writing lists over the combined alphabet.
+    For instance, taking~$\setA$ to be a set of letters and~$\setB$ a set of digits, the sum consists of all alphanumeric strings.
+\end{example}
+
+\begin{example}
+    \label{exa:sum-two-copies-nat}
+    Consider the sum~$\tup{\natnumbers, +, 0} + \tup{\natnumbers, +, 0}$ of two copies of the additive \SY{monoid} of natural numbers.
+    By \cref{exa:presentation-free-one-gen}, each copy is generated by a single element (the number~$1$); write~$\setAel$ for the generator of the first copy and~$\setBel$ for that of the second.
+    All relations internal to each copy are consequences of the \SY{monoid} axioms, so the sum is simply
+    \begin{equation}
+        \langle \makeset{\setAel, \setBel} \mid \; \rangle,
+    \end{equation}
+    the \emph{free} \SY{monoid} on two generators: its elements are arbitrary finite strings in~$\setAel$ and~$\setBel$.
+
+    It is instructive to place this result next to the product:
+    \begin{equation}
+        \tup{\natnumbers, +, 0} \cartprod \tup{\natnumbers, +, 0}
+        \; = \;
+        \langle \makeset{\setAel, \setBel} \mid \setAel\setBel = \setBel\setAel \rangle,
+    \end{equation}
+    by \cref{exa:presentation-commutative,exa:product-inventory}.
+    The sum and the product of the same two \SY{monoids} differ by exactly one relation: commutation between the two components.
+    The product declares the two systems independent; the sum remembers the complete interleaving.
+\end{example}
+
+\begin{example}
+    \label{exa:sum-two-editors}
+    Continuing the guiding picture from the beginning of this section, here is an applied reading of \cref{exa:sum-two-copies-nat} and its contrast with the product.
+    Suppose two users edit a shared document, and each action of user~1 (respectively user~2) is an insertion of a character at the current cursor position of that user.
+    If all we care about is \emph{how many} edits each user has made (say, for billing), the appropriate model is the product~$\natnumbers \cartprod \natnumbers$: a pair of counters, and the order of edits is irrelevant.
+    If instead we care about the \emph{resulting document}, order matters enormously---edits of different users do not commute---and the appropriate model of edit histories is the sum: the free \SY{monoid} on the two kinds of actions, in which the log~$\setAel\setBel$ (user~1 edits, then user~2) is a genuinely different element than~$\setBel\setAel$.
+    Choosing between product and sum is thus a modeling decision: it amounts to declaring which interleavings we are willing to merge.
+\end{example}
+
+\begin{example}
+    \label{exa:sum-two-toggles}
+    Sums of small structures can be surprisingly large.
+    Let~$\monoidA = \langle \makeset{\setAel} \mid \setAel^2 = \emptylist \rangle$ be the two-element toggle \SY{monoid} of \cref{exa:presentation-toggle}, and let~$\monoidB = \langle \makeset{\setBel} \mid \setBel^2 = \emptylist \rangle$ be a second copy.
+    Then
+    \begin{equation}
+        \monoidA + \monoidB = \langle \makeset{\setAel, \setBel} \mid \setAel^2 = \emptylist, \; \setBel^2 = \emptylist \rangle
+    \end{equation}
+    is \emph{infinite}: by \cref{rem:sum-normal-form}, its elements are the alternating strings
+    \begin{equation}
+        \emptylist, \quad \setAel, \quad \setBel, \quad \setAel\setBel, \quad \setBel\setAel, \quad \setAel\setBel\setAel, \quad \setBel\setAel\setBel, \quad \dots
+    \end{equation}
+    and there are alternating strings of every length.
+    Compare with the product~$\monoidA \cartprod \monoidB$, which has just four elements (it is the Klein four-group, by \cref{ex:Klein-as-product}).
+
+    In applied terms: two toggles that act on \emph{independent} state (product) have only four joint configurations; but if we must remember the full \emph{history} of presses of two toggles whose interaction is unknown (sum), no finite record suffices.
+\end{example}
+
+\begin{exercise}
+    \label{ex:sum-with-trivial}
+    Let~$\monoidA$ be a \SY{monoid} and let~$\monoidB$ be the \emph{trivial} \SY{monoid}, whose only element is its \SY{neutral element}.
+    Describe the sum~$\monoidA + \monoidB$.
+\end{exercise}
+\begin{solution}
+    The generators are the elements of~$\monoidAset$ together with~$\idmon_\monoidB$, but the relation of type (c) merges~$\idmon_\monoidB$ with the empty list.
+    What remains is the presentation of~$\monoidA$ by all of its elements and its full composition table, which by \cref{rem:every-monoid-has-presentation} presents~$\monoidA$ itself.
+    So the sum with the trivial \SY{monoid} changes nothing---just as the product with the trivial \SY{monoid} changes nothing, and just as adding~$0$, or multiplying by~$1$, changes nothing in arithmetic.
+\end{solution}
+
+\begin{remark}
+    \label{rem:sum-inclusions-forward}
+    Dually to the situation for products (\cref{rem:product-projections-forward}), the sum comes with two evident ``import'' assignments: each element~$\monela \setin \monoidAset$ determines the element~$[\makelist{\monela}] \setin \monoidA + \monoidB$, and similarly for~$\monoidB$.
+    Once morphisms of \SY{monoids} are available (\cref{chap:morphisms}), we will see that these inclusions interact well with composition, and that they characterize the sum by a \emph{universal property}, dual to the one enjoyed by the product.
+    This duality is the deeper reason for our choice of the name ``sum''.
+\end{remark}

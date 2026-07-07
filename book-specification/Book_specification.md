@@ -85,7 +85,7 @@ Each type of chapter has a respective goal, tone, and scope, as specified in the
 | Constructions chapter | Describe constructions as in: getting new from old | formal | | |
 | Applications chapter | Show how domain things can be defined using CT or do something with CT results | formal | | |
 | Commentary chapter | Communicate, and comment on, the categorcal way of thinking on a meta-level; ground this content in specific concepts and examples| formal | | |
-| One level up chapter | | | | |
+
 
 ## Principles
 

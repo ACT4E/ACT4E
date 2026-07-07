@@ -3,24 +3,33 @@
 \section{Opposites}
 \label{sec:opposites-algebra}
 
-\todotext{J: @J: add material}
+The last construction of this chapter is the simplest to state, and perhaps the most curious: every \SY{semigroup} has an \emph{opposite}, obtained by ``flipping'' the order of composition.
+Where the original composes ``$\ela$ then $\elb$'', the opposite composes ``$\elb$ then $\ela$''.
 
-
-\todotext{Add examples to concretely illustrate opposites. One idea is to use the list construction monoid as an example. Maybe some other examples are also very fitting and pedagogically nice.} 
+Why would one want such a thing?
+One down-to-earth reason: whenever we compose operations, a \emph{convention} must be chosen about reading order---does~$\ela \mtimes \elb$ mean ``first~$\ela$, then~$\elb$'', or ``$\ela$ applied after~$\elb$''?
+Both conventions are in active use in mathematics, engineering, and programming, and translating between them is exactly the passage to the opposite structure.
+A deeper reason will emerge later in the book: the opposite construction is the entry point to \emph{duality}, a pervasive theme of category theory whereby every concept has a mirror-image twin.
+The present section is a first, elementary encounter with that idea.
 
 \paragraph{Opposite semigroup}
 
-Any semigroup has an opposite: it is obtained by ``flipping'' the order of composition.
-
-\todotext{Rewrite definition so that 'in-line formula' is the main statement, and then the part about using the braiding function follows after as a remark.}
-
-\begin{definition}[Opposite semigroup]\label{def:opposite-semigroup}
-    $\sgrpA = \tup{\sgrpAset, {{\mtimes}}}$ be a \SY{semigroup}.
-    Its \emph{opposite} $\sgrpA\op$ is the semigroup $\sgrpA\op = \tup{\sgrpAset, {{\mtimes \op}}}$ whose composition operation $\mtimes \op$ is the composite
+\begin{ctdefinition}[Opposite semigroup]\label{def:opposite-semigroup}
+    Let~$\sgrpA = \tup{\sgrpAset, {{\mtimes}}}$ be a \SY{semigroup}.
+    Its \maindef{opposite}~$\sgrpA\op$ is the \SY{semigroup}~$\sgrpA\op = \tup{\sgrpAset, {{\mtimes\op}}}$ with the same underlying set, and with composition operation~$\mtimes\op$ defined by
     \begin{equation}
-        \sgrpAset \cartprod \sgrpAset \overset{\braiding}{\fto} \sgrpAset \cartprod \sgrpAset \overset{\mtimes}{\fto} \sgrpAset
+        \label{eq:opposite-composition}
+        \sgrpela \mtimes\op \sgrpelb \definedas \sgrpelb \mtimes \sgrpela
+        \qquad \forall \sgrpela, \sgrpelb \setin \sgrpAset.
     \end{equation}
-    where $\braiding$ is the braiding function
+\end{ctdefinition}
+
+\begin{remark}
+    In terms of functions, the operation~$\mtimes\op$ is the composite
+    \begin{equation}
+        \sgrpAset \cartprod \sgrpAset \overset{\braiding}{\fto} \sgrpAset \cartprod \sgrpAset \overset{\mtimes}{\fto} \sgrpAset,
+    \end{equation}
+    where~$\braiding$ is the braiding function
     \begin{equation}
         \defmapperiodset{
             \braiding
@@ -34,27 +43,127 @@ Any semigroup has an opposite: it is obtained by ``flipping'' the order of compo
             \tup{\elb, \ela}
         }
     \end{equation}
-    In other words,
-    \begin{equation}
-        \ela \mtimes \op \elb = \elb \mtimes \ela \qquad \forall \ela, \elb \setin \sgrpAset.
-    \end{equation}
-
-\end{definition}
-
-
-\todotext{make the following a definition or combine somewhere with the other 'opposites' content; highlight connection to opposite semigroup notion, and that the identity element is the same.}
-
-\begin{remark}
-    Just like for semigroups, any monoid has an opposite.
-    It is defined similarly: given a \SY{monoid} $\monoidAdefinition$, its opposite is $\monoidA \op = \tup{ \monoidAset, \mtimes\op, \idmon }$ where $\mtimes\op$ is defined by setting
-    \begin{equation}
-        \ela \mtimes \op \elb = \elb \mtimes_{\monoidA} \ela \qquad \forall \ela, \elb \setin \monoidAset.
-    \end{equation}
 \end{remark}
 
+\begin{exercise}
+    \label{ex:opposite-is-semigroup}
+    Check that~$\mtimes\op$ is \SY{associative}, so that~$\sgrpA\op$ is indeed a \SY{semigroup}.
+\end{exercise}
+\begin{solution}
+    For all~$\sgrpela, \sgrpelb, \sgrpelc \setin \sgrpAset$:
+    \begin{equation}
+        (\sgrpela \mtimes\op \sgrpelb) \mtimes\op \sgrpelc
+        = \sgrpelc \mtimes (\sgrpelb \mtimes \sgrpela)
+        = (\sgrpelc \mtimes \sgrpelb) \mtimes \sgrpela
+        = \sgrpela \mtimes\op (\sgrpelb \mtimes\op \sgrpelc),
+    \end{equation}
+    where the middle step is the \SY{associative law} of~$\sgrpA$.
+\end{solution}
 
+\paragraph{Opposite monoid}
 
+\begin{ctdefinition}[Opposite monoid]\label{def:opposite-monoid}
+    Let~$\monoidAdefinition$ be a \SY{monoid}.
+    Its \emph{opposite} is the \SY{monoid}
+    \begin{equation}
+        \monoidA\op \definedas \tup{ \monoidAset, \mtimes\op, \idmon_\monoidA },
+    \end{equation}
+    where~$\mtimes\op$ is the opposite of the composition operation, as in \cref{eq:opposite-composition}.
+\end{ctdefinition}
 
+\begin{remark}
+    Note that the \SY{neutral element} is \emph{unchanged}: the neutrality laws are symmetric with respect to the flip.
+    Indeed, $\idmon_\monoidA \mtimes\op \monela = \monela \mtimes \idmon_\monoidA = \monela$, and similarly on the other side.
+\end{remark}
 
+\begin{remark}
+    Likewise, every \SY{group} has an opposite: the opposite of the underlying \SY{monoid} is again a \SY{group}, with the \emph{same} inverse operation~$\ginv$, since the inverse laws are also symmetric with respect to the flip.
+\end{remark}
 
+\begin{remark}
+    \label{rem:opposite-involution}
+    Taking the opposite twice returns the original structure: $(\sgrpA\op)\op = \sgrpA$.
+    Flipping the reading order, and then flipping it back, changes nothing.
+\end{remark}
 
+\subsection{Examples}
+
+\begin{example}
+    \label{exa:opposite-commutative}
+    A \SY{semigroup}~$\sgrpA$ is commutative if and only if~$\sgrpA\op = \sgrpA$, meaning that the two composition operations~$\mtimes\op$ and~$\mtimes$ are the \emph{same} function.
+    Indeed, the equation~$\sgrpela \mtimes\op \sgrpelb = \sgrpela \mtimes \sgrpelb$ for all elements is, by \cref{eq:opposite-composition}, exactly the statement~$\sgrpelb \mtimes \sgrpela = \sgrpela \mtimes \sgrpelb$ for all elements.
+
+    So for many of our staple examples---$\tup{\natnumbers, +}$, $\tup{\reals, +, 0}$, $\tup{\natnumbers, \max, 0}$, the plant development \SY{semigroup} of \cref{exa:plant-trafo-semigroup} (where all elements are powers of a single generator)---the opposite construction produces nothing new.
+    The construction is interesting precisely for \emph{non-commutative} structures.
+\end{example}
+
+\begin{example}
+    \label{exa:opposite-lists}
+    Consider the free \SY{monoid}~$\listsof{\setA}$ of lists with concatenation (\cref{exa:string-monoid}), which is not commutative as soon as~$\setA$ has at least two elements.
+    Its opposite~$\listsof{\setA}\op$ has the same elements---lists---but composition appends the first argument \emph{after} the second:
+    \begin{equation}
+        \makelist{\alphabeta} \mtimes\op \makelist{\alphabetb} = \makelist{\alphabetb, \alphabeta}.
+    \end{equation}
+
+    There is a tight relationship between~$\listsof{\setA}$ and its opposite: the operation of \emph{reversing} a list translates between the two.
+    Writing~$\mapa(\ela)$ for the reversal of the list~$\ela$, we have
+    \begin{equation}
+        \mapa(\ela \mtimes \elb) = \mapa(\elb) \mtimes \mapa(\ela) = \mapa(\ela) \mtimes\op \mapa(\elb),
+    \end{equation}
+    that is: the reversal of a concatenation is the concatenation of the reversals, in the opposite order---as anyone who has read a word backwards knows.
+
+    As an applied subexample, consider an ``undo'' facility.
+    If a user performs editing actions recorded as a list, then undoing must revert the individual actions \emph{in reverse order}: the undo log is the reversal of the action log, and composing undo logs follows the opposite convention.
+    Last done, first undone.
+\end{example}
+
+\begin{example}
+    \label{exa:opposite-endofunctions}
+    Consider the \SY{monoid}~$\Endof\setA$ of all functions~$\setA \sto \setA$ under function composition.
+    For functions, the two reading conventions mentioned in the introduction to this section are both widespread:
+    \begin{enumerate}
+        \item the classical notation~$\mapb \circ \mapa$ (``$\mapb$ after~$\mapa$''), where the function applied \emph{first} stands on the \emph{right};
+        \item the ``pipeline'' notation, common in engineering diagrams, signal processing, and programming (for instance in shell pipes and method chaining), where data flows left to right: first apply~$\mapa$, then feed the result to~$\mapb$.
+    \end{enumerate}
+    These two conventions define two composition operations on the same underlying set of functions, and each is the opposite of the other.
+    Neither is more correct; but mixing them up is a classic source of sign-flip-style errors, for example when multiplying transformation matrices in the wrong order.
+    The opposite construction gives this bookkeeping an exact algebraic home.
+\end{example}
+
+\begin{example}
+    \label{exa:opposite-matrices}
+    Let~$\sgrpA$ be the \SY{monoid} of~$\ntimesn$ real matrices under matrix multiplication (with the identity matrix as \SY{neutral element}), which is non-commutative for~$n \geq 2$.
+    Transposition translates between~$\sgrpA$ and its opposite: the familiar identity
+    \begin{equation}
+        (\mat{M} \mat{N})\mattransp = \mat{N}\mattransp \mat{M}\mattransp
+    \end{equation}
+    says that transposing a product yields the product of the transposes \emph{in the opposite order}---the same pattern we saw for list reversal in \cref{exa:opposite-lists}.
+    Similarly, in a \SY{group}, the inverse operation reverses composites: $\ginv(\grpela \gtimes \grpelb) = \ginv(\grpelb) \gtimes \ginv(\grpela)$ (\cref{lem:inv-op-properties}).
+    Such ``order-reversing dictionaries'' are the typical way in which a structure and its opposite are related in practice.
+\end{example}
+
+\begin{example}
+    \label{exa:opposite-first-write}
+    Here is a small example where a structure and its opposite embody two genuinely different policies.
+    Let~$\setA$ be any set (think of its elements as values that can be written to a memory register), and define a composition on~$\setA$ by
+    \begin{equation}
+        \ela \mtimes \elb \definedas \ela .
+    \end{equation}
+    This operation is \SY{associative} (both ways of composing three elements yield the leftmost one), so~$\tup{\setA, \mtimes}$ is a \SY{semigroup}.
+    Reading~$\ela \mtimes \elb$ as ``write~$\ela$, then write~$\elb$'', this \SY{semigroup} implements a \emph{first-write-wins} register: once a value is written, later writes are ignored (as for a fuse, or a write-once memory).
+
+    Its opposite, with~$\ela \mtimes\op \elb = \elb$, implements the complementary policy: \emph{last-write-wins}, where each write overwrites the previous value---the behavior of an ordinary register.
+    Both policies are used in distributed systems for reconciling concurrent updates, and they are, in a precise sense, each other's mirror image.
+\end{example}
+
+\begin{exercise}
+    \label{ex:opposite-composition-table}
+    Suppose~$\sgrpA$ is a finite \SY{semigroup} whose composition is given by a composition table (as in \cref{tab:comp-table-Klein4}, for example).
+    How is the composition table of~$\sgrpA\op$ obtained from that of~$\sgrpA$?
+    What does the table of~$\sgrpA\op$ look like when~$\sgrpA$ is commutative?
+\end{exercise}
+\begin{solution}
+    The entry of the table of~$\sgrpA\op$ in row~$\sgrpela$, column~$\sgrpelb$ is~$\sgrpela \mtimes\op \sgrpelb = \sgrpelb \mtimes \sgrpela$, which is the entry of the original table in row~$\sgrpelb$, column~$\sgrpela$.
+    So the table of~$\sgrpA\op$ is the original table mirrored along its main diagonal---in matrix language, transposed (compare \cref{exa:opposite-matrices}).
+    If~$\sgrpA$ is commutative, the table is symmetric with respect to the diagonal, so transposing does nothing, in accordance with \cref{exa:opposite-commutative}.
+\end{solution}

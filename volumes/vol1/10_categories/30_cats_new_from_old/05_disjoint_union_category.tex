@@ -1,11 +1,17 @@
 % !TEX root = chapter-standalone.tex
 
 \section{Sum of Categories}
+\label{sec:sum-of-categories}
 
-\begin{ctdefinition}[Sum union category]
+The product of the previous section combines two categories by \emph{pairing} them.
+The \emph{sum} of two categories combines them in a different, and in fact simpler, way: we place the two categories side by side, keeping both intact, and add nothing else.
+An object of the sum is an object of one category \emph{or} of the other; morphisms within each part are as before; and there are \emph{no} morphisms connecting one part to the other.
+Because the two parts remain disjoint, this construction is also called the \emph{disjoint union} of the two categories, and it is the categorical analogue of the disjoint union of sets.
+
+\begin{ctdefinition}[Sum of categories]
     \label{def:disjoint-union-category}
     \SYNDEF{disjoint union of categories}
-    Given two categories~\CatC and~\CatD, their \emph{disjoint union}~$\CatC\Cplus\CatD$ is the category specified as follows:
+    Given two categories~\CatC and~\CatD, their \emph{sum} (or \emph{disjoint union})~$\CatC\Cplus\CatD$ is the category specified as follows:
     \begin{enumerate}
         \item \emph{Objects}: $\Ob_{\CatC\Cplus\CatD} \definedas \ObC \setdisunion \ObD$.
               That is, objects of $\CatC\Cplus\CatD$ are tuples of the form~$\disunionI{\Obja}$, with $i=1$ and $\Obja \setin \ObC$ or $i=2$ and~$\Obja \setin \ObD$.
@@ -66,6 +72,34 @@
     If you think about categories in diagrammatic form, this operation corresponds to placing two categories side-by-side, without connecting them.
 \end{remark}
 
+\begin{remark}[Comparison with the sum of monoids]
+    \label{rem:sum-cats-vs-sum-monoids}
+    It is instructive to compare this construction with the sum of \SY{monoids} (\cref{def:sum-monoids}), which was considerably more involved: there, we had to interleave elements of the two \SY{monoids} into alternating words.
+    The reason for the difference is that a \SY{monoid}, viewed as a category (\cref{def:monoidcat}), has exactly \emph{one} object, so a sum of \SY{monoids} must again have one object---the two structures are \emph{forced} to interact, and the interleaving bookkeeping is the price.
+    Categories are under no such constraint: the sum of two categories can simply keep the two parts separate.
+    In particular, note that
+    \begin{equation}
+        \monoidcat{\monoidA} \Cplus \monoidcat{\monoidB}
+    \end{equation}
+    is a category with \emph{two} objects, and is \emph{not} the categorification of the sum~$\monoidA + \monoidB$ (which has one object).
+    Contrast this with the situation for products (\cref{exa:product-cat-monoids}), where the two constructions do agree.
+\end{remark}
+
+\begin{example}
+    \label{exa:sum-cat-two-cities}
+    Let~$\graphA$ and~$\graphB$ be the mobility graphs of two cities with no transport connection between them (say, the walking-and-subway networks of Zurich and Singapore), and consider the free categories of trips~$\pathcat{\graphA}$ and~$\pathcat{\graphB}$ (\cref{sec:catsfromgraphs}).
+    The category~$\pathcat{\graphA} \Cplus \pathcat{\graphB}$ describes the combined system: a location is a location in one city or the other, trips within each city are as before, and there are no trips from one city to the other.
+    An empty hom-set is the category theorist's way of saying ``you can't get there from here''.
+
+    If we later add a connection (say, a flight), the combined model is no longer a plain sum---which is exactly the point: the sum is the special case of combination with \emph{zero} interaction.
+\end{example}
+
+\begin{example}
+    \label{exa:sum-cat-posets}
+    For \SY{posets}~$\posA$ and~$\posB$ viewed as categories (\cref{sec:posets-as-cats}), the sum~$\poscat{\posA} \Cplus \poscat{\posB}$ is the poset obtained by placing the two orders side by side, with elements of different parts incomparable.
+    For instance, the sum of two chains $\bullet \mto \bullet \mto \bullet$ and $\bullet \mto \bullet$ is a five-element poset consisting of two independent chains.
+\end{example}
+
 \begin{remark}
     A remark similar to \cref{rem:n-fold-cart-products-of-cats} holds here, too: we can form the disjoint union of any finite number of categories.
     For example, $\CatA \Cplus \CatB \Cplus \CatC$ for three categories $\CatA, \CatB, \CatC$.
@@ -74,54 +108,31 @@
 \begin{exercise}
     Show that the \SYN{disjoint union of categories}{disjoint union} of two categories is indeed again a category.
 \end{exercise}
-\todotext{\alphubel: @Gioele: the math doesn't match the definition.}
 \begin{solution}
+    We check unitality and associativity.
 
-    We check the two conditions.
-    First, consider a morphism~$\mora\colon \Obja \mto \Objb\setin \HomSet{\CatC\Cplus\CatD}{\tup{\Obja, i}}{\tup{\Objb, i}}$ (the index~$i$ is repeated, because following the definition of morphisms, no morphism connects objects of one category to objects of the other one).
-    We have
+    For unitality, consider a morphism~$\mora \setin \HomSet{\CatC\Cplus\CatD}{\disunionI{\Obja}}{\disunionI{\Objb}}$.
+    (The index~$i$ is the same at source and target: by the definition of the hom-sets, no morphism connects objects of one part with objects of the other part.)
+    If~$i = 1$, then~$\mora$ is a morphism of~\CatC, and
     \begin{equation}
-        \catidat{\CatC\Cplus\CatD}\mthen \mora=
-        \left\{
-        \begin{tabular}{ccc}
-            $\catidof\CatC\mthen \mora=\mora$ &  & if $i=1$, \\
-            $\catidof\CatD\mthen \mora=\mora$ &  & if $i=2$,
-        \end{tabular}
-        \right.
-        {}
+        \catidofat{\CatC\Cplus\CatD}{\disunionI{\Obja}} \mthenof{\CatC\Cplus\CatD} \mora
+        = \catidofat{\CatC}{\Obja} \mthenof{\CatC} \mora
+        = \mora,
     \end{equation}
-    and
+    using unitality in~\CatC; similarly~$\mora \mthenof{\CatC\Cplus\CatD} \catidofat{\CatC\Cplus\CatD}{\disunionI{\Objb}} = \mora$.
+    The case~$i = 2$ is the same computation in~\CatD.
+
+    For associativity, consider composable morphisms
     \begin{equation}
-        \mora \mthen \catidat{\CatC\Cplus\CatD}=
-        \left\{
-        \begin{tabular}{ccc}
-            $\mora \mthen \catidof\CatC=\mora$ &  & if $i=1$, \\
-            $\mora \mthen \catidof\CatD=\mora$ &  & if $i=2$.
-        \end{tabular}
-        \right.{}
+        \mora \setin \HomSet{\CatC\Cplus\CatD}{\disunionI{\Obja}}{\disunionI{\Objb}}, \quad
+        \morb \setin \HomSet{\CatC\Cplus\CatD}{\disunionI{\Objb}}{\disunionI{\Objc}}, \quad
+        \morc \setin \HomSet{\CatC\Cplus\CatD}{\disunionI{\Objc}}{\disunionI{\Objd}}.
     \end{equation}
-    Second, consider the morphisms~$\mora\colon \Obja \mto \Objb\setin \HomSet{\CatC\Cplus\CatD}{\tup{\Obja, i}}{\tup{\Objb, i}}$,~$\morb\colon \Objb \mto \Objc\setin \HomSet{\CatC\Cplus\CatD}{\tup{\Obja, j}}{\tup{\Objb, j}}$, and~$\morc\colon \Objc \mto \Objd\setin \HomSet{\CatC\Cplus\CatD}{\tup{\Obja, k}}{\tup{\Objb, k}}$.
-    We have
+    (Again, composability forces all the indices to agree.)
+    If~$i = 1$, all three are morphisms of~\CatC, and both ways of composing them in~$\CatC\Cplus\CatD$ equal their composite in~\CatC, which is unambiguous by associativity in~\CatC:
     \begin{equation}
-        (\mora \mthenof{\CatC\Cplus\CatD} \morb)
-        \mthenof{\CatC\Cplus\CatD} \morc \definedas
-        \left\{
-        \begin{tabular}{ccc}
-            $(\mora\mthenof\CatC \morb)\mthenof\CatC \morc= \mora\mthenof\CatC \morb\mthenof\CatC \morc$ &  & if $i=j =k= 1$, \\
-            $(\mora\mthenof\CatD \morb)\mthenof\CatD \morc= \mora\mthenof\CatD \morb\mthenof\CatD \morc$ &  & if $i = j=k =2$, \\
-            does not exist                                                                               &  & else.
-        \end{tabular}
-        \right.{}
+        (\mora \mthenof{\CatC} \morb) \mthenof{\CatC} \morc
+        = \mora \mthenof{\CatC} (\morb \mthenof{\CatC} \morc).
     \end{equation}
-    and
-    \begin{equation}
-        \mora \mthenof{\CatC\Cplus\CatD} (\morb\mthenof{\CatC\Cplus\CatD} \morc) \definedas
-        \left\{
-        \begin{tabular}{ccc}
-            $\mora\mthenof\CatC (\morb\mthenof\CatC \morc)= \mora\mthenof\CatC \morb\mthenof\CatC \morc$ &  & if $i=j =k =1$, \\
-            $\mora\mthenof\CatD (\morb\mthenof\CatD \morc)= \mora\mthenof\CatD \morb\mthenof\CatD \morc$ &  & if $i = j=k =2$, \\
-            does not exist                                                                               &  & else.
-        \end{tabular}
-        \right.{}
-    \end{equation}
+    The case~$i = 2$ is analogous, with~\CatD in place of~\CatC.
 \end{solution}
