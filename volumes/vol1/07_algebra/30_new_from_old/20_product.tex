@@ -3,12 +3,171 @@
 \section{Products}
 \label{sec:products-algebra}
 
-\todotext{J: @J: add material}
+\todotext{@J: review this section}
 
+Often we want to consider two systems \emph{side by side} and treat the resulting ensemble as a single system.
+If the two systems are modeled by \SY{semigroups} or \SY{monoids}, there is a canonical way to do this: the \emph{product} construction.
+The idea is entirely natural: a state (or action) of the combined system is a \emph{pair}, consisting of one element from each of the two structures, and composition happens \emph{componentwise}---each component minds its own business.
 
+\begin{ctdefinition}[Product of semigroups]
+    \label{def:product-semigroup}
+    Let~$\sgrpA = \tup{\sgrpAset, \mtimesof{\sgrpA}}$ and~$\sgrpB = \tup{\sgrpBset, \mtimesof{\sgrpB}}$ be \SY{semigroups}.
+    Their \maindef{product}~$\sgrpA \cartprod \sgrpB$ is the \SY{semigroup} given by:
 
+    \constit
 
+    \begin{enumerate}
+        \item The set~$\sgrpAset \cartprod \sgrpBset$ (the \SY{cartesian product} of the underlying sets);
+        \item The componentwise composition operation
+              \begin{equation}
+                  \label{eq:product-componentwise}
+                  \tup{\sgrpela, \sgrpelb} \mtimes \tup{\sgrpela', \sgrpelb'}
+                  \definedas
+                  \tup{\sgrpela \mtimesof{\sgrpA} \sgrpela', \; \sgrpelb \mtimesof{\sgrpB} \sgrpelb'}.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
 
+\begin{lemma}
+    \label{lem:product-semigroup-associative}
+    The operation \cref{eq:product-componentwise} is \SY{associative}, so~$\sgrpA \cartprod \sgrpB$ is indeed a \SY{semigroup}.
+\end{lemma}
 
+\begin{proof}
+    Composition in each component is governed entirely by the corresponding factor, so associativity follows by applying, in each component separately, the associative law of that factor:
+    \begin{equation}
+        \begin{aligned}
+            \pars{ \tup{\sgrpela, \sgrpelb} \mtimes \tup{\sgrpela', \sgrpelb'} } \mtimes \tup{\sgrpela'', \sgrpelb''}
+            & = \tup{ (\sgrpela \mtimesof{\sgrpA} \sgrpela') \mtimesof{\sgrpA} \sgrpela'', \; (\sgrpelb \mtimesof{\sgrpB} \sgrpelb') \mtimesof{\sgrpB} \sgrpelb'' } \\
+            & = \tup{ \sgrpela \mtimesof{\sgrpA} (\sgrpela' \mtimesof{\sgrpA} \sgrpela''), \; \sgrpelb \mtimesof{\sgrpB} (\sgrpelb' \mtimesof{\sgrpB} \sgrpelb'') } \\
+            & = \tup{\sgrpela, \sgrpelb} \mtimes \pars{ \tup{\sgrpela', \sgrpelb'} \mtimes \tup{\sgrpela'', \sgrpelb''} }.
+            \qedhere
+        \end{aligned}
+    \end{equation}
+\end{proof}
 
+\begin{ctdefinition}[Product of monoids]
+    \label{def:product-monoid}
+    Let~$\monoidAdefinition$ and~$\monoidBdefinition$ be \SY{monoids}.
+    Their \emph{product}~$\monoidA \cartprod \monoidB$ is the \SY{monoid} given by:
 
+    \constit
+
+    \begin{enumerate}
+        \item The product of the underlying \SY{semigroups} (\cref{def:product-semigroup});
+        \item The \SY{neutral element}~$\tup{\idmon_\monoidA, \idmon_\monoidB}$.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{exercise}
+    \label{ex:product-monoid-neutral}
+    Check that~$\tup{\idmon_\monoidA, \idmon_\monoidB}$ indeed satisfies the neutrality laws in~$\monoidA \cartprod \monoidB$.
+\end{exercise}
+\begin{solution}
+    For any~$\tup{\monela, \monelb} \setin \monoidAset \cartprod \monoidBset$,
+    \begin{equation}
+        \tup{\idmon_\monoidA, \idmon_\monoidB} \mtimes \tup{\monela, \monelb}
+        = \tup{\idmon_\monoidA \mtimesof{\monoidA} \monela, \; \idmon_\monoidB \mtimesof{\monoidB} \monelb}
+        = \tup{\monela, \monelb},
+    \end{equation}
+    using the neutrality laws of~$\monoidA$ and~$\monoidB$ in the respective components; the computation on the other side is analogous.
+\end{solution}
+
+\begin{remark}
+    \label{rem:product-groups}
+    An analogous definition works for \SY{groups}: given \SY{groups}~$\grpA$ and~$\grpB$, their product is the product of the underlying \SY{monoids}, equipped with the componentwise inverse operation
+    \begin{equation}
+        \ginv\pars{\tup{\grpela, \grpelb}} \definedas \tup{\ginv(\grpela), \ginv(\grpelb)}.
+    \end{equation}
+\end{remark}
+
+\begin{remark}
+    The construction extends in the obvious way to products of three or more factors, and indeed to families~$\makeset{\sgrpA_\setIel}_{\setIel \setin \setI}$ of \SY{semigroups} indexed by an arbitrary set: the underlying set is the set of tuples, and composition is componentwise.
+\end{remark}
+
+\subsection{Examples}
+
+\begin{example}
+    \label{exa:product-reals-plane}
+    The product of the \SY{monoid}~$\tup{\reals, +, 0}$ with itself is the \SY{monoid}~$\tup{\reals \cartprod \reals, +, \tup{0,0}}$ of points of the plane (or: of planar vectors) under vector addition:
+    \begin{equation}
+        \tup{\ela_1, \elb_1} + \tup{\ela_2, \elb_2} = \tup{\ela_1 + \ela_2, \; \elb_1 + \elb_2}.
+    \end{equation}
+    Iterating the construction yields~$\reals^n$ under vector addition.
+    So a structure very familiar from linear algebra is, from the present point of view, an iterated product of a one-dimensional structure.
+    Componentwise composition captures the physical idea that displacements along independent axes do not interfere with one another.
+\end{example}
+
+\begin{example}
+    \label{exa:product-inventory}
+    The product~$\tup{\natnumbers, +, 0} \cartprod \tup{\natnumbers, +, 0}$ is the \SY{monoid} of pairs of counts.
+    We have met it twice already, in different guises: as the quotient of the list \SY{monoid} by reordering (\cref{exa:multiset-quotient}), and as the presented \SY{monoid}~$\langle \makeset{\setAel, \setBel} \mid \setAel\setBel = \setBel\setAel \rangle$ (\cref{exa:presentation-commutative}).
+    The applied reading is as before: bookkeeping of two independent tallies (say, stock levels of two products), where composition is ``receive both deliveries''.
+
+    That one and the same structure arises as a quotient of a free \SY{monoid}, as a presented \SY{monoid}, and as a product is a first taste of a general phenomenon: interesting objects typically admit several different constructions, and part of the craft of modeling is choosing the description best suited to the task at hand.
+\end{example}
+
+\begin{example}
+    \label{exa:product-energy-peak}
+    Different composition rules can be combined in one product.
+    Consider
+    \begin{equation}
+        \tup{\nonNegReals, +, 0} \cartprod \tup{\nonNegReals, \max, 0},
+    \end{equation}
+    whose elements are pairs~$\tup{\ela, \elb}$, composed by adding the first components and taking the maximum of the second.
+
+    As an applied subexample, suppose a machine executes tasks one after the other, and each task is characterized by the pair
+    \begin{equation}
+        \tup{\text{energy consumed}, \; \text{peak power demand}}.
+    \end{equation}
+    When two tasks are executed in sequence, their energies \emph{add}, while the peak power demand of the sequence is the \emph{maximum} of the individual peaks.
+    Thus the bookkeeping of (energy, peak power) under sequential execution is composition in this product \SY{monoid}.
+    Sizing a battery and sizing a power converter, respectively, correspond to reading off the two components.
+\end{example}
+
+\begin{example}
+    \label{exa:product-two-plants}
+    Products model \emph{synchronous, non-interacting} parallelism.
+    Recall the plant development \SY{semigroup}~$\makeset{ \mapa^n \mid n \setin \natnumbers }$ of \cref{exa:plant-trafo-semigroup}, where~$\mapa$ advances one plant's state by one season.
+    The product of this \SY{semigroup} with itself describes a greenhouse with two plants, possibly of different ages: an element~$\tup{\mapa^m, \mapa^n}$ advances the first plant by~$m$ seasons and the second by~$n$ seasons, and composition accumulates these advances independently.
+    Nothing that happens to the first plant ever influences the second: this independence is exactly what the componentwise rule \cref{eq:product-componentwise} encodes---and it is also this rule's limitation as a modeling device.
+\end{example}
+
+\begin{exercise}
+    \label{ex:Klein-as-product}
+    Consider the product~$\grpA \cartprod \grpA$, where~$\grpA$ is the two-element \SY{group} of \cref{exa:grp-order-two} (addition modulo 2 on~$\makeset{0,1}$).
+    Write out its composition table.
+    Compare it with the table of the Klein four-group (\cref{exa:grp-Klein4}): can you match up the elements of the two \SY{groups} so that the tables coincide?
+\end{exercise}
+\begin{solution}
+    The four elements are~$\tup{0,0}, \tup{1,0}, \tup{0,1}, \tup{1,1}$, composed by adding modulo 2 in each component.
+    Matching
+    \begin{equation}
+        \tup{0,0} \leftrightarrow I, \quad
+        \tup{1,0} \leftrightarrow V, \quad
+        \tup{0,1} \leftrightarrow H, \quad
+        \tup{1,1} \leftrightarrow R,
+    \end{equation}
+    the two composition tables coincide.
+    (For instance, $\tup{1,0} \mtimes \tup{0,1} = \tup{1,1}$ matches~$V \gtimes H = R$.)
+    The symmetries of a rectangle thus behave exactly like two independent binary toggles: ``flipped or not along the vertical axis'' and ``flipped or not along the horizontal axis''.
+\end{solution}
+
+\subsection{A few properties}
+
+\begin{remark}
+    If~$\sgrpA$ and~$\sgrpB$ are both commutative, then so is~$\sgrpA \cartprod \sgrpB$: commutativity can be checked componentwise, just like associativity in \cref{lem:product-semigroup-associative}.
+    Conversely, if the product is commutative, then each factor is.
+\end{remark}
+
+\begin{remark}
+    \label{rem:product-projections-forward}
+    The product comes with two evident ``read off one component'' assignments,
+    \begin{equation}
+        \tup{\sgrpela, \sgrpelb} \mapsto \sgrpela
+        \qquad \text{and} \qquad
+        \tup{\sgrpela, \sgrpelb} \mapsto \sgrpelb,
+    \end{equation}
+    which moreover interact well with composition, in the sense that reading off a component of a composite gives the composite of the read-off components.
+    Making this precise requires the notion of a \emph{morphism} of \SY{semigroups}, which we introduce in \cref{chap:morphisms}; there, and again in the language of categories later in the book, we will see that these projections characterize the product by a \emph{universal property}, rather than by the specific construction via pairs.
+\end{remark}

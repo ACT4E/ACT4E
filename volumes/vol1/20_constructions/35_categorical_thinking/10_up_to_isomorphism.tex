@@ -1,7 +1,242 @@
 % !TEX root = chapter-standalone.tex
 
+\devel{
 \section{Up to isomorphism}
 
 \todotext{Explain why category theorists often only think ``up to isomorphism''}
 
 \todotext{add content}
+
+
+\subsection{Sameness in category theory (OLDER material to be reviewed)}
+\label{sec:attributes_sameness}
+
+One nice thing about the category of sets is that we are all used to working with sets and functions.
+And many concepts that are familiar in the setting of sets and functions can actually be reformulated in a way which makes sense for lots of other categories, if not for all categories.
+It can be fun, and insightful, to see known definitions transformed into ``category theory language''.
+For example: the notion of a \SY{bijective} function is a familiar concept.
+There are least two ways of saying what it means for a function~$\mapa \colon \setA \sto \setB$ of sets to be \SY{bijective}:
+
+\textbf{Definition 1:} ``$\mapa \colon \setA \sto \setB$ is \SY{bijective} if, for every~$\elb \setin \setB$ there exists precisely one~$\ela \setin \setA$ such that~$\mapa(\ela) = \elb$;
+
+\textbf{Definition 2:} ``$\mapa \colon \setA \sto \setB$ is \SY{bijective} if there exists a function~$\mapb\colon \setB \sto \setA$ such that~$\mapa \mthen \mapb = \catidat\setA$ and~$\mapb \mthen \mapa = \catidat\setB$''.
+
+It is a short proof to show that the above two definitions are equivalent.
+The first definition, however, does not lend itself well to generalization in category theory, because it is formulated using something that is very specific to sets: namely, it refers to \emph{elements} of the sets~\setA and~\setB.
+And we have seen that the objects of a category need not be sets, and so in general we cannot speak of ``elements'' in the usual sense.
+Definition 2, on the other hand, can easily be generalized to work in any category.
+To formulate this version, all we need are morphisms, their composition, the notion of \SY{identity morphisms}, and the notion of equality of morphisms (for equations such as~``$\mapa \mthen \mapb= \catidat\ela$'').
+The generalization we obtain is the fundamental notion of an ``isomorphism''.
+
+%It turns out that both versions have useful generalizations in category theory, and it also turns out that these generalizations do not always imply each other! So, two equivalent ways of saying that a function is bijective give rise to non-equivalent concepts in category theory. Definition 2 above is the more fundamental variant for category theory; it corresponds to the basic notion of an ``isomorphism''.
+
+\begin{ctdefinition}[Isomorphism]
+    \SYNDEF{isomorphism in a category}
+    Let~\CatC be a category, let~$\Obja,\Objb \setin \ObC$ be objects, and let~$\mora \colon \Obja \mto \Objb$ be a morphism.
+    We say that~$\mora$ is an \maindef{isomorphism} if there exists a morphism~$\morb\colon \Objb \mto \Obja$ such that~$\morab = \catidat\Obja$ and~$\morb \mthen \mora = \catidat\Objb$.
+\end{ctdefinition}
+
+\begin{remark}
+    \label{rem:inverse}
+    The morphism~$\morb$ in the above definition is called the \textbf{\iindex{inverse}} of~$\mora$.
+    Because of the symmetry in how the definition is formulated, it is easy to see that~$\morb$ is necessarily also an isomorphism, and its inverse is~$\mora$.
+\end{remark}
+
+\begin{exercise}
+    \label{ex:isoinverse}
+    In the previous remark we wrote \emph{the} inverse.
+    We do this because inverses are in fact unique.
+    Can you prove this?
+    That is, show that if~$\mora \colon \Obja \mto \Objb$ is an isomorphism, and if~$\morb_1\colon \Objb \mto \Obja$ and~$\morb_2\colon \Objb \mto \Obja$ are morphisms such that~$\morab_1 = \catidat\Obja$ and~$\morb_1 \mthen \mora = \catidat\Objb$, and~$\morab_2 = \catidat\Obja$ and~$\morb_2 \mthen \mora = \catidat\Objb$, then necessarily~$\morb_1 = \morb_2$.
+\end{exercise}
+\todotextjira{96}{\alphubel: @JL: Solution of \cref{ex:isoinverse}.}
+\begin{solution}
+    \missingsolution
+
+\end{solution}
+
+\begin{ctdefinition}[Isomorphic objects]\label{def:isomorphic-objects}
+    Let~$\Obja,\Objb$ be two objects in a category.
+    We say that~$\Obja$ and~$\Objb$ are \maindef{isomorphic} if there exists an isomorphism~$\Obja \mto \Objb$ or~$\Objb \mto \Obja$.
+\end{ctdefinition}
+
+For the formulation of the definition of ``isomorphic'', mathematicians might often only require the existence of an isomorphism~$\Obja \mto \Objb$, say, since by remark above we know there is then necessarily also an isomorphism in the opposing direction, namely the inverse.
+We choose here the longer, perhaps more cumbersome formulation just to emphasize the symmetry of the term ``isomorphic''.
+Also note that the definition leaves unspecified whether there might be just one or perhaps many isomorphisms~$\Obja \mto \Objb$.
+
+When two objects are isomorphic, in some contexts we will want to think of them as ``the same'', and in some contexts we will want to keep track of more information.
+In fact, in category theory, it is typical to think in terms of different kinds of ``sameness''.
+To give a sense of this, we look at some examples using sets.
+
+\begin{example}[Semantic coherence]
+    Suppose Francesca and Gabriel want to share a dish at a restaurant.
+    Francesca only speaks Italian, and Gabriel only speaks German.
+    Let~$M$ denote the set of dishes on the menu.
+    For each dish, Francesca can say if she is willing to eat it, or not.
+    This can be modeled by a function~$f\colon M \to \makeset{ \text{\Si, No} }$ which maps a given dish~$m \setin M$ to the statement ``\Si'' (yes, I'd eat it) or ``No'' (no, I wouldn't eat it).
+    Gabriel can do similarly, and this can be modeled as a function~$g\colon M \to \makeset{ \text{Ja, Nein} }$.
+    Then, the subset of dishes of~$M$ that both Francesca and Gabriel are willing to eat (and thus able to share) is
+    \begin{equation}
+        \makeset{ m \setin M \mid f(m) = \text{\Si} \qqand g(m) = \text{Ja} }.
+    \end{equation}
+    Suppose the server at the restaurant knows no Italian and no German.
+    To help with the situation, he introduces a new two-element set: $\makeset{ \varheartsuit, \mbox{\footnotesize $\skull$} }$.
+    Then Francesca and Gabriel can each map their respective positive answers (``\Si'' and ``Ja'') to ``$\varheartsuit$ '', and their respective negative answers to ``$\mbox{\footnotesize $\skull$}$''.
+    This defines isomorphisms
+    \begin{equation}
+        \makeset{ \text{\Si, No} } \longleftrightarrow \makeset{ \varheartsuit, \mbox{\footnotesize $\skull$} } \longleftrightarrow \makeset{ \text{Ja, Nein} }
+    \end{equation}
+    whose compositions provide a translation between the Italian and German two-element sets.
+    Using these isomorphisms, we obtain, by composition, new functions
+    \begin{equation}
+        \tilde f: M \longrightarrow \makeset{ \varheartsuit, \mbox{\footnotesize $\skull$} }, \qquad \tilde g: M \longrightarrow \makeset{ \varheartsuit, \mbox{\footnotesize $\skull$} },
+    \end{equation}
+    and the set of dishes that Francesca and Gabriel would be willing to share can be written as
+    \begin{equation}
+        \makeset{ m \setin M \mid \tilde f(m) = \varheartsuit \qqand \tilde g(m) = \varheartsuit }.
+    \end{equation}
+
+    This may all seem unnecessarily complicated.
+    The main point of this example is the following.
+    There are infinitely many two-element sets; commonly used ones might be, for example
+    \begin{equation}
+        \makeset{0, 1 }, \ \makeset{ \textsf{true}, \textsf{ false} }, \ \makeset{ \posbot, \postop }, \ \makeset{ \textsf{left}, \textsf{ right} }, \ \makeset{ -, + }, \text{\etc}
+    \end{equation}
+    They are all isomorphic (for any two such sets, there are precisely two possible isomorphisms between them) and we can in principle use any one in place of another.
+    However, in most cases, we should keep precise track of the semantics of what each of the two elements mean in a given context, such as how they are being used in interaction with other mathematical constructs.
+\end{example}
+
+\devel{
+    \begin{example}[Sizes]
+        Suppose we are a manufacturer, and we are counting how many wheels are in a certain warehouse.
+        If~$W$ denotes the set of wheels that we have, then counting can be modelled as a function~$f\colon W \to \natnumbers$ to the natural numbers.
+        If we find that there are, say, 273 wheels, then our counting procedure gives us a \SY{bijective} function from~$W$ to the set~$\makeset{1, 2, 3, \dots, 272, 273}$.
+        In this case, we don't care which specific wheel we counted first, second, or last.
+        We could just as well have counted in a different order, which would amount to a different function~$f'\colon W \to \natnumbers$.
+        The only thing we care about is the fact that the sets~$W$ and~$\makeset{1, 2, 3,\dots, 272, 273 }$ are \emph{isomorphic}; we don't need to keep track of which counting isomorphism exhibits this fact.
+    \end{example}
+}
+
+\begin{example}[Relabelling]
+    Suppose we want to buy an electric stepper motor for a robot that we are building, and for this we consult a catalogue of electric stepper motors\footnote{See \href{https://www.pololu.com/category/87/stepper-motors}{pololu.com} for a standard catalogue of electric stepper motors.
+    }.
+
+    The catalogue might be organized as a large table, where on the left-hand side there is a column listing all available motors (identified with a model ID), and the remaining columns correspond to different attributes that each of the models of motor might have, such as the name of the company that manufactures the motor, the size dimensions, the weight, the maximum power, the price, \etc
+    A simple illustration is provided in \cref{tab:electric_motors}.
+
+    \begin{table*}[h]
+        \centering
+        \begin{tabular}{c|c|c|c|c|c}
+            Motor ID      & Company              & $\unit[\text{Size}]{[mm^3]}$  & \unit[Weight]{[g]} & \unit[Max Power]{[W]}
+                          & \unit[Cost]{[USD]} \\
+            \hline
+            \textsf{1204} & \textsf{SOYO}        & $20 \times 20 \times 30$      & 60.0               & 2.34                  & 19.95 \\
+            \textsf{1206} & \textsf{SOYO}        & $28 \times 28 \times 45$      & 140.0              & 3.00                  & 19.95 \\
+            \textsf{1207} & \textsf{SOYO}        & $35 \times 35\times 26$       & 130.0              & 2.07                  & 12.95 \\
+            \textsf{2267} & \textsf{SOYO}        & $42 \times 42 \times38$       & 285.0              & 4.76                  & 16.95 \\
+            \textsf{2279} & \textsf{Sanyo Denki} & $42 \times 42 \times 31.5$    & 165.0              & 5.40                  & 164.95 \\
+            \textsf{1478} & \textsf{SOYO}        & $56.4 \times 56.4 \times 76 $ & 1,000              & 8.96                  & 49.95 \\
+            \textsf{2299} & \textsf{Sanyo Denki} & $50 \times 50 \times 16$      & 150.0              & 5.90                  & 59.95
+        \end{tabular}
+
+        \caption{
+            A simplified catalogue of motors.
+        }
+        \label{tab:electric_motors}
+    \end{table*}
+    Suppose that your old way of listing models of motors has become outdated, and you need to change to a new system, where each model is identified, say, by a unique numerical 10-digit code.
+    Relabelling each of the models with its numerical code corresponds to an isomorphism, say \textsf{relabel}, from the new set~$N$ of numerical codes to the old set~$M$ of model names.
+    In contrast to the previous example, however, it is of course absolutely necessary to keep track of the isomorphism \textsf{relabel} that defines the relabelling.
+    This is what holds the information of which code denotes which model.
+
+    Note also that all the other labelling functionalities in our example database may be updated by precomposing with \textsf{relabel}.
+    For example, the old ``Company'' label was described by a function
+    \begin{equation}
+        \textsf{Company}\colon M \to C.
+    \end{equation}
+    The updated version of the ``Company'' label, using the new set $N$ of model IDs, is obtained by the composition
+    \begin{equation}
+        N \overset{\textsf{relabel}}{\longrightarrow} M \overset{\textsf{Company}}{\longrightarrow} C.
+    \end{equation}
+\end{example}
+
+\begin{example}
+    Going back to currency exchangers, recall that any currency exchanger~$\tup{a,d}$, given by
+    \begin{equation}
+        \defmapcomma{
+            \mapa_{\tup{a,b}}
+        }{
+            \reals
+        }{
+            \sto
+        }{
+            \reals
+        }{
+            x
+        }{
+            ax-d
+        }
+    \end{equation}
+    is an isomorphism, since we can define a currency exchanger~$\tup{a',b'}$ such that
+    \begin{equation}
+        \tup{a,b}\mthen \tup{a',b'}=\tup{a',b'}\mthen \tup{a,b}=\tup{1,0}.
+    \end{equation}
+\end{example}
+
+\begin{example}
+    In \FinSet, isomorphisms from a set to itself are automorphisms, and correspond to \maindef{permutations} of the set.
+    Assuming a cardinality of~$n$ for the set (for instance, the set has~$n$ elements), the number of isomorphisms is given by the number of ways in which we can ``rearrange'' $n$ elements of the set, which is $n!
+    $.
+\end{example}
+
+\begin{example}
+    In \Set, isomorphisms between $\reals\sto \reals$ correspond to invertible functions.
+\end{example}
+
+\subsection{Isomorphism is not identity}
+\begin{example}
+    Consider the two currencies~$\bitcoinA$ and~$\satoshiA$.
+    These are both objects of the category \Curr and are isomorphic.
+    Being isomorphic does not mean to be strictly ``the same''.
+    Indeed, even if the amounts correspond, \unit[1]{\bitcoinA} and \unit[1,000,000]{\satoshiA} are different elements of different sets, but there exists an isomorphism between the two.
+    For one direction, the isomorphism transforms \bitcoinA \ into \satoshiA (multiplying the real number by 1,000,000);
+    the other direction transforms \satoshiA into \bitcoinA \ (dividing the real number by 1,000,000).
+\end{example}
+
+\subsubsection{Invertible functions are isomorphisms}
+\begin{definition}[Strict  monotone functions]
+    \label{def:strict-monotone-function}
+    A function~$\mapa\colon \reals \sto \reals$ is \maindef{strictly monotone} if for all~$\setAel,\setBel\setin \reals$:
+    \begin{equation}
+        \prfperiod{\setAel < \setBel}{\mapa(\setAel)<\mapa(\setBel)}
+    \end{equation}
+\end{definition}
+\begin{exercise}
+    Show that strictly \SY{monotone maps}.
+    $\mapa\colon \reals \sto \reals$ are invertible.
+\end{exercise}
+\begin{solution}
+    Because of \cref{def:strict-monotone-function}, given~$\setAel,\setBel\setin \reals$, if~$\mapa(\setAel)=\mapa(\setBel)$, then we must have~$\setAel=\setBel$.
+    Suppose that~$\mapa$ is strictly monotone, but there exist elements~$\setAel,\setBel\setin \reals$ such that~$\mapa(\setAel)=\mapa(\setBel)$ but~$\setAel\neq \setBel$.
+    In other words, we have~$\mapa(\setAel)-\mapa(\setBel)=0$ but~$\setAel-\setBel\neq 0$, which implies
+    \begin{equation}
+        (\mapa(\setAel)-\mapa(\setBel))(\setAel-\setBel)=0.
+    \end{equation}
+    However, from the definition of monotonicity, one should have
+    \begin{equation}
+        (\mapa(\setAel)-\mapa(\setBel))(\setAel-\setBel)>0.
+    \end{equation}
+    Therefore, we have a contradiction, implying that if~$\mapa$ is strictly monotone, then~$\mapa(\setAel)=\mapa(\setBel)$ implies~$\setAel=\setBel$.
+\end{solution}
+
+\devel{
+    \subsubsection{Isomorphisms in 2D}
+    \todojira{100}{\bernina: Isomorphisms are permutations.}
+
+    \todojira{101}{\bernina:  Examples from before: Dynamical systems (open, d=0).
+        Objects are sets, morphisms given by state update and readout.
+        Can go back and forth.
+        (category of processes in computer science)}
+}
+
+}
