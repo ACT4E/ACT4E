@@ -61,14 +61,9 @@ The style we chose: [ To Do ]
 
 | | |
 |---|---|
-<<<<<<< HEAD
 | #formal | Formal mathematics but not stuffy |
 | #informal | Informal storytelling close to the style of talking to an intelligent lay-person; 'toy examples' that are simple and from everyday life; no technical mathematics; if mathematics is used, then intuitions are emphasized and explained |
 | #commentary | Informal in the style of talking to an intellent reader who has now understood a certain portion of the book's material (and is in this sense a "colleague") and who we wish to convey meta-thinking and advanced intuition about the material
-=======
-| formal | Formal mathematics but not stuffy |
-| informal | Informal storytelling; 'toy examples' that are simple and from everyday life; no technical mathematics; if mathematics is used, then intuitions are emphasized and explained |
->>>>>>> JL-drafting-branch
 
 
 ## Principles
@@ -81,10 +76,7 @@ The style we chose: [ To Do ]
 - [hard] P_SIMP-EX-ACC: The Simple Examples chapters are understanbale easily with minimum prerequiresites met
 - [soft] P_ONE-MESSAGE: In general, on any given page or short sequence of pages there are not too many main messages being communicated at once. The main point should be clear, and larger distractions from the main line of storytelling and explanation should be avoided.
 - [soft] P_WHY-ACT: Keep in mind and include where relevant: underscore the 'why' of why we care about using categories. This will be addressed squarely in the introduction to the book, however it should also appear sporadically, where relevant, throughout the book.  
-<<<<<<< HEAD
-=======
 - [soft] Ideally every main theory topic is recalled and illustrated in some application chapter ("application chapters" are described later below). If not, then such topics must at least be illustrated with an application example inside a mathematical chapter.
->>>>>>> JL-drafting-branch
 
 ### Consequences.
 
@@ -116,19 +108,11 @@ Each type of chapter has a respective goal, tone, and scope, as specified in the
 
 | type of chapter | goal | tone | in scope | out of scope |
 |---|---|---|---|---|
-<<<<<<< HEAD
-| Definition chapter | Provide formal mathematical content. | #formal | Formal defintiions | Intuition/motivation |
-| Intuition chapter | Provide intuition for why the theme is important. | #informal | | Formal definitions |
-| Constructions chapter | Describe constructions as in: getting new from old | #formal | Formal definitions | |
-| Applications chapter | Show how domain things can be defined using CT or do something with CT results | #formal | | Essential theory|
-| Commentary chapter | Communicate, and comment on, the categorcal way of thinking on a meta-level; ground this content in specific concepts and examples| #commentary | | Formal definitions|
-=======
 | Definition chapter | Provide formal mathematical content. | formal | Formal defintiions | Intuition/motivation |
 | Intuition chapter | Provide intuition for why the theme is important. | informal | | Formal definitions |
 | Constructions chapter | Describe constructions as in: getting new from old | formal | Formal definitions | |
 | Applications chapter | Show how domain things can be defined using CT or do something with CT results | formal | | Essential theory|
 | Commentary chapter | Communicate, and comment on, the categorcal way of thinking on a meta-level; ground this content in specific concepts and examples| formal | | Formal definitions|
->>>>>>> JL-drafting-branch
 
 
 ### Types of sections in a mathematical chapter
@@ -154,13 +138,6 @@ This is a non-exhaustive list of some types of sections that appear often in a m
 The structure is often something like this:
 
 - Intuition chapter
-<<<<<<< HEAD
-- Definitions chapter
-- Constructions chapter (new from old)
-  - note: this kind of chapter appears in many parts, but not all
-- Applications chapter(s)
-  - ideally: every theory part is recalled in some application chapter
-=======
    - example: the chapter "Intro: Series composition" at the beginning of the book part on Categories
 - Definitions chapter
    - example: the chapter "Sets with operations" in the book part on Algebra
@@ -172,7 +149,6 @@ The structure is often something like this:
 - Applications chapter(s)
   - example: the chapter "Application: System behaviors" in the book part on Functors
   - example: the chapter "Application: Databases" in the book part on "Higher structures"
->>>>>>> JL-drafting-branch
 - Definitions chapter "one level up" 
   - e.g. after algebra, morphisms/ actions
   - e.g. after orders, monotone functions
