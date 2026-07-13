@@ -75,6 +75,7 @@ The style we chose: [ To Do ]
 - [hard] P_SIMP-EX-ACC: The Simple Examples chapters are understanbale easily with minimum prerequiresites met
 - [soft] P_ONE-MESSAGE: In general, on any given page or short sequence of pages there are not too many main messages being communicated at once. The main point should be clear, and larger distractions from the main line of storytelling and explanation should be avoided.
 - [soft] P_WHY-ACT: Keep in mind and include where relevant: underscore the 'why' of why we care about using categories. This will be addressed squarely in the introduction to the book, however it should also appear sporadically, where relevant, throughout the book.  
+- [soft] Ideally every main theory topic is recalled and illustrated in some application chapter ("application chapters" are described later below). If not, then such topics must at least be illustrated with an application example inside a mathematical chapter.
 
 ### Consequences.
 
@@ -136,11 +137,17 @@ This is a non-exhaustive list of some types of sections that appear often in a m
 The structure is often something like this:
 
 - Intuition chapter
+   - example: the chapter "Intro: Series composition" at the beginning of the book part on Categories
 - Definitions chapter
+   - example: the chapter "Sets with operations" in the book part on Algebra
 - Constructions chapter (new from old)
   - note: this kind of chapter appears in many parts, but not all
+  - example: the chapter "New posets from old" in the book part on Order
+  - example: the chapter "New from old" in the book part on Algebra
+  - example: the chapter "New categories from old" in the book part on Categories
 - Applications chapter(s)
-  - ideally: every theory part is recalled in some application chapter
+  - example: the chapter "Application: System behaviors" in the book part on Functors
+  - example: the chapter "Application: Databases" in the book part on "Higher structures"
 - Definitions chapter "one level up" 
   - e.g. after algebra, morphisms/ actions
   - e.g. after orders, monotone functions
