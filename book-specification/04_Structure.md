@@ -1,101 +1,4 @@
 
-# Book specification
-
-## Introduction/context
-
-We are writing a book called "Categories and Compositionality, with a view to Applications" which is an introductory textbook on applied category theory.
-
-### Related works
-
-(list of books and notes about what we want to be similar or not)
-
-- "Category Theory for the Sciences", by David Spivak
-  - Similarities: 
-  - Dissimilarities: 
-- "An Invitation to Applied Category Theory", by Brendan Fong and David Spivak
-  - Similarities: 
-  - Dissimilarities: 
-- "The Joy of Abstraction" by Eugenia Cheng
-  - Similarities: 
-  - Dissimilarities: 
-
-
-### Goals of the book
-
-"This book does this, to this audience (with X prereqs)"
-
-### Learning objectives
-
-It must cover these topics:
-
-Category theory notions: 
-- categories
-- functors
-- natural transformations
-- symmetric monoidal categories
-- adjunctions
-- monads
-- enriched categories
-
-Operational learning objectives: (ToDo!!)
-- learn to model with categories
-- ...
-- ...
-- ...
-
-### Audience
-
-The target audience of the book:
-
-- (primary) Master's and PhD students in Engineering disciplines, Computer Science, and Applied Mathematics
-- (primary) Professionals working in academia and industry in roles that involve engineering, computer science, or other applied domains that use mathematics and modeling to solve real-world problems. 
-- (primary) Lecturer's teaching applied mathematics at universities
-- (secondary) Researchers working in applied category theory
-- (secondary) Bachelor's students in Engineering disciplines and Computer Science
-- (secondary) University students in mathematics and natural sciences
-
-### Prerequireiste for reading
-
-We assume that the audiecne already knows (listed in order of priority):
-
-- Familiarity with mathematical logic and reasoning at the level of a bachelor student in Engineering
-- Knowledge of linear algebra at the level of a bachelor student in Engineering
-- Knowledge of probability theory at the level of a bachelor student in Engineering
-
-
-
-
-
-
-
-## Guidance
-(make a priority poset)
-
-- [hard] P_TH-MOTIV-APP: All theory is motivated from the point of view of applications.
-  - Rationale: this validates that the thoery is used for something
-  - Exception: dual concepts only need one of the pair used.
-- [hard] P_TH-SELF-CONTAINED: The theory is self-contained, up to prerequisite knowledge.
-- [soft] P_BOOK-FUNCTIONS: Overall, the book the main function of the book is to serve as a pedagogical introduction that may be used for self-study or as an aide for teaching courses. It should not be thought of mainly as a reference text, even though it is intended, secondarily, to serve as a reference. The structure of the book should not become too rigid in any attempt to be systematic or exhaustive; on the other hand, we want to avoid obscuring inherent systematic structures in category theory (and generally in our covered topics) that are helpful or even essential for readers to see and understand.
-
-- [soft] P_ONE-MESSAGE: In general, on any given page or short sequence of pages there are not too many main messages being communicated at once. The main point should be clear, and larger distractions from the main line of storytelling and explanation should be avoided.
-- [soft] P_WHY-ACT: Keep in mind and include where relevant: underscore the 'why' of why we care about using categories. This will be addressed squarely in the introduction to the book, however it should also appear sporadically, where relevant, throughout the book.  
-- [soft] Ideally every main theory topic is recalled and illustrated in some application chapter ("application chapters" are described later below). If not, then such topics must at least be illustrated with an application example inside a mathematical chapter.
-
-## Prescriptions
-(must be jointly satisfiable)
-
-- [requirement] P_SIMP-EX-ACC: The Simple Examples chapters must be understanbale easily with minimum prerequiresites met
-  - Example:
-  - Non-example: 
-
-
-
-## Consequences
-
-- P_TH-SELF-CONTAINED => Removing all the applications chapters keeps the book readable.
-- P_TH-SELF-CONTAINED => no dependece of non-applications to applications chapters
-- [soft] Every theory construction is recalled/used in either 1) an applied example or 2) an application chapter.
-- [soft] P_TH-MOTIV-APP: => Whenever we supply ``simple mathematical examples'' these should also be illustrated with a "subexample" that is more concrete and applied -- in order to spell out the more concrete implications and possible applied uses of the mathematical examples. These additional concrete examples should be small enough that readers can easily chew on them, but insightful enough to be relevant. Even if the applied examples are relatively simple, this step from generic math to context specific use is often a gap that is valuable (and often nontrivial) to bridge).
 
 
 ## Book structure
@@ -104,9 +7,13 @@ The book is divided in parts, parts are divided into chapters, and chapters are 
 
 A part typically contains 4-8 chapters. A chapter typically contains 2-10 sections. Each section is typically 1-7 pages.
 
+Rem: avoid numbers; rather we have a hierarchy and a size of a section/chapter should be comparable across the book... (after all, pages number depends on size of paper). Define instead more instrinsically -- e.g. a section should be a 'module' in a lecture -- something that has a self-contained shape and is the unit of what one could put in a lecture or not.
+
 ### Types of chapters
 
-There are various types and subtypes of chapters:
+There are various types and subtypes of chapters: (prescriptive or descriptive?? -> prescriptively define)
+One can also be descriptive about "note, the current state is...", but...
+
 - intuition chapter
 - mathematical chapter
   - definition chapter
@@ -139,6 +46,7 @@ Examples of each type of chapter:
 
 
 - Applications chapter
+  - Goal: convey meta-thinking and advanced intuition about the material
   - Example: the chapter "Modelling with categories" in the book part on Categories
   - Example: the chapter "Application: System behaviors" in the book part on Functors
   - Example: the chapter "Application: Databases" in the book part on "Higher structures"
@@ -222,7 +130,7 @@ The structure is often something like this:
 
 ### Typical structure of a mathematical definition section (#Sec_Math_Def) inside a mathematical chapter
 
-- #Sec_Math_Def: Mathematical definition
+- Definition: a #Sec_Math_Def is... (ToDo)
 
   - Subsection: Formal definition
 
@@ -261,19 +169,3 @@ The structure is often something like this:
   TBD
 
 
-## Style
-
-The style we chose: [ To Do ]
-
-
-### Tone
-
-
-
-#### Definition of tones
-
-| | |
-|---|---|
-| #formal | Formal mathematics but not stuffy |
-| #informal | Informal storytelling close to the style of talking to an intelligent lay-person; 'toy examples' that are simple and from everyday life; no technical mathematics; if mathematics is used, then intuitions are emphasized and explained |
-| #commentary | Informal in the style of talking to an intellent reader who has now understood a certain portion of the book's material (and is in this sense a "colleague") and who we wish to convey meta-thinking and advanced intuition about the material
