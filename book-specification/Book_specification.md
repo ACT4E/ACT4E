@@ -102,6 +102,35 @@ There are various types and subtypes of chapters:
   - commentary chapter
 - applications chapter
 
+Examples of each type of chapter:
+
+- Intuition chapter
+   - example: the chapter "Intro: Series composition" at the beginning of the book part on Categories
+
+- Definitions chapter
+   - example: the chapter "Sets with operations" in the book part on Algebra
+
+- Definitions chapter "one level up" (a variant of definitions chapters)
+  - note: most parts don't need to have such a chapter; so far, there are only two parts in the book where there is a pattern of "Defitions chapter and then later in the same part a chapter on definitions that are one level up". 
+  - example: the chapter "Morphisms" in the book part on algebra (it discusses definitions that are  "one level up" from the definitions of semigroup, monoid, and group that are discussed in the earlier chapter "Sets with operations" in the same book part on "Algebra")
+  - example: the chapters "Monotone functions" and "Monotone relations" in the book part on Order
+
+- Constructions chapter (new from old)
+  - example: the chapter "New posets from old" in the book part on Order
+  - example: the chapter "New from old" in the book part on Algebra
+  - example: the chapter "New categories from old" in the book part on Categories
+
+
+   
+- Commentary chapter
+
+- Applications chapter
+  - example: the chapter "Application: System behaviors" in the book part on Functors
+  - example: the chapter "Application: Databases" in the book part on "Higher structures"
+
+
+
+
 
 Each type of chapter has a respective goal, tone, and scope, as specified in the following table: 
 
@@ -138,22 +167,22 @@ This is a non-exhaustive list of some types of sections that appear often in a m
 The structure is often something like this:
 
 - Intuition chapter
-   - example: the chapter "Intro: Series composition" at the beginning of the book part on Categories
+  - when relevant
+   
 - Definitions chapter
-   - example: the chapter "Sets with operations" in the book part on Algebra
-- Constructions chapter (new from old)
-  - note: this kind of chapter appears in many parts, but not all
-  - example: the chapter "New posets from old" in the book part on Order
-  - example: the chapter "New from old" in the book part on Algebra
-  - example: the chapter "New categories from old" in the book part on Categories
+  - sometimes multiple definitions chapters are needed
+   
+- Constructions chapter 
+  - when relevant
+  
+- Definitions chapter "one level up" (or simply another definitions chapter) 
+  - when relevant
+
 - Applications chapter(s)
-  - example: the chapter "Application: System behaviors" in the book part on Functors
-  - example: the chapter "Application: Databases" in the book part on "Higher structures"
-- Definitions chapter "one level up" 
-  - e.g. after algebra, morphisms/ actions
-  - e.g. after orders, monotone functions
-  -
+  - not every part needs to have such a chapter
+   
 - Commentary chapter
+  - when relevant
 
 ### Typical structure of a *mathematical chapter*
 
