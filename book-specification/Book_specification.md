@@ -106,12 +106,13 @@ Examples of each type of chapter:
 
 - Intuition chapter
    - example: the chapter "Intro: Series composition" at the beginning of the book part on Categories
+   - example: the chapter "Intro: Structuralism" at the beginning of the book part on "Categorical constructions"
 
 - Definitions chapter
    - example: the chapter "Sets with operations" in the book part on Algebra
 
 - Definitions chapter "one level up" (a variant of definitions chapters)
-  - note: most parts don't need to have such a chapter; so far, there are only two parts in the book where there is a pattern of "Defitions chapter and then later in the same part a chapter on definitions that are one level up". 
+  - note: most parts don't need to have such a chapter; so far, there are only two parts in the book where there is a pattern of "Definitions chapter and then later in the same part a chapter on definitions that are one level up". 
   - example: the chapter "Morphisms" in the book part on algebra (it discusses definitions that are  "one level up" from the definitions of semigroup, monoid, and group that are discussed in the earlier chapter "Sets with operations" in the same book part on "Algebra")
   - example: the chapters "Monotone functions" and "Monotone relations" in the book part on Order
 
@@ -120,11 +121,13 @@ Examples of each type of chapter:
   - example: the chapter "New from old" in the book part on Algebra
   - example: the chapter "New categories from old" in the book part on Categories
 
-
-   
 - Commentary chapter
+  - example: the chapter "Categorical ways of thinking, I" at the end of the book part on "Categorical constructions"
+  - example: the chapter "Categorical ways of thinking, II" at the end of the book part on "Functors"
+
 
 - Applications chapter
+  - example: the chapter "Modelling with categories" in the book part on Categories
   - example: the chapter "Application: System behaviors" in the book part on Functors
   - example: the chapter "Application: Databases" in the book part on "Higher structures"
 
@@ -146,7 +149,7 @@ Each type of chapter has a respective goal, tone, and scope, as specified in the
 
 ### Types of sections in a mathematical chapter
 
-This is a non-exhaustive list of some types of sections that appear often in a mathematical chapter:
+This is a non-exhaustive list of some types of sections that may appear in a mathematical chapter:
 - #Sec_Math_Moti: Motivating mathematical examples before definition
 - #Sec_Math_Def: Mathematical definition
 - #Sec_Appl_Exa: Application-inspired examples
@@ -160,6 +163,8 @@ This is a non-exhaustive list of some types of sections that appear often in a m
   - Example: Linear algebra material in the Actions chapter
 - #Sec_Fur_Theo: Further theory
   - Goal: Discuss any theory that we think is worth including, but would distract from the main message in a "Mathematical defintion" section
+- #Sec_Trailhead: 
+  - Goal: Briefly and informally introduce a topic that we choose to not cover formally in the book, but that we wish the reader to be aware of; we explain (and teaser) the basic idea and we provide references where one can learn more
 
 
 ### Typical structure of a part
