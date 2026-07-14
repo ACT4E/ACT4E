@@ -1,81 +1,8 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Ordered sets}
+\section{Posets}
+\label{sec:posets}
 
-\label{sec:tradeoffs-ordered-sets}
-\linkvideo{spring2021-tradeoffs:tradeoffs:orders:pre-pos-tot} % Pre-orders, partial orders, and total orders
-
-%\linkvideo{spring2021-tradeoffs:tradeoffs:orders} % Orders
-
-%
-% While we discussed how categories can describe the way in which one resource can be turned into another, this kind of modelling did not allow for quantitative statements.
-% For example, it is good to know that we can obtain motion from electric power, but, how fast can we go with a certain amount of power?
-
-% To achieve a quantitative theory, we need to specify various degrees of resources and functionality.
-% One way of doing this is using the idea of orders.
-
-% Such orderings arise naturally in engineering as criteria for judging whether one design is better or worse than another.
-% As an example, suppose you need to buy a battery.
-% In this simple example, you can think of having two resources: mass and money.
-% A lighter battery might be more expensive, and a heavier one could be more affordable.
-% How to choose among batteries, if you do not prefer one resource over the other?
-% How to model this?
-In this section, we introduce pre-orders, partial orders, and total orders.
-Davey and Priestley~\cite{davey02} and Roman~\cite{roman08} are possible reference texts.
-
-% We introduce these concepts by adding levels of specificity.
-
-\vspace{2cm}
-
-\subsection{Pre-orders}
-
-\todotext{Discuss resource convertibility here to motivate preorders}
-
-\begin{marginfigure}
-    \centering
-    \includesag{pre_order_graph}
-    \caption[A pre-order represented as a graph.]{A \SY{pre-order} represented as a graph.}
-    \label{fig:pre_order_graph}
-\end{marginfigure}
-
-A \SY{pre-order} is a set together with a binary relation that is both \SY{reflexive} (\cref{def:endo_reflexive_irreflexive}) and \SY{transitive}~(\cref{def:transitive-relation}).
-\begin{ctdefinition}[Pre-ordered set]
-    \label{def:preorder}
-    A \maindef{pre-ordered set} is a tuple~$\posAdefinition$, where~$\posAset$ is a set, called the \emph{carrier set} or \emph{underlying set}, together with a relation~$\posAleq$ that is
-    \SY{reflexive} and \SY{transitive}.
-\end{ctdefinition}
-An example of a \SY{pre-ordered set} represented as a graph is shown in \cref{fig:pre_order_graph}.
-In the graph representation of a \SY{pre-order}~\posA, we draw an arrow between~$\posela$ and~$\poselb$ if~$\posela \posAleq \poselb$.
-
-\begin{example}
-    The reachability relationship in any directed graph (potentially including cycles) is a pre-order.
-    The pre-order $\posA$ is defined as follows.
-    The set $\posAset$ is the set of nodes of the graph.
-    Take any two nodes~$\ela,\elb \setin \posAset$.
-    One has $\ela \posAleq \elb$ if and only if there is a path from $\ela$ to $\elb$ in the directed graph.
-    There is always a path from a node to itself (reflexivity), and given a path from $\ela$ to $\elb$, and one from $\elb$ to $\elc$, we know that there is a path from $\ela$ to $\elc$ (transitivity).
-\end{example}
-
-\begin{exercise}
-    \label{ex:findpreorders}
-    Consider the set $\posAset=\makeset{\ela,\elb,\elc}$.
-    Which of the following are pre-orders? Why?
-    \begin{enumerate}
-        \item $\posA= \makeset{\tup{\ela,\ela},\tup{\ela,\elb},\tup{\elb,\ela},\tup{\elb,\elb}}$.
-        \item $\posB= \makeset{\tup{\ela,\elb},\tup{\elb,\elc},\tup{\elc,\ela}}$.
-    \end{enumerate}
-\end{exercise}
-
-\begin{solution}
-    $\posA$ is a pre-order, because it satisfies reflexivity and transitivity.
-    $\posB$ violates both reflexivity (e.g., $\tup{\ela,\ela}$ is missing), and transitivity (e.g., $\tup{\ela,\elc}$ is missing).
-\end{solution}
-
-\todotext{JL: we should include more examples here. }
-
-\vfill
-
-\subsection{Partial orders}
 
 \begin{marginfigure}
     \centering
@@ -345,4 +272,82 @@ The order~\posA on the set~$\makeset{\mat{A},\mat{B},\mat{C}}$ is reported in \c
 The ellipse representing~$\mat{A}$ (in red) is included by the one representing matrix~$\mat{B}$ (in blue), but not by the one representing matrix~$\mat{C}$ (in green).
 Furthermore, the one representing~$\mat{B}$ includes the one representing~$\mat{C}$.
 
+
+
+
+\paragraph{Power poset}
+\todotext{make this an example in the section where poset/preorder definitions are given, not its own section}
+
+We have introduced the concept of power set in \cref{sec:power-set}.
+There is a natural order on subsets, given by set inclusion.
+We can thus define the \emph{power poset}.
+
+\SYNDEF{power poset}
+\begin{definition}[Power poset]
+    \label{def:power-poset}
+    Given a set~\setA, the \maindef{power poset}~$\powerposet\setA$ is defined as its power set $\powerset\setA$ ordered by set inclusion ($\setsubseteq$).
+    Formally, this is the pair $\tup{\powerset\setA, \setsubseteq}$.
+
+    A subset~$\subA$ precedes~$\subB$ if~$\subA \setsubseteq \subB$:
+    \begin{equation} \label{eq:pospower}
+        \vmiddle{
+            \prfdoubleperiod{
+                \subA \posleqof{\powerposet\setA} \subB
+            }{
+                \subA \setsubseteq \subB
+            }
+        }
+    \end{equation}
+    % Composition is given by composition of inclusions, meaning that if~$\setA\setsubseteq \setB \setsubseteq \setC$, then~$\setA\setsubseteq \setC$.
+\end{definition}
+This is illustrated in~\cref{fig:powersetcat} for sets of 0, 1, 2, 3 elements.
+\begin{exercise}
+    Check formally that $\posleqof{\powerposet\setA}$ defined in \cref{eq:pospower} is a partial order.
+\end{exercise}
+\begin{solution}
+    Consider a set~\setA.
+    Clearly, given~$\subA\setin \powerset \setA$, we have~$\subA\setsubseteq \subA$.
+    Furthermore, given also~$\subB\setin \powerset \setA$, we have
+    \begin{equation}\label{eq:ex-pospower-1}
+        \prfperiod{
+            \subA\setsubseteq \subB
+        }{
+            \subB\setsubseteq \subA
+        }{
+            \subA=\subB
+        }
+    \end{equation}
+    Finally, given also~$\subC\setin \powerset \setA$, we have
+    \begin{equation}\label{eq:ex-pospower-2}
+        \prfperiod{
+            \subA\setsubseteq \subB
+        }{
+            \subB\setsubseteq \subC
+        }{
+            \subA\setsubseteq\subC
+        }
+    \end{equation}
+\end{solution}
+\vfill
+\begin{figure*}[h]
+    \centering
+    \subfloat[$\powerposet\Emptyset$]{
+        \includesag{40_dpcatfig_power_1}
+    }
+    \hfill
+    \subfloat[$\powerposet\makeset{\posela}$]{
+        \includesag{40_dpcatfig_power_2}
+    }
+    \hfill
+    \subfloat[$\powerposet\makeset{\posela,\poselb}$]{
+        \includesag{40_dpcatfig_power_3}
+    }
+    \hfill
+    \subfloat[$\powerposet\makeset{\posela,\poselb,\poselc}$ \label{fig:powersetcat3}]{
+        \includesag{40_dpcatfig_power}
+    }
+    \caption{Power set as a poset.
+    }
+    \label{fig:powersetcat}
+\end{figure*}
 \vfill

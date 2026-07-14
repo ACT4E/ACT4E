@@ -1,0 +1,350 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Design problems as monotone relations}
+
+
+
+
+\begin{definition}[monotone relation]
+Let $\posAdefinition$ and~$\posBdefinition$ be posets. A monotone relation $\relA \colon \posA \mto \posB$ is a relation $\relA \colon \posAset \to \posBset$ such that for all $\ela, \ela' \in \posAset$ and all $\elb, \elb' \in \posBset$, 
+\begin{enumerate}
+\item $\tup{\ela, \elb} \in \relA, \ \ela' \leq_{\posA} \ela \ \implies \tup{\ela', \elb} \in \relA$;
+\item $\tup{\ela, \elb} \in \relA, \ \elb \leq_{\posB} \elb' \ \implies \tup{\ela, \elb'} \in \relA$.
+\end{enumerate}
+\end{definition}
+
+\subsection{Monotone relations and co-design}
+
+A monotone relation
+\begin{equation}
+\adp \colon \funsp \mto \ressp
+\end{equation}
+can be used to model a relationship of ``feasability'' between a poset $\funsp$ of ``functionalities'' and a poset $\ressp$ of ``requirements", in the sense that the relation describes whether a resource $\fun \setin \funsp$, seen as a functionality or service or product, is \emph{feasible} to obtain given a certain resource $\res \setin \ressp$, with $\res$ interpreted as a requirement or a cost.
+
+The condition
+\begin{equation}\label{eq:mon-rel-cond-1}
+\tup{\fun, \res} \in \adp, \ \res \leq_{\ressp} \res' \ \implies \tup{\fun, \res'} \in \adp
+\end{equation}
+says that if $\fun$ is feasible to obtain using $\res$, then it is also feasible to obtain $\fun$ if we use more resources, $\res'$. 
+
+The condition
+\begin{equation}\label{eq:mon-rel-cond-2}
+\tup{\fun, \res} \in \adp, \ \fun' \leq_{\funsp} \fun \ \implies \tup{\fun', \res} \in \adp,
+\end{equation}
+on the other hand, says that if $\fun$ is feasible to obtain using $\res$ amount of resources, then it is also feasible to obtain less, $\fun'$, using the same resources $\res$. 
+
+
+
+\subsection[Design problems]{Design problems}
+\label{sec:dpdefinition}
+\SYNDEF{design problem}
+
+Here is an alternative way to think about relations of feasibility. Given a particular functionality~$\fun \in \funsp$ and requirement~$\res \in \ressp$, we would like to know a ``true'' or ``false'' answer to the question of whether they form a feasible pair of resources. This situation is described by a function
+%
+\begin{equation}
+    \mapb\colon \funsp \cartprod \ressp \sto \boolset.
+    % leave cartprod
+\end{equation}
+%
+The value~$\mapb(\fun, \res)$ is the answer to the question ``is the functionality~\fun feasible with resources~\res?''.
+
+The conditions \cref{eq:mon-rel-cond-1} and \cref{eq:mon-rel-cond-2} can now be translated into this formulation: they say, respectively, that $\mapb\colon \funsp \cartprod \ressp \sto \boolset$ is monotone in the variable $\res$ and antitone in the variable $\fun$. Or, equivalently, we can say that we have a monotone map of two variables of the type
+\begin{equation}
+     \funspop \Ptimes \ressp \sto \Bool.
+    % leave cartprod
+\end{equation}
+
+
+
+%\linkvideo{spring2021-design:design:bool-prof} % Boolean profunctors
+
+\begin{definition}[Design Problem]
+    \label{def:design-problem}
+    Given posets $\funsp$ and $\ressp$, a \maindef{design problem} (DP) from $\funsp$ to $\ressp$ is a \SY{monotone map} of the form%
+    \begin{equation}
+        \label{eq:design_prob_as_monfun}
+        \adp \colon \funspop \Ptimes \ressp \toinPos \Bool.
+    \end{equation}
+\end{definition}
+
+\begin{definition}[Feasible set of a design problem]
+    \label{def:dp-feasible-set}
+    We define the \emph{feasible set}~$\feasibleset{\adp}$ of a design problem
+    \begin{equation}
+        \label{eq:generic-design-prob}
+        \adp\colon \funspop \Ptimes \ressp \toinPos \Bool
+    \end{equation}
+    as the subset of~$\funspop\Ptimes \ressp$ for which~$\adp$ is the \emph{indicator function}, that is%
+    \begin{equation}
+        \label{eq:design-prob-as-upper-set}
+        \feasibleset{\adp} = \makeset{ \tup{\F{\fun^*},\res} \setin \funspop\Ptimes \ressp \mid %
+            \adp(\fun\Fop, \res) = \true %
+        }.
+    \end{equation}
+\end{definition}
+
+Note that the feasibility set~$\feasibleset{\adp}$ of a \SY{design problem}~$\adp \colon \funspop \Ptimes \ressp\toinPos \Bool$ is a binary relation~$\feasibleset{\adp} \setsubseteq \funspop \Ptimes \ressp$.
+We saw in \cref{rem:rel-three-fun-descriptions} that there is a one-to-one correspondence between functions~$\mapb \colon \setA \cartprod \setB \sto \boolset$ and binary relations~$\relA\colon \setA \mto \setB$.
+
+
+
+
+\begin{gradedexercise}[\exname{DPsAsUpperSets}]
+    \label{ex:DPsAsUpperSets}
+
+    In this exercise, your task is to prove that there is a one-to-one correspondence between \SY{design problems}~$\adp \colon \funspop \Ptimes \ressp\toinPos \Bool$ and \SY{upper sets}~$\feasibleset{} \setsubseteq \funspop \Ptimes \ressp$.
+
+    In more detail:
+
+    Let $\setA$ denote the set of all \SY{design problems}~$\adp \colon \funspop \Ptimes \ressp\toinPos \Bool$ and let $\setB$ denote that set of all \SY{upper sets}~$\feasibleset{} \setsubseteq \funspop \Ptimes \ressp$.
+
+    \begin{enumerate}
+        \item Define a function
+              \begin{equation*}
+                  \mapa \colon \setA \sto \setB
+              \end{equation*}
+              which to any design problem in $\setA$ assigns a corresponding upper set in $\setB$.
+
+        \item Define a function
+              \begin{equation*}
+                  \mapb \colon \setB \sto \setA
+              \end{equation*}
+              which maps any upper set in $\setB$ to a corresponding design problem in $\setA$.
+        \item Prove that $\mapa$ and $\mapb$ are inverses to one another.
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{DPsAsUpperSets}
+
+
+\begin{gradedexercise}[\exname{DPsFromMonotoneMaps}]
+    \label{ex:DPsFromMonotoneMaps}
+
+    Given any monotone map~$\mapb\colon \funsp \toinPos \ressp$, we can turn it into a design problem
+    \begin{equation*}
+        \adp_\mapb \colon \funspop \Ptimes \ressp \toinPos \Bool
+    \end{equation*}
+    via the following recipe.
+    Set
+    \begin{equation*}
+        \adp_\mapb (\fun\Fop, \res) = \true \quad \text{if and only if} \quad \mapb(\fun) \posleq \res.
+    \end{equation*}
+
+    Prove that~$\adp_\mapb$, as defined above, is indeed a \SY{design problem} when~$\mapb$ is a \SY{monotone map}.
+\end{gradedexercise}
+
+\solutionof{DPsFromMonotoneMaps}
+
+Recall that when working with a relation~$\relA \colon \setA \sto \setB$ between sets, if the sets in question were finite, then we could conveniently draw the relation~\relA using arrows to connect elements of~\setA to those elements of~\setB to which they are related via~\relA.
+Given a \SY{design problem}~$\adp \colon \funspop \Ptimes \ressp\toinPos \Bool$ involving finite \SY{posets}, we can visualize it in a similar fashion.
+We use Hasse diagrams to visualize the \SY{posets} involved, and we use dashed arrows to connect those elements which are related via the feasibility set~$\feasibleset{\adp}$.
+
+\begin{marginfigure}
+    \centering
+    \includesag{example_dp_composition_xy}
+    \caption{}
+    \label{fig:example_dp_graph_xy}
+\end{marginfigure}
+\begin{marginfigure}
+    \centering
+    \includesag{example_dp_graph_xy_feas}
+    \caption{}
+    \label{fig:example_dp_graph_xy_feas}
+\end{marginfigure}
+
+\begin{example}
+    \label{exa:visualize-dp}
+    In \cref{fig:example_dp_graph_xy} we have illustrated this kind of visualization in the case of a \SY{design problem} of the type
+    \begin{equation}
+        \adp \colon \F{\posgenA} \posop \Ptimes \R{\posgenB} \toinPos \Bool,
+    \end{equation}
+    where~$\F{\posgenA} = \tup{\posAset, \posleq}$ and~$ \R{\posgenB} = \tup{\posBset, \posleq}$ are finite \SY{posets}, with
+    \begin{equation}
+        \posAset = \makeset{ \setAeln{1}, \setAeln{2}, \setAeln{3} }
+        \qqand
+        \posBset = \makeset{ \setBeln{1}, \setBeln{2}},
+    \end{equation}
+    and ordered as shown in the figure.
+
+    The relation described by the \SY{design problem} is marked with the dashed arrows;
+    The feasibility set
+    \begin{equation}
+        \feasibleset{\adp} = \makeset{\tup{\setAeln{1}, \setBeln{1}}, \tup{\setAeln{1}, \setBeln{2}}, \tup{\setAeln{2}, \setBeln{2}}, \tup{\setAeln{3}, \setBeln{2}} },
+    \end{equation}
+    is reported in \cref{fig:example_dp_graph_xy_feas}.
+\end{example}
+
+
+
+
+The Boolean-valued \SY{design problems} we are considering in this section do not distinguish between particular implementations: they only tell us if \emph{any} implementation or solution exists for given functionality and resources.
+
+
+    \paragraph{Diagrammatic notation}
+    We represent \SY{design problems} using a diagrammatic notation.
+    One \SY{design problem}~$\adp \colon \funsp \profto \ressp$ is represented as a box with functionality~\funsp on the \emph{left} and resources~\ressp on the \emph{right} (\cref{fig:diagrammaticdp}).
+    \begin{figure}[h!]
+        \centering
+        \includesag{50_diagrammatic}
+        \caption{Diagrammatic representation of a design problem. }
+        \label{fig:diagrammaticdp}
+    \end{figure}
+
+    As we did for DPIs, we will connect these diagrams.
+
+
+\begin{marginfigure}
+    \centering
+    \includesag{50_engine}
+    \caption{Diagram of the engine design problem.}
+    \label{fig:enginedp}
+\end{marginfigure}
+
+    \begin{example}
+        An aerospace company, Jeb's Spaceship Parts, is designing a new rocket engine, the Bucket of Boom X100.
+        The engine requires fuel and provides thrust, and so it can be modeled as a \SY{design problem} where \R{fuel} and \F{thrust} are two totally-ordered sets representing their respective resources.
+
+        The corresponding diagram is reported in~\cref{fig:enginedp}.
+
+        Concretely, ``engine'' is represented as a monotone map%
+        %
+        \begin{equation}
+            \text{engine} \colon \Ftext{thrust}\posop \Ptimes \Rtext{fuel} \toinPos \Bool.
+        \end{equation}
+        %
+        Assuming that the \SY{posets} \R{fuel}, \F{thrust}$\op$ are finite, we can think of the ``engine'' \SY{design problem} as a matrix, where each~$(i,j)$-th entry is the answer to the question, ``is the amount of thrust~$\F{f_i}$ feasible with the amount of fuel~$\R{r_j}$?'':
+        %
+        \begin{equation}
+            \begin{blockarray}{ccccccc}
+                &&&& \Rtext{Fuel} \\
+                && \R{r_1} = 0 & \R{r_2} & \R{r_3} & \hdots & \R{r_m} \\
+                \begin{block}{cc(ccccc)}
+                    & \F{f_n}\Fop = 0 & 0 & 0 & 0 & & 0 \\
+                    & \F{f_{n-1}^*} & 0 & 0 & 0 & & 1 \\
+                    \Ftext{thrust}\op & \F{f_{n-2}^*} & 0 & 1 & 1 & & 1 \\
+                    & \vdots & & & & \ddots & \\
+                    & \F{f_1^*} & 1 & 1 & 1 & & 1 \\
+                \end{block}
+            \end{blockarray}
+        \end{equation}
+        %
+        Suppose we have tested or are given the performance data of a few different engines, as possible solutions to the ``engine'' design problem, each with a fixed optimal fuel-thrust value.
+        To illustrate the monotonicity assumption, we can render the data of ``engine'' as a graph, as depicted in~\cref{fig:solenginedp}.
+        \begin{figure}[h!]
+            \centering
+            \includesag{50_engine_graph}
+            \caption{Graphical representation of the possible solutions of the engine design problem. }
+            \label{fig:solenginedp}
+        \end{figure}
+
+        Note that the shaded regions cover the feasible solution set.
+        This feasible solution set is always an \emph{upper set} (\cref{def:upperset}) in~$\Ftext{thrust}\posop \Ptimes \Rtext{fuel}$, which is another way of characterizing the monotonicity of the design problem.
+        The optimal solutions, indicated by dots, form an \emph{antichain} of solutions.
+        We will come back to \SY{antichains} when discussing how to compute optimal solutions of \SY{design problems}.
+
+    \end{example}
+
+
+    
+
+%\JT{Do we need 2 large examples, or can we move the battery example to the notes?}
+%
+%\newcommand{\cCapacity}{\text{Capacity}}
+%\newcommand{\cMass}{\text{Mass}}
+%
+%\begin{example}[Battery]
+%   A battery is a store of elecrical energy.
+%   We are interested in the relation between the capacity of the battery, measured
+%   in joules, and the mass of the battery, measured in grams.
+%   We will model the battery as a design problem
+%   \[
+%       \text{battery} : \cCapacity \profto \cMass,
+%   \]
+%   with the two \SY{posets} $\cCapacity$ and $\cMass$ defined as
+%   $\cCapacity \definedas \langle\mathbb{R}_+^{\text{J}}, \leq\rangle$
+%   and $\cMass \definedas \langle\mathbb{R}_+^{\text{g}}, \leq\rangle$, where ``$\leq$''' is the usual
+%   order on $\mathbb{R}_+$.
+%
+%This is the corresponding diagram:
+%   \[
+%   \centering
+%   \begin{tikzpicture}[oriented WD, bb min width =1.5cm, bby=2ex, bbx=.7cm,bb port length=3pt]
+%       \node[bb port sep=0.8, bb={1}{1}, bb name={battery}] (dp) {};
+%       \node [black, left = 0.2 of dp] {$\cCapacity$};
+%       \node [black, right = 0.2 of dp] {$\cMass$};
+%   \end{tikzpicture}
+%   \]
+%   The concrete representation of the design problem is
+%   \[
+%       \text{battery} \colon\cCapacity\op\times \cMass \toinPos \Bool,
+%   \]
+%%
+%   In this case, the feasibility question is
+%   \[
+%           \text{battery}(c^*, m) = \true \quad \Leftrightarrow  \quad
+%            \text{a battery of mass $m$ is sufficient to provide the capacity $c^*$.}
+%   \]
+%   It is easy to convince oneself that this ``$\text{battery}$'' is monotone from basic physics consideration.
+%   Monotonicity is equivalent to the following two assertions:
+%%
+%   \newcommand{\qsmall}[1]{{\color{blue}#1}}
+%   \newcommand{\qlarge}[1]{{\color{red}#1}}
+%%
+%\begin{enumerate}
+%\item We can provide a smaller capacity with the same mass:
+%   \begin{eqnarray}
+%       \text{For all}\  \qlarge{c_2}  \geq_{\cCapacity} \qsmall{c_1},\quad
+%       \text{a battery of mass $m$ is sufficient to provide the capacity $\qlarge{c_2}$} \\
+%       \Rightarrow
+%       \text{a battery of mass $m$ is sufficient to provide the capacity $\qsmall{c_1}$.}
+%   \end{eqnarray}
+%%
+%\item A battery of larger mass can provide the same capacity:
+%   \begin{eqnarray}
+%       \text{For all}\ \qlarge{m_2} \geq_{\cMass} \qsmall{m_1},\quad
+%       \text{a battery of mass $\qsmall{m_1}$ is sufficient to provide the capacity $c^*$} \\
+%       \Rightarrow
+%       \text{a battery of mass $\qlarge{m_2}$ is sufficient to provide the capacity $c^*$.}
+%   \end{eqnarray}
+%\end{enumerate}
+%
+%   Assume that there is a linear relation between mass and capacity,
+%   and such relation is described by the energy density~$\rho$ [Wh/kg].
+%   Then the minimum mass to provide~$c^*$ is~$m_\text{min} = m_0 + c^* / \rho$.
+%   So we have
+%   \[
+%       \text{battery}(c^*, m) = \true \quad \Leftrightarrow \quad  m \geq m_0 + c^* / \rho.
+%   \]
+%   A visualization of the feasible set $\feasibleset{\text{battery}}$ is in \cref{fig:battery-1}.
+%   Monotonicity means that if we fix one point $\tup{c^*,m}$,
+%   if we increase $c^*$, we can only see at most one transition, from feasible to unfeasible.
+%   Similarly, if we increase $m$, there is at most one transition from unfeasible to feasible.
+%
+%\end{example}
+%
+%\begin{figure}[h!]
+%    \caption{}
+% \label{fig:battery-1}
+%\end{figure}
+
+
+
+\subsection{A note on pre-orders}
+
+\todotext{If the above material is generalized to preorders, this subsection needs to be removed and/or put as a different kind of comment}
+
+    The theory of \SY{design problems} can be easily generalized to pre-orders.
+    This means that there could be two elements~$\posAel$ and~$\posBel$ such that~$\posAel\posAleq \posBel$ and~$\posAel \posAgeq \posBel$ but~$\posAel \neq \posBel$.
+
+    This is actually common in practice.
+    For example, if the order relation comes from human judgement, such as customer preference, all bets are off regarding the consistency of the relation.
+    We will only refer to \SY{posets} for two reasons:
+    \begin{enumerate}
+        \item The exposition is smoother.
+        \item Given a \SY{pre-order}, computation will always involve passing to the \SY{poset} representation.
+    \end{enumerate}
+    This means that, given a \SY{pre-order}, we can consider the \SY{poset} of its isomorphism classes, by means of the following \SY{equivalence relation}:
+    \begin{equation}
+        \posAel \simeq \posBel \quad \equiv \quad (\posAel \posAleq \posBel) \wedge (\posBel \posAleq \posAel).
+    \end{equation}
+
