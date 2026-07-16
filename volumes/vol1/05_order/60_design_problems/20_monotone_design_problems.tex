@@ -1,38 +1,52 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Design problems as monotone relations}
+\section{Monotone relations and design}
 
 
+We now spell out how monotone relations can be used as a simple and very general model for design situations where we are interested in how requirements and functionalities of a component of a system are related to one another. 
 
-
-\begin{definition}[monotone relation]
-Let $\posAdefinition$ and~$\posBdefinition$ be posets. A monotone relation $\relA \colon \posA \mto \posB$ is a relation $\relA \colon \posAset \to \posBset$ such that for all $\ela, \ela' \in \posAset$ and all $\elb, \elb' \in \posBset$, 
-\begin{enumerate}
-\item $\tup{\ela, \elb} \in \relA, \ \ela' \leq_{\posA} \ela \ \implies \tup{\ela', \elb} \in \relA$;
-\item $\tup{\ela, \elb} \in \relA, \ \elb \leq_{\posB} \elb' \ \implies \tup{\ela, \elb'} \in \relA$.
-\end{enumerate}
-\end{definition}
-
-\subsection{Monotone relations and co-design}
-
-A monotone relation
+Our setup is as follows: we use a monotone relation
 \begin{equation}
 \adp \colon \funsp \mto \ressp
 \end{equation}
-can be used to model a relationship of ``feasability'' between a poset $\funsp$ of ``functionalities'' and a poset $\ressp$ of ``requirements", in the sense that the relation describes whether a resource $\fun \setin \funsp$, seen as a functionality or service or product, is \emph{feasible} to obtain given a certain resource $\res \setin \ressp$, with $\res$ interpreted as a requirement or a cost.
+to model a relationship of ``feasability'' between a poset $\funsp$ of ``functionalities'' and a poset $\ressp$ of ``requirements", in the sense that the relation describes whether a resource $\fun \setin \funsp$, seen as a functionality or service or product, is \emph{feasible} to obtain given a certain resource $\res \setin \ressp$, with $\res$ interpreted as a requirement or a cost. In other words, the monotone relation $\adp$ tells us whether the pair $\tup{\fun, \res}$ is feasible or not. 
+
+Note that $\adp$ plays the role of the system component here, and feasability is \emph{relative} to $\adp$. We can, of course, consider various different monotone relations between the same two resource posets, for example $\adp_1 \colon \funsp \mto \ressp$ and $\adp_2 \colon \funsp \mto \ressp$. In this case, a given pair of resources $\tup{\fun, \res}$ might be feasible with respect to $\adp_1$, but not with respect to $\adp_2$. 
+
+\subsection{Monotonicity}
+
+So far in our discussion, we have described how we use a monotone relation to model a \emph{relation} of feasability. Now let us explain the role of the property of \emph{monotonicity}. For this, let us recall the definition of a monotone relation in full, this time phrased just for posets and in the notation of functionalities and requirements. 
+
+\begin{ctdefinition}[monotone relation as feasibility relation]
+Let $\funsp = \tup{\setF, \posleq_\funsp}$ and~$\ressp = \tup{\setR, \posleq_\ressp}$ be posets. 
+
+A monotone relation $\adp \colon \funsp \mto \ressp$ is:
+
+\constit
+\begin{enumerate}
+\item a relation $\adp \colon \setF \mtoin{\Rel} \setR$ 
+\end{enumerate}
+\condit
+\begin{enumerate}
+\item $\tup{\fun, \res} \in \adp, \quad \fun' \posleq_\funsp \fun \ \implies \tup{\fun', \res} \in \adp$;
+\item $\tup{\fun, \res} \in \adp, \quad \res \posleq_\ressp \res' \ \implies \tup{\fun, \res'} \in \adp$.
+\end{enumerate}
+\end{ctdefinition}
+
+
+
 
 The condition
 \begin{equation}\label{eq:mon-rel-cond-1}
-\tup{\fun, \res} \in \adp, \ \res \leq_{\ressp} \res' \ \implies \tup{\fun, \res'} \in \adp
+\tup{\fun, \res} \in \adp, \quad \res \leq_{\ressp} \res' \ \implies \tup{\fun, \res'} \in \adp
 \end{equation}
-says that if $\fun$ is feasible to obtain using $\res$, then it is also feasible to obtain $\fun$ if we use more resources, $\res'$. 
+says that if $\fun$ is feasible to obtain using $\res$, then it is also feasible to obtain $\fun$ if we use more resources, $\res'$. In other words, it is always possible to use more resources to get the same result. 
 
 The condition
 \begin{equation}\label{eq:mon-rel-cond-2}
 \tup{\fun, \res} \in \adp, \ \fun' \leq_{\funsp} \fun \ \implies \tup{\fun', \res} \in \adp,
 \end{equation}
-on the other hand, says that if $\fun$ is feasible to obtain using $\res$ amount of resources, then it is also feasible to obtain less, $\fun'$, using the same resources $\res$. 
-
+on the other hand, says that if $\fun$ is feasible to obtain using resources $\res$, then it is also feasible to obtain less, $\fun'$, using the same resources $\res$. 
 
 
 \subsection[Design problems]{Design problems}
@@ -330,8 +344,6 @@ The Boolean-valued \SY{design problems} we are considering in this section do no
 
 
 \subsection{A note on pre-orders}
-
-\todotext{If the above material is generalized to preorders, this subsection needs to be removed and/or put as a different kind of comment}
 
     The theory of \SY{design problems} can be easily generalized to pre-orders.
     This means that there could be two elements~$\posAel$ and~$\posBel$ such that~$\posAel\posAleq \posBel$ and~$\posAel \posAgeq \posBel$ but~$\posAel \neq \posBel$.
