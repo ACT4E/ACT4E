@@ -1,5 +1,5 @@
 
-# Book specification
+#  Goals and audience
 
 ## Introduction/context
 
@@ -11,18 +11,31 @@ We are writing a book called "Categories and Compositionality, with a view to Ap
 
 - "Category Theory for the Sciences", by David Spivak
   - Similarities: 
+    - both books connect category theory concepts with applications that illuminate those concepts and illustrate their possible uses
   - Dissimilarities: 
+    - our book provides the reader with more prerequisite material that builds up to category theory (e.g. material on functions, relations, order theory, and algebra)
+    - our book takes a slower pace
+    - our exposition is more accessible for non-mathematician readers
+    - our book covers more category theory
+    - our book covers more applications
+    - our book dedicates some full chapters to applications, wherein several category theory concepts are illustrated working together at once in the given application
 - "An Invitation to Applied Category Theory", by Brendan Fong and David Spivak
   - Similarities: 
+    - both books aim at being accessible to non-mathematician readers
   - Dissimilarities: 
+    - our book is much larger and covers a lot more material
 - "The Joy of Abstraction" by Eugenia Cheng
   - Similarities: 
+    - both books aim at being accessible to non-mathematician readers
   - Dissimilarities: 
+    - our book has a strong emphasis on applications outside of mathematics and inside engineering and computer science; cheng's book does not connect category theory to applications much other than those related to everyday life or to mathematics itself
 
 
 ### Goals of the book
 
 "This book does this, to this audience (with X prereqs)"
+
+Overall, the main function of the book is to serve as a pedagogical introduction that may be used for self-study or as an aide for teaching courses. It should not be thought of mainly as a reference text, even though it is intended, secondarily, to serve as a reference. 
 
 ### Learning objectives
 
