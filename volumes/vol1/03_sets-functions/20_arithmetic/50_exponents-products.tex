@@ -1,4 +1,193 @@
 % !TEX root = chapter-standalone.tex
 
+
+
 \section{Exponents interacting with products}
 \label{sec:arithmetic-exponents-products}
+
+
+\subsection{Functions out of products}
+
+Next we look at the equations $z^{x \cdot y} = (z^y)^x$ and $z^{x \cdot y} = (z^x)^y$, and the respective corresponding relationships
+\begin{equation}\label{eq:iso-functions-out-of-prods}
+    \setC^{\setA \cartprod \setB}  \isomorphic \pars{\setC^\setB}^\setA
+\end{equation}
+and
+\begin{equation}
+    \setC^{\setA \cartprod \setB}  \isomorphic \pars{\setC^\setA}^\setB.
+\end{equation}
+We'll only treat the first relationship \cref{eq:iso-functions-out-of-prods} in detail, since the latter is analogous, except that certain roles are swapped.
+
+What might be a canonical isomorphism proving \cref{eq:iso-functions-out-of-prods}? The elements of the set $ \setC^{\setA \cartprod \setB}$ are functions of two variables, of the type
+\begin{equation}\label{eq:currying-function-of-two-variables}
+    \mora \colon \setA \cartprod \setB \to \setC,
+\end{equation}
+while elements of the set $\pars{\setC^\setB}^\setA$ are functions of the type
+\begin{equation} \label{eq:currying-function-to-functions}
+    \morb \colon \setA \to \setC^\setB;
+\end{equation}
+in other words, functions of a single variable but which evaluate, for each input, to a function of the type $\setB \to \setC$.
+A canonical way to turn a function of the type \cref{eq:currying-function-of-two-variables} into a function of the type \cref{eq:currying-function-to-functions} is by ``partial evaluation'': if we think of $\mora$ as having two input slots, we can partially evaluate $\mora$ by inserting an element of $\setA$ into the first slot of $\mora$, while leaving the second slot ``open'' or ``variable''.
+In other words, for any element $\ela \setin \setA$, we can create, from $\mora$, the function
+\begin{equation}
+    \defmapperiod{
+        \mora(\ela, -)
+    }{
+        \setB
+    }{
+        \to
+    }{
+        \setC
+    }{
+        \elb
+    }{
+        \mora (\ela, \elb)
+    }
+\end{equation}
+But since we can do this for any $\ela \in \setA$, we have also just described a function
+\begin{equation}
+    \begin{aligned}
+         & \setA & \to     & \ \ \setC^\setB, \\
+         & \ela  & \mapsto & \ \  \mora ( \ela, -),
+    \end{aligned}
+\end{equation}
+or, in other words, an element of $\pars{\setC^\setB}^\setA$. Since this recipe works for any function $\mora \colon \setA \cartprod \setB \to \setC$, we also now have the following function
+\begin{equation}\label{eq:left-curry-function}
+    \defmapcomma{
+        \curry
+    }{
+        \setC^{\setA \cartprod \setB}
+    }{
+        \to
+    }{
+        \pars{\setC^\setB}^\setA
+    }{
+        \mora
+    }{
+        (\ela \mapsto \mora ( \ela, -))
+    }
+\end{equation}
+which we call $\curry$.
+This function has the desired type to be an isomorphism proving that $\setC^{\setA \cartprod \setB} \isomorphic \pars{\setC^\setB}^\setA$.
+
+\begin{exercise}\label{ex:currying-is-an-iso}
+    Prove that $\curry \colon \setC^{\setA \cartprod \setB} \to \pars{\setC^\setB}^\setA$ is an isomorphism.
+\end{exercise}
+
+\begin{solution}
+    \todotext{JL: write up}
+\end{solution}
+
+The name ``$\curry$'' stands for ``Curry'', which is the last name of the mathematician and logician Haskell Curry (\cref{fig:haskell-curry}) who did not discover this operation, but likely made it well-known.
+It is after his first name that the functional programming language Haskell is named.
+
+The operation given by the function \cref{eq:left-curry-function} is often called ``currying''.
+When needed for clarity, we call this operation \emph{right currying}, in order to distinguish it from the analogous operation of \emph{left currying} given by the function
+\begin{equation}\label{eq:right-curry-function}
+    \defmapperiod{
+        \curry
+    }{
+        \setC^{\setA \cartprod \setB}
+    }{
+        \to
+    }{
+        \pars{\setC^\setA}^\setB
+    }{
+        \mora
+    }{
+        (\elb \mapsto \mora ( - , \elb))
+    }
+\end{equation}
+We denote the functions \cref{eq:left-curry-function} and \cref{eq:right-curry-function} both by the same name ``$\curry$'' because we trust that it will be clear from context which of the two functions is being used in any given situation.
+
+\begin{marginfigure}
+    \includegraphics[width=3cm]{haskell}
+    \caption{Haskell Curry (1900-1982)}
+    \label{fig:haskell-curry}
+\end{marginfigure}
+
+\todotext{There is a remark (which is commented out in latex) here that could be partially included and useful perhaps, if edited.}
+
+%\begin{remark}
+%In our discussion of currying above, we started with a function $\mora \colon \setB \cartprod \setA \to \setC$ and partially evaluated it in the first variable, and left the second variable still ``open''. Alternatively, though, we could have partially evaluated $\mora$ in the \emph{second} variable, and left the first variable open, thus producing a function $\mora(-, \elb) \colon \setA \to \setC$ and leading, in a way analogous to the above, to an alternative currying operation 
+%\begin{equation}
+%\setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB.
+%\end{equation}
+%In order to distinguish this operation from the currying operation previously defined, we might call this ``co-currying'', or make a distinction between ``left'' and ``right'' currying. Often, mathematicians and computer scientists follow the convention that currying is always done by partially evaluating in the first variable. This is perhaps justified by the fact that the ``co-currying'' isomorphism
+%\begin{equation}
+%\setC^{\setA \cartprod \setB} \to \pars{\setC^\setA}^\setB
+%\end{equation}
+%arising from partial evaluation in the second variable can be expressed as a composite
+%\begin{equation}
+%\setC^{\setA \cartprod \setB} \overset{{\setC^{\braiding}}}{\longrightarrow} \setC^{\setB \cartprod \setA} \overset{\curry}{\longrightarrow} \pars{\setC^\setA}^\setB
+%\end{equation}
+%of the exponentiation of $\braiding \colon \setB \cartprod \setA \to \setA \cartprod \setB$ composed with $\curry \colon \setC^{\setB \cartprod \setA} \to \pars{\setC^\setA}^\setB$.  
+%\end{remark}
+
+\subsection{Functions into products}
+
+Now let's consider the analogue of the equation
+\begin{equation}
+    (x \cdot y)^z = x^z \cdot y^z
+\end{equation}
+for natural numbers, namely
+\begin{equation}
+    (\setA \cartprod \setB)^{\setC}  \isomorphic  \setA^\setC \cartprod \setB^\setC.
+\end{equation}
+In order to describe a canonical isomorphism which is a proof of this statement, we make an important observation about the cartesian product of sets.
+Namely, for any sets $\setA$ and $\setB$, we always have two ``projection functions'' from the cartesian product $\setA \cartprod \setB$ to $\setA$ and $\setB$, respectively.
+These are defined, respectively, by
+\begin{equation}
+    \begin{aligned}
+        \proj_1 \colon & \setA \cartprod \setB & \to     & \ \ \setA, \\
+                       & \tup{\ela, \elb}      & \mapsto & \ \  \ela,
+    \end{aligned}
+\end{equation}
+and
+\begin{equation}
+    \begin{aligned}
+        \proj_2 \colon & \setA \cartprod \setB & \to     & \ \ \setB, \\
+                       & \tup{\ela, \elb}      & \mapsto & \ \  \elb,
+    \end{aligned}
+\end{equation}
+and are called the \emph{canonical projections} associated to the cartesian product.
+
+With the help of these projections, we define a canonical isomorphism
+\begin{equation}
+    \begin{aligned}
+        \mora \colon & (\setA \cartprod \setB)^{\setC} & \to     & \ \  \setA^\setC \cartprod \setB^\setC, \\
+                     & \phi                            & \mapsto & \ \  \tup{\phi \mthen \proj_1, \phi \mthen \proj_2}.
+    \end{aligned}
+\end{equation}
+Illustrated diagrammatically, what $\mora$ does is, given a function
+\begin{equation}
+    \begin{tikzcd}
+         & \setC \arrow[d, "\phi"'] & \\
+         & \setA \cartprod \setB    &
+    \end{tikzcd}
+\end{equation}
+it maps it to the pair of functions $\phi \mthen \proj_1$ and $\phi \mthen \proj_2$
+\begin{equation}
+    \begin{tikzcd}
+              & \setC \arrow[dl, "\phi \mthen \proj_1"']   \arrow[d, "\phi"'] \arrow[dr, "\phi \mthen \proj_2"] & \\
+        \setA & \setA \cartprod \setB  \arrow[l, "\proj_1"] \arrow[r, "\proj_2"']                               & \setB
+    \end{tikzcd}
+\end{equation}
+obtained by post-composing $\phi$ with the projections $\proj_1$ and $\proj_2$, respectively.
+
+The inverse to $\mora$ is the function $\morb \colon  \setA^\setC \cartprod \setB^\setC  \to (\setA \cartprod \setB)^{\setC}$ which takes a pair of functions $\tup{\psi_1, \psi _2} \setin \setA^\setC \cartprod \setB^\setC$ and maps it to the element of $(\setA \cartprod \setB)^{\setC}$ which is the function
+\begin{equation}
+    \begin{aligned}
+         & \setC & \to     & \ \ \setA \cartprod \setB, \\
+         & \elc  & \mapsto & \ \ \tup{\psi_1(\elc), \psi_2(\elc)}.
+    \end{aligned}
+\end{equation}
+
+\begin{gradedexercise}[\exname{CanIsoFunctionsIntoProducts}]
+    Check that $\mora$ and $\morb$ are indeed mutually inverse.
+\end{gradedexercise}
+
+\solutionof{CanIsoFunctionsIntoProducts}
+
+
+
