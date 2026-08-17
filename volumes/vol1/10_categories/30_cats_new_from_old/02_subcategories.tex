@@ -6,25 +6,69 @@
 
 \todographicsjira{429}{\alphubel: @Gioele: Needs graphics for subcategorie}
 
+In \cref{chap:new-from-old-algebra} we saw that a \SY{semigroup}, \SY{monoid}, or \SY{group} can contain smaller structures of the same kind: \SY{subsemigroups}, \SY{submonoids}, and \SY{subgroups}.
+The same phenomenon occurs for categories.
+Frequently, a selection of some of the objects and some of the morphisms of a category~\CatC is ``self-sufficient'': composing selected morphisms never leads outside the selection, and the selected objects bring their \SY{identity morphisms} with them.
+Such a selection then forms a category in its own right, called a \emph{subcategory} of~\CatC.
+
+As with sub-things in algebra, subcategories are useful for modeling \emph{restrictions}.
+Given a category describing a family of systems and processes, we often want to work with a restricted class of processes---only those which are reversible, or feasible, or within budget, or compliant with a specification.
+Whenever the restricted class is closed under composition and contains identities, the restriction is again a category, and everything we know about categories applies to it.
+
 \begin{ctdefinition}[Subcategory]
     \label{def:subcategory}
     \SYNDEF{subcategory}
-    A \emph{sub(semi)category}~\CatD of a (semi)category~\CatC is a category for which:
+    Let~\CatC be a \SY{semicategory}.
+    A \emph{subsemicategory}~\CatD of~\CatC is specified by:
+
+    \constit
+
     \begin{enumerate}
-        \item All the objects in~$\ObD$ are in~$\ObC$;
-        \item For any two objects~$\Obja,\Objb\setin \ObD$,
-              the morphisms of \CatD between them are a subset of the morphisms of \CatC:
+        \item A sub-collection~$\ObD$ of the objects of~$\CatC$;
+        \item For any two objects~$\Obja,\Objb\setin \ObD$, a subset of the morphisms of \CatC between them:
               \begin{equation}
-                  \HomSet{\CatD}{\Obja}{\Objb}\setsubseteq \HomSet{\CatC}{ \Obja}{\Objb};
+                  \HomSet{\CatD}{\Obja}{\Objb}\setsubseteq \HomSet{\CatC}{ \Obja}{\Objb}.
               \end{equation}
-        \item If~$\mora \colon \Obja \mto \Objb$ and~$\morb\colon \Objb\mto \Objc$ in \CatD, then the composite~$\morab$ in \CatC is in~\CatD and represents the composite in~\CatD.
-        \item (Categories) If~$\Obja\setin \ObD$, then the identity $\catidat\Obja$ in $\HomSet{\CatC}{\Obja}{\Obja}$ is also in~$\HomSet{\CatD}{\Obja}{\Obja}$ and acts as its \SY{identity morphism}.
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item Closure under composition: if~$\mora \colon \Obja \mto \Objb$ and~$\morb\colon \Objb\mto \Objc$ are morphisms of \CatD, then the composite~$\morab$, computed in~\CatC, is again a morphism of~\CatD.
+    \end{enumerate}
+
+    If~\CatC is a category, a \emph{subcategory}~\CatD of~\CatC is a subsemicategory which additionally satisfies:
+
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item Identities: if~$\Obja\setin \ObD$, then the \SY{identity morphism} $\catidat\Obja \setin \HomSet{\CatC}{\Obja}{\Obja}$ is also in~$\HomSet{\CatD}{\Obja}{\Obja}$.
     \end{enumerate}
 \end{ctdefinition}
 
-\subsection{Subcategories of \Rel and \Set}
+\begin{remark}
+    A subsemicategory~\CatD of a \SY{semicategory}~\CatC is itself a \SY{semicategory}: composition restricts to the selected morphisms by the closure condition, and associativity is inherited from~\CatC, since it holds for \emph{all} triples of composable morphisms of~\CatC, in particular the selected ones.
+    Likewise, a \SY{subcategory} of a category is itself a category, with the inherited \SY{identity morphisms}.
+    Compare this with the corresponding observation for \SY{subsemigroups} (\cref{rem:subsemigroup-is-semigroup}).
+\end{remark}
 
-Two important examples of \SY{subcategory} are the following.
+There are two extreme ways of building subcategories, which both occur so often that they have names: we can keep all the objects and restrict only the morphisms, or restrict the objects and keep all morphisms between the ones we kept.
+
+\begin{ctdefinition}[Wide and full subcategories]
+    \label{def:wide-full-subcategory}
+    Let~\CatD be a \SY{subcategory} of a category~\CatC.
+    \begin{enumerate}
+        \item \SYNDEF{wide subcategory}\CatD is called \emph{wide} if it contains all objects of~\CatC, that is, $\ObD = \ObC$.
+        \item \SYNDEF{full subcategory}\CatD is called \emph{full} if, for all~$\Obja, \Objb \setin \ObD$, it holds that $\HomSet{\CatD}{\Obja}{\Objb} = \HomSet{\CatC}{\Obja}{\Objb}$.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{remark}
+    A \SYN{full subcategory}{full} subcategory is completely determined by the choice of which objects to keep: the morphisms simply come along.
+    Choosing a full subcategory therefore amounts to focusing attention on a class of objects of interest, without restricting the processes between them.
+    By contrast, choosing a wide subcategory amounts to restricting the admissible processes, while keeping all objects in play.
+\end{remark}
+
+\subsection{Subcategories of \Set and \Rel}
 
 \begin{example}[\FinSet]
     \SYNDEF{category of finite sets and functions}
@@ -34,6 +78,7 @@ Two important examples of \SY{subcategory} are the following.
     While an object~$\Obja \setin \Obof\Set$ is a set with arbitrary cardinality,~$\Obof{\FinSet}$ only includes sets which have finitely many elements.
     Objects of \FinSet are in \Set, but the converse is not true.
     Furthermore, given~$\Obja,\Objb\setin \Obof\FinSet$, we take~$\HomSet{\FinSet}{\Obja}{\Objb} =\HomSet{\Set}{\Obja}{\Objb}$.
+    In particular, \FinSet is a \SYN{full subcategory}{full} subcategory of \Set (but not a wide one).
 \end{example}
 
 \begin{example}[\Set and \Rel]
@@ -47,9 +92,85 @@ Two important examples of \SY{subcategory} are the following.
               This was proven in \cref{lem:comprelfun}.
         \item For each~$\Obja \setin \Obof{\Set}$, the identity relation~$\catidat\Obja=\makeset{\tupp{\ela,\ela\elprime}\setin {\Obja} \cartprod \Obja \mid \ela=\ela\elprime}$ corresponds to the identity function~$\catidat\Obja \colon \Obja \mto \Obja$ in \Set.
     \end{enumerate}
+    Note that \Set is a \SYN{wide subcategory}{wide} subcategory of \Rel: both have all sets as objects.
+    It is not a full one: not every relation is a function.
 \end{example}
 
+\begin{example}
+    \label{exa:bijections-wide-subcategory}
+    Keep all sets as objects, but keep only the \SY{bijective} functions as morphisms.
+    This is a \SYN{wide subcategory}{wide} subcategory of \Set: the composition of two bijections is a bijection, and identity functions are bijections.
 
+    This is the pattern behind many subcategories that arise in practice: one restricts to the morphisms that are \emph{reversible}.
+    For an applied reading, if objects are file formats and morphisms are conversion routines, the restriction to bijections corresponds to considering only \emph{lossless} conversions.
+\end{example}
+
+\subsection{Non-examples and near-misses}
+
+Being a \SY{subcategory} is a genuine condition on a selection of objects and morphisms; it is instructive to see how a selection can fail.
+
+\begin{example}[Failure of closure under composition]
+    \label{exa:quadratics-closure-fails}
+    Consider the selection with a single object, the set~\reals, and with morphisms the polynomial functions~$\reals \sto \reals$ of degree at most~$2$.
+    This selection is not closed under composition: composing the function~$\ela \mapsto \ela^2$ with itself yields~$\ela \mapsto \ela^4$, which has degree~$4$.
+    So ``sets and low-degree polynomial maps'' is not a \SY{subcategory} of \Set.
+
+    This failure mode is worth remembering in modeling practice: a class of ``simple'' components (here: quadratic response curves) is often \emph{not} stable under composition, and the composite system can be strictly more complex than its parts.
+\end{example}
+
+\begin{example}[Failure of the identity condition]
+    \label{exa:noninjective-subsemicategory}
+    In \Set, keep all sets, and keep as morphisms only the functions that are \emph{not} \SY{injective}.
+    If~$\mora$ is not injective, then any composite~$\morab$ is also not injective, so this selection \emph{is} closed under composition, and it forms a subsemicategory of \Set.
+    However, it is not a \SY{subcategory}: identity functions are injective, so no object has its \SY{identity morphism} in the selection.
+
+    This is the categorical analogue of a situation we met in algebra: a subset of a \SY{monoid} may be closed under composition and yet fail to contain the \SY{neutral element} (\cref{exa:zero-not-submonoid}).
+\end{example}
+
+\subsection{Subcategories, sub-monoids, free categories}
+
+\begin{example}
+    \label{exa:subcats-of-monoid-cat}
+    Recall from \cref{def:monoidcat} that any \SY{monoid}~$\monoidAdefinition$ can be viewed as a category~$\monoidcat{\monoidA}$ with a single object, whose morphisms are the elements of~$\monoidAset$.
+    The \SY{subcategories} of~$\monoidcat{\monoidA}$ that contain the single object correspond exactly to the \SY{submonoids} of~$\monoidA$: a selection of morphisms closed under composition and containing the identity is nothing but a subset of~$\monoidAset$ closed under~$\mtimes$ and containing~$\idmon$.
+    Likewise, subsemicategories correspond to \SY{subsemigroups}.
+
+    For instance, viewing~$\tup{\wnumbers, +, 0}$ as a one-object category, the even numbers form a \SY{subcategory}, while the odd numbers fail on both counts: they are not closed under composition, and they do not include the identity~$0$.
+\end{example}
+
+\begin{example}
+    \label{exa:subgraph-subcategory}
+    Let~$\graphA$ be a graph, and let~$\graphA'$ be a subgraph (a selection of some vertices and some edges among them).
+    Then the free category~$\pathcat{\graphA'}$ is a \SY{subcategory} of the free category~$\pathcat{\graphA}$ (\cref{sec:catsfromgraphs}): every path using only edges of~$\graphA'$ is in particular a path in~$\graphA$, concatenation is computed the same way in both, and trivial paths at vertices of~$\graphA'$ qualify.
+
+    This kind of subcategory has a natural applied reading.
+    If~$\graphA$ is the graph of an intermodal mobility network---vertices are locations, edges are individual road segments, subway rides, and so on---then morphisms of~$\pathcat{\graphA}$ are the possible trips.
+    Selecting the subgraph~$\graphA'$ of walking edges only, the subcategory~$\pathcat{\graphA'}$ consists of the trips one can make on foot: a restriction of the mobility model obtained by disabling some modes of transport.
+\end{example}
+
+\begin{exercise}
+    \label{ex:wide-full-classify}
+    Classify the following \SY{subcategories} as \SYN{wide subcategory}{wide}, \SYN{full subcategory}{full}, both, or neither:
+    \begin{enumerate}
+        \item \FinSet inside \Set;
+        \item \Set inside \Rel;
+        \item the subcategory of sets and bijections (\cref{exa:bijections-wide-subcategory}) inside \Set;
+        \item \CatC inside \CatC (any category as a subcategory of itself).
+    \end{enumerate}
+\end{exercise}
+\begin{solution}
+    (1) Full, not wide: only finite sets are kept, but all functions between them.
+    (2) Wide, not full: all sets are kept, but only those relations which are functions.
+    (3) Wide, not full: all sets are kept, but (in general) not all functions.
+    (4) Both wide and full.
+\end{solution}
+
+
+
+
+\devel{
+
+\section{Further materials parked here for now}
 
 \subsection{Subcategories of endomorphisms}
 \label{sec:Draw}
@@ -289,7 +410,6 @@ Two important examples of \SY{subcategory} are the following.
 \end{solution}
 
 
-\devel{
 \subsection{Subcategories of Berg}
 \label{sec:subcat_berg}
 

@@ -1,6 +1,14 @@
 % !TEX root = chapter-standalone.tex
 
 \section{Product of Categories}
+\label{sec:product-of-categories}
+
+\todotext{@J: review and edit}
+
+Suppose we have two categories, each modeling a family of systems and processes, and we wish to consider the two \emph{side by side}, as a single composite system whose two parts do not interact.
+The construction that achieves this is the \emph{product} of categories: an object of the product is a \emph{pair} of objects, one from each category; a morphism is a \emph{pair} of morphisms; and composition happens componentwise, each component minding its own business.
+
+This is the categorical analogue of the product of \SY{monoids} (\cref{def:product-monoid}), and the definition follows the same componentwise pattern.
 
 \begin{ctdefinition}[Cartesian product of categories]
     \label{def:cartesian-product-category}
@@ -25,5 +33,63 @@
     In a manner analogous to \cref{def:cartesian-product-category} we can also define the cartesian product of any finite number of categories.
     For example, if $\CatA, \CatB, \CatC$ are three categories, their triple cartesian product $\CatA \Ctimes \CatB \Ctimes \CatC$ is a category whose objects are triples $\tup{\Obja, \Objb, \Objc}$, with $\Obja\setin \Ob_\CatA$, $\Objb\setin \Ob_\CatB$, $\Objc\setin \Ob_\CatC$.
     For any $n \setin \natnumbers$, the $n$-fold cartesian product of a category $\CatC$ with itself is denoted $\CatC^n$.
+\end{remark}
+
+\begin{exercise}
+    \label{ex:product-cat-is-category}
+    Check that \cref{def:cartesian-product-category} does define a category: verify that composition is associative and that the proposed \SY{identity morphisms} satisfy the identity laws.
+\end{exercise}
+\begin{solution}
+    Both conditions can be checked componentwise, using the corresponding conditions in~\CatC and~\CatD.
+    For associativity:
+    \begin{equation}
+        \begin{aligned}
+            \pars{\tup{\mora, \morb} \mthen \tup{\morc, \mord}} \mthen \tup{\more, \morf}
+            & = \tup{(\mora \mthenof\CatC \morc) \mthenof\CatC \more, \; (\morb \mthenof\CatD \mord) \mthenof\CatD \morf} \\
+            & = \tup{\mora \mthenof\CatC (\morc \mthenof\CatC \more), \; \morb \mthenof\CatD (\mord \mthenof\CatD \morf)} \\
+            & = \tup{\mora, \morb} \mthen \pars{\tup{\morc, \mord} \mthen \tup{\more, \morf}}.
+        \end{aligned}
+    \end{equation}
+    For unitality: $\tup{\catidat\Obja, \catidat\Objb} \mthen \tup{\mora, \morb} = \tup{\catidat\Obja \mthenof\CatC \mora, \; \catidat\Objb \mthenof\CatD \morb} = \tup{\mora, \morb}$, and similarly on the other side.
+\end{solution}
+
+\subsection{Examples}
+
+\begin{example}[Products of monoids, revisited]
+    \label{exa:product-cat-monoids}
+    For \SY{monoids}~$\monoidA$ and~$\monoidB$, viewed as one-object categories (\cref{def:monoidcat}), the product category is the one-object category of the product \SY{monoid}:
+    \begin{equation}
+        \monoidcat{\monoidA} \Ctimes \monoidcat{\monoidB}
+        \; = \;
+        \monoidcat{\pars{\monoidA \cartprod \monoidB}}.
+    \end{equation}
+    Indeed, an object of the left-hand side is a pair of the two single objects (so again a single object), and a morphism is a pair of monoid elements, composed componentwise---which is exactly composition in~$\monoidA \cartprod \monoidB$ (\cref{def:product-monoid}).
+\end{example}
+
+\begin{example}[Products of posets, revisited]
+    \label{exa:product-cat-posets}
+    Similarly, for \SY{posets}~$\posA$ and~$\posB$, viewed as categories (\cref{sec:posets-as-cats}), the product category~$\poscat{\posA} \Ctimes \poscat{\posB}$ is the category of the product poset (\cref{def:poset-product}): objects are pairs of elements, and there is a (single) morphism~$\tup{\posela, \poselb} \mto \tup{\posela', \poselb'}$ exactly when~$\posela \posAleq \posela'$ \emph{and}~$\poselb \posBleq \poselb'$---the componentwise order.
+\end{example}
+
+\begin{example}[Traveling with a wallet]
+    \label{exa:product-cat-travel-money}
+    Applied models compose well under products.
+    Recall the category \Berg of hiking trips (\cref{sec:trekking}) and the currency category \Curr (\cref{sec:currency_cat}).
+    An object of~$\Berg \Ctimes \Curr$ is a pair
+    \begin{equation}
+        \tup{\text{location}, \; \text{currency}},
+    \end{equation}
+    describing the state of a traveler: where they are, and in which currency they hold their money.
+    A morphism is a pair (trip, exchange): a way of moving through the mountains \emph{together with} a way of converting one's money.
+    Composition is componentwise: trips concatenate, exchanges compound.
+
+    The product structure encodes the modeling assumption that the two aspects are \emph{independent}: which trail you hike does not constrain how you exchange money, and vice versa.
+    If, in a finer model, the two aspects do interact (say, certain trips are only possible if one can pay a toll in the local currency), then the product category is no longer the right model---detecting such interaction is one reason to be explicit about when a product is being assumed.
+\end{example}
+
+\begin{remark}
+    \label{rem:product-cat-projections-forward}
+    Like the product of \SY{monoids} (\cref{rem:product-projections-forward}), the product of categories comes with two evident ``read off one component'' assignments, sending~$\tup{\Obja, \Objb}$ to~$\Obja$ (respectively~$\Objb$) and~$\tup{\mora, \morb}$ to~$\mora$ (respectively~$\morb$).
+    Once we have introduced \SY{functors}, we will recognize these projections as functors, and see that they characterize the product of categories by a universal property.
 \end{remark}
 

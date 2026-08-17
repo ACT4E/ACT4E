@@ -1,0 +1,353 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Posets}
+\label{sec:posets}
+
+
+\begin{marginfigure}
+    \centering
+    \includesag{pos_order_graph}
+    \caption{A partial order represented as a graph.}
+    \label{fig:pos_order_graph}
+\end{marginfigure}
+By adding the condition of \emph{\SY{antisymmetry}} (\cref{def:antisymmetry}) to a pre-order, we obtain a partially-ordered set.
+
+\begin{ctdefinition}[Partially ordered set]
+    \label{def:poset}
+    A pre-ordered set~$\posAdefinition$ is a \maindef{partially-ordered set} (poset) if the relation~$\posAleq$ is antisymmetric.
+\end{ctdefinition}
+
+An example of a partially ordered set represented as a graph is shown in \cref{fig:pos_order_graph}.
+% (we will formally define graphs in \cref{def:Graph}).
+By comparing this with \cref{fig:pre_order_graph}, we notice that the double-headed arrow is not allowed anymore (indeed, its existence would imply that source and target of the arrow are the same element in the poset).
+
+\begin{exercise}
+    \label{ex:reachabilityposet}
+    Does the reachability relationship in any directed graph define a poset?
+    Why?
+    If not, can you modify the initial statement to make it work?
+\end{exercise}
+\begin{solution}
+    The reachability relationship in any directed graph does not define a poset.
+    As a simple counterexample, take a graph with nodes $\makeset{\ela,\elb,\elc}$ and paths $\ela$ to $\elb$, $\elb$ to $\elc$, and $\elc$ to $\ela$.
+    From transitivity, one has $\ela \posleq \elc$, but from reachability we also have $\elc\posleq \ela$.
+    Therefore, per antisymmetry one should have $\ela=\elc$, but these are actually distinct nodes.
+    To make things work, one needs to consider only acyclic graphs.
+\end{solution}
+
+\todotext{JL: we should include more examples here. }
+
+\begin{example}
+    The following defines a partial order $\posleq$ on the set of natural numbers $\natnumbers$.
+    Define, for all $\ela, \elb \setin \natnumbers$,
+    \begin{equation}
+        \ela \posleq \elb \quad \text{ if, and only if } \quad \ela \text{ divides } \elb.
+    \end{equation}
+    By definition, a natural number $\ela$ divides another natural number $\elb$ if there exists some other natural number $\elc$ such that $\ela \elc = \elb$.
+    The notation for ``$\ela$ divides $\elb$'' is $\ela \vert \elb$.
+
+\end{example}
+
+\begin{gradedexercise}
+    Consider the set $\setA$ of natural numbers which divide the number 60, and equipped with the partial order defined by
+    \begin{equation}
+        \ela \posleq \elb \quad \text{ if, and only if } \quad \ela \text{ divides } \elb
+    \end{equation}
+    for all~$\ela, \elb \setin \setA$.
+    Draw the Hasse diagram of this partially ordered set.
+\end{gradedexercise}
+
+\begin{gradedexercise}[\exname{PolynomialDivisibility}]
+    \label{ex:PolynomialDivisibility}
+    Let~\setA be the set of all polynomials with coefficients in \reals.
+    Recall that a polynomial~$p$ \emph{divides} a polynomial~$q$ if there exists a polynomial~$m$ such that~$p \cdot m = q$.
+    If~$p$ divides~$q$ we denote this by~$\divides p q$.
+    Divisibility defines an \SY{endorelation} on~\setA by saying~$p$ is related to~$q$ iff~$\divides p q$.
+    Does this define a \SY{pre-order} structure on~\setA?
+    Does this define a \SY{poset} structure on~\setA?
+    Justify your answer.
+\end{gradedexercise}
+\solutionof{PolynomialDivisibility}
+
+\vfill
+
+\subsection{Total orders}
+
+\begin{marginfigure}
+    \centering
+    \includesag{tot_order_graph}
+    \caption{A total order.}
+    \label{fig:tot_order_graph}
+\end{marginfigure}
+By imposing \emph{\SY{totality}} (\cref{def:total-relation}), we obtain a total order.
+
+\begin{ctdefinition}[Totally ordered set]
+    \label{def:total-order}
+    A partially ordered set~$\posA = \tupp{\posAset,\posAleq}$ is a \maindef{totally ordered set} if the relation~$\posAleq$ is total.
+    % In other words, if:
+    % \begin{equation}
+    %     \prfperiod{\true}{(\posAel \posAleq \posBel) \vee (\posBel \posAleq \posAel)}
+    % \end{equation}
+\end{ctdefinition}
+
+An example of a totally ordered set represented as a graph is reported in \cref{fig:tot_order_graph}.
+
+\todotext{JL: we should include more examples here. }
+
+\begin{example}[Reals]
+    The real numbers \reals form a totally ordered \SY{poset} $\realswithleq$ with order relation given by the usual ordering.
+\end{example}
+\vfill
+\clearpage
+
+\subsection{Hasse diagrams}
+\linkvideo{spring2021-tradeoffs:tradeoffs:orders:hasse} % Hasse diagrams
+We can represent partial orders in various ways.
+We now take a proxy partially ordered set and represent it using different conventions.
+Consider~$\posAdefinition$, where~$\posAset=\makeset{\posela,\poselb,\poselc}$ and~$\posela\posAleq \poselb$,~$\poselb\posAleq \poselc$.
+First, we could represent this using the same visualization we had for relations (\cref{fig:poset_as_relation}).
+
+However, this is quite heavy, and does not exploit the fact that partial orders are endorelations.
+Therefore, we could think to only draw the carrier set once, and to drop the order relations arising from \SY{reflexivity} (\cref{fig:poset_as_graph}).
+
+However, the arrow from~$\posela$ to~$\poselb$ is implicit in partial orders, because of \SY{transitivity}.
+
+\label{sec:hasse-diagram}
+A \maindef{Hasse diagram} is an economical (in terms of arrows) way to visualize a poset.
+In a Hasse diagram elements are points, and if~$\posAel \posAleq \posBel$ then~$\posAel$ is drawn lower than~$\posBel$ and with an edge connected to it, if no other point is in between (\cref{fig:poset_as_hasse}).
+Hasse diagrams are directed graphs.
+
+\begin{figure*}[h!]
+    % \aligninner{
+    \hspace{4em}
+    \subfloat[\posA as a relation\label{fig:poset_as_relation}]{
+        \includesag{poset_representation_1}
+    }
+    \hspace{4em}
+    \subfloat[\posA as a graph \label{fig:poset_as_graph}]{
+        \rule{1cm}{0pt} % TODO: FIX PARBOX
+        \includesag{poset_representation_2}
+        \rule{1cm}{0pt}
+    }
+    \hspace{4em}
+    \subfloat[\posA as a Hasse diagram\label{fig:poset_as_hasse}]{
+        \rule{1cm}{0pt}  % TODO: FIX PARBOX
+        \includesag{poset_representation_3}
+        \rule{1cm}{0pt}
+    }
+    % }
+    \caption{Three different representations for a poset}
+    \label{fig:poset_representation}
+\end{figure*}
+
+\clearpage
+\begin{marginfigure}
+    \centering
+    \includesag{40_discrete}
+    \caption{}
+    \label{fig:40_discrete}
+\end{marginfigure}
+
+\begin{example}[Discrete partially ordered sets]
+
+    \label{ex:discreteposet}
+    Every set~$\posAset$ can be considered as a \emph{discrete poset}~$\posA = \tup{\posAset,{{=}}}$ using equality as the partial order.
+    (Notice that equality is symmetric, \SY{transitive}, and antisymmetric.)
+    When visualized as a \SY{Hasse diagram}, discrete \SY{posets} are a collection of points (\cref{fig:40_discrete}).
+\end{example}
+\vspace{1cm}
+\begin{marginfigure}[4mm]
+    \centering
+    \includesag{40_dpcatfig_boolean}
+    \caption{}
+\end{marginfigure}
+
+\begin{definition}[Boolean poset \Bool]
+    \label{def:bool-poset}
+    \SYNDEF{boolean poset}
+    The set of booleans $\boolset = \makeset{\false, \true}$ can be made into a \SY{poset} by choosing the order $\false \posleqof\Bool \true$.
+    This is equivalent to using ``$\Imp$'' as a relation.
+    We obtain the poset
+    \begin{equation}
+        \label{eq:bool-poset}
+        \Bool \definedas \tup{\boolset, {{\Imp}}}.
+    \end{equation}
+    % \index{\Bool} is a \SY{poset} with carrier set~$\makeset{\true,\false}$ and the order relation given by~
+\end{definition}
+
+\vspace{1cm}
+\begin{marginfigure}[4mm]
+    \centering
+    \includesag{70_hasse_pizza}
+    \caption{Possible costs of a battery, represented as a poset.
+    }
+    \label{fig:hassebattery}
+\end{marginfigure}
+%
+\begin{example}[Qualitative information]
+    In the example of the battery choice, both mass and money can be thought of as partially ordered sets.
+    Imagine that you have batteries which are ``\poscheap'', ``\posmidrange'', and ``\posexpensive''.
+    Clearly, if the partially ordered set represents cost, we can say that~$\poscheap \posleq\posmidrange \posleq\posexpensive$.
+    While this is a quantitative judgement (indeed, if I care about cost, I will prefer a cheap battery over a midrange one), it is not a numeric one (cheap could represent a number, but also a range of numbers or just a price category).
+    This can be represented as in~\cref{fig:hassebattery}.
+\end{example}
+
+\vspace{1cm}
+\begin{marginfigure}[4mm]
+    \centering
+    \includesag{40_dpcatfig_hasse}
+    \caption{Example of Hasse diagram of~\posA.}
+    \label{fig:hasse}
+\end{marginfigure}
+\begin{example}
+    Consider a poset~\posA representing a person's food preference over the set~$\posAset=\makeset{\sbretzel,\sfondue,\schoco,\sburger,\sapple}$ with~$\sbretzel\posAleq \schoco$,~$\sburger\posAleq \schoco$,~$\schoco\posAleq \sfondue$, and~$\sburger\posAleq \sapple$.
+    This can be represented with a Hasse diagram as in~\cref{fig:hasse}.
+\end{example}
+
+\vfill\clearpage
+
+\subsection{Example: positive definite matrices as ellipsoids}
+
+\begin{marginfigure}
+    \centering
+    \subfloat[
+        Example of ellipses representing positive definite matrices.
+        \label{fig:posdef_draw}
+    ]{
+        \centering
+        \maxsizebox{0.9\marginparwidth}{!}{%
+            \includesag{20_ellipses_mat}
+        }
+    }
+
+    \subfloat[
+        Example of order between positive semi-definite matrices.
+        \label{fig:posdef_hasse}
+    ]{%
+        \parbox{\marginparwidth}{
+            \centering
+            \includesag{20_mat_order}
+        }%
+    }
+    \caption{}
+    \label{fig:posdef}
+\end{marginfigure}
+
+\begin{definition}[Positive definite matrix]
+    \label{def:positive-definite-matrices}
+    A symmetric matrix~$\mat{M}\setin \reals^{\ntimesn}$ is \maindef{positive definite} if~$\vec{x}\mattransp \mat{M}\vec{x}> 0$ for all non-zero~$\vec{x}\setin \reals^n$.
+    We call the set of all such matrices~$\posdefmatset{n}$.
+\end{definition}
+Positive definite matrices have real, positive eigenvalues, which can be interpreted as axes lengths of ellipsoids.
+Any matrix~$\mat{A}\setin \posdefmatset{n}$ describes an ellipsoid, which can be written as a quadratic equation:
+\begin{equation}
+    \label{eq:posdef-ellipsoid}
+    \vec{x}\mattransp \mat{A}\vec{x}=1,\quad \vec{x}\setin \reals^n.
+\end{equation}
+We can define a partial order on~$n$ as
+\begin{equation}
+    \label{eq:posdef-order}
+    \prfdoubleperiod{
+        \mat{A}\posleqof{\posdefmatset{n}} \mat{B}
+    }{
+        \vec{x}\mattransp \mat{A}\vec{x}\leq \vec{x}\mattransp \mat{B}\vec{x} \quad \forall \vec{x}\setin \reals^n
+    }
+\end{equation}
+The order can be interpreted as an inclusion of ellipsoids.
+Take for instance the matrices
+\begin{equation}
+    \label{eq:posdef-matrices}
+    \mat{A}=
+    \begin{bmatrix}
+        1 & 0 \\ 0& 1
+    \end{bmatrix}, \quad \mat{B}=
+    \begin{bmatrix}
+        3/4 & -1/8 \\ -1/8& 3/4
+    \end{bmatrix},\quad \mat{C}=
+    \begin{bmatrix}
+        1/2 & 0 \\0& 2
+    \end{bmatrix}.
+\end{equation}
+The order~\posA on the set~$\makeset{\mat{A},\mat{B},\mat{C}}$ is reported in \cref{fig:posdef_hasse}, and it is easily explained via \cref{fig:posdef_draw}.
+The ellipse representing~$\mat{A}$ (in red) is included by the one representing matrix~$\mat{B}$ (in blue), but not by the one representing matrix~$\mat{C}$ (in green).
+Furthermore, the one representing~$\mat{B}$ includes the one representing~$\mat{C}$.
+
+
+
+
+\paragraph{Power poset}
+
+
+We have introduced the concept of power set in \cref{sec:power-set}.
+There is a natural order on subsets, given by set inclusion.
+We can thus define the \emph{power poset}.
+
+\SYNDEF{power poset}
+\begin{definition}[Power poset]
+    \label{def:power-poset}
+    Given a set~\setA, the \maindef{power poset}~$\powerposet\setA$ is defined as its power set $\powerset\setA$ ordered by set inclusion ($\setsubseteq$).
+    Formally, this is the pair $\tup{\powerset\setA, \setsubseteq}$.
+
+    A subset~$\subA$ precedes~$\subB$ if~$\subA \setsubseteq \subB$:
+    \begin{equation} \label{eq:pospower}
+        \vmiddle{
+            \prfdoubleperiod{
+                \subA \posleqof{\powerposet\setA} \subB
+            }{
+                \subA \setsubseteq \subB
+            }
+        }
+    \end{equation}
+    % Composition is given by composition of inclusions, meaning that if~$\setA\setsubseteq \setB \setsubseteq \setC$, then~$\setA\setsubseteq \setC$.
+\end{definition}
+This is illustrated in~\cref{fig:powersetcat} for sets of 0, 1, 2, 3 elements.
+\begin{exercise}
+    Check formally that $\posleqof{\powerposet\setA}$ defined in \cref{eq:pospower} is a partial order.
+\end{exercise}
+\begin{solution}
+    Consider a set~\setA.
+    Clearly, given~$\subA\setin \powerset \setA$, we have~$\subA\setsubseteq \subA$.
+    Furthermore, given also~$\subB\setin \powerset \setA$, we have
+    \begin{equation}\label{eq:ex-pospower-1}
+        \prfperiod{
+            \subA\setsubseteq \subB
+        }{
+            \subB\setsubseteq \subA
+        }{
+            \subA=\subB
+        }
+    \end{equation}
+    Finally, given also~$\subC\setin \powerset \setA$, we have
+    \begin{equation}\label{eq:ex-pospower-2}
+        \prfperiod{
+            \subA\setsubseteq \subB
+        }{
+            \subB\setsubseteq \subC
+        }{
+            \subA\setsubseteq\subC
+        }
+    \end{equation}
+\end{solution}
+\vfill
+\begin{figure*}[h]
+    \centering
+    \subfloat[$\powerposet\Emptyset$]{
+        \includesag{40_dpcatfig_power_1}
+    }
+    \hfill
+    \subfloat[$\powerposet\makeset{\posela}$]{
+        \includesag{40_dpcatfig_power_2}
+    }
+    \hfill
+    \subfloat[$\powerposet\makeset{\posela,\poselb}$]{
+        \includesag{40_dpcatfig_power_3}
+    }
+    \hfill
+    \subfloat[$\powerposet\makeset{\posela,\poselb,\poselc}$ \label{fig:powersetcat3}]{
+        \includesag{40_dpcatfig_power}
+    }
+    \caption{Power set as a poset.
+    }
+    \label{fig:powersetcat}
+\end{figure*}
+\vfill
