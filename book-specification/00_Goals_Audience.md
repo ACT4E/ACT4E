@@ -7,7 +7,8 @@ We are writing a book called "Categories and Compositionality, with a view to Ap
 
 ### Related works
 
-(list of books and notes about what we want to be similar or not)
+A list of books, plus for each book X some notes about how we want our own book to be similar or dissimilar to the book X in question. 
+
 
 - "Category Theory for the Sciences", by David Spivak
   - Similarities: 
