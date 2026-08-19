@@ -1,0 +1,268 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Group actions}
+
+\todotext{This to be made its own section, and rewritten in the same way monoid actions are to be rewritten}
+
+For defining a group action, we must adapt the definition of a monoid action.
+The endomorphisms~$\Endof\setA$ are not a group, because they also contain non-invertible maps.
+Recall that an invertible \SY{endomorphism} is called an \emph{automorphism}, and that~$\Autof\setA$, the set of \SY{automorphisms} of~\setA, comes naturally equipped with a \SY{group} structure.
+
+\todotextjira{730}{\bernina: @JL: better would be to make examples in the monoid and group sections for End(A) and Aut(A), respectively, and then reference those here.}
+
+\begin{ctdefinition}
+    [Group right action]\label{def:group-right-action-operation}
+    A \emph{right action} of a \SY{group}~$\grpA = \tup{\grpAset, \mtimesof\grpA, \idmon_\grpA}$ on a set~\setA is:
+
+    \constit
+    \begin{enumerate}
+        \item a function
+              \begin{equation}
+                  \label{eq:ract-group}
+                  \act \colon \makecartprod{\setA, \grpAset} \sto \setA.
+              \end{equation}
+    \end{enumerate}
+    \condit
+    \begin{enumerate}
+        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\grpAset$,
+              \begin{equation}
+                  \label{eq:group-ract-1cond}
+                  \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb);
+              \end{equation}
+        \item for all~$\setAel \setin \setA$,
+              \begin{equation}
+                  \label{eq:group-ract-2cond}
+                  \act(\setAel, \idmon_\monoidA) = \setAel.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\todotext{JL: make remark or lemma here that inverses being respected comes for free... and spell out the property in action terms...}
+
+\begin{ctdefinition}[Group action]
+    \label{def:group-cov-action}
+    An \maindef{action} of a \SY{group}~$\grpA$ onto a set~\setA is a \SY{group morphism}
+    \begin{equation}
+        \label{eq:act-group}
+        \act \colon \grpA \fto \Autof\setA.
+    \end{equation}
+\end{ctdefinition}
+
+\todotext{\bernina: @JL: add example of vector spaces as actions of a field on an abelian group; mention concept of a module}
+
+\todotext{lemma commented out here}
+%\begin{lemma}
+%\label{lem:uncurrying-group-actions}
+%The data of a \SY{group action}
+%\begin{equation}
+%\act \colon \grpA \fto \Autof\setA
+%\end{equation}
+%is equivalent to the data of having a function
+%\begin{equation}
+%\stylemaps{\alpha} \colon \grpAset \cartprod \setA \sto \setA,
+%\end{equation}
+%which satisfies the conditions
+%\begin{enumerate}
+%\item $ \stylemaps{\alpha} (\idgrp_\grpA, \setAel) = \setAel \quad \forall \setAel \setin \setA$;
+%\item $ \stylemaps{\alpha} (\grpelb, \stylemaps{\alpha}(\grpela, \setAel)) = \stylemaps{\alpha} (\grpela \mtimes \grpelb, \setAel) \quad \forall \setAel \setin \setA, \forall \grpela, \grpelb \setin \grpAset.
+%      $
+%\end{enumerate}
+%\end{lemma}
+
+
+\todotext{Add examples, in particular ones relating to group representations and even some definitions perhaps of matrix groups, understood via actions e.g. when notion of symmetry is in the foreground.}
+
+
+
+\begin{example}[Time dilation of signals]
+In the field of signal-processing, a basic way to model a signal is as a function $f \colon \reals \to \subA$, where the domain models time and the codomain models the possible values that a signal might take. 
+
+In this example, we consider the set of all possible such signals, $\setA = \subA^\reals$. Let $\tup{\posReals, \cdot, 1}$ be the group of positive reals, with multiplication as composition. We can define a group action $\act \colon \posReals \to \Autof\setA$ on signals that models ``time dilation'':
+\begin{equation}
+\defmapperiod{\act(\lambda)}{\setA}{\to}{\setA}{f(t)}{f(t / \lambda)}
+\end{equation}
+\end{example}
+
+
+
+
+\devel{
+\subsection{Linear group actions}
+\label{sec:action-matrix-groups}
+
+\todotext{J: this section should be moved into the section on group actions }
+
+\paragraph{Special Euclidean group}
+
+\begin{definition}
+    [General Euclidean group~$\mgEn$]
+    \label{def:general-euclidean-group}
+    The general (real) Euclidean group of order~$n$, written~$\mgEn$, is the group of~$\matdim{(n+1)}{(n+1)}$ real matrices of the form
+    \begin{equation}
+        \label{eq:En-def}
+        \Ematrix{\matmor{R}}{\vectmor{t}},
+    \end{equation}
+    where~$\matmor{R}\setin \mgOn$ and~$\vectmor{t} \setin \reals^n$.
+\end{definition}
+
+\begin{definition}
+    [Special Euclidean group~$\mgSEn$]
+    \label{def:special-euclidean-group}
+    The special (real) Euclidean group of order~$n$, written~$\mgSEn$, is the group of~$(n+1)\times (n+1)$ real matrices of the form
+    \begin{equation}
+        \label{eq:SEn-def}
+        \Ematrix{\matmor{R}}{\vectmor{t}},
+    \end{equation}
+    where~$\matmor{R}\setin \mgSOn$ and~$\vectmor{t} \setin \reals^n$.
+\end{definition}
+
+\begin{table*}
+    \caption{Matrix groups}
+    \label{tab:matrix-groups}
+    \begin{tabular}{cllc}
+        \mgGLn & General linear group     & invertible linear transformations \\
+        \mgSLn & Special linear group     & invertible linear transformations with determinant equal to 1 \\ \\
+        \mgOn  & Orthogonal group         & preserve length of vectors \\
+        \mgSOn & Special orthogonal group & rotations \\ \\
+        \mgEn  & Euclidean group          & preserve distances and angles                                 & \\
+        \mgSEn & Special Euclidean group  & rigid motions \\
+    \end{tabular}
+\end{table*}
+
+The \SY{groups}~$\mgSEtwo$ and~$\mgSEthree$ are particularly important in robotics because they represent the roto-translations of the plane and 3D space, respectively.
+
+From~\cref{eq:SEn-def} we know we can represent one by a pair~$\tupp{\matmor{R}, \vectmor{t}}$, with~$\matmor{R}\setin\mgSOn$ and~$\vectmor{t} \setin \reals^n$.
+
+If we look at how matrices compose, we get
+%
+\begin{equation}
+    \label{eq:SE-composition}
+    \Ematrix{\matmor{R}_2}{\vectmor{t}_2} \Ematrix{\matmor{R}_1}{\vectmor{t}_1} = \Ematrix{\matmor{R}_2 \matmor{R}_1}{\matmor{R}_2\vectmor{t}_1 + \vectmor{t}_2}.
+\end{equation}
+%
+The formula for composition is
+%
+\begin{equation}
+    \label{eq:SE-composition-short}
+    \tupp{\matmor{R}_1, \vectmor{t}_1} \mtimesof{\mgSEn} \tupp{\matmor{R}_2, \vectmor{t}_2} = \tupp{\matmor{R}_2 \matmor{R}_1, \matmor{R}_2 \vectmor{t}_1 + \vectmor{t}_2}.
+\end{equation}
+%
+
+% %
+% \begin{equation}
+%   \tupp{\matmor{R}_1, \vectmor{t}_1} \mthenof{\mgSEn} \tupp{\matmor{R}_2, \vectmor{t}_2}  = \tupp{\matmor{R}_2 \matmor{R}_1, \matmor{R}_2 \vectmor{t}_1 + \vectmor{t}_2}
+% \end{equation}
+%
+% Note that because we are using $\mthen$ (then), we do not have the nice symmetry
+% that we had if we were using $\after$ (after).
+% %
+% %
+
+The group~$\mgSEn$ induces a transformation on the points of~$\reals^n$.
+We are going to call this an \emph{action}.
+
+The action is the following function:
+%
+\begin{equation}
+    \label{eq:apply}
+    \defmapperiodset{\mgact}{
+        \mgSEn \cartprod \reals^n
+    }{
+        \reals^n
+    }{
+        \tupp{ \tupp{\matmor{R}, \vectmor{t}}, \vectob{p}}
+    }{
+        \matmor{R}\vectob{p} + \vectmor{t}
+    }
+\end{equation}
+Given a roto-translation and a point, the function returns the roto-translated point.
+%
+We can also see this in matrix form as follows.
+We need to substitute for a point~$\vectob{p} \setin \reals^n$ a homogenous point~$\Epoint{\vectob{p}} \setin \reals^{n+1}$.
+%
+\begin{equation}
+    \label{eq:homogenous}
+    \Ematrix{\matmor{R}}{\vectmor{t}}
+    \Epoint{\vectob{p}}
+    =
+    \Epoint{\matmor{R}\vectob{p} + \vectmor{t}}.
+\end{equation}
+%
+
+If we apply two rototranslations, first~$\monela=\tupp{\matmor{R}_{\monela}, \vectmor{t}_{\monela}}$ and then~$\monelb=\tupp{\matmor{R}_{\monelb}, \vectmor{t}_{\monelb}}$, we find:
+%
+\begin{equation}
+    \label{eq:rototranslation-series}
+    \begin{aligned}
+        \mgact(\tupp{\matmor{R}_{\monelb}, \vectmor{t}_{\monelb}}, \mgact(\tupp{\matmor{R}_{\monela}, \vectmor{t}_{\monela}}, \vectob{p})) & =
+        \mgact(\tupp{\matmor{R}_{\monelb}, \vectmor{t}_{\monelb}}, \matmor{R}_{\monela}\vectob{p} + \vectmor{t}_{\monela}) \\
+                                                                                                                                           & = \matmor{R}_{\monelb}\matmor{R}_{\monela}\vectob{p} + \matmor{R}_{\monelb}\vectmor{t}_{\monela} + \vectmor{t}_{\monelb}.
+    \end{aligned}
+\end{equation}
+
+Alternatively, we can first compose the transformation~$\monela$ with~$\monelb$:
+%
+\begin{equation}
+    \label{eq:rototranslation-series-2}
+    \tupp{\matmor{R}_{\monela}, \vectmor{t}_{\monela}} \mtimesof{\mgSEn} \tupp{\matmor{R}_{\monelb}, \vectmor{t}_{\monelb}} = \tupp{\matmor{R}_{\monelb} \matmor{R}_{\monela}, \matmor{R}_{\monelb} \vectmor{t}_{\monela} + \vectmor{t}_{\monelb}},
+\end{equation}
+%
+and then apply this composite transformation to the point~$\vectob{p}$:
+\begin{equation}
+    \label{eq:rototranslation-series-3}
+    \mgact(\tupp{\matmor{R}_{\monelb} \matmor{R}_{\monela}, \matmor{R}_{\monelb} \vectmor{t}_{\monela} + \vectmor{t}_{\monelb}}, \vectob{p})
+    = \matmor{R}_{\monelb}\matmor{R}_{\monela}\vectob{p} + \matmor{R}_{\monelb}\vectmor{t}_{\monela} + \vectmor{t}_{\monelb}.
+\end{equation}
+%
+Thus, we have proved this property
+%
+\begin{equation}
+    \label{eq:rototranslation-action}
+    \mgact(\monelb, \mgact(\monela, \vectob{p})) = \mgact(\monela \mtimes \monelb, \vectob{p}),
+\end{equation}
+which is graphically reported in \cref{fig:graphical-roto-action}.
+
+\begin{figure}[h]
+    \includesag{10_graph_roto_action}
+    \caption{Graphical representation of roto-translation action.}
+    \label{fig:graphical-roto-action}
+\end{figure}
+%
+The notion of \SY{semigroup action} generalizes this property.
+}
+
+\todotextjira{26}{\bernina: @JL: add more exercises}
+
+\todotext{graded exercise commented out here}
+%\begin{gradedexercise}[\exname{UncurryingGroupActions}]
+%    \label{ex:UncurryingGroupActions}
+%    Prove \cref{lem:uncurrying-group-actions}.
+%\end{gradedexercise}
+%\solutionof{UncurryingGroupActions}
+
+\begin{gradedexercise}[\exname{MatrixMultAction}]
+    \label{ex:MatrixMultAction}
+    Let~$\setA = \reals^n$, and let~$\mgGLn$ be the group of invertible~$\ntimesn$ matrices.
+    Let
+    \begin{equation}
+        \label{eq:action-matrix-mult}
+        \defmapset{
+            \alpha
+        }{
+            \mgGLn \cartprod \setA
+        }{
+            \setA
+        }{
+            \tup{\matmor{M}, \vectmor{v}}
+        }{
+            \matmor{M}\vectmor{v}
+        }
+    \end{equation}
+    be the usual multiplication of matrices with vectors.
+    Check that \cref{eq:action-matrix-mult} defines a left group action operation of~$\mgGLn$ on~\setA.
+\end{gradedexercise}
+
+\solutionof{MatrixMultAction}
+
+
+

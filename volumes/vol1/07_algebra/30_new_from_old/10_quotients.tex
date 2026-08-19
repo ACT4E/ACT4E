@@ -1,0 +1,323 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Quotients}
+\label{sec:quotients-algebra}
+
+Sub-things, as discussed in the previous section, produce new structures by \emph{discarding elements}.
+Quotients, the topic of this section, produce new structures by \emph{merging elements}: we declare certain elements to be ``the same'', and pass to a coarser structure in which they really \emph{are} the same.
+
+This idea should be familiar from everyday life.
+When telling time, we happily compute ``$11$ o'clock plus $3$ hours is $2$ o'clock'': we are doing arithmetic not with whole numbers, but with whole numbers \emph{merged} according to the rule ``times that differ by a multiple of $12$ count as the same''.
+The result is a new, smaller algebraic structure---``clock arithmetic''---obtained from~$\tup{\wnumbers, +, 0}$ by merging elements.
+
+In modeling and engineering, quotients typically arise when we want to \emph{deliberately ignore} some aspect of a system: we aggregate detailed states into coarser ones, keeping only the distinctions that matter for the question at hand.
+
+\paragraph{From equivalence relations to congruences}
+
+The mathematical tool for ``merging elements of a set'' is the notion of \SY{equivalence relation}, which we studied in \cref{def:equivalence-relation}.
+Recall that, given an \SY{equivalence relation}~$\equival$ on a set~$\setA$, each element~$\ela \setin \setA$ belongs to exactly one \emph{equivalence class}
+\begin{equation}
+    [\ela] \definedas \makeset{ \elb \setin \setA \mid \ela \equival \elb },
+\end{equation}
+and the equivalence classes form a partition of~$\setA$.
+The set of all equivalence classes is called the \emph{quotient set}, and is denoted by~$\setA/_{\equival}$.
+Passing from~$\setA$ to~$\setA/_{\equival}$ implements precisely the merging of elements: two elements~$\ela, \elb$ that are equivalent ($\ela \equival \elb$) determine the \emph{same} element~$[\ela] = [\elb]$ of the quotient set.
+
+Now suppose that our set is not just a set, but the underlying set of a \SY{semigroup}~$\sgrpA = \tup{\sgrpAset, \mtimes}$.
+We would like the quotient set~$\sgrpAset/_{\equival}$ to be a \SY{semigroup} as well, with a composition operation that ``remembers'' the one of~$\sgrpA$.
+The natural candidate is to compose equivalence classes via representatives:
+\begin{equation}
+    \label{eq:quotient-multiplication-candidate}
+    [\sgrpela] \mtimes [\sgrpelb] \definedas [\sgrpela \mtimes \sgrpelb].
+\end{equation}
+
+However, there is a subtlety: the recipe \cref{eq:quotient-multiplication-candidate} uses the specific representatives~$\sgrpela$ and~$\sgrpelb$ to describe the classes being composed, and different representatives could a priori yield different answers.
+For the recipe to make sense---to be \emph{well-defined}---the answer must not depend on the choice of representatives.
+Not every \SY{equivalence relation} has this property; the ones that do get a special name.
+
+\begin{ctdefinition}[Congruence]
+    \label{def:congruence-semigroup}
+    Let~$\sgrpA = \tup{\sgrpAset, \mtimes}$ be a \SY{semigroup}.
+    A \maindef{congruence} on~$\sgrpA$ is:
+
+    \constit
+
+    \begin{enumerate}
+        \item An \SY{equivalence relation}~$\equival$ on the set~$\sgrpAset$.
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item Compatibility with composition:
+              \begin{equation}
+                  \label{eq:congruence-compatibility}
+                  \prfperiod{
+                      \sgrpela \equival \sgrpela' \quad \sgrpelb \equival \sgrpelb'
+                  }{
+                      (\sgrpela \mtimes \sgrpelb) \equival (\sgrpela' \mtimes \sgrpelb')
+                  }
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{example}
+    \label{exa:mod-n-congruence}
+    Fix a natural number~$n \geq 1$ and consider the \SY{semigroup}~$\tup{\wnumbers, +}$.
+    Define~$\ela \equival \elb$ if and only if~$\ela - \elb$ is a multiple of~$n$ (compare the mod-3 example following \cref{def:equivalence-relation}).
+    This is a \SY{congruence}: if~$\ela - \ela'$ and~$\elb - \elb'$ are multiples of~$n$, then so is
+    \begin{equation}
+        (\ela + \elb) - (\ela' + \elb') = (\ela - \ela') + (\elb - \elb').
+    \end{equation}
+\end{example}
+
+\begin{example}[A non-example]
+    \label{exa:sign-not-congruence}
+    Consider the \SY{semigroup}~$\tup{\wnumbers, +}$ and the \SY{equivalence relation} whose three equivalence classes are the negative numbers, $\makeset{0}$, and the positive numbers (``merging numbers with the same sign'').
+    This is \emph{not} a \SY{congruence}.
+    For instance, $1 \equival 2$, but
+    \begin{equation}
+        1 + (-1) = 0
+        \qquad \text{and} \qquad
+        2 + (-1) = 1
+    \end{equation}
+    are not equivalent to each other.
+    In words: knowing only the signs of two numbers does not determine the sign of their sum, so ``sign'' is too coarse an aggregation to support the additive structure.
+\end{example}
+
+\paragraph{Quotient semigroups}
+
+Congruences are exactly what is needed for the candidate composition \cref{eq:quotient-multiplication-candidate} to work.
+
+\begin{lemma}
+    \label{lem:quotient-semigroup}
+    Let~$\sgrpA = \tup{\sgrpAset, \mtimes}$ be a \SY{semigroup} and let~$\equival$ be a \SY{congruence} on~$\sgrpA$.
+    Then \cref{eq:quotient-multiplication-candidate} gives a well-defined binary operation on the quotient set~$\sgrpAset/_{\equival}$, and this operation is \SY{associative}.
+\end{lemma}
+
+\begin{proof}
+    First, well-definedness.
+    Suppose~$[\sgrpela] = [\sgrpela']$ and~$[\sgrpelb] = [\sgrpelb']$, that is, $\sgrpela \equival \sgrpela'$ and~$\sgrpelb \equival \sgrpelb'$.
+    By the compatibility condition \cref{eq:congruence-compatibility}, we have~$(\sgrpela \mtimes \sgrpelb) \equival (\sgrpela' \mtimes \sgrpelb')$, and hence~$[\sgrpela \mtimes \sgrpelb] = [\sgrpela' \mtimes \sgrpelb']$.
+    So the recipe assigns the same result no matter which representatives we use.
+
+    Associativity is inherited from~$\sgrpA$: for all~$\sgrpela, \sgrpelb, \sgrpelc \setin \sgrpAset$,
+    \begin{equation}
+        ([\sgrpela] \mtimes [\sgrpelb]) \mtimes [\sgrpelc]
+        = [(\sgrpela \mtimes \sgrpelb) \mtimes \sgrpelc]
+        = [\sgrpela \mtimes (\sgrpelb \mtimes \sgrpelc)]
+        = [\sgrpela] \mtimes ([\sgrpelb] \mtimes [\sgrpelc]).
+        \qedhere
+    \end{equation}
+\end{proof}
+
+\begin{ctdefinition}[Quotient semigroup]
+    \label{def:quotient-semigroup}
+    Let~$\sgrpA = \tup{\sgrpAset, \mtimes}$ be a \SY{semigroup} and let~$\equival$ be a \SY{congruence} on~$\sgrpA$.
+    The \maindef{quotient semigroup}~$\sgrpA/_{\equival}$ is the \SY{semigroup} given by:
+
+    \constit
+
+    \begin{enumerate}
+        \item The quotient set~$\sgrpAset/_{\equival}$;
+        \item The composition operation~$[\sgrpela] \mtimes [\sgrpelb] \definedas [\sgrpela \mtimes \sgrpelb]$.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{remark}[Quotient monoids and quotient groups]
+    \label{rem:quotient-monoid-group}
+    The same construction works for \SY{monoids} and \SY{groups}, where by a \SY{congruence} on a \SY{monoid} or \SY{group} we mean a \SY{congruence} on the underlying \SY{semigroup}.
+
+    If~$\monoidAdefinition$ is a \SY{monoid} and~$\equival$ is a \SY{congruence} on it, then the quotient \SY{semigroup} is in fact a \SY{monoid}, with \SY{neutral element}~$[\idmon_\monoidA]$: indeed, for any class~$[\monela]$ we have~$[\idmon_\monoidA] \mtimes [\monela] = [\idmon_\monoidA \mtimes \monela] = [\monela]$, and similarly on the other side.
+
+    If~$\grpA = \tup{\grpAset, \gtimes, \idgrp, \ginv}$ is a \SY{group}, then the quotient is again a \SY{group}, with inverses given by~$\ginv([\grpela]) \definedas [\ginv(\grpela)]$.
+    One checks, along the same lines as in \cref{lem:quotient-semigroup}, that this inverse operation is well-defined and satisfies the inverse laws.
+\end{remark}
+
+\begin{example}
+    \label{exa:clock-arithmetic-quotient}
+    Continuing \cref{exa:mod-n-congruence}: the quotient of~$\tup{\wnumbers, +, 0}$ by the mod-$n$ \SY{congruence} is a \SY{group} with exactly~$n$ elements,
+    \begin{equation}
+        [0], [1], \dots, [n-1],
+    \end{equation}
+    where composition is ``addition modulo~$n$''.
+    For~$n = 2$ and~$n = 4$, we recover precisely the \SY{groups} of \cref{exa:grp-order-two,exa:grp-Z4}: what was presented there via composition tables now appears as the result of a general construction.
+
+    For~$n = 12$, we obtain clock arithmetic, as in the introduction to this section: the class~$[\ela]$ is ``the time of day, disregarding how many full half-days have passed''.
+    Similarly, $n = 7$ yields the arithmetic of weekdays: ``today plus 9 days'' has the same weekday as ``today plus 2 days'', because~$[9] = [2]$.
+\end{example}
+
+\begin{example}
+    \label{exa:parity-quotient}
+    The quotient of the \SY{monoid}~$\tup{\natnumbers, +, 0}$ by the mod-2 \SY{congruence} is a two-element \SY{monoid} whose elements are the classes~$[0]$ (``even'') and~$[1]$ (``odd''), with composition given by the familiar rules: even plus even is even, even plus odd is odd, odd plus odd is even.
+
+    As an applied subexample, this quotient is the algebra underlying \emph{parity checks} in data transmission: to detect single bit-flip errors, one does not need to track the exact number of $1$-bits in a message, only its class in the quotient---one single bit of information.
+    The quotient construction formalizes the aggregation step ``count of $1$-bits $\mapsto$ parity''.
+\end{example}
+
+\begin{example}
+    \label{exa:multiset-quotient}
+    Consider the \SY{monoid}~$\listsof{\setA}$ of lists over a set~$\setA$ with concatenation (\cref{exa:string-monoid}), and let~$\equival$ be the relation given by: two lists are equivalent if and only if one can be obtained from the other by reordering its entries.
+    This is a \SY{congruence}: if we reorder the entries of two lists, then their concatenation differs from the original concatenation only by a reordering of entries.
+
+    In the quotient \SY{monoid}, a class~$[\ela]$ retains only the information of \emph{how many times} each element of~$\setA$ occurs, and composition adds up these counts.
+
+    As an applied subexample, consider a warehouse receiving deliveries.
+    A delivery is naturally a \emph{list} of items (they come off the truck in some order), and processing consecutive deliveries corresponds to concatenation.
+    For the inventory, however, the order of the items is irrelevant: inventory bookkeeping takes place in the quotient \SY{monoid}, where a delivery is just a tally of how many units of each product arrived.
+\end{example}
+
+\begin{exercise}
+    \label{ex:trivial-congruences}
+    Let~$\sgrpA = \tup{\sgrpAset, \mtimes}$ be a \SY{semigroup}.
+    Show that the following two \SY{equivalence relations} are always \SY{congruences}:
+    \begin{enumerate}
+        \item the relation where~$\sgrpela \equival \sgrpelb$ holds only for~$\sgrpela = \sgrpelb$;
+        \item the relation where~$\sgrpela \equival \sgrpelb$ holds for all~$\sgrpela, \sgrpelb \setin \sgrpAset$.
+    \end{enumerate}
+    What are the corresponding quotient \SY{semigroups}?
+\end{exercise}
+\begin{solution}
+    For the first relation, compatibility reads: if~$\sgrpela = \sgrpela'$ and~$\sgrpelb = \sgrpelb'$, then~$\sgrpela \mtimes \sgrpelb = \sgrpela' \mtimes \sgrpelb'$; this is trivially true.
+    Each equivalence class is a singleton, and the quotient is a ``copy'' of~$\sgrpA$ itself: nothing is merged.
+
+    For the second relation, compatibility is immediate since \emph{all} elements are equivalent.
+    There is a single equivalence class, and the quotient is the one-element \SY{semigroup}: everything is merged.
+
+    These two extremes are the least and the most aggressive aggregations possible; the interesting quotients live in between.
+\end{solution}
+
+\subsection{Normal subgroups}
+
+For \SY{groups}, there is a classical alternative bookkeeping device for \SY{congruences}.
+The key observation is that a \SY{congruence} on a \SY{group} is completely determined by just \emph{one} of its equivalence classes: the class of the \SY{neutral element}.
+
+\begin{lemma}
+    \label{lem:congruence-determined-by-neutral-class}
+    Let~$\grpA = \tup{\grpAset, \gtimes, \idgrp, \ginv}$ be a \SY{group}, let~$\equival$ be a \SY{congruence} on~$\grpA$, and let~$\grpBset \definedas [\idgrp]$ denote the equivalence class of the \SY{neutral element}.
+    Then, for all~$\grpela, \grpelb \setin \grpAset$:
+    \begin{equation}
+        \label{eq:congruence-from-normal-subgroup}
+        \prfdoubleperiod{
+            \grpela \equival \grpelb
+        }{
+            \grpela \gtimes \ginv(\grpelb) \setin \grpBset
+        }
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Suppose~$\grpela \equival \grpelb$.
+    Since also~$\ginv(\grpelb) \equival \ginv(\grpelb)$ (reflexivity), compatibility \cref{eq:congruence-compatibility} gives
+    \begin{equation}
+        \grpela \gtimes \ginv(\grpelb) \equival \grpelb \gtimes \ginv(\grpelb) = \idgrp,
+    \end{equation}
+    that is, $\grpela \gtimes \ginv(\grpelb) \setin [\idgrp] = \grpBset$.
+
+    Conversely, suppose~$\grpela \gtimes \ginv(\grpelb) \equival \idgrp$.
+    Composing both sides with~$\grpelb$ (which is $\equival$-related to itself) and using compatibility, we obtain
+    \begin{equation}
+        \grpela = \grpela \gtimes \ginv(\grpelb) \gtimes \grpelb \equival \idgrp \gtimes \grpelb = \grpelb.
+        \qedhere
+    \end{equation}
+\end{proof}
+
+So which subsets~$\grpBset \setsubseteq \grpAset$ arise as the neutral element's class of some \SY{congruence}?
+It turns out that~$\grpBset$ is always a \SY{subgroup}, but of a special kind: it must additionally be stable under \emph{conjugation}, in the following sense.
+
+\begin{ctdefinition}[Normal subgroup]
+    \label{def:normal-subgroup}
+    Let~$\grpA = \tup{\grpAset, \gtimes, \idgrp, \ginv}$ be a \SY{group}.
+    A \maindef{normal subgroup} of~$\grpA$ is:
+
+    \constit
+
+    \begin{enumerate}
+        \item A \SY{subgroup}~$\grpBset \setsubseteq \grpAset$.
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item Stability under conjugation:
+              \begin{equation}
+                  \label{eq:normality}
+                  \prfperiod{
+                      \grpelb \setin \grpBset \quad \grpela \setin \grpAset
+                  }{
+                      \grpela \gtimes \grpelb \gtimes \ginv(\grpela) \setin \grpBset
+                  }
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{proposition}
+    \label{prop:congruences-are-normal-subgroups}
+    Let~$\grpA$ be a \SY{group}.
+    The assignments
+    \begin{equation}
+        \equival \; \longmapsto \; [\idgrp]
+        \qquad \text{and} \qquad
+        \grpBset \; \longmapsto \; \pars{ \grpela \equival \grpelb \; \Leftrightarrow \; \grpela \gtimes \ginv(\grpelb) \setin \grpBset }
+    \end{equation}
+    define a one-to-one correspondence between \SY{congruences} on~$\grpA$ and \SY{normal subgroups} of~$\grpA$.
+\end{proposition}
+
+\begin{exercise}
+    \label{ex:congruence-normal-correspondence}
+    Prove \cref{prop:congruences-are-normal-subgroups}.
+    Concretely: show that if~$\equival$ is a \SY{congruence}, then~$[\idgrp]$ is a \SY{normal subgroup}; show that if~$\grpBset$ is a \SY{normal subgroup}, then the relation defined via \cref{eq:congruence-from-normal-subgroup} is a \SY{congruence}; and show that the two assignments are mutually inverse (\cref{lem:congruence-determined-by-neutral-class} does most of this last part).
+\end{exercise}
+\begin{solution}
+    Suppose~$\equival$ is a \SY{congruence} and~$\grpBset = [\idgrp]$.
+    If~$\grpelb, \grpelb' \setin \grpBset$, then~$\grpelb \gtimes \grpelb' \equival \idgrp \gtimes \idgrp = \idgrp$, so~$\grpBset$ is closed under composition; clearly~$\idgrp \setin \grpBset$; and if~$\grpelb \equival \idgrp$, then composing with~$\ginv(\grpelb)$ gives~$\idgrp \equival \ginv(\grpelb)$, so~$\grpBset$ is closed under inverses.
+    For normality: if~$\grpelb \equival \idgrp$ and~$\grpela \setin \grpAset$, then compatibility gives~$\grpela \gtimes \grpelb \gtimes \ginv(\grpela) \equival \grpela \gtimes \idgrp \gtimes \ginv(\grpela) = \idgrp$.
+
+    Conversely, let~$\grpBset$ be a \SY{normal subgroup} and define~$\grpela \equival \grpelb$ by~$\grpela \gtimes \ginv(\grpelb) \setin \grpBset$.
+    Reflexivity follows from~$\idgrp \setin \grpBset$; symmetry from closure of~$\grpBset$ under inverses, since~$\ginv\pars{\grpela \gtimes \ginv(\grpelb)} = \grpelb \gtimes \ginv(\grpela)$; transitivity from closure under composition, since~$\grpela \gtimes \ginv(\grpelc) = \pars{\grpela \gtimes \ginv(\grpelb)} \gtimes \pars{\grpelb \gtimes \ginv(\grpelc)}$.
+    For compatibility, suppose~$\grpela \gtimes \ginv(\grpela') \setin \grpBset$ and~$\grpelb \gtimes \ginv(\grpelb') \setin \grpBset$.
+    Then
+    \begin{equation}
+        (\grpela \gtimes \grpelb) \gtimes \ginv(\grpela' \gtimes \grpelb')
+        = \grpela \gtimes \pars{\grpelb \gtimes \ginv(\grpelb')} \gtimes \ginv(\grpela)
+        \gtimes \pars{\grpela \gtimes \ginv(\grpela')},
+    \end{equation}
+    which lies in~$\grpBset$: the first bracketed factor conjugated by~$\grpela$ lies in~$\grpBset$ by normality, and the second bracketed factor lies in~$\grpBset$ by assumption, so their composite does as well.
+
+    Finally, the two assignments are mutually inverse: starting from a \SY{congruence}~$\equival$, \cref{lem:congruence-determined-by-neutral-class} says that the relation reconstructed from~$[\idgrp]$ is~$\equival$ itself; starting from a \SY{normal subgroup}~$\grpBset$, the class of~$\idgrp$ in the associated relation is exactly~$\makeset{\grpela \mid \grpela \gtimes \ginv(\idgrp) \setin \grpBset} = \grpBset$.
+\end{solution}
+
+\begin{remark}
+    Given a \SY{normal subgroup}~$\grpBset$ of~$\grpA$, the quotient \SY{group} associated with the corresponding \SY{congruence} is commonly denoted~$\grpA / \grpBset$.
+    The equivalence class of an element~$\grpela$ is the set
+    \begin{equation}
+        \makeset{ \grpela \gtimes \grpelb \mid \grpelb \setin \grpBset },
+    \end{equation}
+    called the \emph{coset} of~$\grpela$.
+    In this notation, the quotient of \cref{exa:clock-arithmetic-quotient} is written~$\wnumbers / n\wnumbers$, where~$n\wnumbers$ denotes the \SY{normal subgroup} of multiples of~$n$.
+\end{remark}
+
+\begin{example}
+    In a commutative \SY{group}, \emph{every} \SY{subgroup} is normal: the condition \cref{eq:normality} reduces to~$\grpela \gtimes \ginv(\grpela) \gtimes \grpelb = \grpelb \setin \grpBset$.
+    This is why, for~$\tup{\wnumbers, +, 0}$, we could quotient by the \SY{subgroup} of multiples of~$n$ without further ado.
+\end{example}
+
+\begin{example}[A non-normal subgroup]
+    \label{exa:non-normal-subgroup}
+    Normality is a genuine condition.
+    Consider the \SY{group}~$\Perms_3$ of permutations of the set~$\makeset{1,2,3}$, and let~$\grpBset \setsubseteq \Perms_3$ consist of the identity together with the permutation~$\grpelb$ that swaps~$1$ and~$2$ (leaving~$3$ fixed).
+    Then~$\grpBset$ is a \SY{subgroup} (as~$\grpelb$ is its own inverse), but it is not normal: conjugating~$\grpelb$ by the permutation~$\grpela$ that swaps~$2$ and~$3$ yields the permutation that swaps~$1$ and~$3$, which is not in~$\grpBset$.
+
+    By \cref{prop:congruences-are-normal-subgroups}, there is therefore \emph{no} \SY{congruence} on~$\Perms_3$ whose class of the \SY{neutral element} is~$\grpBset$: not every way of merging group elements is compatible with composition.
+\end{example}
+
+\begin{remark}[No analogue for monoids]
+    \label{rem:no-normal-submonoids}
+    For \SY{monoids}, there is no analogous reduction of \SY{congruences} to special submonoids: a \SY{congruence} on a \SY{monoid} is in general \emph{not} determined by the equivalence class of the \SY{neutral element}.
+    The proof of \cref{lem:congruence-determined-by-neutral-class} used inverses in an essential way.
+
+    For a counterexample, consider the reordering \SY{congruence} on~$\listsof{\setA}$ from \cref{exa:multiset-quotient}, with~$\setA$ having at least two elements.
+    The class of the \SY{neutral element} (the empty list) contains only the empty list itself, since reordering never changes the length of a list.
+    But the class of the \SY{neutral element} of the \emph{trivial} congruence (merging nothing, as in \cref{ex:trivial-congruences}) is also just the empty list---even though the two \SY{congruences} are different.
+    This is one reason why, when working with \SY{monoids} and \SY{semigroups}, the notion of \SY{congruence} is the fundamental one.
+\end{remark}

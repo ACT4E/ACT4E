@@ -1,0 +1,271 @@
+% !TEX root = chapter-standalone.tex
+
+\devel{
+\section{Quotient categories}
+\label{sec:quotient-categories}
+
+\todotext{@J: review and edit}
+
+Just as subcategories restrict a category, \emph{quotients} coarsen one: we declare certain morphisms to be ``the same'', and pass to a category in which they really are the same.
+We have seen this move before, for algebraic structures: in \cref{sec:quotients-algebra}, we merged elements of a \SY{semigroup} using a \SY{congruence}, an equivalence relation compatible with composition.
+For categories, the story is entirely parallel, with one new feature: since morphisms have sources and targets, we only ever merge morphisms that are \emph{parallel}, that is, morphisms which have the same source and the same target.
+
+Why would we want to merge morphisms?
+A typical situation in modeling is that a category keeps track of \emph{how} something is done, while for the question at hand we only care about \emph{what} is achieved.
+Two different sequences of actions---two different morphisms---may have the same net effect, and we may wish to work in a coarser model where they count as one.
+Quotient categories make this precise.
+
+\begin{ctdefinition}[Congruence on a category]
+    \label{def:congruence-category}
+    Let~\CatC be a category.
+    A \SYNDEF{congruence on a category}\emph{congruence}~$\equival$ on~\CatC is:
+
+    \constit
+
+    \begin{enumerate}
+        \item For each pair of objects~$\Obja, \Objb \setin \ObC$, an \SY{equivalence relation}~$\equival_{\Obja,\Objb}$ on the hom-set~$\HomSet{\CatC}{\Obja}{\Objb}$.
+              (We usually drop the subscripts and write~$\equival$ for all of them.)
+    \end{enumerate}
+
+    \condit
+
+    \begin{enumerate}
+        \item Compatibility with composition: for all objects~$\Obja, \Objb, \Objc \setin \ObC$,
+              \begin{equation}
+                  \label{eq:cat-congruence-compatibility}
+                  \prfperiod{
+                      \mora \equival \mora' \colon \Obja \mto \Objb
+                      \quad
+                      \morb \equival \morb' \colon \Objb \mto \Objc
+                  }{
+                      (\morab) \equival (\mora' \mthen \morb')
+                  }
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{remark}
+    Note what the definition does \emph{not} allow: morphisms with different sources or targets are never related, because each equivalence relation lives on a single hom-set.
+    Objects are never merged by this construction; only parallel morphisms are.
+\end{remark}
+
+\begin{ctdefinition}[Quotient category]
+    \label{def:quotient-category}
+    Let~\CatC be a category and let~$\equival$ be a \SY{congruence} on~\CatC.
+    The \maindef{quotient category}~$\CatC/_{\equival}$ is specified by:
+    \begin{enumerate}
+        \item \emph{Objects}: the same objects as~\CatC.
+        \item \emph{Morphisms}: given~$\Obja, \Objb \setin \ObC$, the hom-set is the quotient set
+              \begin{equation}
+                  \HomSet{\CatC/_{\equival}}{\Obja}{\Objb} \definedas \HomSet{\CatC}{\Obja}{\Objb} /_{\equival},
+              \end{equation}
+              whose elements are the equivalence classes~$[\mora]$ of morphisms~$\mora \colon \Obja \mto \Objb$ of \CatC.
+        \item \emph{Composition}: via representatives:
+              \begin{equation}
+                  \label{eq:quotient-cat-composition}
+                  [\mora] \mthen [\morb] \definedas [\morab].
+              \end{equation}
+        \item \emph{Identity morphisms}: $\catidat{\Obja} \definedas [\catidat{\Obja}]$, the class of the \SY{identity morphism} of~\CatC.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{exercise}
+    \label{ex:quotient-cat-well-defined}
+    Check that \cref{def:quotient-category} does define a category.
+    Concretely: show that the composition \cref{eq:quotient-cat-composition} is well-defined (independent of the choice of representatives), and that associativity and unitality hold.
+    (Compare with the proof of \cref{lem:quotient-semigroup}, which is the one-object shadow of this exercise.)
+\end{exercise}
+\begin{solution}
+    Well-definedness: if~$[\mora] = [\mora']$ and~$[\morb] = [\morb']$, with all sources and targets matching, then~$\mora \equival \mora'$ and~$\morb \equival \morb'$, so by the compatibility condition \cref{eq:cat-congruence-compatibility} we get~$(\morab) \equival (\mora' \mthen \morb')$, that is, $[\morab] = [\mora' \mthen \morb']$.
+
+    Associativity and unitality are inherited from~\CatC:
+    \begin{equation}
+        ([\mora] \mthen [\morb]) \mthen [\morc]
+        = [(\morab) \mthen \morc]
+        = [\mora \mthen (\morb \mthen \morc)]
+        = [\mora] \mthen ([\morb] \mthen [\morc]),
+    \end{equation}
+    and~$[\catidat{\Obja}] \mthen [\mora] = [\catidat{\Obja} \mthen \mora] = [\mora]$, and similarly on the other side.
+\end{solution}
+
+\subsection{Examples}
+
+\begin{example}[Quotients of monoids, revisited]
+    \label{exa:quotient-cat-monoid}
+    Recall from \cref{def:monoidcat} that a \SY{monoid}~$\monoidA$ can be viewed as a category~$\monoidcat{\monoidA}$ with one object.
+    Since all morphisms of~$\monoidcat{\monoidA}$ are parallel (there is only one object), a \SY{congruence} on the category~$\monoidcat{\monoidA}$ is exactly a \SY{congruence} on the \SY{monoid}~$\monoidA$ in the sense of \cref{def:congruence-semigroup}, and the quotient category is the one-object category of the quotient \SY{monoid}:
+    \begin{equation}
+        \monoidcat{\monoidA} /_{\equival} \; = \; \monoidcat{\pars{\monoidA /_{\equival}}}.
+    \end{equation}
+    For instance, the mod-12 \SY{congruence} on~$\tup{\wnumbers, +, 0}$ (``clock arithmetic'', \cref{exa:clock-arithmetic-quotient}) can be seen as a quotient of one-object categories.
+    In this sense, quotient categories generalize the quotients of \cref{sec:quotients-algebra}.
+\end{example}
+
+\begin{example}[Trips measured by length]
+    \label{exa:quotient-cat-berg}
+    Recall the category \Berg of \cref{sec:trekking}, whose morphisms are hiking paths between locations in the mountains.
+    Declare two parallel paths to be equivalent if they have the same \emph{length}.
+    This is a \SY{congruence}: the length of a concatenation is the sum of the lengths, so if~$\mora, \mora'$ have equal lengths and~$\morb, \morb'$ have equal lengths, then~$\morab$ and~$\mora' \mthen \morb'$ have equal lengths as well.
+
+    In the quotient category, a morphism from~$\Obja$ to~$\Objb$ is no longer a specific path, but rather ``a way of getting from~$\Obja$ to~$\Objb$ with a given total distance''---the coarser information a pedometer retains about a hike.
+    Which quotient to take is a modeling choice: we could just as well identify parallel paths with the same total ascent, or the same duration, and obtain other quotient categories.
+\end{example}
+
+\begin{example}[Exchange routes with equal net effect]
+    \label{exa:quotient-cat-currency}
+    Consider the graph of \cref{fig:currencygraph}, whose vertices are currencies and whose edges are the individual exchange services offered by particular companies, and let~$\pathcat{\graphA}$ be its free category (\cref{sec:catsfromgraphs}): morphisms are \emph{routes}, that is, finite chains of exchange services.
+    Each edge carries a rate and a commission, and by the composition rule \cref{eq:comp-law-curr}, every route determines a net pair~$\tup{r, c}$.
+
+    Declare two parallel routes equivalent if they determine the same net pair~$\tup{r,c}$.
+    This is a \SY{congruence}: the net pair of a composite route is computed from the net pairs of its parts, so routes with equal net pairs compose to routes with equal net pairs.
+    In the quotient category, a morphism is no longer a route through specific companies; it is simply an achievable exchange behavior~$\tup{r,c}$.
+    This quotient is precisely the passage from the ``operational'' description of the currency system (which services, in which order) to the ``behavioral'' description offered by the category \Curr of \cref{sec:currency_cat}.
+\end{example}
+
+\begin{example}[Collapsing all parallel morphisms]
+    \label{exa:quotient-cat-collapse}
+    On any category~\CatC, the \emph{total} relation on each hom-set (all parallel morphisms equivalent) is a \SY{congruence}: the compatibility condition holds trivially.
+    In the resulting quotient, each hom-set has at most one element---all that survives of a morphism is the fact that \emph{some} morphism exists.
+
+    In other words, this quotient remembers only \emph{reachability}: whether one can get from~$\Obja$ to~$\Objb$ at all, forgetting every distinction between the ways of doing so.
+    Categories in which every hom-set has at most one element behave like \SY{preorders} viewed as categories (\cref{sec:posets-as-cats}); the collapse-all quotient is thus a systematic way of extracting, from any category, its underlying reachability preorder.
+\end{example}
+
+\begin{remark}
+    Not every family of equivalence relations on hom-sets is a \SY{congruence}: compatibility with composition is a genuine requirement.
+    We saw a one-object instance already in \cref{exa:sign-not-congruence}: merging the integers by sign is incompatible with addition.
+    Via \cref{exa:quotient-cat-monoid}, the same example shows a family of equivalence relations on a (one-object) category that fails to be a \SY{congruence}.
+\end{remark}
+
+\section{Generators and relations}
+\label{sec:cat-generators-relations}
+
+\todotext{@J: review and edit}
+
+In \cref{sec:generators-relations-algebra} we saw that \SY{semigroups} and \SY{monoids} can be specified economically by \emph{generators} (from which all elements arise by composition) and \emph{relations} (equations between composites).
+Categories can be specified in the same style.
+In fact, we already know both halves of the recipe: the free category on a graph (\cref{sec:catsfromgraphs}) plays the role of the free \SY{monoid}, and quotients by \SY{congruences} (\cref{sec:quotient-categories}) let us impose equations.
+
+\subsection{Generating sets of morphisms}
+
+We first make precise what it means for some morphisms to \emph{generate} a category.
+
+\begin{ctdefinition}[Generated subcategory]
+    \label{def:generated-subcategory}
+    Let~\CatC be a category and let~$\setS$ be a set of morphisms of~\CatC.
+    The \maindef{subcategory generated by}~$\setS$ is the smallest \SY{subcategory} of~\CatC that contains all objects of \CatC and all morphisms in~$\setS$.
+    Concretely, its morphisms are all \SY{identity morphisms} of~\CatC, together with all finite composites
+    \begin{equation}
+        \mora_1 \mthen \mora_2 \mthen \dots \mthen \mora_n
+    \end{equation}
+    of composable chains of morphisms~$\mora_1, \dots, \mora_n \setin \setS$.
+
+    We say that~\CatC is \emph{generated} by~$\setS$ if this subcategory is all of~\CatC.
+\end{ctdefinition}
+
+\begin{example}
+    The free category~$\pathcat{\graphA}$ on a graph~$\graphA$ is generated by (the single-edge paths corresponding to) the edges of~$\graphA$: every path is a finite concatenation of edges, and the trivial paths are the identities.
+\end{example}
+
+\begin{example}
+    The currency category built from \cref{tab:currencycompanies} is generated by the seven listed exchange services: every available exchange behavior arises by composing these.
+    Similarly, viewing a \SY{monoid}~$\monoidA$ as a one-object category, a generating set of morphisms is exactly a generating subset in the sense of \cref{def:gen-semigrp}.
+\end{example}
+
+\begin{remark}
+    Generators are useful because they make infinite categories finitely describable.
+    A category may have infinitely many morphisms, and yet be generated by a handful of them; specifying the generators (say, as the edges of a finite graph) then specifies the category up to knowing which composites coincide.
+    Pinning down the latter is exactly the job of relations.
+\end{remark}
+
+\subsection{Relations and presented categories}
+
+By a \emph{relation} in this context we mean an equation between two \emph{parallel} composites of generating morphisms---the categorical counterpart of \cref{def:relation-on-semigroup}.
+To impose a chosen list of relations, we use the congruence they generate.
+
+\begin{lemma}
+    \label{lem:cat-generated-congruence}
+    Let~\CatC be a category, and suppose that for each pair of objects we are given a set~$\relA_{\Obja, \Objb}$ of pairs of parallel morphisms~$\Obja \mto \Objb$.
+    Among all \SY{congruences} on~\CatC relating all the given pairs, there is a smallest one: the intersection of all of them.
+    We call it the \SY{congruence} \emph{generated} by the given pairs.
+\end{lemma}
+
+\begin{exercise}
+    \label{ex:cat-generated-congruence}
+    Prove \cref{lem:cat-generated-congruence}, adapting the proof of \cref{lem:generated-congruence}.
+\end{exercise}
+\begin{solution}
+    An intersection of \SY{congruences} (intersecting hom-set-wise) is again a family of \SY{equivalence relations}, since reflexivity, symmetry, and transitivity are each preserved under intersection; the compatibility condition \cref{eq:cat-congruence-compatibility} is likewise preserved, since it holds in each of the intersected \SY{congruences} separately.
+    The collection being intersected is non-empty: the total congruence of \cref{exa:quotient-cat-collapse} relates all parallel pairs, in particular the given ones.
+\end{solution}
+
+\begin{ctdefinition}[Presented category]
+    \label{def:presented-category}
+    Let~$\graphA$ be a graph, and let~$\relA$ be a set of pairs of parallel paths in~$\graphA$ (the ``imposed equations'').
+    The \maindef{category presented by}~$\graphA$ \emph{and}~$\relA$ is the quotient category
+    \begin{equation}
+        \pathcat{\graphA} /_{\equivalparam{\relA}},
+    \end{equation}
+    where~$\equivalparam{\relA}$ is the \SY{congruence} generated by~$\relA$ on the free category $\pathcat{\graphA}$.
+\end{ctdefinition}
+
+In words: the objects are the vertices of~$\graphA$; the morphisms are paths, considered up to the consequences of the imposed equations.
+
+\begin{example}[The commutative square]
+    \label{exa:presented-commutative-square}
+    Let~$\graphA$ be the graph with four vertices and four edges arranged in a square:
+    \begin{equation}
+        \Obja \overset{\mora}{\mto} \Objb, \qquad
+        \Obja \overset{\morc}{\mto} \Objc, \qquad
+        \Objb \overset{\morb}{\mto} \Objd, \qquad
+        \Objc \overset{\mord}{\mto} \Objd,
+    \end{equation}
+    and impose the single relation
+    \begin{equation}
+        \morab = \morc \mthen \mord.
+    \end{equation}
+    In the free category~$\pathcat{\graphA}$, the two paths from~$\Obja$ to~$\Objd$ are distinct morphisms; in the presented category, they are equal.
+    The result is the ``generic \SY{commutative square}'': a category with four objects and exactly one morphism from~$\Obja$ to~$\Objd$.
+    Diagrams that we call commutative are, implicitly, pictures of presented categories: the drawing supplies the generators, and commutativity asserts the relations.
+\end{example}
+
+\begin{example}[Monoid presentations, revisited]
+    \label{exa:presented-cat-monoid}
+    If the graph~$\graphA$ has a single vertex, then all edges are loops, all paths are parallel, and \cref{def:presented-category} reduces to the presentation of a \SY{monoid} by generators and relations (\cref{def:presented-monoid}), viewed through the lens of \cref{def:monoidcat}.
+    For example, the one-vertex graph with a single loop~$\mora$ and the relation~$\mora \mthen \mora = \catid$ presents the two-element \SY{monoid} of the toggle switch (\cref{exa:presentation-toggle}), now seen as a one-object category.
+\end{example}
+
+\begin{example}[A user interface as a presented category]
+    \label{exa:presented-cat-ui}
+    Presented categories are a natural specification format for systems that move between named states via named actions, subject to declared equivalences of action sequences.
+
+    As a small example, consider three screens of an app: \emph{Home}, \emph{Menu}, and \emph{Settings}.
+    Take the graph with these three vertices and with edges the elementary user actions:
+    \begin{equation}
+        \stylemorph{m} \colon \text{Home} \mto \text{Menu}, \qquad
+        \stylemorph{s} \colon \text{Menu} \mto \text{Settings}, \qquad
+        \stylemorph{b} \colon \text{Settings} \mto \text{Menu}, \qquad
+        \stylemorph{h} \colon \text{Menu} \mto \text{Home},
+    \end{equation}
+    (``open menu'', ``open settings'', ``back'', ``home'').
+    We impose the relations
+    \begin{equation}
+        \stylemorph{s} \mthen \stylemorph{b} = \catidat{\text{Menu}},
+        \qquad
+        \stylemorph{m} \mthen \stylemorph{h} = \catidat{\text{Home}}.
+    \end{equation}
+    The first relation says: from the menu, opening the settings and pressing ``back'' has no net effect.
+    The second says: opening the menu and pressing ``home'' has no net effect either.
+    (Note that both imposed equations relate \emph{parallel} composites, as they must: the first two composites go from Menu to Menu, the second two from Home to Home.)
+
+    In the presented category, a morphism from one screen to another is a class of user journeys, where journeys differing by the declared simplifications count as the same.
+    Such models are used, for instance, to reason about whether different click-sequences are guaranteed to leave the app in the same state.
+\end{example}
+
+\begin{remark}
+    Every category is generated by the set of \emph{all} its morphisms, subject to the relations given by its entire composition structure---the categorical analogue of \cref{rem:every-monoid-has-presentation}.
+    As in algebra, the value of presentations lies in economy: a finite graph and a short list of equations can specify a large or infinite category.
+    And the same caution applies: deciding whether two paths represent equal morphisms in a presented category (the \emph{word problem}) is undecidable in general (\cref{rem:word-problem}).
+\end{remark}
+
+}

@@ -1,0 +1,276 @@
+% !TEX root = chapter-standalone.tex
+
+
+\section{Optimality}
+\label{sec:dp-optimality}
+
+\todotext{2026-07, J: add intro material here}
+
+\subsection{Chains and Antichains}
+\label{sec:chains-antichains}
+
+
+Here are two further special types of subsets of a poset: \SY{chains} and \SY{antichains}.
+Their definitions are dual.
+
+\begin{definition}[Chain in a poset]
+    \label{def:chain}
+    Given a poset~$\posAdefinition$, a \maindef{chain} is a subset~$\subA \setsubseteq \posAset$ such that any two elements of~$\subA$ are comparable:
+    \begin{equation}\label{eq:chain}
+        \prfperiod{
+            \posela,\poselb \setin \subA
+        }{
+            (\posela \posAleq \poselb) \boolor (\poselb \posAleq \posela)
+        }
+    \end{equation}
+\end{definition}
+
+
+\begin{definition}[Antichain in a poset]
+    \label{def:antichain}
+    An \maindef{antichain} is a subset~$\subA$ of a \SY{poset} where no two distinct elements are comparable:
+    %
+    \begin{equation}\label{eq:antichain}
+        \prfperiod{
+            \posela, \poselb \setin \subA
+        }{
+            \posela \posAleq \poselb
+        }{
+            \posela = \poselb
+        }
+    \end{equation}
+    %
+\end{definition}
+\begin{remark}
+    Note that the empty set~$\Emptyset$ is both a \SY{chain} and an \SY{antichain}.
+\end{remark}
+
+We denote the set of \SY{antichains} of a poset~\posA by~$\antichains\posA$.
+
+\begin{example}[Chains and antichains in a power poset]
+    Consider the \SY{poset} in \cref{fig:powersetcat3}.
+    Examples of \SY{chains} are
+    \begin{equation}\label{eq:example-chain}
+        \makeset{\Emptyset,\makeset{\posela}}
+        \qqand
+        \makeset{\Emptyset,\makeset{\poselb},\makeset{\poselb,\poselc},\makeset{\posela,\poselb,\poselc}},
+    \end{equation}
+    depicted in \cref{fig:power_chains_a} and \cref{fig:power_chains_b}, respectively.
+
+    Examples of \SY{antichains} are
+    \begin{equation}\label{eq:examples-antichain}
+        \makeset{\makeset{\posela},\makeset{\poselb}}
+        \qqand
+        \makeset{\makeset{\posela,\poselb}, \makeset{\posela,\poselc}, \makeset{\poselb,\poselc}},
+    \end{equation}
+    depicted in \cref{fig:power_antichains_a} and \cref{fig:power_antichains_b}, respectively.
+\end{example}
+
+\begin{marginfigure}
+    \subfloat[\label{fig:power_chains_a}
+        A \SY{chain}.
+    ]{
+        \includesag{40_dpcatfig_power_chains}
+    }
+
+    \subfloat[\label{fig:power_chains_b}
+        A \SY{chain}.
+    ]{
+        \includesag{40_dpcatfig_power_chains_bis}
+    }
+
+    \subfloat[\label{fig:power_antichains_a}
+        An \SY{antichain}.
+    ]{
+        \includesag{40_dpcatfig_power_antichains}
+    }
+
+    \subfloat[\label{fig:power_antichains_b}
+        An \SY{antichain}.
+    ]{
+        \includesag{40_dpcatfig_power_antichains_bis}
+    }
+    \caption{Examples of \SY{chains} (a-b) and \SY{antichains} (c-d) in the \SY{poset} $\powerset\makeset{\posela,\poselb,\poselc}$.}
+\end{marginfigure}
+
+\clearpage
+
+\begin{marginfigure}
+    \centering
+    \includesag{70_antichain}
+    \caption{Example of discrete \SY{antichains}.
+    }
+    \label{fig:antichain}
+\end{marginfigure}
+\begin{example}
+    In the context of battery choices, consider the diagram in~\cref{fig:antichain}.
+    The black markers represent an \SY{antichain} of choices
+    \begin{equation}\label{eq:example-battery-antichain}
+        \makeset{
+            \tupp{\poscheap,\posheavy},
+            \tupp{\posexpensive,\poslight}
+        }.
+    \end{equation}
+    It is a set of pairs because they do not dominate each other: one is cheaper, but is heavier, and the other is more expensive, but lighter, making them incomparable.
+    If a battery with the properties of the red marker existed (very expensive, between light and heavy), that would be an element that cannot be part of the \SY{antichain}, since it would be dominated by~$\tupp{\posexpensive,\poslight}$.
+    %
+    \begin{marginfigure}
+        \centering
+        \includesag{70_antichain_2}
+        \caption{Example of continuous \SY{antichains}.}
+        \label{fig:antichain_2}
+    \end{marginfigure}
+    %
+    Similarly, we could think of a continuous law which relates battery cost and mass.
+    Assume that cheap means~$\unit[10]{\standardcurrency}$, expensive means~$\unit[20]{\standardcurrency}$, light means~$\unit[250]{g}$, and heavy means~$\unit[500]{g}$.
+    For instance, consider the \SY{antichain} given by~$\text{mass}=500-25\cdot \text{cost}$, with maximum possible cost~$\unit[20]{\standardcurrency}$ (\cref{fig:antichain_2}).
+\end{example}
+
+\vspace{5cm}
+
+\begin{marginfigure}
+    \centering
+    \includesag{chain_divisor_poset}
+    \caption{}
+    \label{fig:chain_divisor_poset}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includesag{antichain_divisor_poset}
+    \caption{}
+    \label{fig:antichain_divisor_poset}
+\end{marginfigure}
+
+% We will now have a look at a couple more examples.
+\begin{example}
+    Consider the poset~$\posAdefinition$ where~$(\posAel \posAleq \posBel)$ if~$\posAel$ is a divisor of~$\posBel$ and~$\posAset=\makeset{1,5,10,11,13,15}$.
+    A \SY{chain} of~\posA is~$\makeset{1,5,10}$ (\cref{fig:chain_divisor_poset}).
+    An \SY{antichain} of~\posA is~$\makeset{10,11,13,15}$ (\cref{fig:antichain_divisor_poset}).
+\end{example}
+
+\devel{
+\subsection{Measuring posets}
+
+\todotext{decide if this subsection is a DP thing and if/where to put it}
+
+We can define two measurements for a poset: the height and the width.
+These measurements allow us to quantify the performance of several algorithms we will see in later parts of the book.
+\begin{definition}[Width of a poset]
+    \label{def:poset-width}
+    The \maindef{width of a poset}, denoted~$\posetwidth(\posA)$, is the maximum cardinality of an \SY{antichain} in~\posA.
+\end{definition}
+
+\begin{definition}[Height of a poset]
+    \label{def:poset-height}
+    The \maindef{height of a poset}, denoted~$\posetheight(\posA)$, is the maximum cardinality of a \SY{chain} in~\posA.
+\end{definition}
+
+Note that an empty \SY{poset} has exactly one \SY{chain} and one \SY{antichain}: the empty set.
+Therefore, the height and width are zero.
+
+\begin{example}
+    Consider the poset~\posA in \cref{fig:poset-height-width}.
+    The longest \SY{antichains} of~\posA are~$\makeset{\sapple, \sburger, \scheese}$, $\makeset{\sapple, \schoco, \scheese}$, $\makeset{\sbretzel, \schoco, \scheese}$, $\makeset{\sapple, \schoco, \sgrapes}$, $\makeset{\sbretzel, \schoco, \sgrapes}$, and~$\makeset{\sbretzel, \sburger, \scheese}$.
+    Therefore,
+    \begin{equation}\label{eq:poset-height-width-1}
+        \posetwidth(\posA)=3.
+    \end{equation}
+    The longest \SY{chain} in the \SY{poset} is~$\makeset{\scarrot,\schoco,\sburger,\sfondue}$, and therefore
+    \begin{equation}\label{eq:poset-height-width-2}
+        \posetheight(\posA)=4.
+    \end{equation}
+\end{example}
+
+\begin{figure*}[h]
+    \aligninner{
+        \subfloat[
+            \label{fig:poset-height-width}
+        ]{
+            \includesag{height_width_posets}
+        }
+        \hspace{3em}
+        \subfloat[
+            \label{fig:poset-height-width2}
+            The longest \SY{chain} ]{
+            \includesag{height_width_posets2}
+        }
+        \hspace{3em}
+        \subfloat[
+            \label{fig:poset-height-width3}
+            One of the largest \SY{antichains} ]{
+            \includesag{height_width_posets3}
+        }
+    }
+    \caption{Example for height and width of a poset.
+    }
+\end{figure*}
+
+\vfill
+\begin{gradedexercise}[\exname{MeasurePowerPoset}]
+    \label{ex:MeasurePowerPoset}
+
+    Let~\setA be a finite set with~$n$ elements.
+    Obtain an expression (without proof) for
+    \begin{enumerate}
+        \item $\posetwidth(\powerset \setA)$;
+        \item $\posetheight(\powerset \setA)$.
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{MeasurePowerPoset}
+
+}
+
+\subsection{Antichains and upper sets}
+
+
+
+\begin{lemma}
+    \label{lem:up-cl-inj-antichains}
+    Let~\setA and~\setB be subsets of~\posA that are \SY{antichains}.
+    Then
+    \begin{equation}
+        \prfperiod{
+            \upit \setA = \upit \setB
+        }{
+            \setA = \setB
+        }
+        %\upit  \setA = \ \upit  \setB \quad \Imp \quad \setA = \setB.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Fix an element~$\setAel \setin \setA$.
+    From~$\upit \setA = \upit \setB$ we know that in particular~$\setA \setsubseteq \upit \setB$.
+    This means that for our fixed~$\setAel \setin \setA$ there exists~$\setBel \setin \setB$ such that~$\setBel \posleq \setAel$.
+    From~$\upit \setA = \upit \setB$ it also follows that~$\setB \setsubseteq \upit \setA$, so to the~$\setBel \setin \setB$ given above, there exists~$\setAel\styleelements{'} \setin \setA$ such that~$\setAel\styleelements{'} \posleq \setBel$.
+    In total, we have~$\setAel\styleelements{'} \posleq \setBel \posleq \setAel$, and since~$\setA$ is an \SY{antichain}, we must have~$\setAel\styleelements{'} = \setAel$.
+    This implies that~$\setAel\styleelements{'} = \setBel = \setAel$.
+    In particular, we have~$\setAel \setin \setB$.
+
+    The above shows that~$\setA \setsubseteq \setB$.
+    To show~$\setB \setsubseteq \setA$, we can fix any~$\setBel \setin \setB$ and repeat the above argumentation, now with the roles of~\setA and~\setB exchanged.
+\end{proof}
+
+
+
+\begin{definition}[Downward closed set]
+    \label{def:downward-closed-upperset}
+    An \SY{upper set}~$\subA$ is \maindef{downward-closed} in a poset~\posA if
+    \begin{equation}
+        \subA = \upit \Min \subA.
+    \end{equation}
+    The set of downward-closed \SY{upper sets} of~\posA is denoted~$\setOfDCUppersets \posA$.
+
+\end{definition}
+
+\begin{definition}[Upward closed set]
+    \label{def:upward-closed-lowerset}
+    A \SY{lower set}~$\subA$ is \maindef{upward-closed} in a poset~\posA if
+    \begin{equation}
+        \subA = \downit \Max \subA.
+    \end{equation}
+    The set of upward-closed \SY{lower sets} of~\posA is denoted~$\setOfUCLowersets \posA$.
+\end{definition}
+
