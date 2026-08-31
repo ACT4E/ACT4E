@@ -16,148 +16,46 @@
     satisfying the following axioms:
     \begin{enumerate}
         \item \emph{Naturality in $\Obja$:} For any morphisms $\mora\colon \Obja\mtimescatob \Objc \mto \Objb\mtimescatob \Objc$ and $\morb \colon \Obja' \mto \Obja$,
-              \begin{equation}\label{eq:trace-naturality-1}
+              \begin{equation}\label{eq:mon-trace-naturality-1}
                   \Tr_{\Obja', \Objb}^\Objc ( (\morb \mtimescatmor \catidat\Objc) \mthen \mora) = \morb \mthen \Tr_{\Obja, \Objb}^\Objc (\mora)
               \end{equation}
         \item \emph{Naturality in $\Objb$:} For any morphisms $\mora\colon \Obja\mtimescatob \Objc \mto \Objb\mtimescatob \Objc$ and $\morb \colon \Objb \mto \Objb'$,
-              \begin{equation}\label{eq:trace-naturality-2}
+              \begin{equation}\label{eq:mon-trace-naturality-2}
                   \Tr_{\Obja, \Objb'}^\Objc ( \mora \mthen (\morb \mtimescatmor \catidat\Objc) ) = \Tr_{\Obja, \Objb}^\Objc (\mora) \mthen \morb
               \end{equation}
         \item \emph{Dinaturality in $\Objc$:}
               For any morphisms $\mora \colon \Obja  \mtimescatob \Objc \mto \Objb \mtimescatob \Objc'$ and $\morb \colon \Objc' \mto \Objc$,
-              \begin{equation}\label{eq:trace-dinaturality}
+              \begin{equation}\label{eq:-mon-trace-dinaturality}
                   \Tr_{\Obja, \Objb}^{\Objc} (\mora \mthen (\catidat\Objb \mtimescatmor \morb)) = \Tr_{\Obja, \Objb}^{\Objc'}((\catidat\Obja \mtimescatmor \morb) \mthen \mora).
               \end{equation}
 
         \item \emph{Vanishing I:}
               For any morphisms~$\mora \colon \Obja \mtimescatob \idmoncat \mto \Objb \mtimescatob \idmoncat$ in \CatC,
               \begin{equation}
-                  \label{eq:vanishing_1}
+                  \label{eq:mon-vanishing_1}
                   \Tr_{\Obja,\Objb}^\idmoncat (\mora)= \rightunitor^{-1}_{\Obja} \mthen \mora \mthen \rightunitor_\Objb.
               \end{equation}
         \item \emph{Vanishing II:}
               For any morphism~$\mora \colon (\Obja\mtimescatob \Objc) \mtimescatob \Objd \mto (\Objb\mtimescatob \Objc) \mtimescatob \Objd$ in \CatC,
               \begin{equation}
-                  \label{eq:vanishing_2}
+                  \label{eq:mon-vanishing_2}
                   \Tr_{\Obja,\Objb}^\Objc\pars{
                       \Tr_{\Obja \mtimescatob \Objc, \Objb \mtimescatob \Objc}^\Objd(\mora)} = \Tr_{\Obja,\Objb}^{\Objc\mtimescatob \Objd}(\associator_{\Obja, \Objc, \Objd} \mthen \mora \mthen \associator^{-1}_{\Objb, \Objc, \Objd}).
               \end{equation}
         \item \emph{Superposing:}
               For any morphism~$\mora\colon \Obja\mtimescatob \Objc \mto \Objb\mtimescatob \Objc$ in \CatC,
               \begin{equation}
-                  \label{eq:superposing}
+                  \label{eq:mon-superposing}
                   \Tr_{\Obje\mtimescatob \Obja,\Obje\mtimescatob \Objb}^{\Objc}(\associator_{\Obje, \Obja, \Objc} \mthen \catidat\Obje\mtimescatmor \mora \mthen \associator^{-1}_{\Obje, \Objb, \Objc} )=\catidat\Obje\mtimescatmor \Tr_{\Obja,\Objb}^\Objc(\mora).
               \end{equation}
         \item \emph{Yanking:}
               \begin{equation}
-                  \label{eq:yanking}
+                  \label{eq:mon-yanking}
                   \Tr_{\Objc,\Objc}^\Objc\pars{\braiding_{\Objc,\Objc}}=\catidat\Objc.
               \end{equation}
     \end{enumerate}
 \end{ctdefinition}
 
-\begin{figure}[h!]
-    \centering
-    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
-        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.6cm, minimum height=2.2cm},
-        wire/.style={objects, thick},
-        wirelabel/.style={objects, font=\bfseries},
-        tracebox/.style={draw=black, dashed, thick, fill=graphcolor, rounded corners=2pt},
-    ]
-        % Trace boundary (drawn first so it's behind everything)
-        \fill[graphcolor, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
-        \draw[black, dashed, thick, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
-
-        % Morphism box f
-        \node[morbox] (f) at (2,0) {};
-        \node[morphisms, font=\large\itshape] at (2,0) {$f$};
-
-        % X wire: input from left
-        \draw[wire] (-1.8, 0.55) -- (f.west |- 0,0.55);
-        \node[wirelabel, above] at (-1.2, 0.55) {$\Obja$};
-
-        % Y wire: output to right
-        \draw[wire] (f.east |- 0,0.55) -- (5.8, 0.55);
-        \node[wirelabel, above] at (5.2, 0.55) {$\Objb$};
-
-        % Z wire: input side (from feedback loop up to f)
-        \draw[wire] (0.6, -1.8) -- (0.6, -0.55) -- (f.west |- 0,-0.55);
-        \node[wirelabel, left] at (0.6, -1.1) {$\Objc$};
-
-        % Z wire: output side (from f down to feedback loop)
-        \draw[wire] (f.east |- 0,-0.55) -- (3.4, -0.55) -- (3.4, -1.8);
-        \node[wirelabel, right] at (3.4, -1.1) {$\Objc$};
-
-        % Feedback loop: bottom horizontal segment
-        \draw[wire] (0.6, -1.8) -- (3.4, -1.8);
-    \end{tikzpicture}
-    \caption{The trace operator: given a morphism~$\mora \colon \Obja \mtimescatob \Objc \mto \Objb \mtimescatob \Objc$, its trace~$\Tr_{\Obja,\Objb}^\Objc(\mora) \colon \Obja \mto \Objb$ is obtained by ``closing the loop'' on the~$\Objc$ wire.}
-    \label{fig:trace-operator}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{trace-naturality-x}
-    \caption{Naturality in $\Obja$}
-    \label{fig:trace-naturality-x}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{trace-naturality-y}
-    \caption{Naturality in $\Objb$}
-    \label{fig:trace-naturality-y}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{trace-dinaturality-z}
-    \caption{Dinaturality in $\Objc$}
-    \label{fig:trace-dinaturality-z}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=6cm]{trace-vanishing-i}
-    \caption{Vanishing I}
-    \label{fig:trace-vanishing-i}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=10cm]{trace-vanishing-ii}
-    \caption{Vanishing II}
-    \label{fig:trace-vanishing-ii}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=8cm]{trace-yanking}
-    \caption{Yanking}
-    \label{fig:trace-yanking}
-\end{figure}
-
-
-\begin{remark}
-    Other variants of the definition of a \SY{traced monoidal category} can be found in the literature.
-    For instance, some include a more general version of the superposing law, see \cref{lem:general-superposing-law} below.
-\end{remark}
-
-\begin{lemma}
-    \label{lem:general-superposing-law}
-    Let~$\tup{\CatC, \mtimescat,\idmoncat_{\CatC}, \braiding, \Tr}$ be a \SY{traced monoidal category}.
-    Then a more general version of the superposing law holds: for any morphisms~
-    $$\mora\colon \Obja\mtimescatob \Objc \mto \Objb \mtimescatob \Objc \quad \text{ and } \quad \morb \colon \Objd \mto \Obje,$$
-    we have 
-    \begin{equation}
-        \label{eq:superposing_2}
-        \Tr_{\Objd\mtimescatob \Obja,\Obje\mtimescatob \Objb}^{\Objc}(\morb \mtimescatmor \mora)=\morb \mtimescatmor \Tr_{\Obja,\Objb}^\Objc(\mora).
-    \end{equation}
-\end{lemma}
-
-\todotextjira{165}{\alphubel: @JL: Do the proof.
-    Also, this could be made into a graded exercise.
-}
 
 \subsection{Relations with cartesian product as monoidal product}
 
