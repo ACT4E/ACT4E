@@ -1,0 +1,441 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Modeling parallel composition}
+\label{sec:modeling-parallelism}
+
+We have talked a lot about composition, and considered many examples.
+However, the types of compositions we studied were, so far, mostly of the ``in series composition'' kind.
+For instance, we considered the series composition of travel routes (\cref{exa:car-category}) and trekking routes (\cref{sec:trekking}), functions (\cref{sec:functions}) and relations (\cref{sec:connection-relations}), engineering component dependencies (\cref{sec:dependencies-design}) and various models of dynamical systems \SY{Moore machines} (\cref{sec:cat-dyn}), \etc
+
+In this chapter, we will consider composition both in series and \emph{in parallel}.
+For example, given functions~$\mora\colon \setA \mto \setB$ and~$\morb\colon \setB \mto \setC$, because the target set of the function~$\mora$ matches the source set of~$\morb$ they may be composed in series to obtain a function~$\morab\colon \setA \mto \setC$.
+On the other hand, any two functions~$\moran{1} \colon \setA \mto \setB$ and~$\moran{2} \colon \setC \mto \setD$ may be composed ``in parallel'' by taking their \SY{cartesian product}: we obtain the function~$\moran{1} \funcprod \moran{2}\colon \setA \cartprod \setC \mto \setB \cartprod \setD$.
+This parallel composition of~$\moran{1}$ and~$\moran{2}$ does not rely on any match-up of target and source sets, but it does rely on the ``additional structure'' provided by the \SY{cartesian product}.
+
+Such ``additional structure'' will be formalized in this chapter using the notion of a \emph{monoidal structure}.
+
+Composing components in parallel is of course a very familiar notion in engineering, and the mathematical concepts we develop here will, in particular, model parallel composition in this engineering sense.
+In the context of co-design of complex systems, for example, we have seen that series composition corresponds to relating the functionalities of one component to the required resources of a next component.
+
+\todographicsjira{185}{\alphubel: @Gioele: figure for parallelism 1/2}
+
+Parallel composition, on the other hand, will correspond to taking two components and thinking of them as a single component whose functionality and resource space are given by the cartesian products of the respective constituent functionality and resource spaces of the original two components.
+
+\todographicsjira{186}{\alphubel: @Gioele: figure for parallelism 2/2}
+
+In general, a monoidal structure will be a notion of ``product'' and ``neutral element'' that a category may be equipped with, in which case such is called a \emph{monoidal category}.
+One thing that could potentially be confusing at this point is the following.
+At the beginning of this book, we studied \SY{monoids} as a basic kind of algebraic gadget whose composition operation (also called multiplication) was generalized to the series composition encoded in the definition of a category.
+In this chapter, we will also use the basic pattern of a \SY{monoid} as inspiration, but now for parallel composition!
+Thus, parallel composition is also ``monoid-like'', and hence the name \emph{monoidal structure}.
+
+
+
+\subsection{Stacking}
+\label{sec:stacking}
+
+So far we have seen how we can compose morphisms ``horizontally'':
+%
+\begin{equation}
+    \prfperiod{
+        \mora \colon \Obja \mto \Objb
+    }{
+        \morb\colon \Objb \mto \Objc
+    }{
+        \morab \colon \Obja \mto \Objc
+    }
+\end{equation}
+%
+There are other notions of composition that allow us to compose morphisms by ``stacking them vertically''.
+Given two morphisms
+%
+\begin{align}
+    \mora & \colon \Obja \mto \Objb, \\
+    \morb & \colon \Objc \mto \Objd,
+\end{align}
+%
+we will obtain by parallel stacking a morphism
+%
+\begin{align}
+    (\mora\mtimescatmor \morb)
+     & \colon (\Obja \mtimescatob \Objc) \mto (\Objb \mtimescatob \Objd),
+\end{align}
+%
+where ``$\mtimescatmor$'' and ``$\mtimescatob$'' are operations to be defined.
+Note that while in the case of sequential composition there was a compatibility condition to be defined, as the target of the first morphism must be the source of the second morphism, here instead we can stack arbitrary morphisms.
+
+
+
+\begin{marginfigure}
+    \centering
+    \includesag{parallelism-stacked-morphisms}
+    %\includegraphics[scale=0.12]{parallelism_stacked-morphisms}
+    \caption{Stacked morphisms}
+    \label{fig:stacked-morphisms}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includesag{parallelism-associative-stacking-two-new}
+    %\includegraphics[scale=0.15]{parallelism_associative-stacking-two-new}
+    \caption{Stacking of two morphisms.}
+    \label{fig:double-stacked}
+\end{marginfigure}
+
+
+
+%\begin{marginfigure}
+%    \centering
+%    \includesag{parallelism_stacked-morphisms-diagram}
+%    %\includegraphics[scale=0.17]{parallelism_stacked-morphisms-diagram}
+%    \caption{Stacking string diagrams}
+%    \label{fig:stacked-morphisms-diagram}
+%\end{marginfigure}
+
+\begin{ctdefinition}[Stacking category]
+    \label{def:simple-stacking-cat}
+    A \maindef{stacking category} is a \SY{category}~\CatC together with a stacking structure:
+
+    \constit
+    \begin{itemize}
+        \item A stacking operation~$\mtimescatob \colon \ObC \cartprod \ObC \sto \ObC$.
+        \item A stacking operation~$\mtimescatmor \colon \Mor_\CatC \cartprod \Mor_\CatC \sto \Mor_\CatC$.
+    \end{itemize}
+
+    \condit
+    \begin{itemize}
+        \item The two operations~$\mtimescatob$ and~$\mtimescatmor$ are compatible in the sense that
+              %
+              \begin{equation}
+                  \prfperiod{
+                      \moran{1} \colon \Objan{1} \mto \Objbn{1}
+                      \qquad
+                      \moran{2} \colon \Objan{2} \mto \Objbn{2}
+                  }{
+                      \moran{1} \mtimescatmor \moran{2} \colon  \Objan{1} \mtimescatob  \Objan{2} \mto \Objbn{1} \mtimescatob \Objbn{2}
+                  }
+              \end{equation}
+    \end{itemize}
+\end{ctdefinition}
+
+In \cref{fig:stacked-morphisms} we have depicted a string diagram of two stacked morphisms.
+Alternatively, in \cref{fig:double-stacked} we depict the stacking of the string diagrams for $\moran{1}$ and $\moran{2}$, respectively, by stacking their diagrams vertically and drawing a box around them.
+The outer box denotes $\moran{1} \mtimescatmor \moran{2}$.
+
+%\begin{figure*}[h!]
+%    \centering
+%    \begin{subfigure}{0.49\linewidth}
+%        \includesag{parallelism_associative-stacking-1}
+%        %\includegraphics[scale=0.15]{parallelism_associative-stacking-1}
+%        \caption{One way of stacking three morphisms}
+%        \label{fig:associative-stacking-1}
+%    \end{subfigure}
+%    %
+%    \begin{subfigure}{0.49\linewidth}
+%        \includesag{parallelism_associative-stacking-2}
+%        %\includegraphics[scale=0.15]{parallelism_associative-stacking-2}
+%        \caption{Another way of stacking three morphisms}
+%        \label{fig:associative-stacking-2}
+%    \end{subfigure}
+%    \caption{Stacking three morphisms.}
+%\end{figure*}
+
+
+
+Let us briefly give some simple illustrative examples of stacking structures.
+
+The cartesian product of sets and functions
+    \begin{equation}
+        \setA \mtimescatob \setB = \setA \cartprod \setB
+        \qquad \qquad
+        \mapa \mtimescatmor \mapb = \mapa \funcprod \mapb
+    \end{equation}defines a stacking structure on the category $\Set$.
+    Indeed, by the definition of the cartesian product of functions, the two stacking layers are compatible:
+    \begin{equation}
+        \prfperiod{
+            \mapa \colon \setA \to \setC
+        }{\qquad}{
+            \mapb \colon \setB  \to \setD
+        }{
+            \defmap{
+                \mapa \funcprod \mapb
+            }{
+                \setA \cartprod \setB
+            }{
+                \mto
+            }{
+                \setC \cartprod \setD
+            }{
+                \tup{\setAel, \setCel}
+            }{
+                \tup{\mapa(\setAel),\mapb(\setCel)}
+            }
+        }
+    \end{equation}
+    
+Similarly, the sum of sets and functions
+    \begin{equation}
+        \setA \mtimescatob \setB = \setA \setdisunion \setB
+        \qquad \qquad
+        \mapa \mtimescatmor \mapb = \mapa \funcsum \mapb
+    \end{equation}
+    also defines a stacking structure on the category $\Set$. Note how these first two examples show that we may define various different stacking structures on the same underlying category (in this case $\Set$). 
+    
+    Another basic example is for the category $\MatR$ of real matrices. We may define a stacking structure by summing dimensions
+    \begin{equation}
+        n \mtimescatob m = n + m
+    \end{equation}
+    and combining block matrices like this:
+    \begin{equation}
+        \mat{A} \mtimescatmor \mat{B} = \begin{bmatrix} \mat{A} & \mat{0} \\ \mat{0} & \mat{B} \end{bmatrix}.
+    \end{equation}
+
+Finally, let us consider two examples of a more applied flavor. 
+
+\begin{example}
+    The category $\DP$ of design problems admits a stacking operation which is defined on objects by taking the product of posets,
+    \begin{equation}
+        \posA \mtimescatob \posB = \posA \Ptimes \posB,
+    \end{equation}
+    and on morphisms it is defined by
+    \begin{equation}
+        \prfperiod{
+            \adpa\colon \posAop\Ptimes \posC \mto \Bool
+        }{\qquad}{
+            \adpb\colon \posB\posop\Ptimes \posD \mto \Bool,
+        }{
+            \defmap{
+                \adpa \mtimescatmor \adpb
+            }{
+                \pars{\posA \mtimescatob \posB}\op
+                \Ptimes
+                \pars{\posC \mtimescatob \posD}
+            }{
+                \mto
+            }{
+                \Bool
+            }{
+                \tup{\tup{a, c},\ \tup{b, d}}
+            }{
+                \adpa(a,c) \booland \adpb(c, d)
+            }
+        }
+    \end{equation}
+\end{example}
+
+\begin{example}
+    The following defines a stacking operation for the category \LTI of LTI systems.
+    On objects the stacking is just addition on the natural numbers (which represent dimensions of input and output spaces):
+    \begin{equation}\label{eq:LTI-stacking-objects}
+        \defmapperiod{
+            \mtimescatob
+        }{
+            \Obof\LTI \cartprod \Obof\LTI
+        }{
+            \to
+        }{
+            \Obof\LTI
+        }{
+            \tup{\styleobj{l},\styleobj{m}}
+        }{
+            \styleobj{l}+\styleobj{m}
+        }
+    \end{equation}
+    On morphisms, the stacking is\footnote{For the control engineers out there: the resulting LTI system will have a Relative Gain Array (RGA) matrix corresponding to the identity matrix.
+    }
+    \begin{equation}\label{eq:LTI-stacking-prftree}
+        \prfperiod{
+            \mora \colon \styleobj{l}\mtoin\LTI \styleobj{m}
+        }{
+            \morb \colon \styleobj{n}\mtoin\LTI \styleobj{o}
+        }{
+            \mora\mtimescatmor\morb = \genericlti{} \colon
+            \styleobj{l+n}\mtoin\LTI \styleobj{m+o}
+        }
+    \end{equation}
+    % \begin{equation}
+    %     \defmapcomma{
+    %         \mtimescatmor
+    %     }{
+    %         \Mor_\LTI \cartprod \Mor_\LTI
+    %     }{
+    %         \to
+    %     }{
+    %         \Mor_\LTI
+    %     }{
+    %         \tup{\genericlti{\mora},\genericlti{\morb}}
+    %     }{
+    %         \genericlti{}
+    %     }
+    % \end{equation}
+    with
+    \begin{equation}\label{eq:LTI-stacking-mor1}
+        \prstart=\begin{bmatrix}
+            \prstart_\mora \\
+            \prstart_\morb
+        \end{bmatrix},\
+        \mat{A}=\begin{bmatrix}
+            \mat{A}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{A}_\morb
+        \end{bmatrix},\
+        \mat{B}=\begin{bmatrix}
+            \mat{B}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{B}_\morb
+        \end{bmatrix},
+        %  \
+        % \mat{B}=\begin{bmatrix}
+        %     \mat{B}_\mora & \mat{0}       \\
+        %     \mat{0}       & \mat{B}_\morb
+        % \end{bmatrix},\
+        % \mat{C}=\begin{bmatrix}
+        %     \mat{C}_\mora & \mat{0}       \\
+        %     \mat{0}       & \mat{C}_\morb
+        % \end{bmatrix},\
+        % \mat{D}=\begin{bmatrix}
+        %     \mat{D}_\mora & \mat{0}       \\
+        %     \mat{0}       & \mat{D}_\morb
+        % \end{bmatrix}
+    \end{equation}
+    \begin{equation}\label{eq:LTI-stacking-mor2}
+        % \prstart=\begin{bmatrix}
+        %     \prstart_\mora \\
+        %     \prstart_\morb
+        % \end{bmatrix},\
+        % \mat{A}=\begin{bmatrix}
+        %     \mat{A}_\mora & \mat{0}       \\
+        %     \mat{0}       & \mat{A}_\morb
+        % \end{bmatrix}, \
+        % \mat{B}=\begin{bmatrix}
+        %     \mat{B}_\mora & \mat{0}       \\
+        %     \mat{0}       & \mat{B}_\morb
+        % \end{bmatrix},\
+        \mat{C}=\begin{bmatrix}
+            \mat{C}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{C}_\morb
+        \end{bmatrix},\
+        \mat{D}=\begin{bmatrix}
+            \mat{D}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{D}_\morb
+        \end{bmatrix}.
+    \end{equation}
+
+    % Clearly, the morphism given by~$\genericlti{}$ satisfies the compatibility condition for stacking semicategories:
+    % if~$\genericlti{\mora}$ is~$\styleobj{l}\mto \styleobj{m}$ and~$\genericlti{\morb}$ is~$\styleobj{n}\mto \styleobj{o}$,~$\genericlti{}$ is~$\styleobj{l}+\styleobj{n}\mto \styleobj{m}+\styleobj{o}$.
+\end{example}
+
+
+\subsection{Associativity of stacking}
+
+In \cref{def:simple-stacking-cat} we defined stacking just for pairs of morphisms.  If we are given a collection of morphisms
+%
+\begin{equation}
+    \moran{i} \colon \Objan{i} \mto \Objbn{i}, \qquad 1 \leq i \leq n,
+\end{equation}
+%
+we might also want to be able to stack them all at once, to obtain a morphism
+%
+\begin{equation}
+    (\mtimescatmor_{i=1}^n \moran{i} )
+    \colon( \mtimescatob_{i=1}^n \Objan{i} )\mto (\mtimescatob_{i=1}^n \Objbn{i}).
+\end{equation}
+
+One easy way to achieve this is to require that the binary stacking operations in \cref{def:simple-stacking-cat} be associative. Then iterated use of the binary operations gives higher-arity stacking operations without the need for any parentheses. 
+
+\begin{ctdefinition}[Associative stacking category]
+    \label{def:strict-assoc-stacking-cat}
+    An \maindef{associative stacking category} is a stacking category $\tup{\CatC, \mtimescatob, \mtimescatmor}$ where the stacking operations $\mtimescatob$ and $\mtimescatmor$ are associative.
+\end{ctdefinition}
+
+If we are working with an associative stacking category, then we can draw the stacking of any finite number of morphisms without needing to worry about parentheses or the like for bookkeeping. For example, in \cref{fig:triple-stacked} the string diagram can be understood to depict the morphism $(\moran{1}\mtimescatmor \moran{2})\mtimescatmor \moran{3}$ or the morphism $\moran{1}\mtimescatmor (\moran{2}\mtimescatmor \moran{3})$, but since these two formulae actually denote the same morphism (by associativity), there is no ambiguity in the depiction \cref{fig:triple-stacked}. 
+
+\begin{marginfigure}
+    \centering
+    \includesag{parallelism-triple-stacked}
+    %\includegraphics[scale=0.15]{parallelism_triple-stacked}
+    \caption{Our string diagram notation for a triple stack.}
+    \label{fig:triple-stacked}
+\end{marginfigure}
+
+
+A simple example of an associative stacking category is $\MatR$ equipped the stacking structure as defined above:
+\begin{equation}
+        (k \mtimescatob n) \mtimescatob m = k + n + m = k \mtimescatob (n \mtimescatob m)
+\end{equation}
+and 
+\begin{equation}
+(\mat{A} \mtimescatmor \mat{B}) \mtimescatmor \mat{C} = \begin{bmatrix} \mat{A} & \mat{0} & \mat{0} \\ \mat{0} & \mat{B} & \mat{0} \\
+\mat{0} & \mat{0} & \mat{C} \end{bmatrix} = \mat{A} \mtimescatmor (\mat{B} \mtimescatmor \mat{C}).
+\end{equation}
+
+Several of the other above examples of stacking structures actually fail though to be associative on the nose. For example, the stacking structure on the category $\Set$ defined by the cartesian product is not associative because
+\begin{equation}
+(\setA \cartprod \setB) \cartprod \setC \neq \setA \cartprod (\setB \cartprod \setC)
+\end{equation}
+However, as we have seen in REF, if we wish to have associativity on the nose we can work instead with an equivalent subcategory $\SetL$ of $\Set$ for which we can define a version of the cartesian product which \emph{is} associative. An analogous approach is possible for various other examples that we will consider as well. 
+
+Later, in the chapter REF on monoidal categories we will also discuss a different approach to the ``failure of associativity'' of the cartesian product on $\Set$ (and other similar examples). We have seen in REF that the cartesian product is ``almost associative'' in that there is always a canonical isomorphism
+\begin{equation}
+    \associator \colon (\setA \cartprod \setB) \cartprod \setC \to \setA \cartprod (\setB \cartprod \setC)
+\end{equation}
+We will give ``almost associative'' a precise mathematical sense and develop a setting for parallel composition that generalizes the one treated in the present chapter.  
+
+
+
+\subsection{Compatibility of stacking and series composition}
+
+Imposing the condition of associativity makes a stacking structure ``well-behaved'' (easy to use) in the sense that then we can stack any finite number of morphisms without needing to worry about setting parentheses. 
+
+There is another way that a stacking structure may, or may not, be ``well-behaved'', namely in how it ``interacts'' with series composition. To understand what we mean, suppose we have four morphisms of the types depicted in REF.
+
+\todotext{31-08-2026, JL: finish writing here}
+
+\begin{marginfigure}
+    \centering
+    $(\mora \mtimescatmor \morb )
+        \mthen (\morc \mtimescatmor \mord )$
+
+    \vspace{3mm}
+    \includesag{commuting_stacking_eff}
+
+    $=$
+
+    \vspace{3mm}
+    \includesag{commuting_stacking_eff_bis}
+    %\includegraphics[width=6.5cm]{effects8}
+    \vspace{3mm}
+    $(\mora \mthen \morc ) \mtimescatmor (\morb \mthen \mord )$
+
+    \caption{Commutation of stacking and composition in a functorial stacking \SY{semicategory}. }
+    \label{fig:stacking-functorial}
+\end{marginfigure}
+
+
+
+\begin{ctdefinition}[Functorial stacking category]
+    \label{def:functorial-stacking-cat}
+    A \maindef{functorial stacking category} is a stacking \SY{category} where the two stacking operations~$\mtimescatob$ and~$\mtimescatmor$ are the two components of a \SY{functor} \begin{equation}
+        \mtimescat\colon \CatC \Ctimes \CatC \to \CatC.
+    \end{equation}
+    In infix notation, this means that
+    \begin{equation}
+        (\mora \mthen \morc )
+        \mtimescatmor (\morb \mthen \mord )
+        =
+        (\mora \mtimescatmor \morb )
+        \mthen (\morc \mtimescatmor \mord )
+    \end{equation}
+    for all morphisms $\mora, \morb, \morc$ and $\mord$ (where respectively $\mora$ and $\morc$, and $\morb$ and $\mord$ are composable), and that
+    \begin{equation}\label{eq:functorial-stacking-condition-identities}
+        \catidat{\Obja} \mtimescatmor \catidat{\Objb} = \catidat{\Obja \mtimescatob \Objb}
+    \end{equation}
+    for all objects $\Obja$, $\Objb$ of $\CatC$.
+\end{ctdefinition}
+
+\todotext{31-08-2026, JL: finish writing here}
+
+
+\subsection{Strict monoidal categories}
+
+\todotext{31-08-2026, JL: finish writing here. Explain at a brief high level what SMCs are and why they are the protagonist of this chapter and part; explain again the 'strict' and that we'll later do non-strict SMCs; also mention string diagrams}
+
+
