@@ -3,11 +3,7 @@
 \section{Feedback categories}
 \label{sec:feedback-categories}
 
-The following definition of a feedback operator is identical with the definition of a trace operator, except for two important differences:
-\begin{enumerate}
-    \item the dinaturality axiom for the feeback operator is only required to hold for isomorphisms;
-    \item the yanking axiom is omitted completely.
-\end{enumerate}
+
 
 \begin{ctdefinition}[Feedback category]
     \label{def:feedback-cat}
@@ -52,6 +48,102 @@ The following definition of a feedback operator is identical with the definition
               \end{equation}
     \end{enumerate}
 \end{ctdefinition}
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
+        morbox/.style={draw=morphisms, fill=white, thick, minimum width=1.6cm, minimum height=2.2cm},
+        wire/.style={objects, thick},
+        wirelabel/.style={objects, font=\bfseries},
+        tracebox/.style={draw=black, dashed, thick, fill=graphcolor, rounded corners=2pt},
+    ]
+        % Trace boundary (drawn first so it's behind everything)
+        \fill[graphcolor, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
+        \draw[black, dashed, thick, rounded corners=2pt] (-0.6,-2.4) rectangle (4.6,1.6);
+
+        % Morphism box f
+        \node[morbox] (f) at (2,0) {};
+        \node[morphisms, font=\large\itshape] at (2,0) {$f$};
+
+        % X wire: input from left
+        \draw[wire] (-1.8, 0.55) -- (f.west |- 0,0.55);
+        \node[wirelabel, above] at (-1.2, 0.55) {$\Obja$};
+
+        % Y wire: output to right
+        \draw[wire] (f.east |- 0,0.55) -- (5.8, 0.55);
+        \node[wirelabel, above] at (5.2, 0.55) {$\Objb$};
+
+        % Z wire: input side (from feedback loop up to f)
+        \draw[wire] (0.6, -1.8) -- (0.6, -0.55) -- (f.west |- 0,-0.55);
+        \node[wirelabel, left] at (0.6, -1.1) {$\Objc$};
+
+        % Z wire: output side (from f down to feedback loop)
+        \draw[wire] (f.east |- 0,-0.55) -- (3.4, -0.55) -- (3.4, -1.8);
+        \node[wirelabel, right] at (3.4, -1.1) {$\Objc$};
+
+        % Feedback loop: bottom horizontal segment
+        \draw[wire] (0.6, -1.8) -- (3.4, -1.8);
+    \end{tikzpicture}
+    \caption{The trace operator: given a morphism~$\mora \colon \Obja \mtimescatob \Objc \mto \Objb \mtimescatob \Objc$, its trace~$\Tr_{\Obja,\Objb}^\Objc(\mora) \colon \Obja \mto \Objb$ is obtained by ``closing the loop'' on the~$\Objc$ wire.}
+    \label{fig:trace-operator}
+\end{figure}
+
+The diagrams in the figures \cref{fig:trace-naturality-x} to \cref{fig:trace-vanishing-ii} illustrate each of the axioms in the definition. Each axiom has an interpretation as a kind of compatibility condition. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{trace-naturality-x}
+    \caption{Naturality in $\Obja$}
+    \label{fig:trace-naturality-x}
+\end{figure}
+
+The axiom in \cref{fig:trace-naturality-x} is about compatibility of feedback with series composition via precomposition. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{trace-naturality-y}
+    \caption{Naturality in $\Objb$}
+    \label{fig:trace-naturality-y}
+\end{figure}
+
+
+The axiom in \cref{fig:trace-naturality-y} is about compatibility of feedback with series composition via postcomposition. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{trace-dinaturality-z}
+    \caption{Dinaturality in $\Objc$}
+    \label{fig:trace-dinaturality-z}
+\end{figure}
+
+The axiom in \cref{fig:trace-dinaturality-z} is about compatibility of feedback with series composition in the feedback variable; it is a kind of ``cyclicity'' condition. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=6cm]{trace-vanishing-i}
+    \caption{Vanishing I}
+    \label{fig:trace-vanishing-i}
+\end{figure}
+
+
+The axiom in \cref{fig:trace-vanishing-i} is about compatibility of feedback with the monoidal unit. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=10cm]{trace-vanishing-ii}
+    \caption{Vanishing II}
+    \label{fig:trace-vanishing-ii}
+\end{figure}
+
+The axiom in \cref{fig:trace-vanishing-ii} is about compatibility of feedback with the monoidal product. 
+
+
+
+% Flush the pending float queue before the next mdframed environment.
+% Without this, the seven consecutive [h!] figures above leave no space on the
+% page and mdframed loops forever ("Not enough space on this page").
+\FloatBarrier
+
 
 \todotext{J: I think the example below needs to be double-checked in comparison with the paper/notes by Roman on feedback categories -- there he quotients also by a relation that seems to give cyclicity of the feedback... but perhaps it amounts, in the end, to the same equivalence relation as the one we used (with math msc student's help...). UPDATE: I've checked: Roman's equivalence relation is equivalent to the one we used}
 
