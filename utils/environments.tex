@@ -132,6 +132,12 @@
     backgroundcolor=LightGreen!30,
     roundcorner=4pt,
     linewidth=0pt
+]{exampleexercise}
+
+\surroundwithmdframed[
+    backgroundcolor=LightGreen!30,
+    roundcorner=4pt,
+    linewidth=0pt
 ]{examexercise}
 
 \surroundwithmdframed[
@@ -160,8 +166,22 @@
 ]{codeexercise}
 
 
+% Same shading as before, but the box is now kept inside \linewidth, so that
+% it lines up with the exercise environments (homework, gradedexercise,
+% examexercise, ...), which are mdframed boxes exactly \linewidth wide.
+% The stock "shaded" environment of the framed package instead keeps the text
+% at full measure and lets the coloured box bleed \FrameSep (= 3\fboxsep = 9pt)
+% into both margins, which made every solution look wider than the exercise it
+% belongs to.  The \advance\hsize-\width below is exactly what the framed
+% package's own "framed" environment does.
+% NB: we deliberately stay with the framed package rather than switching to
+% mdframed here: a rounded mdframed box cannot break across pages, and
+% solutions frequently do.
 \newenvironment{gradedsolution}
-{\colorlet{shadecolor}{LightPink!20}\begin{shaded}}{\end{shaded}}
+{\colorlet{shadecolor}{LightPink!20}%
+ \def\FrameCommand{\fboxsep=\FrameSep \colorbox{shadecolor}}%
+ \MakeFramed{\advance\hsize-\width \FrameRestore}}%
+{\endMakeFramed}
 
 
 % We cannot do this if we put figures inside of examples.
