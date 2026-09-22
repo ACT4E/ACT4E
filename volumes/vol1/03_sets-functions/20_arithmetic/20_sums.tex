@@ -1,7 +1,7 @@
 % !TEX root = chapter-standalone.tex
 
 
-\devel{ 
+
 
 \section{Sums}
 \label{sec:arithmetic-sums}
@@ -9,25 +9,78 @@
 
 \subsection{Commutativity}
 
-\todotext{JL: Rewrite this section}
 
-The equation describes the \emph{commutativity property} of addition.
-
-
-The statement $\setA \setdisunion \setB \isomorphic \setB \setdisunion \setA$ is the analogue, on the level of sets, of the commutativity property for the operation of addition for natural numbers.
-
-For this relationship there is also proof via a canonical isomorphism.
+The equation $ x + y = y + x$  describes the \emph{commutativity property} of addition.
 
 
-We use the name $\braiding$ for this canonical isomorphism, too.
+Let us look at the analogous statement on the level of sets:
+\begin{equation}
+\setA \setdisunion \setB \isomorphic \setB \setdisunion \setA.
+\end{equation}
+To prove this statement, we will specify a function $\setA \setdisunion \setB \to \setB \setdisunion \setA$ that is an isomorphism. For this, recall that 
+\begin{equation}
+\setA \setdisunion \setB = ...
+\end{equation}
+and
+\begin{equation}
+\setB \setdisunion \setA = ...
+\end{equation}
+The only difference between these two sets is that, for $\setA \setdisunion \setB$, the set $\setA$ is marked by the index ``$1$'' as being the first summand and $\setB$ is marked by ``$2$'' as being the second summand, while for $\setB \setdisunion \setA$, the set $\setB$ is marked as first, and $\setA$ is marked as second. We thus define the following function which simply swaps the indices that mark which set is first and which is second: 
+\begin{equation}\label{eq:braiding-sum-sets}
+\begin{aligned}
+        \braiding_{\setA, \setB} \colon & \setA \setdisunion \setB & \to & \ \setB \setdisunion \setA, & \ \\
+        & \tup{1, \ela} & \mapsto &\  \tup{2, \ela} & \ \text{ for } \ \tup{1, \ela} \setin \makeset{1} \cartprod \setA
+         \\
+        & \tup{2, \elb} & \mapsto &\  \tup{1, \elb} & \ \ \text{ for } \ \tup{2, \elb} \setin \makeset{2} \cartprod \setB \\
+\end{aligned}
+\end{equation}
+We call this function $\braiding_{\setA, \setB}$: the letters $\braiding$ stand for ``braiding'' and the indices keep track of which sets are involved and in which order.
 
-\begin{exercise}\label{ex:braiding-disjoint-union}
-    Can you guess the canonical isomorphism $\braiding \colon \setB \setdisunion \setA \to \setA \setdisunion \setB$? Prove that your guess is indeed an isomorphism.
+Now observe that there is a function which is an obvious candidate to be an inverse of $\braiding_{\setA, \setB}$, namely the same kind of swap again (but starting from $\setB \setdisunion \setA$): 
+\begin{equation}\label{eq:braiding-sum-sets-inverse}
+\begin{aligned}
+        \braiding_{\setB, \setA} \colon & \setB \setdisunion \setA & \to & \ \setA \setdisunion \setB, & \ \\
+        & \tup{1, \elb} & \mapsto &\  \tup{2, \elb} & \ \text{ for } \ \tup{1, \elb} \setin \makeset{1} \cartprod \setB
+         \\
+        & \tup{2, \ela} & \mapsto &\  \tup{1, \ela} & \ \ \text{ for } \ \tup{2, \ela} \setin \makeset{2} \cartprod \setA \\
+\end{aligned}
+\end{equation}
+\begin{exercise}
+Check that $\braiding_{\setB, \setA}$ is indeed an inverse to $\braiding_{\setA, \setB}$.
 \end{exercise}
 
 \begin{solution}
-    \todotext{JL: write up}
+    According to \cref{def:function-isomorphism}, we have to check the two equations
+    \begin{equation}\label{eq:braiding-sum-sets-inverse-equations}
+        \braiding_{\setA, \setB} \mthen \braiding_{\setB, \setA} = \catidat{\setA \setdisunion \setB}
+        \qqand
+        \braiding_{\setB, \setA} \mthen \braiding_{\setA, \setB} = \catidat{\setB \setdisunion \setA}.
+    \end{equation}
+    Both sides of each of these equations are functions with the same domain and the same codomain, so it suffices to check that they take the same value on every element of their domain.
+
+    For the first equation, every element of $\setA \setdisunion \setB$ is either of the form $\tup{1, \ela} \setin \makeset{1} \cartprod \setA$ or of the form $\tup{2, \elb} \setin \makeset{2} \cartprod \setB$. Using first the definition \cref{eq:braiding-sum-sets} of $\braiding_{\setA, \setB}$ and then the definition \cref{eq:braiding-sum-sets-inverse} of $\braiding_{\setB, \setA}$, we compute
+    \begin{equation}
+        \begin{aligned}
+            \tup{1, \ela} & \ \mapsto \ \tup{2, \ela} & \ \mapsto \ & \tup{1, \ela}, \\
+            \tup{2, \elb} & \ \mapsto \ \tup{1, \elb} & \ \mapsto \ & \tup{2, \elb}.
+        \end{aligned}
+    \end{equation}
+    In both cases the composite $\braiding_{\setA, \setB} \mthen \braiding_{\setB, \setA}$ returns the element it started with, which is precisely what the identity function $\catidat{\setA \setdisunion \setB}$ does.
+
+    The second equation is checked in exactly the same way, with the roles of $\setA$ and $\setB$ interchanged: every element of $\setB \setdisunion \setA$ is of the form $\tup{1, \elb} \setin \makeset{1} \cartprod \setB$ or of the form $\tup{2, \ela} \setin \makeset{2} \cartprod \setA$, and
+    \begin{equation}
+        \begin{aligned}
+            \tup{1, \elb} & \ \mapsto \ \tup{2, \elb} & \ \mapsto \ & \tup{1, \elb}, \\
+            \tup{2, \ela} & \ \mapsto \ \tup{1, \ela} & \ \mapsto \ & \tup{2, \ela},
+        \end{aligned}
+    \end{equation}
+    so that $\braiding_{\setB, \setA} \mthen \braiding_{\setA, \setB} = \catidat{\setB \setdisunion \setA}$.
+
+    Intuitively: swapping the two index labels twice in a row leaves them unchanged. In particular $\braiding_{\setA, \setB}$ is an isomorphism, which proves that $\setA \setdisunion \setB \isomorphic \setB \setdisunion \setA$.
 \end{solution}
+
+\todotext{JL: explain `canonical' here}
+
 
 \subsection{Associativity}
 
@@ -114,5 +167,3 @@ Note that for the unordered version of the sum of sets we have not needed to swi
 In the definition of $\setAn{1} \setdisunion \dots \setdisunion \setAn{n}$, the ordering came solely from the ordinals in the index set $\makeset{1, \dots, n}$.
 
 
-
-}
