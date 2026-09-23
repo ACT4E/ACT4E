@@ -1,56 +1,142 @@
 % !TEX root = chapter-standalone.tex
 
-\devel{
+
 \section{Working with functions}
 \label{sec:functions-working}
 
 \todotext{2026-07-20, JL: explain in this section some of the main uses and perspectives one can have with functions. Especially important (in oder to interpret dependent sums and dependent products): projection/fibre picture of funcitons. For this I wonder if it might make sense to move the partitions material earlier to here for this.}
 
 
-\subsection{Image, preimage, restriction}
 
-The \emph{image} of~$\mapa\colon \setA \sto \setB$ is the set
-\begin{equation}
-    \mapa(\setA) \definedas \makeset{ \elb \setin\setB \mid \exists \ela \setin\setA \colon \mapa(\ela) = \elb }.
-\end{equation}
-More generally, given a subset~$\subA \setsubseteq \setA$, its image under~$\mapa$ is
-\begin{equation}
-    \mapa(\subA) \definedas \makeset{ \elb \setin\setB \mid \exists \ela \setin\subA \colon \mapa(\ela) = \elb }.
-\end{equation}
-From the data of $\mapa\colon \setA \sto \setB$ and $\subA \setsubseteq \setA$ we can define a new function, the \emph{restriction of} $\mapa$ \emph{to} $\subA$,
-\begin{equation}
-    \mapa\vert_\subA \colon \subA \to \setB,
-\end{equation}
-defined by $\mapa\vert_\subA(\ela) = \mapa(\ela)$ for all $\ela \setin \subA$.
-
-Given a subset~$\subB \setsubseteq \setB$ of the target of $\mapa\colon \setA \sto \setB$, its \emph{preimage} under~$\mapa$ is
-\begin{equation}
-    \mapa^{-1}(\subB) \definedas \makeset{ \ela \setin\setA \mid \mapa(\ela) \setin\subB }.
-\end{equation}
-An alternative way of phrasing injectivity of~$\mapa$ is to say that for every singleton subset~$\makeset{ \elb } \setsubseteq \setB$, its preimage under~$\mapa$ is either a singleton set or the empty set.
-\SY{Surjectivity} of~$\mapa$ is equivalent to saying that~$\mapa(\setA) = \setB$.
-
-\subsection{Sets of functions}
-
-So far we have mostly been thinking of functions as a way to relate one set to another.
-However, in our formal definition, a function~$\mapa \colon \setA \sto \setB$ is a certain kind of element in~$\powerset (\setA \cartprod \setB)$.
-Consider all those elements of~$\powerset (\setA \cartprod \setB)$ which are indeed functions: they form a set, the set of all functions from~\setA to~\setB.
-A notation we will use for this set is~$\setB^{\setA}$, or sometimes also $(\setA \to \setB)$.
-
-Why the exponent notation?
-
-If~\setA and~\setB are finite sets, then~$\setB^{\setA}$ is also a finite set and its size is the size of~\setB to the power of the size of~\setA:
-\begin{equation}
-    \cardmap(\setB^{\setA}) = {\cardof\setB} ^ {\cardof \setA}.
-\end{equation}
 
 \subsection{A function is a set of choices}
+Imagine specifying a function $\mapa \colon \setA \to \setB$ element by element: for each $\ela \setin \setA$ there needs to be specified a corresponding element  $\mapa(\ela) \setin \setB$. A point of view that is sometimes useful is to interpret  a function $\mapa \colon \setA \to \setB$ as encoding a set of \emph{choices}: one choice for every $\ela \setin \setA$, namely the choice of a corresponding element $\mapa(\ela)$ in the set $\setB$. 
+
+From this point of view, it is clear, for example, that specifying a function 
+\begin{equation}
+\mapa \colon \makeset{\singletonel} \to \setB
+\end{equation}
+from a singleton set $\singleton = \makeset{\singletonel}$ is the same thing as choosing a single element of $\setB$, namely the choice of $\mapa(\singletonel)$. Thus, from this perspective, it is clear that the set
+\begin{equation}
+\setB^\singleton = \makeset{ \text{ functions } \singleton \to \setB \ }
+\end{equation}
+is in bijection with the set $\setB$ itself. 
+
+\subsection{A function is an indexed collection of things}
+\label{sec:function-as-indexed-collection}
+
+The previous point of view puts the emphasis on the source $\setA$: for each element of $\setA$ we make a choice of an element of $\setB$. Let us now shift the emphasis onto the \emph{results} of all these choices. Taken together, they form a collection of elements of $\setB$ --- one for each $\ela \setin \setA$ --- and the elements of $\setA$ play the role of \emph{names} for the members of this collection. From this point of view we call $\setA$ an \emph{index set}, we call its elements \emph{indices}, and we say that $\mapa$ is a collection of elements of $\setB$ \emph{indexed by} $\setA$.
+
+This change of emphasis is often accompanied by a change of notation: instead of writing $\mapa(\ela)$ for the element of $\setB$ associated with the index $\ela$, one writes it as a subscript, say $\elb_\ela$, and one denotes the whole indexed collection by
+\begin{equation}
+\makeset{ \elb_\ela }_{\ela \setin \setA}.
+\end{equation}
+Nothing mathematical has changed here: $\makeset{ \elb_\ela }_{\ela \setin \setA}$ and $\mapa \colon \setA \to \setB$ are two ways of writing down the same data.
+
+The reason to make this point explicitly is that indexed collections are used everywhere in mathematics, usually without any mention of functions, and it is worth realizing that, technically speaking, an indexed collection simply \emph{is} a function.
+
+\paragraph{Families of sets.}
+When one says ``let $\makeset{ \setA_\setIel }_{\setIel \setin \setI}$ be a family of sets indexed by the set $\setI$'', as we have already done when discussing arbitrary unions and intersections, what is being specified is a function. Its source is the index set $\setI$; its target is some set $\setofsetsA$ whose elements are sets; and the function itself is
+\begin{equation}
+\defmapcomma{
+    \setA_{(-)}
+}{
+    \setI
+}{
+    \sto
+}{
+    \setofsetsA
+}{
+    \setIel
+}{
+    \setA_\setIel
+}
+\end{equation}
+which sends each index $\setIel \setin \setI$ to the set $\setA_\setIel$ that this index names.
+
+\todotext{JL: here I am being careful to say that the target is ``some set $\setofsetsA$ of sets'' rather than ``the set of all sets'', which does not exist. Do we want to discuss this subtlety at this point, or is it better to suppress it here and treat it later (in the foundations material)?}
+
+%This is more than a pedantic observation: it is what makes constructions such as $\bigsetunion_{\setIel \setin \setI} \setA_\setIel$ or the dependent product $\underset{\setIel \setin \setI}{\stylesets{\prod}} \setA_\setIel$ of \cref{sec:arithmetic-products} well posed. Such constructions take as input an entire family, and a family is a single, well-defined mathematical object precisely because it is a function.
+
+\paragraph{Sequences.}
+The same is true of sequences. In analysis one considers sequences of real numbers
+\begin{equation}
+\ela_0, \ela_1, \ela_2, \ela_3, \dots
+\end{equation}
+and writes them as $\makeset{ \ela_\setIel }_{\setIel \setin \natnumbers}$. Such a sequence is exactly a function
+\begin{equation}
+\defmapperiod{
+    \ela
+}{
+    \natnumbers
+}{
+    \sto
+}{
+    \reals
+}{
+    \setIel
+}{
+    \ela_\setIel
+}
+\end{equation}
+The familiar notation $\ela_\setIel$ is just the subscript notation for $\ela(\setIel)$. More generally, a sequence of elements of any set $\setB$ is a function $\natnumbers \to \setB$, and a \emph{finite} sequence, or tuple, of length $n$ is a function $\makeset{1, \dots, n} \to \setB$; this is the observation from which the unordered cartesian product in \cref{sec:arithmetic-products} was built.
+
+It is also worth noticing what the index set contributes. The set $\natnumbers$ does not merely supply enough names for the members of a sequence: it also comes with an order, and it is this order that lets us speak of the ``first'' term, of ``later'' terms, or of what happens ``as $\setIel$ grows''. If we replace $\natnumbers$ by an index set with no order, such as $\makeset{\text{north}, \text{south}, \text{east}, \text{west}}$, we still have an indexed collection, but there is no longer any meaning to the question of which element comes first.
+
+\begin{remark}
+    A word of caution about the notation $\makeset{ \elb_\ela }_{\ela \setin \setA}$: despite the braces, an indexed collection is not the same thing as the set of its members. The set of members is the image $\mapa(\setA) \setsubseteq \setB$, and passing to it destroys information: it forgets which index produced which element, and it collapses repetitions. 
+    
+    
+For an example about how indices are forgotten if we only consider images, consider the two functions $\makeset{1,2} \to \makeset{a, b, c, d, e, f, g}$ given by $\elb_1 = a,  \elb_2 = b$ and by $\elb_1 = b$, $\elb_2 = a$, respectively. They have the same image but are distinct functions.  
+
+For an example about how repetitions are forgotten, consider the function $\makeset{1,2, 3} \to \makeset{a, b, c, d, e, f, g}$ with $\elb_1 = a$, $\elb_2 = a$, and $\elb_3 = a$. Its image is $\makeset{a} \subseteq \setB$, which, on its own, doesn't tell us that the family in question has, in fact, three elements. 
+\end{remark}
+
+\todotext{JL: the example inside the remark above is clumsy as written --- I want to make the point that $\makeset{\setAn{1}, \dots, \setAn{n}}$ can have fewer than $n$ elements (this is the same point as the remark in the union/intersection section), but it should be phrased better. Also: should this remark instead be a cross-reference back to that earlier remark? If so, that remark needs a label.}
+
+
+
+
 
 \subsection{A function is a set of labels}
 
-\subsection{A function is a bundle}
+\todotext{Explain the distinction between names and labels}
+
+Another possible interpretation of a function $\mapa \colon \setA \to \setB$ is that $\setB$ is a set of possible \emph{labels} for elements of $\setA$, and $\mapa$ assigns each $\ela \in \setA$ a label. 
+
+For instance, $\setA$ might be a set of foods and $\setB = \makeset{ \text{fruit}, \text{vegetable}, \text{baked}, \text{candy}}$ a set of types of foods. 
+
+Or, $\setA$ might be a set of people in a government economic database and the elements of $\setB  = \makeset{ \text{employed}, \text{unemployed}}$ mark possible states of employment. 
+
+\todotext{Make more examples?}
 
 \subsection{A function is a partition}
 
+Given a function $\mapa \colon \setA \to \setB$, we can consider, for any $\elb \setin \setB$, it's pre-image under $\mapa$, which is the subset 
+\begin{equation}
+\mapa^{-1}(\makeset{\elb}) = \makeset{ \ela \setin \setA \mid \mapa(\ela) = \elb}.
+\end{equation}
+In other words, $\mapa^{-1}(\makeset{\elb})$ is all of those elements of $\setA$ that evaluate, under $\mapa$, to $\elb$. If we consider a $\elb$ that happens to not be in the image of $\mapa$, then its pre-image under $\mapa$ is simply the empty set. 
 
-}
+Now we observe that the set of all non-empty pre-images under $\mapa$ of elements of $\setB$ forms a partition of $\setA$. In other words, 
+\begin{equation}
+\makeset{ \mapa^{-1}(\makeset{\elb}) \mid \elb \setin \mapa(\setA) \subseteq \setB} \subseteq \powerset \setA
+\end{equation}
+is a partition. This is quite intuitive when drawn visually. 
+\todotext{Make diagram to illustrate}
+
+Thus, another perspective we can take is to view a function $\mapa \colon \setA \to \setB$ as something that groups together elements of the domain $\setA$ into non-empty disjoint subsets which form a partition: one subset for each value of $\mapa$. We can connect this point of view with the previous one about labels if think each value $\elb \setin \setB$ of $\mapa$ as a label for the elements of $\mapa^{-1}(\makeset{\elb})$.
+
+
+\subsection{A function is a bundle}
+
+The idea of a "bundle" comes from differential geometry and related fields. Intuitively speaking, a bundle consists of a ``base space'' $\setB$ (imagine this to be, for example, the surface of the earth), together with, for each point $\elb \setin \setB$, a set $\subA_\elb$ of possible values of something (for example, the set of possible values of temperature that could be measured at the point $\elb$). Now, the picture to imagine is of all of the sets $\subA_\elb$ hovering over the space $\setB$, forming a ``bundle over $\setB$''. 
+\todotext{Make diagram to illustrate}
+
+The sets $\subA_\elb$ are called the ``fibres'' of the bundle and the disjoint union of all the sets $\subA_\elb$ (varying over $\elb \setin \setB$) is, up to isomorphism, the ``total space'' $\setA$ of the bundle. In this situation, there is a function $\pi \colon \setA \to \setB$ which projects any element $\ela \setin \setA$ down to the element $\elb \setin \setB$ above which it ``hovers''. Returning to our example, if you give me a temperature $\ela$, which is a value somewhere in $\setA$, then $\pi(\ela)$ tells me which point on the surface of the earth this is a temperature measurement of. 
+
+Now, the the ``bundle perspective'' on functions works like the above description, but in reverse: we start with any function $\mapa \colon \setA \to \setB$ and then we \emph{interpret} this function to be the projection function of a bundle $\setA$ over $\setB$. From this point of view, the pre-images $\mapa^{-1}(\makeset{\elb})$, with $\elb$ varying over $\setB$, are the fibres of this bundle. 
+ 
+
+
+

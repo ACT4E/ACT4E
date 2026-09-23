@@ -1,7 +1,7 @@
 % !TEX root = chapter-standalone.tex
 
 
-\devel{ 
+
 
 \section{Sums}
 \label{sec:arithmetic-sums}
@@ -9,25 +9,78 @@
 
 \subsection{Commutativity}
 
-\todotext{JL: Rewrite this section}
 
-The equation describes the \emph{commutativity property} of addition.
-
-
-The statement $\setA \setdisunion \setB \isomorphic \setB \setdisunion \setA$ is the analogue, on the level of sets, of the commutativity property for the operation of addition for natural numbers.
-
-For this relationship there is also proof via a canonical isomorphism.
+The equation $ x + y = y + x$  describes the \emph{commutativity property} of addition.
 
 
-We use the name $\braiding$ for this canonical isomorphism, too.
+Let us look at the analogous statement on the level of sets:
+\begin{equation}
+\setA \setdisunion \setB \isomorphic \setB \setdisunion \setA.
+\end{equation}
+To prove this statement, we will specify a function $\setA \setdisunion \setB \to \setB \setdisunion \setA$ that is an isomorphism. For this, recall that 
+\begin{equation}
+\setA \setdisunion \setB = (\makeset{1} \cartprod \setA) \setunion (\makeset{2} \cartprod \setB)
+\end{equation}
+and
+\begin{equation}
+\setB \setdisunion \setA = (\makeset{1} \cartprod \setB) \setunion (\makeset{2} \cartprod \setA).
+\end{equation}
+The only difference between these two sets is that, for $\setA \setdisunion \setB$, the set $\setA$ is marked by the index ``$1$'' as being the first summand and $\setB$ is marked by ``$2$'' as being the second summand, while for $\setB \setdisunion \setA$, the set $\setB$ is marked as first, and $\setA$ is marked as second. We thus define the following function which simply swaps the indices that mark which set is first and which is second: 
+\begin{equation}\label{eq:braiding-sum-sets}
+\begin{aligned}
+        \braiding_{\setA, \setB} \colon & \setA \setdisunion \setB & \to & \ \setB \setdisunion \setA, & \ \\
+        & \tup{1, \ela} & \mapsto &\  \tup{2, \ela} & \ \text{ for } \ \tup{1, \ela} \setin \makeset{1} \cartprod \setA
+         \\
+        & \tup{2, \elb} & \mapsto &\  \tup{1, \elb} & \ \ \text{ for } \ \tup{2, \elb} \setin \makeset{2} \cartprod \setB \\
+\end{aligned}
+\end{equation}
+We call this function $\braiding_{\setA, \setB}$: the letters $\braiding$ stand for ``braiding'' and the indices keep track of which sets are involved and in which order.
 
-\begin{exercise}\label{ex:braiding-disjoint-union}
-    Can you guess the canonical isomorphism $\braiding \colon \setB \setdisunion \setA \to \setA \setdisunion \setB$? Prove that your guess is indeed an isomorphism.
+Now observe that there is a function which is an obvious candidate to be an inverse of $\braiding_{\setA, \setB}$, namely the same kind of swap again (but starting from $\setB \setdisunion \setA$): 
+\begin{equation}\label{eq:braiding-sum-sets-inverse}
+\begin{aligned}
+        \braiding_{\setB, \setA} \colon & \setB \setdisunion \setA & \to & \ \setA \setdisunion \setB, & \ \\
+        & \tup{1, \elb} & \mapsto &\  \tup{2, \elb} & \ \text{ for } \ \tup{1, \elb} \setin \makeset{1} \cartprod \setB
+         \\
+        & \tup{2, \ela} & \mapsto &\  \tup{1, \ela} & \ \ \text{ for } \ \tup{2, \ela} \setin \makeset{2} \cartprod \setA \\
+\end{aligned}
+\end{equation}
+\begin{exercise}
+Check that $\braiding_{\setB, \setA}$ is indeed an inverse to $\braiding_{\setA, \setB}$.
 \end{exercise}
 
 \begin{solution}
-    \todotext{JL: write up}
+    According to \cref{def:function-isomorphism}, we have to check the two equations
+    \begin{equation}\label{eq:braiding-sum-sets-inverse-equations}
+        \braiding_{\setA, \setB} \mthen \braiding_{\setB, \setA} = \catidat{\setA \setdisunion \setB}
+        \qqand
+        \braiding_{\setB, \setA} \mthen \braiding_{\setA, \setB} = \catidat{\setB \setdisunion \setA}.
+    \end{equation}
+    Both sides of each of these equations are functions with the same domain and the same codomain, so it suffices to check that they take the same value on every element of their domain.
+
+    For the first equation, every element of $\setA \setdisunion \setB$ is either of the form $\tup{1, \ela} \setin \makeset{1} \cartprod \setA$ or of the form $\tup{2, \elb} \setin \makeset{2} \cartprod \setB$. Using first the definition \cref{eq:braiding-sum-sets} of $\braiding_{\setA, \setB}$ and then the definition \cref{eq:braiding-sum-sets-inverse} of $\braiding_{\setB, \setA}$, we compute
+    \begin{equation}
+        \begin{aligned}
+            \tup{1, \ela} & \ \mapsto \ \tup{2, \ela} & \ \mapsto \ & \tup{1, \ela}, \\
+            \tup{2, \elb} & \ \mapsto \ \tup{1, \elb} & \ \mapsto \ & \tup{2, \elb}.
+        \end{aligned}
+    \end{equation}
+    In both cases the composite $\braiding_{\setA, \setB} \mthen \braiding_{\setB, \setA}$ returns the element it started with, which is precisely what the identity function $\catidat{\setA \setdisunion \setB}$ does.
+
+    The second equation is checked in exactly the same way, with the roles of $\setA$ and $\setB$ interchanged: every element of $\setB \setdisunion \setA$ is of the form $\tup{1, \elb} \setin \makeset{1} \cartprod \setB$ or of the form $\tup{2, \ela} \setin \makeset{2} \cartprod \setA$, and
+    \begin{equation}
+        \begin{aligned}
+            \tup{1, \elb} & \ \mapsto \ \tup{2, \elb} & \ \mapsto \ & \tup{1, \elb}, \\
+            \tup{2, \ela} & \ \mapsto \ \tup{1, \ela} & \ \mapsto \ & \tup{2, \ela},
+        \end{aligned}
+    \end{equation}
+    so that $\braiding_{\setB, \setA} \mthen \braiding_{\setA, \setB} = \catidat{\setB \setdisunion \setA}$.
+
+    Intuitively: swapping the two index labels twice in a row leaves them unchanged. In particular $\braiding_{\setA, \setB}$ is an isomorphism, which proves that $\setA \setdisunion \setB \isomorphic \setB \setdisunion \setA$.
 \end{solution}
+
+\todotext{JL: explain `canonical' here}
+
 
 \subsection{Associativity}
 
@@ -35,27 +88,46 @@ We use the name $\braiding$ for this canonical isomorphism, too.
 
 The equation $x + (y + z) = (x + y) + z$ describes the \emph{associativity} property of multiplication and addition of natural numbers.
 
-Correspondingly, there is a canonical isomorphism
-
+Analogously, we have 
+\begin{equation}
+    (\setA \setdisunion \setB) \setdisunion \setC \simeq \setA \setdisunion (\setB \setdisunion \setC)
+\end{equation}
+and this may be proven via a canonical isomorphism
 \begin{equation}\label{eq:sets-sum-associator}
-    \associator \colon (\setA \setdisunion \setB) \setdisunion \setC \to \setA \setdisunion (\setB \setdisunion \setC)
+    \associator_{\setA, \setB, \setC}\colon (\setA \setdisunion \setB) \setdisunion \setC \to \setA \setdisunion (\setB \setdisunion \setC).
+\end{equation}
+
+Because the domain of $\associator_{\setA, \setB, \setC}$ is a two-fold nesting of sums, to define $\associator_{\setA, \setB, \setC}$ we distinguish three sub-cases: 
+\begin{equation}\label{eq:sets-sum-associator-def}
+    \begin{aligned}
+            \associator_{\setA, \setB, \setC} \colon & (\setA \setdisunion \setB) \setdisunion \setC & \to & \ \setA \setdisunion (\setB \setdisunion \setC), & \ \\
+            & \tup{1, \tup{1, \ela}} & \mapsto &\  \tup{1, \ela} & \quad \tup{1, \tup{1, \ela}} \setin \makeset{1} \cartprod (\makeset{1} \cartprod \setA) \\
+            & \tup{1, \tup{2, \elb}} & \mapsto &\  \tup{2, \tup{1, \elb}} & \quad \tup{1, \tup{2, \elb}} \setin \makeset{1} \cartprod (\makeset{2} \cartprod \setB) \\
+            & \tup{2, \elc} & \mapsto &\  \tup{2, \tup{2, \elc}} & \quad \tup{2, \elc} \setin \makeset{2} \cartprod \setC \\
+    \end{aligned}
 \end{equation}
 
 \begin{exercise}\label{ex:associator-cart-prod-and-disjoint-union}
-    Guess how $\associator$ is defined for the sum (disjoint union) of sets, and check that your guess is indeed an isomorphism.
+    Write down an inverse function to $\associator_{\setA, \setB, \setC}$, and argue why it is indeed an inverse. 
 \end{exercise}
 
 \begin{solution}
-    \begin{equation}\label{eq:sets-sum-associator-def}
-        \begin{aligned}
-            \associator \colon & (\setA \setdisunion \setB) \setdisunion \setC  \ \  \to         \ \setA \setdisunion (\setB \setdisunion \setC), \\
-                               & \begin{cases}
-                                     \tup{1, \tup{1, \ela}} & \ \ \mapsto   \ \tup{1, \ela}         \\
-                                     \tup{1, \tup{2, \elb}} & \ \ \mapsto  \ \tup{2, \tup{1, \elb}} \\
-                                     \tup{2, \elc}          & \ \ \mapsto \ \tup{2, \tup{2, \elc}}.
-                                 \end{cases}
-        \end{aligned}
+    The inverse function simply re-nests the labels in the other direction:
+    \begin{equation}\label{eq:sets-sum-associator-inverse-def}
+    \begin{aligned}
+            \associator^{-1}_{\setA, \setB, \setC} \colon & \setA \setdisunion (\setB \setdisunion \setC) & \to & \ (\setA \setdisunion \setB) \setdisunion \setC, & \ \\
+            & \tup{1, \ela} & \mapsto &\  \tup{1, \tup{1, \ela}} & \ \tup{1, \ela} \setin \makeset{1} \cartprod \setA \\
+            & \tup{2, \tup{1, \elb}} & \mapsto &\  \tup{1, \tup{2, \elb}} & \ \tup{2, \tup{1, \elb}} \setin \makeset{2} \cartprod (\makeset{1} \cartprod \setB) \\
+            & \tup{2, \tup{2, \elc}} & \mapsto &\  \tup{2, \elc} & \ \tup{2, \tup{2, \elc}} \setin \makeset{2} \cartprod (\makeset{2} \cartprod \setC) \\
+    \end{aligned}
     \end{equation}
+    Comparing with \cref{eq:sets-sum-associator-def}, we see that the three cases of $\associator^{-1}_{\setA, \setB, \setC}$ are exactly the three cases of $\associator_{\setA, \setB, \setC}$ read from right to left. Hence applying $\associator_{\setA, \setB, \setC}$ and then $\associator^{-1}_{\setA, \setB, \setC}$ returns every element of $(\setA \setdisunion \setB) \setdisunion \setC$ to itself, and likewise in the other order, so that
+    \begin{equation}
+        \associator_{\setA, \setB, \setC} \mthen \associator^{-1}_{\setA, \setB, \setC} = \catidat{(\setA \setdisunion \setB) \setdisunion \setC}
+        \qqand
+        \associator^{-1}_{\setA, \setB, \setC} \mthen \associator_{\setA, \setB, \setC} = \catidat{\setA \setdisunion (\setB \setdisunion \setC)}.
+    \end{equation}
+    In particular, $\associator_{\setA, \setB, \setC}$ is thus an isomorphism.
 \end{solution}
 
 
@@ -98,7 +170,35 @@ and
         \ela
     }
 \end{equation}
-which we also call \emph{left unitor} and \emph{right unitor}, respectively.
+which we call \emph{left unitor} and \emph{right unitor}, respectively.
+
+\subsection{From sums to products}
+
+In arithmetic, if we sum a number $x$ with itself some finite number  of times, then 
+\begin{equation}
+x + \dots + x = n \cdot x,
+\end{equation}
+where $n$ is the number of summands in the left-hand sum. 
+
+Analogously, if we sum a set $\setA$ with itself some finite number of times, we have
+\begin{equation}
+\setA \setdisunion \cdots \setdisunion \setA \simeq \stylesets{N} \cartprod \setA,
+\end{equation}
+where $\stylesets{N}$ denotes here the set $\makeset{1, \dots ,n}$, with $n \setin \natnumbers$ being the number of summands. 
+
+For example, for $\stylesets{2} = \makeset{1,2}$ we have 
+\begin{equation}
+\setA \setdisunion \setA \simeq \stylesets{2} \cartprod \setA
+\end{equation}
+and for $\stylesets{3} = \makeset{1,2, 3}$ we have 
+\begin{equation}
+\setA \setdisunion \setA \setdisunion \setA \simeq \stylesets{3} \cartprod \setA
+\end{equation}
+and so on. 
+
+By \cref{def:n-ary-disjoint-union-of-sets}, for the special case $n =1$, we also have that the one-fold sum of $\setA$ is isomorphic to $\singleton \cartprod \setA$ for $\singleton = \makeset{1}$ (however, there is no infix notation for a one-fold sum).
+
+
 
 
 
@@ -115,4 +215,5 @@ In the definition of $\setAn{1} \setdisunion \dots \setdisunion \setAn{n}$, the 
 
 
 
-}
+
+
