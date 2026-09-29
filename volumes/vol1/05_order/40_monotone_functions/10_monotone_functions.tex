@@ -7,9 +7,7 @@
 % \linkvideo{spring2021-functors:semi-and-fun:mon-functions:fun-req-mon} % Functionalities and requirements
 \linkvideo{spring2021-functors:semi-and-fun:mon-functions:mon-on-pos} % Monotone functions on posets
 
-\todotext{rewrite to be for preorders}
-
-A \SY{monotone function} is the generalization to \SY{posets} of a ``non-decreasing'' function on real numbers.
+A \SY{monotone function} is the generalization to \SY{preorders} of a ``non-decreasing'' function on real numbers.
 The function~$\ela \mapsto \max(0, 42 \ela)$ is non-decreasing on the real numbers because
 \begin{equation}\label{eq:monotone-eq-1}
     \prfperiod{
@@ -21,11 +19,11 @@ The function~$\ela \mapsto \max(0, 42 \ela)$ is non-decreasing on the real numbe
 Note that we use ``$\leq$'' and not ``$<$''.
 ``Non-decreasing'' is a weaker condition than ``increasing''.
 
-The definition of \SY{monotone function} on a \SY{poset} is the direct generalization of this concept; the only change is that we use the partial orders at hand, rather than the total order on the reals.
+The definition of \SY{monotone function} on a \SY{preorder} is the direct generalization of this concept; the only change is that we use the preorders at hand, rather than the total order on the reals.
 
-\begin{definition}[montone function]
+\begin{definition}[monotone function]
     \label{def:monotone}
-    A \maindef{montone function} between two \SY{posets}~$\posAdefinition$ and~$\posBdefinition$ is a function~$\mapa \colon \posAset \sto \posBset$ that is compatible with the partial-orderings on its source and target in the sense that
+    A \maindef{monotone function} between two \SY{preorders}~$\posAdefinition$ and~$\posBdefinition$ is a function~$\mapa \colon \posAset \sto \posBset$ that is compatible with the preorder relations on its source and target in the sense that
     \begin{equation}\label{eq:monotone-map-definition}
         \prfperiod{
             \posela \posAleq \poselb
@@ -36,17 +34,17 @@ The definition of \SY{monotone function} on a \SY{poset} is the direct generaliz
 \end{definition}
 
 \begin{example}[The identity is monotone]
-    Given a poset~\posA, the identity function~$\catidat{\posAset}\colon \posAset \mto\linebreak[0] \posAset$ is a montone function, since if~$\posela\posAleq \poselb$, then~$\mapidat{\posAset}(\posela)=\posela \posAleq \poselb = \mapidat{\posAset}(\poselb )$.
+    Given a preorder~\posA, the identity function~$\catidat{\posAset}\colon \posAset \mto\linebreak[0] \posAset$ is a monotone function, since if~$\posela\posAleq \poselb$, then~$\mapidat{\posAset}(\posela)=\posela \posAleq \poselb = \mapidat{\posAset}(\poselb )$.
 \end{example}
 
 \begin{example}[Constant functions]
-    Every constant function is a montone function.
+    Every constant function is a monotone function.
 \end{example}
 
 \begin{figure*}[b]
     \centering
     \includesag{40_dpcatfig_exmonotone}
-    \caption{The cardinality map is a \SY{montone function}.}
+    \caption{The cardinality map is a \SY{monotone function}.}
     \label{fig:cardinality}
 \end{figure*}
 
@@ -85,38 +83,35 @@ The definition of \SY{monotone function} on a \SY{poset} is the direct generaliz
     \end{equation}
 
     This is easy to see that, because all elements of $\subA$ are also in $\subB$, the cardinality of~$\subA$ cannot be more than the cardinality of~$\subB$.
-    Monotonicity depends on the partial order used on the domain and the codomain.
-    To indicate that a map is monotone, we write it indicating the two \SY{posets} as the domain/codomain:
+    Monotonicity depends on the preorder relations used on the domain and the codomain.
+    To indicate that a map is monotone, we write it indicating the two \SY{preorders} as the domain/codomain:
     \begin{equation}\label{eq:cardinality-as-posmap}
         \cardmap \colon \tup{\powerset\setA, \setsubseteq} \mto \tup{\natnumbers, {{\Nleq}}}.
     \end{equation}
 \end{example}
 
 \begin{lemma}
-    The \SY{upper closure} operator~$\upit$ is an \SY{monotone function} 
+    Let~\posA be a \SY{preorder}.
+    The \SY{upper closure} operator~$\upit$ is a \SY{monotone function}
     \begin{equation}
 \upit \colon \tupp{\posPA, \setsubseteq} \mto \tupp{\setOfUppersets \posA,{{\setsubseteq}}}.
 \end{equation}
 \end{lemma}
 \begin{proof}
-    Consider two subsets $\setA\com \setB \setin \linebreak[1] \posPA$.
-    It is clear that given~$\setA\setsubseteq \setB$, we have
-    \begin{equation}
-        \makeset{
-            \styleelements{y} \setin \posAset\mid
-            \exists \styleelements{x}\setin \setA \colon \styleelements{x}\posAleq \styleelements{y}
-        }
-        \setsubseteq
-        \makeset{
-            \styleelements{y}\setin \posAset\mid
-            \exists \styleelements{x}\setin \setB \colon \styleelements{x}\posAleq \styleelements{y}
-        }.
-    \end{equation}
-    Therefore,~$\upit \setA \setsubseteq \upit \setB$, as was to be shown. 
+    First, by \cref{lem:upper-closure-is-upper-set},~$\upit \setA$ is an \SY{upper set} for every~$\setA \setin \posPA$, so~$\upit$ is indeed a function with codomain~$\setOfUppersets \posA$.
+
+    Now let~$\setA\com \setB \setin \linebreak[1] \posPA$ with~$\setA\setsubseteq \setB$.
+    We must show that~$\upit \setA \setsubseteq \upit \setB$.
+    Let~$\styleelements{y}\setin \upit \setA$.
+    By definition of~$\upit \setA$, there exists an~$\styleelements{x}\setin \setA$ such that~$\styleelements{x}\posAleq \styleelements{y}$.
+    Since~$\setA\setsubseteq \setB$, we also have~$\styleelements{x}\setin \setB$.
+    So there exists an element of~$\setB$, namely~$\styleelements{x}$, such that~$\styleelements{x}\posAleq \styleelements{y}$; by definition of~$\upit \setB$, this means~$\styleelements{y}\setin \upit \setB$.
+    As~$\styleelements{y}$ was an arbitrary element of~$\upit \setA$, this shows~$\upit \setA \setsubseteq \upit \setB$, as was to be shown.
 \end{proof}
 
 \begin{lemma}
     \label{lem:lower_closure_monotone}
+    Let~\posA be a \SY{preorder}.
     The \SY{lower closure} operator~
     \begin{equation}
     \downit \colon \tupp{\posPA, \setsubseteq}  \to \tupp{\setOfLowersets \posA, \setsubseteq}
@@ -161,12 +156,12 @@ is a \SY{monotone function}.
         \end{tabular}
     \end{center}
 
-    Which of the functions~$\mapaindex{1}$,~$\mapaindex{2}$,~$\mapaindex{3}$ and~$\mapaindex{4}$ are montone functions?
+    Which of the functions~$\mapaindex{1}$,~$\mapaindex{2}$,~$\mapaindex{3}$ and~$\mapaindex{4}$ are monotone functions?
 \end{gradedexercise}
 \solutionof{WhichMapsMonotone}
 
 \begin{lemma}\label{lem:discrete-is-monotone}
-    Consider a discrete poset~\posA and a poset~\posB.
+    Consider a discrete poset~\posA and a \SY{preorder}~\posB.
     Any map~$\mapa \colon \posA\to \posB$ is monotone.
 \end{lemma}
 \newcommand{\samewidth}[1]{\makebox[3cm]{$#1$}}
@@ -212,47 +207,66 @@ is a \SY{monotone function}.
 
 \begin{ctdefinition}[Order isomorphism]
     \label{def:order-isomorphism}
-    A \SY{montone function} is an \maindef{order isomorphism} if
+    A \SY{monotone function}~$\mapa \colon \posA \mto \posB$ between \SY{preorders} is an \maindef{order isomorphism} if~$\mapa$ is \SY{bijective} and, for all~$\posela, \poselb \setin \posAset$,
     \begin{equation}
         \prfdoubleperiod{
-            \posAel \posleqof\posA \posBel
+            \posela \posleqof\posA \poselb
         }{
-            \mapa(\posAel) \posleqof\posB \mapa(\posBel)
+            \mapa(\posela) \posleqof\posB \mapa(\poselb)
         }
     \end{equation}
 \end{ctdefinition}
 
 \todotext{J: add example of an order isomorphism}
 
-\todotext{J: is it true that an order isomorphism is the same thing as a bijective monotone functions? If yes, we should say and prove (or give as an exercise)}
+\begin{example}[A bijective monotone function that is not an order isomorphism]
+    \label{exa:bijective-monotone-not-iso}
+    Let~$\posAset = \makeset{\posela, \poselb}$ be a set with two distinct elements, and consider two different \SY{preorders} with this same underlying set.
+    \begin{itemize}
+        \item Let~$\posA = \tup{\posAset, {{=}}}$ be the discrete poset on~$\posAset$ (\cref{ex:discreteposet}), in which each element is related only to itself.
+        \item Let~$\posB = \tup{\posBset, \posBleq}$, with~$\posBset = \posAset$, be the two-element chain in which~$\posela \posBleq \poselb$ (in addition to~$\posela \posBleq \posela$ and~$\poselb \posBleq \poselb$).
+    \end{itemize}
+    Consider the identity function~$\mapidat{\posAset}\colon \posAset \sto \posAset$, viewed as a function from~\posA to~\posB.
+    \begin{itemize}
+        \item It is monotone, by \cref{lem:discrete-is-monotone}, since~\posA is discrete.
+        \item It is bijective, since every identity function is.
+        \item It is \emph{not} an order isomorphism: we have~$\mapidat{\posAset}(\posela) = \posela \posBleq \poselb = \mapidat{\posAset}(\poselb)$, but~$\posela \posleqof\posA \poselb$ does not hold, because~$\posela \neq \poselb$.
+        So the implication from right to left in \cref{def:order-isomorphism} fails.
+    \end{itemize}
+\end{example}
+Therefore, a bijective monotone function need not be an order isomorphism.
+Besides being bijective, an order isomorphism must also \emph{reflect} the order: whenever~$\mapa(\posela) \posleqof\posB \mapa(\poselb)$, it must be the case that~$\posela \posleqof\posA \poselb$.
 
 \subsection{Monotonicity is compositional}
 
-\SY{Monotonicity} is a compositional property: the series composition of two \SY{montone functions} is \SY{monotone}.
+\SY{Monotonicity} is a compositional property: the series composition of two \SY{monotone functions} is \SY{monotone}.
 \begin{lemma}\label{lem:monotonicity-compositional}
-    Given \SY{posets}~$\posA,\posB,\posC$ and two \SY{montone functions}.
+    Given \SY{preorders}~$\posA,\posB,\posC$ and two \SY{monotone functions}
     $\mapa\colon \posA \mto \posB$ and $\mapb\colon \posB \mto \posC$, the composite map~$\mapa\mthen \mapb\colon \posA \mto \posC$ is monotone as well.
 \end{lemma}
 \begin{proof}
-    Consider~$\posAnel{1},\posAnel{2} \setin \posAset$,~$\posBnel{1},\posBnel{2}\setin \posBset$.
-    By assuming that~$\mora$ and~$\morb$ are \SY{monotone}, we have
+    Let~$\posAnel{1},\posAnel{2} \setin \posAset$ with~$\posAnel{1}\posAleq \posAnel{2}$.
+    We must show that~$(\mapa\mthen \mapb)(\posAnel{1}) \posCleq (\mapa\mthen \mapb)(\posAnel{2})$.
+    Since~$\mapa$ is \SY{monotone}, we have
     %
     \begin{equation}\label{eq:monotonicity-compositional-1}
-        \prftree{\posAnel{1}\posAleq \posAnel{2}}{\mapa(\posAnel{1})\posBleq \mapa(\posAnel{2})}
+        \mapa(\posAnel{1})\posBleq \mapa(\posAnel{2}).
     \end{equation}
-    and
+    %
+    Now~$\mapa(\posAnel{1})$ and~$\mapa(\posAnel{2})$ are two elements of~$\posBset$, and \cref{eq:monotonicity-compositional-1} says that they are related in~\posB.
+    Since~$\mapb$ is \SY{monotone}, we can apply its monotonicity condition to these two elements, and obtain
     %
     \begin{equation}\label{eq:monotonicity-compositional-2}
-        \prfperiod{\posBnel{1}\posBleq \posBnel{2}}{\mapb(\posBnel{1})\posCleq \mapb(\posBnel{2})}
+        \mapb(\mapa(\posAnel{1}))\posCleq \mapb(\mapa(\posAnel{2})).
     \end{equation}
     %
-    By substituting the above in the map composition formula, we have
+    By definition of composition,~$(\mapa\mthen \mapb)(\posela) = \mapb(\mapa(\posela))$ for every~$\posela \setin \posAset$, so \cref{eq:monotonicity-compositional-2} says precisely that
     %
     \begin{equation}\label{eq:monotonicity-compositional-3}
-        \prfcomma{\posAnel{1}\posAleq \posAnel{2} }{ (\mapa\mthen \mapb)(\posAnel{1}) \posCleq (\mapa\mthen \mapb)(\posAnel{2})}
+        (\mapa\mthen \mapb)(\posAnel{1}) \posCleq (\mapa\mthen \mapb)(\posAnel{2}).
     \end{equation}
     %
-    which is the \SY{monotonicity} condition for the composite map~$(\mapa\mthen\mapb)$.
+    Since~$\posAnel{1}$ and~$\posAnel{2}$ were arbitrary elements of~$\posAset$ with~$\posAnel{1}\posAleq \posAnel{2}$, this is the \SY{monotonicity} condition for the composite map~$\mapa\mthen\mapb$.
 \end{proof}
 
 
@@ -262,7 +276,7 @@ Dually to \SY{monotone functions}, we can define \SY{antitone maps} as order \em
 
 \begin{definition}[Antitone map]
     \label{def:antitone}
-    An \maindef{antitone map} between two \SY{posets}~$\posAdefinition$ and~$\posBdefinition$ is a map~$\mapa$ that reverses the ordering, in the sense that
+    An \maindef{antitone map} between two \SY{preorders}~$\posAdefinition$ and~$\posBdefinition$ is a map~$\mapa$ that reverses the ordering, in the sense that
     \begin{equation}
         \prfperiod{
             \posela \posAleq \poselb
@@ -298,10 +312,10 @@ Dually to \SY{monotone functions}, we can define \SY{antitone maps} as order \em
 
 
 
-It is easy to see that an \SY{antitone map} $\mapa: \posA \mto \posB$ is the same thing as a \SY{montone function} $\mapa: \posAop \mto \posB$.
+It is easy to see that an \SY{antitone map} $\mapa: \posA \mto \posB$ is the same thing as a \SY{monotone function} $\mapa: \posAop \mto \posB$.
 
 \begin{lemma}\label{lem:antitone-is-monotone}
     An \SY{antitone map} $\mapa: \posA \mto \posB$ is a \SY{monotone function} $\mapa: \posAop \mto \posB$
-    and a \SY{montone function} $\mapa: \posA \mto \posB\posop$.
+    and a \SY{monotone function} $\mapa: \posA \mto \posB\posop$.
 \end{lemma}
 
