@@ -16,7 +16,7 @@ The answer to the second question is more subtle than one might expect.
 As we will see, the graph of a monotone function is in general \emph{not} a monotone relation, and we will need a small twist.
 
 \begin{remark}
-    In the next chapter, on design problems, monotone relations will appear prominently in co-design, where they describe which combinations of functionality and requirements are feasible.
+    In the next chapter (\cref{chap:application-design-problems}), monotone relations will appear prominently in co-design, where they describe which combinations of functionality and requirements are feasible.
     In this chapter we develop the general theory, independently of that application.
 \end{remark}
 
@@ -26,32 +26,32 @@ As we will see, the graph of a monotone function is in general \emph{not} a mono
     \label{def:monotone-relation}
     Let $\posAdefinition$ and $\posBdefinition$ be \SY{preorders}.
     
-    A \maindef{monotone relation} $\relA \colon \posA \profto \posB$ is:
+    A \maindef{monotone relation} $\monrelM \colon \posA \profto \posB$ is:
 
     \constit
     \begin{enumerate}
-        \item a \SY{relation} $\relA \setsubseteq \posAset \cartprod \posBset$ (\cref{def:binary-relation});
+        \item a \SY{relation} $\monrelM \setsubseteq \posAset \cartprod \posBset$ (\cref{def:binary-relation});
     \end{enumerate}
     \condit
     \begin{enumerate}
-        \item $\relA$ is \emph{closed downward in the source}: for all $\posAel, \posAel' \setin \posAset$ and $\posBel \setin \posBset$,
+        \item $\monrelM$ is \emph{closed downward in the source}: for all $\posAel, \posAel' \setin \posAset$ and $\posBel \setin \posBset$,
               \begin{equation}\label{eq:monrel-cond-source}
                   \prfperiod{
                       \posAel' \posAleq \posAel
                   }{
-                      \inrel{\posAel}{\relA}{\posBel}
+                      \inrel{\posAel}{\monrelM}{\posBel}
                   }{
-                      \inrel{\posAel'}{\relA}{\posBel}
+                      \inrel{\posAel'}{\monrelM}{\posBel}
                   }
               \end{equation}
-        \item $\relA$ is \emph{closed upward in the target}: for all $\posAel \setin \posAset$ and $\posBel, \posBel' \setin \posBset$,
+        \item $\monrelM$ is \emph{closed upward in the target}: for all $\posAel \setin \posAset$ and $\posBel, \posBel' \setin \posBset$,
               \begin{equation}\label{eq:monrel-cond-target}
                   \prfperiod{
-                      \inrel{\posAel}{\relA}{\posBel}
+                      \inrel{\posAel}{\monrelM}{\posBel}
                   }{
                       \posBel \posBleq \posBel'
                   }{
-                      \inrel{\posAel}{\relA}{\posBel'}
+                      \inrel{\posAel}{\monrelM}{\posBel'}
                   }
               \end{equation}
     \end{enumerate}
@@ -59,6 +59,7 @@ As we will see, the graph of a monotone function is in general \emph{not} a mono
 
 In words: if $\posAel$ is related to $\posBel$, then everything below $\posAel$ is related to $\posBel$, and $\posAel$ is related to everything above $\posBel$.
 We use the slashed arrow ``$\profto$'' for monotone relations, to distinguish them from \SY{monotone functions}, for which we use ``$\mto$''.
+We will usually name monotone relations $\monrelM$ and $\monrelN$ (with primes or numbered subscripts, such as $\monrelM'$ or $\monrelM_1$, when we need more), and keep the letters $\relA$ and $\relB$ for relations that are not assumed to be monotone.
 
 The two conditions of \cref{def:monotone-relation} can be packaged into a single one.
 
@@ -121,9 +122,9 @@ The two conditions of \cref{def:monotone-relation} can be packaged into a single
     \label{exa:monrel-coins}
     Let $\posA = \natswithleq$, whose elements we think of as amounts of money, in francs.
     Let $\posB = \natswithleq \Ptimes \natswithleq$ be the product preorder (\cref{def:poset-product}), whose elements $\tup{\elnc{1}, \elnc{2}}$ we think of as a number $\elnc{1}$ of one-franc coins together with a number $\elnc{2}$ of two-franc coins.
-    Define the relation $\relA \colon \posA \profto \posB$ by
+    Define the relation $\monrelM \colon \posA \profto \posB$ by
     \begin{equation}
-        \inrel{\ela}{\relA}{\tup{\elnc{1}, \elnc{2}}}
+        \inrel{\ela}{\monrelM}{\tup{\elnc{1}, \elnc{2}}}
         \quad \text{if and only if} \quad
         \ela \leq \elnc{1} + 2 \elnc{2},
     \end{equation}
@@ -150,11 +151,11 @@ The two conditions of \cref{def:monotone-relation} can be packaged into a single
     Write $\posA = \tup{\setA, \posleqof{\posA}}$ and $\posB = \tup{\setB, \posleqof{\posB}}$ for the resulting \SY{preorders}.
     The relation ``course $\ela$ is open to student $\elb$'',
     \begin{equation}
-        \inrel{\ela}{\relA}{\elb}
+        \inrel{\ela}{\monrelM}{\elb}
         \quad \text{if and only if} \quad
         \stylemaps{req}(\ela) \leq \stylemaps{avg}(\elb),
     \end{equation}
-    is a monotone relation $\relA \colon \posA \profto \posB$.
+    is a monotone relation $\monrelM \colon \posA \profto \posB$.
     If a course is open to a student, then so is every course with a lower or equal requirement, and the course is also open to every student with a higher or equal average.
 \end{example}
 
@@ -189,28 +190,29 @@ Monotonicity of \relA does not correspond to monotonicity of $\phi_\relA$ on $\p
         \item $\phi_\relA$ is a \SY{monotone function} $\posAop \Ptimes \posB \mto \Bool$ (\cref{def:bool-poset}).
     \end{enumerate}
 \end{lemma}
-\begin{proof}
-    We first unwind the order of $\posAop \Ptimes \posB$.
-    By the definitions of the product and of the opposite, for all $\tup{\posAel, \posBel}, \tup{\posAel', \posBel'} \setin \posAset \cartprod \posBset$ we have
-    \begin{equation}\label{eq:order-Aop-times-B}
-        \tup{\posAel, \posBel} \posleqof{\posAop \Ptimes \posB} \tup{\posAel', \posBel'}
-        \quad \text{if and only if} \quad
-        \posAel' \posAleq \posAel
-        \ \text{ and } \
-        \posBel \posBleq \posBel'.
-    \end{equation}
-
-    \emph{(1)$\Eqv$(2).}
-    By \cref{def:upperset} and \cref{eq:order-Aop-times-B}, $\relA$ is an upper set of $\posAop \Ptimes \posB$ if and only if, whenever $\inrel{\posAel}{\relA}{\posBel}$, $\posAel' \posAleq \posAel$, and $\posBel \posBleq \posBel'$, we have $\inrel{\posAel'}{\relA}{\posBel'}$.
-    This is exactly condition \cref{eq:monrel-single-condition}, which by \cref{lem:monrel-single-condition} is equivalent to \relA being a monotone relation.
-
-    \emph{(2)$\Eqv$(3).}
-    Write $\posC = \posAop \Ptimes \posB$.
-    A function $\phi \colon \posCset \sto \boolset$ fails to be monotone $\posC \mto \Bool$ exactly when there are $\elc \posCleq \elc'$ such that $\phi(\elc) \posleqof\Bool \phi(\elc')$ does not hold.
-    In $\Bool$, the only pair of elements for which $\posleqof{\Bool}$ does not hold is $\tup{\true, \false}$.
-    So $\phi$ is monotone if and only if, whenever $\elc \posCleq \elc'$ and $\phi(\elc) = \true$, also $\phi(\elc') = \true$.
-    For $\phi = \phi_\relA$, this says precisely that $\relA = \makeset{\elc \setin \posCset \mid \phi_\relA(\elc) = \true}$ is an upper set of \posC.
-\end{proof}
+% Proof commented out: it overlaps with the graded exercise DPsAsUpperSets in the design-problems chapter.
+% \begin{proof}
+%     We first unwind the order of $\posAop \Ptimes \posB$.
+%     By the definitions of the product and of the opposite, for all $\tup{\posAel, \posBel}, \tup{\posAel', \posBel'} \setin \posAset \cartprod \posBset$ we have
+%     \begin{equation}\label{eq:order-Aop-times-B}
+%         \tup{\posAel, \posBel} \posleqof{\posAop \Ptimes \posB} \tup{\posAel', \posBel'}
+%         \quad \text{if and only if} \quad
+%         \posAel' \posAleq \posAel
+%         \ \text{ and } \
+%         \posBel \posBleq \posBel'.
+%     \end{equation}
+% 
+%     \emph{(1)$\Eqv$(2).}
+%     By \cref{def:upperset} and \cref{eq:order-Aop-times-B}, $\relA$ is an upper set of $\posAop \Ptimes \posB$ if and only if, whenever $\inrel{\posAel}{\relA}{\posBel}$, $\posAel' \posAleq \posAel$, and $\posBel \posBleq \posBel'$, we have $\inrel{\posAel'}{\relA}{\posBel'}$.
+%     This is exactly condition \cref{eq:monrel-single-condition}, which by \cref{lem:monrel-single-condition} is equivalent to \relA being a monotone relation.
+% 
+%     \emph{(2)$\Eqv$(3).}
+%     Write $\posC = \posAop \Ptimes \posB$.
+%     A function $\phi \colon \posCset \sto \boolset$ fails to be monotone $\posC \mto \Bool$ exactly when there are $\elc \posCleq \elc'$ such that $\phi(\elc) \posleqof\Bool \phi(\elc')$ does not hold.
+%     In $\Bool$, the only pair of elements for which $\posleqof{\Bool}$ does not hold is $\tup{\true, \false}$.
+%     So $\phi$ is monotone if and only if, whenever $\elc \posCleq \elc'$ and $\phi(\elc) = \true$, also $\phi(\elc') = \true$.
+%     For $\phi = \phi_\relA$, this says precisely that $\relA = \makeset{\elc \setin \posCset \mid \phi_\relA(\elc) = \true}$ is an upper set of \posC.
+% \end{proof}
 
 \begin{remark}[Why the twist?]
     It is instructive to see what goes wrong without the twist.
@@ -239,11 +241,11 @@ Monotonicity of \relA does not correspond to monotonicity of $\phi_\relA$ on $\p
 \begin{example}[Upper sets and lower sets]
     \label{exa:monrel-upper-lower-sets}
     Let $\singleton = \makeset{\singletonel}$ be the one-element preorder, with $\singletonel \posleq \singletonel$.
-    A monotone relation $\relA \colon \singleton \profto \posB$ is the same thing as an \SY{upper set} of \posB.
-    Indeed, such a relation is determined by the subset $\stylesets{U} = \makeset{\posBel \setin \posBset \mid \inrel{\singletonel}{\relA}{\posBel}}$.
+    A monotone relation $\monrelM \colon \singleton \profto \posB$ is the same thing as an \SY{upper set} of \posB.
+    Indeed, such a relation is determined by the subset $\stylesets{U} = \makeset{\posBel \setin \posBset \mid \inrel{\singletonel}{\monrelM}{\posBel}}$.
     Condition \cref{eq:monrel-cond-source} holds automatically, because the only element of the source is $\singletonel$, and condition \cref{eq:monrel-cond-target} says precisely that $\stylesets{U}$ is an upper set.
 
-    Dually, a monotone relation $\relA \colon \posA \profto \singleton$ is the same thing as a \SY{lower set} of \posA, namely $\makeset{\posAel \setin \posAset \mid \inrel{\posAel}{\relA}{\singletonel}}$.
+    Dually, a monotone relation $\monrelM \colon \posA \profto \singleton$ is the same thing as a \SY{lower set} of \posA, namely $\makeset{\posAel \setin \posAset \mid \inrel{\posAel}{\monrelM}{\singletonel}}$.
     So the upper and lower sets of \cref{sec:UpperLowerSets} are special cases of monotone relations.
 \end{example}
 
@@ -253,20 +255,20 @@ Monotone relations can be composed using the composition of relations (\cref{def
 
 \begin{lemma}
     \label{lem:monrel-composition}
-    Let \posA, \posB, and \posC be \SY{preorders}, and let $\relA \colon \posA \profto \posB$ and $\relB \colon \posB \profto \posC$ be monotone relations.
-    Then the composite relation $\relA \mthen \relB$ is a monotone relation $\posA \profto \posC$.
+    Let \posA, \posB, and \posC be \SY{preorders}, and let $\monrelM \colon \posA \profto \posB$ and $\monrelN \colon \posB \profto \posC$ be monotone relations.
+    Then the composite relation $\monrelM \mthen \monrelN$ is a monotone relation $\posA \profto \posC$.
 \end{lemma}
 \begin{proof}
-    Recall that $\inrel{\posAel}{(\relA \mthen \relB)}{\posCel}$ means that there exists $\posBel \setin \posBset$ with $\inrel{\posAel}{\relA}{\posBel}$ and $\inrel{\posBel}{\relB}{\posCel}$.
+    Recall that $\inrel{\posAel}{(\monrelM \mthen \monrelN)}{\posCel}$ means that there exists $\posBel \setin \posBset$ with $\inrel{\posAel}{\monrelM}{\posBel}$ and $\inrel{\posBel}{\monrelN}{\posCel}$.
     \begin{enumerate}
-        \item Closure downward in the source: suppose $\posAel' \posAleq \posAel$ and $\inrel{\posAel}{(\relA \mthen \relB)}{\posCel}$.
-              Choose $\posBel$ with $\inrel{\posAel}{\relA}{\posBel}$ and $\inrel{\posBel}{\relB}{\posCel}$.
-              Since \relA is closed downward in the source, $\inrel{\posAel'}{\relA}{\posBel}$.
-              Together with $\inrel{\posBel}{\relB}{\posCel}$, this shows $\inrel{\posAel'}{(\relA \mthen \relB)}{\posCel}$.
-        \item Closure upward in the target: suppose $\inrel{\posAel}{(\relA \mthen \relB)}{\posCel}$ and $\posCel \posCleq \posCel'$.
-              Choose $\posBel$ with $\inrel{\posAel}{\relA}{\posBel}$ and $\inrel{\posBel}{\relB}{\posCel}$.
-              Since \relB is closed upward in the target, $\inrel{\posBel}{\relB}{\posCel'}$.
-              Together with $\inrel{\posAel}{\relA}{\posBel}$, this shows $\inrel{\posAel}{(\relA \mthen \relB)}{\posCel'}$.
+        \item Closure downward in the source: suppose $\posAel' \posAleq \posAel$ and $\inrel{\posAel}{(\monrelM \mthen \monrelN)}{\posCel}$.
+              Choose $\posBel$ with $\inrel{\posAel}{\monrelM}{\posBel}$ and $\inrel{\posBel}{\monrelN}{\posCel}$.
+              Since \monrelM is closed downward in the source, $\inrel{\posAel'}{\monrelM}{\posBel}$.
+              Together with $\inrel{\posBel}{\monrelN}{\posCel}$, this shows $\inrel{\posAel'}{(\monrelM \mthen \monrelN)}{\posCel}$.
+        \item Closure upward in the target: suppose $\inrel{\posAel}{(\monrelM \mthen \monrelN)}{\posCel}$ and $\posCel \posCleq \posCel'$.
+              Choose $\posBel$ with $\inrel{\posAel}{\monrelM}{\posBel}$ and $\inrel{\posBel}{\monrelN}{\posCel}$.
+              Since \monrelN is closed upward in the target, $\inrel{\posBel}{\monrelN}{\posCel'}$.
+              Together with $\inrel{\posAel}{\monrelM}{\posBel}$, this shows $\inrel{\posAel}{(\monrelM \mthen \monrelN)}{\posCel'}$.
     \end{enumerate}
 \end{proof}
 
@@ -277,27 +279,27 @@ Instead, the role of the identity is played by the preorder relation $\posAleq$ 
 
 \begin{lemma}
     \label{lem:monrel-leq-neutral}
-    Let \posA and \posB be \SY{preorders}, and let $\relA \colon \posA \profto \posB$ be a monotone relation.
+    Let \posA and \posB be \SY{preorders}, and let $\monrelM \colon \posA \profto \posB$ be a monotone relation.
     Then
     \begin{equation}
-        \posAleq \mthen \relA = \relA
+        \posAleq \mthen \monrelM = \monrelM
         \qqand
-        \relA \mthen \posBleq = \relA.
+        \monrelM \mthen \posBleq = \monrelM.
     \end{equation}
 \end{lemma}
 \begin{proof}
     We prove the first equation; the second one is proved in the same way, using closure upward in the target instead of closure downward in the source.
     \begin{itemize}
-        \item $\posAleq \mthen \relA \setsubseteq \relA$: suppose $\inrel{\posAel'}{(\posAleq \mthen \relA)}{\posBel}$.
-              Then there is $\posAel \setin \posAset$ with $\posAel' \posAleq \posAel$ and $\inrel{\posAel}{\relA}{\posBel}$.
-              Since \relA is closed downward in the source, $\inrel{\posAel'}{\relA}{\posBel}$.
-        \item $\relA \setsubseteq \posAleq \mthen \relA$: suppose $\inrel{\posAel}{\relA}{\posBel}$.
-              By reflexivity, $\posAel \posAleq \posAel$, so $\posAel$ itself witnesses that $\inrel{\posAel}{(\posAleq \mthen \relA)}{\posBel}$.
+        \item $\posAleq \mthen \monrelM \setsubseteq \monrelM$: suppose $\inrel{\posAel'}{(\posAleq \mthen \monrelM)}{\posBel}$.
+              Then there is $\posAel \setin \posAset$ with $\posAel' \posAleq \posAel$ and $\inrel{\posAel}{\monrelM}{\posBel}$.
+              Since \monrelM is closed downward in the source, $\inrel{\posAel'}{\monrelM}{\posBel}$.
+        \item $\monrelM \setsubseteq \posAleq \mthen \monrelM$: suppose $\inrel{\posAel}{\monrelM}{\posBel}$.
+              By reflexivity, $\posAel \posAleq \posAel$, so $\posAel$ itself witnesses that $\inrel{\posAel}{(\posAleq \mthen \monrelM)}{\posBel}$.
     \end{itemize}
 \end{proof}
 
 \begin{remark}
-    Taking $\relA = \posAleq$ in \cref{lem:monrel-leq-neutral}, we get $\posAleq \mthen \posAleq = \posAleq$.
+    Taking $\monrelM = \posAleq$ in \cref{lem:monrel-leq-neutral}, we get $\posAleq \mthen \posAleq = \posAleq$.
     Here the inclusion $\setsubseteq$ is transitivity, and the inclusion $\setsupseteq$ follows from reflexivity.
     So the two axioms of a \SY{preorder} are exactly what makes its preorder relation behave like an identity for composition.
 \end{remark}
@@ -354,24 +356,26 @@ We will meet these two constructions again, in the setting of design problems, i
     Let $\mapa \colon \posA \mto \posB$ be a \SY{monotone function} between \SY{preorders}.
     Then $\comp{\mapa} \colon \posA \profto \posB$ and $\conj{\mapa} \colon \posB \profto \posA$ are monotone relations.
 \end{lemma}
-\begin{proof}
-    For the companion:
-    \begin{enumerate}
-        \item Closure downward in the source: suppose $\posAel' \posAleq \posAel$ and $\mapa(\posAel) \posBleq \posBel$.
-              Since $\mapa$ is monotone, $\mapa(\posAel') \posBleq \mapa(\posAel)$, and by transitivity $\mapa(\posAel') \posBleq \posBel$.
-        \item Closure upward in the target: suppose $\mapa(\posAel) \posBleq \posBel$ and $\posBel \posBleq \posBel'$.
-              By transitivity, $\mapa(\posAel) \posBleq \posBel'$.
-    \end{enumerate}
-    For the conjoint (whose source is \posB and whose target is \posA):
-    \begin{enumerate}
-        \item Closure downward in the source: suppose $\posBel' \posBleq \posBel$ and $\posBel \posBleq \mapa(\posAel)$.
-              By transitivity, $\posBel' \posBleq \mapa(\posAel)$.
-        \item Closure upward in the target: suppose $\posBel \posBleq \mapa(\posAel)$ and $\posAel \posAleq \posAel'$.
-              Since $\mapa$ is monotone, $\mapa(\posAel) \posBleq \mapa(\posAel')$, and by transitivity $\posBel \posBleq \mapa(\posAel')$.
-    \end{enumerate}
-\end{proof}
+% Proof commented out: it overlaps with the graded exercise DPsFromMonotoneMaps in the design-problems chapter.
+% \begin{proof}
+%     For the companion:
+%     \begin{enumerate}
+%         \item Closure downward in the source: suppose $\posAel' \posAleq \posAel$ and $\mapa(\posAel) \posBleq \posBel$.
+%               Since $\mapa$ is monotone, $\mapa(\posAel') \posBleq \mapa(\posAel)$, and by transitivity $\mapa(\posAel') \posBleq \posBel$.
+%         \item Closure upward in the target: suppose $\mapa(\posAel) \posBleq \posBel$ and $\posBel \posBleq \posBel'$.
+%               By transitivity, $\mapa(\posAel) \posBleq \posBel'$.
+%     \end{enumerate}
+%     For the conjoint (whose source is \posB and whose target is \posA):
+%     \begin{enumerate}
+%         \item Closure downward in the source: suppose $\posBel' \posBleq \posBel$ and $\posBel \posBleq \mapa(\posAel)$.
+%               By transitivity, $\posBel' \posBleq \mapa(\posAel)$.
+%         \item Closure upward in the target: suppose $\posBel \posBleq \mapa(\posAel)$ and $\posAel \posAleq \posAel'$.
+%               Since $\mapa$ is monotone, $\mapa(\posAel) \posBleq \mapa(\posAel')$, and by transitivity $\posBel \posBleq \mapa(\posAel')$.
+%     \end{enumerate}
+% \end{proof}
 
-Notice that the monotonicity of $\mapa$ is used exactly once in each case: for the companion in the source condition, and for the conjoint in the target condition.
+% Commented out together with the proof above (it describes that proof):
+% Notice that the monotonicity of $\mapa$ is used exactly once in each case: for the companion in the source condition, and for the conjoint in the target condition.
 
 \begin{example}
     \label{exa:companion-identity}
@@ -402,9 +406,9 @@ Write $\aword{graph}(\mapa) = \makeset{\tup{\posAel, \mapa(\posAel)} \mid \posAe
     For the second equation: $\inrel{\posBel}{(\posBleq \mthen \aword{graph}(\mapa)\reltransp)}{\posAel}$ if and only if there is $\posBel_0 \setin \posBset$ with $\posBel \posBleq \posBel_0$ and $\posBel_0 = \mapa(\posAel)$, that is, if and only if $\posBel \posBleq \mapa(\posAel)$.
 
     For the last claim, note first that $\aword{graph}(\mapa) \setsubseteq \comp{\mapa}$, since $\mapa(\posAel) \posBleq \mapa(\posAel)$ by reflexivity.
-    Now let $\relA \colon \posA \profto \posB$ be any monotone relation with $\aword{graph}(\mapa) \setsubseteq \relA$, and suppose $\inrel{\posAel}{\comp{\mapa}}{\posBel}$, that is, $\mapa(\posAel) \posBleq \posBel$.
-    Since $\tup{\posAel, \mapa(\posAel)} \setin \aword{graph}(\mapa) \setsubseteq \relA$ and \relA is closed upward in the target, we get $\inrel{\posAel}{\relA}{\posBel}$.
-    Hence $\comp{\mapa} \setsubseteq \relA$.
+    Now let $\monrelM \colon \posA \profto \posB$ be any monotone relation with $\aword{graph}(\mapa) \setsubseteq \monrelM$, and suppose $\inrel{\posAel}{\comp{\mapa}}{\posBel}$, that is, $\mapa(\posAel) \posBleq \posBel$.
+    Since $\tup{\posAel, \mapa(\posAel)} \setin \aword{graph}(\mapa) \setsubseteq \monrelM$ and \monrelM is closed upward in the target, we get $\inrel{\posAel}{\monrelM}{\posBel}$.
+    Hence $\comp{\mapa} \setsubseteq \monrelM$.
 \end{proof}
 
 This lemma is the precise sense in which the companion ``repairs'' the graph: it is the graph, closed upward in the target, in the same way that the \SY{upper closure} of a subset is the smallest upper set that includes it (\cref{lem:upper-closure-smallest}).
@@ -445,42 +449,42 @@ In this sense we can view monotone functions as special monotone relations, just
 When the target is only a \SY{preorder}, two monotone functions have the same companion exactly when their values are equivalent in \posB at every input; the companion forgets precisely the information that the preorder cannot distinguish.
 
 Which monotone relations are companions?
-For a monotone relation $\relA \colon \posA \profto \posB$ and $\posAel \setin \posAset$, write
+For a monotone relation $\monrelM \colon \posA \profto \posB$ and $\posAel \setin \posAset$, write
 \begin{equation}
-    \hat{\relA}(\posAel) = \makeset{\posBel \setin \posBset \mid \inrel{\posAel}{\relA}{\posBel}}
+    \hat{\monrelM}(\posAel) = \makeset{\posBel \setin \posBset \mid \inrel{\posAel}{\monrelM}{\posBel}}
 \end{equation}
 for the set of elements to which $\posAel$ is related, as in \cref{rem:rel-three-fun-descriptions}.
 
 \begin{lemma}
     \label{lem:which-monrels-are-companions}
-    Let $\relA \colon \posA \profto \posB$ be a monotone relation between \SY{preorders}.
-    Then $\relA = \comp{\mapa}$ for some \SY{monotone function} $\mapa \colon \posA \mto \posB$ if and only if, for every $\posAel \setin \posAset$, the set $\hat{\relA}(\posAel)$ has a least element, that is, an element $\posBel_0 \setin \hat{\relA}(\posAel)$ with $\posBel_0 \posBleq \posBel$ for all $\posBel \setin \hat{\relA}(\posAel)$.
+    Let $\monrelM \colon \posA \profto \posB$ be a monotone relation between \SY{preorders}.
+    Then $\monrelM = \comp{\mapa}$ for some \SY{monotone function} $\mapa \colon \posA \mto \posB$ if and only if, for every $\posAel \setin \posAset$, the set $\hat{\monrelM}(\posAel)$ has a least element, that is, an element $\posBel_0 \setin \hat{\monrelM}(\posAel)$ with $\posBel_0 \posBleq \posBel$ for all $\posBel \setin \hat{\monrelM}(\posAel)$.
 \end{lemma}
 \begin{proof}
-    Suppose $\relA = \comp{\mapa}$.
-    Then $\hat{\relA}(\posAel) = \makeset{\posBel \mid \mapa(\posAel) \posBleq \posBel}$, which contains $\mapa(\posAel)$ by reflexivity; and $\mapa(\posAel)$ is below every element of $\hat{\relA}(\posAel)$ by definition.
+    Suppose $\monrelM = \comp{\mapa}$.
+    Then $\hat{\monrelM}(\posAel) = \makeset{\posBel \mid \mapa(\posAel) \posBleq \posBel}$, which contains $\mapa(\posAel)$ by reflexivity; and $\mapa(\posAel)$ is below every element of $\hat{\monrelM}(\posAel)$ by definition.
     So $\mapa(\posAel)$ is a least element.
 
-    Conversely, suppose that each $\hat{\relA}(\posAel)$ has a least element, and choose one for each $\posAel$; call it $\mapa(\posAel)$.
+    Conversely, suppose that each $\hat{\monrelM}(\posAel)$ has a least element, and choose one for each $\posAel$; call it $\mapa(\posAel)$.
     (In a \SY{poset} the least element is unique, so there is no choice to make.)
     This defines a function $\mapa \colon \posAset \sto \posBset$.
     \begin{itemize}
         \item $\mapa$ is monotone: suppose $\posAel \posAleq \posAel'$.
-              We have $\inrel{\posAel'}{\relA}{\mapa(\posAel')}$, so, since \relA is closed downward in the source, also $\inrel{\posAel}{\relA}{\mapa(\posAel')}$, that is, $\mapa(\posAel') \setin \hat{\relA}(\posAel)$.
-              Since $\mapa(\posAel)$ is least in $\hat{\relA}(\posAel)$, we get $\mapa(\posAel) \posBleq \mapa(\posAel')$.
-        \item $\comp{\mapa} = \relA$: if $\inrel{\posAel}{\relA}{\posBel}$, then $\posBel \setin \hat{\relA}(\posAel)$, so $\mapa(\posAel) \posBleq \posBel$ because $\mapa(\posAel)$ is least.
-              Conversely, if $\mapa(\posAel) \posBleq \posBel$, then from $\inrel{\posAel}{\relA}{\mapa(\posAel)}$ and closure upward in the target we get $\inrel{\posAel}{\relA}{\posBel}$.
+              We have $\inrel{\posAel'}{\monrelM}{\mapa(\posAel')}$, so, since \monrelM is closed downward in the source, also $\inrel{\posAel}{\monrelM}{\mapa(\posAel')}$, that is, $\mapa(\posAel') \setin \hat{\monrelM}(\posAel)$.
+              Since $\mapa(\posAel)$ is least in $\hat{\monrelM}(\posAel)$, we get $\mapa(\posAel) \posBleq \mapa(\posAel')$.
+        \item $\comp{\mapa} = \monrelM$: if $\inrel{\posAel}{\monrelM}{\posBel}$, then $\posBel \setin \hat{\monrelM}(\posAel)$, so $\mapa(\posAel) \posBleq \posBel$ because $\mapa(\posAel)$ is least.
+              Conversely, if $\mapa(\posAel) \posBleq \posBel$, then from $\inrel{\posAel}{\monrelM}{\mapa(\posAel)}$ and closure upward in the target we get $\inrel{\posAel}{\monrelM}{\posBel}$.
     \end{itemize}
 \end{proof}
 
 \begin{example}[Monotone relations that are not companions]
     The monotone relation of \cref{exa:monrel-coins} is not the companion of any monotone function.
-    The amount $3$ can be paid with three one-franc coins, or with one coin of each kind, so $\tup{3, 0}$ and $\tup{1, 1}$ both belong to $\hat{\relA}(3)$.
-    A least element of $\hat{\relA}(3)$ would have to be below both of them in the product order, hence of the form $\tup{\elnc{1}, 0}$ with $\elnc{1} \leq 1$.
-    But such coins are worth at most one franc, so they are not in $\hat{\relA}(3)$.
-    Thus $\hat{\relA}(3)$ has no least element, and \cref{lem:which-monrels-are-companions} shows that \relA is not a companion.
+    The amount $3$ can be paid with three one-franc coins, or with one coin of each kind, so $\tup{3, 0}$ and $\tup{1, 1}$ both belong to $\hat{\monrelM}(3)$.
+    A least element of $\hat{\monrelM}(3)$ would have to be below both of them in the product order, hence of the form $\tup{\elnc{1}, 0}$ with $\elnc{1} \leq 1$.
+    But such coins are worth at most one franc, so they are not in $\hat{\monrelM}(3)$.
+    Thus $\hat{\monrelM}(3)$ has no least element, and \cref{lem:which-monrels-are-companions} shows that \monrelM is not a companion.
 
-    Similarly, if $\posAset$ is non-empty, the empty relation $\posA \profto \posB$ is not a companion, since each $\hat{\relA}(\posAel)$ is empty.
+    Similarly, if $\posAset$ is non-empty, the empty relation $\posA \profto \posB$ is not a companion, since each $\hat{\monrelM}(\posAel)$ is empty.
     So monotone relations are \emph{strictly} more general than monotone functions, just as relations are strictly more general than functions.
 \end{example}
 
@@ -520,7 +524,7 @@ Later in the book, when we have the language of categories and functors, we will
     In \cref{exa:monrel-courses}, the functions $\stylemaps{req} \colon \posA \mto \realswithleq$ and $\stylemaps{avg} \colon \posB \mto \realswithleq$ are monotone, by the way we defined the preorders on \posA and \posB.
     The monotone relation ``course $\ela$ is open to student $\elb$'' is the composite
     \begin{equation}
-        \relA = \comp{\stylemaps{req}} \mthen \conj{\stylemaps{avg}} \colon \posA \profto \realswithleq \profto \posB.
+        \monrelM = \comp{\stylemaps{req}} \mthen \conj{\stylemaps{avg}} \colon \posA \profto \realswithleq \profto \posB.
     \end{equation}
     Indeed, $\inrel{\ela}{(\comp{\stylemaps{req}} \mthen \conj{\stylemaps{avg}})}{\elb}$ holds if and only if there is a number $\elc \setin \reals$ with $\stylemaps{req}(\ela) \leq \elc$ and $\elc \leq \stylemaps{avg}(\elb)$.
     If there is such a $\elc$, then $\stylemaps{req}(\ela) \leq \stylemaps{avg}(\elb)$ by transitivity; conversely, if $\stylemaps{req}(\ela) \leq \stylemaps{avg}(\elb)$, we can take $\elc = \stylemaps{req}(\ela)$.
@@ -533,52 +537,53 @@ In \cref{rem:rel-three-fun-descriptions} we described a relation $\relA \colon \
 Here is the analogous story for monotone relations.
 The \SY{power set} is replaced by the set of \SY{upper sets} of the target (respectively, \SY{lower sets} of the source), and the resulting functions are monotone.
 
-For a monotone relation $\relA \colon \posA \profto \posB$ we write, as above,
+For a monotone relation $\monrelM \colon \posA \profto \posB$ we write, as above,
 \begin{equation}
-    \hat{\relA}(\posAel) = \makeset{\posBel \setin \posBset \mid \inrel{\posAel}{\relA}{\posBel}}
+    \hat{\monrelM}(\posAel) = \makeset{\posBel \setin \posBset \mid \inrel{\posAel}{\monrelM}{\posBel}}
     \qqand
-    \check{\relA}(\posBel) = \makeset{\posAel \setin \posAset \mid \inrel{\posAel}{\relA}{\posBel}}.
+    \check{\monrelM}(\posBel) = \makeset{\posAel \setin \posAset \mid \inrel{\posAel}{\monrelM}{\posBel}}.
 \end{equation}
 
 \begin{lemma}
     \label{lem:monrel-currying}
     Let \posA and \posB be \SY{preorders}.
     \begin{enumerate}
-        \item For every monotone relation $\relA \colon \posA \profto \posB$ and every $\posAel \setin \posAset$, the set $\hat{\relA}(\posAel)$ is an \SY{upper set} of \posB, and
+        \item For every monotone relation $\monrelM \colon \posA \profto \posB$ and every $\posAel \setin \posAset$, the set $\hat{\monrelM}(\posAel)$ is an \SY{upper set} of \posB, and
               \begin{equation}
-                  \hat{\relA} \colon \posA \mto \tup{\setOfUppersets \posB, \setsupseteq}
+                  \hat{\monrelM} \colon \posA \mto \tup{\setOfUppersets \posB, \setsupseteq}
               \end{equation}
               is a \SY{monotone function}.
               Conversely, for every monotone function $\mapc \colon \posA \mto \tup{\setOfUppersets \posB, \setsupseteq}$, the relation
               \begin{equation}
-                  \relA_\mapc = \makeset{\tup{\posAel, \posBel} \setin \posAset \cartprod \posBset \mid \posBel \setin \mapc(\posAel)}
+                  \monrelM_\mapc = \makeset{\tup{\posAel, \posBel} \setin \posAset \cartprod \posBset \mid \posBel \setin \mapc(\posAel)}
               \end{equation}
               is a monotone relation $\posA \profto \posB$.
               These two constructions are inverse to one another.
-        \item Dually, for every monotone relation $\relA \colon \posA \profto \posB$ and every $\posBel \setin \posBset$, the set $\check{\relA}(\posBel)$ is a \SY{lower set} of \posA, and
+        \item Dually, for every monotone relation $\monrelM \colon \posA \profto \posB$ and every $\posBel \setin \posBset$, the set $\check{\monrelM}(\posBel)$ is a \SY{lower set} of \posA, and
               \begin{equation}
-                  \check{\relA} \colon \posB \mto \tup{\setOfLowersets \posA, \setsubseteq}
+                  \check{\monrelM} \colon \posB \mto \tup{\setOfLowersets \posA, \setsubseteq}
               \end{equation}
               is a \SY{monotone function}; this gives a one-to-one correspondence between monotone relations $\posA \profto \posB$ and monotone functions $\posB \mto \tup{\setOfLowersets \posA, \setsubseteq}$.
     \end{enumerate}
 \end{lemma}
-\begin{proof}
-    We prove the first part in detail.
-    \begin{itemize}
-        \item $\hat{\relA}(\posAel)$ is an upper set: if $\posBel \setin \hat{\relA}(\posAel)$ and $\posBel \posBleq \posBel'$, then $\inrel{\posAel}{\relA}{\posBel'}$ by closure upward in the target, that is, $\posBel' \setin \hat{\relA}(\posAel)$.
-        \item $\hat{\relA}$ is monotone: suppose $\posAel \posAleq \posAel'$.
-              We must show $\hat{\relA}(\posAel) \setsupseteq \hat{\relA}(\posAel')$.
-              If $\posBel \setin \hat{\relA}(\posAel')$, then $\inrel{\posAel'}{\relA}{\posBel}$, and by closure downward in the source $\inrel{\posAel}{\relA}{\posBel}$, that is, $\posBel \setin \hat{\relA}(\posAel)$.
-        \item $\relA_\mapc$ is monotone: suppose $\posAel' \posAleq \posAel$ and $\posBel \setin \mapc(\posAel)$.
-              Since $\mapc$ is monotone, $\mapc(\posAel') \setsupseteq \mapc(\posAel)$, so $\posBel \setin \mapc(\posAel')$; this is closure downward in the source.
-              Now suppose $\posBel \setin \mapc(\posAel)$ and $\posBel \posBleq \posBel'$; since $\mapc(\posAel)$ is an upper set, $\posBel' \setin \mapc(\posAel)$; this is closure upward in the target.
-        \item The two constructions are inverse to one another: for every \relA we have $\relA_{\hat{\relA}} = \relA$, because $\posBel \setin \hat{\relA}(\posAel)$ if and only if $\inrel{\posAel}{\relA}{\posBel}$; and for every $\mapc$ we have $\widehat{\relA_\mapc} = \mapc$, because $\inrel{\posAel}{\relA_\mapc}{\posBel}$ if and only if $\posBel \setin \mapc(\posAel)$.
-    \end{itemize}
-    The second part is proved in the same way, exchanging the roles of the two conditions of \cref{def:monotone-relation}.
-    For instance, $\check{\relA}(\posBel)$ is a lower set by closure downward in the source, and if $\posBel \posBleq \posBel'$ then $\check{\relA}(\posBel) \setsubseteq \check{\relA}(\posBel')$ by closure upward in the target.
-\end{proof}
+% Proof commented out: it overlaps with the graded exercise CurryingDesignProblems in the design-problems chapter.
+% \begin{proof}
+%     We prove the first part in detail.
+%     \begin{itemize}
+%         \item $\hat{\monrelM}(\posAel)$ is an upper set: if $\posBel \setin \hat{\monrelM}(\posAel)$ and $\posBel \posBleq \posBel'$, then $\inrel{\posAel}{\monrelM}{\posBel'}$ by closure upward in the target, that is, $\posBel' \setin \hat{\monrelM}(\posAel)$.
+%         \item $\hat{\monrelM}$ is monotone: suppose $\posAel \posAleq \posAel'$.
+%               We must show $\hat{\monrelM}(\posAel) \setsupseteq \hat{\monrelM}(\posAel')$.
+%               If $\posBel \setin \hat{\monrelM}(\posAel')$, then $\inrel{\posAel'}{\monrelM}{\posBel}$, and by closure downward in the source $\inrel{\posAel}{\monrelM}{\posBel}$, that is, $\posBel \setin \hat{\monrelM}(\posAel)$.
+%         \item $\monrelM_\mapc$ is monotone: suppose $\posAel' \posAleq \posAel$ and $\posBel \setin \mapc(\posAel)$.
+%               Since $\mapc$ is monotone, $\mapc(\posAel') \setsupseteq \mapc(\posAel)$, so $\posBel \setin \mapc(\posAel')$; this is closure downward in the source.
+%               Now suppose $\posBel \setin \mapc(\posAel)$ and $\posBel \posBleq \posBel'$; since $\mapc(\posAel)$ is an upper set, $\posBel' \setin \mapc(\posAel)$; this is closure upward in the target.
+%         \item The two constructions are inverse to one another: for every \monrelM we have $\monrelM_{\hat{\monrelM}} = \monrelM$, because $\posBel \setin \hat{\monrelM}(\posAel)$ if and only if $\inrel{\posAel}{\monrelM}{\posBel}$; and for every $\mapc$ we have $\widehat{\monrelM_\mapc} = \mapc$, because $\inrel{\posAel}{\monrelM_\mapc}{\posBel}$ if and only if $\posBel \setin \mapc(\posAel)$.
+%     \end{itemize}
+%     The second part is proved in the same way, exchanging the roles of the two conditions of \cref{def:monotone-relation}.
+%     For instance, $\check{\monrelM}(\posBel)$ is a lower set by closure downward in the source, and if $\posBel \posBleq \posBel'$ then $\check{\monrelM}(\posBel) \setsubseteq \check{\monrelM}(\posBel')$ by closure upward in the target.
+% \end{proof}
 
-Note the direction of the order on upper sets: the larger $\posAel$ is, the \emph{fewer} elements it is related to, so $\hat{\relA}$ is monotone when upper sets are ordered by reverse inclusion $\setsupseteq$.
+Note the direction of the order on upper sets: the larger $\posAel$ is, the \emph{fewer} elements it is related to, so $\hat{\monrelM}$ is monotone when upper sets are ordered by reverse inclusion $\setsupseteq$.
 
 \begin{example}
     For a monotone function $\mapa \colon \posA \mto \posB$, the curried form of the companion sends each $\posAel$ to the \SY{upper closure} of the single element $\mapa(\posAel)$:
