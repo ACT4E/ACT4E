@@ -1,0 +1,207 @@
+% !TEX root = chapter-standalone.tex
+
+\section{From preorders to posets}
+\label{sec:preorders-to-posets}
+
+In a \SY{preorder}, two different elements can be ``as good as each other'': it may happen that $\posela \posAleq \poselb$ and $\poselb \posAleq \posela$, although $\posela \neq \poselb$.
+This typically happens when the order compares objects by some attribute, such as price or weight, and two different objects happen to have the same value of that attribute.
+Antisymmetry is precisely the requirement that this never happens.
+In this section we explain how every preorder can be turned into a poset, by treating elements that are as good as each other as one and the same element.
+
+Let $\posA$ be a \SY{preorder}.
+We define a relation $\simeq$ on $\posAset$ by
+\begin{equation}
+    \label{eq:preorder-equivalence}
+    \posela \simeq \poselb
+    \quad \text{if and only if} \quad
+    (\posela \posAleq \poselb) \booland (\poselb \posAleq \posela),
+\end{equation}
+and we say that $\posela$ and $\poselb$ are \emph{equivalent} in $\posA$.
+In the graph representation of $\posA$, two distinct elements are equivalent exactly when they are connected by a double-headed arrow, as in \cref{fig:pre_order_graph}.
+
+\begin{lemma}
+    \label{lem:preorder-equivalence}
+    Let $\posA$ be a \SY{preorder}.
+    The relation $\simeq$ is an \SY{equivalence relation} on $\posAset$.
+    Furthermore, $\posA$ is a \SY{poset} if and only if $\posela \simeq \poselb$ implies $\posela = \poselb$.
+\end{lemma}
+\begin{proof}
+    We check the three conditions of \cref{def:equivalence-relation}.
+    \begin{enumerate}
+        \item Reflexivity: $\posela \posAleq \posela$ holds by reflexivity of $\posAleq$, and therefore $\posela \simeq \posela$.
+        \item Symmetry: the definition \eqref{eq:preorder-equivalence} is symmetric in $\posela$ and $\poselb$.
+        \item Transitivity: suppose $\posela \simeq \poselb$ and $\poselb \simeq \poselc$.
+        From $\posela \posAleq \poselb$ and $\poselb \posAleq \poselc$ we get $\posela \posAleq \poselc$, and from $\poselc \posAleq \poselb$ and $\poselb \posAleq \posela$ we get $\poselc \posAleq \posela$, by transitivity of $\posAleq$.
+        Hence $\posela \simeq \poselc$.
+    \end{enumerate}
+    The second statement is a reformulation of the antisymmetry condition in \cref{def:poset}.
+\end{proof}
+
+Being an equivalence relation, $\simeq$ groups the elements of $\posAset$ into disjoint \emph{equivalence classes}.
+The equivalence class of $\posela \setin \posAset$ is the set of all elements equivalent to it:
+\begin{equation}
+    [\posela] \definedas \makeset{ \poselb \setin \posAset \mid \posela \simeq \poselb }.
+\end{equation}
+Each element belongs to exactly one equivalence class, and two elements have the same class exactly when they are equivalent: $[\posela] = [\poselb]$ if and only if $\posela \simeq \poselb$.
+In other words, the equivalence classes form a \SY{partition} of $\posAset$ (\cref{def:partition}).
+The set of all equivalence classes is called the \emph{quotient set} and is denoted by $\posAset/_{\simeq}$.
+
+We would like to order the equivalence classes by comparing their elements.
+For this to make sense, the result must not depend on which elements of the classes we compare.
+The following lemma shows that this is the case.
+
+\begin{lemma}
+    \label{lem:preorder-order-on-classes}
+    Let $\posA$ be a \SY{preorder}, and let $\posela, \posela', \poselb, \poselb' \setin \posAset$ with $\posela \simeq \posela'$ and $\poselb \simeq \poselb'$.
+    Then $\posela \posAleq \poselb$ if and only if $\posela' \posAleq \poselb'$.
+\end{lemma}
+\begin{proof}
+    Suppose $\posela \posAleq \poselb$.
+    Since $\posela' \posAleq \posela$ and $\poselb \posAleq \poselb'$, two applications of transitivity give $\posela' \posAleq \poselb'$.
+    The converse follows in the same way, exchanging the roles of the primed and unprimed elements.
+\end{proof}
+
+\begin{ctdefinition}[Quotient poset of a preorder]
+    \label{def:preorder-quotient}
+    Let $\posA$ be a \SY{preorder}.
+    The \maindef{quotient poset} of $\posA$ is the tuple $\posA/_{\simeq} = \tupp{\posAset/_{\simeq}, \posleq}$, where the order relation is defined by
+    \begin{equation}
+        [\posela] \posleq [\poselb]
+        \quad \text{if and only if} \quad
+        \posela \posAleq \poselb.
+    \end{equation}
+    By \cref{lem:preorder-order-on-classes}, this does not depend on the choice of the elements $\posela$ and $\poselb$ in their classes.
+\end{ctdefinition}
+
+\begin{lemma}
+    \label{lem:preorder-quotient-is-poset}
+    Let $\posA$ be a \SY{preorder}.
+    Then $\posA/_{\simeq}$ is a \SY{poset}.
+\end{lemma}
+\begin{proof}
+    Reflexivity and transitivity of $\posleq$ follow directly from the corresponding properties of $\posAleq$.
+    For antisymmetry, suppose $[\posela] \posleq [\poselb]$ and $[\poselb] \posleq [\posela]$.
+    By definition, this means $\posela \posAleq \poselb$ and $\poselb \posAleq \posela$, that is, $\posela \simeq \poselb$.
+    Hence $[\posela] = [\poselb]$.
+\end{proof}
+
+Passing from $\posA$ to $\posA/_{\simeq}$ loses no information about the order: for all $\posela, \poselb \setin \posAset$, we have $\posela \posAleq \poselb$ if and only if $[\posela] \posleq [\poselb]$.
+The only thing we forget is \emph{which} different elements were equivalent to each other.
+
+Sometimes it is more convenient to stay inside the original set $\posAset$, rather than working with sets of elements.
+Then we can instead choose one element from each equivalence class, which serves as a ``representative'' of its class.
+
+\begin{ctdefinition}[Skeleton of a preorder]
+    \label{def:preorder-skeleton}
+    Let $\posA$ be a \SY{preorder}.
+    A \maindef{skeleton} of $\posA$ is a subset $\setS \setsubseteq \posAset$ that contains exactly one element from each equivalence class of $\simeq$.
+    In other words, for every $\posela \setin \posAset$ there is exactly one $\poselb \setin \setS$ with $\posela \simeq \poselb$.
+    We equip $\setS$ with the restriction of $\posAleq$: for $\posela, \poselb \setin \setS$, we have $\posela \posleqof{\setS} \poselb$ if and only if $\posela \posAleq \poselb$.
+\end{ctdefinition}
+
+\begin{lemma}
+    \label{lem:preorder-skeleton}
+    Let $\posA$ be a \SY{preorder} and let $\setS$ be a \SY{skeleton} of $\posA$.
+    Then $\tup{\setS, \posleqof{\setS}}$ is a \SY{poset}.
+    Moreover, the function
+    \begin{equation}
+        \setS \sto \posAset/_{\simeq},
+        \qquad
+        \posela \mapsto [\posela]
+    \end{equation}
+    is a bijection, and for all $\posela, \poselb \setin \setS$ we have $\posela \posleqof{\setS} \poselb$ if and only if $[\posela] \posleq [\poselb]$.
+\end{lemma}
+\begin{proof}
+    Reflexivity and transitivity of $\posleqof{\setS}$ are inherited from $\posAleq$.
+    For antisymmetry, suppose $\posela, \poselb \setin \setS$ with $\posela \posleqof{\setS} \poselb$ and $\poselb \posleqof{\setS} \posela$.
+    Then $\posela \simeq \poselb$, so $\posela$ and $\poselb$ are elements of $\setS$ from the same equivalence class.
+    Since $\setS$ contains only one element from each class, $\posela = \poselb$.
+
+    The function $\posela \mapsto [\posela]$ is surjective, because every equivalence class contains an element of $\setS$.
+    It is injective, because $[\posela] = [\poselb]$ means $\posela \simeq \poselb$, which implies $\posela = \poselb$ as just shown.
+    Finally, $\posela \posleqof{\setS} \poselb$ holds if and only if $\posela \posAleq \poselb$, which holds if and only if $[\posela] \posleq [\poselb]$ by \cref{def:preorder-quotient}.
+\end{proof}
+
+In general, a preorder has many different skeletons, one for each way of choosing the representatives.
+However, \cref{lem:preorder-skeleton} tells us that each skeleton is a copy of the quotient poset $\posA/_{\simeq}$, in which each class $[\posela]$ is simply ``renamed'' by its chosen representative.
+(In the language of \cref{def:order-isomorphism}, which we will meet later, every skeleton is order isomorphic to $\posA/_{\simeq}$.)
+For this reason one often speaks of ``the'' skeleton of a preorder.
+Note that if $\posA$ is already a \SY{poset}, then every equivalence class consists of a single element, and the only skeleton of $\posA$ is $\posAset$ itself.
+
+\begin{example}[Comparing by price]
+    \label{ex:skeleton-price}
+    Suppose that a shop sells five chocolate bars $c_1, \dots, c_5$ with the following prices (in CHF):
+    \begin{center}
+        \begin{tabular}{c|ccccc}
+            bar & $c_1$ & $c_2$ & $c_3$ & $c_4$ & $c_5$ \\
+            \hline
+            price & 2 & 3 & 3 & 5 & 2
+        \end{tabular}
+    \end{center}
+    Let $\posAset = \makeset{c_1, c_2, c_3, c_4, c_5}$, and compare bars by price: $c_i \posAleq c_j$ if and only if the price of $c_i$ is less than or equal to the price of $c_j$.
+    This is a \SY{preorder}, because the usual order on prices is reflexive and transitive.
+    It is not a \SY{poset}, because $c_1 \posAleq c_5$ and $c_5 \posAleq c_1$, although $c_1 \neq c_5$.
+
+    Two bars are equivalent exactly when they have the same price.
+    Hence there are three equivalence classes,
+    \begin{equation}
+        [c_1] = [c_5] = \makeset{c_1, c_5},
+        \qquad
+        [c_2] = [c_3] = \makeset{c_2, c_3},
+        \qquad
+        [c_4] = \makeset{c_4},
+    \end{equation}
+    and the quotient poset $\posA/_{\simeq}$ is the \SY{totally ordered set} $[c_1] \posleq [c_2] \posleq [c_4]$.
+    It is a copy of the set of prices that occur, $\makeset{2, 3, 5}$, with the usual order.
+    The sets $\makeset{c_1, c_2, c_4}$ and $\makeset{c_5, c_3, c_4}$ are two of the four possible skeletons of $\posA$: in each, we keep one bar for every price.
+
+    The same happens whenever a preorder is defined by comparing values of a function $\mapa \colon \setA \sto \reals$, via $\ela \posleq \elb$ if and only if $\mapa(\ela) \leq \mapa(\elb)$.
+    Then $\ela \simeq \elb$ holds if and only if $\mapa(\ela) = \mapa(\elb)$, which is the equivalence relation $\equivalparam{\mapa}$ that we met when discussing equivalence relations, and the quotient poset is a copy of the image of $\mapa$ with the usual order of \reals.
+\end{example}
+
+\begin{marginfigure}
+    \centering
+    \subfloat[
+        The directed graph of \cref{ex:skeleton-reachability}; the dashed boxes are the equivalence classes.
+        \label{fig:skeleton-reachability-graph}
+    ]{
+        \includesag{40_reachability_skeleton_graph}
+    }
+    \\
+    \subfloat[
+        The quotient poset.
+        \label{fig:skeleton-reachability-quotient}
+    ]{
+        \includesag{40_reachability_skeleton_quotient}
+    }
+    \caption{Passing from the reachability preorder of a directed graph to a poset.}
+    \label{fig:skeleton-reachability}
+\end{marginfigure}
+
+\begin{example}[Reachability]
+    \label{ex:skeleton-reachability}
+    Consider the directed graph in \cref{fig:skeleton-reachability-graph}, with nodes $a, b, c, d, e$ and edges
+    \begin{equation}
+        a \to b, \quad
+        b \to a, \quad
+        b \to c, \quad
+        c \to d, \quad
+        d \to e, \quad
+        e \to c,
+    \end{equation}
+    and let $\posA$ be the \SY{preorder} on the set of nodes given by reachability: $\ela \posAleq \elb$ if and only if there is a path from $\ela$ to $\elb$.
+    As we saw in \cref{ex:reachabilityposet}, this is not a \SY{poset}, because the graph contains cycles.
+
+    Two nodes are equivalent exactly when each can be reached from the other.
+    Here, $a \simeq b$ and $c \simeq d \simeq e$, so there are two equivalence classes,
+    \begin{equation}
+        [a] = \makeset{a, b},
+        \qquad
+        [c] = \makeset{c, d, e}.
+    \end{equation}
+    Since there is a path from $a$ to $c$, but none from $c$ to $a$, the quotient poset $\posA/_{\simeq}$ has two elements, with $[a] \posleq [c]$, as shown in \cref{fig:skeleton-reachability-quotient}.
+    A skeleton is obtained by choosing one node from each class, for example $\makeset{a, c}$ or $\makeset{b, e}$; there are $2 \cdot 3 = 6$ skeletons in total.
+
+    In general, the equivalence classes of the reachability preorder of a directed graph are called the \emph{strongly connected components} of the graph.
+    So, instead of restricting to acyclic graphs as in the solution of \cref{ex:reachabilityposet}, we can obtain a poset from any directed graph by collapsing each strongly connected component to a single element.
+\end{example}
