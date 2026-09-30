@@ -1,0 +1,221 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Series composition}
+\label{sec:dp-series-composition}
+
+A system is built by connecting components.
+The most basic way to connect two components is \emph{in series}: what one component requires is provided by another component.
+For example, an electric motor that must produce a certain torque requires a certain electric current.
+That current can be provided by a battery, which in turn requires a certain mass.
+For the system consisting of motor and battery together, the functionality is the torque, and the requirement is the mass.
+
+This example also shows why we think of both functionalities and requirements as \emph{resources}.
+The electric current is a requirement of the motor, but it is a functionality of the battery.
+Whether a poset of resources plays the role of functionalities or of requirements depends on the component we are looking at, and in series composition the requirements of one component are the functionalities of the next.
+
+Throughout this section, $\posA$, $\posB$, $\posC$, and $\posD$ are \SY{posets}.
+
+\subsection{Composing feasibility relations}
+
+Let $\monrelM \colon \posA \profto \posB$ and $\monrelN \colon \posB \profto \posC$ be feasibility relations, describing two components.
+When is a functionality $\posAel \setin \posAset$ of the first component feasible with a requirement $\posCel \setin \posCset$ of the second one?
+Precisely when there is an intermediate resource $\posBel \setin \posBset$ such that $\posAel$ is feasible with the requirement $\posBel$ for the first component, and $\posBel$, now seen as a functionality, is feasible with the requirement $\posCel$ for the second component.
+This is exactly the composition of relations (\cref{def:composition-of-relations}):
+\begin{equation}
+    \inrel{\posAel}{(\monrelM \mthen \monrelN)}{\posCel}
+    \quad \text{if and only if} \quad
+    \text{there exists } \posBel \setin \posBset \text{ with } \inrel{\posAel}{\monrelM}{\posBel} \text{ and } \inrel{\posBel}{\monrelN}{\posCel}.
+\end{equation}
+By \cref{lem:monrel-composition}, $\monrelM \mthen \monrelN$ is again a monotone relation, that is, a feasibility relation $\posA \profto \posC$.
+So the system obtained by connecting two components in series is described by a feasibility relation of the same kind as its components.
+
+\begin{remark}[The co-design constraint]
+    \label{rem:codesign-constraint}
+    In a real system, the resources provided by the second component do not have to match the resources required by the first one exactly: it is enough that the second component provides \emph{at least} what the first one requires.
+    So, more carefully, $\posAel$ should be feasible with $\posCel$ if there are $\posBel, \posBel' \setin \posBset$ such that
+    \begin{equation}
+        \inrel{\posAel}{\monrelM}{\posBel},
+        \qquad
+        \posBel \posBleq \posBel',
+        \qquad
+        \inrel{\posBel'}{\monrelN}{\posCel}.
+    \end{equation}
+    The inequality $\posBel \posBleq \posBel'$ is called the \emph{co-design constraint}.
+    In terms of relations, this describes the composite $\monrelM \mthen \posBleq \mthen \monrelN$.
+    But by \cref{lem:monrel-leq-neutral}, $\monrelM \mthen \posBleq = \monrelM$, so this composite is just $\monrelM \mthen \monrelN$.
+    The monotonicity of feasibility relations takes care of the co-design constraint automatically.
+\end{remark}
+
+\subsection{Composing design problems}
+
+We now express series composition in the language of design problems.
+The existential quantifier ``there exists $\posBel$'' becomes a ``big or'': for a set $\setA$ and a function $\stylemaps{s} \colon \setA \sto \boolset$, we write $\bigvee_{\setAel \setin \setA} \stylemaps{s}(\setAel)$ for the boolean that is $\true$ if there exists an $\setAel \setin \setA$ with $\stylemaps{s}(\setAel) = \true$, and $\false$ otherwise.
+
+\begin{definition}[Series composition of design problems]
+    \label{def:dp-series-composition}
+    \SYNDEF{series composition of design problems}
+    Let $\adpa \colon \posAop \Ptimes \posB \toinPos \Bool$ and $\adpb \colon \posB\posop \Ptimes \posC \toinPos \Bool$ be \SY{design problems}.
+    Their \emph{series composition} is the function
+    \begin{equation}
+        \label{eq:dp-series-composition}
+        \defmapperiod{
+            \adpa \dpthen \adpb
+        }{
+            \posAop \Ptimes \posC
+        }{
+            \sto
+        }{
+            \Bool
+        }{
+            \tup{\posAel\Fop, \posCel}
+        }{
+            \bigvee_{\posBel \setin \posBset}
+            \adpa(\posAel\Fop, \posBel)
+            \booland
+            \adpb(\posBel\Fop, \posCel)
+        }
+    \end{equation}
+\end{definition}
+
+So $(\adpa \dpthen \adpb)(\posAel\Fop, \posCel) = \true$ if and only if there exists $\posBel \setin \posBset$ with $\adpa(\posAel\Fop, \posBel) = \true$ and $\adpb(\posBel\Fop, \posCel) = \true$.
+
+\begin{lemma}
+    \label{lem:dp-series-composition}
+    Let $\adpa \colon \posAop \Ptimes \posB \toinPos \Bool$ and $\adpb \colon \posB\posop \Ptimes \posC \toinPos \Bool$ be \SY{design problems}.
+    Then $\adpa \dpthen \adpb$ is a design problem, and its feasible set is the composite of the feasible sets:
+    \begin{equation}
+        \feasibleset{\adpa \dpthen \adpb} = \feasibleset{\adpa} \mthen \feasibleset{\adpb}.
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    We first show that $\adpa \dpthen \adpb$ is monotone.
+    Suppose $\tup{\posAel\Fop, \posCel} \posleq \tup{{\posAel'}\Fop, \posCel'}$ in $\posAop \Ptimes \posC$, that is, $\posAel' \posAleq \posAel$ and $\posCel \posCleq \posCel'$, and suppose $(\adpa \dpthen \adpb)(\posAel\Fop, \posCel) = \true$.
+    (If this value is $\false$, there is nothing to show, because $\false$ is the least element of $\Bool$.)
+    Then there is $\posBel \setin \posBset$ with $\adpa(\posAel\Fop, \posBel) = \true$ and $\adpb(\posBel\Fop, \posCel) = \true$.
+    Since $\tup{\posAel\Fop, \posBel} \posleq \tup{{\posAel'}\Fop, \posBel}$ and $\adpa$ is monotone, $\adpa({\posAel'}\Fop, \posBel) = \true$.
+    Since $\tup{\posBel\Fop, \posCel} \posleq \tup{\posBel\Fop, \posCel'}$ and $\adpb$ is monotone, $\adpb(\posBel\Fop, \posCel') = \true$.
+    So the same $\posBel$ shows that $(\adpa \dpthen \adpb)({\posAel'}\Fop, \posCel') = \true$.
+
+    For the feasible sets: $\posAel$ is related to $\posCel$ by $\feasibleset{\adpa \dpthen \adpb}$ if and only if there is $\posBel$ with $\adpa(\posAel\Fop, \posBel) = \true$ and $\adpb(\posBel\Fop, \posCel) = \true$, that is, with $\posAel$ related to $\posBel$ by $\feasibleset{\adpa}$ and $\posBel$ related to $\posCel$ by $\feasibleset{\adpb}$.
+    This is the definition of $\feasibleset{\adpa} \mthen \feasibleset{\adpb}$.
+\end{proof}
+
+So series composition of design problems and series composition of feasibility relations are two descriptions of the same construction.
+
+\subsection{Identities and the laws of composition}
+
+The identity for series composition is the design problem corresponding to the preorder relation, which is the identity monotone relation (\cref{lem:monrel-leq-neutral}).
+
+\begin{definition}[Identity design problem]
+    \label{def:dp-identity-series}
+    \SYNDEF{identity design problem}
+    For a poset $\posA$, the \emph{identity design problem} is
+    \begin{equation}
+        \defmapperiod{
+            \dpidat{\posA}
+        }{
+            \posAop \Ptimes \posA
+        }{
+            \toinPos
+        }{
+            \Bool
+        }{
+            \tup{\posAel\Fop, \posAel'}
+        }{
+            (\posAel \posAleq \posAel')
+        }
+    \end{equation}
+\end{definition}
+
+Its feasible set is the preorder relation $\posAleq$, which is a feasibility relation (\cref{exa:monrel-leq}).
+The identity design problem describes a ``component'' that does nothing: it provides any resource that is at most what it requires.
+
+\begin{lemma}
+    \label{lem:dp-series-laws}
+    Let $\adpa \colon \posAop \Ptimes \posB \toinPos \Bool$, $\adpb \colon \posB\posop \Ptimes \posC \toinPos \Bool$, and $\adpc \colon \posC\posop \Ptimes \posD \toinPos \Bool$ be \SY{design problems}.
+    Then
+    \begin{equation}
+        \dpidat{\posA} \dpthen \adpa = \adpa = \adpa \dpthen \dpidat{\posB}
+        \qqand
+        (\adpa \dpthen \adpb) \dpthen \adpc = \adpa \dpthen (\adpb \dpthen \adpc).
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    A function to $\Bool$ is determined by the set of elements it sends to $\true$, so it suffices to compare feasible sets.
+    By \cref{lem:dp-series-composition}, the feasible set of $\dpidat{\posA} \dpthen \adpa$ is $\posAleq \mthen \feasibleset{\adpa}$, which is equal to $\feasibleset{\adpa}$ by \cref{lem:monrel-leq-neutral}; similarly, the feasible set of $\adpa \dpthen \dpidat{\posB}$ is $\feasibleset{\adpa} \mthen \posBleq = \feasibleset{\adpa}$.
+    For associativity, both $((\adpa \dpthen \adpb) \dpthen \adpc)(\posAel\Fop, \posDel)$ and $(\adpa \dpthen (\adpb \dpthen \adpc))(\posAel\Fop, \posDel)$ are equal to $\true$ if and only if there exist $\posBel \setin \posBset$ and $\posCel \setin \posCset$ such that
+    \begin{equation}
+        \adpa(\posAel\Fop, \posBel) = \true,
+        \qquad
+        \adpb(\posBel\Fop, \posCel) = \true,
+        \qquad
+        \adpc(\posCel\Fop, \posDel) = \true.
+    \end{equation}
+\end{proof}
+
+Because of associativity, we can write $\adpa \dpthen \adpb \dpthen \adpc$ without parentheses.
+Later in the book we will recognize these laws as the axioms of a category.
+
+\subsection{Series composition in diagrams}
+
+In the diagrammatic notation of \cref{sec:dp-diagrammatic-notation}, we draw series composition by connecting the requirement wire of the first box to the functionality wire of the second box:
+%
+\equationsag{50_series_diag}{fig:dp-series-diag}
+%
+The symbol ``$\posleq$'' on the connecting wire is the co-design constraint of \cref{rem:codesign-constraint}: the requirement of the first component must be at most the functionality provided by the second component.
+The identity design problem $\dpidat{\posA}$ is drawn as a box that connects $\posA$ to itself:
+%
+\equationsag{110_identity}{fig:dp-identity-diag}
+
+When looking at such diagrams, it is tempting to read the boxes as input-output processes.
+However, that would be misleading.
+The wires do not represent a flow of information, materials, or energy.
+Design problems do not describe input-output processes, but rather a static calculus of requirements: a component states what it needs in order to provide what it provides.
+
+\subsection{Examples}
+
+\begin{example}[Composing finite design problems]
+    \label{exa:dp-series-finite}
+    Consider again the design problem $\adpa$ of \cref{exa:visualize-dp}, between the chain $\setAeln{1} \posleq \setAeln{2} \posleq \setAeln{3}$ and the chain $\setBeln{1} \posleq \setBeln{2}$.
+    Consider also a second design problem $\adpb$, from the chain $\setBeln{1} \posleq \setBeln{2}$ to the poset with elements $\setCeln{1}, \setCeln{2}, \setCeln{3}, \setCeln{4}$, in which $\setCeln{1}$ is below $\setCeln{2}$ and $\setCeln{3}$, which are both below $\setCeln{4}$.
+    Its feasible set relates $\setBeln{1}$ to $\setCeln{2}$, $\setCeln{3}$, $\setCeln{4}$, and $\setBeln{2}$ to $\setCeln{4}$, as shown in the first row of \cref{fig:dp-series-example}.
+
+    To compute $\adpa \dpthen \adpb$, we look for intermediate elements.
+    For instance, $\setAeln{1}$ is related to $\setBeln{1}$ by $\adpa$, and $\setBeln{1}$ is related to $\setCeln{2}$ by $\adpb$, so $\setAeln{1}$ is related to $\setCeln{2}$ by the composite.
+    On the other hand, $\setAeln{2}$ is only related to $\setBeln{2}$ by $\adpa$, and $\setBeln{2}$ is only related to $\setCeln{4}$ by $\adpb$, so $\setAeln{2}$ is only related to $\setCeln{4}$ by the composite.
+    Altogether, the feasible set of $\adpa \dpthen \adpb$ relates $\setAeln{1}$ to $\setCeln{2}$, $\setCeln{3}$, and $\setCeln{4}$, and it relates $\setAeln{2}$ and $\setAeln{3}$ to $\setCeln{4}$ only (second row of \cref{fig:dp-series-example}).
+\end{example}
+
+\begin{figure}[h!]
+    \centering
+    \begin{tabular}{cc}
+        \includesag{example_dp_composition_xy} & \includesag{example_dp_composition_yz}
+    \end{tabular}
+
+    \vspace{0.5cm}
+    \includesag{example_dp_composition_xz}
+    \caption{Two design problems $\adpa$ and $\adpb$ (first row) and their series composition $\adpa \dpthen \adpb$ (second row).}
+    \label{fig:dp-series-example}
+\end{figure}
+
+\begin{example}[Motor and battery]
+    \label{exa:dp-series-motor-battery}
+    Let us return to the motor and the battery from the beginning of this section, and model both components by design problems coming from monotone functions, as in \cref{ex:DPsFromMonotoneMaps}.
+    Suppose that the motor needs the current $\stylemaps{c}(\styleelements{\tau})$ to produce the torque $\styleelements{\tau}$, and that the battery needs the mass $\stylemaps{m}(\styleelements{i})$ to provide the current $\styleelements{i}$, where
+    \begin{equation}
+        \stylemaps{c} \colon \tup{\nonNegReals, \leq} \mto \tup{\nonNegReals, \leq}
+        \qqand
+        \stylemaps{m} \colon \tup{\nonNegReals, \leq} \mto \tup{\nonNegReals, \leq}
+    \end{equation}
+    are monotone: more torque needs more current, and more current needs more mass.
+    The motor is described by the design problem $\adp_{\stylemaps{c}}$, with $\adp_{\stylemaps{c}}(\styleelements{\tau}\Fop, \styleelements{i}) = \true$ if and only if $\stylemaps{c}(\styleelements{\tau}) \leq \styleelements{i}$, and the battery by $\adp_{\stylemaps{m}}$, with $\adp_{\stylemaps{m}}(\styleelements{i}\Fop, \styleelements{w}) = \true$ if and only if $\stylemaps{m}(\styleelements{i}) \leq \styleelements{w}$.
+
+    The composite $\adp_{\stylemaps{c}} \dpthen \adp_{\stylemaps{m}}$ says that the torque $\styleelements{\tau}$ is feasible with the mass $\styleelements{w}$ if and only if there is a current $\styleelements{i}$ with $\stylemaps{c}(\styleelements{\tau}) \leq \styleelements{i}$ and $\stylemaps{m}(\styleelements{i}) \leq \styleelements{w}$.
+    If there is such an $\styleelements{i}$, then $\stylemaps{m}(\stylemaps{c}(\styleelements{\tau})) \leq \stylemaps{m}(\styleelements{i}) \leq \styleelements{w}$, since $\stylemaps{m}$ is monotone; conversely, if $\stylemaps{m}(\stylemaps{c}(\styleelements{\tau})) \leq \styleelements{w}$, we can take $\styleelements{i} = \stylemaps{c}(\styleelements{\tau})$.
+    So
+    \begin{equation}
+        \adp_{\stylemaps{c}} \dpthen \adp_{\stylemaps{m}} = \adp_{\stylemaps{c} \mthen \stylemaps{m}}:
+    \end{equation}
+    the combined system needs the mass $\stylemaps{m}(\stylemaps{c}(\styleelements{\tau}))$ to produce the torque $\styleelements{\tau}$.
+    This is an instance of the fact that companions of monotone functions compose like the functions themselves (\cref{lem:companion-conjoint-composition}).
+\end{example}

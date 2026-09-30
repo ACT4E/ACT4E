@@ -4,7 +4,55 @@
 \section{Optimality}
 \label{sec:dp-optimality}
 
-\todotext{2026-07, J: add intro material here}
+In \cref{sec:dp-querying} we saw that the answer to a query ``given $\fun$, which requirements?'' is the upper set $\widehat{\adp}(\fun)$ of feasible requirements.
+In practice, however, a designer rarely wants the whole set of feasible requirements.
+Since it is an upper set, it contains, together with any feasible requirement, all the more wasteful requirements above it.
+What we really want to know are the \emph{optimal} ones.
+In this section we make this precise, and we develop the order theory needed to describe optimal answers: \SY{antichains}, the \SY{upper closure} operator, and the relation between antichains and upper sets.
+
+\subsection{Minimal requirements and maximal functionalities}
+\label{sec:dp-min-max-queries}
+
+The requirements we are interested in are the \emph{minimal} feasible ones, that is, the elements of the set $\Min \widehat{\adp}(\fun)$ of minimal elements of $\widehat{\adp}(\fun)$ (\cref{def:Min}).
+These are the requirements that cannot be lowered without becoming infeasible.
+Dually, given a requirement $\res$, we are interested in the \emph{maximal} feasible functionalities $\Max \widecheck{\adp}(\res)$ (\cref{def:Max}).
+
+\begin{problem}[Minimizing requirements]
+    Given a \SY{design problem} $\adp \colon \funspop \Ptimes \ressp \toinPos \Bool$ and a functionality $\fun \setin \funsp$, find the set of minimal feasible requirements
+    \begin{equation}
+        \Min \widehat{\adp}(\fun) = \Min \makeset{\res \setin \ressp \mid \adp(\fun\Fop, \res) = \true},
+    \end{equation}
+    or show that $\fun$ is infeasible, that is, that $\widehat{\adp}(\fun) = \Emptyset$.
+\end{problem}
+
+\begin{problem}[Maximizing functionalities]
+    Given a \SY{design problem} $\adp \colon \funspop \Ptimes \ressp \toinPos \Bool$ and a requirement $\res \setin \ressp$, find the set of maximal feasible functionalities
+    \begin{equation}
+        \Max \widecheck{\adp}(\res) = \Max \makeset{\fun \setin \funsp \mid \adp(\fun\Fop, \res) = \true}.
+    \end{equation}
+\end{problem}
+
+Later in the book, these two questions will be called $\FixFunMinRes$ (``fix functionality, minimize the required resources'') and $\FixResMaxFun$ (``fix the required resources, maximize functionality'').
+The two problems are dual to each other: one is obtained from the other by exchanging the roles of functionalities and requirements, and of minimal and maximal elements.
+In what follows we mostly discuss the first one.
+
+\begin{remark}[Minimal versus least]
+    \label{rem:minimal-vs-least}
+    Note that we ask for the set of \emph{minimal} elements, and not for the \emph{least} element of $\widehat{\adp}(\fun)$.
+    A least element is a single requirement that is below all feasible requirements; it exists only in special cases.
+    When requirements are only partially ordered, for example when we care both about the cost and about the mass of a component, there is in general no single best choice, but several feasible requirements that are optimal in different ways and cannot be compared with each other.
+    The set of minimal elements collects all of these optimal trade-offs; in engineering, it is often called the \emph{Pareto front}.
+    In particular, we do not need to combine several objectives into a single number (as in ``cost plus ten times mass''), a technique called \emph{scalarization}, and everything works for arbitrary posets, including discrete ones.
+\end{remark}
+
+The examples of \cref{sec:dp-querying} show what kind of answers to expect.
+For the engine (\cref{exa:engine-queries}), whose requirements are totally ordered, and for design problems coming from monotone functions (\cref{exa:companion-dp-queries}), the minimal feasible requirements consist of at most one element.
+For the coins (\cref{exa:coins-dp}), on the other hand, we have
+\begin{equation}
+    \Min \widehat{\adp}(3) = \makeset{\tup{3, 0}, \tup{1, 1}, \tup{0, 2}},
+\end{equation}
+a set of three pairwise incomparable elements.
+Sets of pairwise incomparable elements are called \SY{antichains}, and they are the subject of the next subsection.
 
 \subsection{Chains and Antichains}
 \label{sec:chains-antichains}
@@ -15,7 +63,7 @@ Their definitions are dual.
 
 \begin{definition}[Chain in a poset]
     \label{def:chain}
-    Given a poset~$\posAdefinition$, a \maindef{chain} is a subset~$\subA \setsubseteq \posAset$ such that any two elements of~$\subA$ are comparable:
+    Given a poset $\posAdefinition$, a \maindef{chain} is a subset $\subA \setsubseteq \posAset$ such that any two elements of $\subA$ are comparable:
     \begin{equation}\label{eq:chain}
         \prfperiod{
             \posela,\poselb \setin \subA
@@ -28,7 +76,7 @@ Their definitions are dual.
 
 \begin{definition}[Antichain in a poset]
     \label{def:antichain}
-    An \maindef{antichain} is a subset~$\subA$ of a \SY{poset} where no two distinct elements are comparable:
+    An \maindef{antichain} is a subset $\subA$ of a \SY{poset} where no two distinct elements are comparable:
     %
     \begin{equation}\label{eq:antichain}
         \prfperiod{
@@ -42,10 +90,26 @@ Their definitions are dual.
     %
 \end{definition}
 \begin{remark}
-    Note that the empty set~$\Emptyset$ is both a \SY{chain} and an \SY{antichain}.
+    Note that the empty set $\Emptyset$ is both a \SY{chain} and an \SY{antichain}.
 \end{remark}
 
-We denote the set of \SY{antichains} of a poset~\posA by~$\antichains\posA$.
+We denote the set of \SY{antichains} of a poset \posA by $\antichains\posA$.
+
+In the language of antichains, the answer to the problem of minimizing requirements is always an antichain.
+
+\begin{lemma}
+    \label{lem:Min-is-antichain}
+    Let $\posA$ be a \SY{poset} and let $\subA \setsubseteq \posAset$.
+    Then $\Min \subA$ is an \SY{antichain}, and so is $\Max \subA$.
+\end{lemma}
+\begin{proof}
+    Let $\posela, \poselb \setin \Min \subA$ with $\posela \posAleq \poselb$.
+    Since $\poselb$ is a minimal element of $\subA$ and $\posela$ is an element of $\subA$ below $\poselb$, the definition of $\Min$ (\cref{def:Min}) gives $\posela = \poselb$.
+    So $\Min \subA$ is an antichain.
+    The argument for $\Max \subA$ is dual.
+\end{proof}
+
+For this reason, the minimal elements of a set are sometimes called its \emph{Pareto front}, and antichains in general are a mathematical model for sets of optimal trade-offs.
 
 \begin{example}[Chains and antichains in a power poset]
     Consider the \SY{poset} in \cref{fig:powersetcat3}.
@@ -103,7 +167,7 @@ We denote the set of \SY{antichains} of a poset~\posA by~$\antichains\posA$.
     \label{fig:antichain}
 \end{marginfigure}
 \begin{example}
-    In the context of battery choices, consider the diagram in~\cref{fig:antichain}.
+    In the context of battery choices, consider the diagram in \cref{fig:antichain}.
     The black markers represent an \SY{antichain} of choices
     \begin{equation}\label{eq:example-battery-antichain}
         \makeset{
@@ -112,7 +176,7 @@ We denote the set of \SY{antichains} of a poset~\posA by~$\antichains\posA$.
         }.
     \end{equation}
     It is a set of pairs because they do not dominate each other: one is cheaper, but is heavier, and the other is more expensive, but lighter, making them incomparable.
-    If a battery with the properties of the red marker existed (very expensive, between light and heavy), that would be an element that cannot be part of the \SY{antichain}, since it would be dominated by~$\tupp{\posexpensive,\poslight}$.
+    If a battery with the properties of the red marker existed (very expensive, between light and heavy), that would be an element that cannot be part of the \SY{antichain}, since it would be dominated by $\tupp{\posexpensive,\poslight}$.
     %
     \begin{marginfigure}
         \centering
@@ -122,8 +186,8 @@ We denote the set of \SY{antichains} of a poset~\posA by~$\antichains\posA$.
     \end{marginfigure}
     %
     Similarly, we could think of a continuous law which relates battery cost and mass.
-    Assume that cheap means~$\unit[10]{\standardcurrency}$, expensive means~$\unit[20]{\standardcurrency}$, light means~$\unit[250]{g}$, and heavy means~$\unit[500]{g}$.
-    For instance, consider the \SY{antichain} given by~$\text{mass}=500-25\cdot \text{cost}$, with maximum possible cost~$\unit[20]{\standardcurrency}$ (\cref{fig:antichain_2}).
+    Assume that cheap means $\unit[10]{\standardcurrency}$, expensive means $\unit[20]{\standardcurrency}$, light means $\unit[250]{g}$, and heavy means $\unit[500]{g}$.
+    For instance, consider the \SY{antichain} given by $\text{mass}=500-25\cdot \text{cost}$, with maximum possible cost $\unit[20]{\standardcurrency}$ (\cref{fig:antichain_2}).
 \end{example}
 
 \vspace{5cm}
@@ -144,10 +208,416 @@ We denote the set of \SY{antichains} of a poset~\posA by~$\antichains\posA$.
 
 % We will now have a look at a couple more examples.
 \begin{example}
-    Consider the poset~$\posAdefinition$ where~$(\posAel \posAleq \posBel)$ if~$\posAel$ is a divisor of~$\posBel$ and~$\posAset=\makeset{1,5,10,11,13,15}$.
-    A \SY{chain} of~\posA is~$\makeset{1,5,10}$ (\cref{fig:chain_divisor_poset}).
-    An \SY{antichain} of~\posA is~$\makeset{10,11,13,15}$ (\cref{fig:antichain_divisor_poset}).
+    Consider the poset $\posAdefinition$ where $(\posAel \posAleq \posBel)$ if $\posAel$ is a divisor of $\posBel$ and $\posAset=\makeset{1,5,10,11,13,15}$.
+    A \SY{chain} of \posA is $\makeset{1,5,10}$ (\cref{fig:chain_divisor_poset}).
+    An \SY{antichain} of \posA is $\makeset{10,11,13,15}$ (\cref{fig:antichain_divisor_poset}).
 \end{example}
+
+
+
+
+\subsection{Upper and lower closure}
+
+
+
+\linkvideo{spring2021-design:up-low-closure} % Upper and lower closure
+\begin{definition}[Upper closure operator]
+    \label{def:upperclosure}
+    The \maindef{upper closure operator} $\upit $ maps a subset of a preordered set \posA to the smallest \SY{upper set} that includes it:
+    \begin{equation}
+        \defmapperiod{
+            \upit
+        }{
+            \posPA
+        }{
+            \to
+        }{
+            \uppersets(\posA)
+        }{
+            \subA
+        }{
+            \makeset{\styleelements{y}\setin \posAset \mid \exists \styleelements{x}\setin \subA \colon \styleelements{x}\posAleq \styleelements{y}}
+        }
+    \end{equation}
+\end{definition}
+\begin{remark}
+    Note that, by definition, an \SY{upper set} is closed under \SY{upper closure}.
+\end{remark}
+\begin{lemma}
+    \label{lem:upper-closure-is-upper-set}
+    Let \posA be a preordered set.
+    For any $\setA\setin \posPA$, $\upit \setA$ is in fact an \SY{upper set}.
+\end{lemma}
+\begin{proof}
+    Suppose $\styleelements{y}\setin \upit \setA$ and $\styleelements{z}\setin \posAset$, and suppose $\styleelements{y}\posAleq \styleelements{z}$.
+    By definition there exists an $\styleelements{x}\setin \setA$ such that $\styleelements{x}\posAleq \styleelements{y}$, and so, by transitivity, $\styleelements{x}\posAleq \styleelements{z}$.
+    Thus, $\styleelements{z}\setin \upit \setA$, as was to be shown.
+\end{proof}
+
+\begin{lemma}
+    \label{lem:upper-closure-smallest}
+    Let \posA be a preordered set, and let $\setA\setin \posPA$.
+    Then:
+    \begin{enumerate}
+        \item $\setA \setsubseteq \upit \setA$;
+        \item if $\stylesets{U}$ is an \SY{upper set} of \posA such that $\setA \setsubseteq \stylesets{U}$, then $\upit \setA \setsubseteq \stylesets{U}$.
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    \begin{enumerate}
+        \item Let $\styleelements{x}\setin \setA$.
+        By reflexivity, $\styleelements{x}\posAleq \styleelements{x}$.
+        So there exists an element of $\setA$, namely $\styleelements{x}$ itself, that is below $\styleelements{x}$, and therefore $\styleelements{x}\setin \upit \setA$.
+        \item Let $\stylesets{U}$ be an \SY{upper set} of \posA with $\setA \setsubseteq \stylesets{U}$, and let $\styleelements{y}\setin \upit \setA$.
+        By definition of $\upit \setA$, there exists an $\styleelements{x}\setin \setA$ such that $\styleelements{x}\posAleq \styleelements{y}$.
+        Since $\setA \setsubseteq \stylesets{U}$, we have $\styleelements{x}\setin \stylesets{U}$.
+        Since $\stylesets{U}$ is an \SY{upper set} and $\styleelements{x}\posAleq \styleelements{y}$, it follows that $\styleelements{y}\setin \stylesets{U}$.
+        As $\styleelements{y}$ was an arbitrary element of $\upit \setA$, this shows $\upit \setA \setsubseteq \stylesets{U}$.
+    \end{enumerate}
+\end{proof}
+Together, \cref{lem:upper-closure-is-upper-set} and \cref{lem:upper-closure-smallest} show that $\upit \setA$ is indeed the smallest \SY{upper set} that includes $\setA$, as claimed in \cref{def:upperclosure}.
+
+
+In the example of battery choices (in the numerical case), first, consider the \SY{upper closure} of a single element of the poset, for instance $\posAnel{1}=\tupp{\unit[10]{\standardcurrency},\unit[500]{g}}$ (\cref{fig:upperclosure_1}, left).
+Second, we can look at the \SY{upper closure} when we add the choice $\posAnel{2}=\tupp{\unit[20]{\standardcurrency},\unit[250]{g}}$ (\cref{fig:upperclosure_1}, center).
+
+Note that the \SY{upper set} of the subset formed by the two elements is the union of the \SY{upper sets} of the single elements.
+%
+Finally, we can also define the set
+%
+\begin{equation}
+    \stylesets{S}=\makeset{
+        \tupp{\text{cost},\text{mass}}\mid \text{mass}=750-25\cdot \text{cost},
+        \forall \text{ cost} \setin [0,20]
+    },
+\end{equation}
+%
+and find its \SY{upper closure} (\cref{fig:upperclosure_1}, right).
+%
+\begin{figure*}[h!]
+    \centering
+    \includesag{70_uc_1_1}
+    \hfill
+    \includesag{70_uc_1_2}
+    \hfill
+    \includesag{70_uc_1_3}
+    \caption{Example of \SY{upper closure} for different sets of battery choices.}
+    \label{fig:upperclosure_1}
+\end{figure*}
+
+\begin{definition}[Lower closure operator]
+    \label{def:lowerclosure}
+    The \maindef{lower closure operator} $\downit$ maps a subset of a preordered set \posA to the smallest \SY{lower set} that includes it:
+    \begin{equation}
+        \defmapperiod{
+            \downit
+        }{
+            \posPA
+        }{
+            \to
+        }{
+            \setOfLowersets \posA
+        }{
+            \stylesets{S}
+        }{
+            \makeset{ \styleelements{y}\setin \posAset \mid \exists \styleelements{x}\setin \stylesets{S} \colon \styleelements{y}\posAleq \styleelements{x}}
+        }
+    \end{equation}
+\end{definition}
+
+\begin{lemma}
+    \label{lem:lower-closure-smallest}
+    Let \posA be a preordered set, and let $\setA\setin \posPA$.
+    Then:
+    \begin{enumerate}
+        \item $\downit \setA$ is a \SY{lower set} of \posA;
+        \item $\setA \setsubseteq \downit \setA$;
+        \item if $\stylesets{L}$ is a \SY{lower set} of \posA such that $\setA \setsubseteq \stylesets{L}$, then $\downit \setA \setsubseteq \stylesets{L}$.
+    \end{enumerate}
+    In other words, $\downit \setA$ is the smallest \SY{lower set} that includes $\setA$.
+\end{lemma}
+
+
+
+Consider the battery example, and the \SY{antichain} given by the battery models $\posAnel{1}=\tupp{\unit[10]{\standardcurrency},\unit[1000]{g}}$, $\posAnel{2}=\tupp{\unit[20]{\standardcurrency},\unit[500]{g}}$, and $\posAnel{3}=\tupp{\unit[30]{\standardcurrency},\unit[250]{g}}$ (\cref{fig:examplebatt}, left).
+The \SY{lower closure} operator $\downit\makeset{\posAnel{1},\posAnel{2},\posAnel{3}}$ represents all the battery models which, if existing, would dominate $\makeset{\posAel_1,\posAel_2,\posAel_3}$.
+We could instead consider linear functions between the points getting a poset \posA, and obtain the \SY{lower closure} depicted in \cref{fig:examplebatt} on the right.
+
+\begin{figure*}[h!]
+    \centering
+    \includesag{70_battery_0}
+    \hfill
+    \includesag{70_battery_1}
+    \hfill
+    \includesag{70_battery_1_bis}
+    \caption{Example of lower closures.}
+    \label{fig:examplebatt}
+\end{figure*}
+
+\subsection{Antichains and upper sets}
+
+Every antichain $\setA$ generates an upper set, its upper closure $\upit \setA$.
+The first observation is that different antichains generate different upper sets.
+
+\begin{lemma}
+    \label{lem:up-cl-inj-antichains}
+    Let \setA and \setB be subsets of \posA that are \SY{antichains}.
+    Then
+    \begin{equation}
+        \prfperiod{
+            \upit \setA = \upit \setB
+        }{
+            \setA = \setB
+        }
+        %\upit  \setA = \ \upit  \setB \quad \Imp \quad \setA = \setB.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Fix an element $\setAel \setin \setA$.
+    From $\upit \setA = \upit \setB$ we know that in particular $\setA \setsubseteq \upit \setB$.
+    This means that for our fixed $\setAel \setin \setA$ there exists $\setBel \setin \setB$ such that $\setBel \posleq \setAel$.
+    From $\upit \setA = \upit \setB$ it also follows that $\setB \setsubseteq \upit \setA$, so to the $\setBel \setin \setB$ given above, there exists $\setAel\styleelements{'} \setin \setA$ such that $\setAel\styleelements{'} \posleq \setBel$.
+    In total, we have $\setAel\styleelements{'} \posleq \setBel \posleq \setAel$, and since $\setA$ is an \SY{antichain}, we must have $\setAel\styleelements{'} = \setAel$.
+    This implies that $\setAel\styleelements{'} = \setBel = \setAel$.
+    In particular, we have $\setAel \setin \setB$.
+
+    The above shows that $\setA \setsubseteq \setB$.
+    To show $\setB \setsubseteq \setA$, we can fix any $\setBel \setin \setB$ and repeat the above argumentation, now with the roles of \setA and \setB exchanged.
+\end{proof}
+
+The lemma says that an antichain can be recovered from the upper set it generates.
+In the other direction, we can try to recover an upper set $\subA$ from its minimal elements, by taking $\upit \Min \subA$.
+Since $\Min \subA \setsubseteq \subA$ and $\subA$ is an upper set, we always have $\upit \Min \subA \setsubseteq \subA$ (\cref{lem:upper-closure-smallest}).
+But the inclusion can be strict.
+
+\begin{example}[An upper set without minimal elements]
+    \label{exa:upper-set-no-min}
+    In $\tup{\nonNegReals, \leq}$, the set $\subA = \makeset{\ela \setin \nonNegReals \mid \ela > 1}$ is an upper set, but it has no minimal element: for every $\ela > 1$, the number $(1 + \ela)/2$ is also in $\subA$ and is strictly smaller.
+    So $\Min \subA = \Emptyset$ and $\upit \Min \subA = \Emptyset \neq \subA$.
+    In design terms: if a functionality can be provided with any amount of a resource that is strictly larger than $1$, but not with exactly $1$, then there is no ``minimal'' amount of that resource.
+\end{example}
+
+The upper sets that can be recovered from their minimal elements deserve a name.
+
+\begin{definition}[Downward closed set]
+    \label{def:downward-closed-upperset}
+    An \SY{upper set} $\subA$ is \maindef{downward-closed} in a poset \posA if
+    \begin{equation}
+        \subA = \upit \Min \subA.
+    \end{equation}
+    The set of downward-closed \SY{upper sets} of \posA is denoted $\setOfDCUppersets \posA$.
+\end{definition}
+
+\begin{definition}[Upward closed set]
+    \label{def:upward-closed-lowerset}
+    A \SY{lower set} $\subA$ is \maindef{upward-closed} in a poset \posA if
+    \begin{equation}
+        \subA = \downit \Max \subA.
+    \end{equation}
+    The set of upward-closed \SY{lower sets} of \posA is denoted $\setOfUCLowersets \posA$.
+\end{definition}
+
+The problem in \cref{exa:upper-set-no-min} cannot occur in finite posets.
+
+\begin{lemma}
+    \label{lem:finite-upper-sets-dc}
+    Let $\posA$ be a finite \SY{poset}.
+    Then every \SY{upper set} of $\posA$ is downward-closed, and every \SY{lower set} of $\posA$ is upward-closed.
+\end{lemma}
+\begin{proof}
+    Let $\subA$ be an upper set of $\posA$.
+    We already know that $\upit \Min \subA \setsubseteq \subA$, so we need to show that every $\posela \setin \subA$ is above some minimal element of $\subA$.
+    If $\posela$ is itself minimal, we are done.
+    Otherwise, there is $\posela_1 \setin \subA$ with $\posela_1 \posAleq \posela$ and $\posela_1 \neq \posela$.
+    If $\posela_1$ is minimal, we are done; otherwise there is $\posela_2 \setin \subA$ with $\posela_2 \posAleq \posela_1$ and $\posela_2 \neq \posela_1$, and so on.
+    The elements $\posela, \posela_1, \posela_2, \dots$ obtained in this way are all different: by transitivity each of them is below all the previous ones, so if two of them were equal, antisymmetry would force two consecutive ones to be equal, which is not the case.
+    Since $\posAset$ is finite, the process must stop, and it stops at a minimal element $\posela_k \setin \Min \subA$ with $\posela_k \posAleq \posela$.
+    Hence $\posela \setin \upit \Min \subA$.
+    The statement about lower sets is dual.
+\end{proof}
+
+Putting \cref{lem:up-cl-inj-antichains} and \cref{lem:finite-upper-sets-dc} together, we obtain a precise correspondence between antichains and upper sets.
+
+\begin{proposition}
+    \label{prop:antichains-upper-sets}
+    Let $\posA$ be a \SY{poset}.
+    \begin{enumerate}
+        \item For every \SY{antichain} $\setA$ of $\posA$, we have $\Min \upit \setA = \setA$.
+        \item The functions $\setA \mapsto \upit \setA$ and $\subA \mapsto \Min \subA$ are inverse to one another, as functions between the set $\antichains \posA$ of antichains of $\posA$ and the set $\setOfDCUppersets \posA$ of downward-closed upper sets of $\posA$.
+    \end{enumerate}
+    In particular, if $\posA$ is finite, antichains of $\posA$ correspond one-to-one to upper sets of $\posA$.
+\end{proposition}
+\begin{proof}
+    \begin{enumerate}
+        \item Let $\posela \setin \setA$.
+              Then $\posela \setin \upit \setA$.
+              If $\poselb \setin \upit \setA$ with $\poselb \posAleq \posela$, then there is $\posela' \setin \setA$ with $\posela' \posAleq \poselb \posAleq \posela$; since $\setA$ is an antichain, $\posela' = \posela$, and then $\poselb = \posela$ by antisymmetry.
+              So $\posela$ is minimal in $\upit \setA$, that is, $\setA \setsubseteq \Min \upit \setA$.
+              Conversely, let $\poselb \setin \Min \upit \setA$.
+              There is $\posela \setin \setA$ with $\posela \posAleq \poselb$, and $\posela \setin \upit \setA$; since $\poselb$ is minimal, $\poselb = \posela \setin \setA$.
+        \item By part 1, $\upit \setA$ is downward-closed for every antichain $\setA$, since $\upit \Min \upit \setA = \upit \setA$, and $\Min \upit \setA = \setA$.
+              Conversely, for a downward-closed upper set $\subA$, the set $\Min \subA$ is an antichain (\cref{lem:Min-is-antichain}), and $\upit \Min \subA = \subA$ by definition.
+    \end{enumerate}
+    The last statement follows from \cref{lem:finite-upper-sets-dc}.
+\end{proof}
+
+\subsubsection{Ordering antichains}
+
+Upper sets of requirements are naturally ordered by reverse inclusion (\cref{rem:dp-curry-other-form}): a smaller set of feasible requirements corresponds to a more demanding functionality.
+Via upper closure, we can transport this order to antichains.
+
+\begin{definition}[Order on antichains]
+    \label{def:antichain-order}
+    Let $\posA$ be a \SY{poset}.
+    For antichains $\setA, \setB \setin \antichains \posA$, we write
+    \begin{equation}
+        \setA \posleqof{\antichains \posA} \setB
+        \quad \text{if and only if} \quad
+        \upit \setA \setsupseteq \upit \setB.
+    \end{equation}
+\end{definition}
+
+By \cref{lem:up-cl-inj-antichains}, this is a partial order: reflexivity and transitivity come from those of $\setsupseteq$, and if $\upit \setA = \upit \setB$ then $\setA = \setB$.
+Intuitively, $\setA \posleqof{\antichains \posA} \setB$ means that every element of $\setB$ is above some element of $\setA$: the trade-offs in $\setB$ are all ``worse'' than some trade-off in $\setA$.
+The greatest element of $\tup{\antichains \posA, \posleqof{\antichains \posA}}$ is the empty antichain, since $\upit \Emptyset = \Emptyset$; if $\posA$ has a least element $\bot$, then the least element of $\antichains \posA$ is $\makeset{\bot}$.
+
+
+\subsection{Answering queries with antichains}
+\label{sec:dp-queries-antichains}
+
+We now return to design problems.
+If the set of feasible requirements $\widehat{\adp}(\fun)$ is downward-closed, for instance because $\ressp$ is finite (\cref{lem:finite-upper-sets-dc}), then no information is lost when we pass from $\widehat{\adp}(\fun)$ to its minimal elements: by \cref{prop:antichains-upper-sets}, the antichain $\Min \widehat{\adp}(\fun)$ determines $\widehat{\adp}(\fun) = \upit \Min \widehat{\adp}(\fun)$.
+The answer to the problem of minimizing requirements is then a complete, and typically much smaller, description of the answer to the query ``given $\fun$, which requirements?''.
+
+\begin{definition}[Minimal requirements function]
+    \label{def:dp-min-req-map}
+    Let $\adp \colon \funspop \Ptimes \ressp \toinPos \Bool$ be a \SY{design problem}.
+    Its \emph{minimal requirements function} is
+    \begin{equation}
+        \defmapperiod{
+            \ftor_{\adp}
+        }{
+            \funsp
+        }{
+            \sto
+        }{
+            \antichains \ressp
+        }{
+            \fun
+        }{
+            \Min \widehat{\adp}(\fun)
+        }
+    \end{equation}
+\end{definition}
+
+If $\fun$ is infeasible, then $\ftor_{\adp}(\fun) = \Emptyset$, the greatest element of $\antichains \ressp$.
+
+\begin{lemma}
+    \label{lem:dp-min-req-map-monotone}
+    Let $\adp \colon \funspop \Ptimes \ressp \toinPos \Bool$ be a \SY{design problem} such that $\widehat{\adp}(\fun)$ is downward-closed for every $\fun \setin \funsp$.
+    Then $\ftor_{\adp} \colon \funsp \mto \tup{\antichains \ressp, \posleqof{\antichains \ressp}}$ is a \SY{monotone function}, and $\widehat{\adp}(\fun) = \upit \ftor_{\adp}(\fun)$ for every $\fun$.
+\end{lemma}
+\begin{proof}
+    The second statement is the definition of downward-closed.
+    For monotonicity, let $\fun \funleq \fun'$.
+    By \cref{eq:dp-queries-antitone}, $\widehat{\adp}(\fun') \setsubseteq \widehat{\adp}(\fun)$, that is, $\upit \ftor_{\adp}(\fun') \setsubseteq \upit \ftor_{\adp}(\fun)$.
+    By \cref{def:antichain-order}, this means $\ftor_{\adp}(\fun) \posleqof{\antichains \ressp} \ftor_{\adp}(\fun')$.
+\end{proof}
+
+So, under the assumption of the lemma, the design problem $\adp$ is completely described by the monotone function $\ftor_{\adp}$, which sends each functionality to its Pareto front of minimal requirements.
+As the functionality increases, the Pareto front moves ``up'', until possibly it reaches the top $\Emptyset$ of $\antichains \ressp$, which means that the functionality is infeasible.
+
+\begin{example}[Choosing a sensor from a catalogue]
+    \label{exa:sensor-catalogue}
+    Suppose we need a distance sensor for a robot, and we can choose among the four sensors in the following catalogue:
+    \begin{center}
+        \begin{tabular}{lccc}
+            sensor & range [m] & price [CHF] & power [W] \\ \hline
+            $\styleelements{s}_1$ & 40 & 50 & 1 \\
+            $\styleelements{s}_2$ & 60 & 100 & 5 \\
+            $\styleelements{s}_3$ & 80 & 200 & 2 \\
+            $\styleelements{s}_4$ & 100 & 150 & 6
+        \end{tabular}
+    \end{center}
+    The functionality is the range, $\funsp = \tup{\nonNegReals, \leq}$, and the requirements are pairs of a price and a power consumption, $\ressp = \tup{\nonNegReals, \leq} \Ptimes \tup{\nonNegReals, \leq}$.
+    A range $\fun$ is feasible with the requirement $\tup{p, w}$ if the catalogue contains a sensor with range at least $\fun$, price at most $p$, and power consumption at most $w$.
+    This is a design problem: asking for less range, or allowing more price or power, can only make more sensors acceptable.
+    Its sets of feasible requirements are
+    \begin{equation}
+        \widehat{\adp}(\fun) = \upit \makeset{\tup{\text{price}(\styleelements{s}_i), \text{power}(\styleelements{s}_i)} \mid \text{range}(\styleelements{s}_i) \geq \fun},
+    \end{equation}
+    and their minimal elements are obtained by discarding the sensors that are dominated by others:
+    \begin{itemize}
+        \item for $\fun = 30$, all four sensors have enough range, and $\styleelements{s}_1$ is both the cheapest and the most frugal, so $\ftor_{\adp}(30) = \makeset{\tup{50, 1}}$;
+        \item for $\fun = 50$, the sensors $\styleelements{s}_2$, $\styleelements{s}_3$, $\styleelements{s}_4$ qualify; $\styleelements{s}_4$ is dominated by $\styleelements{s}_2$, which is both cheaper and needs less power, so $\ftor_{\adp}(50) = \makeset{\tup{100, 5}, \tup{200, 2}}$;
+        \item for $\fun = 70$, only $\styleelements{s}_3$ and $\styleelements{s}_4$ qualify, and neither dominates the other, so $\ftor_{\adp}(70) = \makeset{\tup{200, 2}, \tup{150, 6}}$;
+        \item for $\fun = 90$, only $\styleelements{s}_4$ qualifies, so $\ftor_{\adp}(90) = \makeset{\tup{150, 6}}$;
+        \item for $\fun = 120$, no sensor qualifies, so $\ftor_{\adp}(120) = \Emptyset$.
+    \end{itemize}
+    For $\fun = 50$ and $\fun = 70$ the answer is a genuine trade-off between price and power.
+    As predicted by \cref{lem:dp-min-req-map-monotone}, the answers move up in $\antichains \ressp$ as $\fun$ increases: for example, every element of $\ftor_{\adp}(70)$ is above some element of $\ftor_{\adp}(50)$.
+    Pareto fronts of exactly this kind, for price against power, mass, or computation, are the typical output of co-design studies of real robots and vehicles.
+\end{example}
+
+\subsection{Answering queries for series compositions}
+
+Minimal requirements functions can be composed along series compositions (\cref{sec:dp-series-composition}).
+This is the first instance of a central idea of co-design: the answers to queries for a system can be computed from the answers for its components.
+
+\begin{proposition}
+    \label{prop:dp-series-queries}
+    Let $\adpa \colon \posAop \Ptimes \posB \toinPos \Bool$ and $\adpb \colon \posB\posop \Ptimes \posC \toinPos \Bool$ be \SY{design problems}.
+    \begin{enumerate}
+        \item For every $\posAel \setin \posAset$,
+              \begin{equation}
+                  \widehat{\adpa \dpthen \adpb}(\posAel) = \bigsetunion_{\posBel \setin \widehat{\adpa}(\posAel)} \widehat{\adpb}(\posBel).
+              \end{equation}
+        \item If $\widehat{\adpa}(\posAel) = \upit \setA$ for some $\setA \setsubseteq \posBset$, then the union in part 1 can be taken over $\setA$ only:
+              \begin{equation}
+                  \widehat{\adpa \dpthen \adpb}(\posAel) = \bigsetunion_{\posBel \setin \setA} \widehat{\adpb}(\posBel).
+              \end{equation}
+    \end{enumerate}
+    Consequently, if all the sets of feasible requirements involved are downward-closed (for instance, if $\posB$ and $\posC$ are finite), then
+    \begin{equation}
+        \ftor_{\adpa \dpthen \adpb}(\posAel)
+        = \Min \bigsetunion_{\posBel \setin \ftor_{\adpa}(\posAel)} \upit \ftor_{\adpb}(\posBel).
+    \end{equation}
+\end{proposition}
+\begin{proof}
+    \begin{enumerate}
+        \item By \cref{def:dp-series-composition}, $\posCel \setin \widehat{\adpa \dpthen \adpb}(\posAel)$ if and only if there is $\posBel \setin \posBset$ with $\adpa(\posAel\Fop, \posBel) = \true$ and $\adpb(\posBel\Fop, \posCel) = \true$, that is, with $\posBel \setin \widehat{\adpa}(\posAel)$ and $\posCel \setin \widehat{\adpb}(\posBel)$.
+        \item Since $\setA \setsubseteq \upit \setA$, the union over $\setA$ is contained in the union over $\upit \setA$.
+              Conversely, if $\posBel \setin \upit \setA$, there is $\posBel' \setin \setA$ with $\posBel' \posBleq \posBel$, and then $\widehat{\adpb}(\posBel) \setsubseteq \widehat{\adpb}(\posBel')$ by \cref{eq:dp-queries-antitone}.
+              So each set in the union over $\upit \setA$ is contained in a set of the union over $\setA$.
+    \end{enumerate}
+    For the last statement, apply part 2 with $\setA = \ftor_{\adpa}(\posAel)$, use $\widehat{\adpb}(\posBel) = \upit \ftor_{\adpb}(\posBel)$, and take minimal elements.
+\end{proof}
+
+In words: to find the minimal requirements of the system for the functionality $\posAel$, we take each minimal requirement $\posBel$ of the first component, find the minimal requirements of the second component for the functionality $\posBel$, collect everything, and discard the dominated elements.
+
+\begin{example}
+    For the design problems $\adpa$ and $\adpb$ of \cref{exa:dp-series-finite}, we have $\ftor_{\adpa}(\setAeln{1}) = \makeset{\setBeln{1}}$ and $\ftor_{\adpa}(\setAeln{2}) = \ftor_{\adpa}(\setAeln{3}) = \makeset{\setBeln{2}}$, as well as $\ftor_{\adpb}(\setBeln{1}) = \makeset{\setCeln{2}, \setCeln{3}}$ and $\ftor_{\adpb}(\setBeln{2}) = \makeset{\setCeln{4}}$.
+    By \cref{prop:dp-series-queries},
+    \begin{equation}
+        \ftor_{\adpa \dpthen \adpb}(\setAeln{1}) = \Min \upit \makeset{\setCeln{2}, \setCeln{3}} = \makeset{\setCeln{2}, \setCeln{3}},
+        \qquad
+        \ftor_{\adpa \dpthen \adpb}(\setAeln{2}) = \ftor_{\adpa \dpthen \adpb}(\setAeln{3}) = \makeset{\setCeln{4}},
+    \end{equation}
+    in agreement with the feasible set of $\adpa \dpthen \adpb$ computed in \cref{exa:dp-series-finite}.
+\end{example}
+
+\begin{remark}[Maximal functionalities]
+    Everything in this subsection has a dual version for the problem of maximizing functionalities.
+    If the sets of feasible functionalities $\widecheck{\adp}(\res)$ are upward-closed, the design problem is completely described by the function $\res \mapsto \Max \widecheck{\adp}(\res)$, which sends each requirement to the antichain of maximal functionalities that can be provided with it.
+\end{remark}
+
+\begin{remark}[Towards computation]
+    For finite posets, \cref{prop:dp-series-queries} is already an algorithm: all the sets involved are finite, and minimal elements of a finite set can be found by comparing its elements pairwise.
+    For infinite posets, such as the real numbers, and for other ways of connecting components, including feedback loops, more work is needed.
+    We return to the computation of solutions later in the book.
+\end{remark}
+
 
 \devel{
 \subsection{Measuring posets}
@@ -158,25 +628,25 @@ We can define two measurements for a poset: the height and the width.
 These measurements allow us to quantify the performance of several algorithms we will see in later parts of the book.
 \begin{definition}[Width of a poset]
     \label{def:poset-width}
-    The \maindef{width of a poset}, denoted~$\posetwidth(\posA)$, is the maximum cardinality of an \SY{antichain} in~\posA.
+    The \maindef{width of a poset}, denoted $\posetwidth(\posA)$, is the maximum cardinality of an \SY{antichain} in \posA.
 \end{definition}
 
 \begin{definition}[Height of a poset]
     \label{def:poset-height}
-    The \maindef{height of a poset}, denoted~$\posetheight(\posA)$, is the maximum cardinality of a \SY{chain} in~\posA.
+    The \maindef{height of a poset}, denoted $\posetheight(\posA)$, is the maximum cardinality of a \SY{chain} in \posA.
 \end{definition}
 
 Note that an empty \SY{poset} has exactly one \SY{chain} and one \SY{antichain}: the empty set.
 Therefore, the height and width are zero.
 
 \begin{example}
-    Consider the poset~\posA in \cref{fig:poset-height-width}.
-    The longest \SY{antichains} of~\posA are~$\makeset{\sapple, \sburger, \scheese}$, $\makeset{\sapple, \schoco, \scheese}$, $\makeset{\sbretzel, \schoco, \scheese}$, $\makeset{\sapple, \schoco, \sgrapes}$, $\makeset{\sbretzel, \schoco, \sgrapes}$, and~$\makeset{\sbretzel, \sburger, \scheese}$.
+    Consider the poset \posA in \cref{fig:poset-height-width}.
+    The longest \SY{antichains} of \posA are $\makeset{\sapple, \sburger, \scheese}$, $\makeset{\sapple, \schoco, \scheese}$, $\makeset{\sbretzel, \schoco, \scheese}$, $\makeset{\sapple, \schoco, \sgrapes}$, $\makeset{\sbretzel, \schoco, \sgrapes}$, and $\makeset{\sbretzel, \sburger, \scheese}$.
     Therefore,
     \begin{equation}\label{eq:poset-height-width-1}
         \posetwidth(\posA)=3.
     \end{equation}
-    The longest \SY{chain} in the \SY{poset} is~$\makeset{\scarrot,\schoco,\sburger,\sfondue}$, and therefore
+    The longest \SY{chain} in the \SY{poset} is $\makeset{\scarrot,\schoco,\sburger,\sfondue}$, and therefore
     \begin{equation}\label{eq:poset-height-width-2}
         \posetheight(\posA)=4.
     \end{equation}
@@ -210,7 +680,7 @@ Therefore, the height and width are zero.
 \begin{gradedexercise}[\exname{MeasurePowerPoset}]
     \label{ex:MeasurePowerPoset}
 
-    Let~\setA be a finite set with~$n$ elements.
+    Let \setA be a finite set with $n$ elements.
     Obtain an expression (without proof) for
     \begin{enumerate}
         \item $\posetwidth(\powerset \setA)$;
@@ -221,56 +691,3 @@ Therefore, the height and width are zero.
 \solutionof{MeasurePowerPoset}
 
 }
-
-\subsection{Antichains and upper sets}
-
-
-
-\begin{lemma}
-    \label{lem:up-cl-inj-antichains}
-    Let~\setA and~\setB be subsets of~\posA that are \SY{antichains}.
-    Then
-    \begin{equation}
-        \prfperiod{
-            \upit \setA = \upit \setB
-        }{
-            \setA = \setB
-        }
-        %\upit  \setA = \ \upit  \setB \quad \Imp \quad \setA = \setB.
-    \end{equation}
-\end{lemma}
-
-\begin{proof}
-    Fix an element~$\setAel \setin \setA$.
-    From~$\upit \setA = \upit \setB$ we know that in particular~$\setA \setsubseteq \upit \setB$.
-    This means that for our fixed~$\setAel \setin \setA$ there exists~$\setBel \setin \setB$ such that~$\setBel \posleq \setAel$.
-    From~$\upit \setA = \upit \setB$ it also follows that~$\setB \setsubseteq \upit \setA$, so to the~$\setBel \setin \setB$ given above, there exists~$\setAel\styleelements{'} \setin \setA$ such that~$\setAel\styleelements{'} \posleq \setBel$.
-    In total, we have~$\setAel\styleelements{'} \posleq \setBel \posleq \setAel$, and since~$\setA$ is an \SY{antichain}, we must have~$\setAel\styleelements{'} = \setAel$.
-    This implies that~$\setAel\styleelements{'} = \setBel = \setAel$.
-    In particular, we have~$\setAel \setin \setB$.
-
-    The above shows that~$\setA \setsubseteq \setB$.
-    To show~$\setB \setsubseteq \setA$, we can fix any~$\setBel \setin \setB$ and repeat the above argumentation, now with the roles of~\setA and~\setB exchanged.
-\end{proof}
-
-
-
-\begin{definition}[Downward closed set]
-    \label{def:downward-closed-upperset}
-    An \SY{upper set}~$\subA$ is \maindef{downward-closed} in a poset~\posA if
-    \begin{equation}
-        \subA = \upit \Min \subA.
-    \end{equation}
-    The set of downward-closed \SY{upper sets} of~\posA is denoted~$\setOfDCUppersets \posA$.
-
-\end{definition}
-
-\begin{definition}[Upward closed set]
-    \label{def:upward-closed-lowerset}
-    A \SY{lower set}~$\subA$ is \maindef{upward-closed} in a poset~\posA if
-    \begin{equation}
-        \subA = \downit \Max \subA.
-    \end{equation}
-    The set of upward-closed \SY{lower sets} of~\posA is denoted~$\setOfUCLowersets \posA$.
-\end{definition}
-

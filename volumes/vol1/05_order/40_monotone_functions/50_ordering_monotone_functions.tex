@@ -1,33 +1,58 @@
 % !TEX root = chapter-standalone.tex
 
-\devel{
+
 \section{Ordering monotone functions}
+\label{sec:ordering-monotone-functions}
 
+Given \SY{preorders} $\posA$ and $\posB$, the set of \SY{monotone functions} $\posA \mto \posB$ can itself be made into a preorder: we compare two monotone functions ``point-wise'', by comparing their outputs for each input.
 
-
-Given \SY{posets} \posA and \posB, the set of \SY{monotone maps} $\posA \mto \posB$ may be turned into a \SY{poset} itself: we can order the monotone functions ``point-wise''.
-
-\begin{ctdefinition}[Order on monotone maps]
+\begin{ctdefinition}[Pointwise order on monotone functions]
     \label{def:order-monotone-maps}
     \SYNDEF{order on monotone maps}
-    Consider two \SY{monotone maps} $\mora,\morb\colon\posA\mto\posB$.
-    We say that $\mora$ precedes $\morb$ if, point wise, the output of $\mora$ precedes the output of $\morb$ when presented with the same input:
+    Let $\posA$ and $\posB$ be \SY{preorders}, and let $\mapa, \mapb \colon \posA \mto \posB$ be \SY{monotone functions}.
+    We say that $\mapa$ precedes $\mapb$ if, for every input, the output of $\mapa$ precedes the output of $\mapb$:
     \begin{equation}
         \prfdoubleperiod{
-            \mora \posleqof{\posA\mto\posB} \morb
+            \mapa \posleqof{\posA \mto \posB} \mapb
         }{
-            \forall \posela\setin\posAset \colon \mora(\posela) \posleqof\posB \morb(\posela)
+            \forall \posAel \setin \posAset \colon \mapa(\posAel) \posBleq \mapb(\posAel)
         }
     \end{equation}
+    We write $\posB^{\posA}$ for the set of monotone functions $\posA \mto \posB$ equipped with this relation.
 \end{ctdefinition}
 
-We will use the ``exponent'' notation $\posB^\posA$ for the poset obtained by ordering monotone functions from $\posA$ to $\posB$ in this way. 
+The ``exponent'' notation $\posB^{\posA}$ is borrowed from sets, where $\setB^{\setA}$ denotes the set of all functions $\setA \sto \setB$ (\cref{sec:arithmetic-exponents-products}).
+
+\begin{lemma}
+    \label{lem:order-monotone-maps-preorder}
+    Let $\posA$ and $\posB$ be \SY{preorders}.
+    Then $\posB^{\posA}$ is a \SY{preorder}.
+    If $\posB$ is a \SY{poset}, then $\posB^{\posA}$ is a \SY{poset}.
+\end{lemma}
+\begin{proof}
+    Each property is checked one input at a time.
+    Reflexivity: $\mapa(\posAel) \posBleq \mapa(\posAel)$ for all $\posAel$, by reflexivity of $\posBleq$.
+    Transitivity: if $\mapa(\posAel) \posBleq \mapb(\posAel)$ and $\mapb(\posAel) \posBleq \mapc(\posAel)$ for all $\posAel$, then $\mapa(\posAel) \posBleq \mapc(\posAel)$ for all $\posAel$, by transitivity of $\posBleq$.
+    Antisymmetry, when $\posB$ is a poset: if $\mapa(\posAel) \posBleq \mapb(\posAel)$ and $\mapb(\posAel) \posBleq \mapa(\posAel)$ for all $\posAel$, then $\mapa(\posAel) = \mapb(\posAel)$ for all $\posAel$ by antisymmetry of $\posBleq$, that is, $\mapa = \mapb$.
+\end{proof}
+
+Note that the order on $\posA$ plays no role in the definition of the order on $\posB^{\posA}$; it only determines which functions are monotone, and hence which elements $\posB^{\posA}$ has.
+
+\begin{example}[Monotone functions into the booleans]
+    \label{exa:bool-bool}
+    There are four functions $\boolset \sto \boolset$, but only three of them are monotone functions $\Bool \mto \Bool$: the constant function with value $\false$, the identity, and the constant function with value $\true$.
+    (Negation is not monotone, since $\false \posleqof{\Bool} \true$ but $\lnot \false = \true$ is not below $\lnot \true = \false$.)
+    In $\Bool^{\Bool}$, these three functions form a chain:
+    \begin{equation}
+        (\text{constant } \false) \posleq \mapidat{\boolset} \posleq (\text{constant } \true).
+    \end{equation}
+    More generally, for any preorder $\posA$, monotone functions $\posA \mto \Bool$ correspond to \SY{upper sets} of $\posA$, and the point-wise order corresponds to inclusion of upper sets; we will use this in \cref{sec:dp-querying}.
+\end{example}
 
 \begin{example}[Rounding functions]
     \label{ex:rounding-functions}
-    In this example we look at ``rounding functions'': these are functions that truncate a real number to an integer.
-    You might already know the ceiling function \funceil~(\cref{fig:ceil}) and the floor function \funfloor~(\cref{fig:floor}),
-    which are formally defined as
+    In this example we look at ``rounding functions'', which turn a real number into an integer.
+    You might already know the ceiling function $\funceil$ (\cref{fig:ceil}) and the floor function $\funfloor$ (\cref{fig:floor}), which are defined as
     \begin{equation}\label{eq:funceil}
         \defmapcomma{
             \funceil
@@ -36,12 +61,11 @@ We will use the ``exponent'' notation $\posB^\posA$ for the poset obtained by or
         }{
             \mto
         }{
-            \natswithleq
+            \tup{\wnumbers, \leq}
         }{
             \ela
         }{
-            \min \makeset{\elb \setin \natnumbers \colon \elb \geq \ela }
-            % \elb \setin \natnumbers \colon \elb-1<\ela \leq \elb
+            \min \makeset{\elb \setin \wnumbers \colon \elb \geq \ela }
         }
     \end{equation}
     and
@@ -53,18 +77,17 @@ We will use the ``exponent'' notation $\posB^\posA$ for the poset obtained by or
         }{
             \mto
         }{
-            \natswithleq
+            \tup{\wnumbers, \leq}
         }{
             \ela
         }{
-            \max \makeset{\elb \setin \natnumbers \colon \elb \Nleq \ela }
+            \max \makeset{\elb \setin \wnumbers \colon \elb \leq \ela }
         }
     \end{equation}
-    The functions $\funceil$ and $\funfloor$ are monotone, since~$\ela\Rleq \elc$ implies both~$\funceil(\ela)\Nleq \funceil(\elc)$ and~$\funfloor(\ela)\Nleq\funfloor(\elc)$.
+    The functions $\funceil$ and $\funfloor$ are monotone, since $\ela \Rleq \elc$ implies both $\funceil(\ela) \leq \funceil(\elc)$ and $\funfloor(\ela) \leq \funfloor(\elc)$.
 
     There exist many other rounding functions, commonly used by computers.
-    For example, the map ``round to nearest, ties to even'' \cite{P754:2008:ISF}
-    rounds a number to the closest integer, and in case of ties it rounds to the even one (\cref{fig:rtntte}).
+    For example, the function ``round to nearest, ties to even'' \cite{P754:2008:ISF} rounds a number to the closest integer, and in case of a tie it rounds to the even one (\cref{fig:rtntte}).
     For example, $3.2$ is mapped to $3$, $1.5$ is mapped to $2$, and $4.5$ is mapped to $4$.
     This is the formal definition:
     %
@@ -77,34 +100,36 @@ We will use the ``exponent'' notation $\posB^\posA$ for the poset obtained by or
             }{
                 \mto
             }{
-                \natswithleq
+                \tup{\wnumbers, \leq}
             }{
-                x
+                \ela
             }{
                 \begin{cases}
-                    \funfloor(\ela), & \ela< (\funfloor(\ela)+\funceil(\ela))/2                                                \\
-                    \funceil(\ela),  & \ela> (\funfloor(\ela)+\funceil(\ela))/2                                                \\
-                    \funceil(\ela),  & (\ela= (\funfloor(\ela)+\funceil(\ela))/2 )\booland (\funceil(\ela) \text{ is even } )  \\
-                    \funfloor(\ela), & (\ela= (\funfloor(\ela)+\funceil(\ela))/2 )\booland (\funfloor(\ela) \text{ is even } )
+                    \funfloor(\ela), & \ela - \funfloor(\ela) < \tfrac{1}{2},                                                   \\
+                    \funceil(\ela),  & \ela - \funfloor(\ela) > \tfrac{1}{2},                                                   \\
+                    \text{the even one of } \funfloor(\ela) \text{ and } \funceil(\ela), & \ela - \funfloor(\ela) = \tfrac{1}{2}
                 \end{cases}
             }
         \end{equation}
     \end{widepar}
+    It is monotone as well: as $\ela$ increases, the nearest integer can only increase, and the tie-breaking rule never makes it jump back.
     \begin{marginfigure}
         \includesag{floorceilhasse}
         \caption{}
         \label{fig:floorceilhasse}
         \todographics{\bernina: @Gioele: can we align id and rtntte in the center?}
     \end{marginfigure}
-    In this example, note that
+
+    To compare these functions with the identity, we view all of them as monotone functions $\realswithleq \mto \realswithleq$, using that every integer is a real number.
+    Then, in $\realswithleq^{\realswithleq}$,
     \begin{equation}\label{eq:funfloor-mapid-funceil}
-        \funfloor \posleq \mapid \posleq \funceil
+        \funfloor \posleq \mapidat{\reals} \posleq \funceil
     \end{equation}
     and
     \begin{equation}\label{eq:funfloor-rtntte-funceil}
         \funfloor \posleq \rtntte \posleq \funceil,
     \end{equation}
-    and $\mapid$ and $\rtntte$ are not comparable (see \cref{fig:floorceilhasse}).
+    while $\mapidat{\reals}$ and $\rtntte$ are not comparable: $\rtntte(0.4) = 0 < 0.4$, but $\rtntte(0.6) = 1 > 0.6$ (see \cref{fig:floorceilhasse}).
 \end{example}
 
 \begin{figure*}[b]
@@ -121,4 +146,51 @@ We will use the ``exponent'' notation $\posB^\posA$ for the poset obtained by or
     \caption{Comparison of three rounding methods.}
 \end{figure*}
 
-}
+\begin{example}[Comparing battery technologies]
+    \label{exa:battery-technologies}
+    A monotone function can describe how much of a resource a technology requires in order to provide a given functionality.
+    Suppose that, for three battery technologies, the mass (in kg) needed to store the energy $\ela$ (in kWh) is
+    \begin{equation}
+        \mapa(\ela) = 1 + 4 \ela,
+        \qquad
+        \mapb(\ela) = 0.2 + 5 \ela,
+        \qquad
+        \mapc(\ela) = 0.2 + 4 \ela,
+    \end{equation}
+    where the constant term is the mass of the casing and electronics.
+    All three are monotone functions $\tup{\nonNegReals, \leq} \mto \tup{\nonNegReals, \leq}$: storing more energy needs more mass.
+    In the point-wise order, a smaller function describes a \emph{better} technology, since it needs less mass for every amount of energy.
+    \begin{itemize}
+        \item $\mapc \posleq \mapa$ and $\mapc \posleq \mapb$: the third technology is at least as good as the other two, for every amount of energy.
+        \item $\mapa$ and $\mapb$ are not comparable: they are equal at $\ela = 0.8$, the second technology is lighter for smaller batteries ($\mapb(0.5) = 2.7 < 3 = \mapa(0.5)$), and the first is lighter for larger ones ($\mapa(2) = 9 < 10.2 = \mapb(2)$).
+    \end{itemize}
+    So whether $\mapa$ or $\mapb$ is preferable depends on how much energy we need to store; this is another instance of a trade-off.
+\end{example}
+
+\subsection{Composition and the order}
+
+The point-wise order interacts well with composition of monotone functions.
+
+\begin{lemma}
+    \label{lem:composition-monotone-in-order}
+    Let $\posA$, $\posB$, and $\posC$ be \SY{preorders}.
+    \begin{enumerate}
+        \item If $\mapa \posleqof{\posA \mto \posB} \mapa'$ and $\mapb \colon \posB \mto \posC$ is monotone, then $\mapa \mthen \mapb \posleqof{\posA \mto \posC} \mapa' \mthen \mapb$.
+        \item If $\mapa \colon \posA \mto \posB$ is monotone and $\mapb \posleqof{\posB \mto \posC} \mapb'$, then $\mapa \mthen \mapb \posleqof{\posA \mto \posC} \mapa \mthen \mapb'$.
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    \begin{enumerate}
+        \item For every $\posAel$, we have $\mapa(\posAel) \posBleq \mapa'(\posAel)$, and since $\mapb$ is monotone, $\mapb(\mapa(\posAel)) \posCleq \mapb(\mapa'(\posAel))$.
+        \item For every $\posAel$, the element $\mapa(\posAel)$ is an input of $\mapb$ and $\mapb'$, so $\mapb(\mapa(\posAel)) \posCleq \mapb'(\mapa(\posAel))$.
+    \end{enumerate}
+\end{proof}
+
+Note that part 1 uses the monotonicity of $\mapb$, while part 2 uses no monotonicity at all.
+Combining the two parts, if $\mapa \posleq \mapa'$ and $\mapb \posleq \mapb'$, then $\mapa \mthen \mapb \posleq \mapa' \mthen \mapb \posleq \mapa' \mthen \mapb'$.
+
+\begin{example}[Improving a component]
+    Continuing \cref{exa:battery-technologies}, suppose that the mass of the battery determines the price of the vehicle that carries it, through a monotone function $\stylemaps{p} \colon \tup{\nonNegReals, \leq} \mto \tup{\nonNegReals, \leq}$.
+    Then the price of a vehicle able to store the energy $\ela$ is $\stylemaps{p}(\mapa(\ela))$ with the first technology and $\stylemaps{p}(\mapc(\ela))$ with the third.
+    Since $\mapc \posleq \mapa$, part 1 of \cref{lem:composition-monotone-in-order} gives $\mapc \mthen \stylemaps{p} \posleq \mapa \mthen \stylemaps{p}$: replacing a component by a better one can only improve the system, provided that the rest of the system depends monotonically on it.
+\end{example}

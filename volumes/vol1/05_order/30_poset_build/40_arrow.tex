@@ -2,13 +2,11 @@
 
 \section{Interval construction}
 
-\todotext{2026-07 JL: Rewrite this material in preorder version}
-
 An interval of time is defined by two numbers: a lower and upper bound.
 The notation $[a,b]$ usually defines an interval on the real line.
-We can generalize the notion to an interval of a poset.
+We can generalize the notion to an interval of a preorder.
 
-\subsection{Poset intervals}
+\subsection{Intervals in a preorder}
 \begin{marginfigure}
     \centering
     \includesag{int_pos_fig}
@@ -18,8 +16,8 @@ We can generalize the notion to an interval of a poset.
 
 \begin{definition}[Interval]
     \label{def:interval}
-    An \maindef{interval} of a poset~\posA is a pair of elements~$\posela, \poselb$ such that~$\posela \posAleq \poselb$.
-    We also write $\interv \posela \poselb$, and we identify it with the subset of elements of \posA that are a bounded above and below by the two elements:
+    An \maindef{interval} of a preorder~\posA is a pair of elements~$\posela, \poselb$ such that~$\posela \posAleq \poselb$.
+    We also write $\interv \posela \poselb$, and we associate with it the subset of elements of \posA that are bounded below and above by the two elements:
     \begin{equation}\label{eq:interval}
         \interv \posela \poselb
         \definedas
@@ -31,6 +29,12 @@ We can generalize the notion to an interval of a poset.
 \end{definition}
 
 Note that, following this definition, the empty set is \emph{not} an interval.
+
+In a \SY{preorder}, different intervals can have the same associated subset.
+For instance, if~$\posela \posAleq \posela'$ and~$\posela' \posAleq \posela$ with~$\posela \neq \posela'$, and~$\posela \posAleq \poselb$, then~$\interv \posela \poselb$ and~$\interv {\posela'} \poselb$ are different intervals with the same elements.
+Therefore, in general an interval is the \emph{pair} of its bounds, and not just its associated subset.
+If~\posA is a \SY{poset}, however, an interval is determined by its associated subset:~$\posela$ is the unique least element and~$\poselb$ the unique greatest element of~$\interv \posela \poselb$.
+In that case we can safely identify an interval with its associated subset.
 
 
 \begin{marginfigure}
@@ -44,10 +48,10 @@ Note that, following this definition, the empty set is \emph{not} an interval.
     }
 \end{marginfigure}
 
-\begin{definition}[``Arrow'' poset of intervals $\posintbis\posA$]
+\begin{definition}[``Arrow'' preorder of intervals $\posintbis\posA$]
     \label{def:arrow-poset-of-intervals}
-    \SYNDEF{arrow poset of intervals}
-    We define an ``Arrow'' \SY{poset} of intervals on the \SY{poset} \posA by setting the order:
+    \SYNDEF{arrow preorder of intervals}
+    Given a \SY{preorder}~\posA, we define an ``Arrow'' \SY{preorder} of intervals~$\posintbis\posA$, whose elements are the intervals of~\posA, by setting the relation:
     \begin{equation}
         \prfdoubleperiod{
             \interv \posela \poselb
@@ -60,7 +64,7 @@ Note that, following this definition, the empty set is \emph{not} an interval.
         }
     \end{equation}
 \end{definition}
-This is similar to taking the product of~\posA with itself; however, we are only considering intervals, so we obtain a subposet of~$\posA \Ptimes \posA$.
+This is similar to taking the product of~\posA with itself; however, we are only considering intervals, so the relation~$\posleqof{\posintbis{\posA}}$ is the restriction of the product relation of~$\posA \Ptimes \posA$ (\cref{def:poset-product}) to the set of intervals.
 % \begin{equation}
 %     \posintbis\posA \setsubseteq   \posA \Ptimes \posA.
 % \end{equation}
@@ -68,16 +72,22 @@ This is similar to taking the product of~\posA with itself; however, we are only
 % This partially ordered set will be instrumental when we define uncertainty in \SY{design problems}.
 
 \begin{exercise}
-    Check that the relation defined in \cref{def:arrow-poset-of-intervals} is indeed a poset.
+    Check that the relation defined in \cref{def:arrow-poset-of-intervals} is reflexive and transitive, so that~$\posintbis\posA$ is indeed a \SY{preorder}.
+    Then show that if~\posA is a \SY{poset}, then~$\posintbis\posA$ is a \SY{poset}.
 \end{exercise}
 \begin{solution}
-    We check the three conditions.
+    Write~$\posleq$ for~$\posleqof{\posintbis{\posA}}$.
+    Each condition follows from the corresponding property of~$\posAleq$, applied to lower bounds and to upper bounds separately.
     \begin{itemize}
-        \item First, we know that~$\interv{\posAnel{1}}{\posBnel{1}}\posleqof{\posintbis{\posA}}\interv{\posAnel{1}}{\posBnel{1}}$, since~$\posAnel{1}\posAleq \posAnel{1}$ and~$\posBnel{1}\posAleq \posBnel{1}$.
-        \item Second,~$\interv{\posAnel{1}}{\posBnel{1}}\posleqof{\posintbis{\posA}}\interv{\posAnel{2}}{\posBnel{2}}$ and~$\interv{\posAnel{2}}{\posBnel{2}}\posleqof{\posintbis{\posA}}\interv{\posAnel{3}}{\posBnel{3}}$ imply
+        \item Reflexivity: for any interval~$\interv{\posela_1}{\poselb_1}$, we have~$\posela_1\posAleq \posela_1$ and~$\poselb_1\posAleq \poselb_1$ by reflexivity of~$\posAleq$, and therefore~$\interv{\posela_1}{\poselb_1} \posleq \interv{\posela_1}{\poselb_1}$.
+        \item Transitivity: suppose~$\interv{\posela_1}{\poselb_1} \posleq \interv{\posela_2}{\poselb_2}$ and~$\interv{\posela_2}{\poselb_2} \posleq \interv{\posela_3}{\poselb_3}$.
+              By definition, this means~$\posela_1 \posAleq \posela_2$,~$\posela_2 \posAleq \posela_3$,~$\poselb_1 \posAleq \poselb_2$, and~$\poselb_2 \posAleq \poselb_3$.
+              By transitivity of~$\posAleq$, we get~$\posela_1 \posAleq \posela_3$ and~$\poselb_1 \posAleq \poselb_3$, that is,
               \begin{equation}
-                  \interv{\posAnel{1}}{\posBnel{1}}\posleqof{\posintbis{\posA}}\interv{\posAnel{3}}{\posBnel{3}}.
+                  \interv{\posela_1}{\poselb_1} \posleq \interv{\posela_3}{\poselb_3}.
               \end{equation}
-        \item Third, if~$\interv{\posAnel{1}}{\posBnel{1}}\posleqof{\posintbis{\posA}}\interv{\posAnel{2}}{\posBnel{2}}$ and~$\interv{\posAnel{2}}{\posBnel{2}}\posleqof{\posintbis{\posA}}\interv{\posAnel{1}}{\posBnel{1}}$, then~$\posAnel{1}=\posAnel{2}$ and~$\posBnel{1}=\posBnel{2}$.
+        \item Antisymmetry (when~\posA is a \SY{poset}): suppose~$\interv{\posela_1}{\poselb_1} \posleq \interv{\posela_2}{\poselb_2}$ and~$\interv{\posela_2}{\poselb_2} \posleq \interv{\posela_1}{\poselb_1}$.
+              Then~$\posela_1 \posAleq \posela_2$ and~$\posela_2 \posAleq \posela_1$, so~$\posela_1=\posela_2$ by antisymmetry of~$\posAleq$; in the same way,~$\poselb_1=\poselb_2$.
+              Hence~$\interv{\posela_1}{\poselb_1} = \interv{\posela_2}{\poselb_2}$.
     \end{itemize}
 \end{solution}

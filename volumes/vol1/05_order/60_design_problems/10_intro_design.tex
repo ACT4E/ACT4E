@@ -1,7 +1,107 @@
 % !TEX root = chapter-standalone.tex
 
-\section{Intro: Design}
+\section{Design and co-design}
+\label{sec:intro-design}
 
+In this chapter we put the order theory of the previous chapters to work.
+We will see that \SY{preorders}, \SY{monotone functions}, and monotone relations provide a simple and surprisingly general language for describing design, and in particular for describing how the design of a system depends on the design of its components.
+Before we introduce any mathematics, this section explains, informally, what we mean by design and co-design.
 
-\todotext{2026-07 put general discussion of design here (functionalities and requirements, etc.)}
+\subsection{What is design?}
 
+We take a broad view of what it means to design, one that is not limited to engineering.
+In the words of Herbert Simon (\cite{hebert96sciences}, Chapter 5):
+
+\begin{quote}
+    Everyone designs who devises courses of action aimed at changing existing situations into preferred ones.
+    The intellectual activity that produces material artifacts is no different fundamentally from the one that prescribes remedies for a sick patient or the one that devises a new sales plan for a company or a social welfare policy for a state.
+\end{quote}
+
+The examples in this book are mostly taken from engineering, because it is easy to imagine building a machine out of simpler components, and to imagine the choices and trade-offs involved.
+But the ideas apply equally well to other disciplines, as long as we are willing to take an abstract view of what a ``system'' and a ``component'' are.
+In urban planning, the components of a city are roads, sewers, and residential areas; in economics, a component might be an incentive scheme designed to move a market towards a more desirable state.
+
+\subsection{Functionalities and requirements}
+
+Imagine that you are an engineer standing in front of an empty whiteboard, about to design a new product.
+The first question to ask is: what is the product \emph{for}?
+The answer is expressed by its \emph{functionalities}: what the product must provide, deliver, or achieve.
+For example:
+\begin{itemize}
+    \item a car must be able to transport at least four passengers;
+    \item a battery must store at least $\unit[100]{kJ}$ of energy;
+    \item a delivery drone must be able to carry a parcel of at least $\unit[2]{kg}$.
+\end{itemize}
+(Engineers often say ``function'' here, but since that word already has a precise mathematical meaning, we will always say ``functionality''.)
+
+The second question is: what does the product \emph{need}?
+The answer is expressed by its \emph{requirements}: the resources that must be spent or made available in order to provide the functionalities.
+For example:
+\begin{itemize}
+    \item the car should not cost more than $\unit[30000]{CHF}$;
+    \item the battery should not weigh more than $\unit[1]{kg}$;
+    \item the drone should not need more than $\unit[10]{min}$ to charge.
+\end{itemize}
+
+There is a pleasant duality between the two.
+Functionalities are typically given as \emph{lower bounds} (``at least''), and requirements as \emph{upper bounds} (``at most'').
+Most design objectives can be phrased as either providing as much functionality as possible, or needing as few resources as possible.
+
+Two features of functionalities and requirements will be central in what follows.
+First, they come with a natural notion of ``less'' and ``more'', and this notion is often only partial.
+A battery that stores more energy but also weighs more is neither better nor worse than a lighter battery that stores less; the two are incomparable, and choosing between them is a matter of trade-offs.
+This is why we model functionalities and requirements by \SY{preorders} and \SY{posets} (\cref{chap:intro-tradeoffs}).
+Second, the relationship between functionalities and requirements is \emph{monotone}.
+If some requirements suffice to provide a functionality, then they also suffice to provide any lesser functionality; and if a functionality can be provided with some requirements, then it can also be provided with larger ones.
+To obtain more, you need more.
+
+\subsection{Everything is a resource}
+
+Here is a further observation that shapes the whole theory.
+Consider a small electric delivery drone.
+Its motors provide thrust, and they require electric power.
+The electric power is provided by a battery, which in turn requires a certain mass (and money, and charging time).
+The thrust, in turn, is required by the drone as a whole in order to lift the parcel.
+
+In this chain, the electric power is a \emph{requirement} of the motors, but it is a \emph{functionality} of the battery.
+Similarly, thrust is a functionality of the motors, but a requirement of the drone.
+So ``functionality'' and ``requirement'' are not two different kinds of things: they are two \emph{roles} that a resource can play for a given component.
+Every poset that appears in the theory is a poset of resources, and each component relates the resources it provides, its functionalities, to the resources it needs, its requirements.
+Components are connected precisely by letting the requirements of one component be provided as functionalities by another.
+This is why we will always speak of a component as relating \emph{functionalities} to \emph{requirements}, while keeping in mind that both are resources.
+
+\subsection{From components to systems: co-design}
+
+A system is composed of components.
+The computer pioneer Howard Aiken is credited with the remark that a system is composed of components, and a component is something you understand.
+For design, we modify this slightly:
+
+\begin{quote}
+    A system is composed of components;\\
+    a component is something you understand \emph{how to design}.
+\end{quote}
+
+The difficulty is that the components of a system cannot be designed one at a time.
+In the drone, a larger battery provides more power, but it is also heavier, so the drone needs more thrust, so the motors need more power, which calls for a larger battery.
+The requirements of one component depend on choices made for other components, sometimes in a circular way.
+Choices made component by component, without looking at the system as a whole, are therefore likely to be suboptimal, or even infeasible.
+
+We use the word \emph{co-design} for the activity of making the design choices for all components of a system \emph{together}, so as to meet the system-level functionalities with the smallest possible requirements.
+The prefix ``co'' has several meanings for us.
+It stands for \emph{compositional}: the design of the system is obtained by composing the designs of its components.
+It stands for \emph{collaborative}: in practice, different components are designed by different people or teams, who need a common language to describe what each component provides and requires.
+(Melvin Conway famously observed that organizations tend to produce systems whose structure mirrors their own communication structure, an observation that has since been studied empirically \cite{maccormack12exploring}.)
+And it stands for \emph{computational}: we want descriptions of components that are precise enough for a computer to find optimal designs.
+
+\subsection{What we model in this chapter}
+
+In this chapter we take the first steps towards a mathematical theory of co-design.
+\begin{itemize}
+    \item We model a single component by a \emph{feasibility relation}, or equivalently a \emph{design problem}, which says, for each functionality and each requirement, whether the functionality can be provided with that requirement (\cref{sec:dpdefinition}).
+          The monotonicity described above is built into the definition.
+          We do not model \emph{how} a functionality is provided, only \emph{whether} it can be.
+    \item We connect components in series, letting the requirement of one component be provided as a functionality by another (\cref{sec:dp-series-composition}).
+          Other ways of connecting components, including the circular dependencies of the drone example, will be studied later in the book.
+    \item We ask the questions that designers ask of a component or a system: given a functionality, which requirements suffice, and which are minimal? Given a requirement, which functionalities can be provided (\cref{sec:dp-querying})?
+    \item Finally, we see that the answers to such questions are, in general, not single optimal choices but collections of incomparable optimal trade-offs, described mathematically by \SY{antichains} (\cref{sec:dp-optimality}).
+\end{itemize}

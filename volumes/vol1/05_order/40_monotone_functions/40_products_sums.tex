@@ -1,21 +1,262 @@
 % !TEX root = chapter-standalone.tex
 
-\devel{
-\section{Products, sums}
+
+\section{Products and sums of monotone functions}
+\label{sec:monotone-products-sums}
+
+In \cref{chap:poset-build} we constructed the product and the sum of two \SY{preorders}, and in \cref{sec:new-functions-from-old} we constructed the product and the sum of two functions.
+Putting these together, we can form products and sums of \SY{monotone functions}.
+Throughout this section, $\posA$, $\posB$, $\posC$, and $\posD$ are \SY{preorders}.
 
 \subsection{Products}
 
-Just like we can construct the cartesian product of two posets, we can also construct the cartesian product of two monotone functions.
+\begin{ctdefinition}[Product of monotone functions]
+    \label{def:monotone-product}
+    Let $\mapa \colon \posA \mto \posB$ and $\mapb \colon \posC \mto \posD$ be \SY{monotone functions}.
+    Their \emph{product} is the product of functions (\cref{def:product-of-functions})
+    \begin{equation}
+        \defmapcomma{
+            \mapa \funcprod \mapb
+        }{
+            \posA \Ptimes \posC
+        }{
+            \mto
+        }{
+            \posB \Ptimes \posD
+        }{
+            \tup{\posAel, \posCel}
+        }{
+            \tup{\mapa(\posAel), \mapb(\posCel)}
+        }
+    \end{equation}
+    where the source and target carry the product preorders (\cref{def:poset-product}).
+\end{ctdefinition}
 
-\todotext{write the definition}
+\begin{lemma}
+    \label{lem:monotone-product}
+    The product $\mapa \funcprod \mapb$ of two monotone functions is monotone.
+\end{lemma}
+\begin{proof}
+    Suppose $\tup{\posAel, \posCel} \posleqof{\posA \Ptimes \posC} \tup{\posAel', \posCel'}$, that is, $\posAel \posAleq \posAel'$ and $\posCel \posCleq \posCel'$.
+    Since $\mapa$ and $\mapb$ are monotone, $\mapa(\posAel) \posBleq \mapa(\posAel')$ and $\mapb(\posCel) \posDleq \mapb(\posCel')$.
+    By the definition of the product preorder, this says $\tup{\mapa(\posAel), \mapb(\posCel)} \posleqof{\posB \Ptimes \posD} \tup{\mapa(\posAel'), \mapb(\posCel')}$.
+\end{proof}
 
+In words: the product of two monotone functions acts on each component separately, and since the order on a product is also defined component by component, monotonicity is preserved.
+
+\begin{example}[Converting units]
+    \label{exa:monotone-product-units}
+    The functions converting temperatures from degrees Celsius to degrees Fahrenheit, and masses from kilograms to pounds,
+    \begin{equation}
+        \defmapcomma{
+            \mapa
+        }{
+            \realswithleq
+        }{
+            \mto
+        }{
+            \realswithleq
+        }{
+            \ela
+        }{
+            \tfrac{9}{5} \ela + 32
+        }
+        \qquad
+        \defmapcomma{
+            \mapb
+        }{
+            \tup{\nonNegReals, \leq}
+        }{
+            \mto
+        }{
+            \tup{\nonNegReals, \leq}
+        }{
+            \elb
+        }{
+            2.2046 \, \elb
+        }
+    \end{equation}
+    are monotone.
+    Their product $\mapa \funcprod \mapb$ converts a pair $\tup{\text{temperature}, \text{mass}}$ from metric to imperial units, for example $(\mapa \funcprod \mapb)(\tup{20, 3}) = \tup{68, 6.6138}$.
+    By \cref{lem:monotone-product}, if one pair is below another in the product order (warmer \emph{and} heavier), then so are the converted pairs.
+\end{example}
+
+A product of preorders comes with two \emph{projections}
+\begin{equation}
+    \defmapcomma{
+        \proj_1
+    }{
+        \posA \Ptimes \posB
+    }{
+        \mto
+    }{
+        \posA
+    }{
+        \tup{\posAel, \posBel}
+    }{
+        \posAel
+    }
+    \qquad
+    \defmapcomma{
+        \proj_2
+    }{
+        \posA \Ptimes \posB
+    }{
+        \mto
+    }{
+        \posB
+    }{
+        \tup{\posAel, \posBel}
+    }{
+        \posBel
+    }
+\end{equation}
+which are monotone, directly by the definition of the product preorder.
+Conversely, two monotone functions with a common source can be combined into one monotone function into the product.
+
+\begin{lemma}
+    \label{lem:monotone-pairing}
+    Let $\mapa \colon \posC \mto \posA$ and $\mapb \colon \posC \mto \posB$ be \SY{monotone functions}.
+    Then their \emph{pairing}
+    \begin{equation}
+        \defmapcomma{
+            \tup{\mapa, \mapb}
+        }{
+            \posC
+        }{
+            \mto
+        }{
+            \posA \Ptimes \posB
+        }{
+            \posCel
+        }{
+            \tup{\mapa(\posCel), \mapb(\posCel)}
+        }
+    \end{equation}
+    is monotone, and it satisfies $\tup{\mapa, \mapb} \mthen \proj_1 = \mapa$ and $\tup{\mapa, \mapb} \mthen \proj_2 = \mapb$.
+\end{lemma}
+\begin{proof}
+    If $\posCel \posCleq \posCel'$, then $\mapa(\posCel) \posAleq \mapa(\posCel')$ and $\mapb(\posCel) \posBleq \mapb(\posCel')$, which says $\tup{\mapa, \mapb}(\posCel) \posleqof{\posA \Ptimes \posB} \tup{\mapa, \mapb}(\posCel')$.
+    The two equations hold because $\proj_1$ and $\proj_2$ pick out the first and the second component.
+\end{proof}
+
+\begin{example}[Energy and time of a trip]
+    \label{exa:monotone-pairing-trip}
+    An electric vehicle that drives a distance $\ela$ (in km) needs the energy $\mapa(\ela) = 0.2 \, \ela$ (in kWh) and, at an average speed of $\unit[50]{km/h}$, the time $\mapb(\ela) = \ela / 50$ (in hours).
+    Both are monotone functions $\tup{\nonNegReals, \leq} \mto \tup{\nonNegReals, \leq}$, and their pairing
+    \begin{equation}
+        \tup{\mapa, \mapb} \colon \tup{\nonNegReals, \leq} \mto \tup{\nonNegReals, \leq} \Ptimes \tup{\nonNegReals, \leq},
+        \qquad
+        \ela \mapsto \tup{0.2 \, \ela, \ela / 50}
+    \end{equation}
+    is monotone: a longer trip needs both more energy and more time.
+\end{example}
 
 \subsection{Sums}
 
-Just like we can construct the sum of two posets, we can also construct the sum of two monotone functions.
+Recall that the elements of the sum $\posA \Pplus \posC$ (\cref{def:disjoint-union-of-posets}) are tagged elements $\tup{1, \posAel}$ and $\tup{2, \posCel}$, and that elements with different tags are never related.
 
-\todotext{write the definition}
+\begin{ctdefinition}[Sum of monotone functions]
+    \label{def:monotone-sum}
+    Let $\mapa \colon \posA \mto \posB$ and $\mapb \colon \posC \mto \posD$ be \SY{monotone functions}.
+    Their \emph{sum} is the sum of functions (\cref{def:sum-of-functions})
+    \begin{equation}
+        \begin{aligned}
+            \mapa \funcsum \mapb \colon \posA \Pplus \posC & \mto \posB \Pplus \posD, \\
+            \disunionA{\posAel}                             & \mapsto \disunionA{\mapa(\posAel)}, \\
+            \disunionB{\posCel}                             & \mapsto \disunionB{\mapb(\posCel)},
+        \end{aligned}
+    \end{equation}
+    where the source and target carry the sum preorders.
+\end{ctdefinition}
 
+\begin{lemma}
+    \label{lem:monotone-sum}
+    The sum $\mapa \funcsum \mapb$ of two monotone functions is monotone.
+\end{lemma}
+\begin{proof}
+    Suppose that two elements of $\posA \Pplus \posC$ are related.
+    By the definition of the sum preorder, they lie in the same summand.
+    If they are $\disunionA{\posAel} \posleqof{\posA \Pplus \posC} \disunionA{\posAel'}$, then $\posAel \posAleq \posAel'$, so $\mapa(\posAel) \posBleq \mapa(\posAel')$, and hence $\disunionA{\mapa(\posAel)} \posleqof{\posB \Pplus \posD} \disunionA{\mapa(\posAel')}$.
+    The case of two elements of the second summand is the same, with $\mapb$ in place of $\mapa$.
+\end{proof}
 
+\begin{example}
+    \label{exa:monotone-sum}
+    The functions $\mapa \colon \natswithleq \mto \natswithleq$, $\ela \mapsto \ela^2$, and $\mapb \colon \realswithleq \mto \realswithleq$, $\elb \mapsto \elb^3$, are monotone, and so is their sum
+    \begin{equation}
+        \mapa \funcsum \mapb \colon \natswithleq \Pplus \realswithleq \mto \natswithleq \Pplus \realswithleq,
+        \qquad
+        \disunionA{\ela} \mapsto \disunionA{\ela^2},
+        \quad
+        \disunionB{\elb} \mapsto \disunionB{\elb^3}.
+    \end{equation}
+    Note that squaring would \emph{not} be monotone on all integers, since $-2 \leq 1$ but $4 > 1$; this is why we take $\mapa$ to be defined on the natural numbers here.
+\end{example}
 
-}
+A sum of preorders comes with two \emph{inclusions}
+\begin{equation}
+    \defmapcomma{
+        \inj_1
+    }{
+        \posA
+    }{
+        \mto
+    }{
+        \posA \Pplus \posB
+    }{
+        \posAel
+    }{
+        \disunionA{\posAel}
+    }
+    \qquad
+    \defmapcomma{
+        \inj_2
+    }{
+        \posB
+    }{
+        \mto
+    }{
+        \posA \Pplus \posB
+    }{
+        \posBel
+    }{
+        \disunionB{\posBel}
+    }
+\end{equation}
+which are monotone, directly by the definition of the sum preorder.
+Conversely, two monotone functions with a common target can be combined into one monotone function out of the sum.
+
+\begin{lemma}
+    \label{lem:monotone-copairing}
+    Let $\mapa \colon \posA \mto \posC$ and $\mapb \colon \posB \mto \posC$ be \SY{monotone functions}.
+    Then their \emph{copairing}
+    \begin{equation}
+        \begin{aligned}
+            [\mapa, \mapb] \colon \posA \Pplus \posB & \mto \posC, \\
+            \disunionA{\posAel}                      & \mapsto \mapa(\posAel), \\
+            \disunionB{\posBel}                      & \mapsto \mapb(\posBel),
+        \end{aligned}
+    \end{equation}
+    is monotone, and it satisfies $\inj_1 \mthen [\mapa, \mapb] = \mapa$ and $\inj_2 \mthen [\mapa, \mapb] = \mapb$.
+\end{lemma}
+\begin{proof}
+    Related elements of $\posA \Pplus \posB$ lie in the same summand.
+    If $\disunionA{\posAel} \posleqof{\posA \Pplus \posB} \disunionA{\posAel'}$, then $\posAel \posAleq \posAel'$, so $[\mapa, \mapb](\disunionA{\posAel}) = \mapa(\posAel) \posCleq \mapa(\posAel') = [\mapa, \mapb](\disunionA{\posAel'})$; the second summand is treated in the same way, using $\mapb$.
+    The two equations hold by definition.
+\end{proof}
+
+Note that nothing needs to be checked for pairs of elements from different summands, because these are never related.
+This is what makes it possible to combine two completely unrelated monotone functions into one.
+
+\begin{example}[Postage]
+    \label{exa:monotone-copairing-postage}
+    A post office sends parcels, whose price depends on their weight, and letters, whose price depends on their number of pages.
+    Let $\mapa \colon \tup{\nonNegReals, \leq} \mto \tup{\nonNegReals, \leq}$ give the price of a parcel as a function of its weight, and $\mapb \colon \natswithleq \mto \tup{\nonNegReals, \leq}$ give the price of a letter as a function of its number of pages; both are monotone, since heavier parcels and longer letters cost more.
+    The copairing
+    \begin{equation}
+        [\mapa, \mapb] \colon \tup{\nonNegReals, \leq} \Pplus \natswithleq \mto \tup{\nonNegReals, \leq}
+    \end{equation}
+    is the price list of the post office for all items, parcels and letters alike.
+    It is monotone, although a parcel and a letter cannot be compared with each other: in the sum, they are simply not related.
+\end{example}
