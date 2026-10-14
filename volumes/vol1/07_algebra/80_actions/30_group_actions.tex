@@ -2,51 +2,71 @@
 
 \section{Group actions}
 
-\todotext{This to be made its own section, and rewritten in the same way monoid actions are to be rewritten}
 
-For defining a group action, we must adapt the definition of a monoid action.
-The endomorphisms~$\Endof\setA$ are not a group, because they also contain non-invertible maps.
-Recall that an invertible \SY{endomorphism} is called an \emph{automorphism}, and that~$\Autof\setA$, the set of \SY{automorphisms} of~\setA, comes naturally equipped with a \SY{group} structure.
+While semigroups are like monoids without neutral elements, groups are monoids with additional structure: every element of a group has an inverse.
 
-\todotextjira{730}{\bernina: @JL: better would be to make examples in the monoid and group sections for End(A) and Aut(A), respectively, and then reference those here.}
+Monoid actions were defined as monoid morphisms, semigroup actions were defined as semigroup morphisms, so we would expect to find a definition for group actions that follows this pattern. 
 
-\begin{ctdefinition}
-    [Group right action]\label{def:group-right-action-operation}
-    A \emph{right action} of a \SY{group}~$\grpA = \tup{\grpAset, \mtimesof\grpA, \idmon_\grpA}$ on a set~\setA is:
+To define an action of a group $\grpA$ on a set $\stateset$, an initial idea that one might have is to define it as a group homomorphism of this type
+\begin{equation}
+\act \colon \grpA \mto \Endof\stateset,
+\end{equation}
+but the issue we run into is that $\Endof\stateset$ is not a group (in general it contains non-invertible functions). However, the subset $\Autof\stateset \subseteq \Endof\stateset$ of invertible functions on $\stateset$ \emph{is} a group, with function inverses as the group inverses. 
+%The notation ``$\Aut$'' makes reference to the word ``automorphism'', which means "invertible morphism" (in this case, invertible functions). 
+
+\begin{ctdefinition}[Group action]
+    \label{def:group-cov-action}
+    An \maindef{action} of a \SY{group} $\grpA$ on a set $\stateset$ is:
+
+    \constit
+    \begin{enumerate}
+        \item A \SY{group morphism}
+              \begin{equation}
+                  \label{eq:act-group}
+                  \act \colon \grpA \fto \Autof\stateset.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{ctdefinition}[Group action, uncurried]
+    \label{def:group-uncurried-action}
+
+    A (right-uncurried) action of a \SY{group} $\grpA = \tup{\grpAset, \mtimesof\grpA, \idgrp_\grpA, \ginv}$ on a set \stateset is:
 
     \constit
     \begin{enumerate}
         \item a function
               \begin{equation}
-                  \label{eq:ract-group}
-                  \act \colon \makecartprod{\setA, \grpAset} \sto \setA.
+                  \label{eq:group-uncurried-action}
+                  \act \colon \makecartprod{\grpAset, \stateset} \sto \stateset.
               \end{equation}
     \end{enumerate}
     \condit
     \begin{enumerate}
-        \item for all~$\setAel \setin \setA$ and $\monela,\monelb\setin\grpAset$,
+        \item for all $\statesetel \setin \stateset$ and $\grpelA,\grpelB\setin\grpAset$,
               \begin{equation}
-                  \label{eq:group-ract-1cond}
-                  \act(\act(\setAel,\monela), \monelb) = \act(\setAel, \monela \mtimesof\monoidA \monelb);
+                  \label{eq:group-uncurried-action-1cond}
+                  \act(\grpelA \mtimesof\grpA \grpelB, \statesetel) = \act(\grpelB, \act(\grpelA, \statesetel));
               \end{equation}
-        \item for all~$\setAel \setin \setA$,
+        \item for all $\statesetel \setin \stateset$,
               \begin{equation}
-                  \label{eq:group-ract-2cond}
-                  \act(\setAel, \idmon_\monoidA) = \setAel.
+                  \label{eq:group-uncurried-action-2cond}
+                  \act(\idgrp_\grpA, \statesetel) = \statesetel.
               \end{equation}
     \end{enumerate}
 \end{ctdefinition}
 
+\begin{remark}
+Suppose we have a monoid morphism
+\begin{equation}
+\act \colon \monoidA \fto \Endof\stateset.
+\end{equation}
+If $\monoidA$ happens to be a group, then one can prove that the image of $\act$ is necessarily a subset of $\Autof\stateset \subseteq \Endof\stateset$. In other words, any monoid action where the monoid happens to be a group may be viewed as a group action. 
+\end{remark}
+
 \todotext{JL: make remark or lemma here that inverses being respected comes for free... and spell out the property in action terms...}
 
-\begin{ctdefinition}[Group action]
-    \label{def:group-cov-action}
-    An \maindef{action} of a \SY{group}~$\grpA$ onto a set~\setA is a \SY{group morphism}
-    \begin{equation}
-        \label{eq:act-group}
-        \act \colon \grpA \fto \Autof\setA.
-    \end{equation}
-\end{ctdefinition}
+
 
 \todotext{\bernina: @JL: add example of vector spaces as actions of a field on an abelian group; mention concept of a module}
 
@@ -77,43 +97,87 @@ Recall that an invertible \SY{endomorphism} is called an \emph{automorphism}, an
 \begin{example}[Time dilation of signals]
 In the field of signal-processing, a basic way to model a signal is as a function $f \colon \reals \to \subA$, where the domain models time and the codomain models the possible values that a signal might take. 
 
-In this example, we consider the set of all possible such signals, $\setA = \subA^\reals$. Let $\tup{\posReals, \cdot, 1}$ be the group of positive reals, with multiplication as composition. We can define a group action $\act \colon \posReals \to \Autof\setA$ on signals that models ``time dilation'':
+In this example, we consider the set of all possible such signals, $\stateset = \subA^\reals$. Let $\tup{\posReals, \cdot, 1}$ be the group of positive reals, with multiplication as composition. We can define a group action $\act \colon \posReals \fto \Autof\stateset$ on signals that models ``time dilation'': for each $\lambda \setin \posReals$,
 \begin{equation}
-\defmapperiod{\act(\lambda)}{\setA}{\to}{\setA}{f(t)}{f(t / \lambda)}
+\defmapperiod{\act(\lambda)}{\stateset}{\to}{\stateset}{f}{\bigl(t \mapsto f(t / \lambda)\bigr)}
 \end{equation}
 \end{example}
 
+\todotextjira{26}{\bernina: @JL: add more exercises}
+
+\todotext{graded exercise commented out here}
+%\begin{gradedexercise}[\exname{UncurryingGroupActions}]
+%    \label{ex:UncurryingGroupActions}
+%    Prove \cref{lem:uncurrying-group-actions}.
+%\end{gradedexercise}
+%\solutionof{UncurryingGroupActions}
+
+\begin{example}[Invertible matrices acting on vectors]
+    \label{exa:matrix-group-action}
+    This is the group version of \cref{exa:matrix-action}.
+    Fix a natural number $n$, and let $\mgGLn$ denote the set of invertible $\ntimesn$ real matrices.
+    Consider the \SY{group} $\grpA = \tup{\mgGLn, \mtimesof\grpA, \idmat, \ginv}$ with composition operation
+    \begin{equation}
+        \matmor{A} \mtimesof\grpA \matmor{B} \definedas \matmor{B} \matmor{A}
+    \end{equation}
+    (as in \cref{eq:matrix-action-composition}), neutral element the identity matrix $\idmat$, and inverse operation $\ginv(\matmor{A}) \definedas \matmor{A}^{-1}$.
+    This is indeed a \SY{group}: $\matmor{B}\matmor{A}$ is invertible whenever $\matmor{A}$ and $\matmor{B}$ are, associativity and neutrality hold as in \cref{exa:matrix-action}, and $\matmor{A}^{-1}\matmor{A} = \idmat = \matmor{A}\matmor{A}^{-1}$.
+
+    As in \cref{exa:matrix-action}, define, for each $\matmor{A} \setin \mgGLn$,
+    \begin{equation}
+        \defmapperiod{\act(\matmor{A})}{\reals^n}{\to}{\reals^n}{\vectob{v}}{\matmor{A}\vectob{v}}
+    \end{equation}
+    Each $\act(\matmor{A})$ is invertible, with inverse $\act(\matmor{A}^{-1})$, so it is an element of $\Autof{\reals^n}$.
+    The computation in \cref{exa:matrix-action} shows that $\act(\matmor{A} \mtimesof\grpA \matmor{B}) = \act(\matmor{A}) \mtimesof{\Autof{\reals^n}} \act(\matmor{B})$ for all $\matmor{A}, \matmor{B} \setin \mgGLn$.
+    Hence
+    \begin{equation}
+        \act \colon \grpA \fto \Autof{\reals^n}
+    \end{equation}
+    is a \SY{group morphism}, that is, an action of $\grpA$ on $\reals^n$.
+    In uncurried form, $\act(\matmor{A}, \vectob{v}) = \matmor{A}\vectob{v}$, and condition \cref{eq:group-uncurried-action-1cond} reads $(\matmor{B}\matmor{A})\vectob{v} = \matmor{B}(\matmor{A}\vectob{v})$.
+\end{example}
 
 
-
-\devel{
-\subsection{Linear group actions}
-\label{sec:action-matrix-groups}
-
-\todotext{J: this section should be moved into the section on group actions }
-
-\paragraph{Special Euclidean group}
+\subsection{Example: ortho-translations}
 
 \begin{definition}
-    [General Euclidean group~$\mgEn$]
+    [General Euclidean group $\mgEn$]
     \label{def:general-euclidean-group}
-    The general (real) Euclidean group of order~$n$, written~$\mgEn$, is the group of~$\matdim{(n+1)}{(n+1)}$ real matrices of the form
-    \begin{equation}
-        \label{eq:En-def}
-        \Ematrix{\matmor{R}}{\vectmor{t}},
-    \end{equation}
-    where~$\matmor{R}\setin \mgOn$ and~$\vectmor{t} \setin \reals^n$.
+    The general (real) Euclidean group of order $n$, written $\mgEn$,
+    is the \SY{group} given by:
+
+    \constit
+    \begin{enumerate}
+        \item The set of $(n+1) \times (n+1)$ real matrices of the form
+              \begin{equation}
+                  \label{eq:En-def}
+                  \Ematrix{\matmor{R}}{\vectmor{t}},
+              \end{equation}
+              where $\matmor{R}\setin \mgOn$ and $\vectmor{t} \setin \reals^n$;
+        \item The composition operation given by matrix multiplication;
+        \item The neutral element given by the identity matrix;
+        \item The inverse operation given by matrix inversion.
+    \end{enumerate}
 \end{definition}
 
 \begin{definition}
-    [Special Euclidean group~$\mgSEn$]
+    [Special Euclidean group $\mgSEn$]
     \label{def:special-euclidean-group}
-    The special (real) Euclidean group of order~$n$, written~$\mgSEn$, is the group of~$(n+1)\times (n+1)$ real matrices of the form
-    \begin{equation}
-        \label{eq:SEn-def}
-        \Ematrix{\matmor{R}}{\vectmor{t}},
-    \end{equation}
-    where~$\matmor{R}\setin \mgSOn$ and~$\vectmor{t} \setin \reals^n$.
+    The special (real) Euclidean group of order $n$, written $\mgSEn$,
+    is the \SY{group} given by:
+
+    \constit
+    \begin{enumerate}
+        \item The set of $(n+1) \times (n+1)$ real matrices of the form
+              \begin{equation}
+                  \label{eq:SEn-def}
+                  \Ematrix{\matmor{R}}{\vectmor{t}},
+              \end{equation}
+              where $\matmor{R}\setin \mgSOn$ and $\vectmor{t} \setin \reals^n$;
+        \item The composition operation given by matrix multiplication;
+        \item The neutral element given by the identity matrix;
+        \item The inverse operation given by matrix inversion.
+    \end{enumerate}
 \end{definition}
 
 \begin{table*}
@@ -229,40 +293,8 @@ which is graphically reported in \cref{fig:graphical-roto-action}.
 \end{figure}
 %
 The notion of \SY{semigroup action} generalizes this property.
-}
 
-\todotextjira{26}{\bernina: @JL: add more exercises}
 
-\todotext{graded exercise commented out here}
-%\begin{gradedexercise}[\exname{UncurryingGroupActions}]
-%    \label{ex:UncurryingGroupActions}
-%    Prove \cref{lem:uncurrying-group-actions}.
-%\end{gradedexercise}
-%\solutionof{UncurryingGroupActions}
-
-\begin{gradedexercise}[\exname{MatrixMultAction}]
-    \label{ex:MatrixMultAction}
-    Let~$\setA = \reals^n$, and let~$\mgGLn$ be the group of invertible~$\ntimesn$ matrices.
-    Let
-    \begin{equation}
-        \label{eq:action-matrix-mult}
-        \defmapset{
-            \alpha
-        }{
-            \mgGLn \cartprod \setA
-        }{
-            \setA
-        }{
-            \tup{\matmor{M}, \vectmor{v}}
-        }{
-            \matmor{M}\vectmor{v}
-        }
-    \end{equation}
-    be the usual multiplication of matrices with vectors.
-    Check that \cref{eq:action-matrix-mult} defines a left group action operation of~$\mgGLn$ on~\setA.
-\end{gradedexercise}
-
-\solutionof{MatrixMultAction}
 
 
 

@@ -1,0 +1,231 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Machines}
+\label{sec:machines}
+
+In the dynamical systems of \cref{sec:dynamical-systems}, the state of a system changes as \emph{time} passes: the monoids $\tup{\natnumbers, +, 0}$ and $\tup{\reals, +, 0}$ that act on the state space are models of time, and their elements measure durations.
+In many applications, however, changes of state are triggered by \emph{events} or \emph{inputs} -- a key is pressed, a message arrives, a robot receives an instruction -- and what matters is only the \emph{order} in which these occur, not how much time passes between them.
+Such systems are often called \emph{discrete-event systems}; in this section we call them \emph{machines}.
+Mathematically, the role of the monoid of time is now played by a monoid of \emph{lists} of events, and a machine transforms lists of inputs into lists of outputs.
+
+\begin{remark}[Same structure, two readings]
+    \label{rem:machines-vs-dynamical-systems}
+    The two points of view overlap in discrete time.
+    The monoid $\tup{\natnumbers, +, 0}$ is isomorphic to the monoid of lists over a one-element set $\makeset{\ast}$ (think of $\ast$ as a ``tick'' of a clock): the number $n$ corresponds to the list $\makelist{\ast, \dots, \ast}$ of length $n$, and addition corresponds to concatenation.
+    So a discrete-time dynamical system is the same thing as a machine with only one kind of event.
+    More generally, a discrete-time system with inputs, $x_{k+1} = \prdyn(u_k, x_k)$, has exactly the structure of the machines discussed below (see also \cref{exa:discrete-lti-mealy}).
+    The difference lies in how the structure is read: in a discrete-time system, the $k$-th step happens at a definite time (for instance, after $k$ sampling periods), whereas for a machine only the order of the steps matters.
+    This difference becomes important, for instance, when a continuous-time system is sampled, or when several systems are combined -- synchronously, with a shared clock, or by interleaving their events.
+\end{remark}
+
+\subsection{Actions of sets}
+\label{sec:actions-of-sets}
+
+Following the pattern so far from monoids and semigroups, if we wanted to define an ``action of a set $\setA$ on a set $\stateset$'', then arguably such a thing would be defined simply as a function
+\begin{equation}
+\act \colon \setA \sto \Endof\stateset,
+\end{equation}
+without any further conditions. Although the term ``action'' is not usually used in this case, this situation is useful to also consider. 
+
+If we apply (right) uncurrying to such a function $\act$, we obtain a function of the type
+\begin{equation}
+ \makecartprod{\setA, \stateset} \sto \stateset.
+\end{equation}
+We call this a \emph{parametrized endomorphism} (with parameter set $\setA$). The underlying dynamics of various flavors of dynamical systems are specified by such a function (see, for instance, \cref{exa:plant-trafo-semigroup}, \cref{def:LTI_syst_first_time}, and the Moore and Mealy machines below).
+In computer science, such a function is also called a \emph{semiautomaton}, with \emph{input alphabet} $\setA$ and set of states $\stateset$.
+
+Given a function  
+\begin{equation}
+ \mora \colon \makecartprod{\setA, \stateset} \sto \stateset,
+\end{equation}
+we note that from it, we can always build a monoid action of the monoid $\listsof{\setA}$. Namely, the set $\listsof{\setA}$ of finite lists of elements of $\setA$ can be given a canonical monoid structure, with concatenation as composition and the empty list as neutral element (see \cref{exa:string-monoid}), and we obtain an action induced by $\mora$,
+\begin{equation}
+\act \colon \listsof{\setA} \fto \Endof\stateset,
+\end{equation}
+via
+\begin{equation}
+\act(\makelist{\setAel_1, \setAel_2, \dots, \setAel_k}) \definedas \mora(\setAel_1, -) \mthen \mora(\setAel_2, -) \mthen \cdots \mthen \mora(\setAel_k, -),
+\qquad
+\act(\emptylist) \definedas \catidat\stateset.
+\end{equation}
+In words: the action of a list processes its elements one after the other, from left to right; in uncurried form,
+\begin{equation}
+\act(\makelist{\setAel_1, \setAel_2, \dots, \setAel_k}, \statesetel) = \mora\bigl(\setAel_k, \dots \mora(\setAel_2, \mora(\setAel_1, \statesetel)) \dots\bigr).
+\end{equation}
+This is indeed a monoid homomorphism: the action of the concatenation of two lists is the action of the first list followed by the action of the second list, and the empty list acts as the identity.
+The image of $\act$, which is a submonoid of $\Endof\stateset$, is called the \emph{transition monoid} of the semiautomaton.
+
+\begin{example}[A robot following a list of instructions]
+    \label{exa:robot-list-action}
+    Consider the robot on a grid of \cref{sec:robot-motivating-example}, with state space $\prst = \setX_1 \cartprod \setX_2$ (its possible positions on the $4 \times 4$ grid), set of instructions $\prin = \makeset{\uparrow, \downarrow, \rightarrow, \leftarrow}$, and dynamics
+    \begin{equation}
+        \prdyn \colon \makecartprod{\prin, \prst} \sto \prst,
+    \end{equation}
+    which moves the robot one square in the given direction (unless it would leave the grid).
+    This is a parametrized endomorphism with parameter set $\prin$, and so, as described above, it induces an action
+    \begin{equation}
+        \act \colon \listsof{\prin} \fto \Endof\prst
+    \end{equation}
+    of the monoid of lists of instructions on the positions of the robot: a list of instructions moves the robot step by step, executing the instructions from left to right.
+    For example, starting at position $\tup{1,1}$, the list $\makelist{\rightarrow, \uparrow, \rightarrow}$ moves the robot via $\tup{2,1}$ and $\tup{2,2}$ to
+    \begin{equation}
+        \act(\makelist{\rightarrow, \uparrow, \rightarrow}, \tup{1,1})
+        = \prdyn(\rightarrow, \prdyn(\uparrow, \prdyn(\rightarrow, \tup{1,1})))
+        = \tup{3,2}.
+    \end{equation}
+    That $\act$ is a monoid homomorphism says, for instance, that executing the list $\makelist{\rightarrow, \uparrow} \listconcat \makelist{\rightarrow} = \makelist{\rightarrow, \uparrow, \rightarrow}$ is the same as first executing $\makelist{\rightarrow, \uparrow}$ and then executing $\makelist{\rightarrow}$.
+    This is also how a \SY{Moore machine} processes a list of inputs (\cref{sec:moore-machines}).
+\end{example}
+
+
+\subsection{Moore machines}
+\label{sec:moore-machines}
+
+\emph{Moore machines}\footnote{They are named after Edward F. Moore.} are one of the most basic models of machines; they are used extensively, for example, in the study of computation and formal languages, and in the design of digital circuits.
+A Moore machine consists of a semiautomaton (\cref{sec:actions-of-sets}) -- that is, a set of states together with dynamics that specify how each input changes the state -- together with an initial state and a \emph{read-out}, which specifies what output the machine shows in each state.
+In this way, a Moore machine transforms lists of inputs into lists of outputs.
+
+\begin{ctdefinition}[Moore machine]
+    \label{def:moore-machine-first}
+    A \maindef{Moore machine} is:
+
+    \constit
+    \begin{enumerate}
+        \item a set $\prin$ of inputs, a set $\prst$ of states, and a set $\prout$ of outputs;
+        \item a function $\prdyn \colon \makecartprod{\prin, \prst} \sto \prst$, the \emph{dynamics};
+        \item a function $\prreadout \colon \prst \sto \prout$, the \emph{read-out};
+        \item an element $\prstart \setin \prst$, the \emph{initial state}.
+    \end{enumerate}
+\end{ctdefinition}
+
+We write a Moore machine as a tuple
+\begin{equation}
+    \label{eq:moore-tuple}
+    \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}.
+\end{equation}
+The dynamics is a parametrized endomorphism of $\prst$, with parameter set $\prin$; the read-out does not depend on the input.
+
+\todotext{Maybe it would be interesting/nice to do a variation of the following example where the state is both position and orientation?}
+
+\begin{example}[Robot on a grid]
+    \label{exa:robot_on_a_grid}
+    \begin{marginfigure}
+        \centering
+        \includesag{120_robotcategory}
+        \caption{Robot on a grid example. }
+        \label{fig:robot_example_again}
+    \end{marginfigure}
+    We turn the robot on a grid of \cref{sec:robot-motivating-example} (see also \cref{exa:robot-list-action}) into a Moore machine.
+    Its states are the positions on the $4 \times 4$ grid, $\prst = \setX_1 \cartprod \setX_2$ with $\setX_1 = \setX_2 = \makeset{1, 2, 3, 4}$, its inputs are the instructions $\prin=\makeset{\uparrow, \downarrow,\rightarrow,\leftarrow}$, and its dynamics moves the robot one square in the given direction, unless it would leave the grid:
+    \begin{equation}
+        \begin{aligned}
+            \prdyn\colon \prin \cartprod \prst                & \sto \prst \\
+            \tupp{\uparrow, \tup{\prsteln{1},\prsteln{2}}}    & \mapsto \tupp{\prsteln{1}, \min(\prsteln{2}+1,4)}, \\
+            \tupp{\downarrow, \tup{\prsteln{1},\prsteln{2}}}  & \mapsto \tupp{\prsteln{1}, \max(\prsteln{2}-1,1)}, \\
+            \tupp{\rightarrow, \tup{\prsteln{1},\prsteln{2}}} & \mapsto \tupp{\min(\prsteln{1}+1,4), \prsteln{2}}, \\
+            \tupp{\leftarrow, \tup{\prsteln{1},\prsteln{2}}}  & \mapsto \tupp{\max(\prsteln{1}-1,1), \prsteln{2}}.
+        \end{aligned}
+    \end{equation}
+    The read-out can be thought of as a sensor measuring the position of the robot.
+    Assuming a perfect sensor, the set of outputs is $\prout = \prst$, and the read-out is the identity function:
+    \begin{equation*}
+        \defmapperiod{\prreadout}
+        {\prst}
+        {\sto}
+        {\prout}
+        {\tupp{\prsteln{1},\prsteln{2}}}
+        {\tupp{\prsteln{1},\prsteln{2}}}
+    \end{equation*}
+    As initial state we may choose any position, for instance $\prstart = \tup{1,1}$.
+\end{example}
+
+\paragraph{Moore machines transform lists into lists}
+By \cref{sec:actions-of-sets}, the dynamics $\prdyn \colon \makecartprod{\prin, \prst} \sto \prst$ of a Moore machine induces an action $\act \colon \listsof{\prin} \fto \Endof\prst$ of the monoid of lists of inputs on the state space.
+Together with the initial state and the read-out, this lets the machine transform any list $\makelist{\prineln{1}, \dots, \prineln{k}}$ of inputs into a list of outputs:
+the states visited are
+\begin{equation}
+    \prsteln{i} \definedas \act(\makelist{\prineln{1}, \dots, \prineln{i}}, \prstart), \qquad i = 0, 1, \dots, k,
+\end{equation}
+that is, $\prsteln{0} = \prstart$ and $\prsteln{i} = \prdyn(\prineln{i}, \prsteln{i-1})$, and the resulting list of outputs is
+\begin{equation}
+    \label{eq:moore-list-output}
+    \makelist{\prreadout(\prsteln{0}), \prreadout(\prsteln{1}), \dots, \prreadout(\prsteln{k})}.
+\end{equation}
+Note that a list of $k$ inputs produces $k+1$ outputs: the first output, $\prreadout(\prstart)$, is produced before any input has been read, and the output never depends on the current input directly, but only on the inputs read so far.
+
+\begin{example}
+    In \cref{exa:robot_on_a_grid}, starting at $\prstart = \tup{1,1}$, the list of instructions $\makelist{\rightarrow, \uparrow, \rightarrow}$ produces the list of outputs
+    \begin{equation*}
+        \makelist{\tup{1,1}, \tup{2,1}, \tup{2,2}, \tup{3,2}}
+    \end{equation*}
+    (compare \cref{exa:robot-list-action}).
+\end{example}
+
+
+
+\subsection{Mealy machines}
+\label{sec:mealy-machines}
+
+In a \SY{Moore machine}, the output depends only on the current state.
+\emph{Mealy machines}\footnote{They are named after George H. Mealy.} differ in exactly one respect: their read-out may also depend on the current input.
+This allows a Mealy machine to react to an input immediately, in the same step in which it is read.
+
+\begin{ctdefinition}[Mealy machine]
+    \label{def:mealy-machine}
+    A \maindef{Mealy machine} is:
+
+    \constit
+    \begin{enumerate}
+        \item a set $\prin$ of inputs, a set $\prst$ of states, and a set $\prout$ of outputs;
+        \item a function $\prdyn \colon \makecartprod{\prin, \prst} \sto \prst$, the \emph{dynamics};
+        \item a function $\prreadout \colon \makecartprod{\prin, \prst} \sto \prout$, the \emph{read-out};
+        \item an element $\prstart \setin \prst$, the \emph{initial state}.
+    \end{enumerate}
+\end{ctdefinition}
+
+As for Moore machines, we write a Mealy machine as a tuple $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$; the only difference is the type of the read-out.
+A Mealy machine transforms a list $\makelist{\prineln{1}, \dots, \prineln{k}}$ of inputs into a list of outputs as follows: with $\prsteln{0} = \prstart$ and $\prsteln{i} = \prdyn(\prineln{i}, \prsteln{i-1})$ as before (that is, $\prsteln{i} = \act(\makelist{\prineln{1}, \dots, \prineln{i}}, \prstart)$ for the induced action of $\listsof{\prin}$), the outputs are
+\begin{equation}
+    \label{eq:mealy-list-output}
+    \prouteln{i} \definedas \prreadout(\prineln{i}, \prsteln{i-1}), \qquad i = 1, \dots, k.
+\end{equation}
+In contrast to \cref{eq:moore-list-output}, a list of $k$ inputs produces exactly $k$ outputs, and the $i$-th output depends on the $i$-th input.
+
+\begin{example}[Change detector]
+    \label{exa:mealy-change-detector}
+    Let $\prin = \prst = \prout = \makeset{0, 1}$, with dynamics $\prdyn(\prinel, \prstel) \definedas \prinel$ (the state remembers the last input), read-out
+    \begin{equation}
+        \prreadout(\prinel, \prstel) \definedas
+        \begin{cases}
+            1 & \text{if } \prinel \neq \prstel, \\
+            0 & \text{if } \prinel = \prstel,
+        \end{cases}
+    \end{equation}
+    and initial state $\prstart = 0$.
+    This Mealy machine outputs $1$ exactly when the current input differs from the previous one.
+    For instance, the list of inputs $\makelist{0, 1, 1, 0}$ leads through the states $0, 0, 1, 1, 0$ and produces the list of outputs $\makelist{0, 1, 0, 1}$.
+\end{example}
+
+\begin{remark}[Moore versus Mealy]
+    \label{rem:moore-vs-mealy}
+    The two kinds of machines can simulate each other, up to a shift of the outputs by one step.
+    \begin{enumerate}
+        \item Every Moore machine $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$ gives a Mealy machine with the same inputs, states, outputs, dynamics and initial state, and with read-out $\tup{\prinel, \prstel} \mapsto \prreadout(\prdyn(\prinel, \prstel))$.
+              On a list of inputs, it produces the outputs $\prreadout(\prsteln{1}), \dots, \prreadout(\prsteln{k})$, that is, the list \cref{eq:moore-list-output} without its first entry.
+        \item Conversely, a Mealy machine $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$ (with $\prout$ non-empty) gives a Moore machine with state set $\makecartprod{\prst, \prout}$, in which each state also stores the most recent output: its dynamics is $\tup{\prinel, \tup{\prstel, \proutel}} \mapsto \tup{\prdyn(\prinel, \prstel), \prreadout(\prinel, \prstel)}$, its read-out is $\tup{\prstel, \proutel} \mapsto \proutel$, and its initial state is $\tup{\prstart, \proutel_\ast}$ for some chosen $\proutel_\ast \setin \prout$.
+              On a list of inputs, it produces the outputs $\proutel_\ast, \prouteln{1}, \dots, \prouteln{k}$: the outputs of the Mealy machine, each one step later.
+    \end{enumerate}
+\end{remark}
+
+\begin{example}[Discrete-time LTI systems: same structure, two readings]
+    \label{exa:discrete-lti-mealy}
+    Consider a discrete-time LTI system $\tupp{\mat{A}, \mat{B}, \mat{C}, \mat{D}, \mat{x}_0}$ as in \cref{def:LTI-discrete}.
+    If we forget that the index $k$ refers to time, this is a Mealy machine, with inputs $\prin = \reals^l$, states $\prst = \reals^n$, outputs $\prout = \reals^m$, dynamics and read-out
+    \begin{equation}
+        \prdyn(u, x) = \mat{A}x + \mat{B}u, \qquad \prreadout(u, x) = \mat{C}x + \mat{D}u,
+    \end{equation}
+    and initial state $\mat{x}_0$.
+    On a list $\makelist{\mat{u}_0, \dots, \mat{u}_{k-1}}$ of inputs, this Mealy machine produces exactly the list $\makelist{\mat{y}_0, \dots, \mat{y}_{k-1}}$ of outputs computed by the equations \cref{eq:LTI-discrete-equations} (the indices are shifted by one with respect to \cref{eq:mealy-list-output}, since there we number the elements of a list starting from $1$).
+    It is of Moore type -- the read-out does not depend on the input -- exactly when $\mat{D} = 0$, as in \cref{exa:savings-account}.
+    Read as a dynamical system, the $k$-th step happens at a definite time (for instance, after $k$ sampling periods); read as a machine, only the order of the inputs matters.
+\end{example}
