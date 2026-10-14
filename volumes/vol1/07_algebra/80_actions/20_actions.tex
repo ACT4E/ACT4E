@@ -256,6 +256,7 @@ Now, so far, we have just used $\curry^{-1}$ to produce the function \cref{eq:un
 \end{ctdefinition}
 
 \begin{gradedexercise}[\exname{UncurriedAction}]
+    \label{ex:UncurriedAction}
 Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ and~a set $\stateset$. 
 \begin{enumerate}
 \item Given a function
@@ -308,83 +309,7 @@ Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\m
 
 
 
-
-\devel{
-    \subsection{Contravariant actions}
-    
-    \begin{gradedexercise}[\exname{LeftActionCurry}]
-    Show that having a left action of a monoid $\monoidA$ on a set $\stateset$ is equivalent to having a monoid homomorphism
-    \begin{equation}
-        \act \colon \monoidA\op \mto \Endof\stateset.
-    \end{equation}
-\end{gradedexercise}
-
-
-\
-
-\
-
-    There are two versions for actions: a ``covariant'' and a ``contravariant'' version, depending on the order of the transformations.
-    \footnote{
-        Traditionally, people have used the names ``left'' and ``right'' to describe the two types.
-        However, those names are connected to a particular choice of notation.
-        We name the two versions by highlighting the properties of covariance and contravariance.
-    }
-
-    \begin{marginfigure}
-        \centering
-        \includesag{semigroup-contrav-action}
-        \caption{Commutativity}
-        \label{fig:semigroup-contrav-action}
-    \end{marginfigure}
-    \begin{ctdefinition}
-        [Semigroup contravariant action (preliminary version)]\label{def:semigroup-contra-action-prelim}
-        A \emph{contravariant semigroup action} of a \SY{semigroup} $\sgrpA$ on a set $\stateset$ is:
-
-        \constit
-        \begin{enumerate}
-            \item A map
-                  \begin{equation}
-                      \label{eq:ract}
-                      \ract \colon \makecartprod{\sgrpAset, \stateset} \sto \stateset.
-                  \end{equation}
-        \end{enumerate}
-
-        \condit
-        \begin{enumerate}
-            \item For all $\statesetel \setin \stateset$,
-                  \begin{equation}
-                      \label{eq:ract1cond}
-                      \ract(\monelb, \ract(\monela, \statesetel)) = \ract(\monelb \mtimesof\sgrpA \monela, \statesetel).
-                  \end{equation}
-        \end{enumerate}
-    \end{ctdefinition}
-
-    In contrast to \cref{eq:lact1cond}, \cref{eq:ract1cond} says that, if we first apply the action of $\monela$ to obtain $\act(\monela, \statesetel)$, and then we apply the action of $\monelb$ $\act(\monelb, -)$, it is the same thing as applying the action of $\monelb\mtimes\monela$ (note the inverted order).
-
-    % And what about contravariant actions?
-    A \SY{contravariant semigroup action} can be defined as a covariant action of \emph{the opposite} \SY{semigroup}.
-    And similarly for \SY{monoids} and \SY{groups}.
-
-    \begin{ctdefinition}[Semigroup contravariant action]
-        \label{def:semigroup-cont-action}
-        A \maindef{contravariant semigroup action} of a \SY{semigroup} $\sgrpA$ onto a set $\stateset$ is:
-
-        \constit
-        \begin{enumerate}
-            \item A \SY{semigroup} morphism
-                  \begin{equation}
-                      \ract \colon \sgrpA\op \fto \Endof\stateset.
-                  \end{equation}
-        \end{enumerate}
-    \end{ctdefinition}
-
-}
-
-\devel{
 \subsection{Semigroup actions}
-
-
 
 
 
@@ -397,25 +322,39 @@ Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\m
 
 %\linkvideo{spring2021-actions:semi-actions} % Semigroup actions
 
-\begin{ctdefinition}[Semigroup action operation]%
-    \label{def:semigroup-cov-action-prelim}
-    A \emph{right action} of a \SY{semigroup} $\sgrpA = \tup{\sgrpAset, \mthen_{\sgrpA}}$ on a set $\stateset$ is:
+
+\begin{ctdefinition}[Semigroup action]
+    \label{def:semigroup-cov-action}
+    An \maindef{action} of a \SY{semigroup} $\sgrpA = \tup{\sgrpAset, \mtimesof\sgrpA}$ on a set $\stateset$ is:
 
     \constit
     \begin{enumerate}
-        \item A function
+        \item A \SY{semigroup} morphism
               \begin{equation}
-                  \label{eq:lact-semigroup}
-                  \act \colon \makecartprod{\stateset, \sgrpAset} \sto \stateset.
+                  \label{eq:act-semigroup}
+                  \act \colon \sgrpA \fto \Endof\stateset.
               \end{equation}
     \end{enumerate}
+\end{ctdefinition}
 
+\begin{ctdefinition}[Semigroup action, uncurried]
+    \label{def:semigroup-uncurried-action}
+    An \emph{uncurried action} of a \SY{semigroup} $\sgrpA = \tup{\sgrpAset, \mtimesof\sgrpA}$ on a set $\stateset$ is:
+
+    \constit
+    \begin{enumerate}
+        \item a function
+              \begin{equation}
+                  \label{eq:semigroup-uncurried-action}
+                  \act \colon \makecartprod{\sgrpAset, \stateset} \sto \stateset.
+              \end{equation}
+    \end{enumerate}
     \condit
     \begin{enumerate}
-        \item For all $\statesetel \setin \stateset$ and $\monela,\monelb\setin\sgrpAset$,
+        \item for all $\statesetel \setin \stateset$ and $\sgrpelA, \sgrpelB \setin \sgrpAset$,
               \begin{equation}
-                  \label{eq:lact1cond}
-                  \act(\act(\statesetel, \monela), \monelb) = \act(\statesetel, \monela \mtimesof\sgrpA \monelb).
+                  \label{eq:semigroup-uncurried-action-1cond}
+                  \act(\sgrpelA \mtimesof\sgrpA \sgrpelB, \statesetel) = \act(\sgrpelB, \act(\sgrpelA, \statesetel)).
               \end{equation}
     \end{enumerate}
 \end{ctdefinition}
@@ -434,20 +373,8 @@ Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\m
 %     \end{equation}
 % \end{ctdefinition}
 
-\begin{ctdefinition}[Semigroup action]
-    \label{def:semigroup-cov-action}
-    An \maindef{action} of a \SY{semigroup} $\sgrpA$ on a set $\stateset$ is:
 
-    \constit
-    \begin{enumerate}
-        \item A \SY{semigroup} morphism
-              \begin{equation}
-                  \label{eq:act-semigroup}
-                  \act \colon \sgrpA \fto \Endof\stateset.
-              \end{equation}
-    \end{enumerate}
-\end{ctdefinition}
-
+\devel{
 \subsection{Actions of sets}
 
 \begin{ctdefinition}
@@ -481,5 +408,78 @@ Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\m
 \todotext{say how we can turn a set action into a semigroup action or a monoid action}
 
 }
+
+
+
+    \subsection{Contravariant actions}
+    
+    
+    \begin{ctdefinition}[Contravariant monoid action]
+        \label{def:monoid-cont-action}
+        A \maindef{contravariant action} of a \SY{monoid} $\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set $\stateset$ is:
+
+        \constit
+        \begin{enumerate}
+            \item A \SY{monoid morphism}
+                  \begin{equation}
+                      \label{eq:cont-act-monoid}
+                      \act \colon \monoidA\op \fto \Endof\stateset.
+                  \end{equation}
+        \end{enumerate}
+    \end{ctdefinition}
+
+  
+
+    % Diagram for the two conditions of def:monoid-uncurried-cont-action (corrected 2026-10-14), commented out for now:
+    % \begin{marginfigure}
+    %     \centering
+    %     \includesag{semigroup-contrav-action}
+    %     \caption{The conditions for an uncurried contravariant monoid action.}
+    %     \label{fig:semigroup-contrav-action}
+    % \end{marginfigure}
+    
+    
+    \begin{ctdefinition}[Contravariant monoid action, uncurried]
+        \label{def:monoid-uncurried-cont-action}
+        An \emph{uncurried contravariant action} of a \SY{monoid} $\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set $\stateset$ is:
+
+        \constit
+        \begin{enumerate}
+            \item a function
+                  \begin{equation}
+                      \label{eq:uncurried-cont-action}
+                      \act \colon \makecartprod{\monoidAset, \stateset} \sto \stateset.
+                  \end{equation}
+        \end{enumerate}
+        \condit
+        \begin{enumerate}
+            \item for all $\statesetel \setin \stateset$ and $\monelA, \monelB \setin \monoidAset$,
+                  \begin{equation}
+                      \label{eq:uncurried-cont-action-1cond}
+                      \act(\monelA \mtimesof\monoidA \monelB, \statesetel) = \act(\monelA, \act(\monelB, \statesetel));
+                  \end{equation}
+            \item for all $\statesetel \setin \stateset$,
+                  \begin{equation}
+                      \label{eq:uncurried-cont-action-2cond}
+                      \act(\idmon_\monoidA, \statesetel) = \statesetel.
+                  \end{equation}
+        \end{enumerate}
+    \end{ctdefinition}
+
+    \begin{remark}
+        Just as in the covariant case (\cref{def:monoid-cov-action}, \cref{def:uncurried-action}, and \cref{ex:UncurriedAction}), one can prove that \cref{def:monoid-cont-action} and \cref{def:monoid-uncurried-cont-action} are equivalent: currying and uncurrying give a one-to-one correspondence between contravariant actions $\act \colon \monoidA\op \fto \Endof\stateset$ and uncurried contravariant actions $\act \colon \makecartprod{\monoidAset, \stateset} \sto \stateset$.
+        The proof is the same as for \cref{ex:UncurriedAction}, with $\monoidA$ replaced by $\monoidA\op$: since $\monelA \mtimesof{\monoidA\op} \monelB = \monelB \mtimesof\monoidA \monelA$, the order of the two elements on the left-hand side of \cref{eq:monoiad-ract-1cond} is reversed, which gives \cref{eq:uncurried-cont-action-1cond}.
+    \end{remark}
+
+
+
+    In contrast to \cref{eq:monoiad-ract-1cond}, \cref{eq:uncurried-cont-action-1cond} says that, if we first act by $\monelB$ to obtain $\act(\monelB, \statesetel)$, and then act by $\monelA$, the result is the same as acting by $\monelA \mtimesof\monoidA \monelB$ (note the inverted order).
+
+    % And what about contravariant actions?
+    A \SY{contravariant semigroup action} can be defined as a covariant action of \emph{the opposite} \SY{semigroup}.
+
+   
+
+
 
 
