@@ -89,20 +89,28 @@ Unpacked, the above definition means that we have a function
 \end{equation}
 that satisfies the following two conditions.
  
-First, 
+First, for all $\monelA, \monelB \setin \monoidAset$,
 \begin{equation}
     \label{eq:act-to-endo-comp-compatibility}
-    \act(\monela \mtimesof\sgrpA \monelb) = \act(\monela) \mtimesof{\Endof\stateset} \act(\monelb), 
+    \act(\monelA \mtimesof\monoidA \monelB) = \act(\monelA) \mtimesof{\Endof\stateset} \act(\monelB), 
 \end{equation}
 which encodes ``compatibility of $\act$ with the composition operations in the source and the target'';
 
 Second, 
 \begin{equation}\label{eq:act-neutral-element-condit}
-    \act(\idmon_\monoidA) = \idmon_\stateset,
+    \act(\idmon_\monoidA) = \catidat\stateset,
 \end{equation}
 which encodes ``compatibility of $\act$ with the neutral elements in the source and the target''. 
 
-The latter condition may be unpacked even further; in terms of individual elements of $\stateset$ it says
+Both conditions may be unpacked even further, in terms of individual elements of $\stateset$. 
+Recall that the composition operation of $\Endof\stateset$ is the composition of functions, $\mapa \mtimesof{\Endof\stateset} \mapb = \mapa \mthen \mapb$ for $\mapa, \mapb \setin \Endof\stateset$, in which the function written first is applied first (\cref{exa:endofunction-monoid}). 
+Hence the first condition says
+\begin{equation}
+    \label{eq:act-to-endo-comp-compatibility-elementwise}
+    \forall \monelA, \monelB \setin \monoidAset \colon \forall \statesetel \setin \stateset \colon \quad \act(\monelA \mtimesof\monoidA \monelB)(\statesetel) = \act(\monelB)\bigl(\act(\monelA)(\statesetel)\bigr).
+\end{equation}
+In words: acting by $\monelA \mtimesof\monoidA \monelB$ is the same as first acting by $\monelA$ and then acting by $\monelB$.
+The second condition says
 \begin{equation}
     \forall \statesetel \setin \stateset \colon \quad \act(\idmon_\monoidA)(\statesetel) = \statesetel.
 \end{equation}
@@ -172,7 +180,7 @@ Since we can tell the difference between $\act$ and its uncurried version based 
 
 Now, so far, we have just used $\curry^{-1}$ to produce the function \cref{eq:uncurried-action} from a monoid action. However, $\act \colon  \monoidAset \to (\stateset \to \stateset)$ was not just any function, it was a monoid homomorphism $\act \colon \monoidA \fto \Endof\stateset$. What does that condition translate to in the uncurried version $\act \colon  \makecartprod{\monoidAset, \stateset} \sto \stateset$? The answer is summarized in the following definition.
 
-\begin{ctdefinition}[Monoid action, curried]
+\begin{ctdefinition}[Monoid action, uncurried]
 \label{def:uncurried-action}
    
     An \emph{uncurried action} of a \SY{monoid}~$\monoidA = \tup{\monoidAset, \mtimesof\monoidA, \idmon_\monoidA}$ on a set~\stateset is:
@@ -187,10 +195,10 @@ Now, so far, we have just used $\curry^{-1}$ to produce the function \cref{eq:un
     \end{enumerate}
     \condit
     \begin{enumerate}
-        \item for all~$\statesetel \setin \stateset$ and $\monela,\monelb\setin\monoidAset$,
+        \item for all~$\statesetel \setin \stateset$ and $\monelA,\monelB\setin\monoidAset$,
               \begin{equation}
                   \label{eq:monoiad-ract-1cond}
-                  \act(\monela \mtimesof\monoidA \monelb, \statesetel) = \act(\monelb, \act(\monela, \statesetel));
+                  \act(\monelA \mtimesof\monoidA \monelB, \statesetel) = \act(\monelB, \act(\monelA, \statesetel));
               \end{equation}
         \item for all~$\statesetel \setin \stateset$,
               \begin{equation}
@@ -223,6 +231,7 @@ Throughout this exercise, fix a monoid $\monoidA = \tup{\monoidAset, \mtimesof\m
     satisfies \cref{def:uncurried-action}. 
 \end{enumerate}
 \end{gradedexercise}
+\solutionof{UncurriedAction}
 
 \devel{
 
