@@ -26,7 +26,7 @@ This should not produce any errors.
 
 ## Installing Git
 
-You will also need `git` to work with the book.Install it from [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) or visit <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git> & follow the instructions for your operating system.
+You will also need `git` to work with the book. Install it from [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) or visit <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git> & follow the instructions for your operating system.
 
 > **Remark 1**. *Make a Github account, and make sure you are an accepted user for the ACT4E repository. You can check if you have access by visiting [this](https://github.com/ACT4E/ACT4E-solutions) page (solutions page is only available to members of the ACT4E organisation[^1]).*
 
