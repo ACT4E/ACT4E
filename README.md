@@ -136,14 +136,12 @@ To interact with the book you **must** have Docker open. Just click on the icon,
 make shell
 ```
 
-This should modifiy your terminal a bit, and your terminal will look like figure [1](#fig:enter-label){reference-type="ref" reference="fig:enter-label"}.
+This should modifiy your terminal a bit, and your terminal will look like the next figure.
 
 > **Remark 4**. *We will use the computer science terminology of 'root folder' or just 'root' to designate where the repository has been cloned. This is the folder called `ACT4E`.* 
 
-<figure id="fig:enter-label" data-latex-placement="ht">
-<img src="make-shell.png" style="width:50.0%" />
-<figcaption>Expected Terminal display</figcaption>
-</figure>
+![](make-shell.png)
+Expected Terminal display
 
 ## Compiling the entire book
 
