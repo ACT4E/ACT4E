@@ -1,5 +1,6 @@
 # Applied Category Theory for Engineering (ACT4E)
-![](pics/knife.jpg){width=500px}
+<img src="pics/knife.jpg" alt="Alt Text" width="200">
+
 This repository contains the sources to the book used in the Applied Category Theory for Engineering classes which are taught at ETH Zürich and online.
 
 A recent version of the PDF book can be obtained at [this link (PDF, ca. 400 MB)][pdf].
