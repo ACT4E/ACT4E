@@ -140,7 +140,7 @@ This should modifiy your terminal a bit, and your terminal will look like the ne
 
 > **Remark 4**. *We will use the computer science terminology of 'root folder' or just 'root' to designate where the repository has been cloned. This is the folder called `ACT4E`.* 
 
-![](make-shell.png)
+![](book-guide/make-shell.png)
 Expected Terminal display
 
 ## Compiling the entire book
