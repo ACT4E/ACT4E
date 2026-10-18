@@ -2,8 +2,6 @@
 
 \section{Homomorphisms of actions}
 
-\todotext{At the moment unclear if we really want to keep this section; to be considered in the future. Great would be to add a number of interesting examples; this topic related in particular to coordinate changes, bisimulation, etc. (dynamical systems topics). Also, we note that it foreshadows natural transformations.}
-
 
 \begin{ctdefinition}[Homomorphism of monoid actions]
     \label{def:monoid-action-morphism}
@@ -17,69 +15,348 @@
 
     \condit
     \begin{enumerate}
-        \item Equivariance: for every element $\monela \setin \monoidAset$,
+        \item Equivariance: for every element $\monelA \setin \monoidAset$,
               \begin{equation}
                   \label{eq:equivariance}
-                  \act_\setA(\monela) \mthen \mapa = \mapa \mthen \act_\setB(\monela).
+                  \act_\setA(\monelA) \mthen \mapa = \mapa \mthen \act_\setB(\monelA).
               \end{equation}
     \end{enumerate}
 \end{ctdefinition}
 
-In other words, condition \cref{eq:equivariance} says that it does not matter whether we first act by~$\monela$ and then apply~$\mapa$, or first apply~$\mapa$ and then act by~$\monela$: the result is the same.
+In other words, condition \cref{eq:equivariance} says that it does not matter whether we first act by~$\monelA$ and then apply~$\mapa$, or first apply~$\mapa$ and then act by~$\monelA$: the result is the same.
 
-\todotext{@JL: Add a commutative diagram here illustrating the equivariance condition.}
+Equivalently, for every $\monelA \setin \monoidAset$ the following diagram commutes:
+\begin{equation}
+    \label{eq:equivariance-diagram}
+    \begin{tikzcd}[column sep=large]
+        \setA \arrow[r, "\act_\setA(\monelA)"] \arrow[d, "\mapa"'] & \setA \arrow[d, "\mapa"] \\
+        \setB \arrow[r, "\act_\setB(\monelA)"']                    & \setB
+    \end{tikzcd}
+\end{equation}
+In uncurried form, condition \cref{eq:equivariance} reads $\mapa(\act_\setA(\monelA, x)) = \act_\setB(\monelA, \mapa(x))$ for all $\monelA \setin \monoidAset$ and $x \setin \setA$.
+In terms of the uncurried actions $\act_\setA \colon \makecartprod{\monoidAset, \setA} \sto \setA$ and $\act_\setB \colon \makecartprod{\monoidAset, \setB} \sto \setB$, this says that the following diagram commutes:
+\begin{equation}
+    \label{eq:equivariance-diagram-uncurried}
+    \begin{tikzcd}[column sep=large]
+        \makecartprod{\monoidAset, \setA} \arrow[r, "\act_\setA"] \arrow[d, "\catidat{\monoidAset} \cartprod \mapa"'] & \setA \arrow[d, "\mapa"] \\
+        \makecartprod{\monoidAset, \setB} \arrow[r, "\act_\setB"']                                                     & \setB
+    \end{tikzcd}
+\end{equation}
+Following the top and right arrows sends $\tup{\monelA, x}$ to $\mapa(\act_\setA(\monelA, x))$, and following the left and bottom arrows sends it to $\act_\setB(\monelA, \mapa(x))$.
 
-\begin{example}
-    Let~$\monoidA$ be the \SY{monoid}~$\tup{\natnumbers, +, 0}$.
-    An \SY{action} of~$\monoidA$ on a set~$\setA$ amounts to a choice of function~$\mapa \colon \setA \sto \setA$ (the action of~$1 \setin \natnumbers$), since the action of any~$n \setin \natnumbers$ is then determined as the~$n$-fold composition of~$\mapa$ with itself.
-    A homomorphism between two such actions~$\tup{\setA, \mapa}$ and~$\tup{\setB, \mapb}$ is then a function~$\mapc \colon \setA \sto \setB$ satisfying~$\mapa \mthen \mapc = \mapc \mthen \mapb$, which means that~$\mapc$ intertwines the two dynamics.
+\subsection{Homomorphisms of discrete-time dynamical systems}
+\label{sec:homomorphisms-discrete-time}
+
+Let us look at what \cref{def:monoid-action-morphism} amounts to in the case of discrete-time dynamical systems, that is, of actions of the monoid $\tup{\natnumbers, +, 0}$ (\cref{sec:dynamical-systems}).
+Recall from \cref{lem:one-step-function} that such a system is equivalently specified by a pair $\tup{\setX, \mapa}$, consisting of a state space $\setX$ and an endofunction $\mapa \colon \setX \sto \setX$, its one-step function; the action is then $n \mapsto \mapa^n$, or, in uncurried form, $\dyn(n, x) = \mapa^n(x)$.
+
+So let $\tup{\setX, \mapa}$ and $\tup{\setY, \mapb}$ be two discrete-time dynamical systems.
+A homomorphism from the first system to the second (\cref{def:monoid-action-morphism}) is a function $\mapc \colon \setX \sto \setY$ such that $\mapa^n \mthen \mapc = \mapc \mthen \mapb^n$ for all $n \setin \natnumbers$, that is,
+\begin{equation}
+    \label{eq:equivariance-discrete-time}
+    \mapc(\mapa^n(x)) = \mapb^n(\mapc(x)) \qquad \text{for all } n \setin \natnumbers \text{ and } x \setin \setX.
+\end{equation}
+In words: letting the first system run for $n$ time steps and then translating the result with $\mapc$ gives the same as first translating with $\mapc$ and then letting the second system run for $n$ time steps.
+Equivalently, $\mapc$ sends trajectories to trajectories: if $x_0, x_1, x_2, \dots$ is the trajectory of $x_0$ in the first system, then $\mapc(x_0), \mapc(x_1), \mapc(x_2), \dots$ is the trajectory of $\mapc(x_0)$ in the second.
+
+Condition \cref{eq:equivariance-discrete-time} consists of one equation for each $n \setin \natnumbers$.
+In terms of one-step functions, it suffices to check a single one of them.
+
+\begin{lemma}
+    \label{lem:homomorphism-one-step}
+    Let $\tup{\setX, \mapa}$ and $\tup{\setY, \mapb}$ be discrete-time dynamical systems.
+    A function $\mapc \colon \setX \sto \setY$ is a homomorphism of actions from $\tup{\setX, \mapa}$ to $\tup{\setY, \mapb}$ if and only if
+    \begin{equation}
+        \label{eq:equivariance-one-step}
+        \mapa \mthen \mapc = \mapc \mthen \mapb,
+        \qquad \text{that is,} \qquad
+        \mapc(\mapa(x)) = \mapb(\mapc(x)) \quad \text{for all } x \setin \setX.
+    \end{equation}
+\end{lemma}
+
+%\begin{proof}
+%    If $\mapc$ is a homomorphism, then \cref{eq:equivariance-one-step} is the case $n = 1$ of \cref{eq:equivariance-discrete-time}.
+%    Conversely, suppose that \cref{eq:equivariance-one-step} holds.
+%    We show $\mapa^n \mthen \mapc = \mapc \mthen \mapb^n$ by induction on $n$.
+%    For $n = 0$, both sides are equal to $\mapc$.
+%    If the equation holds for $n$, then
+%    \begin{equation}
+%        \mapa^{n+1} \mthen \mapc
+%        = \mapa^n \mthen \mapa \mthen \mapc
+%        = \mapa^n \mthen \mapc \mthen \mapb
+%        = \mapc \mthen \mapb^n \mthen \mapb
+%        = \mapc \mthen \mapb^{n+1},
+%    \end{equation}
+%    using \cref{eq:equivariance-one-step} in the second step and the induction hypothesis in the third.
+%\end{proof}
+
+Condition \cref{eq:equivariance-one-step} says that the following diagram commutes:
+\begin{equation}
+    \begin{tikzcd}
+        \setX \arrow[r, "\mapa"] \arrow[d, "\mapc"'] & \setX \arrow[d, "\mapc"] \\
+        \setY \arrow[r, "\mapb"']                    & \setY
+    \end{tikzcd}
+\end{equation}
+For finite systems, it also has a simple meaning in terms of the graphs of \cref{sec:dynamical-systems}: $\mapc$ sends each dot $x$ of the first graph to a dot $\mapc(x)$ of the second, and \cref{eq:equivariance-one-step} says that each arrow $x \to \mapa(x)$ of the first graph is sent to an arrow $\mapc(x) \to \mapb(\mapc(x))$ of the second.
+
+\begin{example}[From a 24-hour clock to a 12-hour clock]
+    \label{exa:clock-24-to-12}
+    Consider the clock of \cref{exa:clock-dynamical-system}, now with $24$ hours: the state space is $\setX = \makeset{0, 1, \dots, 23}$, with one-step function $\mapa(x) = (x + 1) \bmod 24$.
+    Let $\tup{\setY, \mapb}$ be the $12$-hour clock, with $\setY = \makeset{0, 1, \dots, 11}$ and $\mapb(y) = (y + 1) \bmod 12$.
+    The function
+    \begin{equation}
+        \mapc \colon \setX \sto \setY, \qquad \mapc(x) \definedas x \bmod 12,
+    \end{equation}
+    which translates a time on a 24-hour display into the position of the hour hand on a clock face, is a homomorphism: since $12$ divides $24$, we have
+    \begin{equation}
+        \mapc(\mapa(x)) = \bigl((x + 1) \bmod 24\bigr) \bmod 12 = (x + 1) \bmod 12 = \mapb(\mapc(x)).
+    \end{equation}
+    In terms of graphs, $\mapc$ wraps the cycle of length $24$ twice around the cycle of length $12$.
+    The divisibility matters: $x \mapsto x \bmod 5$ is \emph{not} a homomorphism to a $5$-hour clock $\tup{\makeset{0, \dots, 4}, \, y \mapsto (y + 1) \bmod 5}$, since $23$ is sent to $3$, while its successor $0$ is sent to $0$ instead of to $4$.
 \end{example}
 
-\begin{example}[Simplifying the plant model]
-    \label{exa:plant-coarse-graining}
-    Recall the discrete-time dynamical system of \cref{exa:plant-dynamical-system}: the \SY{action} $n \mapsto \mapa^n$ of $\tup{\natnumbers, +, 0}$ on the set $\setA$ of the five plant states $\sprout$, $\yng$, $\mature$, $\old$, $\dead$, where $\mapa \colon \setA \sto \setA$ is the development map.
-    By the previous example, a homomorphism from this action to another action $\tup{\setB, \mapb}$ of $\tup{\natnumbers, +, 0}$ is a function $\mapc \colon \setA \sto \setB$ with $\mapa \mthen \mapc = \mapc \mthen \mapb$, that is,
+\begin{example}[Changing currency]
+    \label{exa:compound-interest-currency}
+    Consider the compound interest system $\tup{\reals, \mapa}$ of \cref{exa:compound-interest}, with one-step function $\mapa(x) = (1 + r)\,x$, which describes a balance in Swiss francs, say.
+    If we express the balance in another currency instead, at a fixed exchange rate $c > 0$ (or in cents instead of francs, with $c = 100$), we obtain a function
     \begin{equation}
-        \label{eq:plant-equivariance}
-        \mapc(\mapa(\statesetel)) = \mapb(\mapc(\statesetel)) \qquad \text{for all } \statesetel \setin \setA.
+        \mapc \colon \reals \sto \reals, \qquad \mapc(x) \definedas c\,x.
     \end{equation}
-    We can think of such a homomorphism as a \emph{simplification} of the plant model: $\mapc$ translates each detailed state into a coarser description, and \cref{eq:plant-equivariance} says that the coarse model $\tup{\setB, \mapb}$ evolves in step with the detailed one.
-
-    \emph{A first attempt.}
-    Suppose that we only care whether the plant is alive.
-    Let $\setB = \makeset{\alive, \dead}$, and let $\mapc \colon \setA \sto \setB$ send $\dead$ to $\dead$ and the four other states to $\alive$.
-    Is there a dynamics $\mapb \colon \setB \sto \setB$ for which $\mapc$ is a homomorphism of actions?
-    Condition \cref{eq:plant-equivariance} for $\statesetel = \yng$ and for $\statesetel = \old$ gives
+    It is a homomorphism of actions from $\tup{\reals, \mapa}$ to itself, since
     \begin{equation}
-        \begin{aligned}
-            \mapb(\alive) & = \mapc(\mapa(\yng)) = \mapc(\mature) = \alive \qquad \text{and} \\
-            \mapb(\alive) & = \mapc(\mapa(\old)) = \mapc(\dead) = \dead,
-        \end{aligned}
+        \mapc(\mapa(x)) = c\,(1 + r)\,x = (1 + r)\,(c\,x) = \mapa(\mapc(x)).
     \end{equation}
-    a contradiction. So no such $\mapb$ exists.
-    The reason is that the coarse model would have to predict, from the information ``$\alive$'' alone, whether the plant will still be alive after the next season; but this depends on the age of the plant, which $\mapc$ forgets.
-    In general, \cref{eq:plant-equivariance} implies that if $\mapc$ identifies two states, $\mapc(\statesetel) = \mapc(\statesetel')$, then it must also identify their successors, $\mapc(\mapa(\statesetel)) = \mapc(\mapa(\statesetel'))$: a homomorphism of actions is a simplification that can still predict its own future.
-
-    \emph{A simplification that works.}
-    Instead, let us keep track of the age of the plant in seasons, but only up to $2$.
-    Let $\setC = \makeset{0, 1, 2}$, with the dynamics $\mapb'$ of a counter that stops at~$2$: $\mapb'(0) = 1$, $\mapb'(1) = 2$, and $\mapb'(2) = 2$.
-    Define $\mapd \colon \setA \sto \setC$ by
-    \begin{equation}
-        \mapd(\statesetel) \definedas
-        \begin{cases}
-            0 & \text{if } \statesetel = \sprout, \\
-            1 & \text{if } \statesetel = \yng, \\
-            2 & \text{if } \statesetel \setin \makeset{\mature, \old, \dead}.
-        \end{cases}
-    \end{equation}
-    Then $\mapd(\mapa(\statesetel)) = \mapb'(\mapd(\statesetel))$ for all $\statesetel \setin \setA$: for $\sprout$ and $\yng$ both sides are $1$ and $2$, respectively, and for the three other states both sides are $2$, since $\mapa$ sends each of them to $\old$ or $\dead$.
-    So $\mapd$ is a homomorphism of actions from $\tup{\setA, \mapa}$ to $\tup{\setC, \mapb'}$, and therefore $\mapd(\mapa^n(\statesetel)) = (\mapb')^n(\mapd(\statesetel))$ for all $n \setin \natnumbers$: running the detailed model for $n$ seasons and then simplifying gives the same result as simplifying first and running the coarse model for $n$ seasons.
-    The value $2$ means ``has reached maturity at some point'', and the coarse model can predict its own future because nothing ever leaves this state.
-
-    The price is that $\mapd$ no longer distinguishes dead plants from mature or old ones.
-    This is unavoidable: one can check that every homomorphism of actions out of $\tup{\setA, \mapa}$ that identifies at least two states also identifies $\dead$ with some living state.
-    (If $\mapc$ identifies two different states, apply $\mapa$ to both, the same number of times, until the older one has died: by \cref{eq:plant-equivariance}, the two resulting states, $\dead$ and a living state, are still identified by $\mapc$.)
+    So it does not matter whether we first let the interest accrue and then convert the balance, or first convert and then let the interest accrue.
+    By contrast, deducting a fixed fee, $x \mapsto x - d$ with $d \neq 0$, is not a homomorphism when $r \neq 0$: deducting after a year gives $(1 + r)\,x - d$, but deducting first gives $(1 + r)(x - d)$.
 \end{example}
+
+\subsection{Homomorphisms of continuous-time dynamical systems}
+\label{sec:homomorphisms-continuous-time}
+
+Let $\varphi \colon \reals \cartprod \reals^n \sto \reals^n$ and $\psi \colon \reals \cartprod \reals^m \sto \reals^m$ be continuous-time dynamical systems (\cref{def:ct-dynsyst}), that is, actions of $\tup{\reals, +, 0}$.
+By \cref{def:monoid-action-morphism}, a homomorphism from the first to the second is a function $\mapc \colon \reals^n \sto \reals^m$ such that
+\begin{equation}
+    \label{eq:equivariance-continuous-time}
+    \mapc(\varphi(t, x)) = \psi(t, \mapc(x)) \qquad \text{for all } t \setin \reals \text{ and } x \setin \reals^n.
+\end{equation}
+As in discrete time, this says that $\mapc$ sends trajectories to trajectories: if $t \mapsto \varphi(t, x)$ is the trajectory of the first system through $x$, then $t \mapsto \mapc(\varphi(t, x))$ is the trajectory of the second system through $\mapc(x)$.
+
+In contrast to $\tup{\natnumbers, +, 0}$, the monoid $\tup{\reals, +, 0}$ is not generated by a single element, so there is no one-step function to check.
+Its role is taken by the \emph{vector field}: suppose that the two flows come from differential equations $\dot{\stylemaps{x}}(t) = \mapa(\stylemaps{x}(t))$ on $\reals^n$ and $\dot{\stylemaps{y}}(t) = \mapb(\stylemaps{y}(t))$ on $\reals^m$, as in \cref{sec:dynamical-systems}, whose solutions exist for all times and are unique.
+Then there is the following ``infinitesimal'' version of \cref{lem:homomorphism-one-step}, where $\operatorname{D}\mapc(x)$ denotes the derivative (Jacobian matrix) of $\mapc$ at $x$.
+
+\begin{lemma}
+    \label{lem:homomorphism-vector-fields}
+    In the situation just described, a continuously differentiable function $\mapc \colon \reals^n \sto \reals^m$ is a homomorphism from $\varphi$ to $\psi$ if and only if
+    \begin{equation}
+        \label{eq:related-vector-fields}
+        \operatorname{D}\mapc(x) \, \mapa(x) = \mapb(\mapc(x)) \qquad \text{for all } x \setin \reals^n.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}[Sketch of proof]
+    If $\mapc$ is a homomorphism, differentiating \cref{eq:equivariance-continuous-time} with respect to $t$ at $t = 0$ gives \cref{eq:related-vector-fields}, by the chain rule.
+    Conversely, suppose that \cref{eq:related-vector-fields} holds, fix $x \setin \reals^n$, and consider the curve $\stylemaps{c}(t) \definedas \mapc(\varphi(t, x))$.
+    By the chain rule, $\dot{\stylemaps{c}}(t) = \operatorname{D}\mapc(\varphi(t, x)) \, \mapa(\varphi(t, x)) = \mapb(\stylemaps{c}(t))$, and $\stylemaps{c}(0) = \mapc(x)$.
+    So $\stylemaps{c}$ solves the initial value problem of the second system with initial point $\mapc(x)$, and by uniqueness of solutions, $\stylemaps{c}(t) = \psi(t, \mapc(x))$ for all $t$.
+\end{proof}
+
+\begin{remark}
+    \label{rem:homomorphism-sampling}
+    A homomorphism of continuous-time systems is also a homomorphism between the corresponding sampled systems (\cref{sec:sampling}), for every sampling period: \cref{eq:equivariance-continuous-time} holds in particular for all times $t$ that are integer multiples of the sampling period.
+\end{remark}
+
+\begin{example}[Change of coordinates]
+    \label{exa:linear-change-of-coordinates}
+    Consider a linear system $\dot{\stylemaps{x}}(t) = \mat{A}\stylemaps{x}(t)$ on $\reals^n$, and let $\mat{T}$ be an invertible $\matdim{n}{n}$ matrix.
+    Describing the state in the new coordinates $y = \mat{T}x$ gives the linear system $\dot{\stylemaps{y}}(t) = \mat{T}\mat{A}\mat{T}^{-1}\stylemaps{y}(t)$, and the function $\mapc(x) \definedas \mat{T}x$ is a homomorphism from the first system to the second.
+    Indeed, $\operatorname{D}\mapc(x) = \mat{T}$, and \cref{eq:related-vector-fields} holds, since $\mat{T}(\mat{A}x) = (\mat{T}\mat{A}\mat{T}^{-1})(\mat{T}x)$; in terms of flows, this is the equation $\mat{T}e^{\mat{A}t} = e^{\mat{T}\mat{A}\mat{T}^{-1}t}\mat{T}$.
+    Since $x \mapsto \mat{T}^{-1}x$ is a homomorphism in the opposite direction, the two systems are ``the same up to a change of coordinates''.
+\end{example}
+
+\begin{example}[Conserved quantities]
+    \label{exa:conserved-quantity}
+    Consider the system $\dot{x}_1 = -x_2$, $\dot{x}_2 = x_1$ on $\reals^2$, whose flow rotates every point around the origin with angular velocity $1$, and the \emph{trivial} system $\dot{y} = 0$ on $\reals$, whose flow is $\psi(t, y) = y$.
+    The function $\mapc(x_1, x_2) \definedas x_1^2 + x_2^2$ is a homomorphism from the first system to the second: we have $\operatorname{D}\mapc(x) = \begin{bmatrix} 2x_1 & 2x_2 \end{bmatrix}$, so
+    \begin{equation}
+        \operatorname{D}\mapc(x) \begin{bmatrix} -x_2 \\ x_1 \end{bmatrix} = -2x_1x_2 + 2x_2x_1 = 0.
+    \end{equation}
+    More generally, a homomorphism $\mapc$ to the trivial system is exactly a function with $\mapc(\varphi(t, x)) = \mapc(x)$ for all $t$ and $x$, i.e.\ a quantity that is constant along every trajectory. Such quantities are called \emph{conserved quantities}; a typical example is the energy of a mechanical system without friction.
+\end{example}
+
+
+\subsection{Homomorphisms of Moore machines}
+\label{sec:homomorphisms-moore}
+
+Moore machines (\cref{def:moore-machine-first}) are not simply actions of a monoid: besides their dynamics, they have a read-out and an initial state.
+However, their dynamics induces an action of the monoid $\listsof{\prin}$ of lists of inputs (\cref{sec:actions-of-sets}), and a homomorphism of Moore machines is a homomorphism of these actions which, in addition, respects the read-out and the initial state.
+We consider machines with the same inputs and outputs, and compare their states.
+
+\begin{ctdefinition}[Homomorphism of Moore machines]
+    \label{def:moore-machine-homomorphism}
+    Let $\tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$ and $\tupp{\prin, \prst', \prout, \prdyn', \prreadout', \prstart'}$ be two Moore machines with the same set $\prin$ of inputs and the same set $\prout$ of outputs.
+    A \maindef{homomorphism of Moore machines} from the first to the second is:
+
+    \constit
+    \begin{enumerate}
+        \item A function $\mapc \colon \prst \sto \prst'$.
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item Compatibility with the dynamics: $\mapc(\prdyn(\prinel, \prstel)) = \prdyn'(\prinel, \mapc(\prstel))$ for all $\prinel \setin \prin$ and $\prstel \setin \prst$;
+        \item Compatibility with the read-out: $\prreadout'(\mapc(\prstel)) = \prreadout(\prstel)$ for all $\prstel \setin \prst$, that is, $\mapc \mthen \prreadout' = \prreadout$;
+        \item Compatibility with the initial states: $\mapc(\prstart) = \prstart'$.
+    \end{enumerate}
+\end{ctdefinition}
+
+For each input $\prinel$, condition 1 is the one-step condition \cref{eq:equivariance-one-step} for the functions $\prdyn(\prinel, -)$ and $\prdyn'(\prinel, -)$.
+By the same induction as in the proof of \cref{lem:homomorphism-one-step}, now on the length of lists, it is equivalent to $\mapc$ being a homomorphism of the induced actions of $\listsof{\prin}$: $\mapc(\act(l, \prstel)) = \act'(l, \mapc(\prstel))$ for all lists $l \setin \listsof{\prin}$ and all $\prstel \setin \prst$.
+
+The most important property of homomorphisms of Moore machines is that they preserve the input-output behavior.
+
+\begin{lemma}
+    \label{lem:moore-homomorphism-behavior}
+    If there is a homomorphism of Moore machines from one Moore machine to another, then the two machines transform every list of inputs into the same list of outputs \cref{eq:moore-list-output}.
+\end{lemma}
+
+\begin{proof}
+    Let $\mapc$ be the homomorphism, let $\makelist{\prineln{1}, \dots, \prineln{k}}$ be a list of inputs, and let $\prsteln{0}, \dots, \prsteln{k}$ and $\prsteln{0}', \dots, \prsteln{k}'$ be the states visited by the two machines.
+    We show $\prsteln{i}' = \mapc(\prsteln{i})$ by induction on $i$.
+    For $i = 0$, this is condition 3: $\prsteln{0}' = \prstart' = \mapc(\prstart) = \mapc(\prsteln{0})$.
+    If it holds for $i - 1$, then by condition 1,
+    \begin{equation}
+        \prsteln{i}' = \prdyn'(\prineln{i}, \prsteln{i-1}') = \prdyn'(\prineln{i}, \mapc(\prsteln{i-1})) = \mapc(\prdyn(\prineln{i}, \prsteln{i-1})) = \mapc(\prsteln{i}).
+    \end{equation}
+    By condition 2, the outputs agree: $\prreadout'(\prsteln{i}') = \prreadout'(\mapc(\prsteln{i})) = \prreadout(\prsteln{i})$ for all $i$.
+\end{proof}
+
+In particular, a homomorphism can be used to replace a machine by a simpler one with the same input-output behavior; this is the idea behind the \emph{minimization} of machines.
+
+\begin{example}[Counting modulo 4 versus modulo 2]
+    \label{exa:moore-parity}
+    Consider Moore machines with inputs $\prin = \makeset{0, 1}$ and outputs $\prout = \makeset{\text{even}, \text{odd}}$, which report whether the number of $1$s read so far is even or odd.
+    A first machine counts the $1$s modulo $4$: its states are $\prst = \makeset{0, 1, 2, 3}$, with $\prdyn(\prinel, \prstel) = (\prstel + \prinel) \bmod 4$, $\prstart = 0$, and read-out $\prreadout(\prstel) = \text{even}$ if $\prstel$ is even and $\text{odd}$ otherwise.
+    A second machine counts modulo $2$: $\prst' = \makeset{0, 1}$, with $\prdyn'(\prinel, \prstel) = (\prstel + \prinel) \bmod 2$, $\prstart' = 0$, and $\prreadout'(0) = \text{even}$, $\prreadout'(1) = \text{odd}$.
+    The function $\mapc(\prstel) \definedas \prstel \bmod 2$ is a homomorphism from the first machine to the second: since $2$ divides $4$, we have $\mapc((\prstel + \prinel) \bmod 4) = (\prstel + \prinel) \bmod 2 = \prdyn'(\prinel, \mapc(\prstel))$; the parity of $\prstel \bmod 2$ is the parity of $\prstel$; and $\mapc(0) = 0$.
+    By \cref{lem:moore-homomorphism-behavior}, the two machines have the same input-output behavior, so the smaller one can replace the larger one.
+\end{example}
+
+\begin{example}[Forgetting an irrelevant coordinate]
+    \label{exa:moore-robot-projection}
+    Consider the robot of \cref{exa:robot_on_a_grid}, with initial state $\tup{1, 1}$, but now with the read-out that only reports whether the robot is in the left half of the grid: $\prout = \makeset{\text{left}, \text{right}}$, and $\prreadout(\prsteln{1}, \prsteln{2}) = \text{left}$ if $\prsteln{1} \leq 2$, and $\text{right}$ otherwise.
+    For this read-out, the vertical position is irrelevant.
+    Let the second machine have the states $\prst' = \makeset{1, 2, 3, 4}$ (the horizontal position only), the dynamics $\prdyn'(\rightarrow, \prsteln{1}) = \min(\prsteln{1} + 1, 4)$, $\prdyn'(\leftarrow, \prsteln{1}) = \max(\prsteln{1} - 1, 1)$, and $\prdyn'(\uparrow, \prsteln{1}) = \prdyn'(\downarrow, \prsteln{1}) = \prsteln{1}$, the initial state $1$, and the read-out $\prreadout'(\prsteln{1}) = \text{left}$ if $\prsteln{1} \leq 2$, and $\text{right}$ otherwise.
+    Then the projection $\mapc(\prsteln{1}, \prsteln{2}) \definedas \prsteln{1}$ is a homomorphism of Moore machines: each instruction changes the horizontal position in the same way in both machines, the read-out only depends on the horizontal position, and $\mapc(1, 1) = 1$.
+\end{example}
+
+
+\subsection{Homomorphisms of Mealy machines}
+\label{sec:homomorphisms-mealy}
+
+For Mealy machines (\cref{def:mealy-machine}), the definition is the same, except that the read-out now also takes the current input as an argument.
+
+\begin{ctdefinition}[Homomorphism of Mealy machines]
+    \label{def:mealy-machine-homomorphism}
+    Let $\tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$ and $\tupp{\prin, \prst', \prout, \prdyn', \prreadout', \prstart'}$ be two Mealy machines with the same set $\prin$ of inputs and the same set $\prout$ of outputs.
+    A \maindef{homomorphism of Mealy machines} from the first to the second is:
+
+    \constit
+    \begin{enumerate}
+        \item A function $\mapc \colon \prst \sto \prst'$.
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item Compatibility with the dynamics: $\mapc(\prdyn(\prinel, \prstel)) = \prdyn'(\prinel, \mapc(\prstel))$ for all $\prinel \setin \prin$ and $\prstel \setin \prst$;
+        \item Compatibility with the read-out: $\prreadout'(\prinel, \mapc(\prstel)) = \prreadout(\prinel, \prstel)$ for all $\prinel \setin \prin$ and $\prstel \setin \prst$;
+        \item Compatibility with the initial states: $\mapc(\prstart) = \prstart'$.
+    \end{enumerate}
+\end{ctdefinition}
+
+If we combine dynamics and read-out into single functions $\stylemaps{F} \colon \makecartprod{\prin, \prst} \sto \makecartprod{\prout, \prst}$ and $\stylemaps{F}' \colon \makecartprod{\prin, \prst'} \sto \makecartprod{\prout, \prst'}$, as in \cref{rem:mealy-single-function}, conditions 1 and 2 together say that the following diagram commutes:
+\begin{equation}
+    \label{eq:mealy-homomorphism-diagram}
+    \begin{tikzcd}[column sep=large]
+        \makecartprod{\prin, \prst} \arrow[r, "\stylemaps{F}"] \arrow[d, "\catidat{\prin} \cartprod \mapc"'] & \makecartprod{\prout, \prst} \arrow[d, "\catidat{\prout} \cartprod \mapc"] \\
+        \makecartprod{\prin, \prst'} \arrow[r, "\stylemaps{F}'"']                                             & \makecartprod{\prout, \prst'}
+    \end{tikzcd}
+\end{equation}
+Indeed, the two paths send $\tup{\prinel, \prstel}$ to
+\begin{equation}
+    \tup{\prreadout(\prinel, \prstel), \mapc(\prdyn(\prinel, \prstel))}
+    \qquad \text{and} \qquad
+    \tup{\prreadout'(\prinel, \mapc(\prstel)), \prdyn'(\prinel, \mapc(\prstel))},
+\end{equation}
+respectively.
+As for Moore machines, and with the same proof, a homomorphism of Mealy machines implies that the two machines transform every list of inputs into the same list of outputs \cref{eq:mealy-list-output}.
+
+\begin{example}[A change detector with superfluous memory]
+    \label{exa:mealy-superfluous-memory}
+    Consider a variant of the change detector of \cref{exa:mealy-change-detector} whose state stores the last \emph{two} inputs: $\prst_2 = \makecartprod{\makeset{0, 1}, \makeset{0, 1}}$, with dynamics $\prdyn_2(\prinel, \tup{a, b}) = \tup{b, \prinel}$, read-out $\prreadout_2(\prinel, \tup{a, b}) = 1$ if $\prinel \neq b$ and $0$ otherwise, and initial state $\tup{0, 0}$.
+    The function $\mapc \colon \prst_2 \sto \makeset{0, 1}$, $\tup{a, b} \mapsto b$, which forgets the older of the two stored inputs, is a homomorphism from this machine to the original change detector: $\mapc(\tup{b, \prinel}) = \prinel = \prdyn(\prinel, b)$, the two read-outs both compare $\prinel$ with $b$, and $\mapc(\tup{0, 0}) = 0$.
+    So the additional memory is superfluous: both machines have the same input-output behavior.
+\end{example}
+
+\begin{example}[Change of state coordinates of a discrete-time LTI system]
+    \label{exa:lti-similarity-transformation}
+    Consider a discrete-time LTI system $\tupp{\mat{A}, \mat{B}, \mat{C}, \mat{D}, \mat{x}_0}$, viewed as a Mealy machine (\cref{exa:discrete-lti-mealy}), and let $\mat{T}$ be an invertible $\matdim{n}{n}$ matrix.
+    Then $\mapc(x) \definedas \mat{T}x$ is a homomorphism of Mealy machines to the LTI system $\tupp{\mat{T}\mat{A}\mat{T}^{-1}, \mat{T}\mat{B}, \mat{C}\mat{T}^{-1}, \mat{D}, \mat{T}\mat{x}_0}$, since
+    \begin{equation}
+        \mat{T}(\mat{A}x + \mat{B}u) = \mat{T}\mat{A}\mat{T}^{-1}(\mat{T}x) + \mat{T}\mat{B}u,
+        \qquad
+        \mat{C}x + \mat{D}u = \mat{C}\mat{T}^{-1}(\mat{T}x) + \mat{D}u.
+    \end{equation}
+    In control theory, this is known as a \emph{similarity transformation}: the two state-space representations describe the same input-output behavior in different coordinates of the state space.
+\end{example}
+
+
+% [2026-10-18: example removed for now; kept here, commented out, for possible later use.]
+% \begin{example}[Simplifying the plant model]
+%     \label{exa:plant-coarse-graining}
+%     Recall the discrete-time dynamical system of \cref{exa:plant-dynamical-system}: the \SY{action} $n \mapsto \mapa^n$ of $\tup{\natnumbers, +, 0}$ on the set $\setA$ of the five plant states $\sprout$, $\yng$, $\mature$, $\old$, $\dead$, where $\mapa \colon \setA \sto \setA$ is the development map.
+%     By the previous example, a homomorphism from this action to another action $\tup{\setB, \mapb}$ of $\tup{\natnumbers, +, 0}$ is a function $\mapc \colon \setA \sto \setB$ with $\mapa \mthen \mapc = \mapc \mthen \mapb$, that is,
+%     \begin{equation}
+%         \label{eq:plant-equivariance}
+%         \mapc(\mapa(\statesetel)) = \mapb(\mapc(\statesetel)) \qquad \text{for all } \statesetel \setin \setA.
+%     \end{equation}
+%     We can think of such a homomorphism as a \emph{simplification} of the plant model: $\mapc$ translates each detailed state into a coarser description, and \cref{eq:plant-equivariance} says that the coarse model $\tup{\setB, \mapb}$ evolves in step with the detailed one.
+%
+%     \emph{A first attempt.}
+%     Suppose that we only care whether the plant is alive.
+%     Let $\setB = \makeset{\alive, \dead}$, and let $\mapc \colon \setA \sto \setB$ send $\dead$ to $\dead$ and the four other states to $\alive$.
+%     Is there a dynamics $\mapb \colon \setB \sto \setB$ for which $\mapc$ is a homomorphism of actions?
+%     Condition \cref{eq:plant-equivariance} for $\statesetel = \yng$ and for $\statesetel = \old$ gives
+%     \begin{equation}
+%         \begin{aligned}
+%             \mapb(\alive) & = \mapc(\mapa(\yng)) = \mapc(\mature) = \alive \qquad \text{and} \\
+%             \mapb(\alive) & = \mapc(\mapa(\old)) = \mapc(\dead) = \dead,
+%         \end{aligned}
+%     \end{equation}
+%     a contradiction. So no such $\mapb$ exists.
+%     The reason is that the coarse model would have to predict, from the information ``$\alive$'' alone, whether the plant will still be alive after the next season; but this depends on the age of the plant, which $\mapc$ forgets.
+%     In general, \cref{eq:plant-equivariance} implies that if $\mapc$ identifies two states, $\mapc(\statesetel) = \mapc(\statesetel')$, then it must also identify their successors, $\mapc(\mapa(\statesetel)) = \mapc(\mapa(\statesetel'))$: a homomorphism of actions is a simplification that can still predict its own future.
+%
+%     \emph{A simplification that works.}
+%     Instead, let us keep track of the age of the plant in seasons, but only up to $2$.
+%     Let $\setC = \makeset{0, 1, 2}$, with the dynamics $\mapb'$ of a counter that stops at~$2$: $\mapb'(0) = 1$, $\mapb'(1) = 2$, and $\mapb'(2) = 2$.
+%     Define $\mapd \colon \setA \sto \setC$ by
+%     \begin{equation}
+%         \mapd(\statesetel) \definedas
+%         \begin{cases}
+%             0 & \text{if } \statesetel = \sprout, \\
+%             1 & \text{if } \statesetel = \yng, \\
+%             2 & \text{if } \statesetel \setin \makeset{\mature, \old, \dead}.
+%         \end{cases}
+%     \end{equation}
+%     Then $\mapd(\mapa(\statesetel)) = \mapb'(\mapd(\statesetel))$ for all $\statesetel \setin \setA$: for $\sprout$ and $\yng$ both sides are $1$ and $2$, respectively, and for the three other states both sides are $2$, since $\mapa$ sends each of them to $\old$ or $\dead$.
+%     So $\mapd$ is a homomorphism of actions from $\tup{\setA, \mapa}$ to $\tup{\setC, \mapb'}$, and therefore $\mapd(\mapa^n(\statesetel)) = (\mapb')^n(\mapd(\statesetel))$ for all $n \setin \natnumbers$: running the detailed model for $n$ seasons and then simplifying gives the same result as simplifying first and running the coarse model for $n$ seasons.
+%     The value $2$ means ``has reached maturity at some point'', and the coarse model can predict its own future because nothing ever leaves this state.
+%
+%     The price is that $\mapd$ no longer distinguishes dead plants from mature or old ones.
+%     This is unavoidable: one can check that every homomorphism of actions out of $\tup{\setA, \mapa}$ that identifies at least two states also identifies $\dead$ with some living state.
+%     (If $\mapc$ identifies two different states, apply $\mapa$ to both, the same number of times, until the older one has died: by \cref{eq:plant-equivariance}, the two resulting states, $\dead$ and a living state, are still identified by $\mapc$.)
+% \end{example}
 
     
     
