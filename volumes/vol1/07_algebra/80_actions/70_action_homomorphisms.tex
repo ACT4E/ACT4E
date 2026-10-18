@@ -35,6 +35,52 @@ In other words, condition \cref{eq:equivariance} says that it does not matter wh
     A homomorphism between two such actions~$\tup{\setA, \mapa}$ and~$\tup{\setB, \mapb}$ is then a function~$\mapc \colon \setA \sto \setB$ satisfying~$\mapa \mthen \mapc = \mapc \mthen \mapb$, which means that~$\mapc$ intertwines the two dynamics.
 \end{example}
 
+\begin{example}[Simplifying the plant model]
+    \label{exa:plant-coarse-graining}
+    Recall the discrete-time dynamical system of \cref{exa:plant-dynamical-system}: the \SY{action} $n \mapsto \mapa^n$ of $\tup{\natnumbers, +, 0}$ on the set $\setA$ of the five plant states $\sprout$, $\yng$, $\mature$, $\old$, $\dead$, where $\mapa \colon \setA \sto \setA$ is the development map.
+    By the previous example, a homomorphism from this action to another action $\tup{\setB, \mapb}$ of $\tup{\natnumbers, +, 0}$ is a function $\mapc \colon \setA \sto \setB$ with $\mapa \mthen \mapc = \mapc \mthen \mapb$, that is,
+    \begin{equation}
+        \label{eq:plant-equivariance}
+        \mapc(\mapa(\statesetel)) = \mapb(\mapc(\statesetel)) \qquad \text{for all } \statesetel \setin \setA.
+    \end{equation}
+    We can think of such a homomorphism as a \emph{simplification} of the plant model: $\mapc$ translates each detailed state into a coarser description, and \cref{eq:plant-equivariance} says that the coarse model $\tup{\setB, \mapb}$ evolves in step with the detailed one.
+
+    \emph{A first attempt.}
+    Suppose that we only care whether the plant is alive.
+    Let $\setB = \makeset{\alive, \dead}$, and let $\mapc \colon \setA \sto \setB$ send $\dead$ to $\dead$ and the four other states to $\alive$.
+    Is there a dynamics $\mapb \colon \setB \sto \setB$ for which $\mapc$ is a homomorphism of actions?
+    Condition \cref{eq:plant-equivariance} for $\statesetel = \yng$ and for $\statesetel = \old$ gives
+    \begin{equation}
+        \begin{aligned}
+            \mapb(\alive) & = \mapc(\mapa(\yng)) = \mapc(\mature) = \alive \qquad \text{and} \\
+            \mapb(\alive) & = \mapc(\mapa(\old)) = \mapc(\dead) = \dead,
+        \end{aligned}
+    \end{equation}
+    a contradiction. So no such $\mapb$ exists.
+    The reason is that the coarse model would have to predict, from the information ``$\alive$'' alone, whether the plant will still be alive after the next season; but this depends on the age of the plant, which $\mapc$ forgets.
+    In general, \cref{eq:plant-equivariance} implies that if $\mapc$ identifies two states, $\mapc(\statesetel) = \mapc(\statesetel')$, then it must also identify their successors, $\mapc(\mapa(\statesetel)) = \mapc(\mapa(\statesetel'))$: a homomorphism of actions is a simplification that can still predict its own future.
+
+    \emph{A simplification that works.}
+    Instead, let us keep track of the age of the plant in seasons, but only up to $2$.
+    Let $\setC = \makeset{0, 1, 2}$, with the dynamics $\mapb'$ of a counter that stops at~$2$: $\mapb'(0) = 1$, $\mapb'(1) = 2$, and $\mapb'(2) = 2$.
+    Define $\mapd \colon \setA \sto \setC$ by
+    \begin{equation}
+        \mapd(\statesetel) \definedas
+        \begin{cases}
+            0 & \text{if } \statesetel = \sprout, \\
+            1 & \text{if } \statesetel = \yng, \\
+            2 & \text{if } \statesetel \setin \makeset{\mature, \old, \dead}.
+        \end{cases}
+    \end{equation}
+    Then $\mapd(\mapa(\statesetel)) = \mapb'(\mapd(\statesetel))$ for all $\statesetel \setin \setA$: for $\sprout$ and $\yng$ both sides are $1$ and $2$, respectively, and for the three other states both sides are $2$, since $\mapa$ sends each of them to $\old$ or $\dead$.
+    So $\mapd$ is a homomorphism of actions from $\tup{\setA, \mapa}$ to $\tup{\setC, \mapb'}$, and therefore $\mapd(\mapa^n(\statesetel)) = (\mapb')^n(\mapd(\statesetel))$ for all $n \setin \natnumbers$: running the detailed model for $n$ seasons and then simplifying gives the same result as simplifying first and running the coarse model for $n$ seasons.
+    The value $2$ means ``has reached maturity at some point'', and the coarse model can predict its own future because nothing ever leaves this state.
+
+    The price is that $\mapd$ no longer distinguishes dead plants from mature or old ones.
+    This is unavoidable: one can check that every homomorphism of actions out of $\tup{\setA, \mapa}$ that identifies at least two states also identifies $\dead$ with some living state.
+    (If $\mapc$ identifies two different states, apply $\mapa$ to both, the same number of times, until the older one has died: by \cref{eq:plant-equivariance}, the two resulting states, $\dead$ and a living state, are still identified by $\mapc$.)
+\end{example}
+
     
     
     

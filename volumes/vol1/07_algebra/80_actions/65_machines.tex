@@ -184,6 +184,25 @@ This allows a Mealy machine to react to an input immediately, in the same step i
 \end{ctdefinition}
 
 As for Moore machines, we write a Mealy machine as a tuple $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$; the only difference is the type of the read-out.
+
+\begin{remark}[Dynamics and read-out as a single function]
+    \label{rem:mealy-single-function}
+    The dynamics and the read-out of a Mealy machine have the same domain $\makecartprod{\prin, \prst}$.
+    We can therefore, alternatively and equivalently, combine them into a single function
+    \begin{equation}
+        \label{eq:mealy-single-function}
+        \begin{aligned}
+            \stylemaps{F} \colon & \makecartprod{\prin, \prst} & \sto     & \ \ \makecartprod{\prout, \prst}, \\
+                                 & \tup{\prinel, \prstel}      & \mapsto & \ \ \tup{\prreadout(\prinel, \prstel), \prdyn(\prinel, \prstel)},
+        \end{aligned}
+    \end{equation}
+    which, in each step, takes the current input and the current state, and returns the output and the next state.
+    Conversely, we recover the read-out and the dynamics from $\stylemaps{F}$ by post-composing with the canonical projections: $\prreadout = \stylemaps{F} \mthen \proj_1$ and $\prdyn = \stylemaps{F} \mthen \proj_2$.
+    These two passages are inverse to each other; this is the canonical isomorphism $(\makecartprod{\setA, \setB})^{\setC} \cong \makecartprod{\setA^{\setC}, \setB^{\setC}}$ of \cref{sec:arithmetic-exponents-products}, for $\setA = \prout$, $\setB = \prst$, and $\setC = \makecartprod{\prin, \prst}$.
+    So a Mealy machine can equally well be specified by a tuple $\tupp{\prin, \prst, \prout, \stylemaps{F}, \prstart}$, with $\stylemaps{F}$ a function of type $\makecartprod{\prin, \prst} \sto \makecartprod{\prout, \prst}$.
+    A Moore machine can be packaged in the same way, as $\tup{\prinel, \prstel} \mapsto \tup{\prreadout(\prstel), \prdyn(\prinel, \prstel)}$; its first component does not depend on the input.
+\end{remark}
+
 A Mealy machine transforms a list $\makelist{\prineln{1}, \dots, \prineln{k}}$ of inputs into a list of outputs as follows: with $\prsteln{0} = \prstart$ and $\prsteln{i} = \prdyn(\prineln{i}, \prsteln{i-1})$ as before (that is, $\prsteln{i} = \act(\makelist{\prineln{1}, \dots, \prineln{i}}, \prstart)$ for the induced action of $\listsof{\prin}$), the outputs are
 \begin{equation}
     \label{eq:mealy-list-output}
