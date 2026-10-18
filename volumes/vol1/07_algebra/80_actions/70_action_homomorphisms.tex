@@ -44,6 +44,64 @@ In terms of the uncurried actions $\act_\setA \colon \makecartprod{\monoidAset, 
 \end{equation}
 Following the top and right arrows sends $\tup{\monelA, x}$ to $\mapa(\act_\setA(\monelA, x))$, and following the left and bottom arrows sends it to $\act_\setB(\monelA, \mapa(x))$.
 
+
+\begin{example}[Change of coordinates for matrices acting on vectors]
+    \label{exa:matrix-change-of-coordinates}
+    Let $\monoidA = \tup{\reals^{\ntimesn}, \mtimesof\monoidA, \idmat}$ be the monoid of $\ntimesn$ matrices with $\matmor{A} \mtimesof\monoidA \matmor{B} \definedas \matmor{B}\matmor{A}$, acting on $\reals^n$ by $\act_1(\matmor{A}, \vectob{v}) \definedas \matmor{A}\vectob{v}$, as in \cref{exa:matrix-action}.
+    Let $\matmor{T}$ be an invertible $\ntimesn$ matrix, and think of $\vectob{w} = \matmor{T}\vectob{v}$ as the coordinates of the vector $\vectob{v}$ with respect to a new basis.
+    In the new coordinates, the transformation described by $\matmor{A}$ in the old coordinates is described by the matrix $\matmor{T}\matmor{A}\matmor{T}^{-1}$: first translate back to the old coordinates, then apply $\matmor{A}$, then translate to the new coordinates.
+    This gives a second action of $\monoidA$ on $\reals^n$,
+    \begin{equation}
+        \act_2(\matmor{A}, \vectob{w}) \definedas \matmor{T}\matmor{A}\matmor{T}^{-1}\vectob{w}.
+    \end{equation}
+    It is indeed an action: $\act_2(\idmat, \vectob{w}) = \vectob{w}$, and
+    \begin{equation}
+        \begin{aligned}
+            \act_2(\matmor{B}, \act_2(\matmor{A}, \vectob{w}))
+            & = \matmor{T}\matmor{B}\matmor{T}^{-1}\matmor{T}\matmor{A}\matmor{T}^{-1}\vectob{w} \\
+            & = \matmor{T}(\matmor{B}\matmor{A})\matmor{T}^{-1}\vectob{w}
+            = \act_2(\matmor{A} \mtimesof\monoidA \matmor{B}, \vectob{w}).
+        \end{aligned}
+    \end{equation}
+    (Alternatively, $\act_2$ is the restriction of $\act_1$ along the monoid morphism $\monoidA \fto \monoidA$, $\matmor{A} \mapsto \matmor{T}\matmor{A}\matmor{T}^{-1}$; see \cref{lem:restriction-of-action}.)
+    The change of coordinates $\mapa \colon \reals^n \sto \reals^n$, $\vectob{v} \mapsto \matmor{T}\vectob{v}$, is a homomorphism of actions from $\tup{\reals^n, \act_1}$ to $\tup{\reals^n, \act_2}$, since
+    \begin{equation}
+        \mapa(\act_1(\matmor{A}, \vectob{v})) = \matmor{T}\matmor{A}\vectob{v} = \matmor{T}\matmor{A}\matmor{T}^{-1}(\matmor{T}\vectob{v}) = \act_2(\matmor{A}, \mapa(\vectob{v})).
+    \end{equation}
+    In the same way, $\vectob{w} \mapsto \matmor{T}^{-1}\vectob{w}$ is a homomorphism in the opposite direction, inverse to $\mapa$.
+    So the two actions are essentially the same action, described in two coordinate systems.
+\end{example}
+
+\begin{example}[Time-invariant filters]
+    \label{exa:time-invariant-filter}
+    A \emph{discrete-time signal} is a function $\stylemaps{u} \colon \wnumbers \sto \reals$, which assigns a value $\stylemaps{u}(k)$ to every time step $k \setin \wnumbers$; let $\stylesets{S} = \reals^{\wnumbers}$ be the set of all such signals.
+    The monoid $\tup{\wnumbers, +, 0}$ acts on $\stylesets{S}$ by \emph{shifting} signals in time:
+    \begin{equation}
+        \act(s, \stylemaps{u}) \definedas \bigl(k \mapsto \stylemaps{u}(k - s)\bigr),
+    \end{equation}
+    so that $\act(s, \stylemaps{u})$ is the signal $\stylemaps{u}$ delayed by $s$ time steps.
+    This is an action: $\act(0, \stylemaps{u}) = \stylemaps{u}$, and delaying by $s$ and then by $t$ is the same as delaying by $s + t$, since $\act(t, \act(s, \stylemaps{u}))(k) = \stylemaps{u}(k - t - s) = \act(s + t, \stylemaps{u})(k)$.
+
+    A \emph{filter} is a function $\stylemaps{F} \colon \stylesets{S} \sto \stylesets{S}$, which transforms input signals into output signals.
+    A homomorphism of actions from $\tup{\stylesets{S}, \act}$ to itself is a filter that commutes with shifts: delaying the input by $s$ time steps delays the output by $s$ time steps, and does not change it otherwise.
+    In signal processing and control, such filters are called \emph{time-invariant}.
+    For example, the \emph{moving average}
+    \begin{equation}
+        \stylemaps{F}(\stylemaps{u})(k) \definedas \tfrac{1}{2}\bigl(\stylemaps{u}(k) + \stylemaps{u}(k - 1)\bigr)
+    \end{equation}
+    is time-invariant, since for all $s$ and $k$,
+    \begin{equation}
+        \begin{aligned}
+            \stylemaps{F}(\act(s, \stylemaps{u}))(k)
+            & = \tfrac{1}{2}\bigl(\stylemaps{u}(k - s) + \stylemaps{u}(k - 1 - s)\bigr) \\
+            & = \stylemaps{F}(\stylemaps{u})(k - s)
+            = \act(s, \stylemaps{F}(\stylemaps{u}))(k).
+        \end{aligned}
+    \end{equation}
+    By contrast, the filter $\stylemaps{G}(\stylemaps{u})(k) \definedas k \, \stylemaps{u}(k)$, which amplifies the signal more and more as time goes on, is not time-invariant: $\stylemaps{G}(\act(1, \stylemaps{u}))(k) = k \, \stylemaps{u}(k - 1)$, whereas $\act(1, \stylemaps{G}(\stylemaps{u}))(k) = (k - 1) \, \stylemaps{u}(k - 1)$.
+    Together with linearity, time invariance is the ``TI'' in the name of the LTI systems of \cref{sec:dynamical-systems}.
+\end{example}
+
 \subsection{Homomorphisms of discrete-time dynamical systems}
 \label{sec:homomorphisms-discrete-time}
 
