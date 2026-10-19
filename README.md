@@ -190,7 +190,7 @@ If you've never used Git, please watch an introductory video on how it works / w
 
 The `ACT4E` repo has a bit of a complex structure. Here's a quick breakdown of what is where (only relevant folders for TAs).
 
-- `volumes/vol1` contains the files for the current version of the book. The sub-folders within are not chapters, but correspond to larger sections of the book. It's the folders within such larger sections that then correspond to individual chapters (which you can compile). For example, `vol1/30_design/15_poset_bounds}` is a chapter. You can double-check that this is the case by checking that you can also find a `chapter.tex` file inside of it.
+- `volumes/vol1` contains the files for the current version of the book. The sub-folders within are not chapters, but correspond to larger sections of the book. It's the folders within such larger sections that then correspond to individual chapters (which you can compile). For example, `vol1/30_design/15_poset_bounds` is a chapter. You can double-check that this is the case by checking that you can also find a `chapter.tex` file inside of it.
 
 - `sag` contains `.tikz` files and their compiled PDFs that we use for
   the book
