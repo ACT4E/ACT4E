@@ -195,7 +195,7 @@ The `ACT4E` repo has a bit of a complex structure. Here's a quick breakdown of w
 - `sag` contains `.tikz` files and their compiled PDFs that we use for
   the book
 
-The ACT4E-solutions repo is for the solutions to the homework exercises. Each `.tex` file is a solution we use for corrections. Please don't touch them unless asked. There are also folders containing the homework sheets/exams of past & current iterations of the course.
+The ACT4E-solutions repo is for the solutions to the homework exercises. Each `.tex` file is a solution we use for corrections. Please don't touch them unless asked. There are also folders containing the homework `sheets/exams` of past & current iterations of the course.
 
 ## Editing with Git
 
