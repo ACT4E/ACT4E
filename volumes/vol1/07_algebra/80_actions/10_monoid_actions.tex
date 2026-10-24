@@ -107,7 +107,7 @@ The second condition says
 \begin{example}[Scalar multiplication]
 Let $\monoidA = \tup{\reals, \cdot, 1}$ be the monoid of real numbers, with multiplication as composition operation and the number $1$ as neutral element. Consider the set $\stateset = \reals^3$ of real 3-dimensional vectors. An action 
 \begin{equation}
-\act \colon \reals \fto \Endof\reals^3
+\act \colon \reals \fto \Endof{\reals^3}
 \end{equation}
 is given by scalar multiplication: for each $\lambda \in \reals$, 
 \begin{equation}
@@ -115,14 +115,108 @@ is given by scalar multiplication: for each $\lambda \in \reals$,
 \end{equation}
 \end{example}
 
+\begin{example}[A memory bit: the flip-flop monoid]
+    \label{exa:flip-flop-action}
+    A memory cell that stores one bit (for example, a latch in a digital circuit) can receive two commands: $\text{set}$, which stores the value $1$, and $\text{reset}$, which stores the value $0$.
+    Together with the ``empty command'' $\idmon$, which does nothing, these commands form the \emph{flip-flop monoid}
+    \begin{equation}
+        \mathbf{F} = \tup{\makeset{\idmon, \text{set}, \text{reset}}, \mtimesof{\mathbf{F}}, \idmon},
+    \end{equation}
+    in which $\monelA \mtimesof{\mathbf{F}} \monelB$ means ``first $\monelA$, then $\monelB$''.
+    Since the cell only remembers the last value written to it, its composition operation is ``the last command wins'':
+    \begin{equation}
+        \monelA \mtimesof{\mathbf{F}} \monelB \definedas
+        \begin{cases}
+            \monelB & \text{if } \monelB \neq \idmon, \\
+            \monelA & \text{if } \monelB = \idmon.
+        \end{cases}
+    \end{equation}
+    For instance, $\text{set} \mtimesof{\mathbf{F}} \text{reset} = \text{reset}$, whereas $\text{reset} \mtimesof{\mathbf{F}} \text{set} = \text{set}$; so $\mathbf{F}$ is not commutative.
+    It is a monoid: $\idmon$ is neutral by definition, and both $(\monelA \mtimesof{\mathbf{F}} \monelB) \mtimesof{\mathbf{F}} \stylemorph{p}$ and $\monelA \mtimesof{\mathbf{F}} (\monelB \mtimesof{\mathbf{F}} \stylemorph{p})$ are equal to the last element among $\monelA, \monelB, \stylemorph{p}$ that is different from $\idmon$ (or to $\idmon$, if there is none).
+    Note also that $\text{set} \mtimesof{\mathbf{F}} \text{set} = \text{set}$: writing the same value twice is the same as writing it once.
+
+    The monoid $\mathbf{F}$ acts on the set $\stateset = \makeset{0, 1}$ of possible contents of the cell by
+    \begin{equation}
+        \act(\idmon) = \catidat{\stateset}, \qquad
+        \act(\text{set}) = (\statesetel \mapsto 1), \qquad
+        \act(\text{reset}) = (\statesetel \mapsto 0).
+    \end{equation}
+    To check that $\act(\monelA \mtimesof{\mathbf{F}} \monelB) = \act(\monelA) \mthen \act(\monelB)$, note that if $\monelB \neq \idmon$, then $\act(\monelB)$ is a constant function, so that $\act(\monelA) \mthen \act(\monelB) = \act(\monelB)$, and if $\monelB = \idmon$, then $\act(\monelA) \mthen \act(\monelB) = \act(\monelA)$.
+    In both cases, this is $\act(\monelA \mtimesof{\mathbf{F}} \monelB)$.
+
+    More generally, a storage cell for values from any set $\stylesets{V}$ (a ``register'') is described by the monoid whose elements are $\idmon$ and one command ``write $v$'' for each $v \setin \stylesets{V}$, again with ``the last command wins'', acting on $\stylesets{V}$.
+    The flip-flop monoid will reappear later: in the change detector of \cref{exa:mealy-change-detector}, the inputs $0$ and $1$ act on the states exactly as $\text{reset}$ and $\text{set}$.
+    Together with groups, it is one of the basic building blocks of the theory of finite automata (Krohn--Rhodes theory).
+\end{example}
+
+\begin{example}[Charging a battery: a saturating counter]
+    \label{exa:saturating-counter}
+    The charge of a battery is often displayed in a few discrete levels, say $\stateset = \makeset{0, 1, \dots, n}$, where $0$ means empty and $n$ means full (for instance, $n = 4$ bars on a phone display).
+    Charging the battery for $a$ units of time raises its level by $a$, except that the level cannot exceed $n$: the new level is $\min(\statesetel + a, n)$.
+    In particular, charging for $n$ units or more always results in a full battery, whatever the initial level.
+    So the possible ``charging commands'', up to their effect, are $0, 1, \dots, n$, and composing two of them is addition, capped at $n$.
+    This is the \emph{saturating counter} monoid
+    \begin{equation}
+        \mathbf{C}_n = \tup{\makeset{0, 1, \dots, n}, \oplus, 0}, \qquad a \oplus b \definedas \min(a + b, n).
+    \end{equation}
+    It is indeed a monoid: $0$ is neutral, and both $(a \oplus b) \oplus c$ and $a \oplus (b \oplus c)$ are equal to $\min(a + b + c, n)$.
+    It acts on the set $\stateset$ of charge levels by charging:
+    \begin{equation}
+        \act(a, \statesetel) \definedas \min(\statesetel + a, n).
+    \end{equation}
+    The condition for the neutral element holds since $\min(\statesetel, n) = \statesetel$, and compatibility with composition holds since
+    \begin{equation}
+        \begin{aligned}
+            \act(b, \act(a, \statesetel))
+            & = \min\bigl(\min(\statesetel + a, n) + b, n\bigr) \\
+            & = \min(\statesetel + a + b, n) = \act(a \oplus b, \statesetel).
+        \end{aligned}
+    \end{equation}
+    For example, for $n = 4$, charging a battery at level $1$ first by $2$ units and then by $3$ units gives $\act(3, \act(2, 1)) = \act(3, 3) = 4$, the same as charging it by $2 \oplus 3 = 4$ units at once.
+
+    In the same way, \emph{discharging}, $\tup{a, \statesetel} \mapsto \max(\statesetel - a, 0)$, is another action of $\mathbf{C}_n$ on $\stateset$.
+    Charging and discharging do not commute, however: for $n \geq 2$, charging a full battery by $2$ and then discharging it by $2$ leaves it at level $n - 2$, whereas discharging first and then charging leaves it full.
+    So, to describe both kinds of commands at once, we would need a monoid which is not commutative.
+\end{example}
+
+\begin{example}[Relations acting on sets of possible states]
+    \label{exa:relations-acting-on-subsets}
+    Many systems are \emph{nondeterministic}: from a given state, a step may lead to one of several possible states.
+    For example, a robot moving along a corridor with positions $\stateset = \makeset{1, 2, 3}$ may receive the command ``forward'', but its wheels sometimes slip, so that it moves forward by one position or stays where it is (and it stays at the end of the corridor, position $3$).
+    Such a step is described by a relation $\relA \colon \stateset \mto \stateset$ (\cref{def:binary-relation}), where $\inrel{\statesetel}{\relA}{\statesetel'}$ means that $\statesetel'$ is a possible next state when the current state is $\statesetel$; for the slipping robot,
+    \begin{equation}
+        \relA_{\text{fwd}} = \makeset{\tup{1, 1}, \tup{1, 2}, \tup{2, 2}, \tup{2, 3}, \tup{3, 3}}.
+    \end{equation}
+    The relations $\stateset \mto \stateset$, with the composition of relations (\cref{def:composition-of-relations}) and the identity relation (\cref{def:identity-relation}), form a monoid.
+    If $\stateset$ is finite, this monoid is finite as well: for $\stateset$ with $n$ elements, there are $2^{n^2}$ relations.
+
+    If we do not know the current state exactly, but only a set $\stylesets{P} \subseteq \stateset$ of possible states, then after a step described by $\relA$ the set of possible states is
+    \begin{equation}
+        \act(\relA)(\stylesets{P}) \definedas \makeset{\statesetel' \setin \stateset \mid \exists \statesetel \setin \stylesets{P} \colon \inrel{\statesetel}{\relA}{\statesetel'}}.
+    \end{equation}
+    This defines an action of the monoid of relations on the set $\powerset(\stateset)$ of subsets of $\stateset$.
+    Indeed, the identity relation does not change $\stylesets{P}$, and $\act(\relA \mthen \relB)(\stylesets{P}) = \act(\relB)(\act(\relA)(\stylesets{P}))$, since a state is reachable from $\stylesets{P}$ by a step of $\relA \mthen \relB$ exactly if it is reachable by a step of $\relA$ followed by a step of $\relB$.
+    For the slipping robot starting at position $1$, the sets of possible positions after zero, one and two commands ``forward'' are
+    \begin{equation}
+        \makeset{1}, \qquad \makeset{1, 2}, \qquad \makeset{1, 2, 3}.
+    \end{equation}
+
+    In terms of the matrices of \cref{ex:ComposingFiniteRelations}, a relation on $\stateset = \makeset{1, \dots, n}$ is an $\ntimesn$ matrix $\phi_{\relA}$ with entries in $\makeset{0, 1}$, and a subset $\stylesets{P}$ is a row vector $\stylemaps{p}$ with entries in $\makeset{0, 1}$.
+    Composition of relations is the ``Boolean'' matrix product, in which sums are replaced by maxima, and the action is the Boolean product $\stylemaps{p} \, \phi_{\relA}$ of a row vector with a matrix.
+    Since the row vector is multiplied from the left, the order of composition comes out right without reversing it: acting first by $\phi_{\relA}$ and then by $\phi_{\relB}$ gives $(\stylemaps{p} \, \phi_{\relA}) \, \phi_{\relB} = \stylemaps{p} \, (\phi_{\relA} \, \phi_{\relB})$ (compare \cref{exa:matrix-action}).
+    For the slipping robot,
+    \begin{equation}
+        \phi_{\relA_{\text{fwd}}} = \begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix},
+        \qquad
+        \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \phi_{\relA_{\text{fwd}}} = \begin{bmatrix} 1 & 1 & 0 \end{bmatrix}.
+    \end{equation}
+\end{example}
+
 \devel{
 \begin{example}[robot on a grid]
 \todotext{connect the intro to the definition}
 \end{example}
 
-\begin{example}[Plant growing]
-\todotext{connect the example in the semigroups section that describes states of a growing plant}
-\end{example}
 
 
 \todotext{Make a remark/example somewhere that any monoid acts on itself...}
