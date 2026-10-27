@@ -8,40 +8,41 @@
 \todotext{Non-examples need to be added to this section}
 \todotext{More positive examples need to be added to this section}
 
-Loosely speaking, categories describe ``worlds'' where series composition is possible. The mathematical definition of a  category is an abstract encoding of this idea. It has the following constituents: there are things (generically called ``objects''), there are relationships between the things (generically called ``morphisms''), and there is a notion of series composition for those relationships (generically called ``composition''). For each thing (object) there is also a special self-relationship called an ``identity morphism'' (we called these ``neutral components" in the previous chapter). These four constituents are subject to two conditions: that composition must be associative, and that identity morphisms must be neutral for composition.
+Loosely speaking, categories describe ``worlds'' where series composition is possible. For example, in the previous chapter, we considered the series of composition, respectively, of functions between sets, monotone functions between preorders, monoid morphisms between monoids, matrices between coordinate spaces, design problems between posets, etc. Each of these cases was it's own compositional ``world''.  The mathematical definition of a  category is an abstract encoding of this idea. 
 
-Let us motivate and concretize this vague description briefly, before stating the formal definition. After the formal definition, we will provide many examples (in this chapter and in the following ones) which should further explicate the concept. 
+A category has the following constituents: there are things (generically called ``objects''), there are relationships between the things (generically called ``morphisms''), and there is a notion of series composition for those relationships (generically called ``composition''). For each thing (object) there is also a special self-relationship called an ``identity morphism'' (we called these ``neutral components" in the previous chapter). These four constituents are subject to two conditions: that composition must be associative, and that identity morphisms must be neutral for composition.
 
-\subsection{Objects, morphisms, composition}
+Let us motivate and concretize this loose description briefly, before stating the formal definition of a category. Then we will provide many examples -- in this chapter and in the following ones. 
 
-Firstly, in the chords example, we have a set of types of electrical interfaces.
-In a \SY{category}, the things that play the role of types of interfaces are called \emph{objects}.
-(In this text, we often denote generic objects by letters~$\Obja$,~$\Objb$,~$\Objc$, \etc)
+\subsection{Objects, morphisms}
 
-Secondly, in the electrical cords example, the cords themselves connect two interfaces and have a directionality: one end has a socket, the other end has a plug.
-In a \SY{semicategory}, the things that play the role of cords are called \emph{morphisms}.
-(This is a word we've already gotten to know, and the connection here is not accidental.) The object that denotes the type of the ``socket end'' of the morphism is called the \emph{domain} or \emph{source} of the morphism.
-The object that denotes the ``plug end'' of a morphism is called its \emph{codomain} or \emph{target}.
-So morphisms are directed: they go from their source to their target.
+As stated above, every category has a set of ``things'' which are its so-called \emph{objects}, and then it has \emph{morphisms} which encode ``relationships'' between objects. Each morphism always has a \emph{source} object and a \emph{target} object; in other words, morphisms are always directed from one object to another. It is allowed for a morphism to have the same object as both its source and its target. 
 
-To visualize morphisms, we often draw arrows.
-For example, if~$\Obja$ and~$\Objb$ are objects in some \SY{semicategory}, then we draw a morphism from~$\Obja$ to~$\Objb$ (call it~$\mora$) like this:
+In the previous chapter we already got to know this idea, implicitly, for a number of examples. In the electrical cables example, the set of objects was the set of types of electrical interfaces and the morphisms were the electrical cables. We also saw examples where the objects and morphisms, respectively, were
+\begin{itemize}
+\item sets and functions,
+\item preorders and monotone functions,
+\item monoids and monoid morphisms, 
+\item real coordinate space and real matrices,
+\item posets and design problems,
+\item locations and journeys,
+\item currency amounts and currency conversions.
+\end{itemize}
+
+
+In a \SY{category}, we will often denote generic objects by letters~$\Obja$,~$\Objb$,~$\Objc$, etc. To denote morphisms, we usually draw arrows similar to the ones that we have already used, for example, for monotone functions. If~$\Obja$ and~$\Objb$ are objects, we draw a morphism from~$\Obja$ to~$\Objb$ (call it~$\mora$) like this:
 \begin{equation}
     \mora\colon \Obja \mto \Objb.
 \end{equation}
-So here~$\Obja$ is the source of~$\mora$, and~$\Objb$ is its target.
+Here~$\Obja$ is the source of~$\mora$, and~$\Objb$ is its target. We call the pair $\tup{\Obja, \Objb}$,  consisting of the source and target of $\mora$, the \emph{type} of $\mora$. 
 
-Thirdly, a key feature of the cords example is that we can compose two cords and the result is again a chord.
-However, for this to work, the plug-end of the first chord must match the socket-end of the other.
-Similarly, in a \SY{semicategory} we specify a way to compose two morphisms, provided that the target object of the first morphism matches the source object of the second morphism.
-(When this is the case, the morphisms are said to be \emph{composable}.)
+\subsection{Composition, hom-sets}
 
-In other words, if~$\mora\colon \Obja \mto \Objb$ and~$\morb\colon \Objb \mto \Objc$ are morphisms in some \SY{semicategory} (note: they are composable), then the \SY{semicategory} has an operation for composing them, and the result is another morphism.
-Our notation for composition of~$\mora$ and~$\morb$ is~$\morab$, read ``$\mora$ then~$\morb$''.
-(Once again: this is in contrast to the more traditional notation~$\morb \after \mora$.)
-Thus, we have
-\begin{equation}
-    \prfcomma{
+Another key feature of categories is that we can \emph{compose} pairs of morphisms, provided that the target object of the one morphism matches the source object of the other morphism. When this is the case, the morphisms are said to be \emph{composable}. This is completely analogous to how we could only compose a pair of electrical cables if their interfaces matched. 
+
+In terms of notation, in a generic category we use the infix symbol ``$\mthen$'' to denote composition of morphism, analogous to how we've used this symbol to denote function composition or the composition of elements in a semigroup or monoid. The composite of two (composable) morphisms -- say, $\mora\colon \Obja \mto \Objb$ and~$\morb\colon \Objb \mto \Objc$ --- is again a morphism, denoted $\mora \mthen \morb$. Its respective source and target are what you would expect them to be: 
+\begin{equation}\label{eq:generic-cat-comp-rule}
+    \prfperiod{
         \mora \colon \Obja \mto \Objb
     }{
         \morb\colon \Objb \mto \Objc
@@ -49,14 +50,26 @@ Thus, we have
         (\morab )\colon \Obja \mto \Objc
     }
 \end{equation}
-which is analogous to \cref{eq:cords-generic} in the cords example.
+
+To formally encode composition of morphisms, we proceed a similar way to how we encoded the composition operation for semigroups, monoids, and groups. There, we encoded the composition of elements of a monoid $\tup{\monoidAset, \mthen, \idmon}$, say, as a function (a ``binary operation'') of the type
+\begin{equation}
+\monoidAset \cartprod \monoidAset \to \monoidAset. 
+\end{equation}
+
+For categories, we are composing morphisms rather than monoid elements, so instead of considering the underlying set $\monoidAset$ of elements of a monoid, we need to consider sets of morphisms. More precisely, for every pair $\tup{\Obja, \Objb}$ of objects, we will consider the \emph{set of morphisms from $\Obja$ to $\Objb$}, which is denoted
+\begin{equation}
+\HomSet{}{\Obja}{\Objb}.
+\end{equation}
+(The ``Hom'' in the notation here has its historical roots in the word ``homomorphism''.) Note that, in contrast to the case of composition operations for monoids, in a category composition is encoded by functions of the kind
+\begin{equation}
+\HomSet{}{\Obja}{\Objb} \cartprod \HomSet{}{\Objb}{\Objc} \to \HomSet{}{\Obja}{\Objc}
+\end{equation}
+in order to capture the fact that, in general, we are composing morphisms of different -- but composable -- types, in accordance with \cref{eq:generic-cat-comp-rule}. 
 
 
 \subsection{Associativity}
 
-So far we have described the building blocks, or constituents, of a \SY{semicategory}: objects, morphisms, and composition operations.
-We also want these to obey a certain condition called the \emph{associativity law}.
-This condition says that if we are given a string of three composable morphisms, then it doesn't matter in which order we choose to compose them:
+In the previous chapter we have already become acquainted with the property of associativity for morphisms: it states that for any three composable morphisms if the following kind we have 
 \begin{equation}
     \prfperiod{
         \mora \colon \Obja \mto \Objb
@@ -68,46 +81,52 @@ This condition says that if we are given a string of three composable morphisms,
         (\morab ) \mthen \morc = \mora \mthen ( \morb \mthen \morc )
     }
 \end{equation}
-
-This is analogous to the fact, in the electrical cords example, that if we look at three cords connected together, we cannot tell if the first two were connected together first and then the result was connected to the third, or if the connecting happened the other way around.
+This condition is required in the definition of a category; it guarantees that we don't have to keep track of parenthesis in sequences of nested pair-wise series compositions. 
 
 
 \subsection{Identity morphisms}
 
-One might say that \SY{identity morphisms} are morphisms that ``do nothing'': they do not have any effect when we compose with them.
-This is analogous to how the identity element of a \SY{monoid} ``does nothing'' when we multiply it with other elements of the \SY{monoid}.
+\SY{Identity morphisms} are morphisms that ``are neutral for composition'': they do not have any effect when we compose with them. This is analogous to how the identity element of a \SY{monoid} ``does nothing'' when we compose it with other elements of the \SY{monoid}. In a category, there is one identity morphism per object. Given an object $\Obja$, we call its identity morphism the ``identity morphism at $\Obja$'' and denote it by $\catidat\Obja$.  
 
-\SYNDEF{identity morphism}
-\begin{ctdefinition}[Identity morphisms]
-    \label{def:identity-morphism}
-    Let~\CatC be a \SY{semicategory}.
-    An \maindef{identity morphism}, or just \emph{identity}, for an object~$\Obja$ of~\CatC is a morphism
-    \begin{equation}
-        \catidat\Obja \colon \Obja \mto \Obja
-    \end{equation}
-    in~\CatC that acts neutrally with respect to composition with any morphism in the category with which it is composable:
-    \begin{equation}\label{eq:identities-unitality-1}
-        \prfcomma{
-            \mora \colon \Objf \mto \Obja
-        }{
-            \mora \mthen \catidat\Obja = \mora
-        }
-    \end{equation}
-    and
-    \begin{equation}\label{eq:identities-unitality-2}
-        \prfperiod{
-            \morb \colon \Obja \mto \Objb
-        }{
-            \catidat\Obja \mthen \morb = \morb
-        }
-    \end{equation}
-\end{ctdefinition}
+There are two equivalent ways of phrasing precisely what it means for identity morphisms to be neutral. 
 
-\begin{remark}
-    If an \SY{identity morphism}~$\catidat\Obja$ for an object~$\Obja$ exists, then it is unique.
-    To see this, observe that~$\HomSet{\CatC}{\Obja}{\Obja}$ is a \SY{semigroup}, and~$\catidat\Obja$ is a \SY{neutral element} for this \SY{semigroup}, making~$\HomSet{\CatC}{\Obja}{\Obja}$ a \SY{monoid}.
-    We have seen earlier that neutral elements for \SY{semigroups} are necessarily unique.
-\end{remark}
+One way is to say that for any arbitrary object, say $\Obja$, it's identity morphism $\catidat\Obja$ is neutral in the sense that
+\begin{enumerate}
+\item for any morphism 
+\begin{equation}
+\mora \colon \Obja \mto \Objb
+\end{equation}
+whose source is $\Obja$ we have that 
+\begin{equation}
+\catidat\Obja \mthen \mora  = \mora;
+\end{equation}
+and
+\item for any morphism 
+\begin{equation}
+\morb \colon \Objf \mto \Obja
+\end{equation}
+whose target is $\Obja$ we have that 
+\begin{equation}
+\morb \mthen \catidat\Obja = \morb.
+\end{equation}
+\end{enumerate}
+
+Another, equivalent, way of phrasing these conditions is to say that for any arbitrary morphism $\mora \colon \Obja \mto \Objb$, we require that pre-composing or post-composing it with the appropriate identity morphisms has no effect:  
+\begin{enumerate}
+\item  
+\begin{equation}
+\catidat\Obja \mthen \mora = \mora;
+\end{equation}
+\item  
+\begin{equation}
+\mora \mthen \catidat\Objb = \mora.
+\end{equation}
+\end{enumerate}
+
+The two phrasings differ simply in which variable we choose to pin down first: an arbitrary object $\Obja$, or an arbitrary morphism $\mora \colon \Obja \mto \Objb$. 
+
+
+
 
 
 
@@ -141,7 +160,7 @@ Have a read through, then we illustrate it further with examples.
                   \begin{equation}\label{eq:category-composition}
                       \mthenof{\Obja,\Objb,\Objc}\colon \HomSet{\CatC}{\Obja}{\Objb} \cartprod \HomSet{\CatC}{\Objb}{\Objc}\mto \HomSet{\CatC}{\Obja}{\Objc}.
                   \end{equation}
-                  We usually just write~$\mthen$ instead of~$\mthenof{\Obja,\Objb,\Objc}$:
+                  We usually just write~$\mthen$ instead of~$\mthenof{\Obja,\Objb,\Objc}$ and use infix notation:
                   \begin{equation}
                       \prfperiod{
                           \mora \colon \Obja \mto \Objb
@@ -191,16 +210,11 @@ Have a read through, then we illustrate it further with examples.
 
 
 
-\begin{remark}
-    We denote composition of morphisms using the symbol ``$\mthen$'' (pronounced ``then''), as already introduced for functions in \cref{sec:functions}.
-    %    Thus, given~$\mora \colon \Obja\mto \Objb$ and~$\morb \colon \Objb \mto \Objc$, we denote their composite by~$(\mora\mthen \morb)\colon \Obja\mto \Objc$, pronounced ``$\mora$ then~$\morb$''.
-    This is in contrast to the more common notation for composition, namely~$\morb\after \mora$, or simply~$\morb \mora$, which reads as ``$\morb$ after~$\mora$''.
-    As usual,~$\mora^2$ denotes~$\mora \mthen \mora$, $\mora^3$ denotes~$\mora \mthen \mora \mthen \mora$, and so on.
-\end{remark}
+
 
 \begin{remark}
     \begin{enumerate}
-        \item When we want to emphasize which \SY{semicategory} we are working with, we will sometimes write
+        \item When we want to emphasize which \SY{category} we are working with, we will sometimes write
               \begin{equation}
                   \mora \colon \Obja \mtoin\CatC \Objb
               \end{equation}
@@ -238,6 +252,12 @@ Have a read through, then we illustrate it further with examples.
     We will often visualize objects and morphisms using diagrams where symbols or dots indicate objects and arrows indicate morphisms.
     For instance, if~$\Obja$,~$\Objb$,~$\Objc$ are objects in a semicategory~\CatC, and~$\mora\colon \Obja \mto \Objb$ and~$\morb\colon \Objb \mto \Objc$ are morphisms, we draw this as in \cref{fig:points-and-two-arrows-diagram}, for example.
     The composition~$\morab$ of~$\mora$ with~$\morb$ corresponds to yet another arrow, as in \cref{fig:points-and-composed-arrows-diagram}.
+\end{remark}
+
+\begin{remark}
+    If an \SY{identity morphism}~$\catidat\Obja$ for an object~$\Obja$ exists, then it is unique.
+    To see this, observe that~$\HomSet{\CatC}{\Obja}{\Obja}$ is a \SY{semigroup}, and~$\catidat\Obja$ is a \SY{neutral element} for this \SY{semigroup}, making~$\HomSet{\CatC}{\Obja}{\Obja}$ a \SY{monoid}.
+    We have seen earlier that neutral elements for \SY{semigroups} are necessarily unique.
 \end{remark}
 
 
