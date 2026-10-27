@@ -85,38 +85,38 @@ Or, phrased in a slightly more abstract manner, for any plug/socket types $\Obja
 If we think of the ends of the chords as ``interfaces'', then we can say that two chords are only then composable at a pair of interfaces when those interfaces match. In this statement, there are in fact two conditions at play: for interfaces to match we need 1) that one of the interfaces is a plug and the other is a socket, and 2) we need that both interfaces have the same type. This pattern, as described in \cref{eq:cords-generic}, appears all across mathematics and real-world applications. We'll list a few selected examples to illustrate. 
 
 \paragraph{Sets and functions}
-Let $\setA$, $\setB$, and $\setC$ be sets. Given a function $\mora \colon \setA \to \setB$ and a function $\morb \colon \setB \to \setC$, we can compose them in series via the usual notion of function composition: 
+Let $\setA$, $\setB$, and $\setC$ be sets. Given a function $\mapa \colon \setA \sto \setB$ and a function $\mapb \colon \setB \sto \setC$, we can compose them in series via the usual notion of function composition: 
 \begin{equation}
 \defmapperiod{
-\mora \mthen \morb
+\mapa \mthen \mapb
 }{ \setA
-}{ \to
-}{ \setB
+}{ \sto
+}{ \setC
 }{ \ela
-}{ \morb(\mora(\ela))
+}{ \mapb(\mapa(\ela))
 }
 \end{equation}
 In other words, 
 \begin{equation}
-    \label{eq:cords-generic}
+    \label{eq:interfaces-sets}
     \prfperiod{
-        \cord{\Obja}{a}{\Objb}
+        \mapa \colon \setA \sto \setB
     }{
-        \cord{\Objb}{b}{\Objc}
+        \mapb \colon \setB \sto \setC
     }{
-        \cord{\Obja}{a+b}{\Objc}
+        \mapa \mthen \mapb \colon \setA \sto \setC
     }
 \end{equation}
 
 \paragraph{Pre-orders and monotone functions} Consider now, instead of just sets and functions, pre-orders and monotone functions between them. Again we can compose such functions when their ``interfaces'' match:
 \begin{equation}
-    \label{eq:cords-generic}
+    \label{eq:interfaces-preorders}
     \prfperiod{
-        \cord{\Obja}{a}{\Objb}
+        \mapa \colon \posA \mto \posB
     }{
-        \cord{\Objb}{b}{\Objc}
+        \mapb \colon \posB \mto \posC
     }{
-        \cord{\Obja}{a+b}{\Objc}
+        \mapa \mthen \mapb \colon \posA \mto \posC
     }
 \end{equation}
 
@@ -125,39 +125,70 @@ This works, in particular, because the (series) composition of two monotone func
 
 \paragraph{Monoids and monoid morphisms} Similar to the case of pre-orders and monotone functions, we have seen in REF that we can compose monoid morphisms, provided their interfaces match, and the result is again a monoid morphism:
 \begin{equation}
-    \label{eq:cords-generic}
+    \label{eq:interfaces-monoids}
     \prfperiod{
-        \cord{\Obja}{a}{\Objb}
+        \funa \colon \monoidA \fto \monoidB
     }{
-        \cord{\Objb}{b}{\Objc}
+        \funb \colon \monoidB \fto \monoidC
     }{
-        \cord{\Obja}{a+b}{\Objc}
+        \funa \fthen \funb \colon \monoidA \fto \monoidC
     }
 \end{equation}
 
 
 \paragraph{Real coordinate spaces and real matrices}
-Consider real coordinate spaces $\reals^k$, $\reals^m$, and $\reals^n$. An $m \times k$ real matrix encodes a linear function $\mat{A} \colon \reals^k \mto \reals^m$, and an $n \times m$ real matrix encodes a linear function $\mat{B} \colon \reals^m \mto \reals^n$. Because the target space of the first matrix matches the source space of the second matrix, they can be composed in series via matrix multiplication, and the result is a matrix of the appropriate dimensions: 
+Consider real coordinate spaces $\reals^k$, $\reals^m$, and $\reals^n$. An $m \times k$ real matrix encodes a linear function $\matmor{A} \colon \reals^k \mto \reals^m$, and an $n \times m$ real matrix encodes a linear function $\matmor{B} \colon \reals^m \mto \reals^n$. Because the target space of the first matrix matches the source space of the second matrix, they can be composed in series via matrix multiplication, and the result is a matrix of the appropriate dimensions: 
 \begin{equation}
-    \label{eq:cords-generic}
+    \label{eq:interfaces-matrices}
     \prfperiod{
-        \cord{\Obja}{a}{\Objb}
+        \matmor{A} \colon \reals^k \mto \reals^m
     }{
-        \cord{\Objb}{b}{\Objc}
+        \matmor{B} \colon \reals^m \mto \reals^n
     }{
-        \cord{\Obja}{a+b}{\Objc}
+        \matmor{B} \matmor{A} \colon \reals^k \mto \reals^n
     }
 \end{equation}
 
 \paragraph{Components in co-design}
-
-
+In co-design, we describe a component by a \SY{design problem}, which relates the functionalities that the component can provide to the requirements that it needs in order to provide them. The ``interfaces'' of a design problem are its poset of functionalities and its poset of requirements. Recall the example from \cref{sec:dp-series-composition}: an electric motor provides torque and requires electric current, while a battery provides electric current and requires mass. Because the requirements of the motor are the same kind of resource as the functionalities of the battery, the two components can be connected in series, and the result is a system which provides torque and requires mass (\cref{exa:dp-series-motor-battery}). In general, for posets $\posA$, $\posB$, and $\posC$, series composition of design problems (\cref{def:dp-series-composition}) follows the pattern
+\begin{equation}
+    \label{eq:interfaces-dp}
+    \prfperiod{
+        \adpa \colon \funposA \profto \resposB
+    }{
+        \adpb \colon \funposB \profto \resposC
+    }{
+        \adpa \dpthen \adpb \colon \funposA \profto \resposC
+    }
+\end{equation}
+Both of the conditions for matching interfaces that we noted for the chords are visible here. The poset $\posB$ appears as the requirements $\resposB$ of $\adpa$ and as the functionalities $\funposB$ of $\adpb$ (this is analogous to a plug meeting a socket), and it must be the \emph{same} poset in both places (this is analogous to the plug and the socket being of the same type).
 
 \paragraph{Journeys}
-
-
+Suppose that we travel from Zürich to Milan by train, and then from Milan to Florence by car. Because the train journey ends at the place where the car journey begins, the two journeys can be composed in series, and the result is a journey from Zürich to Florence: first take the train, then drive. By contrast, a train journey from Zürich to Milan cannot be directly followed by a car journey that starts in Bologna. Here the ``interfaces'' are locations. In general, for locations $\Obja$, $\Objb$, and $\Objc$, given a journey $\mora$ from $\Obja$ to $\Objb$ and a journey $\morb$ from $\Objb$ to $\Objc$, we obtain the composite journey $\mora \mthen \morb$, which first follows $\mora$ and then follows $\morb$:
+\begin{equation}
+    \label{eq:interfaces-journeys}
+    \prfperiod{
+        \mora \colon \Obja \mto \Objb
+    }{
+        \morb \colon \Objb \mto \Objc
+    }{
+        \mora \mthen \morb \colon \Obja \mto \Objc
+    }
+\end{equation}
 
 \paragraph{Currency conversions}
+Consider currencies such as \CHF, \EUR, and \USD. A currency exchanger from a currency $\Obja$ to a currency $\Objb$ can be described by a pair of numbers $\tup{r,c}$: an exchange rate $r$ and a commission $c$, where the commission is charged in the target currency. Such an exchanger converts an amount $x$ of $\Obja$ into the amount $rx - c$ of $\Objb$. If we first exchange \CHF into \EUR, we can only then continue by using an exchanger that accepts \EUR; in this example, the interfaces are currencies. Given a further exchanger $\tup{s,d}$ from $\Objb$ to $\Objc$, the amount $x$ of $\Obja$ is converted first into $rx - c$ of $\Objb$, and then into $s(rx - c) - d = rsx - (sc + d)$ of $\Objc$. So the composite exchanger has exchange rate $rs$ and commission $sc + d$:
+\begin{equation}
+    \label{eq:interfaces-currencies}
+    \prfperiod{
+        \tup{r,c} \colon \Obja \mto \Objb
+    }{
+        \tup{s,d} \colon \Objb \mto \Objc
+    }{
+        \tup{rs, sc+d} \colon \Obja \mto \Objc
+    }
+\end{equation}
+The exchange rates multiply, while the commission of the first exchanger is converted into the currency $\Objc$ before being added to the commission of the second.
 
 
 
