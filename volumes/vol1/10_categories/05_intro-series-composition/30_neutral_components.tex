@@ -4,4 +4,143 @@
 \section{Neutral components}
 \label{sec:neutral-components}
 
-\todotext{Discuss the pattern of ``identity morphisms'' here}
+In the previous section, we compared series composition with the addition of numbers, and saw that both are associative. Addition of numbers has a further feature: the number $0$ is \emph{neutral}, in the sense that adding it to a number does not change that number:
+\begin{equation}
+    \ela + 0 = \ela = 0 + \ela.
+\end{equation}
+Is there anything analogous for series composition? That is, are there components that ``do nothing'' when we compose them in series with other components?
+
+Let us make this question more precise. A neutral component at an interface $\Obja$ is a component from $\Obja$ to $\Obja$, which we denote by $\catidat\Obja$, such that composing with it has no effect, no matter whether it comes first or second. Assuming that there is a neutral component at every interface, this means:
+\begin{equation}
+    \label{eq:neutral-generic}
+    \prfperiod{
+        \mora \colon \Obja \mto \Objb
+    }{
+        \catidat\Obja \mthen \mora = \mora = \mora \mthen \catidat\Objb
+    }
+\end{equation}
+Two features of this rule are worth pointing out. First, neutrality is required on \emph{both} sides: putting $\catidat\Obja$ before $\mora$ has no effect, and neither does putting $\catidat\Objb$ after $\mora$. Second, unlike the number $0$, a neutral component is not a single thing: a component from $\Obja$ to $\Obja$ can only be composed with components that start or end at $\Obja$, so in general we need a separate neutral component for each interface.
+
+\subsection{Examples with neutral components}
+
+Many of the examples of series composition that we have seen come with neutral components.
+
+\paragraph{Sets and functions}
+For every set $\setA$, the identity function $\mapidat\setA \colon \setA \sto \setA$, which sends every element $\ela \setin \setA$ to itself (\cref{def:identity-function}), is a neutral component. For instance, for a function $\mapa \colon \setA \sto \setB$ and every $\ela \setin \setA$, we have $(\mapidat\setA \mthen \mapa)(\ela) = \mapa(\mapidat\setA(\ela)) = \mapa(\ela)$, and similarly on the other side:
+\begin{equation}
+    \label{eq:neutral-sets}
+    \prfperiod{
+        \mapa \colon \setA \sto \setB
+    }{
+        \mapidat\setA \mthen \mapa = \mapa = \mapa \mthen \mapidat\setB
+    }
+\end{equation}
+
+\paragraph{Preorders and monotone functions}
+For every preorder $\posA$, the identity function on its underlying set is monotone, so it is a component from $\posA$ to $\posA$. Since composition of monotone functions is composition of the underlying functions, it is neutral for the same reason as in the case of sets:
+\begin{equation}
+    \label{eq:neutral-preorders}
+    \prfperiod{
+        \mapa \colon \posA \mto \posB
+    }{
+        \mapidat{\posAset} \mthen \mapa = \mapa = \mapa \mthen \mapidat{\posBset}
+    }
+\end{equation}
+
+\paragraph{Monoids and monoid morphisms}
+For every monoid $\monoidA$, the identity morphism $\funid_\monoidA \colon \monoidA \fto \monoidA$ (\cref{def:identity-mon-mor}) is a neutral component:
+\begin{equation}
+    \label{eq:neutral-monoids}
+    \prfperiod{
+        \funa \colon \monoidB \fto \monoidA
+    }{
+        \funid_\monoidB \fthen \funa = \funa = \funa \fthen \funid_\monoidA
+    }
+\end{equation}
+
+\paragraph{Real coordinate spaces and real matrices}
+For every $m$, the $m \times m$ identity matrix $\idmat_m$ encodes the identity function on $\reals^m$, and it is a neutral component at $\reals^m$. Recalling that $\matmor{A} \mthen \matmor{B}$ is the matrix product $\matmor{B}\matmor{A}$, we have, for $\matmor{A} \colon \reals^k \mto \reals^m$, that $\idmat_k \mthen \matmor{A} = \matmor{A}\idmat_k = \matmor{A}$ and $\matmor{A} \mthen \idmat_m = \idmat_m \matmor{A} = \matmor{A}$:
+\begin{equation}
+    \label{eq:neutral-matrices}
+    \prfperiod{
+        \matmor{A} \colon \reals^k \mto \reals^m
+    }{
+        \idmat_k \mthen \matmor{A} = \matmor{A} = \matmor{A} \mthen \idmat_m
+    }
+\end{equation}
+
+\paragraph{Components in co-design}
+For every poset $\posA$, the identity design problem $\dpidat{\posA} \colon \funposA \profto \resposA$ (\cref{def:dp-identity-series}) describes a ``component'' which provides any functionality that is at most what it requires. We can think of it as a direct connection which passes resources through unchanged. It is a neutral component (\cref{lem:dp-series-laws}):
+\begin{equation}
+    \label{eq:neutral-dp}
+    \prfperiod{
+        \adpa \colon \funposA \profto \resposB
+    }{
+        \dpidat{\posA} \dpthen \adpa = \adpa = \adpa \dpthen \dpidat{\posB}
+    }
+\end{equation}
+
+\paragraph{Currency conversions}
+For every currency $\Obja$, the exchanger $\tup{1,0}$ from $\Obja$ to $\Obja$, with exchange rate $1$ and no commission, converts every amount $x$ into the amount $1 \cdot x - 0 = x$; it does nothing. Using the composition rule from \cref{sec:interfaces}, we can check that it is neutral: for every exchanger $\tup{r,c}$ from $\Obja$ to $\Objb$,
+\begin{equation}
+    \begin{aligned}
+        \tup{1,0} \mthen \tup{r,c} & = \tup{1 \cdot r, \, r \cdot 0 + c} = \tup{r,c}, \\
+        \tup{r,c} \mthen \tup{1,0} & = \tup{r \cdot 1, \, 1 \cdot c + 0} = \tup{r,c}.
+    \end{aligned}
+\end{equation}
+Note that, although it is described by the same pair of numbers $\tup{1,0}$ for every currency, the neutral exchanger for \CHF and the neutral exchanger for \EUR are different components, since they have different interfaces.
+
+\subsection{Examples without neutral components}
+
+In other examples, there ostensibly are no neutral components.
+
+\paragraph{Electrical cables}
+A neutral cable at a plug type would need to have the same type at both of its ends, and its length $\ell$ would need to satisfy $a + \ell = a$ for every length $a$; so its length would have to be $0$. But there is no cable of length $0$: all cables have positive lengths, and connecting a cable to another one always results in a longer cable. In terms of our model, this is reflected in the fact that the semigroup $\tupp{\natnumbers_{>0},+}$ of positive natural numbers has no neutral element.
+
+\paragraph{Journeys}
+A neutral journey at a location $\Obja$ would be a journey from $\Obja$ to $\Obja$ which does not change any journey that it precedes or follows. A round trip that starts and ends at $\Obja$ does not qualify, since adding it to a journey adds legs to that journey. The only candidate would be a ``journey'' that does not go anywhere at all, which is not something we would ordinarily call a journey.
+
+\medskip
+So whether there are neutral components is not a feature of series composition as such; it depends on the model.
+
+\subsection{Neutral components by convention}
+
+Sometimes it is useful to include neutral components in a model by convention, even if they seem somewhat artificial. A helpful analogy is the number zero. As an \emph{amount}, zero is somewhat peculiar: there is nothing to point at in a heap of zero apples. Historically, it took a long time before zero came to be accepted as a number in its own right. Nonetheless, having zero at hand makes arithmetic smoother and more powerful. For example, zero enables things that would otherwise be impossible or awkward, such as positional notation for numbers like $105$, or describing the difference between two equal amounts.
+
+In the same way, depending on the context, it can be useful to include, in our formalism, a ``cable'' of length $0$ for every plug type:
+\begin{equation}
+    \label{eq:neutral-cable}
+    \prfperiod{
+        \cord{\TypeIrish}{0}{\TypeIrish}
+    }{
+        \cord{\TypeIrish}{a}{\TypeSwiss}
+    }{
+        \cord{\TypeIrish}{a}{\TypeSwiss}
+    }
+\end{equation}
+In terms of our model, this means allowing lengths in $\natnumbers = \makeset{0, 1, 2, \dots}$ rather than only in $\natnumbers_{>0}$, which turns the semigroup $\tupp{\natnumbers_{>0},+}$ into the monoid $\tup{\natnumbers, +, 0}$.
+
+To see why this can be useful, suppose that we have a wall socket, a device with a plug, and a drawer full of cables. We may ask: which chains of cables from the drawer connect the socket to the device, and which of these chains is the shortest? If the socket and the plug are of the same type, then the best answer is to use no cable at all, and to plug the device in directly. With ``cables'' of length $0$ in our model, this answer is one of the possible chains; without it the shortest connection would wrongly appear to be the shortest cable in the drawer.
+
+Similarly, in the journeys model, we may include, for every location, a ``journey'' that stays in place. If we think of a journey as a list of legs, then such a journey is an empty list. This may be useful for example for route planning. If we ask a route planner for the shortest journey from a location to itself, the correct answer is to stay where we are, with a travel distance of $0$; including journeys that stay in place lets the planner give this answer. 
+
+
+\subsection{When the absence of neutral components matters}
+
+On the other hand, sometimes it is useful and relevant that a model has no neutral components at all. Consider again currency exchangers, but now suppose that every exchanger charges a strictly positive commission: we only consider exchangers $\tup{r,c}$ with $r > 0$ and $c > 0$. Such exchangers can still be composed in series, since if $c > 0$, $d > 0$, and $s > 0$, then the composite $\tup{rs, sc+d}$ again has a strictly positive commission $sc + d > 0$.
+
+However, in this model there are no neutral components. Indeed, if an exchanger $\tup{u,e}$ from $\Obja$ to $\Obja$ were neutral, then composing it before any exchanger $\tup{r,c}$ from $\Obja$ would give
+\begin{equation}
+    \tup{u,e} \mthen \tup{r,c} = \tup{ur, \, re + c} = \tup{r,c},
+\end{equation}
+which forces $u = 1$ and $e = 0$; but an exchanger with commission $0$ is not part of this model.
+
+Here, the absence of neutral components is not a defect of the model; it reflects a real feature of the situation that we are modeling: no exchange is free of charge. In particular, if we exchange money around a loop of currencies, say from \CHF to \EUR to \USD and back to \CHF, the composite exchanger again charges a strictly positive commission, so it is never the exchanger that ``does nothing'': we cannot go around a loop of exchanges free of charge. Adding a neutral exchanger $\tup{1,0}$ by convention would blur exactly this feature.
+
+So the same kind of data---currencies and exchangers---can be modeled either with or without neutral components, and which choice is appropriate depends on what we want the model to express.
+
+\subsection{Looking ahead}
+
+The patterns that we have discussed in this chapter---interfaces, series composition, associativity, and neutral components---are precisely what the notion of a category captures (\cref{def:categorymain}). In the language of categories, interfaces are called objects, components are called morphisms, and neutral components are called identity morphisms; this is why we have denoted the neutral component at $\Obja$ by $\catidat\Obja$. In a category, every object has an identity morphism.
+
+Models in which series composition is associative, but which need not have neutral components, are described by the more general notion of a semicategory (\cref{def:semicategory-compact}). This mirrors the relationship between \SY{semigroups} and \SY{monoids}: a \SY{monoid} is a \SY{semigroup} together with a neutral element, and a category is a semicategory together with a neutral component at every object. For instance, the electrical cables with positive lengths form a semicategory, but not a category. Adding a cable of length $0$ for every plug type turns the former into a category, just as adding the number $0$ turns the semigroup $\tupp{\natnumbers_{>0},+}$ into the monoid $\tup{\natnumbers, +, 0}$.
