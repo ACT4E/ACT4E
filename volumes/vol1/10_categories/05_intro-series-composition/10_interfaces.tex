@@ -2,81 +2,28 @@
 
 \section{Interfaces}\label{sec:interfaces}
 
-\todotext{This section needs to be rewritten and expanded; in particular more examples need to be added}
 
-One way to get to know  \SY{semicategories} is to understand them as a generalization of semigroups. 
-
-Here is a little story to illustrate how one might think about this. Consider the ropes (with lengths) of~\cref{chap:putting-things-together}, which had this composition rule:
+To think about series composition, let's start off with a toy example: composing electrical extension cables. Each cable has a certain length, and we can stick cables together to obtain a (composite) extension cable of greater length:
 %
+
+
 \begin{equation}
     \prfperiod{
-        \rope{ropecola}{ropecolb}{2}{0}{0}{1}{$a$}
+        \cordG{a}
     }{
-        \rope{ropecola}{ropecolb}{2}{0}{0}{1}{$b$}
+       \cordG{b}
     }{
-        \rope{ropecola}{ropecolb}{4}{0}{0}{1}{$a+b$}
+        \cordG{a + b}
     }
 \end{equation}
 %
-If we are working with all possible ropes whose lengths may be any natural number, then we could say that this gives a kind of model of the semigroup $\tupp{\natnumbers,+}$, because setting ropes end-to-end means that the resulting length is the sum of the component rope lengths. In this setting, \emph{any} two ropes may be composed by being set end-to-end. 
+If we use a unit of length so that it suffices for our model to consider lengths given by positive natural numbers $1, 2, 3, \dots$, then we could say that this model is very similar to the semigroup $\tupp{\natnumbers_{>0},+}$ of positive natural numbers with addition, because composing cables end-to-end means that the resulting length is the sum of the component cable lengths. 
 
-Next, consider electrical chords instead of ropes. Each electrical chord has a socket end and a plug end (and, as with the ropes, also a length):
-\begin{equation}
-\cordG{a}
-\end{equation}
-
-Furthermore, worldwide there is a handful of different types of electrical plugs (and sockets). So let's suppose the socket and plug end of our electrical chords are each labeled with a specific type, and that the socket end and the plug end of a given chord don't necessarily have to have the same type (this can be achieved with adapters, for example). For fun, we'll use little country flags as indicators of the types of the plugs and sockets: 
+In this model so far, \emph{any} two cables may be composed by being set end-to-end. However, worldwide there is a handful of different types of electrical plugs and sockets (see \cref{fig:plugs}), so let's expand our model to allow for cables whose plug end and socket end might be of different types. We'll use little country flags as indicators of the types of the plugs and sockets: 
 \begin{equation}
     \label{eq:want}
     {\cord{\TypeIrish}{a}{\TypeSwiss}}
 \end{equation}
-
-As with the ropes, we can also think about composing electric chords together to make longer ones. However, now we can only connect two chords if the type of the plug of one of them has the type of the socket of the other:
-\begin{equation}
-    \label{eq:irish-swiss-result}
-    \prfperiod{
-        \cord{\TypeIrish}{a}{\TypeIrish}
-    }{
-        \cord{\TypeIrish}{b}{\TypeSwiss}
-    }{
-        \cord{\TypeIrish}{a + b}{\TypeSwiss}
-    }
-\end{equation}
-
-Or, phrased in a slightly more abstract manner, for any plug/socket types $\Obja, \Objb, \Objc$ the general formula to compose chords is
-%
-\begin{equation}
-    \label{eq:cords-generic}
-    \prfperiod{
-        \cord{\Obja}{a}{\Objb}
-    }{
-        \cord{\Objb}{b}{\Objc}
-    }{
-        \cord{\Obja}{a+b}{\Objc}
-    }
-\end{equation}
- 
-If we think of the ends of the chords as ``interfaces'', then we can say that two chords are only then composable at a pair of interfaces when those interfaces match. Here there are in fact two conditions at play: for interfaces to match we need 1) that one of the interfaces is a plug and the other is a socket, and 2) we need that both interfaces have the same type. 
-
-Both of these conditions are indicative of how things work generally in semicategories: as we will see shortly in more detail, in semicategories we have \emph{morphisms} (the analogue of electrical chords) which each have a \emph{source} and a \emph{target} (analogous to have a socket end and a plug end). Furthermore, every source and target of a morphism has a \emph{type}, and any two morphisms are composable at a pair of interfaces if 1) the one interface is a target and the other is a source and 2) if the types of the interfaces are the same. 
-
-In summary, we first looked at a specific illustrative model of a semigroup given by ropes with length, and then we generalized this picture by adding ``interfaces'' in order to give a first intuition about semicategories. In the very special case when all interfaces happen to have the same type, we are back to having just a semigroup. It is in this sense that semicategories are a generalization of semigroups. 
-
-
-\todotext{\bernina: Would be nice to continue the example by considering voltages (220 v 110), voltages converters, appliances that can use one or both.}
-
-%
-%
-%\begin{figure}
-%  \begin{center}
-%    \begin{tabular}{c@{\hskip 1cm}c@{\hskip 1cm}c@{\hskip 1cm}c@{\hskip 1cm}}
-%      \figplug{A} & \figplug{B} & \figplug{C} & \figplug{D} \\
-%      \figplug{E} & \figplug{F} & \figplug{G} & \figplug{H} \\
-%      \figplug{I} & \figplug{L} & \figplug{M} & \figplug{N}
-%    \end{tabular}
-%  \end{center}
-%
-%\end{figure}
 
 \begin{marginfigure}
     \centering
@@ -107,7 +54,142 @@ In summary, we first looked at a specific illustrative model of a semigroup give
     \label{fig:plugs}
 \end{marginfigure}
 
-% \begin{equation}
-%   \label{eq:irish-swiss}
-%   \prftree{\cord{\TypeIrish}{c}{\TypeIrish}}{\cord{\TypeIrish}{0}{\TypeSwiss}}{\cord{\TypeIrish}{c}{\TypeSwiss}}
-% \end{equation}
+In this expanded model, we can no longer compose \emph{any} two cables; we can only connect one cable with another   if the  \emph{type of the plug} of the one is the same as the \emph{type of the socket} of the other:
+\begin{equation}
+    \label{eq:irish-swiss-result}
+    \prfperiod{
+        \cord{\TypeIrish}{a}{\TypeIrish}
+    }{
+        \cord{\TypeIrish}{b}{\TypeSwiss}
+    }{
+        \cord{\TypeIrish}{a + b}{\TypeSwiss}
+    }
+\end{equation}
+
+
+Or, phrased in a slightly more abstract manner, for any plug/socket types $\Obja, \Objb, \Objc$ the general formula to compose cables is
+%
+\begin{equation}
+    \label{eq:cords-generic}
+    \prfperiod{
+        \cord{\Obja}{a}{\Objb}
+    }{
+        \cord{\Objb}{b}{\Objc}
+    }{
+        \cord{\Obja}{a+b}{\Objc}
+    }
+\end{equation}
+ 
+If we think of the ends of the cables as ``interfaces'', then we can say that two cables are only then composable at a pair of interfaces when those interfaces match. In this statement, there are in fact two conditions at play: for interfaces to match we need 1) that one of the interfaces is a plug and the other is a socket, and 2) we need that both interfaces have the same type. This pattern, as described in \cref{eq:cords-generic}, appears all across mathematics and real-world applications. We'll list a few selected examples to illustrate. 
+
+\paragraph{Sets and functions}
+Let $\setA$, $\setB$, and $\setC$ be sets. Given a function $\mapa \colon \setA \sto \setB$ and a function $\mapb \colon \setB \sto \setC$, we can compose them in series via the usual notion of function composition: 
+\begin{equation}
+\defmapperiod{
+\mapa \mthen \mapb
+}{ \setA
+}{ \sto
+}{ \setC
+}{ \ela
+}{ \mapb(\mapa(\ela))
+}
+\end{equation}
+In other words, 
+\begin{equation}
+    \label{eq:interfaces-sets}
+    \prfperiod{
+        \mapa \colon \setA \sto \setB
+    }{
+        \mapb \colon \setB \sto \setC
+    }{
+        \mapa \mthen \mapb \colon \setA \sto \setC
+    }
+\end{equation}
+
+\paragraph{Preorders and monotone functions} Consider now, instead of just sets and functions, preorders and monotone functions between them. Again we can compose such functions when their ``interfaces'' match:
+\begin{equation}
+    \label{eq:interfaces-preorders}
+    \prfperiod{
+        \mapa \colon \posA \mto \posB
+    }{
+        \mapb \colon \posB \mto \posC
+    }{
+        \mapa \mthen \mapb \colon \posA \mto \posC
+    }
+\end{equation}
+
+This works, in particular, because the (series) composition of two monotone functions is, automatically, also a monotone function. This was noted in \cref{lem:monotonicity-compositional} as the ``compositionality'' of monotonicity. 
+
+
+\paragraph{Monoids and monoid morphisms} Similar to the case of preorders and monotone functions, we have seen in \cref{lem:monoid-morphisms-compose} that we can compose monoid morphisms, provided their interfaces match, and the result is again a monoid morphism:
+\begin{equation}
+    \label{eq:interfaces-monoids}
+    \prfperiod{
+        \funa \colon \monoidB \fto \monoidA
+    }{
+        \funb \colon \monoidA \fto \monoidL
+    }{
+        \funa \fthen \funb \colon \monoidB \fto \monoidL
+    }
+\end{equation}
+
+
+\paragraph{Real coordinate spaces and real matrices}
+Consider real coordinate spaces $\reals^k$, $\reals^m$, and $\reals^n$. An $m \times k$ real matrix encodes a linear function $\matmor{A} \colon \reals^k \mto \reals^m$, and an $n \times m$ real matrix encodes a linear function $\matmor{B} \colon \reals^m \mto \reals^n$. Because the target space of the first matrix matches the source space of the second matrix, they can be composed in series via matrix multiplication, and the result is a matrix of the appropriate dimensions: 
+\begin{equation}
+    \label{eq:interfaces-matrices}
+    \prfperiod{
+        \matmor{A} \colon \reals^k \mto \reals^m
+    }{
+        \matmor{B} \colon \reals^m \mto \reals^n
+    }{
+        \matmor{A} \mthen \matmor{B} \colon \reals^k \mto \reals^n
+    }
+\end{equation}
+Here we read $\matmor{A} \mthen \matmor{B}$ as ``first $\matmor{A}$, then $\matmor{B}$''. As a matrix, it is the $n \times k$ matrix product $\matmor{B}\matmor{A}$: to transform a vector $\vectob{v} \setin \reals^k$ first by $\matmor{A}$ and then by $\matmor{B}$, we compute $\matmor{B}(\matmor{A}\vectob{v}) = (\matmor{B}\matmor{A})\vectob{v}$. So the order of the factors in the matrix product is the reverse of the order in which we write the series composition.
+
+\paragraph{Components in co-design}
+In co-design, we describe a component by a \SY{design problem}, which relates the functionalities that the component can provide to the requirements that it needs in order to provide them. The ``interfaces'' of a design problem are its poset of functionalities and its poset of requirements. Recall the example from \cref{sec:dp-series-composition}: an electric motor provides torque and requires electric current, while a battery provides electric current and requires mass. Because the requirements of the motor are the same kind of resource as the functionalities of the battery, the two components can be connected in series, and the result is a system which provides torque and requires mass (\cref{exa:dp-series-motor-battery}). In general, for posets $\posA$, $\posB$, and $\posC$, series composition of design problems (\cref{def:dp-series-composition}) follows the pattern
+\begin{equation}
+    \label{eq:interfaces-dp}
+    \prfperiod{
+        \adpa \colon \funposA \profto \resposB
+    }{
+        \adpb \colon \funposB \profto \resposC
+    }{
+        \adpa \dpthen \adpb \colon \funposA \profto \resposC
+    }
+\end{equation}
+Both of the conditions for matching interfaces that we noted for the cables are visible here. The poset $\posB$ appears as the requirements $\resposB$ of $\adpa$ and as the functionalities $\funposB$ of $\adpb$ (this is analogous to a plug meeting a socket), and it must be the \emph{same} poset in both places (this is analogous to the plug and the socket being of the same type).
+
+\paragraph{Journeys}
+Suppose that we travel from Zürich to Milan by train, and then from Milan to Florence by car. Because the train journey ends at the place where the car journey begins, the two journeys can be composed in series, and the result is a journey from Zürich to Florence: first take the train, then drive. By contrast, a train journey from Zürich to Milan cannot be directly followed by a car journey that starts in Bologna. Here the ``interfaces'' are locations. In general, for locations $\Obja$, $\Objb$, and $\Objc$, given a journey $\mora$ from $\Obja$ to $\Objb$ and a journey $\morb$ from $\Objb$ to $\Objc$, we obtain the composite journey $\mora \mthen \morb$, which first follows $\mora$ and then follows $\morb$:
+\begin{equation}
+    \label{eq:interfaces-journeys}
+    \prfperiod{
+        \mora \colon \Obja \mto \Objb
+    }{
+        \morb \colon \Objb \mto \Objc
+    }{
+        \mora \mthen \morb \colon \Obja \mto \Objc
+    }
+\end{equation}
+
+\paragraph{Currency conversions}
+Consider currencies such as \CHF, \EUR, and \USD. A currency exchanger from a currency $\Obja$ to a currency $\Objb$ can be described by a pair of numbers $\tup{r,c}$: an exchange rate $r$ and a commission $c$, where the commission is charged in the target currency. Such an exchanger converts an amount $x$ of $\Obja$ into the amount $rx - c$ of $\Objb$. If we first exchange \CHF into \EUR, we can only then continue by using an exchanger that accepts \EUR; in this example, the interfaces are currencies. Given a further exchanger $\tup{s,d}$ from $\Objb$ to $\Objc$, the amount $x$ of $\Obja$ is converted first into $rx - c$ of $\Objb$, and then into $s(rx - c) - d = rsx - (sc + d)$ of $\Objc$. So the composite exchanger has exchange rate $rs$ and commission $sc + d$:
+\begin{equation}
+    \label{eq:interfaces-currencies}
+    \prfperiod{
+        \tup{r,c} \colon \Obja \mto \Objb
+    }{
+        \tup{s,d} \colon \Objb \mto \Objc
+    }{
+        \tup{rs, sc+d} \colon \Obja \mto \Objc
+    }
+\end{equation}
+The exchange rates multiply, while the commission of the first exchanger is converted into the currency $\Objc$ before being added to the commission of the second.
+
+
+
+
+
