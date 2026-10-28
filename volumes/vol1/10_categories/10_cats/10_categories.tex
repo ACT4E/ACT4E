@@ -239,6 +239,18 @@ When we want to emphasize which \SY{category} we are working with, we will somet
 
 \subsection{First examples}
 
+At the beginning of this section we noted the following pairs of objects and morphisms: 
+\begin{itemize}
+\item sets and functions,
+\item preorders and monotone functions,
+\item monoids and monoid morphisms, 
+\item real coordinate space and real matrices,
+\item posets and design problems,
+\item locations and journeys,
+\item currency amounts and currency conversions.
+\end{itemize}
+All of these examples form categories, with the possible exception of the last two items (depending on how one sets up the model). And many more similar examples form categories too. For the moment we will only discuss a few of the above items; many more will be discussed in the subsequent \cref{chap:modeling-cats}, \cref{chap:cats-structures} and \cref{chap:structures-as-cats}.
+
 \begin{example}
     \label{exa:the-category-of-sets}
     There is a category where the objects are all sets, morphisms are functions between sets, and the composition operations are the usual composition of functions.
@@ -296,6 +308,64 @@ When we want to emphasize which \SY{category} we are working with, we will somet
         = \catidat\setB(\mapa (\ela)) = \mapa (\ela).
     \end{equation}
     Given a function $\mapb \colon \setB \sto \setC$, we can show similarly that $\catidat\setB \mthen \mapb = \mapb$.
+\end{example}
+
+\begin{example}
+    \label{exa:the-category-of-real-matrices}
+    There is a category where the objects are the real coordinate spaces, the morphisms are real matrices, and the composition operations are given by matrix multiplication.
+    Recall from \cref{sec:interfaces} that an $m \times k$ real matrix $\matmor{A}$ encodes a linear function from $\reals^k$ to $\reals^m$, which sends a vector $\vectob{v} \setin \reals^k$ to the vector $\matmor{A}\vectob{v} \setin \reals^m$; this is why we write $\matmor{A} \colon \reals^k \mto \reals^m$.
+
+    \begin{ctdefinition}[Category of real matrices]
+    \SYNDEF{category of real matrices}
+    \label{def:MatR}
+    The category \MatR of real matrices is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: the real coordinate spaces $\reals^n$, for $n \setin \natnumbers$.
+        \item \emph{Morphisms}: given objects~$\reals^k$ and~$\reals^m$, the morphisms from $\reals^k$ to $\reals^m$ are the $m \times k$ real matrices; that is, the hom-set is
+              \begin{equation}
+                  \HomSet{\MatR}{\reals^k}{\reals^m} = \reals^{\matdim{m}{k}}.
+              \end{equation}
+        \item \emph{Composition}: given morphisms $\matmor{A} \colon \reals^k \mto \reals^m$ and $\matmor{B} \colon \reals^m \mto \reals^n$, their composition is the $n \times k$ matrix given by the matrix product
+              \begin{equation}
+                  \label{eq:MatR-composition}
+                  \matmor{A} \mthen \matmor{B} \definedas \matmor{B}\matmor{A}.
+              \end{equation}
+        \item \emph{Identity morphisms}: given an object~$\reals^m$, its \SY{identity morphism} is the $m \times m$ \SY{identity matrix}~$\catidat{\reals^m} \definedas \idmat_m$.
+    \end{enumerate}
+\end{ctdefinition}
+
+    Note the order of the factors in \cref{eq:MatR-composition}. We read $\matmor{A} \mthen \matmor{B}$ as ``first $\matmor{A}$, then $\matmor{B}$'': to transform a vector $\vectob{v} \setin \reals^k$ first by $\matmor{A}$ and then by $\matmor{B}$, we compute $\matmor{B}(\matmor{A}\vectob{v}) = (\matmor{B}\matmor{A})\vectob{v}$.
+    (We also allow $n = 0$: the space $\reals^0$ consists only of the zero vector, and a matrix with zero rows or zero columns has no entries.)
+
+    Let us check that composition of matrices does indeed satisfy the associativity law.
+    Suppose $\matmor{A} \colon \reals^k \mto \reals^m$, $\matmor{B} \colon \reals^m \mto \reals^n$, and $\matmor{C} \colon \reals^n \mto \reals^p$ are three composable matrices.
+    On the one hand
+    \begin{equation}
+        \label{eq:MatR-associativity-1}
+        (\matmor{A} \mthen \matmor{B}) \mthen \matmor{C} = \matmor{C}(\matmor{B}\matmor{A}),
+    \end{equation}
+    while on the other hand
+    \begin{equation}
+        \label{eq:MatR-associativity-2}
+        \matmor{A} \mthen (\matmor{B} \mthen \matmor{C}) = (\matmor{C}\matmor{B})\matmor{A}.
+    \end{equation}
+    These two $p \times k$ matrices are equal, because matrix multiplication is associative: writing $\matmor{A}_{rl}$ for the entry of $\matmor{A}$ in row $r$ and column $l$, and similarly for the other matrices, both have the entry
+    \begin{equation}
+        \sum_{j=1}^{n} \sum_{r=1}^{m} \matmor{C}_{ij} \, \matmor{B}_{jr} \, \matmor{A}_{rl}
+    \end{equation}
+    in row $i$ and column $l$. So
+    \begin{equation}
+        \label{eq:MatR-associativity-3}
+        (\matmor{A} \mthen \matmor{B}) \mthen \matmor{C} = \matmor{A} \mthen (\matmor{B} \mthen \matmor{C})
+    \end{equation}
+    holds.
+
+    Let us also check that, given an object $\reals^m$, the identity matrix $\idmat_m$ does indeed satisfy conditions \cref{eq:identities-unitality-1} and \cref{eq:identities-unitality-2}.
+    Given a matrix $\matmor{A} \colon \reals^k \mto \reals^m$, the composition $\matmor{A} \mthen \catidat{\reals^m}$ is the same matrix as just $\matmor{A}$ on its own:
+    \begin{equation}
+        \matmor{A} \mthen \catidat{\reals^m} = \idmat_m \matmor{A} = \matmor{A}.
+    \end{equation}
+    Given a matrix $\matmor{B} \colon \reals^m \mto \reals^n$, we can show similarly that $\catidat{\reals^m} \mthen \matmor{B} = \matmor{B}\idmat_m = \matmor{B}$.
 \end{example}
 
 
