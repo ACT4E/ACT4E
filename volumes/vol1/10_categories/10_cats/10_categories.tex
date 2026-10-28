@@ -368,6 +368,63 @@ All of these examples form categories, with the possible exception of the last t
     Given a matrix $\matmor{B} \colon \reals^m \mto \reals^n$, we can show similarly that $\catidat{\reals^m} \mthen \matmor{B} = \matmor{B}\idmat_m = \matmor{B}$.
 \end{example}
 
+\begin{example}
+    \label{exa:the-category-of-feasibility-relations}
+    There is a category where the objects are posets, the morphisms are feasibility relations between posets, and the composition operations are given by the composition of relations.
+    Recall from \cref{sec:intro-design} that, in co-design, we model a component of a system by a feasibility relation $\monrelM \colon \posA \profto \posB$ (\cref{def:feasibility-relation}): here $\posA$ is a poset of functionalities, $\posB$ is a poset of requirements, and $\inrel{\posAel}{\monrelM}{\posBel}$ means that the functionality $\posAel$ is feasible with the requirement $\posBel$.
+    Recall also that a feasibility relation is the same thing as a \SY{monotone relation} between posets.
+
+    \begin{ctdefinition}[Category of feasibility relations]
+    \label{def:Feas}
+    The category \feas of feasibility relations is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: all posets.
+        \item \emph{Morphisms}: given posets~$\posA$ and~$\posB$, the hom-set~$\HomSet{\feas}{\posA}{\posB}$ is the set of all feasibility relations $\posA \profto \posB$.
+        \item \emph{Composition}: given morphisms $\monrelM \colon \posA \profto \posB$ and $\monrelN \colon \posB \profto \posC$, their composition $\monrelM \mthen \monrelN \colon \posA \profto \posC$ is the composition of relations (\cref{def:composition-of-relations}):
+              \begin{equation}
+                  \label{eq:Feas-composition}
+                  \begin{aligned}
+                      \inrel{\posAel}{(\monrelM \mthen \monrelN)}{\posCel}
+                      \quad \text{if and only if} \quad
+                       & \text{there exists } \posBel \setin \posBset \\
+                       & \text{with } \inrel{\posAel}{\monrelM}{\posBel} \text{ and } \inrel{\posBel}{\monrelN}{\posCel}.
+                  \end{aligned}
+              \end{equation}
+        \item \emph{Identity morphisms}: given a poset~$\posA$, its \SY{identity morphism} is the order relation of $\posA$, seen as a feasibility relation $\catidat\posA \definedas {\posAleq} \colon \posA \profto \posA$ (\cref{exa:monrel-leq}).
+    \end{enumerate}
+\end{ctdefinition}
+
+    Composition is well defined, because the composite of two monotone relations is again a monotone relation (\cref{lem:monrel-composition}).
+    In terms of co-design, composition is the series composition of components (\cref{sec:dp-series-composition}): a functionality $\posAel$ of the first component is feasible with a requirement $\posCel$ of the second component if and only if there is an intermediate resource $\posBel$ which the first component requires and which the second component provides.
+    The identity morphism $\catidat\posA$ is the ``component that does nothing'' from \cref{sec:neutral-components}: it provides any functionality that is at most what it requires.
+    Note that the identity morphism is the order relation $\posAleq$, and \emph{not} the equality relation on the underlying set of $\posA$; in general, the equality relation is not even a feasibility relation (\cref{exa:graph-not-monrel}).
+
+    Let us check that composition of feasibility relations does indeed satisfy the associativity law.
+    Suppose $\monrelL \colon \posA \profto \posB$, $\monrelM \colon \posB \profto \posC$, and $\monrelN \colon \posC \profto \posD$ are three composable feasibility relations, and let $\posAel \setin \posAset$ and $\posDel \setin \posDset$.
+    On the one hand, unwinding \cref{eq:Feas-composition} twice, $\inrel{\posAel}{((\monrelL \mthen \monrelM) \mthen \monrelN)}{\posDel}$ holds if and only if there exists $\posCel \setin \posCset$ with $\inrel{\posAel}{(\monrelL \mthen \monrelM)}{\posCel}$ and $\inrel{\posCel}{\monrelN}{\posDel}$, that is, if and only if
+    \begin{equation}
+        \label{eq:Feas-associativity-1}
+        \text{there exist } \posBel \setin \posBset \text{ and } \posCel \setin \posCset \text{ with }
+        \inrel{\posAel}{\monrelL}{\posBel}, \quad
+        \inrel{\posBel}{\monrelM}{\posCel}, \quad \text{and} \quad
+        \inrel{\posCel}{\monrelN}{\posDel}.
+    \end{equation}
+    On the other hand, $\inrel{\posAel}{(\monrelL \mthen (\monrelM \mthen \monrelN))}{\posDel}$ holds if and only if there exists $\posBel \setin \posBset$ with $\inrel{\posAel}{\monrelL}{\posBel}$ and $\inrel{\posBel}{(\monrelM \mthen \monrelN)}{\posDel}$, which unwinds to exactly the same condition \cref{eq:Feas-associativity-1}.
+    So
+    \begin{equation}
+        \label{eq:Feas-associativity-3}
+        (\monrelL \mthen \monrelM) \mthen \monrelN = \monrelL \mthen (\monrelM \mthen \monrelN)
+    \end{equation}
+    holds.
+    In terms of co-design, both sides say that a functionality $\posAel$ is feasible with a requirement $\posDel$ exactly when we can find intermediate resources $\posBel$ and $\posCel$ with which each of the three components is feasible.
+
+    Let us also check that, given a poset $\posB$, the order relation $\catidat\posB = {\posBleq}$ does indeed satisfy conditions \cref{eq:identities-unitality-1} and \cref{eq:identities-unitality-2}.
+    Given a feasibility relation $\monrelM \colon \posA \profto \posB$, the composition $\monrelM \mthen \catidat\posB$ is the same feasibility relation as just $\monrelM$ on its own.
+    Indeed, if $\inrel{\posAel}{\monrelM}{\posBel}$, then $\posBel \posBleq \posBel$ by reflexivity, so $\inrel{\posAel}{(\monrelM \mthen {\posBleq})}{\posBel}$.
+    Conversely, if $\inrel{\posAel}{(\monrelM \mthen {\posBleq})}{\posBel'}$, then there is $\posBel \setin \posBset$ with $\inrel{\posAel}{\monrelM}{\posBel}$ and $\posBel \posBleq \posBel'$; since $\monrelM$ is closed upward in the target, $\inrel{\posAel}{\monrelM}{\posBel'}$.
+    Given a feasibility relation $\monrelN \colon \posB \profto \posC$, we can show similarly, using that $\monrelN$ is closed downward in the source, that $\catidat\posB \mthen \monrelN = \monrelN$ (see also \cref{lem:monrel-leq-neutral}).
+\end{example}
+
 
 
 \todojira{667}{\alphubel: @JL: Fill this section.
