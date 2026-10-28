@@ -1,0 +1,337 @@
+% !TEX root = chapter-standalone.tex
+
+\section[Categories]{Categories}
+\label{sec:formal-def-cats}
+
+%\linkvideo{spring2021-semicats-cats:intro_semi_cat} % Introduction for Semicategories and Categories
+
+\todotext{Non-examples need to be added to this section}
+\todotext{More positive examples need to be added to this section}
+
+Loosely speaking, categories describe ``worlds'' where series composition is possible. For example, in the previous chapter, we considered the series of composition, respectively, of functions between sets, monotone functions between preorders, monoid morphisms between monoids, matrices between coordinate spaces, design problems between posets, etc. Each of these cases was it's own compositional ``world''.  The mathematical definition of a  category is an abstract encoding of this idea. 
+
+A category has the following constituents: there are things (generically called ``objects''), there are relationships between the things (generically called ``morphisms''), and there is a notion of series composition for those relationships (generically called ``composition''). For each thing (object) there is also a special self-relationship called an ``identity morphism'' (we called these ``neutral components" in the previous chapter). These four constituents are subject to two conditions: that composition must be associative, and that identity morphisms must be neutral for composition.
+
+Let us motivate and concretize this loose description briefly, before stating the formal definition of a category. Then we will provide many examples -- in this chapter and in the following ones. 
+
+\subsection{Objects, morphisms}
+
+As stated above, every category has a set of ``things'' which are its so-called \emph{objects}, and then it has \emph{morphisms} which encode ``relationships'' between objects. Each morphism always has a \emph{source} object and a \emph{target} object; in other words, morphisms are always directed from one object to another. It is allowed for a morphism to have the same object as both its source and its target. 
+
+In the previous chapter we already got to know this idea, implicitly, for a number of examples. In the electrical cables example, the set of objects was the set of types of electrical interfaces and the morphisms were the electrical cables. We also saw examples where the objects and morphisms, respectively, were
+\begin{itemize}
+\item sets and functions,
+\item preorders and monotone functions,
+\item monoids and monoid morphisms, 
+\item real coordinate space and real matrices,
+\item posets and design problems,
+\item locations and journeys,
+\item currency amounts and currency conversions.
+\end{itemize}
+
+
+In a \SY{category}, we will often denote generic objects by letters~$\Obja$,~$\Objb$,~$\Objc$, etc. To denote morphisms, we usually draw arrows similar to the ones that we have already used, for example, for monotone functions. If~$\Obja$ and~$\Objb$ are objects, we draw a morphism from~$\Obja$ to~$\Objb$ (call it~$\mora$) like this:
+\begin{equation}
+    \mora\colon \Obja \mto \Objb.
+\end{equation}
+Here~$\Obja$ is the source of~$\mora$, and~$\Objb$ is its target. We call the pair $\tup{\Obja, \Objb}$,  consisting of the source and target of $\mora$, the \emph{type} of $\mora$. 
+
+\subsection{Composition, hom-sets}
+
+Another key feature of categories is that we can \emph{compose} pairs of morphisms, provided that the target object of the one morphism matches the source object of the other morphism. When this is the case, the morphisms are said to be \emph{composable}. This is completely analogous to how we could only compose a pair of electrical cables if their interfaces matched. 
+
+In terms of notation, in a generic category we use the infix symbol ``$\mthen$'' to denote composition of morphism, analogous to how we've used this symbol to denote function composition or the composition of elements in a semigroup or monoid. The composite of two (composable) morphisms -- say, $\mora\colon \Obja \mto \Objb$ and~$\morb\colon \Objb \mto \Objc$ --- is again a morphism, denoted $\mora \mthen \morb$. Its respective source and target are what you would expect them to be: 
+\begin{equation}\label{eq:generic-cat-comp-rule}
+    \prfperiod{
+        \mora \colon \Obja \mto \Objb
+    }{
+        \morb\colon \Objb \mto \Objc
+    }{
+        (\morab )\colon \Obja \mto \Objc
+    }
+\end{equation}
+
+To formally encode composition of morphisms, we proceed a similar way to how we encoded the composition operation for semigroups, monoids, and groups. There, we encoded the composition of elements of a monoid $\tup{\monoidAset, \mthen, \idmon}$, say, as a function (a ``binary operation'') of the type
+\begin{equation}
+\monoidAset \cartprod \monoidAset \to \monoidAset. 
+\end{equation}
+
+For categories, we are composing morphisms rather than monoid elements, so instead of considering the underlying set $\monoidAset$ of elements of a monoid, we need to consider sets of morphisms. More precisely, for every pair $\tup{\Obja, \Objb}$ of objects, we will consider the \emph{set of morphisms from $\Obja$ to $\Objb$}, which is denoted
+\begin{equation}
+\HomSet{}{\Obja}{\Objb}
+\end{equation}
+and called the ``hom-set'' of morphisms from $\Obja$ to $\Objb$. 
+(The ``Hom'' has its historical roots in the word ``homomorphism''.) Note that, for categories, there are in general many hom-sets: one for each pair of objects. In contrast to the case of composition operations for monoids, in a category composition is encoded by functions of the kind
+\begin{equation}\label{eq:cat-composition-function-type}
+\HomSet{}{\Obja}{\Objb} \cartprod \HomSet{}{\Objb}{\Objc} \to \HomSet{}{\Obja}{\Objc}
+\end{equation}
+in order to capture the fact that, in general, we are composing morphisms of different -- but composable -- types, in accordance with \cref{eq:generic-cat-comp-rule}. This means in particular that, also in contrast to monoids (where we had a single function to encode the composition operation), for categories we need \emph{many} functions to encode composition: one function of the kind \cref{eq:cat-composition-function-type} for each triple of objects $\tup{\Obja, \Objb, \Objc}$. 
+
+
+\subsection{Associativity}
+
+In the previous chapter we have already become acquainted with the property of associativity for morphisms. In a category, we require that for any three composable morphisms of the following kind,  
+\begin{equation}
+    \prfperiod{
+        \mora \colon \Obja \mto \Objb
+    }{
+        \morb\colon \Objb \mto \Objc
+    }{
+        \morc \colon \Objc \mto \Objd
+    }{
+        (\morab ) \mthen \morc = \mora \mthen ( \morb \mthen \morc )
+    }
+\end{equation}
+Imposing this condition guarantees that we can safely forget the parenthesis in nested pair-wise series compositions of morphisms. 
+
+
+\subsection{Identity morphisms}
+
+\SY{Identity morphisms} are morphisms that ``are neutral for composition'': they do not have any effect when we compose with them. This is analogous to how the identity element of a \SY{monoid} ``does nothing'' when we compose it with other elements of the \SY{monoid}. In a category, there is one identity morphism per object. Given an object $\Obja$, we call its identity morphism the ``identity morphism at $\Obja$'' and denote it by $\catidat\Obja$.  
+
+There are two equivalent ways of phrasing precisely what it means for identity morphisms to be neutral. 
+
+One way is to say that for any arbitrary object, say $\Obja$, it's identity morphism $\catidat\Obja$ is neutral in the sense that
+\begin{enumerate}
+\item for any morphism 
+\begin{equation}
+\mora \colon \Obja \mto \Objb
+\end{equation}
+whose source is $\Obja$ we have that 
+\begin{equation}
+\catidat\Obja \mthen \mora  = \mora;
+\end{equation}
+and
+\item for any morphism 
+\begin{equation}
+\morb \colon \Objf \mto \Obja
+\end{equation}
+whose target is $\Obja$ we have that 
+\begin{equation}
+\morb \mthen \catidat\Obja = \morb.
+\end{equation}
+\end{enumerate}
+
+Another, equivalent, way of phrasing these conditions is to say that for any arbitrary morphism $\mora \colon \Obja \mto \Objb$, we require that pre-composing or post-composing it with the appropriate identity morphisms has no effect:  
+\begin{enumerate}
+\item  
+\begin{equation}
+\catidat\Obja \mthen \mora = \mora;
+\end{equation}
+\item  
+\begin{equation}
+\mora \mthen \catidat\Objb = \mora.
+\end{equation}
+\end{enumerate}
+
+The two phrasings differ simply in which variable we choose to pin down first: an arbitrary object $\Obja$, or an arbitrary morphism $\mora \colon \Obja \mto \Objb$. 
+
+
+
+
+
+
+\subsection{The definition of a category}
+
+Now we are ready for the full formal definition of a \SY{category}.
+Have a read through, then we illustrate it further with examples.
+
+\todomistake{\alphubel: @JL: the footnote mark after ``collection'' goes nowhere.
+    Need to define collection.
+    Or just call this a ``small semicategory''.
+}
+\SYNDEF{semicategory}
+\SYNDEF{hom-set}
+
+\begin{ctdefinition}[Category]
+    \SYNDEF{category}
+    \label{def:categorymain}
+    A \maindef{category}~\CatC is specified by:
+    \begin{body}
+        \constit
+        \begin{enumerate}
+            \item \label{category-objects}
+                  Objects: A collection~$\ObC$ whose elements are called \emph{objects}.
+            \item \label{category-morphisms}
+                  Morphisms: For every pair of objects~$\Obja,\Objb$ in $\ObC$, there is a set called a ``hom-set'' and indicated as~$\HomSet{\CatC}{\Obja}{\Objb}$, elements of which are called \emph{morphisms} and denoted $\mora \colon \Obja \mto \Objb$.
+
+                  For such an $\mora$, we call $\Obja$ its \emph{source} and $\Objb$ its \emph{target}.
+            \item \label{category-composition}
+                  Composition operations: For every three objects~$\Obja,\Objb,\Objc$ in~$\ObC$ there is a composition map
+                  \begin{equation}\label{eq:category-composition}
+                      \mthenof{\Obja,\Objb,\Objc}\colon \HomSet{\CatC}{\Obja}{\Objb} \cartprod \HomSet{\CatC}{\Objb}{\Objc}\mto \HomSet{\CatC}{\Obja}{\Objc}.
+                  \end{equation}
+                  We usually just write~$\mthen$ instead of~$\mthenof{\Obja,\Objb,\Objc}$ and use infix notation:
+                  \begin{equation}
+                      \prfperiod{
+                          \mora \colon \Obja \mto \Objb
+                      }{
+                          \morb\colon \Objb \mto \Objc
+                      }{
+                          (\morab )\colon \Obja \mto \Objc
+                      }
+                  \end{equation}
+                  The morphism~$\morab$ is called the \emph{composition} of~$\mora$ and~$\morb$.
+            \item \label{category-identities}
+                  Identity morphisms: For every object~$\Obja$ in~$\ObC$, there is a morphism
+                  \begin{equation}\label{eq:category-identity}
+                      \catidat\Obja \colon \Obja \mto \Obja,
+                  \end{equation}
+                  called the \emph{identity morphism} of~$\Obja$.
+        \end{enumerate}
+        \condit
+        \begin{enumerate}
+            \item \label{category-associativity}
+                  Associativity: it holds that
+                  \begin{equation}\label{eq:category-associativity}
+                      \prfperiod{
+                          \mora\colon \Obja \mto \Objb
+                      }{
+                          \morb\colon \Objb \mto \Objc
+                      }{
+                          \morc\colon \Objc \mto \Objd
+                      }{
+                          (\morab)
+                          \mthen \morc= \mora \mthen (\morb \mthen \morc)
+                      }
+                  \end{equation}
+            \item \label{category-unitality}
+                  Unitality: identity morphisms are neutral with respect to composition,
+                                    \begin{equation}\label{eq:category-unitality}
+                      \prfperiod{
+                          \mora\colon \Obja \mto \Objb
+                      }{
+                          \catidat\Obja \mthen \mora = \mora = \mora \mthen \catidat\Objb
+                      }
+                  \end{equation}
+        \end{enumerate}
+    \end{body}
+\end{ctdefinition}
+
+
+
+
+
+
+\begin{remark}
+    \begin{enumerate}
+        \item When we want to emphasize which \SY{category} we are working with, we will sometimes write
+              \begin{equation}
+                  \mora \colon \Obja \mtoin\CatC \Objb
+              \end{equation}
+              to indicate
+              \begin{equation}
+                  \mora \setin \HomSet{\CatC}{\Obja}{\Objb}.
+              \end{equation}
+        \item Sometimes we will use the notation $\Mor_\CatC$ to denote the collection of \emph{all} morphisms in a semicategory $\CatC$, not just a certain hom-set.
+    \end{enumerate}
+\end{remark}
+
+%\begin{marginfigure}
+%    \begin{center}
+%        \includesag{points_and_arrow}
+%    \end{center}
+%    \caption{}
+%    \label{fig:points-and-arrow-diagram}
+%\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includesag{points_and_two_arrows}
+    \caption{}
+    \label{fig:points-and-two-arrows-diagram}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includesag{points_and_composed_arrows}
+    \caption{}
+    \label{fig:points-and-composed-arrows-diagram}
+\end{marginfigure}
+
+\begin{remark}
+    We will often visualize objects and morphisms using diagrams where symbols or dots indicate objects and arrows indicate morphisms.
+    For instance, if~$\Obja$,~$\Objb$,~$\Objc$ are objects in a semicategory~\CatC, and~$\mora\colon \Obja \mto \Objb$ and~$\morb\colon \Objb \mto \Objc$ are morphisms, we draw this as in \cref{fig:points-and-two-arrows-diagram}, for example.
+    The composition~$\morab$ of~$\mora$ with~$\morb$ corresponds to yet another arrow, as in \cref{fig:points-and-composed-arrows-diagram}.
+\end{remark}
+
+\begin{remark}
+    If an \SY{identity morphism}~$\catidat\Obja$ for an object~$\Obja$ exists, then it is unique.
+    To see this, observe that~$\HomSet{\CatC}{\Obja}{\Obja}$ is a \SY{semigroup}, and~$\catidat\Obja$ is a \SY{neutral element} for this \SY{semigroup}, making~$\HomSet{\CatC}{\Obja}{\Obja}$ a \SY{monoid}.
+    We have seen earlier that neutral elements for \SY{semigroups} are necessarily unique.
+\end{remark}
+
+
+\subsection{First examples}
+
+\begin{example}
+    \label{exa:the-category-of-sets}
+    There is a category where the objects are all sets, morphisms are functions between sets, and the composition operations are the usual composition of functions.
+    
+    \begin{ctdefinition}[Category of sets]
+    \SYNDEF{category of sets and functions}
+    \label{def:Set}
+    The category \Set of sets is defined by:
+    \begin{enumerate}
+        \item \emph{Objects}: all sets.
+        \item \emph{Morphisms}: given sets~$\Obja$ and~$\Objb$, the hom-set~$\HomSet{\Set}{\Obja}{\Objb}$ is the set of all functions from~$\Obja$ to~$\Objb$.
+        \item \emph{Composition}: the usual composition of functions.
+        \item \emph{Identity morphisms}: given a set~$\Obja$, its \SY{identity morphism}~ is the identity function~$\catidat\Obja \colon \Obja \mto \Obja, \ \catidat\Obja(\ela) = \ela$.
+    \end{enumerate}
+\end{ctdefinition}
+
+ Let us check that composition of functions does indeed satisfy the associativity law.
+    Suppose $\mora \colon \Obja \mto \Objb$, $\morb\colon \Objb \mto \Objc$, and $\morc \colon \Objc \mto \Objd$ are three composable functions, and let $\ela \setin \Obja$ be an arbitrary element.
+    On the one hand
+    \begin{equation}\label{eq:function-associativity-1}
+        ((\morab) \mthen \morc)(\ela) = \morc((\morab)(\ela)) = \morc (\morb (\mora (\ela))),
+    \end{equation}
+    while on the other hand
+    \begin{equation}\label{eq:function-associativity-2}
+        (\mora \mthen (\morb \mthen \morc))(\ela)
+        = (\morb \mthen \morc)(\mora(\ela)) = \morc (\morb (\mora (\ela))).
+    \end{equation}
+    So
+    \begin{equation}\label{eq:function-associativity-3}
+        (\morab)
+        \mthen \morc = \mora \mthen (\morb \mthen \morc)
+    \end{equation}
+    holds.
+    
+    Let us also check that, given a set $\Obja$, the \SY{identity function} for this set 
+    \begin{equation}
+        \defmapperiod{
+            \catidat\Obja
+        }{
+            \Obja
+        }{
+            \to
+        }{
+            \Obja
+        }{
+            \ela
+        }{
+            \ela
+        }
+    \end{equation}
+    does indeed satisfy conditions \cref{eq:identities-unitality-1} and \cref{eq:identities-unitality-2}.
+    Given a function $\mora \colon \Objf \mto \Obja$, the function composition $\mora \mthen \catidat\Obja$ is the same function as just $\mora$ on its own:
+    \begin{equation}
+        (\mora \mthen \catidat\Obja)(\ela)
+        = \catidat\Obja(\mora (\ela)) = \mora (\ela).
+    \end{equation}
+    Given a function $\morb \colon \Obja \mto \Objb$, we can show similarly that $\catidat\Obja \mthen \morb = \morb$.
+\end{example}
+
+
+
+\todojira{667}{\alphubel: @JL: Fill this section.
+    Add an example of a category that just involved three sets? }
+    
+
+
+
+
+
+
+
