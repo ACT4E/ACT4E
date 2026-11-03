@@ -8,22 +8,32 @@
 
 \todotext{@J: review and edit}
 
-The arrow construction of the previous section admits a useful variant, in which one of the two connecting morphisms is reversed---``twisted''.
-Objects are still the morphisms of~\CatC, but a morphism from~$\mora$ to~$\morb$ now consists of a morphism between sources going \emph{backwards} and a morphism between targets going forwards.
-One intuition: a morphism of the twisted arrow category witnesses that~$\morb$ ``extends''~$\mora$, in the sense that~$\mora$ occurs as the middle portion of~$\morb$, with some pre-processing prepended and some post-processing appended.
-This construction appears naturally when studying tradeoffs and interval-like structures, as the example below illustrates.
-\begin{ctdefinition}[Twisted arrow category]
+The arrow construction of the previous section admits two useful variants, in which one of the two connecting morphisms is reversed---``twisted''.
+Objects are still the morphisms of~\CatC.
+In the \emph{source-twisted} variant, a morphism from~$\mora$ to~$\morb$ consists of a morphism between sources going \emph{backwards} and a morphism between targets going forwards; in the \emph{target-twisted} variant, it is the other way around.
+
+One intuition for the source-twisted variant: a morphism from~$\mora$ to~$\morb$ witnesses that~$\morb$ ``extends''~$\mora$, in the sense that~$\mora$ occurs as the middle portion of~$\morb$, with some pre-processing prepended and some post-processing appended.
+In the target-twisted variant, the roles are swapped: a morphism from~$\mora$ to~$\morb$ witnesses that~$\mora$ extends~$\morb$.
+These constructions appear naturally when studying tradeoffs and interval-like structures, as the example below illustrates.
+
+\begin{ctdefinition}[Source-twisted arrow category]
     \label{def:twisted-arrow-category}
     \label{def:twisted-arrow}
-    Given a category \CatC, its \maindef{twisted arrow category} $\TwistedArrow\CatC$ is:
+    \label{def:source-twisted-arrow}
+    \SYNDEF{twisted arrow category}
+    Given a category \CatC, its \maindef{source-twisted arrow category} $\TwistedArrow\CatC$ is the category given by:
+
+    \constit
+
     \begin{enumerate}
-        \item \emph{Objects:} morphisms in \CatC.
-        \item \emph{Morphisms:}
-              A morphism in $\TwistedArrow\CatC$ from $\mora\colon \Obja \mtoin{\CatC} \Objb $ to $\morb \colon \Objc \mtoin{\CatC} \Objd$ is given by a pair of morphisms $\tup{\twarrowmorasource,\twarrowmoratarget}$ in $\CatC$ such that the following diagram commutes:
+        \item Objects: morphisms in \CatC.
+        \item Morphisms:
+              A morphism in $\TwistedArrow\CatC$ from $\mora\colon \Obja \mtoin{\CatC} \Objb $ to $\morb \colon \Objc \mtoin{\CatC} \Objd$ is given by a pair of morphisms $\twarrowmorasource \colon \Objc \mto \Obja$ and $\twarrowmoratarget \colon \Objb \mto \Objd$ in $\CatC$ such that the following diagram commutes:
               \begin{equation}\label{eq:180_twistedarrow}
                   \includesag{180_twistedarrow}
               \end{equation}
-        \item \emph{Composition:}
+              that is, such that $\twarrowmorasource \mthen \mora \mthen \twarrowmoratarget = \morb$.
+        \item Composition:
               Composition in~$\TwistedArrow\CatC$ is given by placing \SY{commutative squares} side by side.
               Consider~$\tup{\twarrowmorasource,\twarrowmoratarget} \colon \mora \mto \morb$ and~$\tup{\twarrowmorbsource,\twarrowmorbtarget} \colon \morb \mto \morc$ in~$\TwistedArrow\CatC$, giving rise to the following composite diagram
               \begin{equation}\label{eq:180_twistedarrow_comp}
@@ -34,15 +44,64 @@ This construction appears naturally when studying tradeoffs and interval-like st
                   \tup{\twarrowmorasource,\twarrowmoratarget}\mthenof{\TwistedArrow \CatC} \tup{\twarrowmorbsource,\twarrowmorbtarget}
                   \definedas \tup{ \twarrowmorbsource \mthenof\CatC \twarrowmorasource, \twarrowmoratarget\mthenof\CatC \twarrowmorbtarget }.
               \end{equation}
-        \item \emph{Identitites:} given an object $\mora \colon \Obja \mto \Objb$ of $\TwistedArrow\CatC$, its identity morphism is $\tup{\catid_{\Obja},\catid_{\Objb}}$.
+        \item Identity morphisms: given an object $\mora \colon \Obja \mto \Objb$ of $\TwistedArrow\CatC$, its identity morphism is $\tup{\catid_{\Obja},\catid_{\Objb}}$.
+    \end{enumerate}
+
+    When we need to distinguish it from the target-twisted variant below, we also write~$\TwistedArrowSource\CatC$ for~$\TwistedArrow\CatC$.
+\end{ctdefinition}
+
+\begin{ctdefinition}[Target-twisted arrow category]
+    \label{def:target-twisted-arrow}
+    Given a category \CatC, its \maindef{target-twisted arrow category} $\TwistedArrowTarget\CatC$ is the category given by:
+
+    \constit
+
+    \begin{enumerate}
+        \item Objects: morphisms in \CatC.
+        \item Morphisms:
+              A morphism in $\TwistedArrowTarget\CatC$ from $\mora\colon \Obja \mtoin{\CatC} \Objb $ to $\morb \colon \Objc \mtoin{\CatC} \Objd$ is given by a pair of morphisms $\twarrowmorasource \colon \Obja \mto \Objc$ and $\twarrowmoratarget \colon \Objd \mto \Objb$ in $\CatC$ such that the following diagram commutes:
+              \begin{equation}\label{eq:target-twistedarrow}
+                  \begin{tikzcd}[every arrow/.append style={arrowmorphismstyle}]
+                      \Obja \arrow[r, "\mora"] \arrow[d, "\twarrowmorasource"'] \pgfmatrixnextcell \Objb \\
+                      \Objc \arrow[r, "\morb"'] \pgfmatrixnextcell \Objd \arrow[u, "\twarrowmoratarget"']
+                  \end{tikzcd}
+              \end{equation}
+              that is, such that $\twarrowmorasource \mthen \morb \mthen \twarrowmoratarget = \mora$.
+        \item Composition:
+              Given~$\tup{\twarrowmorasource,\twarrowmoratarget} \colon \mora \mto \morb$ and~$\tup{\twarrowmorbsource,\twarrowmorbtarget} \colon \morb \mto \morc$ in~$\TwistedArrowTarget\CatC$, we define
+              \begin{equation}\label{eq:target-twarrow-cat-composition}
+                  \tup{\twarrowmorasource,\twarrowmoratarget}\mthenof{\TwistedArrowTarget \CatC} \tup{\twarrowmorbsource,\twarrowmorbtarget}
+                  \definedas \tup{ \twarrowmorasource \mthenof\CatC \twarrowmorbsource, \twarrowmorbtarget\mthenof\CatC \twarrowmoratarget }.
+              \end{equation}
+              This is again a morphism of~$\TwistedArrowTarget\CatC$, since~$\twarrowmorasource \mthen \twarrowmorbsource \mthen \morc \mthen \twarrowmorbtarget \mthen \twarrowmoratarget = \twarrowmorasource \mthen \morb \mthen \twarrowmoratarget = \mora$.
+        \item Identity morphisms: given an object $\mora \colon \Obja \mto \Objb$ of $\TwistedArrowTarget\CatC$, its identity morphism is $\tup{\catid_{\Obja},\catid_{\Objb}}$.
     \end{enumerate}
 \end{ctdefinition}
 
-\begin{remark}
-    The above construction might be more precisely called the ``source twisted arrow category'' of $\CatC$, because it is a modification of the arrow construction where we are ``twisting'' the arrow between source objects of morphisms of $\CatC$ by reversing its direction.
-    An analogous construction exists where instead we twist the arrow construction by reversing the arrow between targets of morphisms of $\CatC$.
-    This latter construction might be called the ``target twisted arrow category''.
-    For brevity, we have only spelled out the source twisted variant here.
+\begin{remark}[How the two twisted constructions are related]
+    \label{rem:source-target-twisted}
+    Compare the two definitions.
+    A morphism from~$\mora$ to~$\morb$ in~$\TwistedArrowTarget\CatC$ is a pair~$\twarrowmorasource \colon \Obja \mto \Objc$, $\twarrowmoratarget \colon \Objd \mto \Objb$ with~$\twarrowmorasource \mthen \morb \mthen \twarrowmoratarget = \mora$.
+    But this is \emph{exactly} the data, subject to exactly the same condition, of a morphism from~$\morb$ to~$\mora$ in~$\TwistedArrowSource\CatC$.
+    Composition and identities also match up, so the target-twisted arrow category is the opposite of the source-twisted one:
+    \begin{equation}
+        \TwistedArrowTarget\CatC \simeq \pars{\TwistedArrowSource\CatC}\op.
+    \end{equation}
+    In this sense, there is really only one new construction here, together with its opposite.
+    This is why, in the literature, one usually finds only ``the'' twisted arrow category---but beware that different authors take different variants as their default.
+    In this book, $\TwistedArrow\CatC$ without further qualification means the source-twisted variant~$\TwistedArrowSource\CatC$.
+
+    Together with \cref{rem:arrow-opposite}, this gives a complete picture of the four ways of choosing directions for the two connecting morphisms between~$\mora$ and~$\morb$:
+    \begin{center}
+        \begin{tabular}{lll}
+            source leg & target leg & category \\
+            \hline
+            forwards   & forwards   & $\Arrow\CatC$ \\
+            backwards  & backwards  & $\pars{\Arrow\CatC}\op \simeq \Arrow\pars{\CatCop}$ \\
+            backwards  & forwards   & $\TwistedArrowSource\CatC$ \\
+            forwards   & backwards  & $\TwistedArrowTarget\CatC \simeq \pars{\TwistedArrowSource\CatC}\op$
+        \end{tabular}
+    \end{center}
 \end{remark}
 
 \begin{gradedexercise}[\exname{TwistedCat}]
@@ -71,21 +130,32 @@ This construction appears naturally when studying tradeoffs and interval-like st
 \end{example}
 
 \begin{exercise}
+    \label{ex:twisted-arrow-poset}
     Prove the statement in \cref{exa:twisted-arrow-poset}.
-    Recall that, given elements~$\posela, \poselb \setin \posAset$, the interval~$\interv{\posela}{\poselb}$ is
+    Recall (\cref{def:interval}) that an interval~$\interv{\posela}{\poselb}$ of~\posA is a pair of elements with~$\posela \posAleq \poselb$, with associated subset
     \begin{equation}
         \interv{\posela}{\poselb}
-        \definedas \makeset{\poselc \setin \posAset \mid \posela\posAleq \poselc \posAleq \posela}.
+        \definedas \makeset{\poselc \setin \posAset \mid \posela \posAleq \poselc \posAleq \poselb}.
     \end{equation}
-    Start to show that the partial order is equivalent to a twisted morphism.
+    Start by showing that the objects of~$\TwistedArrow (\poscat \posA)$ correspond to the intervals of~\posA.
+    Then show that there is a morphism between two such objects exactly when the corresponding intervals are related in~$\posint\posA$ (\cref{def:twisted-poset-of-intervals}).
 \end{exercise}
 \begin{solution}
-    Consider~$\poscat{\pars{\posint\posA}}$.
-    Take two morphisms in~\posA: $\mora\colon \Obja \mto \Objb$ (from~$\Obja \posleq \Objb$) and $\morb\colon \Objc\mto \Objd$ (from~$\Objc \posleq \Objd$).
-    These are two objects in~$\poscat{\pars{\posint\posA}}$.
-    Now, a morphism in~$\poscat{\pars{\posint\posA}}$ is a pair~$\tup{\morc,\mord}$ where~$\morc\colon \Objc \mto \Obja$ (from~$\Objc\posleq \Obja$) and~$\mord\colon \Objb \mto \Objd$ (from~$\Objb\posleq \Objd$).
-    Therefore, we have~$\Objc\posleq \Obja\posleq \Objb\posleq \Objd$, which corresponds to~$\interv{\Obja}{\Objb}\posleqof{\posint{\posA}}\interv{\Objc}{\Objd}$.
-    Therefore, morphisms in~$\poscat{\pars{\posint\posA}}$ between arrows (intervals) correspond to order relations between intervals.
+    \emph{Objects.}
+    An object of~$\TwistedArrow (\poscat \posA)$ is a morphism of~$\poscat{\posA}$, that is, a pair of elements~$\posela, \poselb \setin \posAset$ with~$\posela \posAleq \poselb$ (between two elements there is at most one morphism).
+    This is exactly an interval~$\interv{\posela}{\poselb}$ of~\posA, that is, an element of~$\posint\posA$.
+
+    \emph{Morphisms.}
+    Consider two objects~$\mora \colon \posela \mto \poselb$ and~$\morb \colon \poselc \mto \poseld$.
+    A morphism~$\mora \mto \morb$ in~$\TwistedArrow (\poscat \posA)$ is a pair consisting of a morphism~$\poselc \mto \posela$ and a morphism~$\poselb \mto \poseld$ of~$\poscat{\posA}$ such that the defining square commutes.
+    Such a pair exists if and only if~$\poselc \posAleq \posela$ and~$\poselb \posAleq \poseld$.
+    Moreover, since~$\poscat{\posA}$ has at most one morphism between any two objects, the square commutes automatically, and the pair is unique when it exists.
+    So there is exactly one morphism~$\mora \mto \morb$ if~$\poselc \posAleq \posela$ and~$\poselb \posAleq \poseld$, and none otherwise.
+    By \cref{eq:twisted-2}, this is exactly the condition~$\interv{\posela}{\poselb} \posleqof{\posint\posA} \interv{\poselc}{\poseld}$.
+
+    \emph{Composition and identities.}
+    Both categories have at most one morphism between any two objects, so composition and \SY{identity morphisms} necessarily agree.
+    Hence the two categories are the same up to renaming objects:~$\TwistedArrow (\poscat \posA) \simeq \poscat{(\posint\posA)}$.
 \end{solution}
 
 \devel{
