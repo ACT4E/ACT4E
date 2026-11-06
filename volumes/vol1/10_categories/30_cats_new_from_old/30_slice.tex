@@ -1,13 +1,15 @@
 % !TEX root = chapter-standalone.tex
 
-\section{(Co)slice construction}
+\section{Slice and co-slice constructions}
 \label{sec:coslice}
 
 \todotext{@J: review and edit}
 
-The final constructions of this chapter again promote morphisms to objects, but this time we do not take \emph{all} morphisms of a category~\CatC: we fix one object~$\slicetarget$ of special interest, and consider only the morphisms \emph{into} it.
+The final constructions of this chapter again promote morphisms to objects, but this time we do not take \emph{all} morphisms of a category~\CatC: we fix one object~$\slicetarget$ of special interest, and consider only the morphisms \emph{into} it or \emph{out} of it.
 
-The resulting \emph{slice category} is a general way of modeling ``objects of \CatC equipped with additional information valued in~$\slicetarget$''.
+\subsection{Slice construction}
+
+The \emph{slice category} of a category $\CatC$ at an object $\slicetarget$ is a general way of modeling ``objects of \CatC equipped with additional information valued in~$\slicetarget$''.
 The fixed object~$\slicetarget$ plays the role of a context, a type system, an index, or a base; the objects of the slice are the objects of~\CatC together with their assignment into that context; and the morphisms of the slice are the morphisms of~\CatC that \emph{respect} the assignments.
 The examples after the definition make this concrete.
 
@@ -41,13 +43,21 @@ The examples after the definition make this concrete.
     \end{enumerate}
 \end{ctdefinition}
 
-\begin{gradedexercise}[\exname{SliceCat}]
-    \label{ex:SliceCat}
-    Let~$\CatC$ be a category, fix~$\slicetarget \setin \Ob_{\CatC}$, and consider the slice category~$\sliceCat{\CatC}{\slicetarget}$.
-    Your task is to check that the composition of two composable morphisms in~$\sliceCat{\CatC}{\slicetarget}$ is again in fact a morphism in~$\sliceCat{\CatC}{\slicetarget}$.
-\end{gradedexercise}
+%\begin{gradedexercise}[\exname{SliceCat}]
+%    \label{ex:SliceCat}
+%    Let~$\CatC$ be a category, fix~$\slicetarget \setin \Ob_{\CatC}$, and consider the slice category~$\sliceCat{\CatC}{\slicetarget}$.
+%    Your task is to check that the composition of two composable morphisms in~$\sliceCat{\CatC}{\slicetarget}$ is again in fact a morphism in~$\sliceCat{\CatC}{\slicetarget}$.
+%\end{gradedexercise}
 
 \solutionof{SliceCat}
+
+\begin{example}[Slices of a poset]
+    \label{exa:slice-poset}
+    Let~$\posA$ be a \SY{poset}, viewed as a category (\cref{sec:posets-as-cats}), and fix an element~$\slicetarget$.
+    Since there is at most one morphism between any two objects, an object of the slice~$\poscat{\posA} / \slicetarget$ is simply an element~$\posela$ with~$\posela \posAleq \slicetarget$, and morphisms are the order relations among such elements.
+    The slice is thus the ``down-set'' of~$\slicetarget$: the part of the poset that lies below the chosen element.
+    If~$\posA$ orders, say, resource budgets, then slicing over~$\slicetarget$ restricts attention to everything below (or at) the budget~$\slicetarget$. 
+    \end{example}
 
 \begin{example}[Typed sets]
     \label{exa:slice-set-typed}
@@ -56,17 +66,100 @@ The examples after the definition make this concrete.
     A morphism from~$\mora \colon \Obja \mto \slicetarget$ to~$\morb \colon \Objb \mto \slicetarget$ is a function~$\slicemora \colon \Obja \mto \Objb$ with~$\slicemora \mthen \morb = \mora$: it may rename or merge items, but it must preserve each item's type.
 
     For instance, let~$\slicetarget$ be a set of file formats.
-    An object of~$\sliceCat{Set}{\slicetarget}$ is a collection of files, each with its format; a morphism is a reorganization of the files (renaming, deduplication, restructuring) that leaves every file's format unchanged.
+    An object of~$\sliceCat{Set}{\slicetarget}$ is a collection of files, each with its format; a morphism might moldel a reorganization of the files (e.g. renaming, deduplication, merging some files of the same format) that leaves every file's format unchanged.
     The slice construction packages ``sets fibered over~$\slicetarget$'' as a category in its own right.
 \end{example}
 
-\begin{example}[Slices of a poset]
-    \label{exa:slice-poset}
-    Let~$\posA$ be a \SY{poset}, viewed as a category (\cref{sec:posets-as-cats}), and fix an element~$\slicetarget$.
-    Since there is at most one morphism between any two objects, an object of the slice~$\poscat{\posA} / \slicetarget$ is simply an element~$\posela$ with~$\posela \posAleq \slicetarget$, and morphisms are the order relations among such elements.
-    The slice is thus the ``down-set'' of~$\slicetarget$: the part of the poset that lies below the chosen element.
-    If~$\posA$ orders, say, resource budgets, then slicing over~$\slicetarget$ restricts attention to everything affordable within budget~$\slicetarget$.
+\begin{example}[Typed graphs]
+    \label{exa:slice-typed-graphs}
+    Slices of the category \Grph of graphs (\cref{def:Grph}) are a standard tool for describing networks whose components come in different kinds, and in which only certain kinds of connections are allowed.
+
+    Consider a water distribution plant, built from tanks, pumps, and pipes.
+    We describe the admissible ways of connecting these components by a \emph{type graph}~$\mathcal{T}$: its vertices are the three kinds of components, and its edges are the kinds of connections that we allow, in the direction of the flow:
+    \begin{equation}
+        \label{eq:water-type-graph}
+        \begin{tikzcd}[column sep=5em, every arrow/.append style={arrowmorphismstyle}]
+            \text{Tank} \arrow[r, bend left=20, "\text{drain}"] \pgfmatrixnextcell \text{Pipe} \arrow[l, bend left=20, "\text{fill}"] \arrow[r, bend left=20, "\text{intake}"] \arrow[loop above, "\text{joint}"] \pgfmatrixnextcell \text{Pump} \arrow[l, bend left=20, "\text{discharge}"]
+        \end{tikzcd}
+    \end{equation}
+    For instance, the edge ``intake'' from Pipe to Pump says that a pump may draw water from a pipe, and the loop ``joint'' says that two pipes may be joined.
+    Note that $\mathcal{T}$ has no edge from Pump to Pump, nor from Pump to Tank: in our plants, a pump always discharges into a pipe.
+
+    An object of the slice category $\sliceCat{\Grphname}{\mathcal{T}}$ is a graph $\graphA$ together with a \SY{graph homomorphism} $\tau \colon \graphA \mto \mathcal{T}$, called a \emph{typing}.
+    We read $\graphA$ as the graph of a concrete plant: its vertices are the individual tanks, pumps, and pipes, and its edges are the individual connections between them.
+    The typing assigns to each component its kind and to each connection its kind of connection, and the conditions for a \SY{graph homomorphism} say that this is done consistently: a connection of kind ``intake'' must go from a pipe to a pump, and so on.
+    For instance, the plant in which a tank $t_1$ drains into a pipe $p_1$, from which a pump $u$ draws water and discharges it into a pipe $p_2$, which fills a tank $t_2$,
+    \begin{equation}
+        \begin{tikzcd}[column sep=2.5em, every arrow/.append style={arrowmorphismstyle}]
+            t_1 \arrow[r] \pgfmatrixnextcell p_1 \arrow[r] \pgfmatrixnextcell u \arrow[r] \pgfmatrixnextcell p_2 \arrow[r] \pgfmatrixnextcell t_2
+        \end{tikzcd}
+    \end{equation}
+    is described by this graph together with the typing that sends $t_1, t_2$ to Tank, $p_1, p_2$ to Pipe, $u$ to Pump, and the four edges, in order, to drain, intake, discharge, and fill.
+
+    Note that the typing is additional data, and not merely a property of the graph: the names $t_1, p_1, \dots$ are only labels, and the graph alone does not know which of its vertices are tanks.
+    Indeed, the same graph has other typings as well; for instance, sending $t_1$ and $t_2$ to Pipe, the first edge to joint, and the last edge to joint describes a plant in which pipes, not tanks, are at both ends.
+
+    The type graph does the work of a design rule.
+    Suppose that we want to describe a plant in which a pump discharges directly into another pump, that is, a typed graph with an edge from a vertex of type Pump to a vertex of type Pump.
+    A typing would have to send this edge to an edge of $\mathcal{T}$ from Pump to Pump, and there is none.
+    So no object of $\sliceCat{\Grphname}{\mathcal{T}}$ describes such a plant: the rule ``pumps discharge only into pipes'' is enforced by the choice of $\mathcal{T}$, not by an extra condition.
+
+    A morphism in $\sliceCat{\Grphname}{\mathcal{T}}$ from $\tau \colon \graphA \mto \mathcal{T}$ to $\tau' \colon \graphA' \mto \mathcal{T}$ is a \SY{graph homomorphism} $\slicemora \colon \graphA \mto \graphA'$ with $\slicemora \mthen \tau' = \tau$, that is, one that preserves the kinds of all components and connections.
+    For instance, the inclusion of a part of a plant into the whole plant is such a morphism.
+    So is the map from a plant in which two pumps work in parallel between the same two pipes onto the plant with a single pump in their place, which sends both pumps to the one pump: it describes the plant at a coarser level of detail, without the redundancy.
+    On the other hand, a \SY{graph homomorphism} that sends a pump to a tank is never a morphism of $\sliceCat{\Grphname}{\mathcal{T}}$, since it does not preserve types.
+
+    Slice categories of this kind are the foundation of \emph{typed graph transformation}, a well-developed theory and set of software tools for specifying and analyzing systems whose states are graphs (see Ehrig, Ehrig, Prange, and Taentzer, \emph{Fundamentals of Algebraic Graph Transformation}, Springer, 2006).
+    There, the states of a system are objects of $\sliceCat{\Grphname}{\mathcal{T}}$, and the rules that rewrite one state into another are expressed through morphisms of $\sliceCat{\Grphname}{\mathcal{T}}$, so that every rewriting step automatically respects the type graph.
 \end{example}
+
+\begin{example}[All routes into an assembly]
+    \label{exa:slice-free-routes}
+    Slicing a free category (\cref{sec:catsfromgraphs}) produces a particularly transparent structure.
+    Let $\graphA$ be a graph, fix a vertex $\vertexa$ of $\graphA$, and consider the slice category $\pathcat{\graphA} / \vertexa$.
+    An object is a path $\mora$ in $\graphA$ that ends at $\vertexa$, starting at any vertex; this includes the trivial path at $\vertexa$.
+    Given two such paths $\mora$ and $\morb$, a morphism from $\mora$ to $\morb$ is a path $\slicemora$ with $\slicemora \mthen \morb = \mora$.
+    Since composition in $\pathcat{\graphA}$ is concatenation of paths, this equation says that the path $\mora$ is obtained by appending the path $\morb$ to the path $\slicemora$.
+    In other words, $\morb$ is a final segment (a \emph{suffix}) of $\mora$, and $\slicemora$ is the remaining initial segment.
+    Two consequences follow:
+    \begin{enumerate}
+        \item A morphism from $\mora$ to $\morb$ exists exactly when $\morb$ is a suffix of $\mora$.
+        \item If it exists, it is unique: $\slicemora$ must be the initial segment of $\mora$ that is left over when the suffix $\morb$ is removed.
+    \end{enumerate}
+    So $\pathcat{\graphA} / \vertexa$ has at most one morphism between any two objects: it is (the category of) a \SY{poset}, namely the set of all paths into $\vertexa$, ordered by ``is an extension of''.
+    Moreover, this poset is a \emph{tree}: the paths that a given path $\mora$ extends are exactly its suffixes, and these form a chain, from $\mora$ itself down to the trivial path at $\vertexa$, which every path extends.
+
+    As an example, consider the graph with vertices $a, b, c, \vertexa$ and edges
+    \begin{equation}
+        e_1 \colon a \to c, \qquad
+        e_2 \colon b \to c, \qquad
+        e_3 \colon c \to \vertexa, \qquad
+        e_4 \colon b \to \vertexa.
+    \end{equation}
+    The paths into $\vertexa$ are the trivial path $\catidat{\vertexa}$, the edges $e_3$ and $e_4$, and the paths $e_1 \mthen e_3$ and $e_2 \mthen e_3$, and the morphisms of the slice between them (besides the identities, and the composites of the morphisms shown) are:
+    \begin{equation}
+        \label{eq:slice-free-tree}
+        \begin{tikzcd}[column sep=1.5em, row sep=2.5em, every arrow/.append style={arrowmorphismstyle}]
+            e_1 \mthen e_3 \arrow[dr] \pgfmatrixnextcell \pgfmatrixnextcell e_2 \mthen e_3 \arrow[dl] \pgfmatrixnextcell \pgfmatrixnextcell \\
+            \pgfmatrixnextcell e_3 \arrow[dr] \pgfmatrixnextcell \pgfmatrixnextcell \pgfmatrixnextcell e_4 \arrow[dll] \\
+            \pgfmatrixnextcell \pgfmatrixnextcell \catidat{\vertexa} \pgfmatrixnextcell \pgfmatrixnextcell
+        \end{tikzcd}
+    \end{equation}
+    For instance, the unique morphism from $e_1 \mthen e_3$ to $e_3$ is the path $e_1$.
+
+    A natural reading of this example comes from supply chains.
+    Let the vertices of $\graphA$ be the intermediate products of a manufacturing process, let its edges be the individual processing and transport steps, and let $\vertexa$ be the final assembly.
+    An object of the slice is then a complete supply route into the final assembly, and a morphism from $\mora$ to $\morb$ says that the route $\mora$ continues the route $\morb$ further upstream.
+    Routes that share their last steps share a common node of the tree, and the tree branches wherever the supply chain does.
+
+    It is instructive to compare this with the slice of a \SY{preorder} (\cref{exa:slice-poset}).
+    In the \SY{preorder} on the vertices of $\graphA$ in which $\posela \posleq \poselb$ means ``there is a path from $\posela$ to $\poselb$'', slicing over $\vertexa$ gives the down-set of $\vertexa$: the set $\makeset{a, b, c, \vertexa}$ of all vertices from which $\vertexa$ can be reached.
+    This only records \emph{which} suppliers can reach the final assembly.
+    The slice of the free category records in addition \emph{how} they reach it: the vertex $b$ appears in the down-set only once, but it is the starting point of two different routes, $e_4$ and $e_2 \mthen e_3$, which are distinct, incomparable objects of the slice.
+\end{example}
+
+
+\subsection{Co-slice construction}
 
 \begin{ctdefinition}[Coslice category]
     \label{def:coslice-category}
@@ -95,3 +188,60 @@ The examples after the definition make this concrete.
     \end{enumerate}
 \end{ctdefinition}
 
+\begin{example}[Open circuits with terminals]
+    \label{exa:coslice-open-circuits}
+    Co-slice categories are a natural way to describe systems that come with a fixed interface.
+    Consider electrical circuits, described as graphs: the vertices are the nodes of a circuit, and the edges are its components (resistors, capacitors, \dots), each with a chosen reference direction.
+    To connect a circuit to the outside world, some of its nodes are designated as \emph{terminals}.
+    We describe the available terminals by a graph $\mathcal{P}$ that has no edges; for instance, $\mathcal{P}$ has the two vertices $p$ and $q$.
+
+    An object of the co-slice category $\cosliceCat{\Grphname}{\mathcal{P}}$ is a graph $\graphA$ together with a \SY{graph homomorphism} $\iota \colon \mathcal{P} \mto \graphA$.
+    Since $\mathcal{P}$ has no edges, such a homomorphism is simply a choice of a node $\iota(p)$ and a node $\iota(q)$ of $\graphA$: it tells us where the terminals are attached.
+    (The two terminals may be attached to the same node; this describes a circuit whose terminals are shorted.)
+    A morphism from $\iota \colon \mathcal{P} \mto \graphA$ to $\iota' \colon \mathcal{P} \mto \graphA'$ is a \SY{graph homomorphism} $\coslicemora \colon \graphA \mto \graphA'$ with $\iota \mthen \coslicemora = \iota'$, that is, one that sends terminals to the corresponding terminals.
+    Such a morphism can be read as a way of finding the circuit $\graphA$ inside the circuit $\graphA'$, compatibly with their interfaces.
+
+    For instance, let $\graphA_1$ consist of a single resistor $r$ from $\iota_1(p)$ to $\iota_1(q)$.
+    Let $\graphA_2$ consist of two resistors $r'$ and $r''$ in parallel, both from $\iota_2(p)$ to $\iota_2(q)$, and let $\graphA_3$ consist of two resistors in series, from $\iota_3(p)$ to an internal node $m$ and from $m$ to $\iota_3(q)$.
+    There are exactly two morphisms from $\graphA_1$ to $\graphA_2$, sending $r$ to $r'$ and to $r''$, respectively: the single resistor appears in two ways as a branch of the parallel circuit.
+    There is no morphism from $\graphA_1$ to $\graphA_3$: a morphism would have to send $r$ to an edge from $\iota_3(p)$ to $\iota_3(q)$, and there is none.
+    Nor is there a morphism from $\graphA_3$ to $\graphA_1$: both resistors of $\graphA_3$ would have to be sent to $r$, so the image of the internal node $m$ would have to be both the target of $r$ (which is $\iota_1(q)$) and its source (which is $\iota_1(p)$), and these two nodes are different.
+    Unlike in the slice of a free category (\cref{exa:slice-free-routes}), hom-sets of co-slices of \Grph can thus have more than one element.
+\end{example}
+
+
+\begin{example}[The computation tree of a system]
+    \label{exa:coslice-computation-tree}
+    Dually to the slice of a free category over a vertex (\cref{exa:slice-free-routes}), consider a graph $\graphA$, a vertex $\vertexa$, and the co-slice category $\vertexa / \pathcat{\graphA}$.
+    An object is a path $\mora$ that starts at $\vertexa$ and ends at any vertex; this includes the trivial path at $\vertexa$.
+    A morphism from $\mora$ to $\morb$ is a path $\coslicemora$ with $\mora \mthen \coslicemora = \morb$: the path $\morb$ is obtained by appending $\coslicemora$ to $\mora$.
+    So a morphism from $\mora$ to $\morb$ exists exactly when $\mora$ is an initial segment (a \emph{prefix}) of $\morb$, and it is then unique: $\coslicemora$ must be the final segment of $\morb$ that is left over when the prefix $\mora$ is removed.
+    As before, $\vertexa / \pathcat{\graphA}$ is therefore (the category of) a \SY{poset}, ordered by ``is extended by'', and this poset is a tree: the prefixes of a path form a chain, from the trivial path at $\vertexa$, which every path extends, up to the path itself.
+
+    This tree has a familiar interpretation.
+    Read $\graphA$ as the transition graph of a (finite state) machine: its vertices are the states, its edges are the possible transitions, and $\vertexa$ is the initial state.
+    Then the objects of $\vertexa / \pathcat{\graphA}$ are the finite \emph{runs} of the system, and a morphism from one run to another says that the second run continues the first.
+    The tree branches wherever the system has a choice, and it is known as the \emph{computation tree} of the system; in reliability engineering, trees of this kind are known as \emph{event trees}.
+
+    For instance, consider the graph with states $s_0, s_1, s_2$ and transitions
+    \begin{equation}
+        a \colon s_0 \to s_1, \qquad
+        b \colon s_0 \to s_2, \qquad
+        c \colon s_1 \to s_0,
+    \end{equation}
+    with initial state $s_0$.
+    The first levels of the tree $s_0 / \pathcat{\graphA}$ look as follows (we show the morphisms between a run and its one-step extensions):
+    \begin{equation}
+        \label{eq:coslice-computation-tree}
+        \begin{tikzcd}[column sep=1.5em, row sep=2em, every arrow/.append style={arrowmorphismstyle}]
+            \pgfmatrixnextcell \pgfmatrixnextcell \catidat{s_0} \arrow[dl] \arrow[dr] \pgfmatrixnextcell \\
+            \pgfmatrixnextcell a \arrow[d] \pgfmatrixnextcell \pgfmatrixnextcell b \\
+            \pgfmatrixnextcell a \mthen c \arrow[dl] \arrow[dr] \pgfmatrixnextcell \pgfmatrixnextcell \\
+            a \mthen c \mthen a \pgfmatrixnextcell \vdots \pgfmatrixnextcell a \mthen c \mthen b \pgfmatrixnextcell
+        \end{tikzcd}
+    \end{equation}
+    Because of the cycle $a \mthen c$ from $s_0$ back to $s_0$, the tree is infinite, although the graph is finite.
+
+    As for slices, it is instructive to compare this with the co-slice of the \SY{preorder} of reachability on the vertices of $\graphA$: there, slicing under $s_0$ gives the up-set of $s_0$, that is, the finite set $\makeset{s_0, s_1, s_2}$ of reachable states.
+    The up-set records only \emph{which} states the system can reach, whereas the computation tree records every possible \emph{history} of how it gets there.
+\end{example}

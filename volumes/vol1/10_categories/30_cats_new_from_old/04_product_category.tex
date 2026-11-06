@@ -90,6 +90,68 @@ This is the categorical analogue of the product of \SY{monoids} (\cref{def:produ
     If, in a finer model, the two aspects do interact (say, certain trips are only possible if one can pay a toll in the local currency), then the product category is no longer the right model---detecting such interaction is one reason to be explicit about when a product is being assumed.
 \end{example}
 
+\begin{example}[Weighted paths: a subcategory of a product]
+    \label{exa:product-cat-weighted-paths}
+       Let $\graphA$ be a graph in which every edge $e$ has a cost $c(e) \setin \natnumbers$, for instance a travel time in hours, and consider its free category $\pathcat{\graphA}$ (\cref{sec:catsfromgraphs}).
+    The \emph{cost} of a path is the sum of the costs of its edges, and the trivial paths have cost $0$.
+    Since composition of paths is concatenation, costs add up under composition:
+    \begin{equation}
+        \mathrm{cost}(\mora \mthen \morb) = \mathrm{cost}(\mora) + \mathrm{cost}(\morb).
+    \end{equation}
+    Let $\CatD = \monoidcat{\tup{\natnumbers, +, 0}}$ be the one-object category of the \SY{monoid} of natural numbers under addition (\cref{def:monoidcat}), with single object $\monoidcatobj$.
+
+    In the product $\pathcat{\graphA} \Ctimes \CatD$, the objects are the pairs $\tup{\vertexa, \monoidcatobj}$, one for each vertex $\vertexa$ of $\graphA$.
+    A morphism from $\tup{\vertexa, \monoidcatobj}$ to $\tup{\vertexb, \monoidcatobj}$ is a pair $\tup{\mora, n}$ of a path $\mora$ from $\vertexa$ to $\vertexb$ and an \emph{arbitrary} natural number $n$, and composition adds the numbers: $\tup{\mora, n} \mthen \tup{\morb, m} = \tup{\mora \mthen \morb, n + m}$.
+    Nothing in the product ties $n$ to the path $\mora$: the two components are independent, as always in a product (compare \cref{exa:product-cat-travel-money}).
+
+    Now consider only the pairs whose second component is the cost of the first:
+    \begin{equation}
+        \tup{\mora, \mathrm{cost}(\mora)}.
+    \end{equation}
+    Together with all objects of $\pathcat{\graphA} \Ctimes \CatD$, these form a \SY{subcategory} $\CatSymbol{W}$:
+    it is closed under composition, because by additivity of the cost
+    \begin{equation}
+        \tup{\mora, \mathrm{cost}(\mora)} \mthen \tup{\morb, \mathrm{cost}(\morb)} = \tup{\mora \mthen \morb, \mathrm{cost}(\mora \mthen \morb)},
+    \end{equation}
+    and it contains the \SY{identity morphisms} $\tup{\catidat{\vertexa}, 0}$, since trivial paths have cost $0$.
+    The \SY{subcategory} $\CatSymbol{W}$ is \SYN{wide subcategory}{wide}, since it contains all objects, but it is not \SYN{full subcategory}{full}: a pair $\tup{\mora, n}$ with $n \neq \mathrm{cost}(\mora)$ is a morphism of the product, but not of $\CatSymbol{W}$.
+    In fact, $\CatSymbol{W}$ carries no more information than $\pathcat{\graphA}$ itself: each path $\mora$ appears in $\CatSymbol{W}$ exactly once, as $\tup{\mora, \mathrm{cost}(\mora)}$, and composition and identities match.
+    So $\CatSymbol{W}$ is a copy of $\pathcat{\graphA}$ in which every path is labeled with its cost.
+
+    For a concrete instance, consider the graph with vertices $a, b, c$ and the following edges and costs:
+    \begin{equation}
+        \label{eq:weighted-paths-graph}
+        \begin{tikzcd}[column sep=4em, every arrow/.append style={arrowmorphismstyle}]
+            a \arrow[r, "{e_1, \; 2}"] \arrow[rr, bend right=30, "{e_3, \; 4}"'] \pgfmatrixnextcell b \arrow[r, "{e_2, \; 3}"] \pgfmatrixnextcell c
+        \end{tikzcd}
+    \end{equation}
+    There are two paths from $a$ to $c$: the edge $e_3$, of cost $4$, and the path $e_1 \mthen e_2$, of cost $2 + 3 = 5$.
+    In the product, a morphism from $\tup{a, \monoidcatobj}$ to $\tup{c, \monoidcatobj}$ is a pair of one of these two paths with any natural number, so there are infinitely many such morphisms.
+    Only two of them belong to $\CatSymbol{W}$, namely $\tup{e_3, 4}$ and $\tup{e_1 \mthen e_2, 5}$:
+    \begin{equation}
+        \label{eq:weighted-paths-homset}
+        \begin{tikzpicture}[x=0.75cm, y=0.8cm, baseline=(current bounding box.center)]
+            \foreach \n in {0,...,7} {
+                \node[font=\small] at (\n, -0.6) {$\n$};
+                \fill[black!30] (\n, 0) circle (2pt);
+                \fill[black!30] (\n, 1) circle (2pt);
+            }
+            \node[font=\small, anchor=east] at (-0.5, 1) {$e_3$};
+            \node[font=\small, anchor=east] at (-0.5, 0) {$e_1 \mthen e_2$};
+            \node[font=\small, anchor=west] at (7.6, -0.6) {$n$};
+            \fill[morphisms] (4, 1) circle (3.5pt);
+            \fill[morphisms] (5, 0) circle (3.5pt);
+            \node at (8.6, 0.5) {$\cdots$};
+        \end{tikzpicture}
+    \end{equation}
+    Here each gray dot is a morphism $\tup{\mora, n}$ of the product (the row gives the path $\mora$, the column the number $n$), and the two highlighted dots are the morphisms $\tup{e_3, 4}$ and $\tup{e_1 \mthen e_2, 5}$ of $\CatSymbol{W}$.
+    For instance, $\tup{e_3, 7}$ is a morphism of the product, but it does not describe the trip along $e_3$ with its travel time.
+    Composition in $\CatSymbol{W}$ does what one expects: $\tup{e_1, 2} \mthen \tup{e_2, 3} = \tup{e_1 \mthen e_2, 5}$.
+
+    The moral is that if one component of a model is determined by or coupled with the other, then the model is not the product of the two categories, but a \SY{subcategory} of it.
+    The product is the right model only when the two components can be chosen independently of each other.
+\end{example}
+
 \begin{remark}
     \label{rem:product-cat-projections-forward}
     Like the product of \SY{monoids} (\cref{rem:product-projections-forward}), the product of categories comes with two evident ``read off one component'' assignments, sending~$\tup{\Obja, \Objb}$ to~$\Obja$ (respectively~$\Objb$) and~$\tup{\mora, \morb}$ to~$\mora$ (respectively~$\morb$).

@@ -7,7 +7,7 @@
 
 The constructions in the remainder of this chapter share a common idea, which is a hallmark of categorical thinking: things that we first met as \emph{morphisms} can themselves be promoted to \emph{objects} of a new category.
 
-The simplest instance is the \emph{arrow category} of a category~\CatC: its objects are the morphisms of~\CatC.
+A simple instance is the \emph{arrow category} of a category~\CatC: its objects are the morphisms of~\CatC.
 What should a morphism between two such objects be?
 A morphism from~$\mora \colon \Obja \mto \Objb$ to~$\morb \colon \Objc \mto \Objd$ should be a way of ``transforming''~$\mora$ into~$\morb$ using the means available in~\CatC: a morphism between the sources and a morphism between the targets, compatible with~$\mora$ and~$\morb$.
 Compatibility is expressed by requiring a square to commute.
@@ -66,22 +66,274 @@ The arrow construction gives the collection of all such processes the structure 
     \end{equation}
 \end{example}
 
-\begin{remark}[Arrow categories and opposites]
-    \label{rem:arrow-opposite}
-    Taking arrow categories is compatible with taking opposites:
-    \begin{equation}
-        \pars{\Arrow\CatC}\op \simeq \Arrow\pars{\CatCop}.
-    \end{equation}
-    Both categories have the same objects: a morphism~$\mora \colon \Obja \mto \Objb$ of~\CatC is the same thing as a morphism~$\mora\op \colon \Objb \mto \Obja$ of~$\CatCop$.
-    Now consider objects~$\mora \colon \Obja \mto \Objb$ and~$\morb \colon \Objc \mto \Objd$.
-    A morphism from~$\mora\op$ to~$\morb\op$ in~$\Arrow\pars{\CatCop}$ consists of a morphism~$\Objb \mto \Objd$ and a morphism~$\Obja \mto \Objc$ in~$\CatCop$, that is, of morphisms~$\morc \colon \Objd \mto \Objb$ and~$\mord \colon \Objc \mto \Obja$ in~\CatC; the commutativity condition, translated back to~\CatC, reads~$\morb \mthen \morc = \mord \mthen \mora$.
-    This is exactly a morphism~$\tup{\mord, \morc} \colon \morb \mto \mora$ in~$\Arrow\CatC$, that is, a morphism from~$\mora$ to~$\morb$ in~$\pars{\Arrow\CatC}\op$.
-    In words: reversing \emph{both} connecting morphisms of a \SY{commutative square} amounts to reversing the morphism of the arrow category.
-    Reversing only \emph{one} of the two connecting morphisms leads to something genuinely new: the twisted arrow constructions of the next section.
-\end{remark}
+%\begin{remark}[Arrow categories and opposites]
+%    \label{rem:arrow-opposite}
+%    Taking arrow categories is compatible with taking opposites:
+%    \begin{equation}
+%        \pars{\Arrow\CatC}\op \simeq \Arrow\pars{\CatCop}.
+%    \end{equation}
+%    Both categories have the same objects: a morphism~$\mora \colon \Obja \mto \Objb$ of~\CatC is the same thing as a morphism~$\mora\op \colon \Objb \mto \Obja$ of~$\CatCop$.
+%    Now consider objects~$\mora \colon \Obja \mto \Objb$ and~$\morb \colon \Objc \mto \Objd$.
+%    A morphism from~$\mora\op$ to~$\morb\op$ in~$\Arrow\pars{\CatCop}$ consists of a morphism~$\Objb \mto \Objd$ and a morphism~$\Obja \mto \Objc$ in~$\CatCop$, that is, of morphisms~$\morc \colon \Objd \mto \Objb$ and~$\mord \colon \Objc \mto \Obja$ in~\CatC; the commutativity condition, translated back to~\CatC, reads~$\morb \mthen \morc = \mord \mthen \mora$.
+%    This is exactly a morphism~$\tup{\mord, \morc} \colon \morb \mto \mora$ in~$\Arrow\CatC$, that is, a morphism from~$\mora$ to~$\morb$ in~$\pars{\Arrow\CatC}\op$.
+%    In words: reversing \emph{both} connecting morphisms of a \SY{commutative square} amounts to reversing the morphism of the arrow category.
+%    Reversing only \emph{one} of the two connecting morphisms leads to something genuinely new: the twisted arrow constructions of the next section.
+%\end{remark}
 
 \todotextjira{406}{\alphubel: @JL: Explain why composition is well defined.
     We didn't talk that much
     about the use of commutative diagrams so this is a good example.
 }
 \todotextjira{406}{\alphubel: Add remark about \SY{functor} category isomorphism}
+
+\subsection{Example: casting out nines}
+\label{sec:arrow-casting-out-nines}
+
+The arrow category of \Set offers a convenient language for a phenomenon that occurs throughout engineering: \emph{computing on encoded data}.
+We often replace a set of values by a smaller or more convenient set of representatives, and we want an operation on the original values to be matched by an operation on the representatives.
+This requirement is a \SY{commutative square}, that is, a morphism in $\Arrow\Set$, whose source and target are the encodings of the inputs and of the outputs, respectively.
+Our first example is a classical technique for checking hand computations.
+
+\paragraph{Reduction modulo 9.}
+Let
+\begin{equation}
+    \pi \colon \wnumbers \sto \wnumbers / 9\wnumbers
+\end{equation}
+send an integer to its class modulo $9$ (\cref{exa:clock-arithmetic-quotient}); we identify the classes with their representatives $0, 1, \dots, 8$.
+For a natural number written in decimal notation, $\pi$ is easy to compute by hand: one repeatedly adds the digits until a single digit remains, where $9$ counts as $0$.
+Indeed, $10 \equiv 1$ modulo $9$, and therefore $10^i \equiv 1$ for all $i$, so that
+\begin{equation}
+    d_k \cdot 10^k + \dots + d_1 \cdot 10 + d_0
+    \;\equiv\;
+    d_k + \dots + d_1 + d_0
+    \pmod{9}.
+\end{equation}
+For instance, $\pi(4738) = \pi(4 + 7 + 3 + 8) = \pi(22) = \pi(2 + 2) = 4$.
+
+\paragraph{Addition and multiplication commute with reduction.}
+Consider the functions
+\begin{equation}
+    (+) \colon \wnumbers \cartprod \wnumbers \sto \wnumbers
+    \qquad\text{and}\qquad
+    (+_9) \colon \wnumbers/9\wnumbers \cartprod \wnumbers/9\wnumbers \sto \wnumbers/9\wnumbers,
+\end{equation}
+addition of integers and addition modulo $9$, and write $\pi \cartprod \pi \colon \tup{\ela, \elb} \mapsto \tup{\pi(\ela), \pi(\elb)}$.
+Then the following square commutes:
+\begin{equation}
+    \label{eq:casting-out-nines-square}
+    \begin{tikzcd}[column sep=4.5em, every arrow/.append style={arrowmorphismstyle}]
+        \wnumbers \cartprod \wnumbers \arrow[r, "(+)"] \arrow[d, "\pi \cartprod \pi"'] \pgfmatrixnextcell \wnumbers \arrow[d, "\pi"] \\
+        \wnumbers/9\wnumbers \cartprod \wnumbers/9\wnumbers \arrow[r, "(+_9)"'] \pgfmatrixnextcell \wnumbers/9\wnumbers
+    \end{tikzcd}
+\end{equation}
+that is, $(\pi \cartprod \pi) \mthen (+_9) = (+) \mthen \pi$: reducing both summands and then adding modulo $9$ gives the same result as adding and then reducing.
+To see this, write $\ela = 9q + r$ and $\elb = 9q' + r'$; then $\ela + \elb = 9(q + q') + (r + r')$, so both paths yield the class of $r + r'$.
+In the same way, $\ela\elb = 81qq' + 9(qr' + q'r) + rr'$ shows that multiplication commutes with reduction:
+$(\pi \cartprod \pi) \mthen (\cdot_9) = (\cdot) \mthen \pi$, or as a diagram,
+\begin{equation}
+    \label{eq:casting-out-nines-square-multiplication}
+    \begin{tikzcd}[column sep=4.5em, every arrow/.append style={arrowmorphismstyle}]
+        \wnumbers \cartprod \wnumbers \arrow[r, "(\cdot)"] \arrow[d, "\pi \cartprod \pi"'] \pgfmatrixnextcell \wnumbers \arrow[d, "\pi"] \\
+        \wnumbers/9\wnumbers \cartprod \wnumbers/9\wnumbers \arrow[r, "(\cdot_9)"'] \pgfmatrixnextcell \wnumbers/9\wnumbers
+    \end{tikzcd}
+\end{equation}
+
+In the language of this section, each of above squares is a morphism in $\Arrow\Set$ from the object $\pi \cartprod \pi$ to the object $\pi$:
+\begin{equation}
+    \tup{(+), (+_9)} \colon \pi \cartprod \pi \mto \pi,
+    \qquad
+    \tup{(\cdot), (\cdot_9)} \colon \pi \cartprod \pi \mto \pi.
+\end{equation}
+The objects are the encodings, and a morphism is a pair consisting of a computation on the original values and a matching computation on the representatives.
+
+\begin{example}[Checking a multiplication]
+    \label{exa:casting-out-nines-check}
+    Suppose someone claims that $4738 \cdot 2569 = 12171922$.
+    Instead of redoing the multiplication, we follow the square for multiplication along its left and bottom sides:
+    $\pi(4738) = 4$, $\pi(2569) = \pi(22) = 4$, and $4 \cdot_9 4 = 16 \bmod 9 = 7$.
+    Along the other path, the top side is the multiplication itself, whose result is claimed to be $12171922$; following it with the right side, we find
+    $\pi(12171922) = \pi(1+2+1+7+1+9+2+2) = \pi(25) = 7$.
+    The two paths agree, so the claim passes the check (and it is in fact correct).
+
+    The check is \emph{one-sided}.
+    If the two paths disagree, the claimed result is certainly wrong: for the mistyped result $12173922$, the digit sum is $27$, so $\pi(12173922) = 0 \neq 7$, which the square rules out.
+    If they agree, however, the result is not thereby proven correct, because $\pi$ forgets information.
+    For instance, swapping two digits ($12171292$) does not change the digit sum, and the error goes undetected; more generally, any error by a multiple of $9$ is invisible to the check.
+    This is typical of computing on a lossy encoding: the square lets us check cheaply on the small side, but only up to what the encoding can distinguish.
+\end{example}
+
+\paragraph{Composing computations.}
+To check an expression such as $\ela\elb + \elc$, we compose morphisms in $\Arrow\Set$.
+The first step, which sends $\tup{\ela, \elb, \elc}$ to $\tup{\ela\elb, \elc}$, is the morphism $\tup{(\cdot) \cartprod \catidat{\wnumbers}, (\cdot_9) \cartprod \catidat{\wnumbers/9\wnumbers}} \colon \pi \cartprod \pi \cartprod \pi \mto \pi \cartprod \pi$; the second step is the morphism $\tup{(+), (+_9)} \colon \pi \cartprod \pi \mto \pi$.
+Their composite places the two squares side by side, from left to right:
+\begin{equation}
+    \begin{tikzcd}[column sep=6em, every arrow/.append style={arrowmorphismstyle}]
+        \wnumbers^3 \arrow[r, "(\cdot) \cartprod \catidat{\wnumbers}"] \arrow[d, "\pi \cartprod \pi \cartprod \pi"'] \pgfmatrixnextcell \wnumbers^2 \arrow[r, "(+)"] \arrow[d, "\pi \cartprod \pi"] \pgfmatrixnextcell \wnumbers \arrow[d, "\pi"] \\
+        \pars{\wnumbers/9\wnumbers}^3 \arrow[r, "(\cdot_9) \cartprod \catidat{\wnumbers/9\wnumbers}"'] \pgfmatrixnextcell \pars{\wnumbers/9\wnumbers}^2 \arrow[r, "(+_9)"'] \pgfmatrixnextcell \wnumbers/9\wnumbers
+    \end{tikzcd}
+\end{equation}
+The outer rectangle commutes because both of its parts do, so the composite morphism is the square for the whole expression $\ela\elb + \elc$.
+This is why casting out nines can check a long computation step by step: each step is a morphism of $\Arrow\Set$, and the check for the whole computation is their composite.
+
+\subsection{Example: fixed-point arithmetic}
+\label{sec:arrow-fixed-point}
+
+Our second example comes from digital hardware, where real numbers are commonly represented by integers with an implicit scale factor.
+
+\paragraph{Fixed-point encoding.}
+Fix a number $k \setin \natnumbers$ of \emph{fractional bits}.
+In the fixed-point format with $k$ fractional bits, the integer $n$ represents the real number $n / 2^k$:
+\begin{equation}
+    \mathrm{dec}_k \colon \wnumbers \sto \reals,
+    \qquad
+    n \mapsto n / 2^k.
+\end{equation}
+For instance, with $k = 4$ the scale factor is $16$, and the real numbers $2.75$ and $1.5$ are stored as the integers $44$ and $24$.
+The point of this format is that the hardware only ever performs integer operations, and we want these to implement the corresponding operations on real numbers.
+
+\begin{example}[Addition: a commutative square]
+    \label{exa:fixed-point-addition}
+    Since $(n + m)/2^k = n/2^k + m/2^k$, the following square commutes:
+    \begin{equation}
+        \label{eq:fixed-point-addition}
+        \begin{tikzcd}[column sep=4.5em, every arrow/.append style={arrowmorphismstyle}]
+            \wnumbers \cartprod \wnumbers \arrow[r, "(+)"] \arrow[d, "\mathrm{dec}_k \cartprod \mathrm{dec}_k"'] \pgfmatrixnextcell \wnumbers \arrow[d, "\mathrm{dec}_k"] \\
+            \reals \cartprod \reals \arrow[r, "(+)"'] \pgfmatrixnextcell \reals
+        \end{tikzcd}
+    \end{equation}
+    So $\tup{(+), (+)} \colon \mathrm{dec}_k \cartprod \mathrm{dec}_k \mto \mathrm{dec}_k$, the pair consisting of integer addition and real addition, is a morphism in $\Arrow\Set$.
+    For instance, $44 + 24 = 68$ and $68/16 = 4.25 = 2.75 + 1.5$: read through the encoding, the integer adder \emph{is} an adder of real numbers, without any rounding.
+\end{example}
+
+\begin{example}[Multiplication: a change of format]
+    \label{exa:fixed-point-multiplication}
+    For multiplication we compute
+    \begin{equation}
+        \frac{n}{2^k} \cdot \frac{m}{2^k} = \frac{nm}{2^{2k}},
+    \end{equation}
+    so the product of the stored integers represents the product of the real numbers without any rounding error, provided that we read it in the format with $2k$ fractional bits:
+    \begin{equation}
+        \label{eq:fixed-point-multiplication}
+        \begin{tikzcd}[column sep=4.5em, every arrow/.append style={arrowmorphismstyle}]
+            \wnumbers \cartprod \wnumbers \arrow[r, "(\cdot)"] \arrow[d, "\mathrm{dec}_k \cartprod \mathrm{dec}_k"'] \pgfmatrixnextcell \wnumbers \arrow[d, "\mathrm{dec}_{2k}"] \\
+            \reals \cartprod \reals \arrow[r, "(\cdot)"'] \pgfmatrixnextcell \reals
+        \end{tikzcd}
+    \end{equation}
+    that is, $(\mathrm{dec}_k \cartprod \mathrm{dec}_k) \mthen (\cdot) = (\cdot) \mthen \mathrm{dec}_{2k}$.
+    For instance, $44 \cdot 24 = 1056$ and $1056/256 = 4.125 = 2.75 \cdot 1.5$.
+    In $\Arrow\Set$, this square is a morphism $\tup{(\cdot), (\cdot)} \colon \mathrm{dec}_k \cartprod \mathrm{dec}_k \mto \mathrm{dec}_{2k}$, whose source and target are different encodings.
+\end{example}
+
+\begin{example}[Requantization: where rounding enters]
+    \label{exa:fixed-point-requantization}
+    To stay in a fixed format, the product has to be converted back from $2k$ to $k$ fractional bits: one divides by $2^k$ and rounds to the nearest integer.
+    Call this function $\mathrm{requant} \colon \wnumbers \sto \wnumbers$.
+    The resulting square no longer commutes, but it commutes \emph{up to a small error}: for all $n, m$,
+    \begin{equation}
+        \left| \mathrm{dec}_k\pars{\mathrm{requant}(nm)} - \mathrm{dec}_k(n) \cdot \mathrm{dec}_k(m) \right| \leq 2^{-(k+1)},
+    \end{equation}
+    because rounding changes $nm/2^k$ by at most $1/2$, and this difference is then divided by $2^k$.
+    For instance, $2.6875$ is stored as $43$, and $43 \cdot 24 = 1032$ represents $1032/256 = 4.03125$ without rounding; requantization gives $1032/16 = 64.5$, which is rounded to $64$ or $65$, representing $4.0$ or $4.0625$, with an error of $0.03125 = 2^{-5}$.
+\end{example}
+
+\begin{example}[Overflow: a commutative square with a different codomain]
+    \label{exa:fixed-point-overflow}
+    Actual hardware works with integers of a fixed width $w$, with wraparound; that is, it computes in $\wnumbers/2^w\wnumbers$.
+    For $w = 8$ and $k = 4$, the representable range is $[-8, 8)$, and the sum $6.0 + 3.0$ overflows: $96 + 48 = 144$, which wraps around to $144 - 256 = -112$, representing $-7.0$.
+    With values in $\reals$, the addition square therefore fails.
+    It does commute, however, if we decode into the circle $\reals / 2^{w-k}\wnumbers$ instead of the line:
+    the function
+    \begin{equation}
+        \wnumbers/2^w\wnumbers \sto \reals / 2^{w-k}\wnumbers,
+        \qquad
+        [n] \mapsto [n / 2^k]
+    \end{equation}
+    is well defined (since $2^w / 2^k = 2^{w-k}$), and it is compatible with addition.
+    Indeed, $9.0$ and $-7.0$ are the same element of $\reals / 16\wnumbers$.
+    So overflow is not necessarily a failure of the encoding, but a statement about its codomain: wraparound arithmetic is addition on a circle.
+\end{example}
+
+\paragraph{Composition example: implementing a filter.}
+In $\Arrow\Set$, composing two morphisms means placing their \SY{commutative squares} side by side, from left to right (\cref{def:arrow-category}).
+In our setting, this composes computations, and this is what makes it possible to verify a fixed-point computation one step at a time.
+
+As an example, consider the digital filter
+\begin{equation}
+    y = a x_1 + b x_2,
+\end{equation}
+a weighted combination of two samples $x_1, x_2$ of a signal.
+The hardware stores the coefficients and the inputs in the format with $k$ fractional bits: the coefficients as integers $A$ and $B$, so that $a = A/2^k$ and $b = B/2^k$, and the inputs as integers $n_1$ and $n_2$.
+For instance, with $k = 4$, the coefficients $a = 0.75$ and $b = -0.5$ are stored as $A = 12$ and $B = -8$, and the inputs $x_1 = 2.75$ and $x_2 = 1.5$ as $n_1 = 44$ and $n_2 = 24$.
+The filter output is then $0.75 \cdot 2.75 - 0.5 \cdot 1.5 = 2.0625 - 0.75 = 1.3125$.
+Which integer computation should the hardware perform, and why does its result represent this number?
+
+The filter consists of two steps, each of which is a morphism in $\Arrow\Set$.
+The first step multiplies the inputs by the coefficients, on the integers and on the real numbers, respectively:
+\begin{equation}
+    \begin{aligned}
+        \mathrm{scale}_{A,B} & \colon \tup{n_1, n_2} \mapsto \tup{A n_1, B n_2}, \\
+        \mathrm{scale}_{a,b} & \colon \tup{x_1, x_2} \mapsto \tup{a x_1, b x_2}.
+    \end{aligned}
+\end{equation}
+Since $A n_1 / 2^{2k} = (A/2^k) \cdot (n_1/2^k) = a \cdot \mathrm{dec}_k(n_1)$, and similarly for the second component, the pair
+\begin{equation}
+    \tup{\mathrm{scale}_{A,B}, \mathrm{scale}_{a,b}} \colon \mathrm{dec}_k \cartprod \mathrm{dec}_k \mto \mathrm{dec}_{2k} \cartprod \mathrm{dec}_{2k}
+\end{equation}
+is a morphism in $\Arrow\Set$; as in \cref{exa:fixed-point-multiplication}, its target is the format with $2k$ fractional bits.
+In the example, $12 \cdot 44 = 528$ and $-8 \cdot 24 = -192$, which represent $528/256 = 2.0625$ and $-192/256 = -0.75$ in the format with $8$ fractional bits.
+The second step is the morphism
+\begin{equation}
+    \tup{(+), (+)} \colon \mathrm{dec}_{2k} \cartprod \mathrm{dec}_{2k} \mto \mathrm{dec}_{2k}
+\end{equation}
+of \cref{exa:fixed-point-addition}, for $2k$ fractional bits; in the example, $528 + (-192) = 336$.
+The two morphisms are composable, since the target of the first is the source of the second, and their composite places the two squares side by side:
+\begin{equation}
+    \label{eq:fixed-point-filter}
+    \begin{tikzcd}[column sep=6em, every arrow/.append style={arrowmorphismstyle}]
+        \wnumbers \cartprod \wnumbers \arrow[r, "\mathrm{scale}_{A,B}"] \arrow[d, "\mathrm{dec}_k \cartprod \mathrm{dec}_k"'] \pgfmatrixnextcell \wnumbers \cartprod \wnumbers \arrow[r, "(+)"] \arrow[d, "\mathrm{dec}_{2k} \cartprod \mathrm{dec}_{2k}"] \pgfmatrixnextcell \wnumbers \arrow[d, "\mathrm{dec}_{2k}"] \\
+        \reals \cartprod \reals \arrow[r, "\mathrm{scale}_{a,b}"'] \pgfmatrixnextcell \reals \cartprod \reals \arrow[r, "(+)"'] \pgfmatrixnextcell \reals
+    \end{tikzcd}
+\end{equation}
+The top row of the outer rectangle is the integer computation $\tup{n_1, n_2} \mapsto A n_1 + B n_2$, and its bottom row is the filter itself.
+The outer rectangle commutes because both of its squares do; so the integer computation implements the filter without any rounding error, provided that its result is read in the format with $2k$ fractional bits.
+In the example, $336/256 = 1.3125$, as it should be.
+
+We draw three lessons from this example.
+\begin{enumerate}
+    \item \emph{Correctness composes.}
+          We never checked directly that the outer rectangle commutes: this follows from the fact that its two squares commute.
+          In general, it suffices to verify the elementary steps (multiplication, addition, \dots) once; every computation composed from them is then automatically correct.
+          For a filter with fifty coefficients, nobody checks the formula as a whole.
+    \item \emph{The objects keep track of the formats.}
+          The objects of $\Arrow\Set$ are here the encodings $\mathrm{dec}_k, \mathrm{dec}_{2k}, \dots$, so they record in which format each intermediate value is stored, and two morphisms can only be composed if the formats match.
+          For instance, to add to the output a constant $c$ that is stored in the format with $k$ fractional bits as the integer $C$, one cannot simply add $C$ to $A n_1 + B n_2$, which is in the format with $2k$ fractional bits.
+          One first has to convert $C$ to that format, by multiplying it by $2^k$; this conversion is itself a morphism $\tup{n \mapsto 2^k n, \catidat{\reals}} \colon \mathrm{dec}_k \mto \mathrm{dec}_{2k}$, since $\mathrm{dec}_{2k}(2^k n) = \mathrm{dec}_k(n)$.
+          The composability condition of $\Arrow\Set$ thus works like a type check on number formats.
+    \item \emph{Rounding errors arise exactly where a square does not commute.}
+          Usually the output is needed in the format with $k$ fractional bits, so it has to be requantized, which introduces an error of at most $2^{-(k+1)}$ (\cref{exa:fixed-point-requantization}).
+          The diagram shows that we can choose where to place this step.
+          If we requantize only the final result, the total error is at most $2^{-(k+1)}$.
+          If we instead requantize each product before adding, each of the two products contributes an error of up to $2^{-(k+1)}$, so that the total error can be up to $2^{-k}$; with $N$ coefficients, it can be up to $N \cdot 2^{-(k+1)}$.
+          This is why digital signal processors accumulate sums of products in registers that are wider than their inputs, and round only once at the end: one composes as many commuting squares as possible, and places the single non-commuting square last.
+\end{enumerate}
+In this discussion we have ignored overflow (\cref{exa:fixed-point-overflow}); in practice, the format with $2k$ fractional bits also requires more bits in total, which is part of the reason why the accumulators are wider.
+
+%\subsection{Further examples}
+%
+%\paragraph{Homomorphic encryption}
+%    A similar principle to that of fixed-point approximation example is at the heart of \emph{homomorphic encryption}, which allows a server to compute on data that it cannot read.
+%    Let $\mora \colon \Obja \sto \Objb$ be a computation on plaintexts, let $\morb \colon \Obja' \sto \Objb'$ be the computation that the server performs on the corresponding ciphertexts, and let $\mathrm{Dec}_{\Obja} \colon \Obja' \sto \Obja$ and $\mathrm{Dec}_{\Objb} \colon \Objb' \sto \Objb$ be the decryption functions.
+%    Correctness of the scheme requires that the following square commutes:
+%    \begin{equation}
+%        \label{eq:homomorphic-encryption-square}
+%        \begin{tikzcd}[column sep=4.5em, every arrow/.append style={arrowmorphismstyle}]
+%            \Obja' \arrow[r, "\morb"] \arrow[d, "\mathrm{Dec}_{\Obja}"'] \pgfmatrixnextcell \Objb' \arrow[d, "\mathrm{Dec}_{\Objb}"] \\
+%            \Obja \arrow[r, "\mora"'] \pgfmatrixnextcell \Objb
+%        \end{tikzcd}
+%    \end{equation}
+%    In words: computing on the ciphertexts and then decrypting the result (top and right sides) agrees with decrypting the inputs and then computing on the plaintexts (left and bottom sides), that is, $\morb \mthen \mathrm{Dec}_{\Objb} = \mathrm{Dec}_{\Obja} \mthen \mora$.
+%    So the pair $\tup{\morb, \mora} \colon \mathrm{Dec}_{\Obja} \mto \mathrm{Dec}_{\Objb}$ is a morphism in $\Arrow\Set$, from the decryption function on inputs to the decryption function on outputs.
+%    (We use decryption rather than encryption, because encryption is typically randomized, whereas decryption is a function.)
+%    As in the previous examples, composition in $\Arrow\Set$ is the composition of computations: if each elementary operation is implemented correctly, then so is every circuit built from them.
+%    In many practical schemes, however, each operation adds some ``noise'' to the ciphertexts, and decryption is only correct while the noise stays below a threshold; correct implementations are then not closed under arbitrarily long composition, and special techniques (``bootstrapping'') are needed to keep composing.
+
