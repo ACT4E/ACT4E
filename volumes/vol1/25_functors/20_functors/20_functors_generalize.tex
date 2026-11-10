@@ -3,8 +3,7 @@
 \section{Functors generalize some familiar concepts}
 \label{sec:functors-generalize}
 
-In this section we collect further examples of functors.
-We begin with four examples which show that functors generalize notions that we have already met: homomorphisms between graphs, \SY{monotone functions} between preorders, morphisms between monoids, and actions of monoids.
+In this section we show that functors generalize several notions that we have already met: homomorphisms between graphs, \SY{monotone functions} between preorders, morphisms between monoids, and actions of monoids.
 
 \subsection{Functors generalize graph homomorphisms}
 \label{sec:functors-generalize-graph-homomorphisms}
@@ -336,27 +335,75 @@ Unpacking the definition of the opposite category (\cref{def:opposite-category})
     \funamor(\mora\op) \colon \funaob(\Objb) \sto \funaob(\Obja).
 \end{equation}
 Acting by a composite $\mora \mthenof{\CatC} \morb$ is now the same as first acting by $\morb$ and then acting by $\mora$ (compare \cref{eq:uncurried-cont-action-1cond}).
-An example which combines both kinds of action is the hom-functor of \cref{exa:hom-functor}.
+An example which combines both kinds of action is the hom-functor \cref{eq:hom-functor-type}, which we discuss next.
 
 
 \paragraph{Canonical actions of a category.}
+Every monoid acts on itself: its elements can be composed with each other, and so each element transforms all the others.
+The same is true for any category $\CatC$, without any additional choices: $\CatC$ acts on its own homsets, by composition.
+In fact it does so in two ways, one covariant and one contravariant.
 
+\emph{Post-composition: a covariant action.}
+Fix an object $\Obja$ of $\CatC$.
+We define a functor
+\begin{equation}
+    \label{eq:covariant-hom-functor-type}
+    \HomSet{\CatC}{\Obja}{-} \colon \CatC \fto \Set
+\end{equation}
+as follows.
+On objects, it maps each object $\Objb$ of $\CatC$ to the homset $\HomSet{\CatC}{\Obja}{\Objb}$, the set of all morphisms from $\Obja$ to $\Objb$.
+On morphisms, it maps each morphism $\morb \colon \Objb \mtoin{\CatC} \Objc$ to the function ``post-compose with $\morb$'':
+\begin{equation}
+    \label{eq:covariant-hom-functor-on-morphisms}
+    \defmapperiod{\HomSet{\CatC}{\Obja}{\morb}}{\HomSet{\CatC}{\Obja}{\Objb}}{\sto}{\HomSet{\CatC}{\Obja}{\Objc}}{\stylemorph{\varphi}}{\stylemorph{\varphi} \mthen \morb}
+\end{equation}
+In the language of generalized actions: the ``states of type $\Objb$'' are the morphisms $\stylemorph{\varphi} \colon \Obja \mto \Objb$, and a morphism $\morb \colon \Objb \mto \Objc$ acts on such a state by being attached at its end, which results in a morphism $\Obja \mto \Objc$.
 
-\begin{example}\label{exa:hom-functor}
-    Let $\CatC$ be any category.
-    There is a functor
-    \begin{equation}\label{eq:hom-functor-type}
-        \funa \colon \CatC\op \Ctimes \CatC \fto \Set
-    \end{equation}
-    defined on objects by
-    \begin{equation}\label{eq:hom-functor-on-objects}
-        \funaob(\tup{\Obja, \Objb}) = \Hom_\CatC(\Obja, \Objb).
-    \end{equation}
-    To see how $\funa$ is defined on morphisms, let $\mora\op \colon \Objd \mtoin{\CatC\op} \Obja$ and $\morb \colon \Objb \mtoin{\CatC} \Objc$ be morphisms in $\CatC\op$ and $\CatC$, respectively, and recall that $\mora\op \colon \Objd \mtoin{\CatC\op} \Obja$ is, by definition, a morphism $\mora \colon \Obja \mtoin{\CatC} \Objd$.
-    We define $\funamor(\tup{\mora\op, \morb})$ to be the function
-    \begin{equation}\label{eq:hom-functor-on-morphisms}
-        \defmapperiod{\funamor(\tup{\mora\op, \morb})}{\Hom_\CatC(\Obja, \Objb)}{\sto}{\Hom_\CatC(\Objd, \Objc)}{\stylemorph{\varphi}}{\mora \mthen \stylemorph{\varphi} \mthen \morb}
-    \end{equation}
+The two conditions \cref{eq:generalized-action-conditions} for a generalized action are nothing but the associativity and unitality of composition in $\CatC$.
+Indeed, for morphisms $\morb \colon \Objb \mto \Objc$ and $\morc \colon \Objc \mto \Objd$, and for every $\stylemorph{\varphi} \colon \Obja \mto \Objb$, acting by the composite $\morb \mthen \morc$ gives
+\begin{equation}
+    \stylemorph{\varphi} \mthen (\morb \mthen \morc) = (\stylemorph{\varphi} \mthen \morb) \mthen \morc,
+\end{equation}
+which is the result of first acting by $\morb$ and then acting by $\morc$; and acting by an identity morphism gives $\stylemorph{\varphi} \mthen \catidat\Objb = \stylemorph{\varphi}$.
 
+Note that we obtain one such action for each choice of the object $\Obja$.
+When $\CatC = \monoidcat{\monoidA}$ is the categorification of a monoid, there is only one choice, $\Obja = \monoidcatobj$, and what we obtain is the action of $\monoidA$ on its own underlying set $\monoidAset$ in which $\monelA$ acts by $\monela \mapsto \monela \mtimesof\monoidA \monelA$.
 
+\emph{Pre-composition: a contravariant action.}
+Now fix instead an object $\Objb$ of $\CatC$, and let the \emph{source} of the morphisms vary.
+We define a functor
+\begin{equation}
+    \label{eq:contravariant-hom-functor-type}
+    \HomSet{\CatC}{-}{\Objb} \colon \CatCop \fto \Set
+\end{equation}
+as follows.
+On objects, it maps each object $\Obja$ of $\CatC$ to the homset $\HomSet{\CatC}{\Obja}{\Objb}$.
+On morphisms, it maps each morphism $\mora \colon \Objd \mtoin{\CatC} \Obja$ -- or rather, the corresponding morphism $\mora\op \colon \Obja \mtoin{\CatCop} \Objd$ of the opposite category -- to the function ``pre-compose with $\mora$'':
+\begin{equation}
+    \label{eq:contravariant-hom-functor-on-morphisms}
+    \defmapperiod{\HomSet{\CatC}{\mora}{\Objb}}{\HomSet{\CatC}{\Obja}{\Objb}}{\sto}{\HomSet{\CatC}{\Objd}{\Objb}}{\stylemorph{\varphi}}{\mora \mthen \stylemorph{\varphi}}
+\end{equation}
+Here a morphism $\mora \colon \Objd \mto \Obja$ acts on a morphism $\stylemorph{\varphi} \colon \Obja \mto \Objb$ by being attached at its beginning.
+Note the reversal of direction that is typical for contravariant actions: $\mora$ goes from $\Objd$ to $\Obja$, but it transforms morphisms with source $\Obja$ into morphisms with source $\Objd$.
+Also, acting by a composite $\mora' \mthen \mora$ gives $(\mora' \mthen \mora) \mthen \stylemorph{\varphi} = \mora' \mthen (\mora \mthen \stylemorph{\varphi})$, which is the result of first acting by $\mora$ and then acting by $\mora'$.
+Again, the functor conditions follow from the associativity and unitality of composition in $\CatC$.
 
+\emph{Combining the two: the hom-functor.}
+Pre-composition and post-composition do not interfere with each other: by associativity, it does not matter whether we first attach $\mora$ at the beginning of $\stylemorph{\varphi}$ and then $\morb$ at its end, or the other way around.
+We can therefore combine the two actions into a single one, in which both the source and the target of the morphisms vary.
+This is the \emph{hom-functor}
+\begin{equation}\label{eq:hom-functor-type}
+    \funa \colon \CatCop \Ctimes \CatC \fto \Set,
+\end{equation}
+whose source is the product (\cref{def:cartesian-product-category}) of the opposite category of $\CatC$ with $\CatC$ itself.
+It is defined on objects by
+\begin{equation}\label{eq:hom-functor-on-objects}
+    \funaob(\tup{\Obja, \Objb}) = \HomSet{\CatC}{\Obja}{\Objb}.
+\end{equation}
+To see how $\funa$ is defined on morphisms, recall that a morphism $\tup{\Obja, \Objb} \mto \tup{\Objd, \Objc}$ in $\CatCop \Ctimes \CatC$ is a pair $\tup{\mora\op, \morb}$, where $\mora\op \colon \Obja \mtoin{\CatCop} \Objd$ and $\morb \colon \Objb \mtoin{\CatC} \Objc$, and that $\mora\op \colon \Obja \mtoin{\CatCop} \Objd$ is, by definition, a morphism $\mora \colon \Objd \mtoin{\CatC} \Obja$.
+We define $\funamor(\tup{\mora\op, \morb})$ to be the function
+\begin{equation}\label{eq:hom-functor-on-morphisms}
+    \defmapperiod{\funamor(\tup{\mora\op, \morb})}{\HomSet{\CatC}{\Obja}{\Objb}}{\sto}{\HomSet{\CatC}{\Objd}{\Objc}}{\stylemorph{\varphi}}{\mora \mthen \stylemorph{\varphi} \mthen \morb}
+\end{equation}
+The two actions above can be recovered from the hom-functor by letting one of the two components be an identity morphism: $\funamor(\tup{\catidat\Obja\op, \morb})$ is post-composition with $\morb$, and $\funamor(\tup{\mora\op, \catidat\Objb})$ is pre-composition with $\mora$.
+That $\funa$ is indeed a functor is the subject of \cref{ex:HomFunctor}.

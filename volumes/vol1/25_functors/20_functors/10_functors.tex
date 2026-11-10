@@ -227,6 +227,125 @@ Here is the formal definition of a functor; we'll follow it with many examples t
     \end{equation}
 \end{example}
 
+\begin{example}[Cartesian product]
+    \label{exa:cart-prod-functor}
+    Recall that, given categories $\CatC$ and $\CatD$, we can form their product category $\CatC \Ctimes \CatD$ (\cref{def:cartesian-product-category}).
+    Here we consider the product $\Set \Ctimes \Set$ of the category $\Set$ with itself: its objects are pairs of sets, and its morphisms are pairs of functions.
+
+    The operation of ``taking the cartesian product of sets and functions'' is a functor
+    \begin{equation}
+        \funa \colon \Set \Ctimes \Set \fto \Set.
+    \end{equation}
+    On objects, it maps a pair of sets $\tup{\setA, \setB}$ to their cartesian product,
+    \begin{equation}
+        \funaob(\tup{\setA, \setB}) \definedas \setA \cartprod \setB,
+    \end{equation}
+    and on morphisms, it maps a pair of functions $\mora \colon \setA \mto \setC$, $\morb \colon \setB \mto \setD$ to their product (\cref{def:product-of-functions}),
+    \begin{equation}
+        \funamor(\tup{\mora, \morb}) \definedas \mora \funcprod \morb \colon \setA \cartprod \setB \sto \setC \cartprod \setD,
+    \end{equation}
+    which is the function $\tup{\ela, \elb} \mapsto \tup{\mora(\ela), \morb(\elb)}$.
+\end{example}
+
+\begin{gradedexercise}[\exname{CartProdAsFunctor}]
+    \label{ex:CartProdAsFunctor}
+    Check that the proposed functor $\funa \colon \Set \Ctimes \Set \fto \Set$ in \cref{exa:cart-prod-functor} is indeed a functor.
+\end{gradedexercise}
+\solutionof{CartProdAsFunctor}
+
+\begin{example}[Multiplication with a set]
+    \label{exa:multiplication-with-a-set-functor}
+    Let $\subA$ be a set.
+    There is a functor $\funa \colon \Set \fto \Set$ which acts on objects by
+    \begin{equation}
+        \funaob(\setA) = \setA \cartprod \subA
+    \end{equation}
+    and on morphisms by
+    \begin{equation}
+        \funamor(\mora) = \mora \funcprod \catid_{\subA}.
+    \end{equation}
+    In other words, given a function $\mora \colon \setA \mto \setB$, the function $\funamor(\mora) \colon \setA \cartprod \subA \sto \setB \cartprod \subA$ applies $\mora$ to the first component of a pair and leaves the second component unchanged.
+\end{example}
+
+\begin{gradedexercise}[\exname{MultiplicationWithASet}]
+    \label{ex:MultiplicationWithASet}
+    Check that the proposed functor $\funa \colon \Set \fto \Set$ in \cref{exa:multiplication-with-a-set-functor} is indeed a functor.
+\end{gradedexercise}
+\solutionof{MultiplicationWithASet}
+
+\begin{example}[Exponentiation with a set]
+    \label{exa:exponentiation-with-a-set-functor}
+    Let $\subA$ be a set.
+    There is a functor $\funa \colon \Set \fto \Set$ which acts on objects by
+    \begin{equation}
+        \funaob(\setA) = \setA^\subA.
+    \end{equation}
+    (Recall that $\setA^\subA$ denotes the set of functions from $\subA$ to $\setA$.)
+    On morphisms, it maps a function $\mora \colon \setA \mto \setB$ to the function ``post-compose with $\mora$'':
+    \begin{equation}
+        \defmapperiod{\funamor(\mora)}{\setA^\subA}{\sto}{\setB^\subA}{\stylemorph{\varphi}}{\stylemorph{\varphi} \mthen \mora}
+    \end{equation}
+\end{example}
+
+\begin{gradedexercise}[\exname{ExponentiationWithASet}]
+    \label{ex:ExponentiationWithASet}
+    Check that the proposed functor $\funa \colon \Set \fto \Set$ in \cref{exa:exponentiation-with-a-set-functor} is indeed a functor.
+\end{gradedexercise}
+\solutionof{ExponentiationWithASet}
+
+\begin{example}[Probability measures]
+    \label{exa:probability-functor}
+    There is a functor $\funa \colon \Set \fto \Set$ which maps each set to the set of probability measures on it.
+
+    On objects: for any set $\setA$, we define $\funaob(\setA)$ to be the set of \emph{finitely supported probability measures} on $\setA$.
+    These are functions $p \colon \setA \to [0,1]$ with only finitely many non-zero values, and such that these values sum to $1$:
+    \begin{equation}\label{eq:probability-measure}
+        \sum_{\ela \setin \setA} p(\ela) = 1.
+    \end{equation}
+
+    On morphisms: for any function $\mora \colon \setA \mto \setB$, the function $\funamor(\mora) \colon \funaob(\setA) \sto \funaob(\setB)$ maps a probability measure $p$ on $\setA$ to the probability measure on $\setB$ given by
+    \begin{equation}
+        \defmapcomma{\funamor(\mora)(p)}{\setB}{\sto}{[0,1]}{\elb}{\sum_{\ela \setin \mora^{-1}(\elb)} p(\ela)}
+    \end{equation}
+    where the sum ranges over all elements $\ela \setin \setA$ such that $\mora(\ela) = \elb$.
+
+    The following is a helpful visualization.
+    We may think of finitely supported probability measures on $\setA$ as ``finite normalized histograms over the elements of $\setA$'', and the functor $\funa$ moves the columns of a histogram on $\setA$ ``along'' $\mora$ to make a histogram on $\setB$, stacking columns on top of each other whenever they end up over the same element.
+    (Credit: this nice description is taken from Paolo Perrone's \emph{Notes on category theory}.)
+\end{example}
+
+\begin{gradedexercise}[\exname{ProbabilityFunctor}]
+    \label{ex:probability-functor}
+    Check that the proposed functor $\funa \colon \Set \fto \Set$ in \cref{exa:probability-functor} is indeed a functor.
+\end{gradedexercise}
+\solutionof{ProbabilityFunctor}
+
+\begin{example}[Differentiation]
+    \label{exa:differentiation-functor}
+    Consider the category $\pEuc$ from \linkifexists{ex:pointed-euclidean-spaces}, as well as the category $\RVect$ of real vector spaces studied in \linkifexists{ex:category-real-vect}.
+    Differentiation is a functor
+    \begin{equation}
+        \funa \colon \pEuc \fto \RVect.
+    \end{equation}
+
+    On objects: $\funaob (\tup{\reals^n, \ela}) = \reals^n$.
+
+    On morphisms: given a morphism $\mora \colon \tup{\reals^n, \ela} \mto \tup{\reals^m, \elb}$ in $\pEuc$, the linear map $\funamor(\mora)$ is the derivative of $\mora$ at the point $\ela$,
+    \begin{equation}
+        D \mora \vert_\ela \colon \reals^n \mto \reals^m,
+    \end{equation}
+    which is typically represented by the Jacobian matrix.
+
+    The intuition for the on-objects part of this functor is that $\tup{\reals^n, \ela}$ is mapped to the tangent space of ``vectors starting at $\ela$'', which is isomorphic to $\reals^n$.
+    On the level of morphisms, the differential of a function $\mora$ at $\ela$ maps vectors starting at $\ela$ to vectors starting at $\mora(\ela)$.
+\end{example}
+
+\begin{gradedexercise}[\exname{DifferentiationFunctor}]
+    \label{ex:DifferentiationFunctor}
+    Check that the proposed functor $\funa \colon \pEuc \fto \RVect$ in \cref{exa:differentiation-functor} is indeed a functor.
+\end{gradedexercise}
+\solutionof{DifferentiationFunctor}
+
 % To see that this is indeed a \SY{functor}, notice that~$\funidC(\morab)$ is equal to~$\funidC(\mora)\mthen \funidC(\morb)$ because they are both equal to~$\morab$.
 % Moreover, identities are preserved because~$\funidC(\catidof\CatC)=\catidof\CatC$.
 
