@@ -1,0 +1,362 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Functors generalize some familiar concepts}
+\label{sec:functors-generalize}
+
+In this section we collect further examples of functors.
+We begin with four examples which show that functors generalize notions that we have already met: homomorphisms between graphs, \SY{monotone functions} between preorders, morphisms between monoids, and actions of monoids.
+
+\subsection{Functors generalize graph homomorphisms}
+\label{sec:functors-generalize-graph-homomorphisms}
+
+Recall from \cref{sec:catsfromgraphs} that we can turn any graph $\graphA=\tupp{\vertices,\arcs, \source,\target}$ into a category $\pathcat{\graphA}$, the free category on $\graphA$ (\cref{def:free-category}).
+The objects of $\pathcat{\graphA}$ are the vertices of the graph, and the morphisms from a vertex $\vertexa$ to a vertex $\vertexb$ are the paths from $\vertexa$ to $\vertexb$ (\cref{def:path}).
+Composition is the concatenation of paths, and the identity morphisms are the trivial paths.
+
+Now suppose that we have two graphs,
+\begin{equation}
+    {\graphA}_1=\tupp{\verticesn{1},\arcsn{1},\sourcen{1},\targetn{1}}
+    \qqand
+    {\graphA}_2=\tupp{\verticesn{2},\arcsn{2},\sourcen{2},\targetn{2}},
+\end{equation}
+and a \SY{graph homomorphism} $\funb \colon {\graphA}_1 \fto {\graphA}_2$ (\cref{def:graph-homomorphism}).
+It consists of a function $\funbob \colon \verticesn{1} \sto \verticesn{2}$ on vertices and a function $\funbmor \colon \arcsn{1} \sto \arcsn{2}$ on edges, which are compatible with the source and target functions: an edge from $\vertexa$ to $\vertexb$ is mapped to an edge from $\funbob(\vertexa)$ to $\funbob(\vertexb)$.
+
+From $\funb$ we can build a functor
+\begin{equation}
+    \funa \colon \pathcat{{\graphA}_1} \fto \pathcat{{\graphA}_2}
+\end{equation}
+as follows.
+\begin{itemize}
+    \item On objects, $\funa$ does what $\funb$ does on vertices: $\funaob \definedas \funbob$.
+    \item On morphisms, $\funa$ applies $\funb$ to a path edge by edge:
+          \begin{equation}
+              \label{eq:graph-hom-functor-on-paths}
+              \funamor\pars{\maketypedlist{e_1, \dots, e_n}{\arcsn{1}}} \definedas \maketypedlist{\funbmor(e_1), \dots, \funbmor(e_n)}{\arcsn{2}},
+          \end{equation}
+          and it maps the trivial path at a vertex $\vertexa$ to the trivial path at the vertex $\funbob(\vertexa)$.
+\end{itemize}
+The right-hand side of \cref{eq:graph-hom-functor-on-paths} is indeed a path in ${\graphA}_2$: since $\funb$ is compatible with sources and targets, the equation $\targetn{1}(e_i) = \sourcen{1}(e_{i+1})$ implies $\targetn{2}(\funbmor(e_i)) = \sourcen{2}(\funbmor(e_{i+1}))$.
+For the same reason, a path from $\vertexa$ to $\vertexb$ is mapped to a path from $\funbob(\vertexa)$ to $\funbob(\vertexb)$, as the definition of a functor requires.
+The two functor conditions hold as well: applying $\funb$ edge by edge to a concatenation of two paths gives the concatenation of the two resulting paths, and trivial paths are mapped to trivial paths by definition.
+
+We have shown the following.
+
+\begin{lemma}
+    \label{lem:graph-hom-to-functor}
+    Given graphs ${\graphA}_1$ and ${\graphA}_2$, every \SY{graph homomorphism} $\funb \colon {\graphA}_1 \fto {\graphA}_2$ induces a \SY{functor} $\funa \colon \pathcat{{\graphA}_1} \fto \pathcat{{\graphA}_2}$, which acts on vertices as $\funb$ does and which applies $\funb$ to paths edge by edge.
+\end{lemma}
+
+Different graph homomorphisms induce different functors, since we can recover $\funbob$ from $\funaob$, and $\funbmor$ from what $\funamor$ does on paths of length one.
+So functors between free categories do generalize graph homomorphisms.
+Note, however, that the correspondence is \emph{not} one-to-one: there are, in general, functors $\pathcat{{\graphA}_1} \fto \pathcat{{\graphA}_2}$ that are not induced by any graph homomorphism.
+
+\begin{example}
+    \label{exa:functor-not-from-graph-hom}
+    Let $\graphA$ be the graph with a single vertex $\vertexa$ and a single edge $e$, which goes from $\vertexa$ to $\vertexa$.
+    The morphisms of the category $\pathcat{\graphA}$ are the paths that go $n$ times around this loop, one for each $n \setin \natnumbers$, and composing two of them adds their lengths.
+
+    There is a functor $\funa \colon \pathcat{\graphA} \fto \pathcat{\graphA}$ which is the identity on objects and which maps the path of length $n$ to the path of length $2n$.
+    It is compatible with composition, since $2(n + m) = 2n + 2m$, and with identities, since $2 \cdot 0 = 0$.
+    However, $\funa$ is not induced by any graph homomorphism $\graphA \fto \graphA$: a functor that is induced by a graph homomorphism maps paths of length one to paths of length one, whereas $\funa$ maps the path $\maketypedlist{e}{\arcs}$ to the path $\maketypedlist{e, e}{\arcs}$, which has length two.
+\end{example}
+
+In general, a functor between free categories is free to map each edge of the first graph to an arbitrary \emph{path} in the second graph, and the functors which are induced by graph homomorphisms are precisely those which map each path of length one to a path of length one.
+
+In the next three subsections we will meet situations where the correspondence is even tighter: there, the functors between the categories in question correspond \emph{one-to-one} to the structure-preserving functions that we already know.
+
+\todotext{J: the fact that not every functor between free categories is induced by a graph homomorphism is an interesting point to come back to when discussing adjunctions (free-forgetful adjunction between graphs and categories).}
+
+\subsection{Functors generalize monotone functions}
+\label{sec:posetsarecats}
+
+\linkvideo{spring2021-tradeoffs:tradeoffs:orders:preorder-as-cat} % Pre-order as a category
+\linkvideo{spring2021-tradeoffs:tradeoffs:orders:preorder-poset} % The skeleton of a pre-order is a poset
+\linkvideo{spring2021-functors:semi-and-fun:mon-functions:mon-fun-as-func} % Monotone functions as functors
+
+Recall from \cref{chap:structures-as-cats} that also a single \SY{preorder} $\posAdefinition$ can be viewed as a category $\poscat{\posA}$, called its categorification (\cref{def:poscat}).
+The objects of $\poscat{\posA}$ are the elements of $\posAset$, and, given objects $\posela, \poselb \setin \posAset$, there is exactly one morphism $\posela \mto \poselb$ if $\posela \posAleq \poselb$, and there is no such morphism otherwise:
+\begin{equation}
+    \label{eq:poscat-homsets-recalled}
+    \HomSet{\poscat{\posA}}{\posela}{\poselb} =
+    \begin{cases}
+        \singleton & \text{ if }  \ \posela \posAleq \poselb, \\
+        \Emptyset  & \text{ else. }
+    \end{cases}
+\end{equation}
+There is only one possible way to compose morphisms in $\poscat{\posA}$; that composites exist is guaranteed by the transitivity of $\posAleq$, and that identity morphisms exist is guaranteed by its reflexivity.
+
+Now suppose that we have two preorders, $\posAdefinition$ and $\posBdefinition$.
+What is a functor
+\begin{equation}
+    \funa \colon \poscat{\posA} \fto \poscat{\posB}
+\end{equation}
+between their categorifications?
+Let us unpack \cref{def:functor} in this special case.
+We will see that, in contrast to the situation for graphs, the answer is: exactly a monotone function.
+
+The first constituent of $\funa$ is a function $\funaob \colon \Obof{\poscat{\posA}} \to \Obof{\poscat{\posB}}$.
+Since the objects of $\poscat{\posA}$ and $\poscat{\posB}$ are the elements of $\posAset$ and $\posBset$, respectively, this is simply a function
+\begin{equation}
+    \funaob \colon \posAset \sto \posBset.
+\end{equation}
+
+The second constituent of $\funa$ is, for every pair of objects $\posela, \poselb \setin \posAset$, a function
+\begin{equation}
+    \label{eq:poscat-functor-on-morphisms}
+    \funamor \colon \HomSet{\poscat{\posA}}{\posela}{\poselb} \to \HomSet{\poscat{\posB}}{\funaob(\posela)}{\funaob(\poselb)}.
+\end{equation}
+In view of \cref{eq:poscat-homsets-recalled}, there are two cases to consider.
+\begin{itemize}
+    \item If $\posela \posAleq \poselb$ does not hold, then the source of the function \cref{eq:poscat-functor-on-morphisms} is the empty set.
+          There is exactly one function from the empty set to any given set, so in this case there is nothing to choose and nothing to check.
+    \item If $\posela \posAleq \poselb$ holds, then the source of the function \cref{eq:poscat-functor-on-morphisms} is the set $\singleton$, which has one element.
+          A function from $\singleton$ to the target set exists only if the target set is not empty, that is, only if
+          \begin{equation}
+              \funaob(\posela) \posBleq \funaob(\poselb).
+          \end{equation}
+          When this is the case, the target set is also $\singleton$, and there is exactly one function $\singleton \to \singleton$.
+\end{itemize}
+In summary: the functions $\funamor$ exist precisely when $\posela \posAleq \poselb$ implies $\funaob(\posela) \posBleq \funaob(\poselb)$ -- in other words, precisely when $\funaob$ is a \SY{monotone function} (\cref{def:monotone}) -- and, when they exist, there is no choice in how to define them.
+
+Finally, the two conditions in \cref{def:functor} are equations between morphisms of $\poscat{\posB}$ that have the same source and the same target.
+Since in $\poscat{\posB}$ there is at most one morphism with any given source and target, these equations hold automatically.
+
+We have shown the following.
+
+\begin{lemma}
+    \label{lem:posetfunctor}
+    Let $\posA$ and $\posB$ be preorders.
+    \begin{enumerate}
+        \item For every \SY{functor} $\funa \colon \poscat{\posA} \fto \poscat{\posB}$, the function $\funaob \colon \posAset \sto \posBset$ is a \SY{monotone function} $\posA \mto \posB$.
+        \item For every \SY{monotone function} $\mapa \colon \posA \mto \posB$, there is exactly one \SY{functor} $\funa \colon \poscat{\posA} \fto \poscat{\posB}$ such that $\funaob = \mapa$.
+    \end{enumerate}
+    Hence the assignment $\funa \mapsto \funaob$ is a bijection between the set of functors $\poscat{\posA} \fto \poscat{\posB}$ and the set of monotone functions $\posA \mto \posB$.
+\end{lemma}
+
+It is in this sense that a monotone function $\posA \mto \posB$ is ``the same thing'' as a functor $\poscat{\posA} \fto \poscat{\posB}$.
+We can read the lemma in two directions.
+On the one hand, it says that functors are a generalization of monotone functions: monotone functions are what functors look like when the categories involved come from preorders.
+On the other hand, it gives us an intuition for what the functor conditions mean in general.
+A monotone function is one that ``respects the order''; a functor is one that ``respects composition''.
+In a general category, however, there may be many different morphisms between two given objects, and so a functor must also specify \emph{which} morphism in the target category each morphism in the source category is sent to; and the two conditions in \cref{def:functor} are then no longer automatic.
+
+\subsection{Functors generalize monoid morphisms}
+\label{sec:functors-generalize-monoid-morphisms}
+
+\linkvideo{spring2021-functors:semi-and-fun:ex-semigroup-semifun} % Semigroup morphisms as semi-functors
+
+Recall from \cref{chap:structures-as-cats} that, similarly, a single \SY{monoid} $\monoidAdefinition$ can be viewed as a category $\monoidcat{\monoidA}$, called its categorification (\cref{def:monoidcat}).
+This category has just one object, which we denote by $\monoidcatobj$.
+Its morphisms are the elements of the monoid,
+\begin{equation}
+    \HomSet{\monoidcat{\monoidA}}{\monoidcatobj}{\monoidcatobj} = \monoidAset,
+\end{equation}
+composition of morphisms is given by the composition operation $\mtimesof\monoidA$ of the monoid, and the identity morphism of $\monoidcatobj$ is the neutral element $\idmon_\monoidA$.
+
+Now suppose that we have two monoids, $\monoidAdefinition$ and $\monoidBdefinition$.
+What is a functor
+\begin{equation}
+    \funa \colon \monoidcat{\monoidA} \fto \monoidcat{\monoidB}
+\end{equation}
+between their categorifications?
+Again, let us unpack \cref{def:functor}.
+
+The first constituent of $\funa$ is a function $\funaob \colon \Obof{\monoidcat{\monoidA}} \to \Obof{\monoidcat{\monoidB}}$.
+Both categories have just the single object $\monoidcatobj$, so there is exactly one such function, and there is nothing to choose.
+
+The second constituent of $\funa$ is a function
+\begin{equation}
+    \funamor \colon \HomSet{\monoidcat{\monoidA}}{\monoidcatobj}{\monoidcatobj} \to \HomSet{\monoidcat{\monoidB}}{\monoidcatobj}{\monoidcatobj},
+\end{equation}
+which is to say, a function
+\begin{equation}
+    \funamor \colon \monoidAset \sto \monoidBset.
+\end{equation}
+
+The first condition in \cref{def:functor}, compatibility with composition, says that for all $\monelA, \monelB \setin \monoidAset$,
+\begin{equation}
+    \label{eq:monoidcat-functor-composition}
+    \funamor(\monelA \mtimesof\monoidA \monelB) = \funamor(\monelA) \mtimesof\monoidB \funamor(\monelB),
+\end{equation}
+and the second condition, compatibility with identity morphisms, says that
+\begin{equation}
+    \label{eq:monoidcat-functor-identity}
+    \funamor(\idmon_\monoidA) = \idmon_\monoidB.
+\end{equation}
+These are precisely the two conditions \cref{eq:mon-mor-comp} and \cref{eq:mon-id-comp} that define a \SY{monoid morphism} (\cref{def:monoid-mor}).
+
+We have shown the following.
+
+\begin{lemma}
+    \label{lem:monoid-hom-as-functor}
+    Let $\monoidA$ and $\monoidB$ be monoids.
+    \begin{enumerate}
+        \item For every \SY{functor} $\funa \colon \monoidcat{\monoidA} \fto \monoidcat{\monoidB}$, the function $\funamor \colon \monoidAset \sto \monoidBset$ is a \SY{monoid morphism} $\monoidA \fto \monoidB$.
+        \item For every \SY{monoid morphism} $\sgrpmorA \colon \monoidA \fto \monoidB$, there is exactly one \SY{functor} $\funa \colon \monoidcat{\monoidA} \fto \monoidcat{\monoidB}$ such that $\funamor = \sgrpmorA$.
+    \end{enumerate}
+    Hence the assignment $\funa \mapsto \funamor$ is a bijection between the set of functors $\monoidcat{\monoidA} \fto \monoidcat{\monoidB}$ and the set of monoid morphisms $\monoidA \fto \monoidB$.
+\end{lemma}
+
+It is in this sense that a monoid morphism $\monoidA \fto \monoidB$ is ``the same thing'' as a functor $\monoidcat{\monoidA} \fto \monoidcat{\monoidB}$.
+
+\begin{example}
+    In \cref{exa:string-length} we saw that the function which maps each string to its length is a \SY{monoid morphism} from a monoid of strings to the monoid $\tup{\natnumbers, +, 0}$.
+    By \cref{lem:monoid-hom-as-functor}, we can equally well think of it as a functor between the corresponding one-object categories.
+    Its compatibility with composition is the statement that the length of a concatenation of two strings is the sum of their lengths, and its compatibility with identities is the statement that the empty string has length $0$.
+\end{example}
+
+It is instructive to compare \cref{lem:posetfunctor} and \cref{lem:monoid-hom-as-functor}.
+The categorification of a preorder may have many objects, but it has at most one morphism between any two of them.
+Correspondingly, a functor between such categories is determined by what it does on objects, and the functor conditions hold automatically.
+The categorification of a monoid, on the contrary, may have many morphisms, but it has only one object.
+Correspondingly, a functor between such categories is determined by what it does on morphisms, and all of the content is in the functor conditions.
+A functor between general categories combines both aspects.
+
+\subsection{Functors generalize monoid actions}
+\label{sec:functors-generalize-monoid-actions}
+
+Let $\monoidAdefinition$ be a monoid.
+Recall from \cref{def:monoid-cov-action} that an \SY{action} of $\monoidA$ on a set $\stateset$ is a \SY{monoid morphism}
+\begin{equation}
+    \act \colon \monoidA \fto \Endof\stateset,
+\end{equation}
+where $\Endof\stateset$ is the monoid whose elements are the functions $\stateset \to \stateset$, whose composition operation is the composition of functions, and whose neutral element is the identity function $\catidat\stateset$ (\cref{exa:endofunction-monoid}).
+
+We will now see that monoid actions, too, are functors.
+This time, we consider functors whose source is the categorification $\monoidcat{\monoidA}$ of the monoid, and whose target is the category $\Set$ of sets and functions.
+So, what is a functor
+\begin{equation}
+    \funa \colon \monoidcat{\monoidA} \fto \Set?
+\end{equation}
+As before, we unpack \cref{def:functor}.
+
+The first constituent of $\funa$ is a function $\funaob \colon \Obof{\monoidcat{\monoidA}} \to \Obof{\Set}$.
+Since $\monoidcat{\monoidA}$ has just the single object $\monoidcatobj$, specifying such a function amounts to choosing one set, namely
+\begin{equation}
+    \stateset \definedas \funaob(\monoidcatobj).
+\end{equation}
+
+The second constituent of $\funa$ is a function
+\begin{equation}
+    \funamor \colon \HomSet{\monoidcat{\monoidA}}{\monoidcatobj}{\monoidcatobj} \to \HomSet{\Set}{\stateset}{\stateset}.
+\end{equation}
+The source of this function is the set $\monoidAset$, and its target is the set of functions $\stateset \to \stateset$.
+In other words, $\funamor$ assigns to each element $\monelA \setin \monoidAset$ of the monoid a function
+\begin{equation}
+    \funamor(\monelA) \colon \stateset \sto \stateset.
+\end{equation}
+
+The first condition in \cref{def:functor} says that for all $\monelA, \monelB \setin \monoidAset$,
+\begin{equation}
+    \funamor(\monelA \mtimesof\monoidA \monelB) = \funamor(\monelA) \mthenof{\Set} \funamor(\monelB),
+\end{equation}
+and the second condition says that
+\begin{equation}
+    \funamor(\idmon_\monoidA) = \catidat\stateset.
+\end{equation}
+Since composition in $\Set$ is the composition of functions, these are precisely the conditions \cref{eq:act-to-endo-comp-compatibility} and \cref{eq:act-neutral-element-condit}, which say that $\funamor$ is a \SY{monoid morphism} from $\monoidA$ to $\Endof\stateset$.
+
+We have shown the following.
+
+\begin{lemma}
+    \label{lem:monoid-action-as-functor}
+    Let $\monoidA$ be a monoid.
+    \begin{enumerate}
+        \item For every \SY{functor} $\funa \colon \monoidcat{\monoidA} \fto \Set$, the function $\funamor$ is an action of $\monoidA$ on the set $\funaob(\monoidcatobj)$.
+        \item For every set $\stateset$ and every action $\act \colon \monoidA \fto \Endof\stateset$ of $\monoidA$ on $\stateset$, there is exactly one \SY{functor} $\funa \colon \monoidcat{\monoidA} \fto \Set$ such that $\funaob(\monoidcatobj) = \stateset$ and $\funamor = \act$.
+    \end{enumerate}
+\end{lemma}
+
+It is in this sense that a functor $\monoidcat{\monoidA} \fto \Set$ is ``the same thing'' as a set together with an action of $\monoidA$ on it.
+
+\begin{example}
+    Consider the flip-flop monoid $\mathbf{F}$ from \cref{exa:flip-flop-action}, and its action on the set $\makeset{0, 1}$ of possible contents of a memory cell.
+    The corresponding functor $\funa \colon \monoidcat{\mathbf{F}} \fto \Set$ maps the single object $\monoidcatobj$ to the set $\makeset{0, 1}$.
+    It maps the morphism $\text{set}$ to the function $\makeset{0, 1} \sto \makeset{0, 1}$ which is constant with value $1$, the morphism $\text{reset}$ to the function which is constant with value $0$, and the identity morphism $\idmon$ to the identity function.
+\end{example}
+
+\begin{remark}[Group actions]
+    \label{rem:group-actions-as-functors}
+    Every \SY{group} $\grpA = \tup{\grpAset, \mtimesof\grpA, \idgrp_\grpA, \ginv}$ is in particular a \SY{monoid}, so it, too, can be viewed as a category $\monoidcat{\grpA}$ with a single object $\monoidcatobj$, and \cref{lem:monoid-action-as-functor} applies: a functor $\funa \colon \monoidcat{\grpA} \fto \Set$ is the same thing as a set $\stateset$ together with a \SY{monoid morphism} $\funamor \colon \grpA \fto \Endof\stateset$.
+
+    Recall, however, that an action of a group was defined as a group morphism $\grpA \fto \Autof\stateset$ to the group of invertible functions $\stateset \to \stateset$ (\cref{def:group-cov-action}).
+    This is no discrepancy.
+    For every $\grpelA \setin \grpAset$, the functor conditions and the inverse laws \cref{eq:group-inverse-law} give
+    \begin{equation}
+        \funamor(\grpelA) \mthenof{\Set} \funamor(\ginv(\grpelA)) = \funamor(\grpelA \mtimesof\grpA \ginv(\grpelA)) = \funamor(\idgrp_\grpA) = \catidat\stateset,
+    \end{equation}
+    and, in the same way, $\funamor(\ginv(\grpelA)) \mthenof{\Set} \funamor(\grpelA) = \catidat\stateset$.
+    So each function $\funamor(\grpelA)$ is invertible, with inverse $\funamor(\ginv(\grpelA))$.
+    In other words, $\funamor$ automatically takes its values in $\Autof\stateset$, and it is compatible with inverses.
+    Hence a functor $\monoidcat{\grpA} \fto \Set$ is ``the same thing'' as a set together with an action of the group $\grpA$ on it.
+\end{remark}
+
+\paragraph{Set-valued functors as generalized actions.}
+\Cref{lem:monoid-action-as-functor} suggests a useful point of view on functors whose target is the category $\Set$, whatever their source may be.
+Let $\CatC$ be any category, and let
+\begin{equation}
+    \funa \colon \CatC \fto \Set
+\end{equation}
+be a functor.
+Unpacking \cref{def:functor}, the functor $\funa$ provides
+\begin{itemize}
+    \item for every object $\Obja$ of $\CatC$, a set $\funaob(\Obja)$;
+    \item for every morphism $\mora \colon \Obja \mtoin{\CatC} \Objb$, a function $\funamor(\mora) \colon \funaob(\Obja) \sto \funaob(\Objb)$.
+\end{itemize}
+Moreover, written out in terms of elements, the two functor conditions say that for all morphisms $\mora \colon \Obja \mtoin{\CatC} \Objb$ and $\morb \colon \Objb \mtoin{\CatC} \Objc$, and for all $\statesetel \setin \funaob(\Obja)$,
+\begin{equation}
+    \label{eq:generalized-action-conditions}
+    \funamor(\mora \mthenof{\CatC} \morb)(\statesetel) = \funamor(\morb)\bigl(\funamor(\mora)(\statesetel)\bigr)
+    \qqand
+    \funamor(\catidat\Obja)(\statesetel) = \statesetel.
+\end{equation}
+These have exactly the same form as the conditions for a monoid action (compare \cref{eq:act-to-endo-comp-compatibility-elementwise}, and also \cref{def:uncurried-action}): acting by a composite $\mora \mthenof{\CatC} \morb$ is the same as first acting by $\mora$ and then acting by $\morb$, and acting by an identity morphism does nothing.
+
+We can therefore think of any functor $\funa \colon \CatC \fto \Set$ as a \emph{generalized action}: an action of the category $\CatC$.
+The difference to a monoid action is that the category $\CatC$ may have many objects.
+Accordingly, there is not just one set that is acted upon, but a whole family of sets, one for each object of $\CatC$; and a morphism $\mora \colon \Obja \mtoin{\CatC} \Objb$ does not act on all of them, but only on the elements of $\funaob(\Obja)$, which it transforms into elements of $\funaob(\Objb)$.
+If we think of the elements of the sets $\funaob(\Obja)$ as possible states of a system, then the objects of $\CatC$ play the role of different \emph{types} of states, and a morphism $\mora \colon \Obja \mtoin{\CatC} \Objb$ is a command which can only be applied to states of type $\Obja$, and which results in a state of type $\Objb$.
+An action of a monoid is the special case where there is only one type.
+
+We will meet several functors of this kind in what follows; see, for example, \cref{ex:GraphsViaFunctors}, where a very small category ``acts'' on the vertices and arrows of a graph.
+
+\paragraph{Contravariant actions.}
+What about \emph{contravariant} actions?
+Recall that a contravariant action of a monoid $\monoidA$ on a set $\stateset$ is a \SY{monoid morphism} $\monoidA\op \fto \Endof\stateset$ whose source is the opposite monoid (\cref{def:monoid-cont-action}); in other words, it is an action of $\monoidA\op$.
+Recall also that the categorification of the opposite monoid is the opposite of the categorification, $\monoidcat{\pars{\monoidA\op}} = \pars{\monoidcat{\monoidA}}\op$ (\cref{exa:opposite-cat-monoid}).
+Applying \cref{lem:monoid-action-as-functor} to the monoid $\monoidA\op$, we find that a contravariant action of $\monoidA$ is ``the same thing'' as a functor
+\begin{equation}
+    \pars{\monoidcat{\monoidA}}\op \fto \Set.
+\end{equation}
+
+Accordingly, for any category $\CatC$, we can think of a functor $\funa \colon \CatCop \fto \Set$ as a generalized contravariant action of $\CatC$.
+Unpacking the definition of the opposite category (\cref{def:opposite-category}), such a functor provides a set $\funaob(\Obja)$ for every object $\Obja$ of $\CatC$, and, for every morphism $\mora \colon \Obja \mtoin{\CatC} \Objb$, a function in the reverse direction,
+\begin{equation}
+    \funamor(\mora\op) \colon \funaob(\Objb) \sto \funaob(\Obja).
+\end{equation}
+Acting by a composite $\mora \mthenof{\CatC} \morb$ is now the same as first acting by $\morb$ and then acting by $\mora$ (compare \cref{eq:uncurried-cont-action-1cond}).
+An example which combines both kinds of action is the hom-functor of \cref{exa:hom-functor}.
+
+
+\paragraph{Canonical actions of a category.}
+
+
+\begin{example}\label{exa:hom-functor}
+    Let $\CatC$ be any category.
+    There is a functor
+    \begin{equation}\label{eq:hom-functor-type}
+        \funa \colon \CatC\op \Ctimes \CatC \fto \Set
+    \end{equation}
+    defined on objects by
+    \begin{equation}\label{eq:hom-functor-on-objects}
+        \funaob(\tup{\Obja, \Objb}) = \Hom_\CatC(\Obja, \Objb).
+    \end{equation}
+    To see how $\funa$ is defined on morphisms, let $\mora\op \colon \Objd \mtoin{\CatC\op} \Obja$ and $\morb \colon \Objb \mtoin{\CatC} \Objc$ be morphisms in $\CatC\op$ and $\CatC$, respectively, and recall that $\mora\op \colon \Objd \mtoin{\CatC\op} \Obja$ is, by definition, a morphism $\mora \colon \Obja \mtoin{\CatC} \Objd$.
+    We define $\funamor(\tup{\mora\op, \morb})$ to be the function
+    \begin{equation}\label{eq:hom-functor-on-morphisms}
+        \defmapperiod{\funamor(\tup{\mora\op, \morb})}{\Hom_\CatC(\Obja, \Objb)}{\sto}{\Hom_\CatC(\Objd, \Objc)}{\stylemorph{\varphi}}{\mora \mthen \stylemorph{\varphi} \mthen \morb}
+    \end{equation}
+
+
+
