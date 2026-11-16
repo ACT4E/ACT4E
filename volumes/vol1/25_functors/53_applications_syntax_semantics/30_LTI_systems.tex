@@ -133,54 +133,15 @@ What is different in each specification is only different by a change of coordin
 
 \subsection{Category of LTI systems}
 
-We define a category of LTI systems \LTI.
-
-\begin{ctdefinition}[Category \LTI]
-    \SYNDEF{category of finite-dimensional linear time-invariant systems}
-    \label{def:LTICat}
-    The category \LTI of LTI systems is defined by:
-    \begin{enumerate}
-        \item \emph{Objects}: natural numbers.
-        \item \emph{Morphisms}: A morphism in \LTI from~$\styleobj{l}\setin \natnumbers$ to~$\styleobj{m}\setin \natnumbers$ is a continuous time LTI system~$\genericlti{}$ such that $\styleobj{l}$ is the dimension of the input space, and $\styleobj{m}$ the dimension of the output space.
-              %where~$\mat{A}\setin \reals^{\ntimesn}$,~$\mat{B}\setin \reals^{n\times l}$,~$\mat{C}\setin \reals^{m\times n}$,~$\mat{D}\setin \reals^{m\times l}$.
-
-        \item \emph{Composition}: Given morphisms~$\mora \colon \styleobj{a}\mto \styleobj{b}$ and~$\morb\colon \styleobj{b}\mto \styleobj{c}$, described by the LTI systems
-              \begin{equation}
-                  \begin{aligned}
-                       & \genericlti{\mora} \\
-                       & \genericlti{\morb},
-                  \end{aligned}
-              \end{equation}
-              their composition~$(\morab)\colon \styleobj{a}\mto \styleobj{c}$ is the LTI system~$\genericlti{}$, where
-              \begin{equation}
-                  \begin{aligned}
-                      \prstart & =\begin{bmatrix}
-                                      \prstart_\mora \\
-                                      \prstart_\morb \\
-                                  \end{bmatrix},\quad
-                      \mat{A}=\begin{bmatrix}
-                                  \mat{A}_\mora              & \mat{0}       \\
-                                  \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
-                              \end{bmatrix},\quad
-                      \mat{B}=\begin{bmatrix}
-                                  \mat{B}_\mora \\
-                                  \mat{B}_\morb\mat{D}_\mora
-                              \end{bmatrix}, \\
-                      \mat{C}  & =\begin{bmatrix}
-                                      \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
-                                  \end{bmatrix}, \quad
-                      \mat{D}=\mat{D}_\morb\mat{D}_\mora.
-                  \end{aligned}
-              \end{equation}
-        \item \emph{Identities}: the identity for~$\styleobj{l}\setin \natnumbers$ is the system~$\tup{\mat{0}^{\matdim{0}{1}},\mat{0}^{\matdim{0}{0}},\mat{0}^{\matdim{0}{l}},\mat{0}^{\matdim{l}{0}},\mat{1}^{\matdim{l}{l}}}$, where $\mat{1}^{\matdim{l}{l}}$ denotes the $l\times l$ identity matrix.
-    \end{enumerate}
-\end{ctdefinition}
+Recall the category \LTI of LTI systems from \cref{def:LTICat}.
+Its objects are the real coordinate spaces $\reals^n$, a morphism from $\reals^l$ to $\reals^m$ is an LTI system with input space $\reals^l$ and output space $\reals^m$, and composition is series composition of LTI systems, given by the block matrices in \cref{eq:LTI-composition}.
+In this section we often leave the state space implicit, and write a morphism of \LTI simply as $\genericlti{}$.
 
 \begin{remark}
     Again, all of this works with matrices with zero rows and/or zero columns.
     Let's see practically how via a simple instance.
-    Consider the system $\mora\colon a \mto b$ given by $\genericlti{\mora}$ and the system $\morb\colon b\mto c$ given by $\tupp{\mat{0}^{0\times 1},\mat{0}^{0\times 0}, \mat{0}^{0\times b}, \mat{0}^{c\times 0}, \mat{0}^{c\times b}}$.
-    Their composition $\mora\mthen \morb\colon a\mto c$ is a system $\genericlti{}$ with:
+    Consider the system $\mora\colon \reals^a \mto \reals^b$ given by $\genericlti{\mora}$, with state space $\reals^s$, and the system $\morb\colon \reals^b\mto \reals^c$ with state space $\reals^0$ given by $\tupp{\mat{0}^{0\times 1},\mat{0}^{0\times 0}, \mat{0}^{0\times b}, \mat{0}^{c\times 0}, \mat{0}^{c\times b}}$.
+    Their composition $\mora\mthen \morb\colon \reals^a\mto \reals^c$ is a system $\genericlti{}$ with state space $\reals^{s+0} = \reals^s$ and with:
     \begin{equation*}
         \prstart=\begin{bmatrix} \prstart_\mora \\ \mat{0}^{0\times 1}\end{bmatrix}=\prstart_\mora.
     \end{equation*}
@@ -211,7 +172,7 @@ We define a category of LTI systems \LTI.
 \end{exercise}
 \begin{solution}
     We start with associativity.
-    Consider morphism $\mora \colon \styleobj{l}\mto \styleobj{m}$ given by~$\genericlti{\mora}$, and $\morb\colon \styleobj{m}\mto \styleobj{n}$ given by~$\genericlti{\morb}$, and $\morc\colon \styleobj{n}\mto \styleobj{o}$ given by~$\genericlti{\morc}$.
+    Consider morphism $\mora \colon \reals^l\mto \reals^m$ given by~$\genericlti{\mora}$, and $\morb\colon \reals^m\mto \reals^n$ given by~$\genericlti{\morb}$, and $\morc\colon \reals^n\mto \reals^o$ given by~$\genericlti{\morc}$.
     The morphism~$\morab$ is described by the LTI
     \begin{equation}
         \genericlti{\mora,\morb},
@@ -324,12 +285,15 @@ We define a category of LTI systems \LTI.
             \end{aligned}
         \end{equation}
     \end{widepar}
-    Clearly, the matrices in \cref{eq:assoc_lti_1} and \cref{eq:assoc_lti_2} coincide, showing associativity.
+    Clearly, the matrices in \cref{eq:assoc_lti_1} and \cref{eq:assoc_lti_2} coincide.
+    The state spaces coincide as well: if $\reals^{k_\mora}$, $\reals^{k_\morb}$, and $\reals^{k_\morc}$ are the state spaces of $\mora$, $\morb$, and $\morc$, then the state space of $(\morab)\mthen \morc$ is $\reals^{(k_\mora+k_\morb)+k_\morc}$ and that of $\mora\mthen (\morb\mthen \morc)$ is $\reals^{k_\mora+(k_\morb+k_\morc)}$, and these are equal because addition of natural numbers is associative (\cref{rem:LTI-state-space-trick}).
+    This shows associativity.
 
     We now show unitality.
-    Consider a morphism~$\mora\colon \styleobj{l}\mto \styleobj{m}$, described by~$\genericlti{}$.
-    The morphism~$\catidat{\styleobj{l}} \mthen \mora$ is a morphism~$\styleobj{l}\mto \styleobj{m}$ still given by~$\genericlti{}$.
-    Similarly, the morphism~$\mora\mthen \catidat{\styleobj{m}}$ is a morphism~$\styleobj{l}\mto \styleobj{m}$, given by~$\genericlti{}$.
+    Consider a morphism~$\mora\colon \reals^l\mto \reals^m$, described by~$\genericlti{}$, with state space $\reals^k$.
+    The morphism~$\catidat{\reals^l} \mthen \mora$ is a morphism~$\reals^l\mto \reals^m$ still given by~$\genericlti{}$.
+    Similarly, the morphism~$\mora\mthen \catidat{\reals^m}$ is a morphism~$\reals^l\mto \reals^m$, given by~$\genericlti{}$.
+    In both cases the state space is again $\reals^k$, since $\reals^{0+k} = \reals^k = \reals^{k+0}$.
     Therefore, \LTI is a category.
 \end{solution}
 
@@ -437,27 +401,27 @@ We define a category of LTI systems \LTI.
                   }{
                       \Obof\Set
                   }{
-                      \styleobj{n}
+                      \reals^n
                   }{
-                      \diffun(\nonNegReals, \reals^\styleobj{n})
+                      \diffun(\nonNegReals, \reals^n)
                   }
               \end{equation}
         \item A map
               \begin{equation}\label{eq:LTI-action-morphisms}
-                  \funmorspace{\act} \colon \HomSet{\LTI}{\styleobj{m}}{\styleobj{n}}
+                  \funmorspace{\act} \colon \HomSet{\LTI}{\reals^m}{\reals^n}
                   \to
-                  \HomSet{\Set}{\diffun(\nonNegReals, \reals^\styleobj{m})}{\diffun(\nonNegReals, \reals^\styleobj{n})}
+                  \HomSet{\Set}{\diffun(\nonNegReals, \reals^m)}{\diffun(\nonNegReals, \reals^n)}
               \end{equation}
-              where~$\funmorspace{\act}$ takes an LTI system~$\mora\colon \styleobj{m} \to \styleobj{n}$ given by
+              where~$\funmorspace{\act}$ takes an LTI system~$\mora\colon \reals^m \to \reals^n$ given by
               \begin{equation}
                   \genericlti{\mora},
               \end{equation}
               and returns the function
               \begin{equation}\label{eq:LTI-action-morphisms-defined}
                   \defmapcomma{\funmorspace{\act}(\mora)}
-                  {\diffun(\nonNegReals, \reals^\styleobj{m})}
+                  {\diffun(\nonNegReals, \reals^m)}
                   {\to}
-                  {\diffun(\nonNegReals, \reals^\styleobj{n})}
+                  {\diffun(\nonNegReals, \reals^n)}
                   {\mat{u}(t)}
                   {\mat{C}_\mora\mat{s}_\mora(t) + \mat{D}_\mora\mat{u}(t) }
               \end{equation}
@@ -504,13 +468,13 @@ We define a category of LTI systems \LTI.
         =
         \funmorspace{\act}(\mora) \mthenof\Set \funmorspace{\act}(\morb).
     \end{equation}
-    Consider~$\mora \colon \styleobj{m}\mto \styleobj{n}$ and~$\morb\colon \styleobj{n}\mto \styleobj{o}$.
+    Consider~$\mora \colon \reals^m\mto \reals^n$ and~$\morb\colon \reals^n\mto \reals^o$.
     We first look at the map
     \begin{equation}
         \defmapcomma{\funmorspace{\act}(\mora \mthenof \LTI \morb)}
-        {\diffun(\nonNegReals,\reals^\styleobj{m})}
+        {\diffun(\nonNegReals,\reals^m)}
         {\mto}
-        {\diffun(\nonNegReals,\reals^\styleobj{o})}
+        {\diffun(\nonNegReals,\reals^o)}
         {\mat{u}(t)}
         {\mat{C}_{\morab}\mat{s}_{\morab}(t)+\mat{D}_{\morab}\mat{u}(t)}
     \end{equation}
@@ -566,9 +530,9 @@ We define a category of LTI systems \LTI.
     By instead looking at~$\funmorspace{\act}(\mora)$ we have
     \begin{equation}
         \defmapcomma{\funmorspace{\act}(\mora)}
-        {\diffun(\nonNegReals,\reals^\styleobj{m})}
+        {\diffun(\nonNegReals,\reals^m)}
         {\mto}
-        {\diffun(\nonNegReals,\reals^\styleobj{n})}
+        {\diffun(\nonNegReals,\reals^n)}
         {\mat{u}}
         {\mat{C}_\mora \mat{s}_\mora + \mat{D}_\mora \mat{u}}
     \end{equation}
@@ -585,11 +549,11 @@ We define a category of LTI systems \LTI.
         \defmapcomma{
             \funmorspace{\act}(\morb)
         }{
-            \diffun(\nonNegReals,\reals^\styleobj{n})
+            \diffun(\nonNegReals,\reals^n)
         }{
             \mto
         }{
-            \diffun(\nonNegReals,\reals^\styleobj{o})
+            \diffun(\nonNegReals,\reals^o)
         }{
             \mat{u}}{\mat{C}_\morb \mat{s}_\morb+\mat{D}_\morb \mat{u}
         }
@@ -607,11 +571,11 @@ We define a category of LTI systems \LTI.
         \defmapcomma{
             \funmorspace{\act}(\mora) \mthen \funmorspace{\act}(\morb)
         }{
-            \diffun(\nonNegReals,\reals^\styleobj{m})
+            \diffun(\nonNegReals,\reals^m)
         }{
             \mto
         }{
-            \diffun(\nonNegReals,\reals^\styleobj{o})
+            \diffun(\nonNegReals,\reals^o)
         }{
             \mat{u}
         }{

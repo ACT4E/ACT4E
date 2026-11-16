@@ -17,25 +17,127 @@
     \end{enumerate}
 \end{ctdefinition}
 
-\begin{exercise}
-    Prove that \cref{def:cat-endofunctions} is indeed a category.
-\end{exercise}
-
-\begin{solution}
-    \todotext{Write this solution}
-\end{solution}
 
 \begin{gradedexercise}[\exname{Endofunctions}]
     \label{ex:endofunctions}
 
-    In this exercise we will define a category $\EndSet$ of ``endofunctions'' and it is your task to check that it really is a category.
-
-    The objects of $\EndSet$ are pairs $\tup{\setA, \stylemorph{\varphi}}$ where $\setA$ is a set and $\stylemorph{\varphi} \colon \setA \to \setA$ is a function.
-
-    A morphism $\mora \colon \tup{\setA, \stylemorph{\varphi}} \mto_\EndSet \tup{\setB, \stylemorph{\psi}}$ is a function $\mora \colon \setA \to_\Set \setB$ with the property that $\mora \mthen \stylemorph{\psi}= \stylemorph{\varphi} \mthen \mora$.
-
-    Composition is given by composition of functions, and identity morphisms are identity functions.
+Prove that \cref{def:cat-endofunctions} is indeed a category.
 
 \end{gradedexercise}
 
 \solutionof{Endofunctions}
+
+
+
+\subsection{Linear time-invariant systems}
+\label{sec:cat-dyn-lti}
+
+In \cref{sec:dynamical-systems} we met \emph{linear time-invariant (LTI) systems}: dynamical systems which, in addition to a state, have inputs and outputs (\cref{def:LTI_syst_first_time}).
+We now show that continuous-time LTI systems are the morphisms of a category, in which composition models connecting two systems in series.
+
+Recall that such a system receives an input signal $\mat{u}(t) \setin \reals^n$, maintains an internal state $\mat{x}(t) \setin \reals^k$, and produces an output signal $\mat{y}(t) \setin \reals^m$.
+The state starts at a given start state (or initial state) $\prstart \setin \reals^k$, and the state and the output evolve according to the equations
+\begin{equation}
+    \label{eq:cat-dyn-lti-equations}
+    \begin{aligned}
+        \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t), \\
+        \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t),
+    \end{aligned}
+\end{equation}
+where $\mat{A}$, $\mat{B}$, $\mat{C}$, and $\mat{D}$ are real matrices.
+The key idea is to view an LTI system as a process that turns signals in its input space $\reals^n$ into signals in its output space $\reals^m$, that is, as a morphism from $\reals^n$ to $\reals^m$.
+Two such systems can be composed in series, by feeding the output of the first into the second as its input, whenever the output space of the first is the input space of the second.
+We will come back to this category, and study it in more detail, in \cref{sec:LTI-systems}.
+
+Throughout, we think of the elements of $\reals^k$ as column vectors, that is, as matrices with $k$ rows and one column.
+
+\begin{ctdefinition}[Category \LTI]
+    \label{def:LTICat}
+    \SYNDEF{category of finite-dimensional linear time-invariant systems}
+    The category \LTI of LTI systems is the category given by:
+
+    \constit
+
+    \begin{enumerate}
+        \item Objects: the real coordinate spaces $\reals^n$, for $n \setin \natnumbers$.
+        \item Morphisms: a morphism from $\reals^n$ to $\reals^m$ is an LTI system with input space $\reals^n$ and output space $\reals^m$, by which we mean a tuple
+              \begin{equation}
+                  \tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}},
+              \end{equation}
+              where $\reals^k$, for some $k \setin \natnumbers$, is the \emph{state space}, $\prstart \setin \reals^k$ is the \emph{start state}, and
+              \begin{equation}
+                  \mat{A} \setin \reals^{\matdim{k}{k}}, \quad
+                  \mat{B} \setin \reals^{\matdim{k}{n}}, \quad
+                  \mat{C} \setin \reals^{\matdim{m}{k}}, \quad
+                  \mat{D} \setin \reals^{\matdim{m}{n}}
+              \end{equation}
+              are real matrices.
+        \item Composition: given morphisms $\mora \colon \reals^n \mto \reals^m$ and $\morb \colon \reals^m \mto \reals^p$, described by the LTI systems
+              \begin{equation}
+                  \begin{aligned}
+                      \mora & = \tupp{\reals^k, \prstart_\mora, \mat{A}_\mora, \mat{B}_\mora, \mat{C}_\mora, \mat{D}_\mora}, \\
+                      \morb & = \tupp{\reals^l, \prstart_\morb, \mat{A}_\morb, \mat{B}_\morb, \mat{C}_\morb, \mat{D}_\morb},
+                  \end{aligned}
+              \end{equation}
+              their composition $(\morab) \colon \reals^n \mto \reals^p$ is the LTI system $\tupp{\reals^{k+l}, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}}$, where
+              \begin{equation}
+                  \label{eq:LTI-composition}
+                  \begin{aligned}
+                      \prstart & =\begin{bmatrix}
+                                      \prstart_\mora \\
+                                      \prstart_\morb \\
+                                  \end{bmatrix},\quad
+                      \mat{A}=\begin{bmatrix}
+                                  \mat{A}_\mora              & \mat{0}       \\
+                                  \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
+                              \end{bmatrix},\quad
+                      \mat{B}=\begin{bmatrix}
+                                  \mat{B}_\mora \\
+                                  \mat{B}_\morb\mat{D}_\mora
+                              \end{bmatrix}, \\
+                      \mat{C}  & =\begin{bmatrix}
+                                      \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+                                  \end{bmatrix}, \quad
+                      \mat{D}=\mat{D}_\morb\mat{D}_\mora.
+                  \end{aligned}
+              \end{equation}
+        \item Identity morphisms: the identity morphism of $\reals^n$ is the LTI system
+              \begin{equation}
+                  \tupp{\reals^0, \mat{0}^{\matdim{0}{1}},\mat{0}^{\matdim{0}{0}},\mat{0}^{\matdim{0}{n}},\mat{0}^{\matdim{n}{0}},\mat{1}^{\matdim{n}{n}}},
+              \end{equation}
+              where $\mat{1}^{\matdim{n}{n}}$ denotes the $n \times n$ identity matrix, and the remaining entries are the (unique) matrices of the indicated dimensions, which have no entries.
+    \end{enumerate}
+\end{ctdefinition}
+
+\begin{remark}[Where the composition rule comes from]
+    The matrices in \cref{eq:LTI-composition} are obtained by writing down the equations \cref{eq:cat-dyn-lti-equations} for $\mora$ and for $\morb$, and then substituting the output of $\mora$ for the input of $\morb$.
+    Writing $\mat{x}_\mora$ and $\mat{x}_\morb$ for the states of the two systems, and $\mat{u}$ for the input of $\mora$, this gives
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{x}}_\mora(t) & = \mat{A}_\mora\mat{x}_\mora(t) + \mat{B}_\mora\mat{u}(t), \\
+            \dot{\mat{x}}_\morb(t) & = \mat{B}_\morb\mat{C}_\mora\mat{x}_\mora(t) + \mat{A}_\morb\mat{x}_\morb(t) + \mat{B}_\morb\mat{D}_\mora\mat{u}(t), \\
+            \mat{y}(t)             & = \mat{D}_\morb\mat{C}_\mora\mat{x}_\mora(t) + \mat{C}_\morb\mat{x}_\morb(t) + \mat{D}_\morb\mat{D}_\mora\mat{u}(t),
+        \end{aligned}
+    \end{equation}
+    where $\mat{y}$ is the output of $\morb$.
+    These are again equations of the form \cref{eq:cat-dyn-lti-equations}, for the stacked state vector with $\mat{x}_\mora(t)$ on top of $\mat{x}_\morb(t)$.
+\end{remark}
+
+\begin{remark}[The state space of a composite]
+    \label{rem:LTI-state-space-trick}
+    The state of the composite system $\morab$ consists of a state of $\mora$ together with a state of $\morb$.
+    It would therefore be natural to take the \SY{cartesian product} $\reals^k \cartprod \reals^l$ as the state space of $\morab$.
+    We deliberately do not do this.
+    Instead, we take the coordinate space $\reals^{k+l}$, whose dimension is the sum of the two dimensions, and whose elements are obtained by stacking a column vector with $k$ rows on top of a column vector with $l$ rows.
+
+    The reason is that the elements of $\reals^k \cartprod \reals^l$ are pairs of vectors, and so for three composable systems the state spaces $(\reals^k \cartprod \reals^l) \cartprod \reals^p$ and $\reals^k \cartprod (\reals^l \cartprod \reals^p)$ consist of differently nested pairs: they are isomorphic, but not equal.
+    In contrast,
+    \begin{equation}
+        \reals^{(k+l)+p} = \reals^{k+(l+p)}
+        \qquad \text{and} \qquad
+        \reals^{k+0} = \reals^k = \reals^{0+k}
+    \end{equation}
+    hold on the nose, simply because addition of natural numbers is \SY{associative} and has $0$ as neutral element.
+    This is what makes composition in \LTI \SY{associative} and unital exactly, and not only ``up to an isomorphism''.
+    We will meet the same issue again in \cref{sec:cat-machines} for \SY{Moore machines}, whose state spaces are arbitrary sets, where no such simple trick is available.
+\end{remark}
