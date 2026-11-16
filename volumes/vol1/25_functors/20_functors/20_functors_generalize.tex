@@ -291,7 +291,7 @@ It is in this sense that a functor $\monoidcat{\monoidA} \fto \Set$ is ``the sam
     Hence a functor $\monoidcat{\grpA} \fto \Set$ is ``the same thing'' as a set together with an action of the group $\grpA$ on it.
 \end{remark}
 
-\paragraph{Set-valued functors as generalized actions.}
+\subsection{Set-valued functors as generalized actions.}
 \Cref{lem:monoid-action-as-functor} suggests a useful point of view on functors whose target is the category $\Set$, whatever their source may be.
 Let $\CatC$ be any category, and let
 \begin{equation}
@@ -320,7 +320,158 @@ An action of a monoid is the special case where there is only one type.
 
 We will meet several functors of this kind in what follows; see, for example, \cref{ex:GraphsViaFunctors}, where a very small category ``acts'' on the vertices and arrows of a graph.
 
-\paragraph{Contravariant actions.}
+We close this subsection with three examples from systems theory, in which the acting categories are the categories of systems and machines that we constructed in \cref{sec:cat-dyn-lti} and \cref{sec:cat-machines}.
+In all three, the morphisms are systems, and the action describes what a system \emph{does}: how it transforms what it receives as input into what it produces as output.
+
+\begin{example}[LTI systems act on signals]
+    \label{exa:lti-action-signals}
+    Recall the category $\LTI$ (\cref{def:LTICat}): its objects are the real coordinate spaces $\reals^n$, and a morphism $\mora \colon \reals^n \mto \reals^m$ is an LTI system
+    \begin{equation}
+        \mora = \tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}}
+    \end{equation}
+    with input space $\reals^n$, output space $\reals^m$, and state space $\reals^k$.
+    We now take the \emph{dynamical systems} point of view on such a tuple (\cref{def:LTI_syst_first_time}): it specifies a system in continuous time, which turns a signal with values in $\reals^n$ into a signal with values in $\reals^m$.
+    This defines an action of $\LTI$, that is, a functor
+    \begin{equation}
+        \funa \colon \LTI \fto \Set.
+    \end{equation}
+
+    On objects, $\funa$ assigns to each coordinate space the set of signals with values in it, which we model as continuously differentiable functions of time:
+    \begin{equation}
+        \funaob(\reals^n) \definedas \diffun(\nonNegReals, \reals^n).
+    \end{equation}
+    On morphisms, $\funa$ assigns to an LTI system $\mora \colon \reals^n \mto \reals^m$ as above the function
+    \begin{equation}
+        \funamor(\mora) \colon \diffun(\nonNegReals, \reals^n) \sto \diffun(\nonNegReals, \reals^m)
+    \end{equation}
+    which maps an input signal $\mat{u}$ to the output signal $\mat{y}$ given by
+    \begin{equation}
+        \label{eq:lti-action-signals-output}
+        \mat{y}(t) \definedas \mat{C}\mat{s}(t) + \mat{D}\mat{u}(t),
+    \end{equation}
+    where $\mat{s} \colon \nonNegReals \sto \reals^k$ is the unique solution of the initial value problem
+    \begin{equation}
+        \label{eq:lti-action-signals-ivp}
+        \begin{cases}
+            \dot{\mat{x}}(t) = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t), \\
+            \mat{x}(0) = \prstart.
+        \end{cases}
+    \end{equation}
+    Such a solution always exists and is unique; explicitly,
+    \begin{equation}
+        \mat{s}(t) = e^{\mat{A} t} \prstart + \int_{0}^{t} e^{\mat{A} (t - \tau)}\mat{B}\mat{u}(\tau) \, d\tau.
+    \end{equation}
+
+    Let us see why the functor conditions hold.
+    Let $\mora \colon \reals^n \mto \reals^m$ and $\morb \colon \reals^m \mto \reals^p$ be LTI systems, let $\mat{u}$ be an input signal for $\mora$, and let $\mat{y}_\mora \definedas \funamor(\mora)(\mat{u})$.
+    Let $\mat{s}_\mora$ be the solution of the initial value problem of $\mora$ for the input $\mat{u}$, and let $\mat{s}_\morb$ be the solution of the initial value problem of $\morb$ for the input $\mat{y}_\mora$.
+    Stacking $\mat{s}_\mora$ on top of $\mat{s}_\morb$, we obtain a function with values in the state space of the composite system $\morab$, and this function solves the initial value problem of the composite system $\morab$ for the input $\mat{u}$: this is precisely how the block matrices in \cref{eq:LTI-composition} were chosen.
+    By uniqueness, it is \emph{the} solution, and so the output signal of $\morab$ is
+    \begin{equation}
+        \mat{D}_\morb\mat{C}_\mora\mat{s}_\mora(t) + \mat{C}_\morb\mat{s}_\morb(t) + \mat{D}_\morb\mat{D}_\mora\mat{u}(t)
+        = \mat{C}_\morb\mat{s}_\morb(t) + \mat{D}_\morb\mat{y}_\mora(t),
+    \end{equation}
+    which is the output signal of $\morb$ for the input $\mat{y}_\mora$.
+    Hence $\funamor(\morab) = \funamor(\mora) \mthenof{\Set} \funamor(\morb)$.
+    The identity morphism of $\reals^n$ has the state space $\reals^0$ and $\mat{D} = \mat{1}^{\matdim{n}{n}}$, so \cref{eq:lti-action-signals-output} reduces to $\mat{y}(t) = \mat{u}(t)$, and $\funamor(\catidat{\reals^n})$ is the identity function.
+    (We will come back to this action in \cref{def:lti_cat_action} and \cref{lem:lti_cat_action}.)
+\end{example}
+
+The tuples that make up the morphisms of $\LTI$ do not, by themselves, know anything about continuous time.
+We can just as well take the \emph{machines} point of view on them, and this gives a second action of the very same category.
+
+\begin{example}[LTI systems act on streams]
+    \label{exa:lti-action-streams}
+    A \emph{stream} in a set $\setA$ is an infinite list $\tup{a_0, a_1, a_2, \dots}$ of elements of $\setA$, that is, a function $\natnumbers \sto \setA$.
+    We write $\setA^{\natnumbers}$ for the set of streams in $\setA$.
+
+    We define a functor
+    \begin{equation}
+        \funb \colon \LTI \fto \Set
+    \end{equation}
+    as follows.
+    On objects, $\funb$ assigns to each coordinate space the set of streams of vectors in it:
+    \begin{equation}
+        \funbob(\reals^n) \definedas (\reals^n)^{\natnumbers}.
+    \end{equation}
+    On morphisms, $\funb$ assigns to $\mora = \tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}} \colon \reals^n \mto \reals^m$ the function
+    \begin{equation}
+        \funbmor(\mora) \colon (\reals^n)^{\natnumbers} \sto (\reals^m)^{\natnumbers}
+    \end{equation}
+    which maps a stream $\mat{u} = \tup{\mat{u}_0, \mat{u}_1, \mat{u}_2, \dots}$ of inputs to the stream $\mat{y} = \tup{\mat{y}_0, \mat{y}_1, \mat{y}_2, \dots}$ of outputs defined, step by step, by
+    \begin{equation}
+        \label{eq:lti-action-streams}
+        \mat{x}_0 \definedas \prstart,
+        \qquad
+        \mat{x}_{i+1} \definedas \mat{A}\mat{x}_i + \mat{B}\mat{u}_i,
+        \qquad
+        \mat{y}_i \definedas \mat{C}\mat{x}_i + \mat{D}\mat{u}_i.
+    \end{equation}
+    In other words, we now read the tuple $\mora$ as a discrete-time LTI system (\cref{def:LTI-discrete}), or, equivalently, as a Mealy machine with set of inputs $\reals^n$, set of states $\reals^k$, and set of outputs $\reals^m$ (\cref{exa:discrete-lti-mealy}), and we let this machine run forever.
+    No differential equation needs to be solved: the matrix $\mat{A}$ now describes the next state, and not the rate of change of the state.
+
+    The functor conditions are checked as in \cref{exa:lti-action-signals}, and more easily.
+    If we feed the outputs of $\mora$ into $\morb$ at every step, then the stacked states satisfy the recursion \cref{eq:lti-action-streams} for the block matrices in \cref{eq:LTI-composition}; the computation is the same as in the continuous-time case, with $\mat{x}_{i+1}$ in place of $\dot{\mat{x}}(t)$.
+    Hence $\funbmor(\morab) = \funbmor(\mora) \mthenof{\Set} \funbmor(\morb)$.
+    The identity morphism of $\reals^n$ again yields $\mat{y}_i = \mat{u}_i$, the identity function on streams.
+\end{example}
+
+The two examples have the same source category, but they are different functors: the category $\LTI$ only records how systems are specified and how they are connected in series, while each of the two actions gives these specifications a meaning.
+The same morphism can mean quite different things under the two actions.
+Consider, for instance, the morphism $\tupp{\reals^1, 0, 0, 1, 1, 0} \colon \reals^1 \mto \reals^1$, in which all four matrices have a single entry.
+Under the action $\funa$ on signals, it is an integrator: it maps a signal $u$ to the signal $t \mapsto \int_0^t u(\tau) \, d\tau$.
+Under the action $\funb$ on streams, it is a delay by one step: it maps a stream $\tup{u_0, u_1, u_2, \dots}$ to the stream $\tup{0, u_0, u_1, \dots}$.
+
+In \cref{exa:lti-action-streams}, linearity played no role.
+The same construction works for arbitrary Mealy machines.
+
+\begin{example}[Mealy machines act on streams]
+    \label{exa:mealy-action-streams}
+    Recall the category $\MealyMod$ (\cref{def:MealyCat}): its objects are sets, and a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$ of Mealy machines $\mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$, up to isomorphism.
+    There is a functor
+    \begin{equation}
+        \func \colon \MealyMod \fto \Set
+    \end{equation}
+    defined as follows.
+    On objects, $\func$ assigns to each set the set of streams in it:
+    \begin{equation}
+        \funobspace{H}(\prin) \definedas \prin^{\natnumbers}.
+    \end{equation}
+    On morphisms, $\func$ assigns to $\equivmora$ the function
+    \begin{equation}
+        \funmorspace{H}(\equivmora) \colon \prin^{\natnumbers} \sto \prout^{\natnumbers}
+    \end{equation}
+    which maps a stream $\tup{\prineln{0}, \prineln{1}, \prineln{2}, \dots}$ of inputs to the stream $\tup{\prouteln{0}, \prouteln{1}, \prouteln{2}, \dots}$ of outputs defined, step by step, by
+    \begin{equation}
+        \label{eq:mealy-action-streams}
+        \prsteln{0} \definedas \prstart,
+        \qquad
+        \prsteln{i+1} \definedas \prdyn(\prineln{i}, \prsteln{i}),
+        \qquad
+        \prouteln{i} \definedas \prreadout(\prineln{i}, \prsteln{i}).
+    \end{equation}
+    This is the stream version of \cref{eq:mealy-list-output}, with the entries numbered starting from $0$.
+
+    Since a morphism is an equivalence class, we need to check that the result does not depend on the chosen representative $\mora$.
+    Let $\mapc$ be an isomorphism of Mealy machines from $\mora$ to a machine $\mora'$, and let $\prsteln{i}'$ and $\prouteln{i}'$ be the states and outputs of $\mora'$ for the same stream of inputs.
+    By induction on $i$, the compatibility of $\mapc$ with the initial states and the dynamics gives $\prsteln{i}' = \mapc(\prsteln{i})$, and then the compatibility with the read-outs gives $\prouteln{i}' = \prouteln{i}$ (compare \cref{sec:homomorphisms-mealy}).
+
+    For the functor conditions, consider a composite $\morab$ as in \cref{eq:mealy-composition}.
+    Its state at step $i$ is the pair consisting of the state of $\mora$ at step $i$ for the given inputs, and the state of $\morb$ at step $i$ when $\morb$ receives the outputs of $\mora$ as its inputs; this follows by induction from the formula for $\prdyn_{\morab}$.
+    The formula for $\prreadout_{\morab}$ then says that the $i$-th output of $\morab$ is the $i$-th output of $\morb$.
+    Hence $\funmorspace{H}(\equivmora \mthen \equivmorb) = \funmorspace{H}(\equivmora) \mthenof{\Set} \funmorspace{H}(\equivmorb)$.
+    The identity morphism of $\prin$ is represented by the machine which passes each input straight through to the output, so it acts as the identity function on $\prin^{\natnumbers}$.
+\end{example}
+
+\begin{remark}
+    \label{rem:lti-streams-via-mealy}
+    The action of $\LTI$ on streams in \cref{exa:lti-action-streams} is a special case of \cref{exa:mealy-action-streams}: reading an LTI system $\mora \colon \reals^n \mto \reals^m$ as a Mealy machine, as we did there, and then applying $\funmorspace{H}$ to its equivalence class gives precisely $\funbmor(\mora)$.
+
+    In fact, this reading is itself a functor $\LTI \fto \MealyMod$, as we have seen in \cref{exa:lti-to-mealy-functor}.
+    Once we know how to compose functors (\cref{def:functor-composition}), we will be able to say that the action $\funb$ is the composition of that functor with the action $\func$.
+\end{remark}
+
+\subsection{Contravariant category actions.}
 What about \emph{contravariant} actions?
 Recall that a contravariant action of a monoid $\monoidA$ on a set $\stateset$ is a \SY{monoid morphism} $\monoidA\op \fto \Endof\stateset$ whose source is the opposite monoid (\cref{def:monoid-cont-action}); in other words, it is an action of $\monoidA\op$.
 Recall also that the categorification of the opposite monoid is the opposite of the categorification, $\monoidcat{\pars{\monoidA\op}} = \pars{\monoidcat{\monoidA}}\op$ (\cref{exa:opposite-cat-monoid}).
@@ -338,7 +489,7 @@ Acting by a composite $\mora \mthenof{\CatC} \morb$ is now the same as first act
 An example which combines both kinds of action is the hom-functor \cref{eq:hom-functor-type}, which we discuss next.
 
 
-\paragraph{Canonical actions of a category.}
+\subsection{Canonical actions of a category.}
 Every monoid acts on itself: its elements can be composed with each other, and so each element transforms all the others.
 The same is true for any category $\CatC$, without any additional choices: $\CatC$ acts on its own homsets, by composition.
 In fact it does so in two ways, one covariant and one contravariant.
@@ -406,4 +557,9 @@ We define $\funamor(\tup{\mora\op, \morb})$ to be the function
     \defmapperiod{\funamor(\tup{\mora\op, \morb})}{\HomSet{\CatC}{\Obja}{\Objb}}{\sto}{\HomSet{\CatC}{\Objd}{\Objc}}{\stylemorph{\varphi}}{\mora \mthen \stylemorph{\varphi} \mthen \morb}
 \end{equation}
 The two actions above can be recovered from the hom-functor by letting one of the two components be an identity morphism: $\funamor(\tup{\catidat\Obja\op, \morb})$ is post-composition with $\morb$, and $\funamor(\tup{\mora\op, \catidat\Objb})$ is pre-composition with $\mora$.
-That $\funa$ is indeed a functor is the subject of \cref{ex:HomFunctor}.
+
+\begin{gradedexercise}[\exname{HomFunctor}]
+    \label{ex:HomFunctor}
+    Prove that the hom-functor $\funa \colon \CatCop \Ctimes \CatC \fto \Set$ defined by \cref{eq:hom-functor-on-objects} and \cref{eq:hom-functor-on-morphisms} is in fact a functor.
+\end{gradedexercise}
+\solutionof{HomFunctor}
