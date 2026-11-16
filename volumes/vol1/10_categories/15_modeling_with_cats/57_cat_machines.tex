@@ -279,7 +279,7 @@ We resolve it in the same way, by considering Mealy machines up to isomorphism.
 Recall from \cref{sec:homomorphisms-mealy} that a homomorphism of Mealy machines, between two machines with the same set of inputs and the same set of outputs, is a function between their state spaces which is compatible with the respective initial states, dynamics, and read-outs (\cref{def:mealy-machine-homomorphism}).
 As for \SY{Moore machines}, when this function is \SY{bijective} we call it an \emph{isomorphism of Mealy machines}, and we say that two Mealy machines are \emph{isomorphic} if there is an isomorphism from one to the other.
 
-For every set $\setA$ of inputs and every set $\setB$ of outputs, we now declare two Mealy machines from $\setA$ to $\setB$ -- that is, two machines with the same source and the same target -- to be equivalent if, and only if, they are isomorphic.
+For every set $\prin$ of inputs and every set $\prout$ of outputs, we now declare two Mealy machines from $\prin$ to $\prout$ -- that is, two machines with the same source and the same target -- to be equivalent if, and only if, they are isomorphic.
 For the same reasons as in the case of \SY{Moore machines}, this is an \SY{equivalence relation}.
 We write $\equivmora$ for the equivalence class of a Mealy machine $\mora$.
 
@@ -291,31 +291,42 @@ Since the read-out of a Mealy machine may depend on the current input, there are
 The category $\MealyMod$ is:
 \begin{enumerate}
     \item \emph{Objects}: All sets.
-    \item \emph{Morphisms}: A morphism in $\MealyMod$ from a set~$\setA$ to a set~$\setB$ is an equivalence class $\equivmora$ of Mealy machines from $\setA$ to $\setB$, that is, of tuples 
-    $$\mora = \tupp{\setA, \setS, \setB, \prdyn, \prreadout, \prstart}$$
+    \item \emph{Morphisms}: A morphism in $\MealyMod$ from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$ of Mealy machines from $\prin$ to $\prout$, that is, of tuples
+    \begin{equation}
+        \mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}
+    \end{equation}
     where
     \begin{itemize}
-    \item $\setA$, $\setS$, and $\setB$ are an input set, state set, and output set, respectively;
-    \item $\prdyn \colon \setS \cartprod \setA \mto \setS$ is the \emph{dynamics} (or \emph{update}) function;
-    \item $\prreadout \colon \setS \cartprod \setA \mto \setB$ is the \emph{readout} function;
-    \item$\prstart \setin \setS$ is an initial state.
+    \item $\prin$, $\prst$, and $\prout$ are an input set, state set, and output set, respectively;
+    \item $\prdyn \colon \prin \cartprod \prst \sto \prst$ is the \emph{dynamics} (or \emph{update}) function;
+    \item $\prreadout \colon \prin \cartprod \prst \sto \prout$ is the \emph{read-out} function;
+    \item $\prstart \setin \prst$ is an initial state.
     \end{itemize}
-    \item \emph{Composition}: Given morphisms~$\equivmora \colon \setA \mto \setB$ and~$\equivmorb\colon \setB \mto \setC$ represented by the Mealy machines
+    \item \emph{Composition}: Given morphisms $\equivmora$ and $\equivmorb$ represented by the Mealy machines
     \begin{equation}
         \begin{aligned}
-             & \mora = \tupp{\prstart_\mora, \prdyn_\mora, \prreadout_\mora} \\
-             & \morb = \tupp{\prstart_\morb, \prdyn_\morb, \prreadout_\morb},
+            \mora & = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}, \\
+            \morb & = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
         \end{aligned}
     \end{equation}
-    with state sets~$\setS_\mora$ and~$\setS_\morb$ respectively, their composition~$(\equivmora \mthen \equivmorb)\colon \setA \mto \setC$ is represented by the Mealy machine~$\mora \mthen \morb = \tupp{\prstart, \prdyn, \prreadout}$ with state set~$\setS_\mora \cartprod \setS_\morb$, where
+    with $\prout_{\mora} = \prin_{\morb}$, their composition $\equivmora \mthen \equivmorb$ is represented by the Mealy machine
     \begin{equation}
+        \morab = \tupp{\prin_{\mora},\ \prst_{\mora} \cartprod \prst_{\morb},\ \prout_{\morb},\ \prdyn_{\morab},\ \prreadout_{\morab},\ \prstart_{\morab}},
+    \end{equation}
+    where
+    \begin{equation}
+        \label{eq:mealy-composition}
         \begin{aligned}
-            \prstart &= \tup{\prstart_\mora, \prstart_\morb}, \\
-            \prdyn\bigl(\tup{s_\mora, s_\morb},\, a\bigr) &= \tup{\prdyn_\mora(s_\mora, a),\; \prdyn_\morb\bigl(s_\morb,\, \prreadout_\mora(s_\mora, a)\bigr)}, \\
-            \prreadout\bigl(\tup{s_\mora, s_\morb},\, a\bigr) &= \prreadout_\morb\bigl(s_\morb,\, \prreadout_\mora(s_\mora, a)\bigr).
+            \prstart_{\morab} &= \tupp{\prstart_{\mora}, \prstart_{\morb}}, \\
+            \prdyn_{\morab}\bigl(\prinel, \tupp{\prsteln{\mora}, \prsteln{\morb}}\bigr) &= \tupp{\prdyn_{\mora}(\prinel, \prsteln{\mora}),\; \prdyn_{\morb}\bigl(\prreadout_{\mora}(\prinel, \prsteln{\mora}),\, \prsteln{\morb}\bigr)}, \\
+            \prreadout_{\morab}\bigl(\prinel, \tupp{\prsteln{\mora}, \prsteln{\morb}}\bigr) &= \prreadout_{\morb}\bigl(\prreadout_{\mora}(\prinel, \prsteln{\mora}),\, \prsteln{\morb}\bigr).
         \end{aligned}
     \end{equation}
-    \item \emph{Identities}: the identity for a set~$\setA$ is the Mealy machine~$\tupp{\ast, \prdyn, \prreadout}$ with state set~$\{\ast\}$ (a singleton), where~$\prdyn(\ast, a) = \ \ast$ and~$\prreadout(\ast, a) = a$ for all~$a \setin \setA$.
+    \item \emph{Identities}: the identity for a set $\prin$ is represented by the Mealy machine
+    \begin{equation}
+        \tupp{\prin, \{\ast\}, \prin, \prdyn, \prreadout, \ast}
+    \end{equation}
+    whose state set $\{\ast\}$ is a singleton, where $\prdyn(\prinel, \ast) = \ast$ and $\prreadout(\prinel, \ast) = \prinel$ for all $\prinel \setin \prin$.
 \end{enumerate}
 \end{ctdefinition}
 
@@ -324,7 +335,7 @@ The category $\MealyMod$ is:
     That \cref{def:MealyCat} does define a category is checked in the same way as in \cref{lem:MooreMod-semicategory}.
     Composition is independent of the choice of representatives, because isomorphisms of the two factors combine into an isomorphism of the composites, and it is \SY{associative}, because re-bracketing of states is an isomorphism of Mealy machines.
 
-    For unitality, note that composing a Mealy machine $\mora$ having state set $\setS_\mora$ with an identity machine yields a machine with state set $\setS_\mora \cartprod \{\ast\}$ or $\{\ast\} \cartprod \setS_\mora$.
-    These sets are not equal to $\setS_\mora$, but the functions which forget the component $\ast$ are isomorphisms of Mealy machines to $\mora$.
+    For unitality, note that composing a Mealy machine $\mora$ having state set $\prst_{\mora}$ with an identity machine yields a machine with state set $\prst_{\mora} \cartprod \{\ast\}$ or $\{\ast\} \cartprod \prst_{\mora}$.
+    These sets are not equal to $\prst_{\mora}$, but the functions which forget the component $\ast$ are isomorphisms of Mealy machines to $\mora$.
     So unitality, just like associativity, holds only because we work with equivalence classes.
 \end{remark}
