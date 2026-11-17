@@ -1,14 +1,14 @@
 % !TEX root = chapter-standalone.tex
 
+
 \section[Machines]{Machines}
 \label{sec:cat-machines}
 
+
 \subsection{Moore machines}
 
-\todotext{To do...}
 
-
-Let us consider composing \SY{Moore machines} serially by letting the output of one machine be the input of the next.
+Let us now consider composing \SY{Moore machines} serially by letting the output of one machine be the input of the next.
 We'd like the result to again be a \SY{Moore machine}.
 
 \begin{marginfigure}
@@ -87,11 +87,11 @@ and we define the composite readout to be
 
 This formalization works very nicely -- it models composition using the output of one machine as the input of the next, and result of composition is again a \SY{Moore machine}.
 
-However, there is one aspect which we wish were different: this composition operation is not \SY{associative}.
+However, there is one aspect which we might wish were different: this composition operation is not \SY{associative}.
 It \emph{almost} is, but not quite.
 We explain why below.
 
-The reason we wish it \emph{were} \SY{associative} is that \SY{Moore machines} would then form a \SY{semicategory}, and we could integrate them nicely into the mathematics we have been developing thus far.
+The reason we might wish it \emph{were} \SY{associative} is that \SY{Moore machines} would then form a \SY{semicategory}, and we could integrate them nicely into the mathematics we have been developing thus far.
 
 The culprit for associativity failing is the \SY{cartesian product} that we use to define the state space $\prst_{\mora} \cartprod \prst_{\morb}$ of a composite \SY{Moore machine} $\morab$.
 Consider three composable systems~$\mora$,~$\morb$, and~$\morc$.
@@ -123,42 +123,219 @@ An isomorphism between the two sets is given by the following function
 \end{equation}
 which simply re-brackets the tuples.
 
-In the next section we will introduce a technical construction for defining a product similar to the \SY{cartesian product}, but which is \SY{associative} on the nose - not just ``up to an isomorphism''.
-This construction will allow us to make a new, modified formalization of \SY{Moore machines} which form a bona fide \SY{semicategory}, and it will prove useful in other respects further down the road.
+The failure of associativity of the \SY{cartesian product} thus means that composing \SY{Moore machines} in the above way is not \SY{associative}.
+At this point, there are various ways one might proceed.
 
-\todotext{The above needs editing -- it is no longer current}
+One option is to accept that \SY{Moore machines} composed in this way form a structure that is strictly more general than \SY{semicategories}.
+One could then become curious about what kind of structure this might most appropriately be, study it, and use it for modeling.
+This is a completely valid and interesting approach.
+However, in order to keep within a narrower scope in this book, we do not follow such a path, and we will instead explore other ways in which to model \SY{Moore machines} that allow us to remain in the domain of \SY{semicategories} and categories.
+There are here, too, several possible approaches; we discuss one below, and another will be discussed later in the part of the book on parallel composition.
+
+Recall from \cref{sec:homomorphisms-moore} that a homomorphism of Moore machines (\cref{def:moore-machine-homomorphism}) from a machine
+\begin{equation}
+    \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}
+\end{equation}
+to a machine
+\begin{equation}
+    \tupp{\prin, \prst', \prout, \prdyn', \prreadout', \prstart'}
+\end{equation}
+with the same set $\prin$ of inputs and the same set $\prout$ of outputs is a function of state spaces
+\begin{equation}
+    \mapc \colon \prst \sto \prst'
+\end{equation}
+which is compatible with the respective initial states, dynamics, and read-outs.
+Explicitly, this means that
+\begin{equation}
+    \label{eq:moore-homomorphism-conditions}
+    \mapc(\prstart) = \prstart',
+    \qquad
+    \mapc(\prdyn(\prinel, \prstel)) = \prdyn'(\prinel, \mapc(\prstel)),
+    \qquad
+    \prreadout'(\mapc(\prstel)) = \prreadout(\prstel)
+\end{equation}
+for all $\prinel \setin \prin$ and $\prstel \setin \prst$.
+When the above function of state spaces is \SY{bijective}, we call it an \emph{isomorphism of Moore machines}, and we say that the two machines are \emph{isomorphic}.
+In this case the inverse function $\mapc^{-1} \colon \prst' \sto \prst$ is a homomorphism of Moore machines as well, as one sees by applying $\mapc^{-1}$ to the equations in \cref{eq:moore-homomorphism-conditions}.
+Such isomorphisms are analogous to changing coordinates; two isomorphic Moore machines are ``essentially the same'' and differ at most superficially, in how they are mathematically specified.
+In particular, by \cref{lem:moore-homomorphism-behavior}, isomorphic Moore machines transform every list of inputs into the same list of outputs.
+
+Now, one approach to the failure of associativity of composing \SY{Moore machines} is to consider \SY{Moore machines} only ``up to isomorphism''.
+To set this up formally, for every set $\prin$ of inputs and every set $\prout$ of outputs we define an \SY{equivalence relation} on the collection of Moore machines from $\prin$ to $\prout$ by declaring two Moore machines equivalent if, and only if, they are isomorphic.
+It is straightforward to check that this is indeed an \SY{equivalence relation}: identity functions are isomorphisms of Moore machines (reflexivity), the inverse of an isomorphism is an isomorphism (symmetry), and the composition of two isomorphisms is an isomorphism (transitivity).
+We write $\equivmora$ for the equivalence class of a Moore machine $\mora$.
+
+The reason why this helps is that, although the Moore machines $(\morab) \mthen \morc$ and $\mora \mthen (\morb \mthen \morc)$ are not equal, they are isomorphic: the re-bracketing function \cref{eq:assoc-fails2} is an isomorphism of Moore machines between them.
+Hence they define the same equivalence class.
+
+We can therefore define the following \SY{semicategory}, where the morphisms are equivalence classes of \SY{Moore machines}.
+This is one way to resolve our ``associativity issue'' from before.
+
+\begin{ctdefinition}[Semicategory $\MooreMod$]
+    \label{def:MooreMod}
+    The semicategory $\MooreMod$ of Moore machines up to isomorphism is the semicategory given by:
+
+    \constit
+
+    \begin{enumerate}
+        \item Objects: all sets.
+        \item Morphisms: a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$, with respect to isomorphism of Moore machines, of Moore machines
+              \begin{equation}
+                  \mora = \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}
+              \end{equation}
+              whose set of inputs is $\prin$ and whose set of outputs is $\prout$.
+        \item Composition: given morphisms $\equivmora$ and $\equivmorb$, represented by Moore machines $\mora$ and $\morb$ with $\prout_{\mora} = \prin_{\morb}$, their composition is
+              \begin{equation}
+                  \label{eq:MooreMod-composition}
+                  \equivmora \mthen \equivmorb \definedas \stylemorph{[} \morab \stylemorph{]},
+              \end{equation}
+              where $\morab$ is the Moore machine defined by \cref{eq:moore-comp-naive-1}, \cref{eq:moore-comp-naive-2}, and \cref{eq:moore-comp-naive-3}.
+    \end{enumerate}
+\end{ctdefinition}
+
+Since composition is defined by choosing representatives, we need to make sure that the result does not depend on the choice.
+
+\begin{lemma}
+    \label{lem:MooreMod-semicategory}
+    \cref{def:MooreMod} does define a \SY{semicategory}: the composition \cref{eq:MooreMod-composition} is independent of the choice of representatives, and it is \SY{associative}.
+\end{lemma}
+
+\begin{proof}
+    For the independence of representatives, suppose that $\mapc_1 \colon \prst_{\mora} \sto \prst_{\mora'}$ is an isomorphism of Moore machines from $\mora$ to $\mora'$, and that $\mapc_2 \colon \prst_{\morb} \sto \prst_{\morb'}$ is an isomorphism of Moore machines from $\morb$ to $\morb'$.
+    We claim that the function
+    \begin{equation}
+        \defmapperiodset{
+            \mapc
+        }{
+            \prst_{\mora} \cartprod \prst_{\morb}
+        }{
+            \prst_{\mora'} \cartprod \prst_{\morb'}
+        }{
+            \tupp{\prsteln{\mora}, \prsteln{\morb}}
+        }{
+            \tupp{\mapc_1(\prsteln{\mora}), \mapc_2(\prsteln{\morb})}
+        }
+    \end{equation}
+    is an isomorphism of Moore machines from $\morab$ to $\mora' \mthen \morb'$.
+    It is \SY{bijective} because $\mapc_1$ and $\mapc_2$ are, and it maps the initial state $\tupp{\prstart_{\mora}, \prstart_{\morb}}$ to $\tupp{\prstart_{\mora'}, \prstart_{\morb'}}$.
+    For the dynamics, we compute
+    \begin{equation}
+        \begin{aligned}
+            \mapc(\prdyn_{\morab}(\prinel, \tupp{\prsteln{\mora}, \prsteln{\morb}}))
+             & = \tupp{ \mapc_1(\prdyn_{\mora} (\prinel, \prsteln{\mora})), \mapc_2(\prdyn_{\morb}(\prreadout_{\mora}(\prsteln{\mora}), \prsteln{\morb}))} \\
+             & = \tupp{ \prdyn_{\mora'} (\prinel, \mapc_1(\prsteln{\mora})), \prdyn_{\morb'}(\prreadout_{\mora}(\prsteln{\mora}), \mapc_2(\prsteln{\morb}))} \\
+             & = \tupp{ \prdyn_{\mora'} (\prinel, \mapc_1(\prsteln{\mora})), \prdyn_{\morb'}(\prreadout_{\mora'}(\mapc_1(\prsteln{\mora})), \mapc_2(\prsteln{\morb}))} \\
+             & = \prdyn_{\mora' \mthen \morb'}(\prinel, \mapc(\tupp{\prsteln{\mora}, \prsteln{\morb}})),
+        \end{aligned}
+    \end{equation}
+    where the second equality uses the compatibility of $\mapc_1$ and $\mapc_2$ with the dynamics, and the third uses the compatibility of $\mapc_1$ with the read-outs.
+    For the read-outs, we have
+    \begin{equation}
+        \prreadout_{\mora' \mthen \morb'}(\mapc(\tupp{\prsteln{\mora}, \prsteln{\morb}}))
+        = \prreadout_{\morb'}(\mapc_2(\prsteln{\morb}))
+        = \prreadout_{\morb}(\prsteln{\morb})
+        = \prreadout_{\morab}(\tupp{\prsteln{\mora}, \prsteln{\morb}}).
+    \end{equation}
+    Hence $\stylemorph{[} \morab \stylemorph{]} = \stylemorph{[} \mora' \mthen \morb' \stylemorph{]}$.
+
+    For associativity, let $\mora$, $\morb$, and $\morc$ be three composable Moore machines.
+    The machines $(\morab) \mthen \morc$ and $\mora \mthen (\morb \mthen \morc)$ have the same inputs and outputs, and the re-bracketing function \cref{eq:assoc-fails2} between their state spaces is \SY{bijective}.
+    It maps the initial state $\tupp{\tupp{\prstart_{\mora}, \prstart_{\morb}}, \prstart_{\morc}}$ to the initial state $\tupp{\prstart_{\mora}, \tupp{\prstart_{\morb}, \prstart_{\morc}}}$.
+    Unfolding the definition \cref{eq:moore-comp-naive-2} twice, the dynamics of $(\morab) \mthen \morc$ maps an input $\prinel$ and a state $\tupp{ \tupp{\prsteln{\mora}, \prsteln{\morb}}, \prsteln{\morc} }$ to
+    \begin{equation}
+        \tupp{ \tupp{\prdyn_{\mora} (\prinel, \prsteln{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(\prsteln{\mora}), \prsteln{\morb})}, \prdyn_{\morc}(\prreadout_{\morb}(\prsteln{\morb}), \prsteln{\morc}) },
+    \end{equation}
+    while the dynamics of $\mora \mthen (\morb \mthen \morc)$ maps $\prinel$ and the state $\tupp{\prsteln{\mora}, \tupp{\prsteln{\morb}, \prsteln{\morc}} }$ to
+    \begin{equation}
+        \tupp{ \prdyn_{\mora} (\prinel, \prsteln{\mora}), \tupp{\prdyn_{\morb}(\prreadout_{\mora}(\prsteln{\mora}), \prsteln{\morb}), \prdyn_{\morc}(\prreadout_{\morb}(\prsteln{\morb}), \prsteln{\morc})} }.
+    \end{equation}
+    These two states correspond to each other under re-bracketing.
+    Finally, both read-outs return $\prreadout_{\morc}(\prsteln{\morc})$.
+    So the re-bracketing function is an isomorphism of Moore machines, and therefore
+    \begin{equation}
+        (\equivmora \mthen \equivmorb) \mthen \equivmorc = \equivmora \mthen (\equivmorb \mthen \equivmorc).
+    \end{equation}
+\end{proof}
+
+\begin{remark}
+    \label{rem:MooreMod-no-identities}
+    We have been careful to say \SY{semicategory}, and not category: in general, $\MooreMod$ does not have identity morphisms.
+    The reason is that the read-out of a Moore machine only depends on its state, and not on its current input.
+    An identity morphism for a set $\prout$ would have to be represented by a machine $\more$ which outputs exactly what it receives as input, with the property that $\mora \mthen \more$ is isomorphic to $\mora$ for every machine $\mora$ with set of outputs $\prout$.
+    If $\mora$ has finitely many states, this forces $\more$ to have exactly one state, because the state space of $\mora \mthen \more$ is $\prst_{\mora} \cartprod \prst_{\more}$.
+    But then the read-out of $\more$, and hence the read-out of $\mora \mthen \more$, always returns the same output, while the read-out of $\mora$ need not do so as soon as $\prout$ has at least two elements.
+
+    We will see next that \emph{Mealy machines}, whose read-out may also depend on the current input, do not have this defect: up to isomorphism, they form a category.
+\end{remark}
 
 
 \subsection{Mealy machines}
 
-\todotext{This section needs more explanations.}
+Mealy machines (\cref{def:mealy-machine}) differ from \SY{Moore machines} in that their read-out may depend not only on the current state, but also on the current input.
+They can be composed in series in the same way as \SY{Moore machines}: the output of the first machine is the input of the second, and the state space of the composite is the \SY{cartesian product} of the two state spaces.
+Consequently, we meet the same issue as before: this composition is \SY{associative} only up to re-bracketing of states, and not on the nose.
+We resolve it in the same way, by considering Mealy machines up to isomorphism.
+
+Recall from \cref{sec:homomorphisms-mealy} that a homomorphism of Mealy machines, between two machines with the same set of inputs and the same set of outputs, is a function between their state spaces which is compatible with the respective initial states, dynamics, and read-outs (\cref{def:mealy-machine-homomorphism}).
+As for \SY{Moore machines}, when this function is \SY{bijective} we call it an \emph{isomorphism of Mealy machines}, and we say that two Mealy machines are \emph{isomorphic} if there is an isomorphism from one to the other.
+
+For every set $\prin$ of inputs and every set $\prout$ of outputs, we now declare two Mealy machines from $\prin$ to $\prout$ -- that is, two machines with the same source and the same target -- to be equivalent if, and only if, they are isomorphic.
+For the same reasons as in the case of \SY{Moore machines}, this is an \SY{equivalence relation}.
+We write $\equivmora$ for the equivalence class of a Mealy machine $\mora$.
+
+There is one important difference to the case of \SY{Moore machines}: this time we obtain a category, and not only a \SY{semicategory}.
+Since the read-out of a Mealy machine may depend on the current input, there are Mealy machines which pass their input straight through to their output, and these provide the identity morphisms that were missing in \cref{rem:MooreMod-no-identities}.
 
 \begin{ctdefinition}[Category $\MealyMod$]
 \label{def:MealyCat}
 The category $\MealyMod$ is:
 \begin{enumerate}
     \item \emph{Objects}: All sets.
-    \item \emph{Morphisms}: A morphism in $\MealyMod$ from a set~$\setA$ to a set~$\setB$ is an equivalence class of Mealy machines from $\setA$ to $\setB$.
-    
-    ~$\tupp{\prstart, \prdyn, \prreadout}$, where~$\prstart \setin \setS$ is an initial state in some set~$\setS$ (for some non-fixed set~$\setS$, the \emph{state set}), $\prdyn \colon \setS \cartprod \setA \mto \setS$ is the \emph{dynamics} (or \emph{update}) function, and~$\prreadout \colon \setS \cartprod \setA \mto \setB$ is the \emph{readout} function.
-    \item \emph{Composition}: Given morphisms~$\equivmora \colon \setA \mto \setB$ and~$\equivmorb\colon \setB \mto \setC$ represented by the Mealy machines
+    \item \emph{Morphisms}: A morphism in $\MealyMod$ from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$ of Mealy machines from $\prin$ to $\prout$, that is, of tuples
+    \begin{equation}
+        \mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}
+    \end{equation}
+    where
+    \begin{itemize}
+    \item $\prin$, $\prst$, and $\prout$ are an input set, state set, and output set, respectively;
+    \item $\prdyn \colon \prin \cartprod \prst \sto \prst$ is the \emph{dynamics} (or \emph{update}) function;
+    \item $\prreadout \colon \prin \cartprod \prst \sto \prout$ is the \emph{read-out} function;
+    \item $\prstart \setin \prst$ is an initial state.
+    \end{itemize}
+    \item \emph{Composition}: Given morphisms $\equivmora$ and $\equivmorb$ represented by the Mealy machines
     \begin{equation}
         \begin{aligned}
-             & \mora = \tupp{\prstart_\mora, \prdyn_\mora, \prreadout_\mora} \\
-             & \morb = \tupp{\prstart_\morb, \prdyn_\morb, \prreadout_\morb},
+            \mora & = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}, \\
+            \morb & = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
         \end{aligned}
     \end{equation}
-    with state sets~$\setS_\mora$ and~$\setS_\morb$ respectively, their composition~$(\equivmora \mthen \equivmorb)\colon \setA \mto \setC$ is represented by the Mealy machine~$\mora \mthen \morb = \tupp{\prstart, \prdyn, \prreadout}$ with state set~$\setS_\mora \cartprod \setS_\morb$, where
+    with $\prout_{\mora} = \prin_{\morb}$, their composition $\equivmora \mthen \equivmorb$ is represented by the Mealy machine
     \begin{equation}
+        \morab = \tupp{\prin_{\mora},\ \prst_{\mora} \cartprod \prst_{\morb},\ \prout_{\morb},\ \prdyn_{\morab},\ \prreadout_{\morab},\ \prstart_{\morab}},
+    \end{equation}
+    where
+    \begin{equation}
+        \label{eq:mealy-composition}
         \begin{aligned}
-            \prstart &= \tup{\prstart_\mora, \prstart_\morb}, \\
-            \prdyn\bigl(\tup{s_\mora, s_\morb},\, a\bigr) &= \tup{\prdyn_\mora(s_\mora, a),\; \prdyn_\morb\bigl(s_\morb,\, \prreadout_\mora(s_\mora, a)\bigr)}, \\
-            \prreadout\bigl(\tup{s_\mora, s_\morb},\, a\bigr) &= \prreadout_\morb\bigl(s_\morb,\, \prreadout_\mora(s_\mora, a)\bigr).
+            \prstart_{\morab} &= \tupp{\prstart_{\mora}, \prstart_{\morb}}, \\
+            \prdyn_{\morab}\bigl(\prinel, \tupp{\prsteln{\mora}, \prsteln{\morb}}\bigr) &= \tupp{\prdyn_{\mora}(\prinel, \prsteln{\mora}),\; \prdyn_{\morb}\bigl(\prreadout_{\mora}(\prinel, \prsteln{\mora}),\, \prsteln{\morb}\bigr)}, \\
+            \prreadout_{\morab}\bigl(\prinel, \tupp{\prsteln{\mora}, \prsteln{\morb}}\bigr) &= \prreadout_{\morb}\bigl(\prreadout_{\mora}(\prinel, \prsteln{\mora}),\, \prsteln{\morb}\bigr).
         \end{aligned}
     \end{equation}
-    \item \emph{Identities}: the identity for a set~$\setA$ is the Mealy machine~$\tupp{\ast, \prdyn, \prreadout}$ with state set~$\{\ast\}$ (a singleton), where~$\prdyn(\ast, a) = \ \ast$ and~$\prreadout(\ast, a) = a$ for all~$a \setin \setA$.
+    \item \emph{Identities}: the identity for a set $\prin$ is represented by the Mealy machine
+    \begin{equation}
+        \tupp{\prin, \{\ast\}, \prin, \prdyn, \prreadout, \ast}
+    \end{equation}
+    whose state set $\{\ast\}$ is a singleton, where $\prdyn(\prinel, \ast) = \ast$ and $\prreadout(\prinel, \ast) = \prinel$ for all $\prinel \setin \prin$.
 \end{enumerate}
 \end{ctdefinition}
 
+\begin{remark}
+    \label{rem:MealyMod-category}
+    That \cref{def:MealyCat} does define a category is checked in the same way as in \cref{lem:MooreMod-semicategory}.
+    Composition is independent of the choice of representatives, because isomorphisms of the two factors combine into an isomorphism of the composites, and it is \SY{associative}, because re-bracketing of states is an isomorphism of Mealy machines.
 
-
+    For unitality, note that composing a Mealy machine $\mora$ having state set $\prst_{\mora}$ with an identity machine yields a machine with state set $\prst_{\mora} \cartprod \{\ast\}$ or $\{\ast\} \cartprod \prst_{\mora}$.
+    These sets are not equal to $\prst_{\mora}$, but the functions which forget the component $\ast$ are isomorphisms of Mealy machines to $\mora$.
+    So unitality, just like associativity, holds only because we work with equivalence classes.
+\end{remark}
