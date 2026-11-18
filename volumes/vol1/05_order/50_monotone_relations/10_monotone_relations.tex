@@ -221,6 +221,26 @@ Monotonicity of \relA does not correspond to monotonicity of $\phi_\relA$ on $\p
     Reversing the order on the source is exactly what makes the preorder relation itself, and more generally the constructions of \cref{sec:monrel-from-monotone-functions}, into monotone relations.
 \end{remark}
 
+The third description in \cref{lem:monrel-as-bool-map}, in which a monotone relation appears as a monotone function with values in $\Bool$, is the ``matrix point of view'' on monotone relations.
+It is used often enough that it deserves its own definition.
+
+\begin{ctdefinition}[Boolean profunctor]
+    \label{def:boolean-profunctor}
+    Given \SY{preorders} $\posA$ and $\posB$, a \maindef{Boolean profunctor} from $\posA$ to $\posB$ is:
+
+    \constit
+    \begin{enumerate}
+        \item A \SY{monotone function} of the form
+              \begin{equation}
+                  \label{eq:boolean-profunctor-as-monfun}
+                  \stylemorph{\phi} \colon \posAop \Ptimes \posB \mto \Bool.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+By \cref{lem:monrel-as-bool-map}, Boolean profunctors from $\posA$ to $\posB$ and monotone relations $\posA \profto \posB$ are two presentations of the same thing: a monotone relation $\relA$ gives the Boolean profunctor $\phi_\relA$, and a Boolean profunctor $\stylemorph{\phi}$ gives the monotone relation $\makeset{\tup{\posAel, \posBel} \mid \stylemorph{\phi}(\posAel, \posBel) = \true}$.
+The \SY{design problems} that we will study in \cref{def:design-problem} are Boolean profunctors between posets.
+
 \begin{example}[A monotone relation as a matrix]
     \label{exa:monrel-matrix}
     Let $\posA = \posB = \tup{\makeset{1, 2, 3}, \leq}$, and consider the monotone relation $\leq \colon \posA \profto \posB$ of \cref{exa:monrel-leq}.
@@ -320,6 +340,79 @@ We can also rephrase \cref{def:monotone-relation} entirely in the language of co
     So \cref{eq:monrel-relational} says exactly that condition \cref{eq:monrel-single-condition} holds, and by \cref{lem:monrel-single-condition} this is equivalent to \relA being monotone.
     Moreover, the reverse inclusion always holds: if $\inrel{\posAel}{\relA}{\posBel}$, then $\posAel \posAleq \posAel$ and $\posBel \posBleq \posBel$ by reflexivity, so $\inrel{\posAel}{((\posAleq \mthen \relA) \mthen \posBleq)}{\posBel}$.
 \end{proof}
+
+\paragraph{Composition as matrix multiplication}
+\label{sec:monrel-composition-matrix}
+From the ``matrix point of view'' of \cref{def:boolean-profunctor}, composing monotone relations is multiplying matrices.
+To see this, let $\monrelM \colon \posA \profto \posB$ and $\monrelN \colon \posB \profto \posC$ be monotone relations, and let $\phi_{\monrelM}$, $\phi_{\monrelN}$, and $\phi_{\monrelM \mthen \monrelN}$ be the Boolean profunctors which correspond to $\monrelM$, to $\monrelN$, and to their composite.
+
+\begin{lemma}
+    \label{lem:boolprof-composition-matrix}
+    For all $\posAel \setin \posAset$ and $\posCel \setin \posCset$,
+    \begin{equation}
+        \label{eq:boolprof-composition}
+        \phi_{\monrelM \mthen \monrelN}(\posAel, \posCel)
+        =
+        \bigvee_{\posBel \setin \posBset}
+        \phi_{\monrelM}(\posAel, \posBel) \booland \phi_{\monrelN}(\posBel, \posCel).
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    The left-hand side is $\true$ if and only if $\inrel{\posAel}{(\monrelM \mthen \monrelN)}{\posCel}$, that is, if and only if there exists $\posBel \setin \posBset$ with $\inrel{\posAel}{\monrelM}{\posBel}$ and $\inrel{\posBel}{\monrelN}{\posCel}$.
+    The right-hand side is $\true$ if and only if at least one of the terms $\phi_{\monrelM}(\posAel, \posBel) \booland \phi_{\monrelN}(\posBel, \posCel)$ is $\true$, which says the same.
+\end{proof}
+
+Compare \cref{eq:boolprof-composition} with the formula for the product of two matrices of numbers,
+\begin{equation}
+    (\mat{A}\mat{B})_{ik} = \sum_{j} \mat{A}_{ij} \cdot \mat{B}_{jk}.
+\end{equation}
+It is the same formula, with ``or'' in the role of addition and ``and'' in the role of multiplication: the entry of the composite in row $\posAel$ and column $\posCel$ is obtained by going through row $\posAel$ of the first matrix and column $\posCel$ of the second one, combining matching entries with $\booland$, and then combining all the results with $\boolor$.
+So we can take \cref{eq:boolprof-composition} as the definition of the composition of two Boolean profunctors; by \cref{lem:monrel-composition}, the result is again a Boolean profunctor.
+
+The matrix of the preorder relation $\posAleq$, which plays the role of the identity (\cref{lem:monrel-leq-neutral}), is not the familiar identity matrix with entries $\true$ only on the diagonal: its entry in row $\posAel$ and column $\posAel'$ is $\true$ whenever $\posAel \posAleq \posAel'$.
+Nevertheless, multiplying a matrix of a monotone relation by it, from either side, does not change the matrix.
+
+\begin{example}[Composing two monotone relations as matrices]
+    \label{exa:monrel-matrix-multiplication}
+    Let $\posA = \posC = \tup{\makeset{1, 2}, \leq}$ and $\posB = \tup{\makeset{1, 2, 3}, \leq}$, and consider the monotone relations $\monrelM \colon \posA \profto \posB$ and $\monrelN \colon \posB \profto \posC$ given by
+    \begin{equation}
+        \inrel{\posAel}{\monrelM}{\posBel} \ \text{ if and only if } \ 2 \posAel \leq \posBel,
+        \qquad \qquad
+        \inrel{\posBel}{\monrelN}{\posCel} \ \text{ if and only if } \ \posBel \leq \posCel + 1.
+    \end{equation}
+    To multiply their matrices, the elements of $\posB$ must be listed in the same order for the columns of the first matrix and for the rows of the second.
+    We therefore list all rows and all columns in increasing order here (in contrast to \cref{exa:monrel-matrix}), and we again write $1$ for $\true$ and $0$ for $\false$:
+    \begin{equation}
+        \begin{array}{c|ccc}
+            \monrelM & 1 & 2 & 3 \\ \hline
+            1        & 0 & 1 & 1 \\
+            2        & 0 & 0 & 0
+        \end{array}
+        \qquad \qquad
+        \begin{array}{c|cc}
+            \monrelN & 1 & 2 \\ \hline
+            1        & 1 & 1 \\
+            2        & 1 & 1 \\
+            3        & 0 & 1
+        \end{array}
+        \qquad \qquad
+        \begin{array}{c|cc}
+            \monrelM \mthen \monrelN & 1 & 2 \\ \hline
+            1                        & 1 & 1 \\
+            2                        & 0 & 0
+        \end{array}
+    \end{equation}
+    For instance, the entry of the composite in row $1$ and column $1$ is
+    \begin{equation}
+        (0 \booland 1) \boolor (1 \booland 1) \boolor (1 \booland 0) = 0 \boolor 1 \boolor 0 = 1,
+    \end{equation}
+    and indeed $\inrel{1}{(\monrelM \mthen \monrelN)}{1}$ holds, with $\posBel = 2$ as the element in the middle.
+
+    If we multiplied the two matrices as matrices of numbers instead, we would obtain the entries $1$ and $2$ in the first row: the product then counts \emph{how many} elements $\posBel$ in the middle there are.
+    The Boolean product only records \emph{whether} there is one.
+\end{example}
+
+We will meet \cref{eq:boolprof-composition} again as the formula for the series composition of design problems (\cref{def:dp-series-composition}).
 
 \subsection{From monotone functions to monotone relations}
 \label{sec:monrel-from-monotone-functions}
