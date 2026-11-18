@@ -1470,18 +1470,39 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
     Two Mealy machines can be run side by side: the combined machine receives a pair of inputs, one for each machine, each machine updates its own state, and the combined machine returns the pair of outputs.
     We now turn this into a strict monoidal structure.
 
-    For this, we need to be careful with the objects.
-    The objects of $\MealyMod$ are all sets, and the \SY{cartesian product} of sets is not associative on the nose.
-    As for $\SetL$ (\cref{lem:SetL-strict-monoidal}), we therefore only use the sets which are objects of $\SetL$: we let $\MealyModL$ denote the \SY{full subcategory} of $\MealyMod$ whose objects are the objects of $\SetL$.
-    A morphism of $\MealyModL$ from $\prin$ to $\prout$ is thus still an equivalence class $\equivmora$ of Mealy machines $\mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$, where the set $\prin$ of inputs and the set $\prout$ of outputs are objects of $\SetL$, while the set $\prst$ of states may be any set.
+    For this, we need to be careful with the sets involved.
+    In $\MealyMod$, the sets of inputs, states, and outputs are arbitrary sets, and they are combined using the \SY{cartesian product}, which is not associative on the nose.
+    As for $\SetL$ (\cref{lem:SetL-strict-monoidal}), we therefore let all three kinds of sets live in $\SetL$, and we combine them using the multiplication $\cprod$ of $\SetL$.
+
+    We define the category $\MealyModL$ as follows.
+    Its objects are the objects of $\SetL$.
+    A morphism from $\prin$ to $\prout$ is an equivalence class $\equivmora$ of Mealy machines
+    \begin{equation}
+        \mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart},
+    \end{equation}
+    in which the set $\prin$ of inputs, the set $\prst$ of states, and the set $\prout$ of outputs are all objects of $\SetL$, the dynamics and the read-out are morphisms
+    \begin{equation}
+        \prdyn \colon \prin \cprod \prst \mtoin\SetL \prst
+        \qqand
+        \prreadout \colon \prin \cprod \prst \mtoin\SetL \prout
+    \end{equation}
+    of $\SetL$, and $\prstart \setin \prst$ is the initial state.
+    As before, two such machines with the same inputs and outputs are equivalent if they are isomorphic, that is, if there is a bijection between their sets of states which is compatible with the initial states, the dynamics, and the read-outs.
+
+    Composition is defined as in $\MealyMod$ (\cref{eq:mealy-composition}), with $\cprod$ in place of the \SY{cartesian product}: given Mealy machines $\mora$ and $\morb$ with $\prout_{\mora} = \prin_{\morb}$, the machine $\morab$ has the set of states $\prst_{\mora} \cprod \prst_{\morb}$, the initial state $\maketupconcat{\prstart_{\mora}, \prstart_{\morb}}$, and
+    \begin{equation}
+        \label{eq:mealyL-composition}
+        \begin{aligned}
+            \prdyn_{\morab}\bigl(\maketupconcat{\prinel, \prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \maketupconcat{\prdyn_{\mora}(\maketupconcat{\prinel, \prsteln{\mora}}),\ \prdyn_{\morb}\bigl(\maketupconcat{\prreadout_{\mora}(\maketupconcat{\prinel, \prsteln{\mora}}), \prsteln{\morb}}\bigr)}, \\
+            \prreadout_{\morab}\bigl(\maketupconcat{\prinel, \prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \prreadout_{\morb}\bigl(\maketupconcat{\prreadout_{\mora}(\maketupconcat{\prinel, \prsteln{\mora}}), \prsteln{\morb}}\bigr).
+        \end{aligned}
+    \end{equation}
+    The identity morphism of $\prin$ is represented by the machine with the set of states $\emptycobj$, whose read-out returns its input.
+    (Every set of states is in bijection with an object of $\SetL$, namely with the set of tuples of length one over it. Hence $\MealyModL$ can be identified with the \SY{full subcategory} of $\MealyMod$ whose objects are the objects of $\SetL$.)
 
     The following defines a strict monoidal structure on $\MealyModL$.
 
-    On objects, the monoidal product is the one of $\SetL$,
-    \begin{equation}
-        \prin \mtimescat \prin' \definedas \makeset{\maketupconcat{\prinel,\prinel'} \mid \prinel \setin \prin, \prinel' \setin \prin'},
-    \end{equation}
-    and the monoidal unit is $\idmoncat \definedas \makeset{\tup{}}$.
+    On objects, the monoidal product is the one of $\SetL$, that is, $\prin \mtimescatob \prin' \definedas \prin \cprod \prin'$, and the monoidal unit is $\idmoncat \definedas \emptycobj$.
 
     On morphisms, given morphisms $\equivmora$ and $\equivmorb$ represented by Mealy machines
     \begin{equation}
@@ -1490,36 +1511,40 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
             \morb & = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
         \end{aligned}
     \end{equation}
-    we define $\equivmora \mtimescat \equivmorb$ to be the equivalence class of the Mealy machine
+    we define $\equivmora \mtimescatmor \equivmorb$ to be the equivalence class of the Mealy machine
     \begin{equation}
-        \mora \mtimescat \morb \definedas \tupp{\prin_{\mora} \mtimescat \prin_{\morb},\ \prst_{\mora} \cartprod \prst_{\morb},\ \prout_{\mora} \mtimescat \prout_{\morb},\ \prdyn,\ \prreadout,\ \tup{\prstart_{\mora}, \prstart_{\morb}}},
+        \mora \mtimescatmor \morb \definedas \tupp{\prin_{\mora} \cprod \prin_{\morb},\ \prst_{\mora} \cprod \prst_{\morb},\ \prout_{\mora} \cprod \prout_{\morb},\ \prdyn,\ \prreadout,\ \maketupconcat{\prstart_{\mora}, \prstart_{\morb}}},
     \end{equation}
     whose dynamics and read-out are
     \begin{equation}
         \label{eq:mealy-stacking}
         \begin{aligned}
-            \prdyn\bigl(\maketupconcat{\prineln{\mora},\prineln{\morb}}, \tup{\prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \tup{\prdyn_{\mora}(\prineln{\mora}, \prsteln{\mora}),\ \prdyn_{\morb}(\prineln{\morb}, \prsteln{\morb})}, \\
-            \prreadout\bigl(\maketupconcat{\prineln{\mora},\prineln{\morb}}, \tup{\prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \maketupconcat{\prreadout_{\mora}(\prineln{\mora}, \prsteln{\mora}),\prreadout_{\morb}(\prineln{\morb}, \prsteln{\morb})}.
+            \prdyn\bigl(\maketupconcat{\prineln{\mora},\prineln{\morb},\prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \maketupconcat{\prdyn_{\mora}(\maketupconcat{\prineln{\mora}, \prsteln{\mora}}),\ \prdyn_{\morb}(\maketupconcat{\prineln{\morb}, \prsteln{\morb}})}, \\
+            \prreadout\bigl(\maketupconcat{\prineln{\mora},\prineln{\morb},\prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \maketupconcat{\prreadout_{\mora}(\maketupconcat{\prineln{\mora}, \prsteln{\mora}}),\ \prreadout_{\morb}(\maketupconcat{\prineln{\morb}, \prsteln{\morb}})}.
         \end{aligned}
     \end{equation}
-    Note the two different products: for the inputs and the outputs, which are the objects, we use the monoidal product of $\SetL$, while for the states we simply use the \SY{cartesian product}.
+    This does not depend on the choice of representatives: if $\mapc_1$ is an isomorphism of Mealy machines from $\mora$ to $\mora'$, and $\mapc_2$ one from $\morb$ to $\morb'$, then $\maketupconcat{\prsteln{\mora}, \prsteln{\morb}} \mapsto \maketupconcat{\mapc_1(\prsteln{\mora}), \mapc_2(\prsteln{\morb})}$ is one from $\mora \mtimescatmor \morb$ to $\mora' \mtimescatmor \morb'$.
 
-    The reason why this is enough is that the states are only determined up to isomorphism anyway.
-    First, the definition does not depend on the choice of representatives: if $\mapc_1$ is an isomorphism of Mealy machines from $\mora$ to $\mora'$, and $\mapc_2$ one from $\morb$ to $\morb'$, then $\tup{\prsteln{\mora}, \prsteln{\morb}} \mapsto \tup{\mapc_1(\prsteln{\mora}), \mapc_2(\prsteln{\morb})}$ is one from $\mora \mtimescat \morb$ to $\mora' \mtimescat \morb'$.
-    Then, for each of the conditions in \cref{def:strict-monoidal-cat}, the Mealy machines on the two sides have the same inputs and the same outputs, since the monoidal product of $\SetL$ is strict, and their sets of states differ only by an evident bijection, which is an isomorphism of Mealy machines:
+    Let us go through the conditions of \cref{def:strict-monoidal-cat}.
+    Since the sets of states now live in $\SetL$ as well, most of them hold on the nose, already for the machines themselves:
     \begin{itemize}
-        \item Functoriality: the machines $(\mora \mthen \morc) \mtimescat (\morb \mthen \mord)$ and $(\mora \mtimescat \morb) \mthen (\morc \mtimescat \mord)$ have the sets of states
+        \item Associativity: the machines $(\mora \mtimescatmor \morb) \mtimescatmor \morc$ and $\mora \mtimescatmor (\morb \mtimescatmor \morc)$ are equal.
+              In particular, they have the same set of states, since $(\prst_{\mora} \cprod \prst_{\morb}) \cprod \prst_{\morc} = \prst_{\mora} \cprod (\prst_{\morb} \cprod \prst_{\morc})$.
+        \item Neutrality of the unit: the machine $\mora \mtimescatmor \catid_\idmoncat$ is equal to $\mora$, since $\prst_{\mora} \cprod \emptycobj = \prst_{\mora}$; similarly for $\catid_\idmoncat \mtimescatmor \mora$.
+        \item Functoriality: stacking two identity machines gives an identity machine, since $\emptycobj \cprod \emptycobj = \emptycobj$.
+              However, the machines $(\mora \mthen \morc) \mtimescatmor (\morb \mthen \mord)$ and $(\mora \mtimescatmor \morb) \mthen (\morc \mtimescatmor \mord)$ are \emph{not} equal: their sets of states are
               \begin{equation}
-                  (\prst_{\mora} \cartprod \prst_{\morc}) \cartprod (\prst_{\morb} \cartprod \prst_{\mord})
+                  \label{eq:mealyL-interchange-states}
+                  \prst_{\mora} \cprod \prst_{\morc} \cprod \prst_{\morb} \cprod \prst_{\mord}
                   \qqand
-                  (\prst_{\mora} \cartprod \prst_{\morb}) \cartprod (\prst_{\morc} \cartprod \prst_{\mord}),
+                  \prst_{\mora} \cprod \prst_{\morb} \cprod \prst_{\morc} \cprod \prst_{\mord},
               \end{equation}
-              respectively, and the bijection exchanges the two middle components.
-              Similarly, stacking two identity machines gives a machine with the set of states $\makeset{\ast} \cartprod \makeset{\ast}$ instead of $\makeset{\ast}$.
-        \item Associativity: the machines $(\mora \mtimescat \morb) \mtimescat \morc$ and $\mora \mtimescat (\morb \mtimescat \morc)$ have the sets of states $(\prst_{\mora} \cartprod \prst_{\morb}) \cartprod \prst_{\morc}$ and $\prst_{\mora} \cartprod (\prst_{\morb} \cartprod \prst_{\morc})$, and the bijection re-brackets.
-        \item Neutrality of the unit: the machine $\mora \mtimescat \catid_\idmoncat$ has the set of states $\prst_{\mora} \cartprod \makeset{\ast}$, and the bijection forgets the component $\ast$; similarly for $\catid_\idmoncat \mtimescat \mora$.
+              respectively, in which the states of $\morb$ and of $\morc$ appear in the opposite order.
+              The bijection which exchanges the two middle components is an isomorphism of Mealy machines between them, and so the two machines represent the same morphism of $\MealyModL$.
     \end{itemize}
-    In each case the two machines are isomorphic, so they represent the same morphism of $\MealyModL$.
+    So the only condition for which we really need to pass to equivalence classes is the compatibility of the monoidal product with composition.
+    We will meet exactly the same phenomenon for LTI systems in \cref{exa:LTI-stacking-not-functorial} and \cref{exa:LTI-quotient-strict-monoidal}.
+    (For the same reason, composition in $\MealyModL$ is associative and unital already for the machines themselves.)
 \end{example}
 
 \begin{example}[Stacking of LTI systems is not functorial]
