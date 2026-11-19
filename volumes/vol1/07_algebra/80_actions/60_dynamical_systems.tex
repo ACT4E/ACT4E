@@ -373,6 +373,7 @@ We first consider the discrete-time version, and then the continuous-time versio
     \constit
     \begin{enumerate}
         \item Real \SY{vector spaces} $\prin=\reals^l$ (input space), $\prout=\reals^m$ (output space), and $\prst=\reals^n$ (state space);
+        \item An \emph{initial state} $\mat{x}_0 \setin \prst$;
         \item Real matrices $\mat{A}$, $\mat{B}$, $\mat{C}$, $\mat{D}$ of dimensions $\matdim{n}{n}$, $\matdim{n}{l}$, $\matdim{m}{n}$, and $\matdim{m}{l}$, respectively, specifying a system of equations of the form
               \begin{equation}
                   \label{eq:LTI-discrete-equations}
@@ -381,12 +382,11 @@ We first consider the discrete-time version, and then the continuous-time versio
                       \mat{y}_k     & = \mat{C}\mat{x}_k + \mat{D}\mat{u}_k,
                   \end{aligned}
               \end{equation}
-              where $k \setin \natnumbers$, $\mat{u}_k \setin \prin$, $\mat{y}_k \setin \prout$, $\mat{x}_k \setin \prst$;
-        \item An \emph{initial state} $\mat{x}_0 \setin \prst$.
+              where $k \setin \natnumbers$, $\mat{u}_k \setin \prin$, $\mat{y}_k \setin \prout$, $\mat{x}_k \setin \prst$.
     \end{enumerate}
 \end{definition}
 
-We write such a system compactly as a tuple $\tupp{\mat{A}, \mat{B}, \mat{C}, \mat{D}, \mat{x}_0}$.
+We write such a system compactly as a tuple $\tupp{\mat{x}_0, \mat{A}, \mat{B}, \mat{C}, \mat{D}}$.
 Given a sequence $\mat{u}_0, \mat{u}_1, \mat{u}_2, \dots$ of inputs, the equations \cref{eq:LTI-discrete-equations} determine, step by step, the sequence of states $\mat{x}_0, \mat{x}_1, \mat{x}_2, \dots$ and the sequence of outputs $\mat{y}_0, \mat{y}_1, \mat{y}_2, \dots$; explicitly,
 \begin{equation}
     \mat{x}_k = \mat{A}^k \mat{x}_0 + \sum_{i=0}^{k-1} \mat{A}^{k-1-i} \mat{B} \mat{u}_i.
@@ -412,13 +412,13 @@ With inputs, the system has the same structure as a \emph{Mealy machine} (\cref{
     \constit
     \begin{enumerate}
         \item Real \SY{vector spaces} $\prin=\reals^l$ (input space), $\prout=\reals^m$ (output space), and $\prst=\reals^n$ (state space);
+        \item An \emph{initial state} $\prstart\setin \prst$;
         \item Real matrices $\mat{A}$, $\mat{B}$, $\mat{C}$, $\mat{D}$ of appropriate dimension, specifying a system of equations of the form
               \begin{align}
                   \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn-equation} \\
                   \mat{y}(t)       & = \mat{C}\mat{x}(t) + \mat{D}\mat{u}(t) \label{eq:LTI-system-ro-equation},
               \end{align}
-              where $t \setin \nonNegReals$, $\mat{u}(t) \setin \prin$, $\mat{y}(t) \setin \prout$, $\mat{x}(t) \setin \prst$;
-        \item An \emph{initial state} $\prstart\setin \prst$.
+              where $t \setin \nonNegReals$, $\mat{u}(t) \setin \prin$, $\mat{y}(t) \setin \prout$, $\mat{x}(t) \setin \prst$.
     \end{enumerate}
 \end{definition}
 
@@ -446,3 +446,78 @@ and \cref{eq:LTI-system-ro-equation} as defining a read-out function
 \end{equation}
 
 In contrast to the discrete-time case (\cref{def:LTI-discrete}), here the inputs $\mat{u}(t)$ are functions of continuous time (``signals''), and the dynamics $\tup{u, x} \mapsto \mat{A}x + \mat{B}u$ specifies the \emph{rate of change} of the state, not the next state.
+
+As in the discrete-time case, we write a continuous-time LTI system compactly as a tuple $\genericlti{}$.
+
+In both cases, the matrix $\mat{D}$ is called the \emph{feedthrough term}: it describes the direct influence of the current input on the current output.
+
+\begin{definition}[Proper LTI system]
+    \label{def:prop_LTI_syst}
+    We will call a (discrete-time or continuous-time) LTI system $\genericlti{}$ \emph{proper} if the matrix $\mat{D}$ is the zero matrix (understood as having the appropriate dimensions).
+\end{definition}
+
+In a proper LTI system, the input influences the output only through the state.
+For instance, the savings account of \cref{exa:savings-account} is proper.
+(In the control theory literature, systems with $\mat{D} = \mat{0}$ are often called \emph{strictly proper}.)
+
+\begin{remark}
+    When using state-space LTI systems as models, it is typical that the equations \cref{eq:LTI-system-dyn-equation} are chosen using physical laws and first principles reasoning, while the matrices $\mat{C}$ and $\mat{D}$ in \cref{eq:LTI-system-ro-equation} are rather chosen based on what information from our model is explicitly relevant or accessible.
+\end{remark}
+
+\begin{example}[A mass between two springs]
+    \label{exa:sping-mass-lti}
+    Consider a mass $m$ lying on a frictionless surface, and attached to two springs as depicted in \cref{fig:LTI-example_two-springs-one-mass}.
+
+    \begin{figure}[h]
+        \centering
+        \includesag{mass-spring-lti}
+        %\includegraphics[width=0.4\linewidth]{LTI-example_two-springs-one-mass}
+        \caption{A mass attached to two springs on a frictionless surface.}
+        \label{fig:LTI-example_two-springs-one-mass}
+    \end{figure}
+
+    The coordinate $q(t)$ describes position of the mass along one horizontal dimension, $F$ denotes a force that is applied to $m$ in that horizontal direction, and $k_1$ and $k_2$ are the spring constants of the respective springs.
+
+    The dynamics of the position coordinate $q$ as a function of time is described by the differential equation
+    \begin{equation}\label{eq:LTI-exa-double-spring-equation}
+        (k_1 + k_2)q + m \ddot q = F.
+    \end{equation}
+
+    We may rewrite this as a proper continuous-time LTI system in a state-space representation (\cref{def:LTI_syst_first_time}, \cref{def:prop_LTI_syst}), with the force $F$ as input, by choosing the state-variable to be
+    \begin{equation}\label{eq:LTI-exa-double-spring-state}
+        \mat{x} =
+        \begin{bmatrix}
+            q(t) \\
+            \dot{q}(t)
+        \end{bmatrix}.
+    \end{equation}
+    Then
+    \begin{equation}\label{eq:LTI-exa-double-spring-dynamics}
+        \dot{\mat{x}} =
+        \begin{bmatrix}
+            0                       & 1 \\
+            \tfrac{-(k_1 + k_2)}{m} & 0
+        \end{bmatrix}
+        \mat{x}(t) +
+        \begin{bmatrix}
+            0 \\
+            \tfrac{1}{m}
+        \end{bmatrix}
+        F
+    \end{equation}
+    describes the dynamics, and as output we might choose
+    \begin{equation}\label{eq:LTI-exa-double-spring-readout}
+        \mat{y} =
+        \begin{bmatrix}
+            1 & 0
+        \end{bmatrix}
+        \mat{x}(t) +
+        \begin{bmatrix}
+            0
+        \end{bmatrix}
+        F.
+    \end{equation}
+    With this choice, the output is the position of the mass; the system is proper, since the force does not influence the position instantaneously.
+\end{example}
+
+\todotext{J: the above example is Example 4.3.1 from the Polderman Willems books ``Introduction to mathematical systems theory''}

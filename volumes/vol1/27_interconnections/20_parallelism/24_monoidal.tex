@@ -50,81 +50,1906 @@
 
 \todotext{@JL: make/include more examples of strict monoidal categories... there are quite a few nice ones i think... scour Baez materials...}
 
-\subsection{Non-examples}
+\subsection{What can fail}
 
 
 \subsection{Basic examples}
 
+\begin{example}[Real matrices between coordinate spaces]
+    \label{exa:MatR-strict-monoidal}
+    Recall the category $\MatR$ of real matrices (\cref{def:MatR}): its objects are the real coordinate spaces $\reals^n$, for $n \setin \natnumbers$, a morphism $\matmor{A} \colon \reals^k \mto \reals^m$ is an $m \times k$ real matrix, and composition is given by the matrix product, $\matmor{A} \mthen \matmor{B} = \matmor{B}\matmor{A}$.
 
-\begin{example}
-Recall the category $\SetL$ which is the full subcategory of $\Set$ whose objects are sets which are either the empty set or are of the form
-\begin{equation}
-\makeset{ \tup{\elna{1}, \elna{2}, \ldots, \elna{n}} \mid \elna{1} \setin \setAn{1}, \elna{2} \setin \setAn{2}, \ldots, \elna{n} \setin \setAn{n} }
-\end{equation}
-for some natural number $n \geq 0$ and non-empty sets $\setAn{1}, \setAn{2}, \ldots, \setAn{n}$. The case $n = 0$ gives us a singleton set 
-\begin{equation}
-\makeset{\tup{}}
-\end{equation}
-whose sole element is the empty tuple.
+    The following defines a strict monoidal structure on $\MatR$.
 
+    On objects, the monoidal product sums the dimensions:
+    \begin{equation}
+        \reals^k \mtimescat \reals^l \definedas \reals^{k+l}.
+    \end{equation}
+    On morphisms, given $\matmor{A} \colon \reals^k \mto \reals^m$ and $\matmor{B} \colon \reals^l \mto \reals^n$, we define $\matmor{A} \mtimescat \matmor{B} \colon \reals^{k+l} \mto \reals^{m+n}$ to be the block-diagonal matrix
+    \begin{equation}
+        \label{eq:MatR-monoidal-product}
+        \matmor{A} \mtimescat \matmor{B} \definedas
+        \begin{bmatrix}
+            \matmor{A} & \mat{0}    \\
+            \mat{0}    & \matmor{B}
+        \end{bmatrix},
+    \end{equation}
+    which has $m + n$ rows and $k + l$ columns.
+    In terms of the linear functions which the matrices encode, this is parallel composition in a very literal sense: if we stack a vector $\vectob{v} \setin \reals^k$ on top of a vector $\vectob{w} \setin \reals^l$, then
+    \begin{equation}
+        \begin{bmatrix}
+            \matmor{A} & \mat{0}    \\
+            \mat{0}    & \matmor{B}
+        \end{bmatrix}
+        \begin{bmatrix}
+            \vectob{v} \\
+            \vectob{w}
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            \matmor{A}\vectob{v} \\
+            \matmor{B}\vectob{w}
+        \end{bmatrix},
+    \end{equation}
+    so $\matmor{A}$ acts on the upper part, $\matmor{B}$ acts on the lower part, and the two do not interact.
 
-The following defines a strict monoidal structure on $\SetL$. 
+    The monoidal unit is $\idmoncat \definedas \reals^0$.
+    Its identity morphism is the matrix with zero rows and zero columns.
 
-For the monoidal product we define, on objects, 
-\begin{equation}
-\Obja \mtimescat \Objb \definedas \makeset{\maketupconcat{\ela,\elb} \mid \ela \in \Obja, \elb \in \Objb}
-\end{equation}
-On morphisms, given $\mora \colon \Obja \to \Objc$ and $\morb \colon \Objb \to \Objd$, we define $\mora \mtimescat \morb$ as
-\begin{equation}
-\defmap{\mora \mtimescat \morb}{\Obja \mtimescat \Objb}{\mto}{\Objc \mtimescat \Objd}{\maketupconcat{\ela,\elb}}{\maketupconcat{\mora(\ela),\morb(\elb)}}
-\end{equation}
-
-
-We define the monoidal unit to be $\idmoncat \definedas \makeset{\tup{}}$.
-
+    Let us check the conditions.
+    The monoidal product is a functor: for matrices $\matmor{A} \colon \reals^k \mto \reals^m$, $\matmor{C} \colon \reals^m \mto \reals^p$, $\matmor{B} \colon \reals^l \mto \reals^n$, and $\matmor{D} \colon \reals^n \mto \reals^q$, multiplying block-diagonal matrices block by block gives
+    \begin{equation}
+        (\matmor{A} \mtimescat \matmor{B}) \mthen (\matmor{C} \mtimescat \matmor{D})
+        =
+        \begin{bmatrix}
+            \matmor{C} & \mat{0}    \\
+            \mat{0}    & \matmor{D}
+        \end{bmatrix}
+        \begin{bmatrix}
+            \matmor{A} & \mat{0}    \\
+            \mat{0}    & \matmor{B}
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            \matmor{C}\matmor{A} & \mat{0}              \\
+            \mat{0}              & \matmor{D}\matmor{B}
+        \end{bmatrix}
+        =
+        (\matmor{A} \mthen \matmor{C}) \mtimescat (\matmor{B} \mthen \matmor{D}),
+    \end{equation}
+    and the block-diagonal matrix built from two identity matrices is an identity matrix, $\idmat_k \mtimescat \idmat_l = \idmat_{k+l}$.
+    The monoidal product is associative on objects because addition of natural numbers is, $\reals^{(k+l)+p} = \reals^{k+(l+p)}$, and it is associative on morphisms because both ways of bracketing give the same block-diagonal matrix:
+    \begin{equation}
+        (\matmor{A} \mtimescat \matmor{B}) \mtimescat \matmor{C}
+        =
+        \begin{bmatrix}
+            \matmor{A} & \mat{0}    & \mat{0}    \\
+            \mat{0}    & \matmor{B} & \mat{0}    \\
+            \mat{0}    & \mat{0}    & \matmor{C}
+        \end{bmatrix}
+        =
+        \matmor{A} \mtimescat (\matmor{B} \mtimescat \matmor{C}).
+    \end{equation}
+    Finally, the monoidal unit is neutral on objects, since $\reals^{k+0} = \reals^k = \reals^{0+k}$, and on morphisms, since adding a block with zero rows and zero columns to a matrix does not change it.
 \end{example}
+
+\begin{remark}
+    \label{rem:LinRel-strict-monoidal}
+    There is a category of real \emph{linear relations} which is a strict monoidal category in a very similar way.
+    Its objects are again the coordinate spaces $\reals^n$, but a morphism from $\reals^k$ to $\reals^m$ is now a linear subspace of $\reals^{k+m}$, thought of as a relation between vectors in $\reals^k$ and vectors in $\reals^m$, and morphisms are composed like relations.
+    The monoidal product again sums the dimensions on objects, and it places two linear relations side by side, just as \cref{eq:MatR-monoidal-product} does for matrices.
+    We do not spell out the details here; see also \cref{rem:dimension-trick}.
+\end{remark}
+
+\subsection{Examples where the objects are natural numbers}
+\label{sec:strict-monoidal-natural-numbers}
+
+In many strict monoidal categories, the objects are simply the natural numbers, which count how many wires of a single kind there are.
+In all the examples of this subsection, the monoidal product on objects is addition of natural numbers, and the monoidal unit is $0 \setin \natnumbers$.
+Addition is associative and has $0$ as neutral element, so the conditions on the level of objects in \cref{def:strict-monoidal-cat} hold for free, and an example is specified by saying what the morphisms are, how they are composed, and what their monoidal product is.
+
+Some of the strict monoidal categories of this kind are ``stand-ins'' for larger and more complicated categories.
+The idea is that the number $n$ stands for a typical object of ``size'' $n$ in the larger category, for instance for a set with $n$ elements, or for a space of dimension $n$.
+If all objects of the same size are interchangeable for our purposes, then we lose nothing by keeping just one number for each size, and we gain a lot: a monoidal product which, in the larger category, is associative only up to renaming or re-bracketing becomes addition of numbers, which is associative on the nose.
+We will point out what stands for what in the examples below.
+
+\begin{example}[Functions between finite sets]
+    \label{exa:prop-finset}
+    There is a strict monoidal category $\stylecat{FinSet}$ of this kind, where
+    \begin{itemize}
+        \item the set of morphisms from $m$ to $n$ (for $m, n \setin \natnumbers$) is defined to be the set of functions from $\makeset{1, \dots, m}$ to $\makeset{1, \dots, n}$;
+        \item composition is the usual composition of functions;
+        \item identity morphisms are identity functions;
+        \item the monoidal product of functions $\mora \colon \makeset{1, \dots, m} \mto \makeset{1, \dots, n}$ and $\mora\stylemorph{'} \colon \makeset{1, \dots, m'} \mto \makeset{1, \dots, n'}$ is the ``disjoint union''
+              \begin{equation}
+                  \mora + \mora\stylemorph{'} \colon \makeset{1, \dots, m + m'} \mto \makeset{1, \dots, n + n'},
+              \end{equation}
+              which applies $\mora$ to the first $m$ numbers, and applies $\mora\stylemorph{'}$, shifted by $m$ in the source and by $n$ in the target, to the remaining $m'$ numbers.
+    \end{itemize}
+
+    This category is a stand-in for the category of all finite sets and all functions between them, with the sum of sets and of functions as parallel composition (\cref{sec:stacking}).
+    The number $n$ stands for the set $\makeset{1, \dots, n}$, and thereby for every set with $n$ elements: any such set can be put in bijection with $\makeset{1, \dots, n}$ by numbering its elements, and after numbering the elements, a function between two finite sets becomes a morphism of $\stylecat{FinSet}$.
+    The sum of a set with $m$ elements and a set with $n$ elements has $m + n$ elements, which is why addition appears as the monoidal product on objects.
+    But while the sum of sets is associative only up to renaming the elements, addition of numbers is associative on the nose.
+\end{example}
+
+\begin{example}[Polynomial maps]
+    \label{exa:polynomial-maps}
+    There is a strict monoidal category $\stylecat{Poly}_\reals$ of this kind, where
+    \begin{itemize}
+        \item a morphism from $m$ to $n$ is a tuple $\stylemorph{p} = \tup{p_1, \dots, p_n}$ of $n$ polynomials with real coefficients in the $m$ variables $x_1, \dots, x_m$;
+        \item composition is \emph{substitution}: given $\stylemorph{p} = \tup{p_1, \dots, p_n} \colon \styleobj{m} \mto \styleobj{n}$ and $\stylemorph{q} = \tup{q_1, \dots, q_k} \colon \styleobj{n} \mto \styleobj{k}$, the composite $\stylemorph{p} \mthen \stylemorph{q} \colon \styleobj{m} \mto \styleobj{k}$ is the tuple of polynomials
+              \begin{equation}
+                  \label{eq:polynomial-maps-composition}
+                  q_j(p_1, \dots, p_n), \qquad j = 1, \dots, k,
+              \end{equation}
+              which are obtained by substituting the polynomial $p_i$ for the $i$-th variable of $q_j$, for all $i$;
+        \item the identity morphism of $n$ is the tuple of variables $\tup{x_1, \dots, x_n}$;
+        \item the monoidal product of $\stylemorph{p} = \tup{p_1, \dots, p_n} \colon \styleobj{m} \mto \styleobj{n}$ and $\stylemorph{p}\stylemorph{'} = \tup{p'_1, \dots, p'_{n'}} \colon \styleobj{m'} \mto \styleobj{n'}$ is the tuple
+              \begin{equation}
+                  \stylemorph{p} \mtimescatmor \stylemorph{p}\stylemorph{'} \definedas \tup{p_1, \dots, p_n, \tilde{p}'_1, \dots, \tilde{p}'_{n'}} \colon \styleobj{m + m'} \mto \styleobj{n + n'},
+              \end{equation}
+              where $\tilde{p}'_j$ is the polynomial $p'_j$ with its variables $x_1, \dots, x_{m'}$ renamed to $x_{m+1}, \dots, x_{m+m'}$, so that the two tuples use different variables.
+    \end{itemize}
+    For instance, composing $\tup{x_1 + x_2,\ x_1 x_2} \colon \styleobj{2} \mto \styleobj{2}$ with $\tup{x_1^2 - x_2} \colon \styleobj{2} \mto \styleobj{1}$ gives
+    \begin{equation}
+        \tup{(x_1 + x_2)^2 - x_1 x_2} = \tup{x_1^2 + x_1 x_2 + x_2^2} \colon \styleobj{2} \mto \styleobj{1}.
+    \end{equation}
+
+    This category, too, is a stand-in.
+    The number $n$ stands for the coordinate space $\reals^n$, and a morphism $\stylemorph{p} \colon \styleobj{m} \mto \styleobj{n}$ stands for the function $\reals^m \sto \reals^n$ which maps a vector $\tup{x_1, \dots, x_m}$ to the vector with the entries $p_1(x_1, \dots, x_m), \dots, p_n(x_1, \dots, x_m)$.
+    Substitution of polynomials corresponds to the composition of these functions, and the monoidal product corresponds to letting two such functions act side by side on two blocks of coordinates.
+    So we may think of $\stylecat{Poly}_\reals$ as the category of coordinate spaces and polynomial functions between them, described purely in terms of formulas.
+
+    Note what happens when all the polynomials are linear without constant term, such as $3 x_1 - x_2$.
+    A tuple of $n$ such polynomials in $m$ variables is the same thing as an $n \times m$ matrix of coefficients, and substituting such tuples into each other is precisely matrix multiplication.
+    In this way, the category of matrices sits inside $\stylecat{Poly}_\reals$; see also the next remark.
+\end{example}
+
+\begin{remark}[Keeping track only of the dimension]
+    \label{rem:dimension-trick}
+    For various strict monoidal categories whose objects are the coordinate spaces $\reals^n$, we can apply the same ``trick'' and keep track only of the dimension: instead of the object $\reals^n$, we use the natural number $n$.
+    Nothing is lost, since the space $\reals^n$ is determined by $n$, and since $\reals^{m} \mtimescatob \reals^{n} = \reals^{m+n}$ corresponds to the addition $m + n$.
+
+    As an illustration, consider the strict monoidal category $\MatR$ of real matrices (\cref{exa:MatR-strict-monoidal}).
+    Applying the trick gives a strict monoidal category $\stylecat{Mat}_\reals$ whose objects are the natural numbers, in which a morphism from $m$ to $n$ is an $n \times m$ real matrix, composition is the matrix product (in the order $\matmor{A} \mthen \matmor{B} = \matmor{B}\matmor{A}$), identity morphisms are identity matrices, and the monoidal product of two matrices is the block-diagonal matrix which they form.
+    The two categories differ only in how their objects are named.
+
+    The same can be done for the category of linear relations (\cref{rem:LinRel-strict-monoidal}), which gives a strict monoidal category $\stylecat{LinRel}_\reals$ whose objects are natural numbers, and for LTI systems.
+    Which of the two versions one uses is a matter of taste: writing $\reals^n$ is a reminder of what the wires carry, while writing $n$ is shorter.
+\end{remark}
+
+\begin{example}[Signal-flow diagrams]
+    \label{exa:signal-flow-diagrams}
+    In control theory, linear systems are often described by \emph{signal-flow diagrams}.
+    These are built from a small number of basic components, each of which has a certain number of input wires and of output wires, all carrying real-valued signals:
+    \begin{itemize}
+        \item for every real number $c$, an \emph{amplifier}, which multiplies a signal by $c$ (one input, one output);
+        \item an \emph{adder}, which adds two signals (two inputs, one output);
+        \item a \emph{branch point}, which copies a signal (one input, two outputs);
+        \item a \emph{zero source}, which emits the signal $0$ (no input, one output);
+        \item a \emph{terminator}, which discards a signal (one input, no output).
+    \end{itemize}
+    There is a strict monoidal category $\stylecat{SigFlow}$ of the kind considered in this subsection, where
+    \begin{itemize}
+        \item a morphism from $m$ to $n$ is a diagram with $m$ input wires and $n$ output wires which is built from the basic components by connecting them in series and by placing them on top of each other;
+        \item composition connects the output wires of one diagram to the input wires of the next;
+        \item the identity morphism of $n$ consists of $n$ wires, without any components;
+        \item the monoidal product places one diagram on top of the other.
+    \end{itemize}
+    For instance, the following diagram, built from two amplifiers and an adder, is a morphism $\styleobj{2} \mto \styleobj{1}$:
+    \begin{equation}
+        \label{eq:signal-flow-example}
+        \begin{tikzpicture}[baseline=(current bounding box.center)]
+            \node[block, minimum width=7.5mm, minimum height=6.5mm, inner sep=2pt] (a) at (0,0.5) {$\stylemorph{a}$};
+            \node[block, minimum width=7.5mm, minimum height=6.5mm, inner sep=2pt] (b) at (0,-0.5) {$\stylemorph{b}$};
+            \node[block, minimum width=7.5mm, minimum height=16.5mm, inner sep=2pt] (s) at (1.9,0) {$\stylemorph{+}$};
+            \draw[draw=objects, thick] (a.west) -- ++(-1.1,0);
+            \draw[draw=objects, thick] (b.west) -- ++(-1.1,0);
+            \draw[draw=objects, thick] (a.east) -- (s.west |- a);
+            \draw[draw=objects, thick] (b.east) -- (s.west |- b);
+            \draw[draw=objects, thick] (s.east) -- ++(1.1,0);
+        \end{tikzpicture}
+    \end{equation}
+    It describes the system which turns two input signals $u_1$ and $u_2$ into the output signal $a u_1 + b u_2$.
+
+    This is our first example of a strict monoidal category in which the morphisms are themselves pictures.
+    Two diagrams count as the same morphism if they differ only in how they are drawn; we will make this precise in \cref{sec:graphical-calculus}.
+    Note also that, for now, the wires of a diagram are not allowed to cross, and there are no feedback loops.
+    Both will become available later, once we have symmetric strict monoidal categories and feedback.
+
+    A diagram is only a description of a system; the system itself is a linear function.
+    Every diagram from $m$ to $n$ determines an $n \times m$ real matrix, which tells us how the output signals depend on the input signals: for the diagram in \cref{eq:signal-flow-example}, it is the matrix $\begin{bmatrix} a & b \end{bmatrix}$.
+    Connecting diagrams in series corresponds to multiplying their matrices, and placing them on top of each other corresponds to forming a block-diagonal matrix.
+    Different diagrams can have the same matrix: for example, a branch point followed by an adder has the same matrix as the amplifier for $c = 2$.
+    So $\stylecat{SigFlow}$ and the category $\stylecat{Mat}_\reals$ of \cref{rem:dimension-trick} are two different strict monoidal categories, one of descriptions and one of the things described.
+\end{example}
+
+\subsection{Examples where the objects are like lists}
+\label{sec:strict-monoidal-lists}
+
+Concatenation of lists is associative on the nose, and the empty list is neutral for it (\cref{exa:string-monoid}).
+This makes lists a very convenient source of strict monoidal categories: if the objects of a category are lists, and the monoidal product concatenates them, then the conditions on the level of objects in \cref{def:strict-monoidal-cat} hold for free.
+We start with the simplest construction of this kind, which works for any category whatsoever.
+
+\paragraph{A simple list construction} Let $\CatC$ be a category.
+We build a new category whose objects are lists of objects of $\CatC$ and whose morphisms are lists of morphisms of $\CatC$.
+We think of an object $\makelist{\Objan{1}, \dots, \Objan{n}}$ as $n$ parallel wires, of the types $\Objan{1}, \dots, \Objan{n}$, and of a morphism as $n$ boxes, one on each wire.
+
+\begin{ctdefinition}[Category of lists]
+    \label{def:list-category}
+    Let $\CatC$ be a category.
+    The \maindef{category of lists} in $\CatC$, denoted $\CatSymbol{List}(\CatC)$, is the category given by:
+
+    \constit
+
+    \begin{enumerate}
+        \item Objects: finite lists $\makelist{\Objan{1}, \dots, \Objan{n}}$ of objects of $\CatC$, for $n \setin \natnumbers$.
+              For $n = 0$ this is the empty list $\emptylist$.
+        \item Morphisms: a morphism from $\makelist{\Objan{1}, \dots, \Objan{n}}$ to $\makelist{\Objbn{1}, \dots, \Objbn{m}}$ exists only if the two lists have the same length, $n = m$, and in this case it is a list
+              \begin{equation}
+                  \makelist{\moran{1}, \dots, \moran{n}}
+              \end{equation}
+              of morphisms $\moran{i} \colon \Objan{i} \mtoin{\CatC} \Objbn{i}$ of $\CatC$, for $i = 1, \dots, n$.
+        \item Composition: entry by entry, using the composition of $\CatC$:
+              \begin{equation}
+                  \makelist{\moran{1}, \dots, \moran{n}} \mthen \makelist{\morbn{1}, \dots, \morbn{n}}
+                  \definedas
+                  \makelist{\moran{1} \mthenof{\CatC} \morbn{1}, \dots, \moran{n} \mthenof{\CatC} \morbn{n}}.
+              \end{equation}
+        \item Identity morphisms: the identity morphism of $\makelist{\Objan{1}, \dots, \Objan{n}}$ is the list $\makelist{\catidat{\Objan{1}}, \dots, \catidat{\Objan{n}}}$ of identity morphisms of $\CatC$.
+    \end{enumerate}
+\end{ctdefinition}
+
+Associativity and unitality hold in $\CatSymbol{List}(\CatC)$ because they hold in $\CatC$, entry by entry.
+Note that the empty list $\emptylist$ is an object, and that it has exactly one morphism to itself, namely the empty list of morphisms, which is its identity morphism.
+
+\begin{example}[The strict monoidal category of lists]
+    \label{exa:list-category-strict-monoidal}
+    For any category $\CatC$, the following defines a strict monoidal structure on $\CatSymbol{List}(\CatC)$.
+
+    The monoidal product is concatenation of lists, both on objects and on morphisms:
+    \begin{equation}
+        \begin{aligned}
+            \makelist{\Objan{1}, \dots, \Objan{n}} \mtimescat \makelist{\Objbn{1}, \dots, \Objbn{m}}
+             & \definedas \makelist{\Objan{1}, \dots, \Objan{n}, \Objbn{1}, \dots, \Objbn{m}}, \\
+            \makelist{\moran{1}, \dots, \moran{n}} \mtimescat \makelist{\morbn{1}, \dots, \morbn{m}}
+             & \definedas \makelist{\moran{1}, \dots, \moran{n}, \morbn{1}, \dots, \morbn{m}}.
+        \end{aligned}
+    \end{equation}
+    The monoidal unit is the empty list, $\idmoncat \definedas \emptylist$.
+
+    The monoidal product is a functor: concatenating two lists of morphisms and then composing entry by entry gives the same result as composing entry by entry and then concatenating, and a concatenation of two lists of identity morphisms is a list of identity morphisms.
+    The remaining conditions hold because concatenation of lists is associative and the empty list is neutral for it.
+    For morphisms, note that the identity morphism of the monoidal unit is the empty list of morphisms.
+\end{example}
+
+For instance, in $\CatSymbol{List}(\Set)$ an object is a list of sets, such as $\makelist{\setA, \setB}$, and a morphism $\makelist{\setA, \setB} \mto \makelist{\setC, \setD}$ is a list $\makelist{\mapa, \mapb}$ of two functions $\mapa \colon \setA \sto \setC$ and $\mapb \colon \setB \sto \setD$.
+
+The category $\CatSymbol{List}(\CatC)$ models parallel composition in its purest form: the wires never interact.
+Each morphism of $\CatC$ sits on its own wire, there are no morphisms which take two wires to one wire, or one wire to two, and there are no morphisms at all between lists of different lengths.
+In $\CatSymbol{List}(\Set)$, for example, there is no morphism $\makelist{\setA, \setB} \mto \makelist{\setC}$ which could play the role of a function of two arguments.
+The examples that follow keep the idea that objects are lists, and that the monoidal product concatenates them, but allow more morphisms.
+
+\paragraph{The category \SetL}
+\label{sec:cartcatset}
+
+The construction $\CatSymbol{List}(\CatC)$ is not yet what we need for our motivating example, the category $\Set$ with the \SY{cartesian product}.
+An object of $\CatSymbol{List}(\Set)$ is a list of sets, which is not itself a set, and so $\CatSymbol{List}(\Set)$ is a different category from $\Set$, with far fewer morphisms.
+What we would like instead is a strict monoidal structure on $\Set$ itself which is modeled on the \SY{cartesian product}; but we have seen that the \SY{cartesian product} is not associative on the nose (\cref{eq:assoc-fails1}).
+
+The category that we introduce now reconciles the two.
+It implements the ``list idea'' \emph{inside} of $\Set$: instead of the list $\makelist{\setAn{1}, \ldots, \setAn{n}}$ of sets, we use the set of all tuples $\tup{\elna{1}, \ldots, \elna{n}}$ whose entries are taken from the sets in the list.
+Such a set of tuples is an honest set, and so these sets, together with all functions between them, form a \SY{subcategory} of $\Set$.
+On this subcategory, concatenation of lists becomes a product of sets which does the same job as the \SY{cartesian product}, but which concatenates tuples instead of nesting them, and which is therefore associative on the nose.
+Moreover, in contrast to $\CatSymbol{List}(\CatC)$, the wires can now interact: a function of two arguments, for example, is a morphism from a set of tuples of length two to a set of tuples of length one.
+
+Concretely, we will define a category~\SetL whose objects are ``sets of tuples''.
+
+%\subsection{Lists}
+%
+%Before defining L-sets, let's first recall our notion of lists.
+%Given three things, for example (call them $\ela$, $\elb$, and $\elc$) we can list them in some order:
+%\begin{equation}
+%    [\elb, \elc, \ela].
+%\end{equation}
+%The square brackets are our notation for lists, and recall that the ordering matters for lists (for instance, $[\elc, \ela, \elb]$ is a different list of those same three things).
+%
+%Any list has a length; for example $[\elb, \elc, \ela]$ has length 3.
+%For us, by definition, all lists have finite length.
+%We also define such a thing as an \emph{empty list}, which we denote by $[ \ ]$.
+%It has length zero.
+%
+%The things in a list -- for example, $\elb$, $\elc$, and $\ela$ -- are the \emph{entries} of the list.
+%They each come with an index corresponding to their placement in the list (so we can speak of the 1st entry, 2nd entry, and so on).
+
+Given sets~$\setAn{1}, \setAn{2}, \ldots, \setAn{n}$, where $n \setin \natnumbers$, we define
+\begin{equation}
+    \label{eq:sets-of-tuples}
+    \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} \definedas \makeset{ \tup{\elna{1}, \elna{2}, \ldots, \elna{n}} \mid \elna{1} \setin \setAn{1}, \elna{2} \setin \setAn{2}, \ldots, \elna{n} \setin \setAn{n} }.
+\end{equation}
+So for example,
+\begin{equation}
+    \label{eq:setL-example}
+    \cObj{\wnumbers, \natnumbers, \reals} = \makeset{ \tup{\ela, \elb, \elc} \mid \ela \setin \wnumbers, \elb \setin \natnumbers, \elc \setin \reals }.
+\end{equation}
+
+% A special case is when any of the sets $\setAn{1}, \dots, \setAn{n}$ are the empty set $\Emptyset$; then we have
+% \begin{equation}
+%     \cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} = \Emptyset.
+% \end{equation}
+Note the case $n = 0$, where
+\begin{equation}
+    \cObj{} = \makeset{ \tup{} }
+\end{equation}
+is a singleton set whose element is the empty tuple.
+
+% We make the convention that~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$ denotes the empty set if any of the sets~$\setAn{1}, \setAn{2}, \ldots , \setAn{n}$ are equal to the empty set.
+% In particular, we have for example~$\Emptyset = \cObj{\Emptyset}$.
+
+All the objects of~$\SetL$ are in particular just sets, so we can package them into a category whose morphisms are simply functions between such sets.
+
+\begin{ctdefinition}[\SetL]\label{def:SetL}
+    \SYNDEF{category of tuple-sets and functions}
+    The category \SetL is the category whose objects are those sets which are of the form~$\cObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$, for any~$n \setin \natnumbers$ and any sets~$\setAn{1}, \setAn{2}, \ldots, \setAn{n}$.
+    Morphisms in \SetL are any functions between such sets, and the composition operations and identities are the usual ones for functions.
+\end{ctdefinition}
+
+\paragraph{From \Set to~\SetL}
+
+Observe that we can turn any set into an object of \SetL: given a set~\setA, there is the associated set
+\begin{equation}
+    \label{eq:setintosetl}
+    \cObj{\setA} = \makeset{ \tup{\ela} \mid \ela \setin \setA }
+\end{equation}
+whose elements are precisely all the tuples of length one whose entry is an element of~\setA.
+This defines a function
+\begin{equation}
+    \label{eq:setintosetlfunction}
+    \begin{aligned}
+        \Obof{\Set} & \to \Obof{\SetL} \\
+        \setA       & \mapsto \cObj{\setA}
+    \end{aligned}
+\end{equation}
+%\Ob_{\Set} \to \Ob_{\SetL}, \setA \mapsto \cObj{\setA}
+which one might call ``bracket''.
+
+Similarly, given a function~$\mapa \colon \setA \sto \setB$ between sets, there is an associated function~$\cMor{ \mapa }\colon \cObj{\setA} \mto \cObj{\setB}$ given by
+\begin{equation}
+    \label{eq:functionintosetlmor}
+    \cMor{ \mapa } ( \tup{\ela }) \definedas \tup{\mapa(\ela)}.
+\end{equation}
+This defines a function
+\begin{equation}
+    \label{eq:functionintosetlmorfun}
+    \Hom_{\Set}(\setA,\setB) \to \Hom_{\SetL}(\cObj{\setA},\cObj{\setB})
+\end{equation}
+for any sets~\setA and~\setB; one might also call it ``bracket''.
+
+\paragraph{Concatenation of tuples}
+
+Given tuples~$\tup{\ela, \elb, \elc}$ and~$\tup{\eld, \ele}$ we can stick them together to make the longer tuple~$\tup{\ela, \elb, \elc, \eld, \ele}$, using the already defined \SY{concatenation of tuples}.
+
+%We call this operation \emph{concatenation}, and in the context of \SetL we think of it as a kind of multiplication.
+%Our notation for concatenation of tuples is
+%\begin{equation}\label{eq:concatenation-of-tuples-SetL}
+%    \tup{\ela, \elb, \elc} \tupconcat \tup{\eld, \ele} = \tup{\ela, \elb, \elc, \eld, \ele}.
+%\end{equation}
+%\todotext{\alphubel: We already defined the concatenation of tuples...}
+%For the empty tuple~$\tup{ }$ we set
+%\begin{equation}\label{eq:empty-tuple-concat-1}
+%    \tup{} \tupconcat \tup{\ela, \elb, \elc}  = \tup{\ela, \elb, \elc}
+%\end{equation}
+%and
+%\begin{equation}\label{eq:empty-tuple-concat-2}
+%    \tup{\ela, \elb, \elc}  \tupconcat \tup{} = \tup{\ela, \elb, \elc}.
+%\end{equation}
+
+\paragraph{Multiplication in \SetL}
+\label{sec:multiplication-for-SetL}
+We define a multiplication for objects of \SetL.
+The symbol~$\cprod$ will denote this multiplication in infix notation.
+
+Given~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ and~$\cObj{\setBn{1}, \ldots, \setBn{n}}$ we define the operation
+\begin{equation}
+    \label{eq:mult-setl-sign}
+    \cprod \colon \Obof{\SetL} \cartprod \Obof{\SetL} \to \Obof{\SetL}
+\end{equation}
+by
+\begin{equation}
+    \label{eq:strict-monoidal-product-sets}
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{m}},
+        \cObj{\setBn{1}, \ldots, \setBn{n}}
+    } \definedas \cObj{\setAn{1}, \ldots, \setAn{m}, \setBn{1}, \ldots, \setBn{n}}
+\end{equation}
+for any $n, m \setin \natnumbers$.
+
+The elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}} \cprod \cObj{\setBn{1}, \ldots, \setBn{n}}$ are all possible concatenations of elements of~$\cObj{\setAn{1}, \ldots, \setAn{m}}$ with elements of~$\cObj{\setBn{1}, \ldots, \setBn{n}}$.
+
+Equation \cref{eq:strict-monoidal-product-sets} holds in particular also in the cases when~$m = 0$ or~$n =0$:
+\begin{equation}
+    \makecprod{
+        \emptycobj,
+        \cObj{\setBn{1}, \ldots, \setBn{n}}
+    } =
+    \cObj{
+        \setBn{1}, \ldots, \setBn{n}
+    }
+\end{equation}
+and
+\begin{equation}
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{m}},
+        \emptycobj
+    } =
+    \cObj{
+        \setAn{1}, \ldots, \setAn{m}
+    }.
+\end{equation}
+
+% Also, writing $\Emptyset = \cObj{\Emptyset}$ we find that
+% \begin{equation}
+%     \makecprod{
+%         \cObj{\setAn{1}, \ldots, \setAn{m}},
+%         \Emptyset
+%     } = \Emptyset
+% \end{equation}
+% and
+% \begin{equation}
+%     \makecprod{\Emptyset, \cObj{\setBn{1}, \ldots, \setBn{n}}} = \Emptyset.
+% \end{equation}
+
+The multiplication of objects in~\SetL is \SY{associative} (which was our goal with making this construction).
+Indeed, both
+\begin{equation}
+    \makecprod{
+        ( \makecprod{\cObj{\setAn{1}, \ldots, \setAn{l}}, \cObj{\setBn{1}, \ldots, \setBn{m}}})
+        ,
+        \cObj{\setCn{1}, \ldots, \setCn{n}}
+    }
+\end{equation}
+and
+\begin{equation}
+    \makecprod{
+        \cObj{\setAn{1}, \ldots, \setAn{l}},
+        (
+        \makecprod{
+            \cObj{\setBn{1}, \ldots, \setBn{m}},
+            \cObj{\setCn{1}, \ldots, \setCn{n}}
+        }
+        )
+    }
+\end{equation}
+are equal to
+\begin{equation}
+    \cObj{\setAn{1}, \ldots, \setAn{l}, \setBn{1}, \ldots, \setBn{m}, \setCn{1}, \ldots, \setCn{n}}.
+\end{equation}
+
+\begin{remark}
+    Note that, for any sets $\setA, \setB$, we have
+    \begin{equation}
+        \cObj{\setA, \setB} = \setA \cartprod \setB.
+    \end{equation}
+    In other words, the multiplication operation in $\SetL$ ``coincides'' with the cartesian product operation in the special case when we are multiplying two sets together.
+
+    Because of this, the operation of cartesian product is well-defined for $\SetL$.
+    Namely, given tuples sets $\cObj{\setAn{1}, \ldots, \setAn{l}}$ and $\cObj{\setBn{1}, \ldots, \setBn{m}}$, their cartesian product is again a tuple set:
+    \begin{equation}
+        \cObj{\setAn{1}, \ldots, \setAn{l}} \cartprod \cObj{\setBn{1}, \ldots, \setBn{m}} = \cObj{\cObj{\setAn{1}, \ldots, \setAn{l}}, \cObj{\setBn{1}, \ldots, \setBn{m}}},
+    \end{equation}
+    (which is a ``nested'' tuple set).
+
+\end{remark}
+
+\begin{lemma}
+    \label{lem:SetL-strict-monoidal}
+    The following defines a strict monoidal structure on $\SetL$:
+    \begin{itemize}
+        \item on objects, the monoidal product is the multiplication $\cprod$ of \cref{eq:strict-monoidal-product-sets};
+        \item on morphisms, the monoidal product is defined as follows: for $\mora \colon \setA \mtoin\SetL \setB$ and $\morb \colon \setC \mtoin\SetL \setD$, the function $\mora \mtimescatmor \morb$ maps $\maketupconcat{\ela, \elc}$ to $\maketupconcat{\mora(\ela), \morb(\elc)}$;
+        \item the monoidal unit is the set $\idmoncat \definedas \emptycobj = \makeset{\tup{}}$, whose only element is the empty tuple.
+    \end{itemize}
+\end{lemma}
+
+%\begin{proof}
+%    We check the conditions of \cref{def:strict-monoidal-cat}.
+%    The monoidal product is a functor: its compatibility with composition was shown in \cref{ex:setfunstack}, and it maps identity functions to identity functions, since $(\catidat{\setA} \mtimescatmor \catidat{\setC})(\maketupconcat{\ela, \elc}) = \maketupconcat{\ela, \elc}$.
+%    It is associative, both on objects and on morphisms, by \cref{lem:SetL-is-associative-stacking}.
+%    The monoidal unit is neutral on objects, since $\emptycobj \cprod \setA = \setA = \setA \cprod \emptycobj$, as we saw when we defined the multiplication $\cprod$.
+%    Finally, it is neutral on morphisms: concatenating a tuple with the empty tuple does not change it, so
+%    \begin{equation}
+%        (\mora \mtimescatmor \catidat{\idmoncat})(\maketupconcat{\ela, \tup{}}) = \maketupconcat{\mora(\ela), \tup{}} = \mora(\ela)
+%    \end{equation}
+%    for all $\ela \setin \setA$, which shows $\mora \mtimescatmor \catidat{\idmoncat} = \mora$; similarly, $\catidat{\idmoncat} \mtimescatmor \mora = \mora$.
+%\end{proof}
+
+
+%begin{example}[\SetL is a functorial stacking semicategory]
+%    \label{ex:setfunstack}
+%    We want to show that~\SetL is a \SY{functorial stacking semicategory}.
+%
+%    Consider four morphisms
+%    \begin{equation}
+%        \begin{aligned}
+%            \mora\colon \setA \mto \setB, & \quad \morc\colon \setB \mto \setC, \\
+%            \morb\colon \setD \mto \setE, & \quad \mord\colon \setE \mto \setF.
+%            \\
+%        \end{aligned}
+%    \end{equation}
+%    We want to show that
+%    \begin{equation}
+%        (\mora \mtimescatmor \morb )
+%        \mthen (\morc \mtimescatmor \mord )
+%        =
+%        (\mora \mthen \morc ) \mtimescatmor (\morb \mthen \mord ),
+%    \end{equation}
+%    We show this by showing that, for any $\setAel\tupconcat \setDel\setin \setA\cprod\setD$:
+%    \begin{equation}
+%        \begin{aligned}
+%            ((\mora \mtimescatmor \morb )\mthen (\morc \mtimescatmor \mord ))(\setAeln{}\tupconcat \setDeln{})
+%             & = (\morc \mtimescatmor \mord)(\mora(\setAeln{})\tupconcat \morb(\setDeln{})) \\
+%             & =\morc(\mora(\setAeln{}))\tupconcat \mord(\morb(\setDeln{})) \\
+%             & =(\mora \mthen \morc)(\setAeln{})\tupconcat (\morb\mthen \mord)(\setDeln{}) \\
+%             & =((\mora \mthen \morc ) \mtimescatmor (\morb \mthen \mord ))(\setAeln{}\tupconcat \setDeln{}).
+%        \end{aligned}
+%    \end{equation}
+%\end{example}
+
+%\begin{lemma}
+%    \label{lem:SetL-is-associative-stacking}
+%    \SetL is  \SY{associative stacking} using the structure that arises from tuple concatenation.
+%    % by setting $\mtimescatob_{\SetL} \definedas \cprod$
+%    % and $\mtimescatmor_{\SetL} \definedas \cprod$
+%\end{lemma}
+
+%\begin{proof}
+%    % In this example we show that~\SetL is an  \SY{associative stacking} semicategory.
+%    % We first show that it is a stacking category.
+%    % To do so, we start by showing that the stacking operations fulfill \cref{def:simple-stacking-semi-cat}.
+%    For the stacking operation on objects $\mtimescatob$ we use the operation $\cprod$ defined in \cref{sec:cartcatset} which was referred to as the ``multiplication in \SetL'':
+%    \begin{align}
+%        \cObj{\setAn{1}, \dots, \setAn{m}} \mtimescatob \cObj{\setBn{1}, \dots, \setBn{n}} & \definedas \cObj{\setAn{1}, \dots, \setAn{m}} \cprod \cObj{\setBn{1}, \dots, \setBn{n}} \\
+%                                                                                           & = \cObj{\setAn{1}, \dots, \setAn{m}, \setBn{1}, \dots, \setBn{n}}.
+%    \end{align}
+%    It was shown there that this operation is associative.
+%
+%    As for $\mtimescatmor$, we define it as follows:
+%    \begin{equation}
+%        \label{eq:mtimescatmor-SetL}
+%        \prfperiod{
+%            \mora\colon\setA\mtoin\SetL\setB
+%        }{
+%            \quad
+%        }{
+%            \morb\colon\setC\mtoin\SetL\setD
+%        }{
+%            \defmap{
+%                (\mora\mtimescatmor\morb )
+%            }{
+%                \setA \cprod \setC
+%            }{
+%                \mtoin\SetL
+%            }{
+%                \setB \cprod \setD
+%            }{
+%                \maketupconcat{\ela, \elc}
+%            }{
+%                \maketupconcat{\mora(\ela), \morb(\elc)}
+%            }
+%        }
+%    \end{equation}
+%    The two operations $\mtimescatob, \mtimescatmor$ so defined satisfy the compatibility conditions
+%    required by \cref{def:simple-stacking-cat}.
+%
+%    To show associativity, consider three morphisms
+%    \begin{equation}\label{eq:SetL-morphisms-to-associatively-stack}
+%        % \begin{aligned}
+%        \mora\colon\setA\mtoin\SetL\setB,\qquad
+%        \morb\colon\setC\mtoin\SetL\setD,\qquad
+%        \morc\colon\setE\mtoin\SetL\setF.
+%        % \end{aligned}
+%    \end{equation}
+%    We compute $\mora\mtimescatmor(\morb\mtimescatmor\morc)$ and $(\mora\mtimescatmor\morb)\mtimescatmor\morc$ following the recipe \cref{eq:mtimescatmor-SetL} to obtain
+%    \begin{equation}\label{eq:SetL-morphisms-associative-stack-check-1}
+%        \defmapcomma{
+%            \parslight{\mora\mtimescatmor\morb}\mtimescatmor\morc
+%        }{
+%            \parslight{\setA \cprod \setC} \cprod \setE
+%        }{
+%            \mtoin\SetL
+%        }{
+%            \parslight{\setB \cprod \setD} \cprod \setF
+%        }{
+%            \maketupconcat{\parslight{\maketupconcat{\ela, \elc}}, \ele}
+%        }{
+%            \maketupconcat{\parslight{\maketupconcat{\mora(\ela), \morb(\elc)}}, \morc(\ele) }
+%        }
+%    \end{equation}
+%    \begin{equation}\label{eq:SetL-morphisms-associative-stack-check-2}
+%        \defmapperiod{
+%            \mora\mtimescatmor\parslight{\morb\mtimescatmor\morc}
+%        }{
+%            \setA \cprod \parslight{\setC \cprod \setE}
+%        }{
+%            \mtoin\SetL
+%        }{
+%            \setB \cprod \parslight{\setD \cprod \setF}
+%        }{
+%            \maketupconcat{\ela, \parslight{\maketupconcat{\elc, \ele}}}
+%        }{
+%            \maketupconcat{\mora(\ela), \parslight{\maketupconcat{\morb(\elc), \morc(\ele)}}}
+%        }
+%    \end{equation}
+%    Notice that the operations $\cprod$ and $\tupconcat$ are associative; therefore, we can remove all the light parentheses that appear in the formulas.
+%    This implies that both functions are equal to
+%    \begin{equation}\label{eq:SetL-morphisms-associative-stack-check-3}
+%        \defmapperiod{
+%            \mora\mtimescatmor\morb\mtimescatmor\morc
+%        }{
+%            \setA \cprod \setC \cprod \setE
+%        }{
+%            \mtoin\SetL
+%        }{
+%            \setB \cprod \setD \cprod \setF
+%        }{
+%            \maketupconcat{\ela, \elc, \ele}
+%        }{
+%            \maketupconcat{\mora(\ela), \morb(\elc), \morc(\ele)}
+%        }
+%    \end{equation}
+%    % \begin{equation}
+%    %     \defmapperiod{
+%    %         \mtimescatob
+%    %     }{
+%    %         \Obof{\SetL} \cartprod \Obof{\SetL}
+%    %     }{
+%    %         \mto
+%    %     }{
+%    %         \Obof{\SetL}
+%    %     }{
+%    %         \tup{\cObj{\setAn{1},\ldots, \setAn{n}}, \cObj{\setBn{1},\ldots,\setBn{m}}}
+%    %     }{
+%    %         \cObj{\setAn{1},\ldots, \setAn{n}, \setBn{1},\ldots,\setBn{m}}
+%    %     }
+%    % \end{equation}
+%    % The stacking operation on morphisms is defined as
+%    % \begin{equation}
+%    %     \defmapcomma{
+%    %         \mtimescatmor
+%    %     }{
+%    %         \Mor_{\SetL} \cartprod \Mor_{\SetL}
+%    %     }{
+%    %         \mto
+%    %     }{
+%    %         \Mor_{\SetL}
+%    %     }{
+%    %         \tup{\mora,\morb}
+%    %     }{
+%    %         \mora \cprod \morb
+%    %     },
+%    % \end{equation}
+%    % where~$(\mora \cprod \morb)(\tup{\setAeln{1},\ldots, \setAeln{m}} \tupconcat \tup{\setBel_1,\ldots, \setBel_n})\definedas \mora(\tup{\setAeln{1},\ldots, \setAeln{m}})\tupconcat \morb(\tup{\setBel_1,\ldots, \setBel_n})$.
+%    % This is indeed a map between sets.
+%    % The two operations are compatible, because
+%    % \begin{widepar}
+%    %     \begin{equation}
+%    %         \prfperiod{
+%    %             \mora\colon \cObj{\setAn{1},\ldots,\setAn{n}}\mto \cObj{\setBn{1},\ldots,\setBn{m}}
+%    %         }{
+%    %             \morb\colon \cObj{\setCn{1},\ldots,\setCn{o}}\mto \cObj{\setDn{1},\ldots,\setDn{p}}
+%    %         }{
+%    %             \mora \mtimescatmor \morb \colon \cObj{\setAn{1}, \ldots, \setAn{n}, \setCn{1}, \ldots, \setCn{o}} \mto \cObj{\setBn{1}, \ldots, \setBn{m}, \setDn{1}, \ldots, \setDn{p}}
+%    %         }
+%    %     \end{equation}
+%    % \end{widepar}
+%
+%    % We now show associativity.
+%    % We have already shown in \cref{sec:cartcatset} that~$\cprod$ satisfies the properties of a \SY{semigroup} operation.
+%    % For the operation on morphisms, consider
+%    % \begin{equation}
+%    %     \begin{aligned}
+%    %         \mora\colon \cObj{\setAn{1},\ldots,\setAn{m}} & \mto \cObj{\setBn{1}, \ldots, \setBn{n}}, \\
+%    %         \morb\colon \cObj{\setCn{1},\ldots,\setCn{o}} & \mto \cObj{\setDn{1},\ldots,\setDn{p}}, \\
+%    %         \morc\colon \cObj{\setEn{1},\ldots,\setEn{q}} & \mto \cObj{\setFn{1},\ldots,\setFn{r}},
+%    %     \end{aligned}
+%    % \end{equation}
+%    % For brevity, we write~$\setAeln{}=\tup{\setAeln{1},\ldots, \setAeln{m}}$,~$\setCeln{}=\tup{\setCeln{1},\ldots, \setCeln{o}}$, and~$\setEeln{}=\tup{\setEeln{1},\ldots,\setEeln{q}}$.
+%    % We have
+%    % \begin{align}
+%    %     ((\mora \cprod \morb)\cprod \morc)(\tup{\setAeln{}, \setCeln{},\setEeln{}})
+%    %      & =(\mora(\setAeln{})\tupconcat \morb(\setCeln{}))\tupconcat \morc(\setEeln{}) \\
+%    %      & =\mora(\setAeln{})\tupconcat \morb(\setCeln{})\tupconcat \morc(\setEeln{}) \\
+%    %      & =\mora(\setAeln{})\tupconcat (\morb(\setCeln{})\tupconcat \morc(\setEeln{})) \\
+%    %      & =(\mora \cprod (\morb\cprod \morc))(\tup{\setAeln{}, \setCeln{},\setEeln{}})
+%    % \end{align}
+%    % for all~$\tup{\setAeln{}, \setCeln{},\setEeln{}}\setin \cObj{\setAn{1},\ldots,\setAn{m},\setCn{1},\ldots,\setCn{o},\setEn{1},\ldots,\setEn{q}}$.
+%
+%\end{proof}
+
+
+
+% \begin{comment}
+% \todotext{The example below is perhaps deprecated if we no longer use Set* as a main character in our story}
+
+% \begin{example}
+%     \SetL is an  \SY{associative stacking} semicategory.
+%     We first show that it is a stacking category.
+%     The stacking operation on objects is defined as list concatenation:
+%     \begin{equation}
+%         \defmapperiod{\mtimescatob}{\Ob_{\SetL} \cartprod \Ob_{\SetL}}{\mto}{\Ob_{\SetL}}{\tup{\Tupcatt{\setAn{1}}{\ldots}{ \setAn{n}}, \Tupcatt{\setBn{1}}{\ldots}{\setBn{m}}}}{\Tupcatt{\setAn{1}}{\ldots}{\setAn{n}} \listconcat \Tupcatt{\setBn{1}}{\ldots}{\setBn{m}}}
+%     \end{equation}
+%     The stacking operation on morphisms is defined as
+%     \begin{equation}
+%         \defmapperiod{\mtimescatmor}{\Mor_{\SetL} \cartprod \Mor_{\SetL}}{\mto}{\Mor_{\SetL}}{\tup{\mora,\morb}}{\more},
+%     \end{equation}
+%     which, given~$\mora\colon \Tupcatt{\setAn{1}}{\ldots}{\setAn{n}}\mto \Tupcatt{\setBn{1}}{\ldots}{\setBn{m}}$ (given by a map~$\mapc$) and~$\Tupcatt{\setCn{1}}{\ldots}{\setCn{o}}\mto \Tupcatt{\setDn{1}}{\ldots}{\setDn{p}}$ (given by a map~$\mapd$) is given by a function
+%     \begin{equation}
+%         \mape \definedas \cohm_{\setA,\setC}\then (\mapc\funcprod \mapd) \then \cohm_{\setB,\setD},
+%     \end{equation}
+%     which has signature
+%     \begin{widepar}
+%         \begin{equation}
+%             \setAn{1}\cartprod (\setA_2\cartprod (\ldots \cartprod (\setAn{n} \cartprod (\setCn{1} \cartprod(\setC_2 \cartprod (\ldots \cartprod \setCn{o}))))))
+%             \to
+%             \setBn{1}\cartprod (\setB_2\cartprod (\ldots \cartprod (\setBn{m} \cartprod (\setDn{1} \cartprod (\setD_2 \cartprod(\ldots \cartprod \setDn{p})))))).
+%         \end{equation}
+%     \end{widepar}
+%     The two operations are compatible, because
+%     \begin{widepar}
+%         \begin{equation}
+%             \prfperiod{\mora\colon \Tupcatt{\setAn{1}}{\ldots}{\setAn{n}}\mto \Tupcatt{\setBn{1}}{\ldots}{\setBn{m}}}
+%             {\morb\colon \Tupcatt{\setCn{1}}{\ldots}{\setCn{o}}\mto \Tupcatt{\setDn{1}}{\ldots}{\setDn{p}}}
+%             {\more\colon \Tupca{\setAn{1}\setconcat \ldots \setconcat \setAn{n} \setconcat \setCn{1} \setconcat \ldots \setconcat \setCn{o}} \mto \Tupca{\setBn{1}\setconcat \ldots \setconcat \setBn{m} \setconcat \setDn{1} \setconcat \ldots \setconcat \setDn{p}}}
+%         \end{equation}
+%     \end{widepar}
+%     Note that using the coherence morphisms is needed for the compatibility conditions to hold.
+
+%     We now show associativity.
+%     We have already shown in \cref{sec:semigroups} that the concatenation of lists satisfies the properties of a \SY{semigroup} operation.
+%     Showing associativity of the operation on the morphisms is more cumbersome.
+%     Consider morphisms
+%     \begin{equation}
+%         \begin{aligned}
+%             \mora\colon \Tupcatt{\setAn{1}}{\ldots}{\setAn{m}} & \mto \Tupcatt{\setBn{1}}{\ldots}{\setBn{n}}, \\
+%             \morb\colon \Tupcatt{\setCn{1}}{\ldots}{\setCn{o}} & \mto \Tupcatt{\setDn{1}}{\ldots}{\setDn{p}}, \\
+%             \morc\colon \Tupcatt{\setEn{1}}{\ldots}{ \\setEn{q}} & \mto \Tupcatt{\\setFn{1}}{\ldots}{\\setFn{r}},
+%         \end{aligned}
+%     \end{equation}
+%     to which maps~$\mapd,\mape,\mapf$ are associated.
+
+%     We have:
+
+%     \begin{center}
+%         \begin{tikzpicture}
+%             \node at (0,0){
+%                 \begin{tikzcd}[every arrow/.append style={-Triangle, draw=morphisms}, column sep=large]
+%                     (\mora \mtimescatmor \morb)
+%                     \mtimescatmor \morc                                                                                                                                                                      & \mora \mtimescatmor (\morb \mtimescatmor \morc) \\
+%                     \tupset{((\setLA \listconcat \setLC)\listconcat \setLE)}\arrow[d,"\cohm_{\setLA\listconcat \setLC, \setLE}^{-1}"]\arrow[r, equal]                                                        & \tupset{(\setLA \listconcat (\setLC\listconcat \setLE))}\arrow[d] \\
+%                     \tupset{(\setLA\listconcat \setLC)}\cartprod \tupset{(\setLE)}\arrow[d, "\cohm_{\tupset{(\setLA)}, \tupset{(\setLC)}}^{-1} \funcprod \catid_{\tupset{(\setLC)}}"]                         & \tupset{(\setLA)}\cartprod \tupset{(\setLC \listconcat \setLE)}\arrow[d] \\
+%                     (\tupset{(\setLA)}\cartprod \tupset{(\setLC)})\cartprod \tupset{(\setLE)}\arrow[r, "\alpha"]\arrow[d, "(\mapd \funcprod \mape)\funcprod \mapf"]                                          & \tupset{(\setLA)}\cartprod (\tupset{(\setLC)}\cartprod \tupset{(\setLE)})\arrow[d, "\mapd \funcprod (\mape\funcprod \mapf)"] \\
+%                     (\tupset{(\setLB)}\cartprod \tupset{(\setLD)})\cartprod \tupset{(\setLF)}\arrow[r, "\alpha"]\arrow[d, "\cohm_{\tupset{(\setLB)}, \tupset{(\setLD)}}\funcprod \catid_{\tupset{(\setLF)}}"] & \tupset{(\setLB)}\cartprod (\tupset{(\setLD)}\cartprod \tupset{(\setLF)})\arrow[d] \\
+%                     \tupset{(\setLB\listconcat \setLD)}\cartprod \tupset{(\setLF)}\arrow[d,"\cohm_{\setLB\listconcat \setLD, \setLF}"]                                                                       & \tupset{(\setLB)} \cartprod \tupset{(\setLD \listconcat\setLF)}\arrow[d] \\
+%                     \tupset{((\setLB \listconcat \setLD)\listconcat \setLF)}\arrow[r, equal]                                                                                                                 & \tupset{(\setLB \listconcat (\setLD\listconcat \setLF))}
+%                 \end{tikzcd}
+%             };
+%         \end{tikzpicture}
+%     \end{center}
+%     \todo{finish diagram above}
+% \end{example}
+% \end{comment}
+
+%
+%\begin{definition}
+%    An  \SY{associative stacking} semicategory is called \emph{commutative} if its two stacking operations make the collections of objects and morphisms, respectively, into commutative semigroups.
+%\end{definition}
+
+
+
+
+
+
+\paragraph{The category~\PreL}
+\label{sec:PreL}
+
+We now apply the same idea to preorders.
+Let $\Pre$ denote the category whose objects are \SY{preorders} and whose morphisms are \SY{monotone functions}.
+We define a category analogous to~\SetL, whose objects are ``tuple preorders''.
+
+Given \SY{preorders}~$\posA_1,\ldots, \posA_n$, where $n \setin \natnumbers$, we define the preorder
+\begin{equation}
+    \label{eq:posetoftuples}
+    \cObj{\posA_1,\ldots, \posA_n}\definedas \tup{\cObj{\posAsetn{1},\ldots, \posAsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_n}}},
+\end{equation}
+where~$\cObj{\posAsetn{1},\ldots, \posAsetn{n}}$ is the set of tuples \cref{eq:sets-of-tuples}, and we use the product order:
+\begin{equation}
+    \label{eq:tuple-preorder-order}
+    \prfdoubleperiod{
+        \tup{\posela_1,\ldots, \posela_n}
+        \posleqof{\cObj{\posA_1,\ldots, \posA_n}}
+        \tup{\poselb_1,\ldots, \poselb_n}
+    }{
+        \posela_i \posleqof{\posA_i} \poselb_i \text{ for all } i\setin \makeset{1,\ldots, n}
+    }
+\end{equation}
+This relation is reflexive and transitive because each of the relations $\posleqof{\posA_i}$ is, so $\cObj{\posA_1,\ldots, \posA_n}$ is indeed a preorder.
+In the case $n = 0$, it is the preorder $\emptycobj$ whose only element is the empty tuple.
+
+\begin{definition}[The category~\PreL]
+    \SYNDEF{category of tuple-preorders and monotone functions}
+    \label{def:PreL}
+    The category~\PreL is the \SY{subcategory} of $\Pre$ where the objects are tuple preorders, that is, \SY{preorders} of the form
+    \begin{equation}
+        \cObj{\posA_1,\ldots, \posA_n} = \tup{\cObj{\posAsetn{1},\ldots, \posAsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_n}}},
+    \end{equation}
+    and where the morphisms are all monotone functions between such preorders.
+    % \begin{enumerate}
+    %     \item \emph{Objects:} \SY{posets} of the form presented in \cref{eq:posetoftuples}.
+    %     \item \emph{Morphisms:}
+    %           Monotone functions between \SY{posets} of the form presented in \cref{eq:posetoftuples}.
+    %     \item \emph{Composition:}
+    %           Composition is the usual composition of functions.
+    %     \item \emph{Identities:}
+    %           Identity functions.
+    % \end{enumerate}
+\end{definition}
+
+\begin{lemma}\label{lem:PosL-associative-stacking}
+    \label{lem:PreL-strict-monoidal}
+    The following defines a strict monoidal structure on $\PreL$:
+    \begin{itemize}
+        \item on objects, the monoidal product concatenates the lists of preorders,
+              \begin{equation}
+                  \label{eq:multposstack}
+                  \cObj{\posA_1,\ldots, \posA_m} \mtimescatob \cObj{\posB_1,\ldots, \posB_n} \definedas
+                  \cObj{\posA_1,\ldots, \posA_m, \posB_1,\ldots, \posB_n};
+              \end{equation}
+              so the underlying set of a monoidal product is the product $\cprod$ of the underlying sets (\cref{eq:strict-monoidal-product-sets}), and $\maketupconcat{\posela, \poselb}$ is below $\maketupconcat{\posela', \poselb'}$ precisely when $\posela$ is below $\posela'$ and $\poselb$ is below $\poselb'$;
+        \item on morphisms, the monoidal product is defined as in $\SetL$ (\cref{lem:SetL-strict-monoidal}): for monotone functions $\mora \colon \posA \mtoin\PreL \posB$ and $\morb \colon \posC \mtoin\PreL \posD$, the function $\mora \mtimescatmor \morb \colon \posA \mtimescatob \posC \mtoin\PreL \posB \mtimescatob \posD$ maps $\maketupconcat{\posela, \poselc}$ to $\maketupconcat{\mora(\posela), \morb(\poselc)}$;
+        \item the monoidal unit is the preorder $\idmoncat \definedas \emptycobj$, whose only element is the empty tuple.
+    \end{itemize}
+\end{lemma}
+
+\begin{proof}
+    The function $\mora \mtimescatmor \morb$ is monotone because $\mora$ and $\morb$ are, and because the order of a monoidal product is defined entry by entry.
+    All the conditions in \cref{def:strict-monoidal-cat} then follow from the corresponding statements for $\SetL$ (\cref{lem:SetL-strict-monoidal}).
+    On the level of morphisms, this is because two monotone functions with the same source and target are equal as soon as their underlying functions are equal.
+    On the level of objects, the underlying sets on the two sides of each condition are equal, and so are the orders, since by \cref{eq:tuple-preorder-order} two tuples are always compared entry by entry, however the list of preorders was put together.
+\end{proof}
+
+\begin{remark}[The category~\PosL]
+    \SYNDEF{category of tuple-posets and monotone maps}
+    \label{def:PosL}
+    If the preorders $\posA_1,\ldots, \posA_n$ are \SY{posets}, then the tuple preorder $\cObj{\posA_1,\ldots, \posA_n}$ is a poset as well: if two tuples are below each other, then so are their entries, which are therefore equal.
+    We write $\PosL$ for the \SY{full subcategory} of $\PreL$ whose objects are the tuple preorders which are posets.
+    It is also a subcategory of the category $\Pos$ of posets and monotone functions.
+
+    A monoidal product of two posets in $\PreL$ is again a poset, and the monoidal unit $\emptycobj$ is a poset.
+    Hence the strict monoidal structure of \cref{lem:PreL-strict-monoidal} restricts to $\PosL$, which is thus a strict monoidal category as well.
+\end{remark}
+%\begin{proof}
+%    Analogously to what we did for \SetL, we can define a multiplication operation $\mtimescatob$ in \PosL.
+%   
+%    Given two objects $\posA = \cObj{\posA_1,\ldots, \posA_n}$ and $\posB = \cObj{\posB_1,\ldots, \posB_n}$, we define
+%    \begin{equation}
+%        \label{eq:multposstack}
+%        % \begin{aligned}
+%        \cObj{\posA_1,\ldots, \posA_n} \mtimescatob \cObj{\posB_1,\ldots, \posB_n} \definedas
+%        % \tup{\cObj{\posAsetn{1},\ldots, \posAsetn{m}} \cprod \cObj{\posBsetn{1},\ldots, \posBsetn{n}}, \posleqof{\cObj{\posA_1,\ldots, \posA_m}\cprod \cObj{\posB_1,\ldots, \posB_n}}} \\
+%        \cObj{\posA_1,\ldots, \posA_n, \posB_1,\ldots, \posB_n}.
+%    \end{equation}
+%    %    where the order is defined as
+%    %    \begin{equation}\label{eq:PosL-order}
+%    %        \prfdoubleperiod{
+%    %            \pars{\maketupconcat{\posAnel{1}, \posBnel{1}}}
+%    %            \ %
+%    %            \posleqof{\posA\mtimescatob \posB}
+%    %            \ %
+%    %            \pars{\maketupconcat{\posAnel{2}, \posBnel{2}}}
+%    %        }{
+%    %            \pars{\posAnel{1}\posleqof\posA\posAnel{2}}
+%    %            \ \booland\ %
+%    %            \pars{\posBnel{1}\posleqof\posB\posBnel{2}}
+%    %        }
+%    %    \end{equation}
+%    For the multiplication on morphisms, we define
+%    \begin{equation}
+%        \prfperiod{
+%            \mora\colon \posA \mto \posB
+%        }{
+%            \quad
+%        }{
+%            \mora\colon \posC \mto \posD
+%        }{
+%            \defmap{
+%                \pars{
+%                    \mora
+%                    \mtimescatmor
+%                    \morb
+%                }
+%            }{
+%                \posA\mtimescatob\posC
+%            }{
+%                \mto
+%            }{
+%                \posB\mtimescatob\posD
+%            }{
+%                \maketupconcat{\posAel, \posCel}
+%            }{
+%                \maketupconcat{\mora(\posAel), \morb(\posCel)}
+%            }
+%        }
+%    \end{equation}
+%    We need to check that the expression $\maketupconcat{\mora(\posAel), \morb(\posCel)}$ is monotone.
+%    This can be easily seen because the order on $\posB\mtimescatob\posD$ is akin to a product order.
+%    The proof for associativity of $\mtimescatmor$ is the same as in the proof of $\SetL$ (\cref{lem:SetL-is-associative-stacking}).
+%\end{proof}
+
+
+% ~$\tup{\posAnel{1},\ldots, \posAnel{m},\posBnel{1},\ldots, \posBnel{n}} \posleqof{\cObj{\posA_1,\ldots, \posA_m}\mtimescatob \cObj{\posB_1,\ldots, \posB_n}} \tup{\posAnel{1}',\ldots, \posAnel{m}',\posBnel{1}',\ldots, \posBnel{n}'}$ if and only if~$\posAnel{i}\posleqof{\posA_i}\posAnel{i}'$ and~$\posBnel{j}\posleqof{\posB_j}\posBnel{j}'$ for all~$i\setin \makeset{1,\ldots, m}$,~$j\setin \makeset{1,\ldots, n}$.
+% % Note that this construction is analogous to the product poset.
+% The resulting \SY{poset} of tuples is written as~$\cObj{\posA_1,\ldots, \posA_m,\posB_1,\ldots, \posB_n}$.
+% We now want to show that one can define a structure for which~\PosL is  \SY{associative stacking}.
+% To do so, we define the stacking operation on objects as the multiplication operation~$\cprod$ defined in \cref{eq:multposstack}.
+
+% The stacking operation on morphisms is defined as
+% \begin{equation}
+%     \defmapcomma{
+%         \mtimescatmor
+%     }{
+%         \Mor_{\PosL} \cartprod \Mor_{\PosL}
+%     }{
+%         \mto
+%     }{
+%         \Mor_{\PosL}
+%     }{
+%         \tup{\mora,\morb}
+%     }{
+%         \mora \cprod \morb
+%     }
+% \end{equation}
+% where~$(\mora \mtimescatmor \morb)(\tup{\posAnel{1},\ldots, \posAnel{m}} \tupconcat \tup{\posBnel{1},\ldots, \posBnel{n}})\definedas \mora(\tup{\posAnel{1},\ldots, \posAnel{m}})\tupconcat \morb(\tup{\posBnel{1},\ldots, \posBnel{n}})$.
+
+% \begin{lemma}[\PosL is associative stacking]\label{lem:PosL-associative-stacking}
+%     \PosL, equipped with the aforementioned stacking operations on objects and morphisms, is  \SY{associative stacking}.
+% \end{lemma}
+
+% \begin{proof}
+%     % We show that~\PosL is an  \SY{associative stacking} semicategory.
+%     We first show that it is a stacking category, by showing that the stacking operations fulfill \cref{def:simple-stacking-semi-cat}, and then showing the compatibility condition.
+%     The stacking operation on objects fulfills \cref{def:simple-stacking-semi-cat}, since, given two \SY{posets} of tuples it returns a \SY{poset} of tuples.
+%     To show that the stacking operation on morphism fulfills \cref{def:simple-stacking-semi-cat}, we need to show that given monotone~$\mora,\morb$, the map~$\mapa \mtimescatmor \mapb$ is monotone.
+%     This is easy to show, by leveraging the monotonicity of~$\mora$ and~$\morb$.
+%     For brevity, in the following we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$,~$\posAnel{}'=\tup{\posAnel{1}',\ldots, \posAnel{m}'}$,~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$, and~$\posBnel{}'=\tup{\posBnel{1}',\ldots, \posBnel{n}'}$.
+%     We have
+%     \begin{equation}
+%         \prfcomma{\posAnel{}\tupconcat \posBnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m,\posB_1,\ldots, \posB_n}} \posAnel{}'\tupconcat \posBnel{}'}
+%         {\prftree{
+%                 \left(\posAnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m}} \posAnel{}'\right) \booland \left(\posBnel{} \posleqof{\cObj{\posB_1,\ldots, \posB_n}} \posBnel{}'\right)}
+%             {
+%                 \prftree{
+%                     \left(\mora(\posAnel{}) \posleqof{\cObj{\posC_1,\ldots, \posC_o}} \mora(\posAnel{}')\right) \booland \left(\morb(\posBnel{})\posleqof{\cObj{\posD_1,\ldots, \posD_t}} \morb(\posBnel{}')\right)}
+%                 {
+%                     \prftree{
+%                         {\mora(\posAnel{}) \tupconcat \morb(\posBnel{})  \posleqof{\cObj{\posC_1,\ldots, \posC_o, \posD_1,\ldots, \posD_t}} \mora(\posAnel{}') \tupconcat \morb(\posBnel{}')}}
+%                     {(\mora \mtimescatmor \morb)(\posAnel{}\tupconcat \posBnel{}) \posleqof{\cObj{\posC_1,\ldots, \posC_o,\posD_1,\ldots, \posD_t}} (\mora \mtimescatmor \morb)(\posAnel{}'\tupconcat \posBnel{}')
+%                     }}}
+%         }
+%     \end{equation}
+%     which shows monotonicity.
+%     Furthermore, the two stacking operations are compatible:
+%     \begin{equation}
+%         \prfperiod{\mora\colon \cObj{\posA_1,\ldots,\posA_m}\mto \cObj{\posC_1,\ldots,\posC_o}}
+%         {\morb\colon \cObj{\posB_1,\ldots,\posB_n}\mto \cObj{\posD_1,\ldots,\posD_t}}
+%         {\mora \mtimescatmor \morb \colon \cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n} \mto \cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}}
+%     \end{equation}
+%     %
+%     The proof of associativity is parallel to the proof for~\SetL.
+% \end{proof}
+%
+
+\begin{exercise}
+    \label{ex:the-usual-suspects-are-functorial-stacking-categories}
+    Prove in detail that the monoidal product on $\PreL$ defined in \cref{lem:PreL-strict-monoidal} is a functor.
+    Hint: You have to define the functor $\mtimescat$ and check that it satisfies the two equations in \cref{def:functorial-stacking-cat}.
+\end{exercise}
+\begin{solution}
+    \todotext{Solution for \cref{ex:the-usual-suspects-are-functorial-stacking-categories}}
+\end{solution}
+
+
+
+\paragraph{Analogously:~\RelL, $\mRelL$, $\ProfBoolL$}
+\phantomsection\label{def:RelL}\label{def:mRelL}\label{def:ProfBoolL}%
+In a manner similar to the above examples, we can define a category~\RelL where the objects are sets of tuples (as in~\SetL) and the morphisms are relations, we can define a category $\mRelL$ where the objects are preorders of tuples (as in~\PreL) and the morphisms are monotone relations, and we can define a category $\ProfBoolL$ of Boolean profunctors between preorders of tuples.
+
+
+
+    The categories $\RelL$ and $\mRelL$ can be equipped with strict monoidal structures in the same way as $\SetL$ and $\PreL$.
+    On objects, the monoidal products and the monoidal units are those of $\SetL$ and of $\PreL$, respectively.
+    On morphisms, the monoidal product of two relations $\relA \colon \setA \mto \setB$ and $\relB \colon \setC \mto \setD$ is the relation $\relA \mtimescatmor \relB \colon \setA \cprod \setC \mto \setB \cprod \setD$ which relates concatenated tuples entry by entry:
+    \begin{equation}
+        \label{eq:RelL-monoidal-product}
+        \relA \mtimescatmor \relB
+        \definedas
+        \makeset{
+            \tup{\maketupconcat{\ela, \elc}, \maketupconcat{\elb, \eld}}
+            \mid
+            \tup{\ela, \elb} \setin \relA \text{ and } \tup{\elc, \eld} \setin \relB
+        }.
+    \end{equation}
+    The same formula is used for monotone relations; it is the product of monotone relations (\cref{def:monrel-product}), with tuples concatenated instead of paired.
+
+
+For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
+
+% \begin{remark}
+%     In other words, \DPL is the subcategory of \DP in which objects are of the form presented in \cref{eq:posetoftuples}.
+% \end{remark}
+%\begin{lemma}
+%    \DPL is \SY{associative stacking} using the structure induced by tuple concatenation.
+%\end{lemma}
+
+%\begin{proof}
+%    For the stacking operation $\mtimescatob$ on objects, we use $\mtimescatobof{\DPL}\definedas\mtimescatobof{\PosL}$.
+%    For stacking morphisms, we define $\mtimescatmor$ by
+%    % Given two \SY{design problems} % \begin{equation}
+%    %     \begin{aligned}
+%    %         \adpa\colon \posA\posop \Ptimes \posC & \toinPos \Bool, \\
+%    %         \adpb\colon \posB\posop \Ptimes \posD & \toinPos \Bool,
+%    %     \end{aligned}
+%    % \end{equation}
+%    % we define
+%    \begin{equation}
+%        \label{eq:dpmulti}
+%        \prfperiod{
+%            \adpa\colon \posAop\Ptimes \posC \mto \Bool
+%        }{\qquad}{
+%            \adpb\colon \posB\posop\Ptimes \posD \mto \Bool,
+%        }{
+%            \defmap{
+%                \adpa \mtimescatmor \adpb
+%            }{
+%                \pars{\posA \mtimescatob \posB}\op
+%                \Ptimes
+%                \pars{\posC \mtimescatob \posD}
+%            }{
+%                \mto
+%            }{
+%                \Bool
+%            }{
+%                \tup{\maketupconcat{a^*, c^*},\ \maketupconcat{b, d}}
+%            }{
+%                \adpa(a^*,c) \booland \adpb(c^*, d)
+%            }
+%        }
+%    \end{equation}
+%    Note that this is a valid definition of a \SY{design problem} because the expression $\adpa(a^*,c) \booland \adpb(c^*, d)$ is monotone, as may readily be checked.
+%
+%    To show associativity, consider three DPs
+%    \begin{widepar}
+%    \begin{equation}
+%        \adpa\colon \posAop\Ptimes \posC \toinPos \Bool, \qquad
+%        \adpb\colon \posB\posop\Ptimes \posD \toinPos \Bool, \qquad
+%        \adpc\colon \posE\posop\Ptimes \posF \toinPos \Bool.
+%    \end{equation}
+%    \end{widepar}
+%    We compute $(\adpa \mtimescatmor \adpb) \mtimescatmor \adpc$
+%    and $\adpa \mtimescatmor (\adpb \mtimescatmor \adpc)$ according to the recipe in~\cref{eq:dpmulti}:
+%    \begin{widepar}
+%    \begin{equation}
+%        \defmapcomma{
+%            \parslight{\adpa \mtimescatmor \adpb} \mtimescatmor \adpc
+%        }{
+%            \pars{\parslight{\posA \mtimescatob \posB} \mtimescatob \posE}\op
+%            \Ptimes
+%            \pars{\parslight{\posC \mtimescatob \posD} \mtimescatob \posF}
+%        }{
+%            \toinPos
+%        }{
+%            \Bool
+%        }{
+%            \tup{
+%                \parslight{\maketupconcat{a^*, c^*}} \tupconcat e^*
+%                ,\
+%                \parslight{\maketupconcat{b, d}} \tupconcat f
+%            }
+%        }{
+%            \parslight{
+%                \adpa(a^*,c) \booland \adpb(c^*, d)
+%            }
+%            \ \booland\
+%            \adpc(e^*, f)
+%        }
+%    \end{equation}
+%    \end{widepar}
+%    \begin{widepar}
+%    \begin{equation}
+%        \defmapperiod{
+%            \adpa \mtimescatmor \parslight{\adpb \mtimescatmor \adpc}
+%        }{
+%            \pars{
+%                \posA \mtimescatob
+%                \parslight{
+%                    \posB \mtimescatob \posE
+%                }
+%            }\op
+%            \Ptimes
+%            \pars{
+%                \posC \mtimescatob
+%                \parslight{
+%                    \posD \mtimescatob \posF
+%                }
+%            }
+%        }{
+%            \toinPos
+%        }{
+%            \Bool
+%        }{
+%            \tup{
+%                \maketupconcat{a^*, \parslight{\maketupconcat{c^*, e^*})}},\
+%                \maketupconcat{b, \parslight{\maketupconcat{d, f}}}
+%            }
+%        }{
+%            \adpa(a^*,c)
+%            \ \booland\
+%            \parslight{
+%                \adpb(c^*, d)
+%                \booland
+%                \adpc(e^*, f)
+%            }
+%        }
+%    \end{equation}
+%    \end{widepar}
+%    Because the operations $\mtimescatob$ and $\booland$ are \SY{associative}, we can erase all the light parentheses in the formulas, and we find that $(\adpa \mtimescatmor \adpb) \mtimescatmor \adpc$ and
+%    $\adpa \mtimescatmor (\adpb \mtimescatmor \adpc)$ are equal to the design problem
+%    \begin{widepar}
+%    \begin{equation}
+%        \defmapperiod{
+%            \adpa \mtimescatmor \adpb \mtimescatmor \adpc
+%        }{
+%            \pars{
+%                \posA \mtimescatob
+%                \posB \mtimescatob \posE
+%            }\op
+%            \Ptimes
+%            \pars{
+%                \posC \mtimescatob
+%                \posD \mtimescatob \posF
+%            }
+%        }{
+%            \toinPos
+%        }{
+%            \Bool
+%        }{
+%            \tup{
+%                \maketupconcat{a^*, c^*, e^*},\
+%                \maketupconcat{b, d, f}
+%            }
+%        }{
+%            \adpa(a^*,c)
+%            \booland
+%            \adpb(c^*, d)
+%            \booland
+%            \adpc(e^*, f)
+%        }
+%    \end{equation}
+%    \end{widepar}
+%\end{proof}
+
+
+% where
+% \begin{equation}
+%     (\adpa \cproddp \adpb)  (\tup{\posAnel{}\opel,\posBnel{}\opel,\posCnel{},\posDnel{}})
+%     \definedas\adpa(\tup{\posAnel{}\opel,\posCnel{}})\booland
+%     \adpb(\tup{\posBnel{}\opel,\posDnel{}}).
+% \end{equation}
+
+% We now consider the stacking operation on objects we considered for~\PosL, and the stacking operation on morphism defined as
+% \begin{equation}
+%     \defmapcomma{
+%         \mtimescatmor
+%     }{
+%         \Mor_{\DPL} \cartprod \Mor_{\DPL}
+%     }{
+%         \mto
+%     }{
+%         \Mor_{\DPL}
+%     }{
+%         \tup{\adpa,\adpb}
+%     }{
+%         \adpa \cproddp \adpb
+%     },
+% \end{equation}
+
+% \begin{lemma}\label{lem:DPL-associative-stacking}
+%     \DPL, equipped with the aforementioned stacking operations on objects and morphisms, is  \SY{associative stacking}.
+% \end{lemma}
+
+% \begin{proof}
+%     We show that~$\DPL$ is an  \SY{associative stacking} semicategory.
+%     We first show that it is a stacking category, by first showing that the stacking operations indeed fulfill \cref{def:simple-stacking-semi-cat}, and then showing the compatibility condition.
+%     The stacking operation on objects fulfills \cref{def:simple-stacking-semi-cat}, since, given two \SY{posets} of tuples it returns a \SY{poset} of tuples.
+%     To show that the stacking operation on morphism fulfills \cref{def:simple-stacking-semi-cat}, we need to show that given \SY{design problems} ~$\adpa,\adpb$, the morphism~$\adpa \mtimescatmor \adpb$ is a design problem.
+%     This is easy to show, by leveraging the fact that~$\adpa$ and~$\adpb$ are \SY{design problems}.
+%     We know that
+%     \begin{equation}
+%         \prfcomma{\tup{\posAnel{}\opel,\posBnel{}\opel,\posCnel{},\posDnel{}} \posleqof{\posA\posop \Ptimes \posB\posop \Ptimes \posC\Ptimes \posD} \tup{{\posAnel{}'}\opel,{\posBnel{}'}\opel,\posCnel{}',\posDnel{}'}}
+%         {(\posAnel{}\opel \posleqof{\posA\op} {\posAnel{}'}\opel) \booland (\posBnel{}\opel \posleqof{\posB\op} {\posBnel{}'}\opel)\booland (\posCnel{}\posleqof{\posC}\posCnel{}')\booland (\posDnel{}\posleqof{\posD}\posDnel{}')}
+%     \end{equation}
+%     and that~$\booland$ is a monotone operator.
+%     Therefore,~$\adpa \cproddp \adpb$ is a design problem.
+%     Furthermore, the two stacking operations are compatible:
+%     \begin{equation}
+%         \prfperiod{\adpa\colon \posA\posop \Ptimes \posC \toinPos \Bool}
+%         {\adpb\colon \posB\posop \Ptimes \posD\toinPos \Bool}
+%         {\adpa \cproddp \adpb \colon \posA\posop \Ptimes \posB\posop \Ptimes\posC\Ptimes\posD\toinPos \Bool}
+%     \end{equation}
+
+%     \begin{comment}
+%     For brevity, we write~$\posAnel{}=\tup{\posAnel{1},\ldots, \posAnel{m}}$,~$\posBnel{}=\tup{\posBnel{1},\ldots, \posBnel{n}}$,~$\posCnel{}=\tup{\posCnel{1},\ldots, \posCnel{o}}$, and~$\posDnel{}=\tup{\posDnel{1},\ldots, \posDnel{t}}$.
+%     We have:
+%     \begin{equation}
+%         \prfperiod{
+%         \posAnel{}\tupconcat \posBnel{}\posleqof{\cObj{\posA_1, \ldots, \posA_m, \posB_1, \ldots, \posB_n}} \posAnel{}'\tupconcat \posBnel{}'
+%         }
+%         {\prftree{(\posAnel{} \posleqof{\cObj{\posA_1,\ldots, \posA_m}} \posAnel{}') \booland (\posBnel{} \posleqof{\cObj{\posB_1,\ldots, \posB_n}} \posBnel{}')}
+%         {\prftree{(\adpa(\posAnel{}\opel,\posCnel{})\posgeqof{\Bool} \adpa({\posAnel{}'}\opel,\posCnel{}))
+%                 \booland
+%                 (\adpb(\posBnel{}\opel,\posDnel{})\posgeqof{\Bool} \adpb({\posBnel{}'}\opel,\posDnel{}))}
+%             {
+%                 \prftree{
+%                     (\adpa({\posAnel{}}\opel,\posCnel{})\booland \adpb(\posBnel{}\opel,\posDnel{}))
+%                     \posgeqof{\Bool}
+%                     (\adpa({\posAnel{}'}\opel,\posCnel{})\booland \adpb({\posBnel{}'}\opel,\posDnel{}))
+%                 }
+%                 {(\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}\tupconcat \posDnel{})\posgeqof{\Bool}
+%                     (\adpa \cprod \adpb)((\posAnel{}'\tupconcat \posBnel{}')\opel,\posCnel{}\tupconcat \posDnel{})} }
+%             }
+%         }
+%     \end{equation}
+%     For the second iteration, we have:
+%     \begin{equation}
+%         \prfperiod{
+%         \posCnel{}\tupconcat \posDnel{}\posleqof{\cObj{\posC_1, \ldots, \posC_o, \posD_1, \ldots, \posD_t}} \posCnel{}'\tupconcat \posDnel{}'
+%         }
+%         {\prftree{(\posCnel{} \posleqof{\cObj{\posC_1,\ldots,\posC_o}} \posCnel{}') \booland (\posDnel{}\posleqof{\cObj{\posD_1,\ldots, \posD_t}} \posDnel{}')}
+%         {\prftree{(\adpa(\posAnel{}\opel,\posCnel{})\posleqof{\Bool}
+%                 \adpa(\posAnel{}\opel,\posCnel{}'))
+%                 \booland
+%                 (\adpb(\posBnel{}\opel,\posDnel{})\posleqof{\Bool}
+%                 \adpb(\posBnel{}\opel,\posDnel{}'))}
+%             {
+%                 \prftree{
+%                     (\adpa(\posAnel{}\opel,\posCnel{})\booland \adpb(\posBnel{}\opel,\posDnel{}))
+%                     \posleqof{\Bool}
+%                     (\adpa(\posAnel{}\opel,\posCnel{}')\booland \adpb(\posBnel{}\opel,\posDnel{}'))
+%                 }
+%                 {(\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}\tupconcat \posDnel{})
+%                     \posleqof{\Bool}
+%                     (\adpa \cprod \adpb)((\posAnel{}\tupconcat \posBnel{})\opel,\posCnel{}'\tupconcat \posDnel{}')} }
+%             }
+%         }
+%     \end{equation}
+%     Therefore,~$\adpa \cprod \adpb$ is really a design problem.
+%     \end{comment}
+%     Associativity can be shown following what we did for~$\cObj{\Set}$.
+% \end{proof}
+
+\begin{lemma}
+    \label{lem:ProfBoolL-strict-monoidal}
+    The following defines a strict monoidal structure on $\ProfBoolL$:
+    \begin{itemize}
+        \item on objects, the monoidal product is the one of $\PreL$ (\cref{eq:multposstack});
+        \item on morphisms, given Boolean profunctors $\stylemorph{\phi} \colon \posAop \Ptimes \posB \mto \Bool$ and $\stylemorph{\psi} \colon \posC\op \Ptimes \posD \mto \Bool$ between objects of $\PreL$, their monoidal product is the Boolean profunctor
+              \begin{equation}
+                  \stylemorph{\phi} \mtimescatmor \stylemorph{\psi} \colon (\posA \mtimescatob \posC)\op \Ptimes (\posB \mtimescatob \posD) \mto \Bool
+              \end{equation}
+              defined by
+              \begin{equation}
+                  \label{eq:dpmulti}
+                  (\stylemorph{\phi} \mtimescatmor \stylemorph{\psi})\bigl(\maketupconcat{a, c}, \maketupconcat{b, d}\bigr)
+                  \definedas
+                  \stylemorph{\phi}(a, b) \booland \stylemorph{\psi}(c, d)
+              \end{equation}
+              for all $a \setin \posA$, $c \setin \posC$, $b \setin \posB$, and $d \setin \posD$;
+        \item the monoidal unit is the preorder $\idmoncat \definedas \emptycobj$, whose only element is the empty tuple.
+    \end{itemize}
+\end{lemma}
+
+
+
+%\begin{lemma}\label{lem:RelL-associative-stacking}
+%    \RelL is  \SY{associative stacking} with the structure induced by tuple concatenation.
+%\end{lemma}
+%\begin{proof}
+%    The multiplication $\mtimescatob$ is $\cprod$, the same as the one defined for $\SetL$.
+%
+%    The multiplication $\mtimescatmor$ is defined as follows:
+%    \begin{equation}
+%        \prf{
+%            \relA\setsubseteq \setA \cartprod \setB
+%        }{
+%            \quad
+%        }{
+%            \relB\setsubseteq \setC\cartprod \setD
+%        }{
+%            \pars{\relA\mtimescatmor\relB} \setsubseteq
+%            \pars{\makecprod{\setA,\setC}} \cartprod
+%            \pars{\makecprod{\setB,\setD}}
+%        }
+%    \end{equation}
+%    where
+%    \begin{equation}
+%        \pars{
+%            \relA
+%            \mtimescatmor
+%            \relB
+%        }
+%        =
+%        \makesett{
+%            \tup{\setAeln{}\tupconcat \setCeln{},\setBeln{}\tupconcat \setDeln{}}
+%            \mid
+%            % \setAeln{} \setin \setA,
+%            % \setBeln{} \setin \setB,
+%            % \setCeln{} \setin \setC,
+%            % \setDeln{} \setin \setD:
+%            (\inrel{\setAeln{}}\relA{\setBeln{}})
+%            \booland
+%            (\inrel{\setCeln{}}\relB{\setDeln{}})
+%        }.
+%    \end{equation}
+%    The rest of the proof is left as an exercise.
+%\end{proof}
+
+% What is a relation in this context?
+% Given two sets of tuples~$\cObj{\setAn{1},\ldots, \setAn{m}}$ and~$\cObj{\setBn{1},\ldots, \setBn{n}}$, a relation between them is given by
+% \begin{equation}
+%     \relA \setsubseteq \cObj{\setAn{1},\ldots, \setAn{m}} \cartprod \cObj{\setBn{1},\ldots, \setBn{n}}.
+% % \end{equation}
+% We can define a multiplication operation for relations.
+% Consider
+% \begin{equation}
+%     \begin{aligned}
+%         \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} & \mtoin{\RelL}\cObj{\setBn{1},\ldots, \setBn{n}}, \\
+%         \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} & \mtoin{\RelL}\cObj{\setDn{1},\ldots, \setDn{p}}.
+%     \end{aligned}
+% \end{equation}
+% We have
+% \begin{equation}
+%     \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mtoin{\RelL}
+%     \cObj{\setBn{1},\ldots, \setBn{n}}\cprod \cObj{\setDn{1},\ldots, \setDn{p}}.
+% \end{equation}
+% Specifically, the multiplication is given by:
+% \begin{equation}
+%     \label{eq:multiofrels}
+%     \defmapperiod{
+%         \mtimescatmor
+%     }{
+%         \Mor_{\RelL}\cartprod \Mor_{\RelL}
+%     }{
+%         \mto
+%     }{
+%         \Mor_{\RelL}
+%     }{
+%         \tup{\relA,\relB}
+%     }{
+%         \makeset{
+%             \tup{\setAeln{}\tupconcat \setCeln{},\setBeln{}\tupconcat \setDeln{}}
+%             \mid
+%             (\inrel{\setAeln{}}\relA{\setBeln{}}) \booland (\inrel{\setCeln{}}\relB{\setDeln{}})
+%         }
+%     }
+% \end{equation}
+
+\begin{exercise}
+    \label{ex:relassocstack}
+    Consider the monoidal product on $\RelL$ described in \cref{eq:RelL-monoidal-product}.
+    Prove that it is associative, both on objects and on morphisms.
+\end{exercise}
+
+\begin{solution}
+    To prove the statement we first check that the stacking operations satisfy \cref{def:simple-stacking-cat}, we then show that they are compatible, and finally show associativity.
+    The stacking operation on objects was already checked for~\SetL.
+    The stacking operation on morphisms clearly returns a valid relation.
+    Furthermore, compatibility is satisfied:
+    \begin{equation}
+        \prfperiod{
+            \relA\colon \cObj{\setAn{1},\ldots, \setAn{m}} \mtoin{\RelL}\cObj{\setBn{1},\ldots, \setBn{n}}
+        }
+        {
+            \relB\colon \cObj{\setCn{1},\ldots, \setCn{o}} \mtoin{\RelL}\cObj{\setDn{1},\ldots, \setDn{p}}
+        }
+        {
+            \relA\mtimescatmor \relB \colon \cObj{\setAn{1},\ldots, \setAn{m}}\cprod \cObj{\setCn{1},\ldots, \setCn{o}}\mtoin{\RelL}
+            \cObj{\setBn{1},\ldots, \setBn{n}}\cprod \cObj{\setDn{1},\ldots, \setDn{p}}
+        }
+    \end{equation}
+    Finally, associativity for the operation on objects was already shown for~\SetL.
+    % The stacking operation on morphisms follows directly from \cref{eq:multiofrels}.
+\end{solution}
+
+
+
+
+
+%\begin{gradedexercise}[\exname{RelFunStack}]
+%    \label{ex:RelFunStack}
+%    Prove that the structure defined in \cref{ex:relassocstack} makes~\RelL a \SY{functorial stacking semicategory}.
+%\end{gradedexercise}
+%
+%\solutionof{RelFunStack}
+
+
+%\begin{proof}
+%    Consider
+%    \begin{equation}
+%        \begin{aligned}
+%            \adpa\colon \posAop\Ptimes \posC     & \toinPos \Bool \\
+%            \adpb\colon \posB\posop\Ptimes \posD & \toinPos \Bool \\
+%            \adpc\colon \posC\posop\Ptimes \posE & \toinPos \Bool \\
+%            \adpd\colon \posD\posop\Ptimes \posF & \toinPos \Bool
+%        \end{aligned}
+%    \end{equation}
+%    We want to prove that
+%    \begin{equation}
+%        (\adpa \dpthen \adpc)
+%        \mtimescatmor (\adpb \dpthen \adpd)=(\adpa \mtimescatmor \adpb) \dpthen (\adpc \mtimescatmor \adpd).
+%    \end{equation}
+%    %For brevity, in the following we write
+%    %\begin{align*}
+%    %    \posAnel{} & =\tup{\posAnel{1},\ldots, \posAnel{i}}, &
+%    %    \posBnel{} & =\tup{\posBnel{1},\ldots, \posBnel{l}} \\
+%    %    \posCnel{} & =\tup{\posCnel{1},\ldots, \posCnel{m}}, &
+%    %    \posDnel{} & =\tup{\posDnel{1},\ldots, \posDnel{n}} \\
+%    %    \posEnel{} & =\tup{\posEnel{1},\ldots, \posEnel{o}}, &
+%    %    \posFnel{} & =\tup{\posFnel{1},\ldots, \posFnel{v}}
+%    %\end{align*}
+%    We start from the left-hand side.
+%    We have
+%    \begin{equation}
+%        (\adpa \dpthen \adpc)(\posAnel{}\opel,\posEnel{})
+%        =\bigvee_{\posCnel{}\setin \posC}
+%        \adpa(\posAnel{}\opel, \posCnel{}) \booland \adpc(\posCnel{}\opel,\posEnel{})
+%    \end{equation}
+%    and
+%    \begin{equation}
+%        \begin{aligned}
+%            (\adpb \dpthen \adpd)(\posBnel{}\opel,\posFnel{})
+%            =\bigvee_{\posDnel{}\setin \posD}
+%            \adpb(\posBnel{}\opel, \posDnel{}) \booland \adpd(\posDnel{}\opel\posFnel{})
+%        \end{aligned}
+%    \end{equation}
+%    Therefore, we know
+%    \begin{equation}
+%        \begin{aligned}
+%             & ((\adpa \dpthen \adpc)\mtimescatmor (\adpb \dpthen \adpd))
+%            ((\posAnel{}\tupconcat \posBnel{})\opel,\posEnel{}\tupconcat \posFnel{}) \\
+%             & =\bigvee_{\posCnel{}\setin \posC}
+%            \adpa(\posAnel{}\opel, \posCnel{}) \booland \adpc(\posCnel{}\opel,\posEnel{}) \booland
+%            \bigvee_{\posDnel{}\setin \posD} \adpb(\posBnel{}\opel, \posDnel{}) \booland \adpd(\posDnel{}\opel,\posFnel{}).
+%        \end{aligned}
+%    \end{equation}
+%
+%    On the other hand, we have
+%    \begin{equation}
+%        (\adpa \mtimescatmor \adpb)
+%        ((\posAnel{}\tupconcat \posBnel{})\opel, \posCnel{}\tupconcat \posDnel{})
+%        =\adpa(\posAnel{}\opel,\posCnel{}) \booland \adpb(\posBnel{}\opel,\posDnel{})
+%    \end{equation}
+%    and
+%    \begin{equation}
+%        (\adpc \mtimescatmor \adpd)
+%        ((\posCnel{}\tupconcat \posDnel{})\opel, \posEnel{}\tupconcat \posFnel{})
+%        =\adpc(\posCnel{}\opel,\posEnel{}) \booland \adpd(\posDnel{}\opel,\posFnel{})
+%    \end{equation}
+%    Therefore, we know
+%    \begin{equation}
+%        \begin{aligned}
+%             & ((\adpa \mtimescatmor \adpb)\dpthen (\adpc \mtimescatmor \adpd))((\posAnel{}\tupconcat \posBnel{})\opel,\posEnel{}\tupconcat \posFnel{}) \\
+%             & =\bigvee_{\posCnel{}\tupconcat \posDnel{}\setin \cObj{\posC,\posD}}
+%            (\adpa \mtimescatmor \adpb)((\posAnel{}\tupconcat \posBnel{})\opel, \posCnel{}\tupconcat \posDnel{})
+%            \booland (\adpc \mtimescatmor \adpd)((\posCnel{}\tupconcat \posDnel{})\opel, \posEnel{}\tupconcat \posFnel{}) \\
+%             & =\bigvee_{\posCnel{}\tupconcat \posDnel{}\setin \cObj{\posC,\posD}}
+%            \adpa(\posAnel{}\opel,\posCnel{}) \booland \adpb(\posBnel{}\opel,\posDnel{})
+%            \booland
+%            \adpc(\posCnel{}\opel,\posEnel{}) \booland \adpd(\posDnel{}\opel,\posFnel{}) \\
+%             & =\bigvee_{\posCnel{}\setin \posC}
+%            \adpa(\posAnel{}\opel, \posCnel{}) \booland \adpc(\posCnel{}\opel,\posEnel{}) \booland
+%            \bigvee_{\posDnel{}\setin \posD} \adpb(\posBnel{}\opel, \posDnel{}) \booland \adpd(\posDnel{}\opel,\posFnel{}),
+%        \end{aligned}
+%    \end{equation}
+%    proving the statement for any \SY{posets}~$\posA,\posB,\posC,\posD,\posE,\posF$ (and hence, also for \SY{posets} of tuples).
+%
+%\end{proof}
+
+
+
 
 \subsection{Applied examples}
 
-\begin{example}
-    \LTI, equipped with previously described stacking operations and an appropriate unit, is a strict monoidal stacking category.
-    The unit is given by the object $\reals^0$, and its identity morphism is given by the LTI system
+\begin{example}[Codesign]
+    \label{exa:codesign-strict-monoidal}
+    Recall from \cref{chap:application-design-problems} that in codesign we model a component of an engineering system as a relationship between the functionalities that it provides and the requirements that it has.
+    Formally, such a component is a \emph{feasibility relation} $\monrelM \colon \funsp \profto \ressp$ between a poset $\funsp$ of functionalities and a poset $\ressp$ of requirements (\cref{def:feasibility-relation}), or, equivalently, a \SY{design problem} $\adp \colon \funspop \Ptimes \ressp \mto \Bool$ (\cref{def:design-problem}), which is a Boolean profunctor between posets (\cref{def:boolean-profunctor}).
+    We have also seen that components can be connected in series, and that they are the morphisms of two categories which describe the same thing in two ways: the category $\feas$ of feasibility relations (\cref{def:Feas}) and the category $\DP$ of design problems (\cref{def:DP}).
+
+    In the terminology of this chapter, $\feas$ is the \SY{full subcategory} of the category $\mRel$ of monotone relations, and $\DP$ is the \SY{full subcategory} of the category $\ProfBool$ of Boolean profunctors, in which we only consider those objects which are posets.
+
+    To model the parallel composition of components, we can use the tuple versions of these two categories instead.
+    \SYNDEF{category of tuple-posets and design problems}%
+    \label{def:DPL}%
+    We write $\feasL$ for the \SY{full subcategory} of $\mRelL$, and $\DPL$ for the \SY{full subcategory} of $\ProfBoolL$, in which we only consider those objects which are tuple preorders that are posets, that is, the objects of $\PosL$.
+    These are also subcategories of $\feas$ and of $\DP$, respectively: the morphisms of $\feasL$ are the feasibility relations, and the morphisms of $\DPL$ are the design problems, between posets of tuples.
+    An object $\cObj{\posA_1,\ldots, \posA_n}$ then stands for a list of $n$ functionalities, or of $n$ requirements, each with its own poset of possible values.
+
+    The monoidal product of two posets of tuples is a poset, and so the strict monoidal structures of $\mRelL$ and of $\ProfBoolL$ (\cref{eq:RelL-monoidal-product} and \cref{lem:ProfBoolL-strict-monoidal}) restrict to $\feasL$ and to $\DPL$.
+    The monoidal product of two components is the component which provides the functionalities of both, listed one after the other, and which has the requirements of both; by \cref{eq:dpmulti}, a pair of lists of functionalities is feasible with a pair of lists of requirements precisely when this is the case for each of the two components separately.
+    In this way, placing two components of a system side by side, without any interaction between them, is modeled by the monoidal product of the strict monoidal categories $\feasL$ and $\DPL$.
+\end{example}
+
+\begin{example}[Mealy machines]
+    \label{exa:MealyModL-strict-monoidal}
+    Recall the category $\MealyMod$ of Mealy machines up to isomorphism (\cref{def:MealyCat}).
+    Two Mealy machines can be run side by side: the combined machine receives a pair of inputs, one for each machine, each machine updates its own state, and the combined machine returns the pair of outputs.
+    We now turn this into a strict monoidal structure.
+
+    For this, we need to be careful with the sets involved.
+    In $\MealyMod$, the sets of inputs, states, and outputs are arbitrary sets, and they are combined using the \SY{cartesian product}, which is not associative on the nose.
+    As for $\SetL$ (\cref{lem:SetL-strict-monoidal}), we therefore let all three kinds of sets live in $\SetL$, and we combine them using the multiplication $\cprod$ of $\SetL$.
+
+    We define the category $\MealyModL$ as follows.
+    Its objects are the objects of $\SetL$.
+    A morphism from $\prin$ to $\prout$ is an equivalence class $\equivmora$ of Mealy machines
+    \begin{equation}
+        \mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart},
+    \end{equation}
+    in which the set $\prin$ of inputs, the set $\prst$ of states, and the set $\prout$ of outputs are all objects of $\SetL$, the dynamics and the read-out are morphisms
+    \begin{equation}
+        \prdyn \colon \prin \cprod \prst \mtoin\SetL \prst
+        \qqand
+        \prreadout \colon \prin \cprod \prst \mtoin\SetL \prout
+    \end{equation}
+    of $\SetL$, and $\prstart \setin \prst$ is the initial state.
+    As before, two such machines with the same inputs and outputs are equivalent if they are isomorphic, that is, if there is a bijection between their sets of states which is compatible with the initial states, the dynamics, and the read-outs.
+
+    Composition is defined as in $\MealyMod$ (\cref{eq:mealy-composition}), with $\cprod$ in place of the \SY{cartesian product}: given Mealy machines $\mora$ and $\morb$ with $\prout_{\mora} = \prin_{\morb}$, the machine $\morab$ has the set of states $\prst_{\mora} \cprod \prst_{\morb}$, the initial state $\maketupconcat{\prstart_{\mora}, \prstart_{\morb}}$, and
+    \begin{equation}
+        \label{eq:mealyL-composition}
+        \begin{aligned}
+            \prdyn_{\morab}\bigl(\maketupconcat{\prinel, \prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \maketupconcat{\prdyn_{\mora}(\maketupconcat{\prinel, \prsteln{\mora}}),\ \prdyn_{\morb}\bigl(\maketupconcat{\prreadout_{\mora}(\maketupconcat{\prinel, \prsteln{\mora}}), \prsteln{\morb}}\bigr)}, \\
+            \prreadout_{\morab}\bigl(\maketupconcat{\prinel, \prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \prreadout_{\morb}\bigl(\maketupconcat{\prreadout_{\mora}(\maketupconcat{\prinel, \prsteln{\mora}}), \prsteln{\morb}}\bigr).
+        \end{aligned}
+    \end{equation}
+    The identity morphism of $\prin$ is represented by the machine with the set of states $\emptycobj$, whose read-out returns its input.
+    (Every set of states is in bijection with an object of $\SetL$, namely with the set of tuples of length one over it. Hence $\MealyModL$ can be identified with the \SY{full subcategory} of $\MealyMod$ whose objects are the objects of $\SetL$.)
+
+    The following defines a strict monoidal structure on $\MealyModL$.
+
+    On objects, the monoidal product is the one of $\SetL$, that is, $\prin \mtimescatob \prin' \definedas \prin \cprod \prin'$, and the monoidal unit is $\idmoncat \definedas \emptycobj$.
+
+    On morphisms, given morphisms $\equivmora$ and $\equivmorb$ represented by Mealy machines
+    \begin{equation}
+        \begin{aligned}
+            \mora & = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}, \\
+            \morb & = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
+        \end{aligned}
+    \end{equation}
+    we define $\equivmora \mtimescatmor \equivmorb$ to be the equivalence class of the Mealy machine
+    \begin{equation}
+        \mora \mtimescatmor \morb \definedas \tupp{\prin_{\mora} \cprod \prin_{\morb},\ \prst_{\mora} \cprod \prst_{\morb},\ \prout_{\mora} \cprod \prout_{\morb},\ \prdyn,\ \prreadout,\ \maketupconcat{\prstart_{\mora}, \prstart_{\morb}}},
+    \end{equation}
+    whose dynamics and read-out are
+    \begin{equation}
+        \label{eq:mealy-stacking}
+        \begin{aligned}
+            \prdyn\bigl(\maketupconcat{\prineln{\mora},\prineln{\morb},\prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \maketupconcat{\prdyn_{\mora}(\maketupconcat{\prineln{\mora}, \prsteln{\mora}}),\ \prdyn_{\morb}(\maketupconcat{\prineln{\morb}, \prsteln{\morb}})}, \\
+            \prreadout\bigl(\maketupconcat{\prineln{\mora},\prineln{\morb},\prsteln{\mora}, \prsteln{\morb}}\bigr) & \definedas \maketupconcat{\prreadout_{\mora}(\maketupconcat{\prineln{\mora}, \prsteln{\mora}}),\ \prreadout_{\morb}(\maketupconcat{\prineln{\morb}, \prsteln{\morb}})}.
+        \end{aligned}
+    \end{equation}
+    This does not depend on the choice of representatives: if $\mapc_1$ is an isomorphism of Mealy machines from $\mora$ to $\mora'$, and $\mapc_2$ one from $\morb$ to $\morb'$, then $\maketupconcat{\prsteln{\mora}, \prsteln{\morb}} \mapsto \maketupconcat{\mapc_1(\prsteln{\mora}), \mapc_2(\prsteln{\morb})}$ is one from $\mora \mtimescatmor \morb$ to $\mora' \mtimescatmor \morb'$.
+
+    Let us go through the conditions of \cref{def:strict-monoidal-cat}.
+    Since the sets of states now live in $\SetL$ as well, most of them hold on the nose, already for the machines themselves:
+    \begin{itemize}
+        \item Associativity: the machines $(\mora \mtimescatmor \morb) \mtimescatmor \morc$ and $\mora \mtimescatmor (\morb \mtimescatmor \morc)$ are equal.
+              In particular, they have the same set of states, since $(\prst_{\mora} \cprod \prst_{\morb}) \cprod \prst_{\morc} = \prst_{\mora} \cprod (\prst_{\morb} \cprod \prst_{\morc})$.
+        \item Neutrality of the unit: the machine $\mora \mtimescatmor \catid_\idmoncat$ is equal to $\mora$, since $\prst_{\mora} \cprod \emptycobj = \prst_{\mora}$; similarly for $\catid_\idmoncat \mtimescatmor \mora$.
+        \item Functoriality: stacking two identity machines gives an identity machine, since $\emptycobj \cprod \emptycobj = \emptycobj$.
+              However, the machines $(\mora \mthen \morc) \mtimescatmor (\morb \mthen \mord)$ and $(\mora \mtimescatmor \morb) \mthen (\morc \mtimescatmor \mord)$ are \emph{not} equal: their sets of states are
+              \begin{equation}
+                  \label{eq:mealyL-interchange-states}
+                  \prst_{\mora} \cprod \prst_{\morc} \cprod \prst_{\morb} \cprod \prst_{\mord}
+                  \qqand
+                  \prst_{\mora} \cprod \prst_{\morb} \cprod \prst_{\morc} \cprod \prst_{\mord},
+              \end{equation}
+              respectively, in which the states of $\morb$ and of $\morc$ appear in the opposite order.
+              The bijection which exchanges the two middle components is an isomorphism of Mealy machines between them, and so the two machines represent the same morphism of $\MealyModL$.
+    \end{itemize}
+    So the only condition for which we really need to pass to equivalence classes is the compatibility of the monoidal product with composition.
+    We will meet exactly the same phenomenon for LTI systems in \cref{exa:LTI-stacking-not-functorial} and \cref{exa:LTI-quotient-strict-monoidal}.
+    (For the same reason, composition in $\MealyModL$ is associative and unital already for the machines themselves.)
+\end{example}
+
+\begin{example}[Stacking of LTI systems is not functorial]
+    \label{exa:LTI-stacking-not-functorial}
+    Consider the category \LTI with the stacking operations described in \cref{eq:LTI-stacking-objects} and \cref{eq:LTI-stacking-prftree}.
+    At first sight this looks like a strict monoidal category.
+
+    On the side of objects, the stacking $\reals^l \mtimescatob \reals^m = \reals^{l+m}$ is associative on the nose, and $\reals^{l+0}=\reals^{0+l}=\reals^l$ for any object $\reals^l\setin \Ob_\LTI$, so the object $\reals^0$ is a candidate for the monoidal unit.
+    On the side of morphisms, stacking is associative on the nose as well, since it is given by block-diagonal matrices.
+    The identity morphism of $\reals^0$ is the LTI system
     \begin{equation*}
-        \catid_\idmoncat=\tup{\mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0},\mat{0}^{0\times 0}}.
+        \catid_\idmoncat=\tupp{\reals^0, \mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0},\mat{0}^{0\times 0}},
     \end{equation*}
-    On the side of objects, clearly $\reals^{l+0}=\reals^{0+l}=\reals^l$ for any object $\reals^l\setin \Ob_\LTI$.
-    Consider $\mora\colon \reals^l\mto \reals^m$.
-    On the side of morphisms we have:
+    whose state space is $\reals^0$, in accordance with \cref{def:LTICat}, and it is neutral for stacking.
+    Indeed, consider a morphism $\mora = \tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}} \colon \reals^l\mto \reals^m$, with state space $\reals^k$.
+    Using $\reals^{k+0} = \reals^k$, we have:
     \begin{equation*}
         \begin{aligned}
             \mora \mtimescatmor \catid_\idmoncat & =
-            \langle\begin{bmatrix}\prstart \\ \mat{0}^{0\times 1}\end{bmatrix},
+            \langle \reals^{k+0}, \begin{bmatrix}\prstart \\ \mat{0}^{0\times 1}\end{bmatrix},
             \begin{bmatrix}\mat{A}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
             \begin{bmatrix}\mat{B}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
             \begin{bmatrix}\mat{C}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
             \begin{bmatrix}\mat{D}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix}\rangle \\
-                                                 & =\genericlti{}
+                                                 & =\tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}} = \mora.
         \end{aligned}
     \end{equation*}
-    Similarly:
+    Similarly, using $\reals^{0+k} = \reals^k$:
     \begin{equation*}
         \begin{aligned}
             \catid_\idmoncat \mtimescatmor \mora & =
-            \langle\begin{bmatrix}\mat{0}^{0\times 1}\\ \prstart\end{bmatrix},
+            \langle \reals^{0+k}, \begin{bmatrix}\mat{0}^{0\times 1}\\ \prstart\end{bmatrix},
             \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{A}\end{bmatrix},
             \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{B}\end{bmatrix},
             \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{C}\end{bmatrix},
             \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{D}\end{bmatrix}\rangle \\
-                                                 & =\genericlti{}
+                                                 & =\tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}} = \mora.
         \end{aligned}
     \end{equation*}
+
+    Nevertheless, \LTI with these operations is \emph{not} a \SY{strict monoidal category} in the sense of \cref{def:strict-monoidal-cat}, because the stacking operations are not the components of a functor: the first condition in \cref{def:functorial-stacking-cat} fails.
+    To see this, consider LTI systems $\mora$, $\morb$, $\morc$, and $\mord$ such that $\mora \mthen \morc$ and $\morb \mthen \mord$ are defined, and compare the two LTI systems
+    \begin{equation}
+        \label{eq:LTI-interchange-two-sides}
+        (\mora \mthen \morc) \mtimescatmor (\morb \mthen \mord)
+        \qqand
+        (\mora \mtimescatmor \morb) \mthen (\morc \mtimescatmor \mord).
+    \end{equation}
+    Both series composition (\cref{eq:LTI-composition}) and stacking (\cref{eq:LTI-stacking-mor1}) build the state of the resulting system by stacking the states of the two given systems on top of each other, with the first system on top.
+    Hence the start states of the two systems in \cref{eq:LTI-interchange-two-sides} are
+    \begin{equation}
+        \label{eq:LTI-interchange-start-states}
+        \begin{bmatrix}
+            \prstart_\mora \\
+            \prstart_\morc \\
+            \prstart_\morb \\
+            \prstart_\mord
+        \end{bmatrix}
+        \qqand
+        \begin{bmatrix}
+            \prstart_\mora \\
+            \prstart_\morb \\
+            \prstart_\morc \\
+            \prstart_\mord
+        \end{bmatrix},
+    \end{equation}
+    respectively.
+    These are different vectors in general: for instance, if all four state spaces are $\reals^1$, they differ as soon as $\prstart_\morb \neq \prstart_\morc$.
+    The same happens for the matrices: the blocks belonging to $\morb$ and to $\morc$ appear in the opposite order in the two systems (computing the two matrices $\mat{A}$ is the subject of \linkifexists{ex:StackingLTI}).
+
+    Note that the two systems in \cref{eq:LTI-interchange-two-sides} are ``essentially the same'': they have the same four subsystems, connected in the same way, and they only list the coordinates of their state in a different order.
+    But as morphisms of \LTI they are not equal.
 \end{example}
 
+\begin{example}[LTI systems up to equivalence]
+    \label{exa:LTI-quotient-strict-monoidal}
+    The failure of functoriality in \cref{exa:LTI-stacking-not-functorial} can be repaired in the same way in which we obtained the categories of Moore and Mealy machines (\cref{sec:cat-machines}): by no longer distinguishing systems which only differ by a change of coordinates of their state space.
+
+    Recall from \cref{def:equivalence_lti} that two LTI systems $\mora$ and $\mora'$ with the same input space, the same output space, and state spaces of the same dimension $k$ are \emph{equivalent}, written $\mora \equival \mora'$, if there is an invertible matrix $\mat{T} \setin \reals^{\matdim{k}{k}}$ such that
+    \begin{equation}
+        \mat{A}_{\mora'} = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \quad \mat{B}_{\mora'} = \mat{T}\mat{B}_\mora, \quad \mat{C}_{\mora'} =\mat{C}_\mora\mat{T}^{-1},\quad \mat{D}_{\mora'}=\mat{D}_\mora, \quad \prstart_{\mora'}=\mat{T}\prstart_\mora.
+    \end{equation}
+    Equivalent systems transform every input signal into the same output signal; they are the same system, described in different coordinates.
+
+    This \SY{equivalence relation} is a \SY{congruence} on \LTI (\cref{def:congruence-category}): if $\mat{T}_1$ is an equivalence transformation from $\mora$ to $\mora'$ and $\mat{T}_2$ is one from $\morb$ to $\morb'$, then the block-diagonal matrix
+    \begin{equation}
+        \label{eq:LTI-block-diagonal-transformation}
+        \begin{bmatrix}
+            \mat{T}_1 & \mat{0}   \\
+            \mat{0}   & \mat{T}_2
+        \end{bmatrix}
+    \end{equation}
+    is an equivalence transformation from $\mora \mthen \morb$ to $\mora' \mthen \morb'$.
+    We can therefore form the \SY{quotient category} $\LTI/_{\equival}$ (\cref{def:quotient-category}).
+    Its objects are still the coordinate spaces $\reals^n$, and its morphisms are equivalence classes $\equivmora$ of LTI systems.
+
+    The stacking operations pass to $\LTI/_{\equival}$: on objects nothing changes, and on morphisms we define $\equivmora \mtimescatmor \equivmorb$ to be the equivalence class of $\mora \mtimescatmor \morb$.
+    This does not depend on the choice of representatives, since the matrix \cref{eq:LTI-block-diagonal-transformation} is also an equivalence transformation from $\mora \mtimescatmor \morb$ to $\mora' \mtimescatmor \morb'$.
+
+    With these operations and the monoidal unit $\reals^0$, the category $\LTI/_{\equival}$ \emph{is} a \SY{strict monoidal category}.
+    Associativity and the neutrality of the unit hold already for representatives, as we saw in \cref{exa:LTI-stacking-not-functorial}.
+    And stacking is now functorial: the two systems in \cref{eq:LTI-interchange-two-sides} are equivalent, with the equivalence transformation given by the permutation matrix
+    \begin{equation}
+        \begin{bmatrix}
+            \mat{1} & \mat{0} & \mat{0} & \mat{0} \\
+            \mat{0} & \mat{0} & \mat{1} & \mat{0} \\
+            \mat{0} & \mat{1} & \mat{0} & \mat{0} \\
+            \mat{0} & \mat{0} & \mat{0} & \mat{1}
+        \end{bmatrix},
+    \end{equation}
+    in which the blocks $\mat{1}$ are identity matrices of the appropriate sizes; it exchanges the two middle blocks of the state, as in \cref{eq:LTI-interchange-start-states}.
+    The second condition in \cref{def:functorial-stacking-cat}, on identity morphisms, holds already for representatives.
+\end{example}
+
+\begin{remark}
+    \label{rem:LTI-other-repairs}
+    Passing to equivalence classes is not the only way to deal with the fact that the stacking of LTI systems is not functorial.
+    Instead of declaring the two systems in \cref{eq:LTI-interchange-two-sides} to be equal, one can keep them distinct and remember the equivalence transformation between them as an additional piece of structure.
+    This leads to mathematical structures which are more general, and more complicated, than monoidal categories, in which the conditions for parallel composition only hold ``up to'' specified transformations (see \cref{exa:bicat-lti} for a first step in this direction).
+    We do not pursue this here.
+\end{remark}
 
 
-\subsection{Canonical examples}
 
-\subsection{Constructions}
+
+
+
+\subsection{When the category is a preorder}
+\label{sec:strict-monoidal-preorders}
+
+Recall that every preorder $\posAdefinition$ can be viewed as a category $\poscat{\posA}$ (\cref{def:poscat}): its objects are the elements of $\posAset$, and there is exactly one morphism from $\posela$ to $\poselb$ if $\posela \posAleq \poselb$, and none otherwise.
+What is a strict monoidal structure on such a category?
+Let us unpack \cref{def:strict-monoidal-cat}.
+
+The monoidal product is a functor $\poscat{\posA} \Ctimes \poscat{\posA} \fto \poscat{\posA}$.
+On objects, it is a binary operation on the set $\posAset$, which we write as $\monpostimes$.
+On morphisms, note that there is a morphism from $\tup{\posela, \poselb}$ to $\tup{\posela', \poselb'}$ in the product category precisely when $\posela \posAleq \posela'$ and $\poselb \posAleq \poselb'$.
+The functor has to map it to a morphism from $\posela \monpostimes \poselb$ to $\posela' \monpostimes \poselb'$, and such a morphism exists precisely when $\posela \monpostimes \poselb \posAleq \posela' \monpostimes \poselb'$.
+So the operation $\monpostimes$ must be monotone in both arguments.
+Conversely, if it is, then there is exactly one way to define the functor on morphisms, and the two functor conditions hold automatically, because in $\poscat{\posA}$ any two morphisms with the same source and the same target are equal.
+
+The monoidal unit is an element $\idmoncat \setin \posAset$.
+The conditions on the level of objects say that $\monpostimes$ is associative and that $\idmoncat$ is neutral for it; in other words, that $\tup{\posAset, \monpostimes, \idmoncat}$ is a \SY{monoid}.
+The conditions on the level of morphisms hold automatically, again because parallel morphisms in $\poscat{\posA}$ are equal.
+
+We arrive at the following structure.
+
+\begin{ctdefinition}[Monoidal preorder]
+    \label{def:monoidal-preorder}
+    A \maindef{monoidal preorder} is:
+
+    \constit
+    \begin{enumerate}
+        \item A preorder $\posAdefinition$;
+        \item A binary operation $\monpostimes \colon \posAset \cartprod \posAset \sto \posAset$, called the \emph{monoidal product};
+        \item An element $\idmoncat \setin \posAset$, called the \emph{monoidal unit}.
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item Monotonicity: for all $\posela, \posela', \poselb, \poselb' \setin \posAset$,
+              \begin{equation}
+                  \label{eq:monoidal-preorder-monotonicity}
+                  \text{if} \quad \posela \posAleq \posela' \quad \text{and} \quad \poselb \posAleq \poselb', \quad \text{then} \quad \posela \monpostimes \poselb \posAleq \posela' \monpostimes \poselb';
+              \end{equation}
+        \item Associativity: for all $\posela, \poselb, \poselc \setin \posAset$,
+              \begin{equation}
+                  (\posela \monpostimes \poselb) \monpostimes \poselc = \posela \monpostimes (\poselb \monpostimes \poselc);
+              \end{equation}
+        \item Neutrality: for all $\posela \setin \posAset$,
+              \begin{equation}
+                  \posela \monpostimes \idmoncat = \posela
+                  \qqand
+                  \idmoncat \monpostimes \posela = \posela.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+In short, a monoidal preorder is a set which is both a preorder and a \SY{monoid}, in such a way that the two structures are compatible.
+By the discussion above, a strict monoidal structure on the category $\poscat{\posA}$ is ``the same thing'' as a monoidal product and a monoidal unit which make the preorder $\posA$ into a monoidal preorder.
+When the preorder is a poset, one speaks of a \emph{monoidal poset}\iflabelexists{def:monoidal-poset}{; these will play an important role later on (\cref{def:monoidal-poset})}.
+
+\begin{example}
+    \label{exa:monoidal-preorders}
+    The following are monoidal preorders, and hence strict monoidal categories:
+    \begin{itemize}
+        \item the natural numbers with their usual order, addition as monoidal product, and $0$ as monoidal unit;
+        \item the natural numbers with their usual order, the maximum of two numbers as monoidal product, and $0$ as monoidal unit;
+        \item the Booleans $\Bool$, ordered by $\false \posleq \true$, with $\booland$ as monoidal product and $\true$ as monoidal unit;
+        \item the non-negative real numbers $\nonNegReals$ with the \emph{reversed} order $\geq$, addition as monoidal product, and $0$ as monoidal unit (think of costs: there is a morphism from a cost to any cost that is at most as large);
+        \item the subsets of a given set, ordered by inclusion, with union as monoidal product and the empty set as monoidal unit.
+    \end{itemize}
+    In each case, the monotonicity condition \cref{eq:monoidal-preorder-monotonicity} is a familiar fact; for instance, for the first one it says that $\posela \leq \posela'$ and $\poselb \leq \poselb'$ imply $\posela + \poselb \leq \posela' + \poselb'$.
+\end{example}
+
+\subsection{When the category is a monoid}
+\label{sec:strict-monoidal-monoids}
+
+Recall that every monoid $\monoidA = \tup{\monoidAset, \mtimes, \idmon}$ can be viewed as a category $\monoidcat{\monoidA}$ (\cref{def:monoidcat}): it has a single object $\monoidcatobj$, its morphisms are the elements of $\monoidAset$, composition is the operation $\mtimes$, and the identity morphism is the neutral element $\idmon$.
+What is a strict monoidal structure on such a category?
+We again unpack \cref{def:strict-monoidal-cat}.
+
+On the level of objects, there is nothing to choose and nothing to check: the monoidal unit must be the only object $\monoidcatobj$, and necessarily $\monoidcatobj \mtimescat \monoidcatobj = \monoidcatobj$.
+
+On the level of morphisms, the monoidal product is a second binary operation on the set $\monoidAset$,
+\begin{equation}
+    \mtimescat \colon \monoidAset \cartprod \monoidAset \sto \monoidAset.
+\end{equation}
+That $\mtimescat$ is a functor means that for all $\monela, \monela', \monelb, \monelb' \setin \monoidAset$,
+\begin{equation}
+    \label{eq:monoid-interchange}
+    (\monela \mtimes \monela') \mtimescat (\monelb \mtimes \monelb') = (\monela \mtimescat \monelb) \mtimes (\monela' \mtimescat \monelb')
+    \qqand
+    \idmon \mtimescat \idmon = \idmon.
+\end{equation}
+The remaining conditions say that $\mtimescat$ is associative, and that the identity morphism of the monoidal unit, which is $\idmon$, is neutral for it:
+\begin{equation}
+    \label{eq:monoid-second-neutrality}
+    \monela \mtimescat \idmon = \monela
+    \qqand
+    \idmon \mtimescat \monela = \monela.
+\end{equation}
+So a strict monoidal structure on $\monoidcat{\monoidA}$ is a second monoid structure on the same set, with the same neutral element, which is compatible with the first one in the sense of \cref{eq:monoid-interchange}.
+
+This looks like a rich new kind of structure, with two different ways of multiplying.
+Surprisingly, it is not: the two operations are forced to coincide, and to be commutative.
+
+\begin{lemma}
+    \label{lem:eckmann-hilton}
+    Let $\monoidA = \tup{\monoidAset, \mtimes, \idmon}$ be a monoid, and let $\mtimescat$ be a binary operation on $\monoidAset$ which satisfies \cref{eq:monoid-interchange} and \cref{eq:monoid-second-neutrality}.
+    Then, for all $\monela, \monelb \setin \monoidAset$,
+    \begin{equation}
+        \monela \mtimescat \monelb = \monela \mtimes \monelb = \monelb \mtimes \monela.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Using, in turn, the neutrality of $\idmon$ for $\mtimes$, the first equation in \cref{eq:monoid-interchange}, and the neutrality of $\idmon$ for $\mtimescat$, we find
+    \begin{equation}
+        \monela \mtimescat \monelb
+        = (\monela \mtimes \idmon) \mtimescat (\idmon \mtimes \monelb)
+        = (\monela \mtimescat \idmon) \mtimes (\idmon \mtimescat \monelb)
+        = \monela \mtimes \monelb,
+    \end{equation}
+    and, in the same way,
+    \begin{equation}
+        \monela \mtimescat \monelb
+        = (\idmon \mtimes \monela) \mtimescat (\monelb \mtimes \idmon)
+        = (\idmon \mtimescat \monelb) \mtimes (\monela \mtimescat \idmon)
+        = \monelb \mtimes \monela.
+    \end{equation}
+\end{proof}
+
+The resulting structure is therefore one that we already know.
+
+\begin{ctdefinition}[Commutative monoid]
+    \label{def:commutative-monoid}
+    A \emph{commutative monoid} is:
+
+    \constit
+    \begin{enumerate}
+        \item A monoid $\monoidA = \tup{\monoidAset, \mtimes, \idmon}$.
+    \end{enumerate}
+
+    \condit
+    \begin{enumerate}
+        \item Commutativity: for all $\monela, \monelb \setin \monoidAset$,
+              \begin{equation}
+                  \monela \mtimes \monelb = \monelb \mtimes \monela.
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+By \cref{lem:eckmann-hilton}, the category $\monoidcat{\monoidA}$ admits a strict monoidal structure only if the monoid $\monoidA$ is commutative, and in this case there is exactly one: the monoidal product of morphisms is the operation $\mtimes$ itself.
+(Conversely, if $\monoidA$ is commutative, then $\mtimescat \definedas \mtimes$ does satisfy \cref{eq:monoid-interchange}, since then $(\monela \mtimes \monela') \mtimes (\monelb \mtimes \monelb') = (\monela \mtimes \monelb) \mtimes (\monela' \mtimes \monelb')$.)
+In this sense, a strict monoidal category with a single object is ``the same thing'' as a commutative monoid.
+
+For example, the natural numbers with addition, and the real numbers with multiplication, are strict monoidal categories with a single object, while the monoid of $\matdim{2}{2}$ real matrices with matrix multiplication, which is not commutative, cannot be made into one.
+
+
 
 
 \subsection{Theory remarks}
