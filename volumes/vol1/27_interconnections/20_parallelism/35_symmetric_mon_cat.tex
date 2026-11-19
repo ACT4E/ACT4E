@@ -44,4 +44,53 @@
 
 \todotext{08-2026, JL: make remark that if the braidings are all identity morphisms, then we call the strict monoidal category 'commutative'; however, this rarely ever is the case (give examples and non-examples)} 
 
+\subsection{Props}
+\label{sec:props}
 
+In \cref{sec:strict-monoidal-natural-numbers} we met strict monoidal categories whose objects are the natural numbers, with addition as the monoidal product on objects.
+Those among them which are symmetric have a name.
+
+\begin{ctdefinition}[Prop]\label{def:prop}
+    A \emph{prop} is a symmetric strict monoidal category $\CatC$ where the collection of objects is the natural numbers $\natnumbers$, the monoidal product on objects is addition of natural numbers, and the monoidal unit is $0 \setin \natnumbers$.
+\end{ctdefinition}
+
+\begin{example}
+    \label{exa:props}
+    The strict monoidal category $\stylecat{FinSet}$ of \cref{exa:prop-finset}, and the strict monoidal categories $\stylecat{Mat}_\reals$ and $\stylecat{LinRel}_\reals$ of \cref{rem:dimension-trick}, are props.
+    In each of them, the braiding $\braiding_{\styleobj{m},\styleobj{n}} \colon \styleobj{m} + \styleobj{n} \mto \styleobj{n} + \styleobj{m}$ exchanges the first $m$ wires with the last $n$ wires:
+    \begin{itemize}
+        \item in $\stylecat{FinSet}$, it is the function $\makeset{1, \dots, m + n} \mto \makeset{1, \dots, n + m}$ which maps $i$ to $n + i$ if $i \leq m$, and to $i - m$ if $i > m$;
+        \item in $\stylecat{Mat}_\reals$, it is the block matrix
+              \begin{equation}
+                  \braiding_{\styleobj{m},\styleobj{n}} =
+                  \begin{bmatrix}
+                      \mat{0}  & \idmat_n \\
+                      \idmat_m & \mat{0}
+                  \end{bmatrix},
+              \end{equation}
+              which maps a vector with $m$ entries, stacked on top of a vector with $n$ entries, to the same two vectors stacked in the opposite order;
+        \item in $\stylecat{LinRel}_\reals$, it is the linear relation which relates each such stacked vector to the one with the two parts exchanged.
+    \end{itemize}
+\end{example}
+
+\devel{
+    \todotext{Maybe move this where we start doing some algebraic perspective}
+    \begin{definition}\label{def:prop-expressions}
+        Let $\stylesets{G}$ be a set and $s, t \colon \stylesets{G} \mto \natnumbers$ functions which specify the source and target of elements of $\stylesets{G}$.
+        The set $E(\stylesets{G})$ of $\stylesets{G}$\emph{-generated prop expressions} (or just \emph{expressions}) is defined inductively as follows.
+        \begin{itemize}
+            \item The empty morphism $\catid_\styleobj{0} \colon \styleobj{0} \mto \styleobj{0}$, the identity morphism $\catid_\styleobj{1} \colon \styleobj{1} \mto \styleobj{1}$, and the symmetry $\stylenat{\sigma} \colon \styleobj{2} \mto \styleobj{2}$ are expressions.
+            \item The generators $g \setin\stylesets{G}$ are expressions $g \colon s(g) \mto t(g)$.
+            \item If $\mora \colon \styleobj{a} \mto \styleobj{b}$ and $\morb \colon \styleobj{x} \mto \styleobj{y}$ are expressions, then $\mora + \morb \colon \styleobj{a} + \styleobj{x} \mto \styleobj{b} + \styleobj{y}$ is an expression.
+            \item If $\mora \colon \styleobj{a} \mto \styleobj{b}$ and $\morb \colon \styleobj{y} \mto \styleobj{z}$ are expressions, then $\mora \mthen \morb \colon \styleobj{a} \mto \styleobj{c}$ is an expression.
+        \end{itemize}
+        The functions $s$ and $t$ are extended from $\stylesets{G}$ to $E(\stylesets{G})$ in the obvious way.
+        If $\mora \colon m \mto n$ is an expression, the pair $\tup{\styleobj{m}, \styleobj{n}}$ is called its \emph{arity}.
+    \end{definition}
+
+    \begin{definition}\label{def:presentation-of-a-prop}
+        A \emph{presentation} $\tup{\stylesets{G}, s, t, \stylesets{R}}$ of a prop is a set $\stylesets{G}$, source and target functions $s, t \colon \stylesets{G} \mto \natnumbers$, and a relation $\stylesets{R} \setsubseteq E(\stylesets{G}) \cartprod E(\stylesets{G})$ between expressions such that for any $\tup{e_1, e_2} \setin\stylesets{R}$, the expressions $e_1$ and $e_2$ have the same arity.
+
+        The prop $\CatC$ \emph{presented} by $\tup{\stylesets{G}, s, t, \stylesets{R}}$ is the prop whose morphisms are elements of $E(\stylesets{G})$ quotiented by the equations (or ``relations'') $e_1 = e_2$ for $\tup{e_1, e_2} \setin\stylesets{R}$, and by the axioms for symmetric strict monoidal categories.
+    \end{definition}
+}

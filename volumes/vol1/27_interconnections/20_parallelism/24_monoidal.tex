@@ -138,8 +138,132 @@
     There is a category of real \emph{linear relations} which is a strict monoidal category in a very similar way.
     Its objects are again the coordinate spaces $\reals^n$, but a morphism from $\reals^k$ to $\reals^m$ is now a linear subspace of $\reals^{k+m}$, thought of as a relation between vectors in $\reals^k$ and vectors in $\reals^m$, and morphisms are composed like relations.
     The monoidal product again sums the dimensions on objects, and it places two linear relations side by side, just as \cref{eq:MatR-monoidal-product} does for matrices.
-    We do not spell out the details here; see \cref{exa:prop-linrel} for a variant of this category.
+    We do not spell out the details here; see also \cref{rem:dimension-trick}.
 \end{remark}
+
+\subsection{Examples where the objects are natural numbers}
+\label{sec:strict-monoidal-natural-numbers}
+
+In many strict monoidal categories, the objects are simply the natural numbers, which count how many wires of a single kind there are.
+In all the examples of this subsection, the monoidal product on objects is addition of natural numbers, and the monoidal unit is $0 \setin \natnumbers$.
+Addition is associative and has $0$ as neutral element, so the conditions on the level of objects in \cref{def:strict-monoidal-cat} hold for free, and an example is specified by saying what the morphisms are, how they are composed, and what their monoidal product is.
+
+Some of the strict monoidal categories of this kind are ``stand-ins'' for larger and more complicated categories.
+The idea is that the number $n$ stands for a typical object of ``size'' $n$ in the larger category, for instance for a set with $n$ elements, or for a space of dimension $n$.
+If all objects of the same size are interchangeable for our purposes, then we lose nothing by keeping just one number for each size, and we gain a lot: a monoidal product which, in the larger category, is associative only up to renaming or re-bracketing becomes addition of numbers, which is associative on the nose.
+We will point out what stands for what in the examples below.
+
+\begin{example}[Functions between finite sets]
+    \label{exa:prop-finset}
+    There is a strict monoidal category $\stylecat{FinSet}$ of this kind, where
+    \begin{itemize}
+        \item the set of morphisms from $m$ to $n$ (for $m, n \setin \natnumbers$) is defined to be the set of functions from $\makeset{1, \dots, m}$ to $\makeset{1, \dots, n}$;
+        \item composition is the usual composition of functions;
+        \item identity morphisms are identity functions;
+        \item the monoidal product of functions $\mora \colon \makeset{1, \dots, m} \mto \makeset{1, \dots, n}$ and $\mora\stylemorph{'} \colon \makeset{1, \dots, m'} \mto \makeset{1, \dots, n'}$ is the ``disjoint union''
+              \begin{equation}
+                  \mora + \mora\stylemorph{'} \colon \makeset{1, \dots, m + m'} \mto \makeset{1, \dots, n + n'},
+              \end{equation}
+              which applies $\mora$ to the first $m$ numbers, and applies $\mora\stylemorph{'}$, shifted by $m$ in the source and by $n$ in the target, to the remaining $m'$ numbers.
+    \end{itemize}
+
+    This category is a stand-in for the category of all finite sets and all functions between them, with the sum of sets and of functions as parallel composition (\cref{sec:stacking}).
+    The number $n$ stands for the set $\makeset{1, \dots, n}$, and thereby for every set with $n$ elements: any such set can be put in bijection with $\makeset{1, \dots, n}$ by numbering its elements, and after numbering the elements, a function between two finite sets becomes a morphism of $\stylecat{FinSet}$.
+    The sum of a set with $m$ elements and a set with $n$ elements has $m + n$ elements, which is why addition appears as the monoidal product on objects.
+    But while the sum of sets is associative only up to renaming the elements, addition of numbers is associative on the nose.
+\end{example}
+
+\begin{example}[Polynomial maps]
+    \label{exa:polynomial-maps}
+    There is a strict monoidal category $\stylecat{Poly}_\reals$ of this kind, where
+    \begin{itemize}
+        \item a morphism from $m$ to $n$ is a tuple $\stylemorph{p} = \tup{p_1, \dots, p_n}$ of $n$ polynomials with real coefficients in the $m$ variables $x_1, \dots, x_m$;
+        \item composition is \emph{substitution}: given $\stylemorph{p} = \tup{p_1, \dots, p_n} \colon \styleobj{m} \mto \styleobj{n}$ and $\stylemorph{q} = \tup{q_1, \dots, q_k} \colon \styleobj{n} \mto \styleobj{k}$, the composite $\stylemorph{p} \mthen \stylemorph{q} \colon \styleobj{m} \mto \styleobj{k}$ is the tuple of polynomials
+              \begin{equation}
+                  \label{eq:polynomial-maps-composition}
+                  q_j(p_1, \dots, p_n), \qquad j = 1, \dots, k,
+              \end{equation}
+              which are obtained by substituting the polynomial $p_i$ for the $i$-th variable of $q_j$, for all $i$;
+        \item the identity morphism of $n$ is the tuple of variables $\tup{x_1, \dots, x_n}$;
+        \item the monoidal product of $\stylemorph{p} = \tup{p_1, \dots, p_n} \colon \styleobj{m} \mto \styleobj{n}$ and $\stylemorph{p}\stylemorph{'} = \tup{p'_1, \dots, p'_{n'}} \colon \styleobj{m'} \mto \styleobj{n'}$ is the tuple
+              \begin{equation}
+                  \stylemorph{p} \mtimescatmor \stylemorph{p}\stylemorph{'} \definedas \tup{p_1, \dots, p_n, \tilde{p}'_1, \dots, \tilde{p}'_{n'}} \colon \styleobj{m + m'} \mto \styleobj{n + n'},
+              \end{equation}
+              where $\tilde{p}'_j$ is the polynomial $p'_j$ with its variables $x_1, \dots, x_{m'}$ renamed to $x_{m+1}, \dots, x_{m+m'}$, so that the two tuples use different variables.
+    \end{itemize}
+    For instance, composing $\tup{x_1 + x_2,\ x_1 x_2} \colon \styleobj{2} \mto \styleobj{2}$ with $\tup{x_1^2 - x_2} \colon \styleobj{2} \mto \styleobj{1}$ gives
+    \begin{equation}
+        \tup{(x_1 + x_2)^2 - x_1 x_2} = \tup{x_1^2 + x_1 x_2 + x_2^2} \colon \styleobj{2} \mto \styleobj{1}.
+    \end{equation}
+
+    This category, too, is a stand-in.
+    The number $n$ stands for the coordinate space $\reals^n$, and a morphism $\stylemorph{p} \colon \styleobj{m} \mto \styleobj{n}$ stands for the function $\reals^m \sto \reals^n$ which maps a vector $\tup{x_1, \dots, x_m}$ to the vector with the entries $p_1(x_1, \dots, x_m), \dots, p_n(x_1, \dots, x_m)$.
+    Substitution of polynomials corresponds to the composition of these functions, and the monoidal product corresponds to letting two such functions act side by side on two blocks of coordinates.
+    So we may think of $\stylecat{Poly}_\reals$ as the category of coordinate spaces and polynomial functions between them, described purely in terms of formulas.
+
+    Note what happens when all the polynomials are linear without constant term, such as $3 x_1 - x_2$.
+    A tuple of $n$ such polynomials in $m$ variables is the same thing as an $n \times m$ matrix of coefficients, and substituting such tuples into each other is precisely matrix multiplication.
+    In this way, the category of matrices sits inside $\stylecat{Poly}_\reals$; see also the next remark.
+\end{example}
+
+\begin{remark}[Keeping track only of the dimension]
+    \label{rem:dimension-trick}
+    For various strict monoidal categories whose objects are the coordinate spaces $\reals^n$, we can apply the same ``trick'' and keep track only of the dimension: instead of the object $\reals^n$, we use the natural number $n$.
+    Nothing is lost, since the space $\reals^n$ is determined by $n$, and since $\reals^{m} \mtimescatob \reals^{n} = \reals^{m+n}$ corresponds to the addition $m + n$.
+
+    As an illustration, consider the strict monoidal category $\MatR$ of real matrices (\cref{exa:MatR-strict-monoidal}).
+    Applying the trick gives a strict monoidal category $\stylecat{Mat}_\reals$ whose objects are the natural numbers, in which a morphism from $m$ to $n$ is an $n \times m$ real matrix, composition is the matrix product (in the order $\matmor{A} \mthen \matmor{B} = \matmor{B}\matmor{A}$), identity morphisms are identity matrices, and the monoidal product of two matrices is the block-diagonal matrix which they form.
+    The two categories differ only in how their objects are named.
+
+    The same can be done for the category of linear relations (\cref{rem:LinRel-strict-monoidal}), which gives a strict monoidal category $\stylecat{LinRel}_\reals$ whose objects are natural numbers, and for LTI systems.
+    Which of the two versions one uses is a matter of taste: writing $\reals^n$ is a reminder of what the wires carry, while writing $n$ is shorter.
+\end{remark}
+
+\begin{example}[Signal-flow diagrams]
+    \label{exa:signal-flow-diagrams}
+    In control theory, linear systems are often described by \emph{signal-flow diagrams}.
+    These are built from a small number of basic components, each of which has a certain number of input wires and of output wires, all carrying real-valued signals:
+    \begin{itemize}
+        \item for every real number $c$, an \emph{amplifier}, which multiplies a signal by $c$ (one input, one output);
+        \item an \emph{adder}, which adds two signals (two inputs, one output);
+        \item a \emph{branch point}, which copies a signal (one input, two outputs);
+        \item a \emph{zero source}, which emits the signal $0$ (no input, one output);
+        \item a \emph{terminator}, which discards a signal (one input, no output).
+    \end{itemize}
+    There is a strict monoidal category $\stylecat{SigFlow}$ of the kind considered in this subsection, where
+    \begin{itemize}
+        \item a morphism from $m$ to $n$ is a diagram with $m$ input wires and $n$ output wires which is built from the basic components by connecting them in series and by placing them on top of each other;
+        \item composition connects the output wires of one diagram to the input wires of the next;
+        \item the identity morphism of $n$ consists of $n$ wires, without any components;
+        \item the monoidal product places one diagram on top of the other.
+    \end{itemize}
+    For instance, the following diagram, built from two amplifiers and an adder, is a morphism $\styleobj{2} \mto \styleobj{1}$:
+    \begin{equation}
+        \label{eq:signal-flow-example}
+        \begin{tikzpicture}[baseline=(current bounding box.center)]
+            \node[block, minimum width=7.5mm, minimum height=6.5mm, inner sep=2pt] (a) at (0,0.5) {$\stylemorph{a}$};
+            \node[block, minimum width=7.5mm, minimum height=6.5mm, inner sep=2pt] (b) at (0,-0.5) {$\stylemorph{b}$};
+            \node[block, minimum width=7.5mm, minimum height=16.5mm, inner sep=2pt] (s) at (1.9,0) {$\stylemorph{+}$};
+            \draw[draw=objects, thick] (a.west) -- ++(-1.1,0);
+            \draw[draw=objects, thick] (b.west) -- ++(-1.1,0);
+            \draw[draw=objects, thick] (a.east) -- (s.west |- a);
+            \draw[draw=objects, thick] (b.east) -- (s.west |- b);
+            \draw[draw=objects, thick] (s.east) -- ++(1.1,0);
+        \end{tikzpicture}
+    \end{equation}
+    It describes the system which turns two input signals $u_1$ and $u_2$ into the output signal $a u_1 + b u_2$.
+
+    This is our first example of a strict monoidal category in which the morphisms are themselves pictures.
+    Two diagrams count as the same morphism if they differ only in how they are drawn; we will make this precise in \cref{sec:graphical-calculus}.
+    Note also that, for now, the wires of a diagram are not allowed to cross, and there are no feedback loops.
+    Both will become available later, once we have symmetric strict monoidal categories and feedback.
+
+    A diagram is only a description of a system; the system itself is a linear function.
+    Every diagram from $m$ to $n$ determines an $n \times m$ real matrix, which tells us how the output signals depend on the input signals: for the diagram in \cref{eq:signal-flow-example}, it is the matrix $\begin{bmatrix} a & b \end{bmatrix}$.
+    Connecting diagrams in series corresponds to multiplying their matrices, and placing them on top of each other corresponds to forming a block-diagonal matrix.
+    Different diagrams can have the same matrix: for example, a branch point followed by an adder has the same matrix as the amplifier for $c = 2$.
+    So $\stylecat{SigFlow}$ and the category $\stylecat{Mat}_\reals$ of \cref{rem:dimension-trick} are two different strict monoidal categories, one of descriptions and one of the things described.
+\end{example}
 
 \subsection{Examples where the objects are like lists}
 \label{sec:strict-monoidal-lists}
@@ -423,7 +547,7 @@ are equal to
     The following defines a strict monoidal structure on $\SetL$:
     \begin{itemize}
         \item on objects, the monoidal product is the multiplication $\cprod$ of \cref{eq:strict-monoidal-product-sets};
-        \item on morphisms, the monoidal product is given by \cref{eq:mtimescatmor-SetL}: for $\mora \colon \setA \mtoin\SetL \setB$ and $\morb \colon \setC \mtoin\SetL \setD$, the function $\mora \mtimescatmor \morb$ maps $\maketupconcat{\ela, \elc}$ to $\maketupconcat{\mora(\ela), \morb(\elc)}$;
+        \item on morphisms, the monoidal product is defined as follows: for $\mora \colon \setA \mtoin\SetL \setB$ and $\morb \colon \setC \mtoin\SetL \setD$, the function $\mora \mtimescatmor \morb$ maps $\maketupconcat{\ela, \elc}$ to $\maketupconcat{\mora(\ela), \morb(\elc)}$;
         \item the monoidal unit is the set $\idmoncat \definedas \emptycobj = \makeset{\tup{}}$, whose only element is the empty tuple.
     \end{itemize}
 \end{lemma}
@@ -782,7 +906,7 @@ In the case $n = 0$, it is the preorder $\emptycobj$ whose only element is the e
                   \cObj{\posA_1,\ldots, \posA_m, \posB_1,\ldots, \posB_n};
               \end{equation}
               so the underlying set of a monoidal product is the product $\cprod$ of the underlying sets (\cref{eq:strict-monoidal-product-sets}), and $\maketupconcat{\posela, \poselb}$ is below $\maketupconcat{\posela', \poselb'}$ precisely when $\posela$ is below $\posela'$ and $\poselb$ is below $\poselb'$;
-        \item on morphisms, the monoidal product is defined as in $\SetL$ (\cref{eq:mtimescatmor-SetL}): for monotone functions $\mora \colon \posA \mtoin\PreL \posB$ and $\morb \colon \posC \mtoin\PreL \posD$, the function $\mora \mtimescatmor \morb \colon \posA \mtimescatob \posC \mtoin\PreL \posB \mtimescatob \posD$ maps $\maketupconcat{\posela, \poselc}$ to $\maketupconcat{\mora(\posela), \morb(\poselc)}$;
+        \item on morphisms, the monoidal product is defined as in $\SetL$ (\cref{lem:SetL-strict-monoidal}): for monotone functions $\mora \colon \posA \mtoin\PreL \posB$ and $\morb \colon \posC \mtoin\PreL \posD$, the function $\mora \mtimescatmor \morb \colon \posA \mtimescatob \posC \mtoin\PreL \posB \mtimescatob \posD$ maps $\maketupconcat{\posela, \poselc}$ to $\maketupconcat{\mora(\posela), \morb(\poselc)}$;
         \item the monoidal unit is the preorder $\idmoncat \definedas \emptycobj$, whose only element is the empty tuple.
     \end{itemize}
 \end{lemma}
@@ -1320,7 +1444,7 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
 
 \begin{exercise}
     \label{ex:relassocstack}
-    Consider the monoidal product on $\RelL$ described in \cref{rem:RelL-mRelL-strict-monoidal}.
+    Consider the monoidal product on $\RelL$ described in \cref{eq:RelL-monoidal-product}.
     Prove that it is associative, both on objects and on morphisms.
 \end{exercise}
 
@@ -1459,7 +1583,7 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
     These are also subcategories of $\feas$ and of $\DP$, respectively: the morphisms of $\feasL$ are the feasibility relations, and the morphisms of $\DPL$ are the design problems, between posets of tuples.
     An object $\cObj{\posA_1,\ldots, \posA_n}$ then stands for a list of $n$ functionalities, or of $n$ requirements, each with its own poset of possible values.
 
-    The monoidal product of two posets of tuples is a poset, and so the strict monoidal structures of $\mRelL$ and of $\ProfBoolL$ (\cref{rem:RelL-mRelL-strict-monoidal} and \cref{lem:ProfBoolL-strict-monoidal}) restrict to $\feasL$ and to $\DPL$.
+    The monoidal product of two posets of tuples is a poset, and so the strict monoidal structures of $\mRelL$ and of $\ProfBoolL$ (\cref{eq:RelL-monoidal-product} and \cref{lem:ProfBoolL-strict-monoidal}) restrict to $\feasL$ and to $\DPL$.
     The monoidal product of two components is the component which provides the functionalities of both, listed one after the other, and which has the requirements of both; by \cref{eq:dpmulti}, a pair of lists of functionalities is feasible with a pair of lists of requirements precisely when this is the case for each of the two components separately.
     In this way, placing two components of a system side by side, without any interaction between them, is modeled by the monoidal product of the strict monoidal categories $\feasL$ and $\DPL$.
 \end{example}
