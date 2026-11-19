@@ -374,8 +374,84 @@ In all three, the morphisms are systems, and the action describes what a system 
     which is the output signal of $\morb$ for the input $\mat{y}_\mora$.
     Hence $\funamor(\morab) = \funamor(\mora) \mthenof{\Set} \funamor(\morb)$.
     The identity morphism of $\reals^n$ has the state space $\reals^0$ and $\mat{D} = \mat{1}^{\matdim{n}{n}}$, so \cref{eq:lti-action-signals-output} reduces to $\mat{y}(t) = \mat{u}(t)$, and $\funamor(\catidat{\reals^n})$ is the identity function.
-    (We will come back to this action in \cref{def:lti_cat_action} and \cref{lem:lti_cat_action}.)
 \end{example}
+
+\begin{lemma}
+    \label{lem:equivsystequivact}
+    Equivalent LTI systems act on signals in the same way: if $\mora, \morb \colon \reals^n \mto \reals^m$ are equivalent LTI systems (\cref{def:equivalence_lti}), then $\funamor(\mora) = \funamor(\morb)$ for the action $\funa \colon \LTI \fto \Set$ of \cref{exa:lti-action-signals}.
+\end{lemma}
+
+\begin{proof}
+    Consider two equivalent LTI systems
+    \begin{equation}
+        \mora = \genericlti{\mora},\quad \morb = \genericlti{\morb},
+    \end{equation}
+    with equivalence transformation $\mat{T}$, and let $\mat{u}$ be an input signal.
+    The initial value problem that~$\mora$ poses reads:
+    \begin{equation}
+        \label{eq:first_lti_equiv}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}(t), \\
+            \mat{x}(0)       & = \prstart_\mora.
+        \end{aligned}
+    \end{equation}
+    Let~$\mat{s}$ be the solution of \cref{eq:first_lti_equiv}, and consider~$\mat{r}(t) \definedas \mat{T}\mat{s}(t)$.
+    Then, we have
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{r}}(t) & =\mat{T}\dot{\mat{s}}(t) \\
+                             & =\mat{T}\mat{A}_\mora \mat{s}(t)+\mat{T}\mat{B}_\mora \mat{u}(t) \\
+                             & =\mat{T}\mat{A}_\mora \mat{T}^{-1}\mat{r}(t)+\mat{T}\mat{B}_\mora \mat{u}(t) \\
+                             & =\mat{A}_\morb\mat{r}(t)+\mat{B}_\morb \mat{u}(t),
+        \end{aligned}
+    \end{equation}
+    and~$\mat{r}(0) = \mat{T} \prstart_\mora = \prstart_\morb$.
+    So $\mat{r}$ is the unique solution of the initial value problem that $\morb$ poses for the same input signal $\mat{u}$.
+    Therefore, the action of the system~$\morb$ is:
+    \begin{equation}
+        \begin{aligned}
+            \funamor(\morb)(\mat{u})(t) & =\mat{C}_\morb \mat{r}(t)+ \mat{D}_\morb \mat{u}(t) \\
+                                        & =\mat{C}_\mora \mat{T}^{-1}\mat{T}\mat{s}(t)+\mat{D}_\mora \mat{u}(t) \\
+                                        & =\mat{C}_\mora \mat{s}(t)+\mat{D}_\mora \mat{u}(t) \\
+                                        & =\funamor(\mora)(\mat{u})(t).
+        \end{aligned}
+    \end{equation}
+\end{proof}
+
+\begin{remark}
+    \label{rem:same-action-not-equivalent}
+    The converse of \cref{lem:equivsystequivact} does not hold: two LTI systems with the same action on signals are not necessarily equivalent.
+    For a simple counterexample, consider the LTI system with initial state $\prstart = \mat{0}$ and
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\begin{bmatrix}
+                                    1 & 0 \\ 0& 1
+                                \end{bmatrix} \mat{x}(t)+\begin{bmatrix}
+                                                             1 \\ 0
+                                                         \end{bmatrix} \mat{u}(t) \\
+            \mat{y}(t)       & =\begin{bmatrix}
+                                    1 & 0
+                                \end{bmatrix} \mat{x}(t)+\mat{u}(t).
+        \end{aligned}
+    \end{equation}
+    Its action on signals is the same as that of any system, again with initial state $\mat{0}$, of the form
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mat{x}}(t) & =\begin{bmatrix}
+                                    1 & 0 \\ 0& \alpha
+                                \end{bmatrix} \mat{x}(t)+\begin{bmatrix}
+                                                             1 \\ 0
+                                                         \end{bmatrix} \mat{u}(t) \\
+            \mat{y}(t)       & =\begin{bmatrix}
+                                    1 & 0
+                                \end{bmatrix} \mat{x}(t)+\mat{u}(t),
+        \end{aligned}
+    \end{equation}
+    where~$\alpha \setin \reals$, because the output~$\mat{y}$ does not depend on the second component of~$\mat{x}$.
+    However, for $\alpha \neq 1$ there is no invertible matrix $\mat{T}$ which relates these systems: the first one has $\mat{A} = \idmat$, and $\mat{T}\idmat\mat{T}^{-1} = \idmat$ for every invertible $\mat{T}$.
+    We note that control theory has developed tools to deal with hidden parts of the dynamics.
+    Examples are the notion of controllability (ability of an actuator/input to control all states of a system) and observability (ability to estimate all states of the system).
+\end{remark}
 
 The tuples that make up the morphisms of $\LTI$ do not, by themselves, know anything about continuous time.
 We can just as well take the \emph{machines} point of view on them, and this gives a second action of the very same category.
@@ -470,6 +546,49 @@ The same construction works for arbitrary Mealy machines.
     In fact, this reading is itself a functor $\LTI \fto \MealyMod$, as we have seen in \cref{exa:lti-to-mealy-functor}.
     Once we know how to compose functors (\cref{def:functor-composition}), we will be able to say that the action $\funb$ is the composition of that functor with the action $\func$.
 \end{remark}
+
+\subsection{Semicategory actions.}
+\label{sec:semicategory-actions}
+Everything we have said about actions of categories has an analogue for \SY{semicategories}.
+Just as an action of a category $\CatC$ is a functor $\CatC \fto \Set$, we say that an \emph{action of a semicategory} $\CatC$ is a \SY{semifunctor} $\CatC \fto \Set$ (\cref{def:semifunctor}), where we regard the category $\Set$ as a semicategory by forgetting its identity morphisms.
+Such an action satisfies the first of the two conditions in \cref{eq:generalized-action-conditions}; the second one does not apply, since a semicategory need not have identity morphisms.
+
+\begin{example}[Moore machines act on streams]
+    \label{exa:moore-action-streams}
+    Recall the semicategory $\MooreMod$ (\cref{def:MooreMod}): its objects are sets, and a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$ of Moore machines $\mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$, up to isomorphism.
+    There is a semifunctor
+    \begin{equation}
+        \funa \colon \MooreMod \fto \Set
+    \end{equation}
+    defined as follows.
+    On objects, $\funa$ assigns to each set the set of streams in it (\cref{exa:lti-action-streams}):
+    \begin{equation}
+        \funaob(\prin) \definedas \prin^{\natnumbers}.
+    \end{equation}
+    On morphisms, $\funa$ assigns to $\equivmora$ the function
+    \begin{equation}
+        \funamor(\equivmora) \colon \prin^{\natnumbers} \sto \prout^{\natnumbers}
+    \end{equation}
+    which maps a stream $\tup{\prineln{0}, \prineln{1}, \prineln{2}, \dots}$ of inputs to the stream $\tup{\prouteln{0}, \prouteln{1}, \prouteln{2}, \dots}$ of outputs defined, step by step, by
+    \begin{equation}
+        \label{eq:moore-action-streams}
+        \prsteln{0} \definedas \prstart,
+        \qquad
+        \prsteln{i+1} \definedas \prdyn(\prineln{i}, \prsteln{i}),
+        \qquad
+        \prouteln{i} \definedas \prreadout(\prsteln{i}).
+    \end{equation}
+    This is the stream version of \cref{eq:moore-list-output}.
+    As in \cref{exa:mealy-action-streams}, the result does not depend on the chosen representative $\mora$, since isomorphic Moore machines produce the same outputs.
+
+    For the semifunctor condition, consider a composite $\morab$ as in \cref{eq:MooreMod-composition}.
+    Its state at step $i$ is the pair consisting of the state of $\mora$ at step $i$ for the given inputs, and the state of $\morb$ at step $i$ when $\morb$ receives the outputs of $\mora$ as its inputs; this follows by induction from the formula \cref{eq:moore-comp-naive-2} for $\prdyn_{\morab}$.
+    Since the read-out of $\morab$ is the read-out of $\morb$, the $i$-th output of $\morab$ is the $i$-th output of $\morb$.
+    Hence $\funamor(\equivmora \mthen \equivmorb) = \funamor(\equivmora) \mthenof{\Set} \funamor(\equivmorb)$.
+
+    Note that the first output, $\prouteln{0} = \prreadout(\prstart)$, does not depend on the inputs at all.
+    So, as soon as $\prin$ has more than one element, no Moore machine acts as the identity function on $\prin^{\natnumbers}$; this matches the fact that $\MooreMod$ has no identity morphisms (\cref{rem:MooreMod-no-identities}).
+\end{example}
 
 \subsection{Contravariant category actions.}
 What about \emph{contravariant} actions?

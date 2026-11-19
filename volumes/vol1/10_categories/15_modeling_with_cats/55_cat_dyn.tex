@@ -47,7 +47,6 @@ The state starts at a given start state (or initial state) $\prstart \setin \rea
 where $\mat{A}$, $\mat{B}$, $\mat{C}$, and $\mat{D}$ are real matrices.
 The key idea is to view an LTI system as a process that turns signals in its input space $\reals^n$ into signals in its output space $\reals^m$, that is, as a morphism from $\reals^n$ to $\reals^m$.
 Two such systems can be composed in series, by feeding the output of the first into the second as its input, whenever the output space of the first is the input space of the second.
-We will come back to this category, and study it in more detail, in \cref{sec:LTI-systems}.
 
 Throughout, we think of the elements of $\reals^k$ as column vectors, that is, as matrices with $k$ rows and one column.
 
@@ -141,3 +140,240 @@ Throughout, we think of the elements of $\reals^k$ as column vectors, that is, a
     This is what makes composition in \LTI \SY{associative} and unital exactly, and not only ``up to an isomorphism''.
     We will meet the same issue again in \cref{sec:cat-machines} for \SY{Moore machines}, whose state spaces are arbitrary sets, where no such simple trick is available.
 \end{remark}
+
+In what follows we often leave the state space implicit, and write a morphism of \LTI simply as $\genericlti{}$.
+
+\begin{exercise}
+    \label{ex:LTI-is-a-category}
+    Prove that \LTI is indeed a category.
+\end{exercise}
+\begin{solution}
+    We start with associativity.
+    Consider morphism $\mora \colon \reals^l\mto \reals^m$ given by~$\genericlti{\mora}$, and $\morb\colon \reals^m\mto \reals^n$ given by~$\genericlti{\morb}$, and $\morc\colon \reals^n\mto \reals^o$ given by~$\genericlti{\morc}$.
+    The morphism~$\morab$ is described by the LTI
+    \begin{equation}
+        \genericlti{\mora,\morb},
+    \end{equation}
+    where
+    \begin{widepar}
+        \begin{equation}
+            \prstart_{\mora,\morb}=\begin{bmatrix}
+                \prstart_\mora \\
+                \prstart_\morb
+            \end{bmatrix},\quad
+            \mat{A}_{\mora,\morb}=\begin{bmatrix}
+                \mat{A}_\mora              & \mat{0}       \\
+                \mat{B}_\morb\mat{C}_\mora & \mat{A}_\morb
+            \end{bmatrix},\
+            \mat{B}_{\mora,\morb}=\begin{bmatrix}
+                \mat{B}_\mora \\
+                \mat{B}_\morb\mat{D}_\mora
+            \end{bmatrix},\
+            \mat{C}_{\mora,\morb}=\begin{bmatrix}
+                \mat{D}_\morb\mat{C}_\mora & \mat{C}_\morb
+            \end{bmatrix}, \
+            \mat{D}_{\mora,\morb}=\mat{D}_\morb\mat{D}_\mora.
+        \end{equation}
+    \end{widepar}
+    The morphism~$(\morab)\mthen \morc$ is described by
+    \begin{equation}
+        \genericlti{(\mora,\morb),\morc},
+    \end{equation}
+    where:
+    \begin{widepar}
+        \begin{equation}
+            \label{eq:assoc_lti_1}
+            \begin{aligned}
+                \prstart_{(\mora,\morb),\morc} & =\begin{bmatrix}
+                                                      \prstart_\mora \\
+                                                      \prstart_\morb \\
+                                                      \prstart_\morc
+                                                  \end{bmatrix},\quad
+                \mat{A}_{(\mora,\morb),\morc}=\begin{bmatrix}
+                                                  \mat{A}_\mora                           & \mat{0}                    & \mat{0}       \\
+                                                  \mat{B}_\morb\mat{C}_\mora              & \mat{A}_\morb              & \mat{0}       \\
+                                                  \mat{B}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
+                                              \end{bmatrix},\
+                \mat{B}_{(\mora,\morb),\morc}=\begin{bmatrix}
+                                                  \mat{B}_\mora              \\
+                                                  \mat{B}_\morb\mat{D}_\mora \\
+                                                  \mat{B}_\morc\mat{D}_\morb\mat{D}_\mora
+                                              \end{bmatrix}, \\
+                \mat{C}_{(\mora,\morb),\morc}  & =\begin{bmatrix}
+                                                      \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
+                                                  \end{bmatrix}, \
+                \mat{D}_{(\mora,\morb),\morc}=\mat{D}_\morc\mat{D}_\morb\mat{D}_\mora.
+            \end{aligned}
+        \end{equation}
+    \end{widepar}
+    On the other hand, the morphism~$\morb\mthen \morc$ is described by
+    \begin{equation}
+        \genericlti{\morb,\morc},
+    \end{equation}
+    where:
+    \begin{widepar}
+        \begin{equation}
+            \prstart_{\morb,\morc}=\begin{bmatrix}
+                \prstart_\morb \\
+                \prstart_\morc
+            \end{bmatrix},\
+            \mat{A}_{\morb,\morc}=\begin{bmatrix}
+                \mat{A}_\morb              & \mat{0}       \\
+                \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
+            \end{bmatrix},\
+            \mat{B}_{\morb,\morc}=\begin{bmatrix}
+                \mat{B}_\morb \\
+                \mat{B}_\morc\mat{D}_\morb
+            \end{bmatrix},\
+            \mat{C}_{\morb,\morc}=\begin{bmatrix}
+                \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
+            \end{bmatrix}, \
+            \mat{D}_{\morb,\morc}=\mat{D}_\morc\mat{D}_\morb.
+        \end{equation}
+    \end{widepar}
+    Furthermore, the morphism~$\mora\mthen (\morb\mthen \morc)$ is described by
+    \begin{equation}
+        \genericlti{\mora,(\morb,\morc)},
+    \end{equation}
+    where:
+    \begin{widepar}
+        \begin{equation}
+            \begin{aligned}
+                \label{eq:assoc_lti_2}
+                \prstart_{\mora,(\morb,\morc)} & =\begin{bmatrix}
+                                                      \prstart_\mora \\
+                                                      \prstart_\morb \\
+                                                      \prstart_\morc
+                                                  \end{bmatrix},\quad
+                \mat{A}_{\mora,(\morb,\morc)}=\begin{bmatrix}
+                                                  \mat{A}_\mora                           & \mat{0}                    & \mat{0}       \\
+                                                  \mat{B}_\morb\mat{C}_\mora              & \mat{A}_\morb              & \mat{0}       \\
+                                                  \mat{B}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{B}_\morc\mat{C}_\morb & \mat{A}_\morc
+                                              \end{bmatrix},\
+                \mat{B}_{\mora,(\morb,\morc)}=\begin{bmatrix}
+                                                  \mat{B}_\mora              \\
+                                                  \mat{B}_\morb\mat{D}_\mora \\
+                                                  \mat{B}_\morc\mat{D}_\morb\mat{D}_\mora
+                                              \end{bmatrix}, \\
+                \mat{C}_{\mora,(\morb,\morc)}  & =\begin{bmatrix}
+                                                      \mat{D}_\morc\mat{D}_\morb\mat{C}_\mora & \mat{D}_\morc\mat{C}_\morb & \mat{C}_\morc
+                                                  \end{bmatrix}, \
+                \mat{D}_{\mora,(\morb,\morc)}=\mat{D}_\morc\mat{D}_\morb\mat{D}_\mora.
+            \end{aligned}
+        \end{equation}
+    \end{widepar}
+    Clearly, the matrices in \cref{eq:assoc_lti_1} and \cref{eq:assoc_lti_2} coincide.
+    The state spaces coincide as well: if $\reals^{k_\mora}$, $\reals^{k_\morb}$, and $\reals^{k_\morc}$ are the state spaces of $\mora$, $\morb$, and $\morc$, then the state space of $(\morab)\mthen \morc$ is $\reals^{(k_\mora+k_\morb)+k_\morc}$ and that of $\mora\mthen (\morb\mthen \morc)$ is $\reals^{k_\mora+(k_\morb+k_\morc)}$, and these are equal because addition of natural numbers is associative (\cref{rem:LTI-state-space-trick}).
+    This shows associativity.
+
+    We now show unitality.
+    Consider a morphism~$\mora\colon \reals^l\mto \reals^m$, described by~$\genericlti{}$, with state space $\reals^k$.
+    The morphism~$\catidat{\reals^l} \mthen \mora$ is a morphism~$\reals^l\mto \reals^m$ still given by~$\genericlti{}$.
+    Similarly, the morphism~$\mora\mthen \catidat{\reals^m}$ is a morphism~$\reals^l\mto \reals^m$, given by~$\genericlti{}$.
+    In both cases the state space is again $\reals^k$, since $\reals^{0+k} = \reals^k = \reals^{k+0}$.
+    Therefore, \LTI is a category.
+\end{solution}
+
+\begin{example}[Composing two LTI systems]
+    \label{exa:lti-composition-spring-mass}
+    Consider the mass between two springs of \cref{exa:sping-mass-lti}.
+    It is a morphism $\mora \colon \reals^1 \mto \reals^1$ of \LTI, whose input is the force $F$, whose output is the position $q$ of the mass, and whose state space is $\reals^2$; its matrices are
+    \begin{equation*}
+        \mat{A}_\mora=\begin{bmatrix}0                  & 1 \\
+               -\frac{k_1+k_2}{m} & 0\end{bmatrix},\quad
+        \mat{B}_\mora=\begin{bmatrix}
+            0 \\
+            \frac{1}{m}
+        \end{bmatrix},
+        \quad
+        \mat{C}_\mora=\begin{bmatrix}
+            1 & 0
+        \end{bmatrix},
+        \quad
+        \mat{D}_\mora=\begin{bmatrix}
+            0
+        \end{bmatrix}.
+    \end{equation*}
+    Consider also the LTI system $\morb \colon \reals^1 \mto \reals^1$ with a one-dimensional state $p$, given by
+    \begin{equation*}
+        \begin{aligned}
+            \dot{p}(t) & =p(t)+c\,q(t), \\
+            w(t)       & =p(t),
+        \end{aligned}
+    \end{equation*}
+    which takes as input the output produced by the spring-mass system (the position of the mass along the horizontal dimension), scaled by a constant factor $c$.
+    Its matrices are $\mat{A}_\morb = \begin{bmatrix} 1 \end{bmatrix}$, $\mat{B}_\morb = \begin{bmatrix} c \end{bmatrix}$, $\mat{C}_\morb = \begin{bmatrix} 1 \end{bmatrix}$, and $\mat{D}_\morb = \begin{bmatrix} 0 \end{bmatrix}$.
+
+    We can compose the two systems.
+    By \cref{eq:LTI-composition}, the composite $\morab \colon \reals^1 \mto \reals^1$ has the state space $\reals^3$ and the matrices
+    \begin{equation*}
+        \mat{A}=\begin{bmatrix}0                  & 1 & 0 \\
+               -\frac{k_1+k_2}{m} & 0 & 0 \\
+               c                  & 0 & 1\end{bmatrix},\quad
+        \mat{B}=\begin{bmatrix}
+            0 \\
+            \frac{1}{m} \\
+            0
+        \end{bmatrix},
+        \quad
+        \mat{C}=\begin{bmatrix}
+            0 & 0 & 1
+        \end{bmatrix},
+        \quad
+        \mat{D}=\begin{bmatrix}
+            0
+        \end{bmatrix}.
+    \end{equation*}
+    This can be visualized more intuitively with the explicit composed dynamics:
+    \begin{equation*}
+        \begin{aligned}
+            \begin{bmatrix}
+                \dot{q}(t)  \\
+                \ddot{q}(t) \\
+                \dot{p}(t)
+            \end{bmatrix} & =
+            \begin{bmatrix}0                  & 1 & 0 \\
+               -\frac{k_1+k_2}{m} & 0 & 0 \\
+               c                  & 0 & 1\end{bmatrix} \begin{bmatrix}
+                                                        {q}(t)     \\
+                                                        \dot{q}(t) \\
+                                                        {p}(t)
+                                                    \end{bmatrix}+
+            \begin{bmatrix}
+                0 \\
+                \frac{1}{m} \\
+                0
+            \end{bmatrix} F \\
+            w(t)            & =\begin{bmatrix}
+                                   0 & 0 & 1
+                               \end{bmatrix}\begin{bmatrix}
+                                                {q}(t)     \\
+                                                \dot{q}(t) \\
+                                                {p}(t)
+                                            \end{bmatrix}
+        \end{aligned}
+    \end{equation*}
+    Given an input force, we will get a transformed horizontal position as an output.
+\end{example}
+
+\paragraph{Equivalent LTI systems}
+The same system can be specified by different tuples, which differ only by a change of coordinates of the state space (compare \cref{exa:lti-similarity-transformation}).
+
+\begin{definition}[Equivalence of LTI systems]
+    \label{def:equivalence_lti}
+    \SYNDEF{equivalence of LTI systems}
+    Two LTI systems~$\genericlti{\mora}$ and~$\genericlti{\morb}$ with the same input space, the same output space, and state spaces of the same dimension $k$ are \emph{equivalent} if and only if there exists an invertible matrix $\mat{T} \setin \reals^{\matdim{k}{k}}$ such that
+    \begin{equation}
+        \prstart_\morb=\mat{T}\prstart_\mora, \ \mat{A}_\morb = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \ \mat{B}_\morb = \mat{T}\mat{B}_\mora, \ \mat{C}_\morb =\mat{C}_\mora\mat{T}^{-1},\ \mat{D}_\morb=\mat{D}_\mora.
+    \end{equation}
+    $\mat{T}$ is called an \emph{equivalence transformation}; it relates the states of the two systems by $\mat{x}_\morb(t)=\mat{T}\mat{x}_\mora(t)$.
+\end{definition}
+
+We think of equivalent LTI-systems as different ways of specifying what is essentially ``the same system''.
+What is different in each specification is only different by a change of coordinates.
+
+\todotext{J: is this the definition of equivalence of systems that is most commonly used in control theory? Can you Gioele or Andrea confirm? Alternatively, one might consider a definition where there is also a coordinate transformation on the input and output spaces, too.
+    Compare e.g. with the definition given on page 22 of the book ``Mathematical Control Theory'' by Zabcyzk.
+}
+
+Equivalent LTI systems play the same role for \LTI as isomorphic machines will play for Moore and Mealy machines in \cref{sec:cat-machines}.
