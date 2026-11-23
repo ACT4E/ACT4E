@@ -168,28 +168,91 @@ The axiom in \cref{fig:trace-vanishing-ii} is about compatibility of feedback wi
 
 
 
-\begin{example}
-    Consider the symmetric monoidal category  \MealyMod of Mealy machines modulo congruence, where objects are sets and where a morphism $\setA \mto \setB$ is an equivalence class represented by a pair $\tup{\setS, \mapa}$ consisting of a set $\setS$ (which we think of as a state space) and a function
-    \begin{equation}
-        \mapa  \colon \setA \cartprod \setS \to \setB \cartprod \setS.
-    \end{equation}
-    A feedback operator for \MealyMod is defined as follows.
-    Given a morphism of the type
-    \begin{equation}
-        \equivmorb \colon \setA \cartprod \setC \mto \setB \cartprod \setC,
-    \end{equation}
-    represented by a function
-    \begin{equation}
-        \mapb \colon (\setA \cartprod \setC) \cartprod \setS \mto (\setB \cartprod \setC) \cartprod \setS,
-    \end{equation}
-    we let
-    \begin{equation}
-        \Fb_{\setA \setB}^\setC(\equivmorb) \colon \setA \mto \setB
-    \end{equation}
-    be the morphism in  \MealyMod  represented by the function
-    \begin{equation}
-        \setA \cartprod (\setC \cartprod \setS) \overset{\associator^{-1}}{\sto}  (\setA \cartprod \setC) \cartprod \setS \overset{\mapb}{\sto} (\setB \cartprod \setC) \cartprod \setS \overset{\associator}{\sto}\setB \cartprod (\setC \cartprod \setS).
-    \end{equation}
-    In other words, the feedback operator $\Fb_{\setA \setB}^\setC$ simply shifts $\setC$ to being part of the state space, instead of as being part of the input and output spaces.
+\begin{example}[Feedback for Mealy machines]
+    \label{exa:mealy-feedback}
+    The category $\MealyMod$ of Mealy machines up to isomorphism (\cref{def:MealyCat}) has a monoidal product.
+    It is given, on objects, by the \SY{cartesian product} of sets, and, on morphisms, by running two machines side by side (compare \cref{exa:MealyModL-strict-monoidal}).
+    A feedback operator for $\MealyMod$ is defined as follows.
 
+    Let
+    \begin{equation}
+        \equivmora \colon \setA \cartprod \setC \mto \setB \cartprod \setC
+    \end{equation}
+    be a morphism, represented by a Mealy machine
+    \begin{equation}
+        \mora = \tupp{\setA \cartprod \setC,\ \prst,\ \setB \cartprod \setC,\ \prdyn_\mora,\ \prreadout_\mora},
+    \end{equation}
+    with set of states $\prst$, dynamics, and read-out
+    \begin{equation}
+        \prdyn_\mora \colon (\setA \cartprod \setC) \cartprod \prst \sto \prst,
+        \qquad
+        \prreadout_\mora \colon (\setA \cartprod \setC) \cartprod \prst \sto \setB \cartprod \setC.
+    \end{equation}
+    Since the set of outputs of $\mora$ is a \SY{cartesian product}, its read-out consists of two components,
+    \begin{equation}
+        \begin{aligned}
+            \prreadout_\mora^{\setB} & \definedas \prreadout_\mora \mthen \proj_1 \colon (\setA \cartprod \setC) \cartprod \prst \sto \setB, \\
+            \prreadout_\mora^{\setC} & \definedas \prreadout_\mora \mthen \proj_2 \colon (\setA \cartprod \setC) \cartprod \prst \sto \setC,
+        \end{aligned}
+    \end{equation}
+    so that $\prreadout_\mora(\prinel, \prstel) = \tup{\prreadout_\mora^{\setB}(\prinel, \prstel), \prreadout_\mora^{\setC}(\prinel, \prstel)}$ for every input $\prinel \setin \setA \cartprod \setC$ and every state $\prstel \setin \prst$.
+
+    We let
+    \begin{equation}
+        \Fb_{\setA, \setB}^{\setC}(\equivmora) \colon \setA \mto \setB
+    \end{equation}
+    be the morphism of $\MealyMod$ which is represented by the Mealy machine
+    \begin{equation}
+        \label{eq:mealy-feedback-machine}
+        \tupp{\setA,\ \setC \cartprod \prst,\ \setB,\ \prdyn_{\Fb},\ \prreadout_{\Fb}}
+    \end{equation}
+    whose set of states is $\setC \cartprod \prst$, and whose dynamics and read-out are
+    \begin{equation}
+        \label{eq:mealy-feedback-dyn}
+        \begin{aligned}
+            \prdyn_{\Fb} \colon \setA \cartprod (\setC \cartprod \prst) & \sto \setC \cartprod \prst, \\
+            \tup{\styleelements{a}, \tup{\styleelements{c}, \prstel}}                                        & \mapsto \tup{\prreadout_\mora^{\setC}(\tup{\styleelements{a}, \styleelements{c}}, \prstel),\ \prdyn_\mora(\tup{\styleelements{a}, \styleelements{c}}, \prstel)},
+        \end{aligned}
+    \end{equation}
+    and
+    \begin{equation}
+        \label{eq:mealy-feedback-ro}
+        \begin{aligned}
+            \prreadout_{\Fb} \colon \setA \cartprod (\setC \cartprod \prst) & \sto \setB, \\
+            \tup{\styleelements{a}, \tup{\styleelements{c}, \prstel}}                                            & \mapsto \prreadout_\mora^{\setB}(\tup{\styleelements{a}, \styleelements{c}}, \prstel).
+        \end{aligned}
+    \end{equation}
+    In other words, the feedback operator $\Fb_{\setA, \setB}^{\setC}$ moves $\setC$ from the inputs and the outputs of the machine into its state.
+    The $\setB$-component of the read-out of $\mora$ becomes the read-out of the new machine, and the $\setC$-component of the read-out of $\mora$ becomes part of the \emph{dynamics} of the new machine: it is no longer shown to the outside, but it is stored, and it is fed back to $\mora$ as the $\setC$-component of its input in the next step.
+
+    Concretely, if the new machine is in the state $\tup{\styleelements{c}_{i-1}, \prsteln{i-1}}$ and receives the input $\styleelements{a}_i$, then it returns the output $\styleelements{b}_i$ and moves to the state $\tup{\styleelements{c}_i, \prsteln{i}}$, where
+    \begin{equation}
+        \label{eq:mealy-feedback-steps}
+        \begin{aligned}
+            \styleelements{b}_i          & = \prreadout_\mora^{\setB}(\tup{\styleelements{a}_i, \styleelements{c}_{i-1}}, \prsteln{i-1}), \\
+            \styleelements{c}_i          & = \prreadout_\mora^{\setC}(\tup{\styleelements{a}_i, \styleelements{c}_{i-1}}, \prsteln{i-1}), \\
+            \prsteln{i}  & = \prdyn_\mora(\tup{\styleelements{a}_i, \styleelements{c}_{i-1}}, \prsteln{i-1}).
+        \end{aligned}
+    \end{equation}
+    So the value which $\mora$ emits on the wire $\setC$ in one step is the value which $\mora$ receives on the wire $\setC$ in the following step: this is feedback with a delay of one step.
+
+    The morphism $\Fb_{\setA, \setB}^{\setC}(\equivmora)$ does not depend on the choice of the representative $\mora$.
+    Indeed, if $\mapc \colon \prst \sto \prst'$ is an isomorphism of Mealy machines from $\mora$ to a machine $\mora'$, then it is compatible with both components of the read-outs, and therefore the function
+    \begin{equation}
+        \setC \cartprod \prst \sto \setC \cartprod \prst', \qquad \tup{\styleelements{c}, \prstel} \mapsto \tup{\styleelements{c}, \mapc(\prstel)},
+    \end{equation}
+    is an isomorphism of Mealy machines between the machines \cref{eq:mealy-feedback-machine} obtained from $\mora$ and from $\mora'$.
+
+    If we combine the dynamics and the read-out of $\mora$ into a single function $(\setA \cartprod \setC) \cartprod \prst \sto (\setB \cartprod \setC) \cartprod \prst$, as in \cref{rem:mealy-single-function}, then the single function $\setA \cartprod (\setC \cartprod \prst) \sto \setB \cartprod (\setC \cartprod \prst)$ of the new machine is obtained from it simply by re-bracketing its arguments and its values.
+
+    Finally, note that \cref{def:feedback-cat} asks for a \SY{strict monoidal category}, which $\MealyMod$ with the \SY{cartesian product} is not.
+    The same construction applies to the strict version $\MealyModL$ of \cref{exa:MealyModL-strict-monoidal}, where it becomes even simpler: there, tuples are concatenated instead of nested, and no re-bracketing is needed.
 \end{example}
+
+\begin{remark}[Feedback and initial states]
+    \label{rem:mealy-feedback-initial-states}
+    The feedback operator of \cref{exa:mealy-feedback} makes use of the fact that our Mealy machines do not include an initial state.
+    The set of states of the new machine is $\setC \cartprod \prst$, so an initial state for it would have to contain an element of $\setC$: an initial value on the wire that is fed back.
+    The machine $\mora$ does not provide such a value, and there is no natural choice for it; the set $\setC$ may even be empty.
+    For Mealy machines with initial state (\cref{def:MealyModst}), a feedback operation of this kind therefore needs an initial value on the wire $\setC$ as an additional piece of data.
+\end{remark}

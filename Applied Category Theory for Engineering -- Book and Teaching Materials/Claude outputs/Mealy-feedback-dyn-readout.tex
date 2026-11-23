@@ -1,0 +1,269 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,hmargin=26mm,vmargin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{stmaryrd}
+\usepackage{microtype}
+\usepackage{enumitem}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\crefname{equation}{equation}{equations}
+\creflabelformat{equation}{(#2#1#3)}
+
+\theoremstyle{plain}
+\newtheorem{lemma}{Lemma}
+\newtheorem*{proposition}{Proposition}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\DeclareMathOperator{\dyn}{dyn}
+\DeclareMathOperator{\ro}{ro}
+\DeclareMathOperator{\Fb}{Fb}
+\newcommand{\as}{\mathrm{as}}
+\newcommand{\st}{\mathrm{st}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\then}{\mathbin{\fatsemi}}
+\newcommand{\MealyMod}{\mathbf{Mealy}/{\sim}}
+\newcommand{\lbl}[1]{\nolinkurl{#1}}
+
+\title{The feedback operator on $\MealyMod$\\ with separate dynamics and read-out}
+\author{Working note for the ACT4E chapter on feedback}
+\date{23 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent
+The example on Mealy machines in the section on feedback categories (Example 35.5 in the current build, equations (13)--(17)) is phrased with the dynamics and the read-out of a Mealy machine combined into one single function.
+This note translates the example, and in particular its feedback operator, into the formulation with two separate functions, and proves that the translation is correct.
+The translation is a short computation, but it brings out two things which the single-function formula hides: the feedback has a one-step delay, and the construction has a gap as soon as machines carry initial states.
+
+\section{The example to be translated}
+
+In the example, a morphism $A \to B$ of $\MealyMod$ is an equivalence class represented by a pair $\langle S, f \rangle$ of a set $S$ of states and a function
+\begin{equation}
+    f \colon A \times S \to B \times S .
+\end{equation}
+Given a morphism $[g] \colon A \times C \to B \times C$, represented by a function
+\begin{equation}
+    \label{eq:g}
+    g \colon (A \times C) \times S \to (B \times C) \times S ,
+\end{equation}
+the example defines $\Fb_{A B}^{C}([g]) \colon A \to B$ to be the morphism represented by the function
+\begin{equation}
+    \label{eq:h}
+    A \times (C \times S) \xrightarrow{\ \as^{-1}\ } (A \times C) \times S \xrightarrow{\ g\ } (B \times C) \times S \xrightarrow{\ \as\ } B \times (C \times S) .
+\end{equation}
+Here $\as$ denotes the re-bracketing function
+\begin{equation}
+    \as \colon (P \times Q) \times R \to P \times (Q \times R), \qquad \bigl((p, q), r\bigr) \mapsto \bigl(p, (q, r)\bigr),
+\end{equation}
+for the appropriate sets $P$, $Q$, $R$.
+Functions are composed in diagrammatic order, written $\then$, as in the book.
+
+\section{Setup and dictionary}
+
+Following the book (\lbl{def:mealy-machine}), a Mealy machine from a set $U$ of inputs to a set $Y$ of outputs has a set $X$ of states, a dynamics and a read-out
+\begin{equation}
+    \dyn \colon U \times X \to X, \qquad \ro \colon U \times X \to Y,
+\end{equation}
+and an initial state.
+The initial state is left aside until \cref{sec:initial}, because the example as written does not mention it.
+The single-function form of the machine (\lbl{rem:mealy-single-function}) is
+\begin{equation}
+    \label{eq:single}
+    F \colon U \times X \to Y \times X, \qquad F(u, x) = \bigl(\ro(u, x),\ \dyn(u, x)\bigr).
+\end{equation}
+
+\begin{lemma}[Dictionary]
+    \label{lem:dictionary}
+    Let $U$, $X$, $Y$ be sets.
+    The assignment $(\dyn, \ro) \mapsto F$ of \cref{eq:single} is a bijection from the set of pairs of functions
+    \begin{equation*}
+        \bigl(\, U \times X \to X,\ \ U \times X \to Y \,\bigr)
+    \end{equation*}
+    to the set of functions $U \times X \to Y \times X$.
+    Its inverse is $F \mapsto (F \then \pi_2,\ F \then \pi_1)$, where $\pi_1$ and $\pi_2$ are the projections of $Y \times X$.
+\end{lemma}
+
+\begin{proof}
+    Let a pair $(\dyn, \ro)$ be given, and let $F$ be defined by \cref{eq:single}.
+    Then $\pi_1(F(u, x)) = \ro(u, x)$ and $\pi_2(F(u, x)) = \dyn(u, x)$ for all $u \in U$ and $x \in X$, so $(F \then \pi_2, F \then \pi_1) = (\dyn, \ro)$.
+
+    Conversely, let $F \colon U \times X \to Y \times X$ be given.
+    Every element of $Y \times X$ is the pair of its two components, and hence
+    \begin{equation*}
+        F(u, x) = \bigl(\pi_1(F(u, x)),\ \pi_2(F(u, x))\bigr) \qquad \text{for all } u \in U,\ x \in X.
+    \end{equation*}
+    This says that $F$ is the single function associated by \cref{eq:single} to the pair $(F \then \pi_2, F \then \pi_1)$.
+\end{proof}
+
+So the phrase ``the two-function formulation of the machine given by $F$'' has exactly one meaning: its read-out is $F \then \pi_1$ and its dynamics is $F \then \pi_2$.
+
+\section{The translated example}
+
+Let $[g] \colon A \times C \to B \times C$ be represented by a machine with set of states $S$ and single function $g$ as in \cref{eq:g}.
+By \cref{lem:dictionary}, applied with $U = A \times C$, $X = S$, and $Y = B \times C$, this is the same as the two functions
+\begin{equation}
+    \dyn_g \colon (A \times C) \times S \to S, \qquad \ro_g \colon (A \times C) \times S \to B \times C,
+\end{equation}
+with
+\begin{equation}
+    \label{eq:g-split}
+    g(u, s) = \bigl(\ro_g(u, s),\ \dyn_g(u, s)\bigr) \qquad \text{for all } u \in A \times C,\ s \in S.
+\end{equation}
+Since the set of outputs is itself a product, the read-out splits further into its two components
+\begin{equation}
+    \ro_g^{B} \coloneqq \ro_g \then \pi_1 \colon (A \times C) \times S \to B,
+    \qquad
+    \ro_g^{C} \coloneqq \ro_g \then \pi_2 \colon (A \times C) \times S \to C,
+\end{equation}
+so that $\ro_g(u, s) = \bigl(\ro_g^{B}(u, s), \ro_g^{C}(u, s)\bigr)$.
+
+\begin{proposition}
+    The function of \cref{eq:h},
+    \begin{equation*}
+        h \coloneqq \as^{-1} \then g \then \as \colon A \times (C \times S) \to B \times (C \times S),
+    \end{equation*}
+    is the single function of the Mealy machine with set of inputs $A$, set of states $C \times S$, set of outputs $B$, read-out
+    \begin{equation}
+        \label{eq:ro-fb}
+        \ro_{\Fb} \colon A \times (C \times S) \to B, \qquad
+        \ro_{\Fb}\bigl(a, (c, s)\bigr) = \ro_g^{B}\bigl((a, c), s\bigr),
+    \end{equation}
+    and dynamics
+    \begin{equation}
+        \label{eq:dyn-fb}
+        \dyn_{\Fb} \colon A \times (C \times S) \to C \times S, \qquad
+        \dyn_{\Fb}\bigl(a, (c, s)\bigr) = \Bigl(\ro_g^{C}\bigl((a, c), s\bigr),\ \dyn_g\bigl((a, c), s\bigr)\Bigr).
+    \end{equation}
+    Moreover, $\ro_{\Fb}$ and $\dyn_{\Fb}$ are the only read-out and dynamics with this single function.
+\end{proposition}
+
+\begin{proof}
+    Let $a \in A$, $c \in C$, and $s \in S$.
+    Then
+    \begin{align*}
+        h\bigl(a, (c, s)\bigr)
+         & = \as\Bigl(g\bigl(\as^{-1}(a, (c, s))\bigr)\Bigr) \\
+         & = \as\Bigl(g\bigl((a, c), s\bigr)\Bigr) \\
+         & = \as\Bigl(\ro_g\bigl((a, c), s\bigr),\ \dyn_g\bigl((a, c), s\bigr)\Bigr) \\
+         & = \as\Bigl(\bigl(\ro_g^{B}((a, c), s),\ \ro_g^{C}((a, c), s)\bigr),\ \dyn_g\bigl((a, c), s\bigr)\Bigr) \\
+         & = \Bigl(\ro_g^{B}\bigl((a, c), s\bigr),\ \bigl(\ro_g^{C}((a, c), s),\ \dyn_g((a, c), s)\bigr)\Bigr).
+    \end{align*}
+    The first equality is the definition of $h$, the second is the definition of $\as^{-1}$, the third is \cref{eq:g-split}, the fourth writes the element $\ro_g((a, c), s)$ of $B \times C$ as the pair of its components, and the fifth is the definition of $\as$.
+
+    The result is an element of $B \times (C \times S)$.
+    Its first component is the right-hand side of \cref{eq:ro-fb}, and its second component is the right-hand side of \cref{eq:dyn-fb}.
+    Hence $h\bigl(a, (c, s)\bigr) = \bigl(\ro_{\Fb}(a, (c, s)),\ \dyn_{\Fb}(a, (c, s))\bigr)$, which is \cref{eq:single} for the machine in the statement.
+    The uniqueness follows from \cref{lem:dictionary}, applied with $U = A$, $X = C \times S$, and $Y = B$.
+\end{proof}
+
+\paragraph{What this says.}
+The $B$-component of the read-out is unchanged, except that the value $c$ is now read from the state instead of from the input.
+The $C$-component of the old \emph{read-out} becomes part of the new \emph{dynamics}.
+Concretely, if the machine is in the state $(c_{i-1}, s_{i-1})$ and receives the input $a_i$, then it returns the output $b_i$ and moves to the state $(c_i, s_i)$, where
+\begin{equation}
+    \begin{aligned}
+        b_i & = \ro_g^{B}\bigl((a_i, c_{i-1}), s_{i-1}\bigr), \\
+        c_i & = \ro_g^{C}\bigl((a_i, c_{i-1}), s_{i-1}\bigr), \\
+        s_i & = \dyn_g\bigl((a_i, c_{i-1}), s_{i-1}\bigr).
+    \end{aligned}
+\end{equation}
+So the value which $g$ emits on the $C$ wire at step $i$ is stored, and it is fed back to $g$ as its $C$ input at step $i + 1$.
+This is feedback with a one-step delay.
+The description ``shift $C$ into the state space'' of the single-function formulation does not show this; the two-function formulation does.
+
+\section{Well-definedness on equivalence classes}
+
+The feedback operator is defined by choosing a representative, so the translation is complete only once we have checked that it respects the equivalence relation.
+I take ``congruence'' to mean isomorphism of Mealy machines, as in \lbl{def:MealyCat} and \lbl{def:mealy-machine-homomorphism}: a bijection between the sets of states which is compatible with the dynamics and with the read-outs.
+
+\begin{lemma}
+    \label{lem:well-defined}
+    Let $g$ and $g'$ be Mealy machines from $A \times C$ to $B \times C$, with sets of states $S$ and $S'$, and let $\varphi \colon S \to S'$ be a bijection such that
+    \begin{equation}
+        \label{eq:iso}
+        \varphi\bigl(\dyn_g(u, s)\bigr) = \dyn_{g'}\bigl(u, \varphi(s)\bigr)
+        \qquad \text{and} \qquad
+        \ro_{g'}\bigl(u, \varphi(s)\bigr) = \ro_g(u, s)
+    \end{equation}
+    for all $u \in A \times C$ and $s \in S$.
+    Then the function
+    \begin{equation*}
+        \psi \coloneqq \id_C \times \varphi \colon C \times S \to C \times S', \qquad (c, s) \mapsto \bigl(c, \varphi(s)\bigr),
+    \end{equation*}
+    is an isomorphism of Mealy machines from the machine $(\dyn_{\Fb}, \ro_{\Fb})$ obtained from $g$ to the machine $(\dyn'_{\Fb}, \ro'_{\Fb})$ obtained from $g'$.
+\end{lemma}
+
+\begin{proof}
+    The function $\psi$ is bijective because $\varphi$ is.
+    Applying $\pi_1$ and $\pi_2$ to the second equation in \eqref{eq:iso} gives
+    \begin{equation*}
+        \ro_{g'}^{B}\bigl(u, \varphi(s)\bigr) = \ro_g^{B}(u, s)
+        \qquad \text{and} \qquad
+        \ro_{g'}^{C}\bigl(u, \varphi(s)\bigr) = \ro_g^{C}(u, s).
+    \end{equation*}
+    Let $a \in A$, $c \in C$, and $s \in S$.
+    For the dynamics, we compute
+    \begin{align*}
+        \psi\bigl(\dyn_{\Fb}(a, (c, s))\bigr)
+         & = \Bigl(\ro_g^{C}\bigl((a, c), s\bigr),\ \varphi\bigl(\dyn_g((a, c), s)\bigr)\Bigr) \\
+         & = \Bigl(\ro_{g'}^{C}\bigl((a, c), \varphi(s)\bigr),\ \dyn_{g'}\bigl((a, c), \varphi(s)\bigr)\Bigr) \\
+         & = \dyn'_{\Fb}\bigl(a, (c, \varphi(s))\bigr) \\
+         & = \dyn'_{\Fb}\bigl(a, \psi(c, s)\bigr).
+    \end{align*}
+    For the read-outs, we compute
+    \begin{equation*}
+        \ro'_{\Fb}\bigl(a, \psi(c, s)\bigr)
+        = \ro_{g'}^{B}\bigl((a, c), \varphi(s)\bigr)
+        = \ro_g^{B}\bigl((a, c), s\bigr)
+        = \ro_{\Fb}\bigl(a, (c, s)\bigr).
+    \end{equation*}
+    These are the two compatibility conditions for $\psi$.
+\end{proof}
+
+Hence $\Fb_{A B}^{C}([g])$ does not depend on the choice of the representative $g$.
+
+\section{A gap: initial states}
+\label{sec:initial}
+
+The example describes a morphism of $\MealyMod$ as a pair $\langle S, f \rangle$.
+In the book, however, a Mealy machine also carries an initial state $\st \in S$ (\lbl{def:mealy-machine}), and isomorphisms of Mealy machines are required to preserve it (\lbl{def:MealyCat}).
+With initial states, the formula \eqref{eq:h} does not define a feedback operator.
+
+The set of states of the new machine is $C \times S$, so its initial state must be a pair $(c_0, \st')$.
+The choice $\st' = \st_g$ is natural, but nothing in the data determines the element $c_0 \in C$.
+It is the initial value on the feedback wire, which the one-step delay described above requires.
+Such an element can even fail to exist.
+Let $C = \emptyset$.
+Then $A \times C = \emptyset$ and $B \times C = \emptyset$, and for every set $S$ with a chosen element $\st$ there is a Mealy machine from $A \times C$ to $B \times C$ with set of states $S$, whose dynamics and read-out are empty functions.
+But $C \times S = \emptyset$ has no element which could serve as the initial state.
+
+There are three ways to repair this.
+
+\begin{enumerate}[leftmargin=*]
+    \item \emph{Drop the initial states} for this example: use machines $\langle S, \dyn, \ro \rangle$ up to bijections which are compatible with the dynamics and the read-out.
+          Everything in this note then applies as it stands.
+          As far as I know, this is the setting of the literature on feedback categories to which the to-do note above the example refers.
+          It is, however, a different category from the one of \lbl{def:MealyCat}.
+    \item \emph{Use pointed sets as objects}, so that every wire carries an initial value, and take $c_0$ to be the base point of $C$.
+          The initial state of the new machine is then $(c_0, \st_g)$, and the function $\psi$ of \cref{lem:well-defined} preserves it whenever $\varphi$ preserves the initial states.
+    \item \emph{Keep} \lbl{def:MealyCat} and accept that feedback needs $c_0$ as additional data.
+          The operator then no longer has the type required by \lbl{def:feedback-cat}.
+\end{enumerate}
+
+\begin{remark}
+    The definition of a feedback category (\lbl{def:feedback-cat}) asks for a \emph{strict} monoidal category, and the strict version of $\MealyMod$ in the book is the list-based one of \lbl{exa:MealyModL-strict-monoidal}.
+    There the re-bracketing functions are identities, and the formulas \eqref{eq:ro-fb} and \eqref{eq:dyn-fb} simplify: on the set of concatenated tuples $\langle a, c, s \rangle$, the read-out of the new machine is $\ro_g^{B}$ and its dynamics is the pairing $\langle \ro_g^{C}, \dyn_g \rangle$, with no re-bracketing at all.
+\end{remark}
+
+\paragraph{Open decision.}
+Which of the three options for the initial states to adopt.
+This decides how the example is to be rewritten in the chapter.
+
+\end{document}

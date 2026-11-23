@@ -373,7 +373,6 @@ We first consider the discrete-time version, and then the continuous-time versio
     \constit
     \begin{enumerate}
         \item Real \SY{vector spaces} $\prin=\reals^l$ (input space), $\prout=\reals^m$ (output space), and $\prst=\reals^n$ (state space);
-        \item An \emph{initial state} $\mat{x}_0 \setin \prst$;
         \item Real matrices $\mat{A}$, $\mat{B}$, $\mat{C}$, $\mat{D}$ of dimensions $\matdim{n}{n}$, $\matdim{n}{l}$, $\matdim{m}{n}$, and $\matdim{m}{l}$, respectively, specifying a system of equations of the form
               \begin{equation}
                   \label{eq:LTI-discrete-equations}
@@ -386,8 +385,9 @@ We first consider the discrete-time version, and then the continuous-time versio
     \end{enumerate}
 \end{definition}
 
-We write such a system compactly as a tuple $\tupp{\mat{x}_0, \mat{A}, \mat{B}, \mat{C}, \mat{D}}$.
-Given a sequence $\mat{u}_0, \mat{u}_1, \mat{u}_2, \dots$ of inputs, the equations \cref{eq:LTI-discrete-equations} determine, step by step, the sequence of states $\mat{x}_0, \mat{x}_1, \mat{x}_2, \dots$ and the sequence of outputs $\mat{y}_0, \mat{y}_1, \mat{y}_2, \dots$; explicitly,
+We write such a system compactly as a tuple $\tupp{\mat{A}, \mat{B}, \mat{C}, \mat{D}}$.
+Note that the system itself does not specify a state to start from.
+Given a choice of an \emph{initial state} $\mat{x}_0 \setin \prst$ and a sequence $\mat{u}_0, \mat{u}_1, \mat{u}_2, \dots$ of inputs, the equations \cref{eq:LTI-discrete-equations} determine, step by step, the sequence of states $\mat{x}_0, \mat{x}_1, \mat{x}_2, \dots$ and the sequence of outputs $\mat{y}_0, \mat{y}_1, \mat{y}_2, \dots$; explicitly,
 \begin{equation}
     \mat{x}_k = \mat{A}^k \mat{x}_0 + \sum_{i=0}^{k-1} \mat{A}^{k-1-i} \mat{B} \mat{u}_i.
 \end{equation}
@@ -412,7 +412,6 @@ With inputs, the system has the same structure as a \emph{Mealy machine} (\cref{
     \constit
     \begin{enumerate}
         \item Real \SY{vector spaces} $\prin=\reals^l$ (input space), $\prout=\reals^m$ (output space), and $\prst=\reals^n$ (state space);
-        \item An \emph{initial state} $\prstart\setin \prst$;
         \item Real matrices $\mat{A}$, $\mat{B}$, $\mat{C}$, $\mat{D}$ of appropriate dimension, specifying a system of equations of the form
               \begin{align}
                   \dot{\mat{x}}(t) & = \mat{A}\mat{x}(t) + \mat{B}\mat{u}(t) \label{eq:LTI-system-dyn-equation} \\
@@ -447,13 +446,16 @@ and \cref{eq:LTI-system-ro-equation} as defining a read-out function
 
 In contrast to the discrete-time case (\cref{def:LTI-discrete}), here the inputs $\mat{u}(t)$ are functions of continuous time (``signals''), and the dynamics $\tup{u, x} \mapsto \mat{A}x + \mat{B}u$ specifies the \emph{rate of change} of the state, not the next state.
 
-As in the discrete-time case, we write a continuous-time LTI system compactly as a tuple $\genericlti{}$.
+As in the discrete-time case, we write a continuous-time LTI system compactly as a tuple $\ltituple{}$.
+Again, the system itself does not specify a state to start from.
+Given a choice of an \emph{initial state} $\prstart \setin \prst$ and an input signal $\mat{u}$, the equation \cref{eq:LTI-system-dyn-equation} together with the condition $\mat{x}(0) = \prstart$ determines the states $\mat{x}(t)$, and then \cref{eq:LTI-system-ro-equation} determines the outputs $\mat{y}(t)$.
+We will come back to this when we discuss how LTI systems act on signals.
 
 In both cases, the matrix $\mat{D}$ is called the \emph{feedthrough term}: it describes the direct influence of the current input on the current output.
 
 \begin{definition}[Proper LTI system]
     \label{def:prop_LTI_syst}
-    We will call a (discrete-time or continuous-time) LTI system $\genericlti{}$ \emph{proper} if the matrix $\mat{D}$ is the zero matrix (understood as having the appropriate dimensions).
+    We will call a (discrete-time or continuous-time) LTI system $\ltituple{}$ \emph{proper} if the matrix $\mat{D}$ is the zero matrix (understood as having the appropriate dimensions).
 \end{definition}
 
 In a proper LTI system, the input influences the output only through the state.

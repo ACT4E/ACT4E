@@ -246,13 +246,13 @@ Then there is the following ``infinitesimal'' version of \cref{lem:homomorphism-
 \subsection{Homomorphisms of Moore machines}
 \label{sec:homomorphisms-moore}
 
-Moore machines (\cref{def:moore-machine-first}) are not simply actions of a monoid: besides their dynamics, they have a read-out and an initial state.
-However, their dynamics induces an action of the monoid $\listsof{\prin}$ of lists of inputs (\cref{sec:actions-of-sets}), and a homomorphism of Moore machines is a homomorphism of these actions which, in addition, respects the read-out and the initial state.
+Moore machines (\cref{def:moore-machine-first}) are not simply actions of a monoid: besides their dynamics, they have a read-out.
+However, their dynamics induces an action of the monoid $\listsof{\prin}$ of lists of inputs (\cref{sec:actions-of-sets}), and a homomorphism of Moore machines is a homomorphism of these actions which, in addition, respects the read-out.
 We consider machines with the same inputs and outputs, and compare their states.
 
 \begin{ctdefinition}[Homomorphism of Moore machines]
     \label{def:moore-machine-homomorphism}
-    Let $\tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$ and $\tupp{\prin, \prst', \prout, \prdyn', \prreadout', \prstart'}$ be two Moore machines with the same set $\prin$ of inputs and the same set $\prout$ of outputs.
+    Let $\tupp{\prin, \prst, \prout, \prdyn, \prreadout}$ and $\tupp{\prin, \prst', \prout, \prdyn', \prreadout'}$ be two Moore machines with the same set $\prin$ of inputs and the same set $\prout$ of outputs.
     A \maindef{homomorphism of Moore machines} from the first to the second is:
 
     \constit
@@ -263,25 +263,25 @@ We consider machines with the same inputs and outputs, and compare their states.
     \condit
     \begin{enumerate}
         \item Compatibility with the dynamics: $\mapc(\prdyn(\prinel, \prstel)) = \prdyn'(\prinel, \mapc(\prstel))$ for all $\prinel \setin \prin$ and $\prstel \setin \prst$;
-        \item Compatibility with the read-out: $\prreadout'(\mapc(\prstel)) = \prreadout(\prstel)$ for all $\prstel \setin \prst$, that is, $\mapc \mthen \prreadout' = \prreadout$;
-        \item Compatibility with the initial states: $\mapc(\prstart) = \prstart'$.
+        \item Compatibility with the read-out: $\prreadout'(\mapc(\prstel)) = \prreadout(\prstel)$ for all $\prstel \setin \prst$, that is, $\mapc \mthen \prreadout' = \prreadout$.
     \end{enumerate}
 \end{ctdefinition}
 
 For each input $\prinel$, condition 1 is the one-step condition \cref{eq:equivariance-one-step} for the functions $\prdyn(\prinel, -)$ and $\prdyn'(\prinel, -)$.
 By the same induction as in the proof of \cref{lem:homomorphism-one-step}, now on the length of lists, it is equivalent to $\mapc$ being a homomorphism of the induced actions of $\listsof{\prin}$: $\mapc(\act(l, \prstel)) = \act'(l, \mapc(\prstel))$ for all lists $l \setin \listsof{\prin}$ and all $\prstel \setin \prst$.
 
-The most important property of homomorphisms of Moore machines is that they preserve the input-output behavior.
+The most important property of homomorphisms of Moore machines is that they preserve the input-output behavior, when the two machines are started in states that correspond to each other.
 
 \begin{lemma}
     \label{lem:moore-homomorphism-behavior}
-    If there is a homomorphism of Moore machines from one Moore machine to another, then the two machines transform every list of inputs into the same list of outputs \cref{eq:moore-list-output}.
+    Let $\mapc$ be a homomorphism of Moore machines from one Moore machine to another, and let $\prstel$ be a state of the first machine.
+    Then the first machine with initial state $\prstel$ and the second machine with initial state $\mapc(\prstel)$ transform every list of inputs into the same list of outputs \cref{eq:moore-list-output}.
 \end{lemma}
 
 \begin{proof}
-    Let $\mapc$ be the homomorphism, let $\makelist{\prineln{1}, \dots, \prineln{k}}$ be a list of inputs, and let $\prsteln{0}, \dots, \prsteln{k}$ and $\prsteln{0}', \dots, \prsteln{k}'$ be the states visited by the two machines.
+    Let $\makelist{\prineln{1}, \dots, \prineln{k}}$ be a list of inputs, and let $\prsteln{0}, \dots, \prsteln{k}$ and $\prsteln{0}', \dots, \prsteln{k}'$ be the states visited by the two machines, so that $\prsteln{0} = \prstel$ and $\prsteln{0}' = \mapc(\prstel)$.
     We show $\prsteln{i}' = \mapc(\prsteln{i})$ by induction on $i$.
-    For $i = 0$, this is condition 3: $\prsteln{0}' = \prstart' = \mapc(\prstart) = \mapc(\prsteln{0})$.
+    For $i = 0$, this holds by the choice of the two initial states.
     If it holds for $i - 1$, then by condition 1,
     \begin{equation}
         \prsteln{i}' = \prdyn'(\prineln{i}, \prsteln{i-1}') = \prdyn'(\prineln{i}, \mapc(\prsteln{i-1})) = \mapc(\prdyn(\prineln{i}, \prsteln{i-1})) = \mapc(\prsteln{i}).
@@ -293,19 +293,20 @@ In particular, a homomorphism can be used to replace a machine by a simpler one 
 
 \begin{example}[Counting modulo 4 versus modulo 2]
     \label{exa:moore-parity}
-    Consider Moore machines with inputs $\prin = \makeset{0, 1}$ and outputs $\prout = \makeset{\text{even}, \text{odd}}$, which report whether the number of $1$s read so far is even or odd.
-    A first machine counts the $1$s modulo $4$: its states are $\prst = \makeset{0, 1, 2, 3}$, with $\prdyn(\prinel, \prstel) = (\prstel + \prinel) \bmod 4$, $\prstart = 0$, and read-out $\prreadout(\prstel) = \text{even}$ if $\prstel$ is even and $\text{odd}$ otherwise.
-    A second machine counts modulo $2$: $\prst' = \makeset{0, 1}$, with $\prdyn'(\prinel, \prstel) = (\prstel + \prinel) \bmod 2$, $\prstart' = 0$, and $\prreadout'(0) = \text{even}$, $\prreadout'(1) = \text{odd}$.
-    The function $\mapc(\prstel) \definedas \prstel \bmod 2$ is a homomorphism from the first machine to the second: since $2$ divides $4$, we have $\mapc((\prstel + \prinel) \bmod 4) = (\prstel + \prinel) \bmod 2 = \prdyn'(\prinel, \mapc(\prstel))$; the parity of $\prstel \bmod 2$ is the parity of $\prstel$; and $\mapc(0) = 0$.
-    By \cref{lem:moore-homomorphism-behavior}, the two machines have the same input-output behavior, so the smaller one can replace the larger one.
+    Consider Moore machines with inputs $\prin = \makeset{0, 1}$ and outputs $\prout = \makeset{\text{even}, \text{odd}}$, which are meant to report whether the number of $1$s read so far is even or odd.
+    A first machine counts the $1$s modulo $4$: its states are $\prst = \makeset{0, 1, 2, 3}$, with $\prdyn(\prinel, \prstel) = (\prstel + \prinel) \bmod 4$, and read-out $\prreadout(\prstel) = \text{even}$ if $\prstel$ is even and $\text{odd}$ otherwise.
+    A second machine counts modulo $2$: $\prst' = \makeset{0, 1}$, with $\prdyn'(\prinel, \prstel) = (\prstel + \prinel) \bmod 2$, and $\prreadout'(0) = \text{even}$, $\prreadout'(1) = \text{odd}$.
+    The function $\mapc(\prstel) \definedas \prstel \bmod 2$ is a homomorphism from the first machine to the second: since $2$ divides $4$, we have $\mapc((\prstel + \prinel) \bmod 4) = (\prstel + \prinel) \bmod 2 = \prdyn'(\prinel, \mapc(\prstel))$; and the parity of $\prstel \bmod 2$ is the parity of $\prstel$.
+    By \cref{lem:moore-homomorphism-behavior}, the first machine with initial state $\prstel$ and the second machine with initial state $\prstel \bmod 2$ have the same input-output behavior.
+    In particular, this is so when both machines are started in the state $0$, in which case they do report whether the number of $1$s read so far is even or odd; so the smaller machine can replace the larger one.
 \end{example}
 
 \begin{example}[Forgetting an irrelevant coordinate]
     \label{exa:moore-robot-projection}
-    Consider the robot of \cref{exa:robot_on_a_grid}, with initial state $\tup{1, 1}$, but now with the read-out that only reports whether the robot is in the left half of the grid: $\prout = \makeset{\text{left}, \text{right}}$, and $\prreadout(\prsteln{1}, \prsteln{2}) = \text{left}$ if $\prsteln{1} \leq 2$, and $\text{right}$ otherwise.
+    Consider the robot of \cref{exa:robot_on_a_grid}, but now with the read-out that only reports whether the robot is in the left half of the grid: $\prout = \makeset{\text{left}, \text{right}}$, and $\prreadout(\prsteln{1}, \prsteln{2}) = \text{left}$ if $\prsteln{1} \leq 2$, and $\text{right}$ otherwise.
     For this read-out, the vertical position is irrelevant.
-    Let the second machine have the states $\prst' = \makeset{1, 2, 3, 4}$ (the horizontal position only), the dynamics $\prdyn'(\rightarrow, \prsteln{1}) = \min(\prsteln{1} + 1, 4)$, $\prdyn'(\leftarrow, \prsteln{1}) = \max(\prsteln{1} - 1, 1)$, and $\prdyn'(\uparrow, \prsteln{1}) = \prdyn'(\downarrow, \prsteln{1}) = \prsteln{1}$, the initial state $1$, and the read-out $\prreadout'(\prsteln{1}) = \text{left}$ if $\prsteln{1} \leq 2$, and $\text{right}$ otherwise.
-    Then the projection $\mapc(\prsteln{1}, \prsteln{2}) \definedas \prsteln{1}$ is a homomorphism of Moore machines: each instruction changes the horizontal position in the same way in both machines, the read-out only depends on the horizontal position, and $\mapc(1, 1) = 1$.
+    Let the second machine have the states $\prst' = \makeset{1, 2, 3, 4}$ (the horizontal position only), the dynamics $\prdyn'(\rightarrow, \prsteln{1}) = \min(\prsteln{1} + 1, 4)$, $\prdyn'(\leftarrow, \prsteln{1}) = \max(\prsteln{1} - 1, 1)$, and $\prdyn'(\uparrow, \prsteln{1}) = \prdyn'(\downarrow, \prsteln{1}) = \prsteln{1}$, and the read-out $\prreadout'(\prsteln{1}) = \text{left}$ if $\prsteln{1} \leq 2$, and $\text{right}$ otherwise.
+    Then the projection $\mapc(\prsteln{1}, \prsteln{2}) \definedas \prsteln{1}$ is a homomorphism of Moore machines: each instruction changes the horizontal position in the same way in both machines, and the read-out only depends on the horizontal position.
 \end{example}
 
 
@@ -316,7 +317,7 @@ For Mealy machines (\cref{def:mealy-machine}), the definition is the same, excep
 
 \begin{ctdefinition}[Homomorphism of Mealy machines]
     \label{def:mealy-machine-homomorphism}
-    Let $\tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$ and $\tupp{\prin, \prst', \prout, \prdyn', \prreadout', \prstart'}$ be two Mealy machines with the same set $\prin$ of inputs and the same set $\prout$ of outputs.
+    Let $\tupp{\prin, \prst, \prout, \prdyn, \prreadout}$ and $\tupp{\prin, \prst', \prout, \prdyn', \prreadout'}$ be two Mealy machines with the same set $\prin$ of inputs and the same set $\prout$ of outputs.
     A \maindef{homomorphism of Mealy machines} from the first to the second is:
 
     \constit
@@ -327,12 +328,11 @@ For Mealy machines (\cref{def:mealy-machine}), the definition is the same, excep
     \condit
     \begin{enumerate}
         \item Compatibility with the dynamics: $\mapc(\prdyn(\prinel, \prstel)) = \prdyn'(\prinel, \mapc(\prstel))$ for all $\prinel \setin \prin$ and $\prstel \setin \prst$;
-        \item Compatibility with the read-out: $\prreadout'(\prinel, \mapc(\prstel)) = \prreadout(\prinel, \prstel)$ for all $\prinel \setin \prin$ and $\prstel \setin \prst$;
-        \item Compatibility with the initial states: $\mapc(\prstart) = \prstart'$.
+        \item Compatibility with the read-out: $\prreadout'(\prinel, \mapc(\prstel)) = \prreadout(\prinel, \prstel)$ for all $\prinel \setin \prin$ and $\prstel \setin \prst$.
     \end{enumerate}
 \end{ctdefinition}
 
-If we combine dynamics and read-out into single functions $\stylemaps{F} \colon \makecartprod{\prin, \prst} \sto \makecartprod{\prout, \prst}$ and $\stylemaps{F}' \colon \makecartprod{\prin, \prst'} \sto \makecartprod{\prout, \prst'}$, as in \cref{rem:mealy-single-function}, conditions 1 and 2 together say that the following diagram commutes:
+If we combine dynamics and read-out into single functions $\stylemaps{F} \colon \makecartprod{\prin, \prst} \sto \makecartprod{\prout, \prst}$ and $\stylemaps{F}' \colon \makecartprod{\prin, \prst'} \sto \makecartprod{\prout, \prst'}$, as in \cref{rem:mealy-single-function}, the two conditions together say that the following diagram commutes:
 \begin{equation}
     \label{eq:mealy-homomorphism-diagram}
     \begin{tikzcd}[column sep=large]
@@ -347,19 +347,19 @@ Indeed, the two paths send $\tup{\prinel, \prstel}$ to
     \tup{\prreadout'(\prinel, \mapc(\prstel)), \prdyn'(\prinel, \mapc(\prstel))},
 \end{equation}
 respectively.
-As for Moore machines, and with the same proof, a homomorphism of Mealy machines implies that the two machines transform every list of inputs into the same list of outputs \cref{eq:mealy-list-output}.
+As for Moore machines, and with the same proof, if $\mapc$ is a homomorphism of Mealy machines, then the first machine with initial state $\prstel$ and the second machine with initial state $\mapc(\prstel)$ transform every list of inputs into the same list of outputs \cref{eq:mealy-list-output}.
 
 \begin{example}[A change detector with superfluous memory]
     \label{exa:mealy-superfluous-memory}
-    Consider a variant of the change detector of \cref{exa:mealy-change-detector} whose state stores the last \emph{two} inputs: $\prst_2 = \makecartprod{\makeset{0, 1}, \makeset{0, 1}}$, with dynamics $\prdyn_2(\prinel, \tup{a, b}) = \tup{b, \prinel}$, read-out $\prreadout_2(\prinel, \tup{a, b}) = 1$ if $\prinel \neq b$ and $0$ otherwise, and initial state $\tup{0, 0}$.
-    The function $\mapc \colon \prst_2 \sto \makeset{0, 1}$, $\tup{a, b} \mapsto b$, which forgets the older of the two stored inputs, is a homomorphism from this machine to the original change detector: $\mapc(\tup{b, \prinel}) = \prinel = \prdyn(\prinel, b)$, the two read-outs both compare $\prinel$ with $b$, and $\mapc(\tup{0, 0}) = 0$.
-    So the additional memory is superfluous: both machines have the same input-output behavior.
+    Consider a variant of the change detector of \cref{exa:mealy-change-detector} whose state stores the last \emph{two} inputs: $\prst_2 = \makecartprod{\makeset{0, 1}, \makeset{0, 1}}$, with dynamics $\prdyn_2(\prinel, \tup{a, b}) = \tup{b, \prinel}$ and read-out $\prreadout_2(\prinel, \tup{a, b}) = 1$ if $\prinel \neq b$ and $0$ otherwise.
+    The function $\mapc \colon \prst_2 \sto \makeset{0, 1}$, $\tup{a, b} \mapsto b$, which forgets the older of the two stored inputs, is a homomorphism from this machine to the original change detector: $\mapc(\tup{b, \prinel}) = \prinel = \prdyn(\prinel, b)$, and the two read-outs both compare $\prinel$ with $b$.
+    So the additional memory is superfluous: started in corresponding states, both machines have the same input-output behavior.
 \end{example}
 
 \begin{example}[Change of state coordinates of a discrete-time LTI system]
     \label{exa:lti-similarity-transformation}
-    Consider a discrete-time LTI system $\tupp{\mat{x}_0, \mat{A}, \mat{B}, \mat{C}, \mat{D}}$, viewed as a Mealy machine (\cref{exa:discrete-lti-mealy}), and let $\mat{T}$ be an invertible $\matdim{n}{n}$ matrix.
-    Then $\mapc(x) \definedas \mat{T}x$ is a homomorphism of Mealy machines to the LTI system $\tupp{\mat{T}\mat{x}_0, \mat{T}\mat{A}\mat{T}^{-1}, \mat{T}\mat{B}, \mat{C}\mat{T}^{-1}, \mat{D}}$, since
+    Consider a discrete-time LTI system $\tupp{\mat{A}, \mat{B}, \mat{C}, \mat{D}}$, viewed as a Mealy machine (\cref{exa:discrete-lti-mealy}), and let $\mat{T}$ be an invertible $\matdim{n}{n}$ matrix.
+    Then $\mapc(x) \definedas \mat{T}x$ is a homomorphism of Mealy machines to the LTI system $\tupp{\mat{T}\mat{A}\mat{T}^{-1}, \mat{T}\mat{B}, \mat{C}\mat{T}^{-1}, \mat{D}}$, since
     \begin{equation}
         \mat{T}(\mat{A}x + \mat{B}u) = \mat{T}\mat{A}\mat{T}^{-1}(\mat{T}x) + \mat{T}\mat{B}u,
         \qquad

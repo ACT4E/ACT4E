@@ -82,8 +82,8 @@ The image of $\act$, which is a submonoid of $\Endof\stateset$, is called the \e
 \label{sec:moore-machines}
 
 \emph{Moore machines}\footnote{They are named after Edward F. Moore.} are one of the most basic models of machines; they are used extensively, for example, in the study of computation and formal languages, and in the design of digital circuits.
-A Moore machine consists of a semiautomaton (\cref{sec:actions-of-sets}) -- that is, a set of states together with dynamics that specify how each input changes the state -- together with an initial state and a \emph{read-out}, which specifies what output the machine shows in each state.
-In this way, a Moore machine transforms lists of inputs into lists of outputs.
+A Moore machine consists of a semiautomaton (\cref{sec:actions-of-sets}) -- that is, a set of states together with dynamics that specify how each input changes the state -- together with a \emph{read-out}, which specifies what output the machine shows in each state.
+Once we choose a state for it to start in, a Moore machine transforms lists of inputs into lists of outputs.
 
 \begin{ctdefinition}[Moore machine]
     \label{def:moore-machine-first}
@@ -93,15 +93,14 @@ In this way, a Moore machine transforms lists of inputs into lists of outputs.
     \begin{enumerate}
         \item a set $\prin$ of inputs, a set $\prst$ of states, and a set $\prout$ of outputs;
         \item a function $\prdyn \colon \makecartprod{\prin, \prst} \sto \prst$, the \emph{dynamics};
-        \item a function $\prreadout \colon \prst \sto \prout$, the \emph{read-out};
-        \item an element $\prstart \setin \prst$, the \emph{initial state}.
+        \item a function $\prreadout \colon \prst \sto \prout$, the \emph{read-out}.
     \end{enumerate}
 \end{ctdefinition}
 
 We write a Moore machine as a tuple
 \begin{equation}
     \label{eq:moore-tuple}
-    \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}.
+    \tupp{\prin,\prst,\prout,\prdyn,\prreadout}.
 \end{equation}
 The dynamics is a parametrized endomorphism of $\prst$, with parameter set $\prin$; the read-out does not depend on the input.
 
@@ -136,12 +135,13 @@ The dynamics is a parametrized endomorphism of $\prst$, with parameter set $\pri
         {\tupp{\prsteln{1},\prsteln{2}}}
         {\tupp{\prsteln{1},\prsteln{2}}}
     \end{equation*}
-    As initial state we may choose any position, for instance $\prstart = \tup{1,1}$.
 \end{example}
 
 \paragraph{Moore machines transform lists into lists}
 By \cref{sec:actions-of-sets}, the dynamics $\prdyn \colon \makecartprod{\prin, \prst} \sto \prst$ of a Moore machine induces an action $\act \colon \listsof{\prin} \fto \Endof\prst$ of the monoid of lists of inputs on the state space.
-Together with the initial state and the read-out, this lets the machine transform any list $\makelist{\prineln{1}, \dots, \prineln{k}}$ of inputs into a list of outputs:
+To let the machine process a list of inputs, we need to say in which state it starts.
+This is not part of the machine: it is a choice that we make when we run the machine, and we call the chosen state $\prstart \setin \prst$ the \emph{initial state}.
+Together with the read-out, it lets the machine transform any list $\makelist{\prineln{1}, \dots, \prineln{k}}$ of inputs into a list of outputs:
 the states visited are
 \begin{equation}
     \prsteln{i} \definedas \act(\makelist{\prineln{1}, \dots, \prineln{i}}, \prstart), \qquad i = 0, 1, \dots, k,
@@ -152,9 +152,10 @@ that is, $\prsteln{0} = \prstart$ and $\prsteln{i} = \prdyn(\prineln{i}, \prstel
     \makelist{\prreadout(\prsteln{0}), \prreadout(\prsteln{1}), \dots, \prreadout(\prsteln{k})}.
 \end{equation}
 Note that a list of $k$ inputs produces $k+1$ outputs: the first output, $\prreadout(\prstart)$, is produced before any input has been read, and the output never depends on the current input directly, but only on the inputs read so far.
+The same machine can be started in any of its states, and different initial states lead, in general, to different lists of outputs.
 
 \begin{example}
-    In \cref{exa:robot_on_a_grid}, starting at $\prstart = \tup{1,1}$, the list of instructions $\makelist{\rightarrow, \uparrow, \rightarrow}$ produces the list of outputs
+    In \cref{exa:robot_on_a_grid}, with the initial state $\prstart = \tup{1,1}$, the list of instructions $\makelist{\rightarrow, \uparrow, \rightarrow}$ produces the list of outputs
     \begin{equation*}
         \makelist{\tup{1,1}, \tup{2,1}, \tup{2,2}, \tup{3,2}}
     \end{equation*}
@@ -178,12 +179,11 @@ This allows a Mealy machine to react to an input immediately, in the same step i
     \begin{enumerate}
         \item a set $\prin$ of inputs, a set $\prst$ of states, and a set $\prout$ of outputs;
         \item a function $\prdyn \colon \makecartprod{\prin, \prst} \sto \prst$, the \emph{dynamics};
-        \item a function $\prreadout \colon \makecartprod{\prin, \prst} \sto \prout$, the \emph{read-out};
-        \item an element $\prstart \setin \prst$, the \emph{initial state}.
+        \item a function $\prreadout \colon \makecartprod{\prin, \prst} \sto \prout$, the \emph{read-out}.
     \end{enumerate}
 \end{ctdefinition}
 
-As for Moore machines, we write a Mealy machine as a tuple $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$; the only difference is the type of the read-out.
+As for Moore machines, we write a Mealy machine as a tuple $\tupp{\prin,\prst,\prout,\prdyn,\prreadout}$; the only difference is the type of the read-out.
 
 \begin{remark}[Dynamics and read-out as a single function]
     \label{rem:mealy-single-function}
@@ -199,11 +199,11 @@ As for Moore machines, we write a Mealy machine as a tuple $\tupp{\prin,\prst,\p
     which, in each step, takes the current input and the current state, and returns the output and the next state.
     Conversely, we recover the read-out and the dynamics from $\stylemaps{F}$ by post-composing with the canonical projections: $\prreadout = \stylemaps{F} \mthen \proj_1$ and $\prdyn = \stylemaps{F} \mthen \proj_2$.
     These two passages are inverse to each other; this is the canonical isomorphism $(\makecartprod{\setA, \setB})^{\setC} \cong \makecartprod{\setA^{\setC}, \setB^{\setC}}$ of \cref{sec:arithmetic-exponents-products}, for $\setA = \prout$, $\setB = \prst$, and $\setC = \makecartprod{\prin, \prst}$.
-    So a Mealy machine can equally well be specified by a tuple $\tupp{\prin, \prst, \prout, \stylemaps{F}, \prstart}$, with $\stylemaps{F}$ a function of type $\makecartprod{\prin, \prst} \sto \makecartprod{\prout, \prst}$.
+    So a Mealy machine can equally well be specified by a tuple $\tupp{\prin, \prst, \prout, \stylemaps{F}}$, with $\stylemaps{F}$ a function of type $\makecartprod{\prin, \prst} \sto \makecartprod{\prout, \prst}$.
     A Moore machine can be packaged in the same way, as $\tup{\prinel, \prstel} \mapsto \tup{\prreadout(\prstel), \prdyn(\prinel, \prstel)}$; its first component does not depend on the input.
 \end{remark}
 
-A Mealy machine transforms a list $\makelist{\prineln{1}, \dots, \prineln{k}}$ of inputs into a list of outputs as follows: with $\prsteln{0} = \prstart$ and $\prsteln{i} = \prdyn(\prineln{i}, \prsteln{i-1})$ as before (that is, $\prsteln{i} = \act(\makelist{\prineln{1}, \dots, \prineln{i}}, \prstart)$ for the induced action of $\listsof{\prin}$), the outputs are
+As for Moore machines, once we have chosen an initial state $\prstart \setin \prst$, a Mealy machine transforms a list $\makelist{\prineln{1}, \dots, \prineln{k}}$ of inputs into a list of outputs as follows: with $\prsteln{0} = \prstart$ and $\prsteln{i} = \prdyn(\prineln{i}, \prsteln{i-1})$ as before (that is, $\prsteln{i} = \act(\makelist{\prineln{1}, \dots, \prineln{i}}, \prstart)$ for the induced action of $\listsof{\prin}$), the outputs are
 \begin{equation}
     \label{eq:mealy-list-output}
     \prouteln{i} \definedas \prreadout(\prineln{i}, \prsteln{i-1}), \qquad i = 1, \dots, k.
@@ -212,39 +212,37 @@ In contrast to \cref{eq:moore-list-output}, a list of $k$ inputs produces exactl
 
 \begin{example}[Change detector]
     \label{exa:mealy-change-detector}
-    Let $\prin = \prst = \prout = \makeset{0, 1}$, with dynamics $\prdyn(\prinel, \prstel) \definedas \prinel$ (the state remembers the last input), read-out
+    Let $\prin = \prst = \prout = \makeset{0, 1}$, with dynamics $\prdyn(\prinel, \prstel) \definedas \prinel$ (the state remembers the last input) and read-out
     \begin{equation}
         \prreadout(\prinel, \prstel) \definedas
         \begin{cases}
             1 & \text{if } \prinel \neq \prstel, \\
-            0 & \text{if } \prinel = \prstel,
+            0 & \text{if } \prinel = \prstel.
         \end{cases}
     \end{equation}
-    and initial state $\prstart = 0$.
     This Mealy machine outputs $1$ exactly when the current input differs from the previous one.
-    For instance, the list of inputs $\makelist{0, 1, 1, 0}$ leads through the states $0, 0, 1, 1, 0$ and produces the list of outputs $\makelist{0, 1, 0, 1}$.
+    For instance, with the initial state $\prstart = 0$, the list of inputs $\makelist{0, 1, 1, 0}$ leads through the states $0, 0, 1, 1, 0$ and produces the list of outputs $\makelist{0, 1, 0, 1}$.
 \end{example}
 
 \begin{remark}[Moore versus Mealy]
     \label{rem:moore-vs-mealy}
     The two kinds of machines can simulate each other, up to a shift of the outputs by one step.
     \begin{enumerate}
-        \item Every Moore machine $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$ gives a Mealy machine with the same inputs, states, outputs, dynamics and initial state, and with read-out $\tup{\prinel, \prstel} \mapsto \prreadout(\prdyn(\prinel, \prstel))$.
-              On a list of inputs, it produces the outputs $\prreadout(\prsteln{1}), \dots, \prreadout(\prsteln{k})$, that is, the list \cref{eq:moore-list-output} without its first entry.
-        \item Conversely, a Mealy machine $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$ (with $\prout$ non-empty) gives a Moore machine with state set $\makecartprod{\prst, \prout}$, in which each state also stores the most recent output: its dynamics is $\tup{\prinel, \tup{\prstel, \proutel}} \mapsto \tup{\prdyn(\prinel, \prstel), \prreadout(\prinel, \prstel)}$, its read-out is $\tup{\prstel, \proutel} \mapsto \proutel$, and its initial state is $\tup{\prstart, \proutel_\ast}$ for some chosen $\proutel_\ast \setin \prout$.
-              On a list of inputs, it produces the outputs $\proutel_\ast, \prouteln{1}, \dots, \prouteln{k}$: the outputs of the Mealy machine, each one step later.
+        \item Every Moore machine $\tupp{\prin,\prst,\prout,\prdyn,\prreadout}$ gives a Mealy machine with the same inputs, states, outputs and dynamics, and with read-out $\tup{\prinel, \prstel} \mapsto \prreadout(\prdyn(\prinel, \prstel))$.
+              For the same initial state and the same list of inputs, it produces the outputs $\prreadout(\prsteln{1}), \dots, \prreadout(\prsteln{k})$, that is, the list \cref{eq:moore-list-output} without its first entry.
+        \item Conversely, a Mealy machine $\tupp{\prin,\prst,\prout,\prdyn,\prreadout}$ gives a Moore machine with state set $\makecartprod{\prst, \prout}$, in which each state also stores the most recent output: its dynamics is $\tup{\prinel, \tup{\prstel, \proutel}} \mapsto \tup{\prdyn(\prinel, \prstel), \prreadout(\prinel, \prstel)}$, and its read-out is $\tup{\prstel, \proutel} \mapsto \proutel$.
+              If the Mealy machine is started in the state $\prstart$, and the Moore machine in the state $\tup{\prstart, \proutel_\ast}$, for any $\proutel_\ast \setin \prout$, then, on a list of inputs, the Moore machine produces the outputs $\proutel_\ast, \prouteln{1}, \dots, \prouteln{k}$: the outputs of the Mealy machine, each one step later.
     \end{enumerate}
 \end{remark}
 
 \begin{example}[Discrete-time LTI systems: same structure, two readings]
     \label{exa:discrete-lti-mealy}
-    Consider a discrete-time LTI system $\tupp{\mat{x}_0, \mat{A}, \mat{B}, \mat{C}, \mat{D}}$ as in \cref{def:LTI-discrete}.
+    Consider a discrete-time LTI system $\tupp{\mat{A}, \mat{B}, \mat{C}, \mat{D}}$ as in \cref{def:LTI-discrete}.
     If we forget that the index $k$ refers to time, this is a Mealy machine, with inputs $\prin = \reals^l$, states $\prst = \reals^n$, outputs $\prout = \reals^m$, dynamics and read-out
     \begin{equation}
-        \prdyn(u, x) = \mat{A}x + \mat{B}u, \qquad \prreadout(u, x) = \mat{C}x + \mat{D}u,
+        \prdyn(u, x) = \mat{A}x + \mat{B}u, \qquad \prreadout(u, x) = \mat{C}x + \mat{D}u.
     \end{equation}
-    and initial state $\mat{x}_0$.
-    On a list $\makelist{\mat{u}_0, \dots, \mat{u}_{k-1}}$ of inputs, this Mealy machine produces exactly the list $\makelist{\mat{y}_0, \dots, \mat{y}_{k-1}}$ of outputs computed by the equations \cref{eq:LTI-discrete-equations} (the indices are shifted by one with respect to \cref{eq:mealy-list-output}, since there we number the elements of a list starting from $1$).
+    With the initial state $\mat{x}_0$, and on a list $\makelist{\mat{u}_0, \dots, \mat{u}_{k-1}}$ of inputs, this Mealy machine produces exactly the list $\makelist{\mat{y}_0, \dots, \mat{y}_{k-1}}$ of outputs computed by the equations \cref{eq:LTI-discrete-equations} (the indices are shifted by one with respect to \cref{eq:mealy-list-output}, since there we number the elements of a list starting from $1$).
     It is of Moore type -- the read-out does not depend on the input -- exactly when $\mat{D} = 0$, that is, when the system is proper (\cref{def:prop_LTI_syst}), as in \cref{exa:savings-account}.
     Read as a dynamical system, the $k$-th step happens at a definite time (for instance, after $k$ sampling periods); read as a machine, only the order of the inputs matters.
 \end{example}
@@ -266,18 +264,17 @@ Since such a machine can output more than one element in a step, we call it a \e
     \begin{enumerate}
         \item a set $\prin$ of inputs, a set $\prst$ of states, and a set $\prout$ of outputs;
         \item a function $\prdyn \colon \makecartprod{\prin, \prst} \sto \prst$, the \emph{dynamics};
-        \item a function $\prreadout \colon \prst \sto \listsof{\prout}$, the \emph{read-out};
-        \item an element $\prstart \setin \prst$, the \emph{initial state}.
+        \item a function $\prreadout \colon \prst \sto \listsof{\prout}$, the \emph{read-out}.
     \end{enumerate}
 \end{ctdefinition}
 
-As for Moore and Mealy machines, we write a More machine as a tuple $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$.
+As for Moore and Mealy machines, we write a More machine as a tuple $\tupp{\prin,\prst,\prout,\prdyn,\prreadout}$.
 Compared with a Moore machine (\cref{def:moore-machine-first}), the only difference is the type of the read-out: its target is not the set $\prout$ of outputs, but the set $\listsof{\prout}$ of finite lists of elements of $\prout$.
-The dynamics is the same as before, so that a More machine, too, consists of a semiautomaton (\cref{sec:actions-of-sets}) together with an initial state and a read-out.
+The dynamics is the same as before, so that a More machine, too, consists of a semiautomaton (\cref{sec:actions-of-sets}) together with a read-out.
 
 \paragraph{More machines transform lists into lists}
 A More machine transforms a list $\makelist{\prineln{1}, \dots, \prineln{k}}$ of inputs into a list of outputs in the same way as a Moore machine does, except that the lists of outputs produced in the individual states are joined together.
-With $\prsteln{0} = \prstart$ and $\prsteln{i} = \prdyn(\prineln{i}, \prsteln{i-1})$ as before (that is, $\prsteln{i} = \act(\makelist{\prineln{1}, \dots, \prineln{i}}, \prstart)$ for the induced action of $\listsof{\prin}$), the resulting list of outputs is the concatenation
+For a chosen initial state $\prstart \setin \prst$, with $\prsteln{0} = \prstart$ and $\prsteln{i} = \prdyn(\prineln{i}, \prsteln{i-1})$ as before (that is, $\prsteln{i} = \act(\makelist{\prineln{1}, \dots, \prineln{i}}, \prstart)$ for the induced action of $\listsof{\prin}$), the resulting list of outputs is the concatenation
 \begin{equation}
     \label{eq:more-list-output}
     \prreadout(\prsteln{0}) \listconcat \prreadout(\prsteln{1}) \listconcat \cdots \listconcat \prreadout(\prsteln{k}).
@@ -287,8 +284,8 @@ It can be larger than $k$, smaller than $k$, or even zero.
 
 \begin{remark}[Moore machines as More machines]
     \label{rem:moore-as-more}
-    Every Moore machine $\tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}$ gives a More machine with the same inputs, states, outputs, dynamics and initial state, and with the read-out $\prstel \mapsto \makelist{\prreadout(\prstel)}$, which returns the list whose only element is the output of the Moore machine.
-    On any list of inputs, the list \cref{eq:more-list-output} produced by this More machine is exactly the list \cref{eq:moore-list-output} produced by the Moore machine.
+    Every Moore machine $\tupp{\prin,\prst,\prout,\prdyn,\prreadout}$ gives a More machine with the same inputs, states, outputs and dynamics, and with the read-out $\prstel \mapsto \makelist{\prreadout(\prstel)}$, which returns the list whose only element is the output of the Moore machine.
+    For any initial state and any list of inputs, the list \cref{eq:more-list-output} produced by this More machine is exactly the list \cref{eq:moore-list-output} produced by the Moore machine.
     In this sense, Moore machines are the special case of More machines in which every list returned by the read-out has length one.
 \end{remark}
 
@@ -297,7 +294,7 @@ It can be larger than $k$, smaller than $k$, or even zero.
     Let $\prin$ be any set.
     We describe a More machine, which we call a \emph{duplicator}, that outputs every input twice.
     Its set of outputs is $\prout = \prin$, and its set of states is $\prst = \prin \setunion \makeset{\ast}$, where $\ast$ is an additional element, not contained in $\prin$, which stands for ``no input has been read yet''.
-    The initial state is $\prstart = \ast$, the dynamics remembers the last input,
+    The dynamics remembers the last input,
     \begin{equation}
         \defmapcomma{\prdyn}
         {\makecartprod{\prin, \prst}}
@@ -312,7 +309,7 @@ It can be larger than $k$, smaller than $k$, or even zero.
         \qquad
         \prreadout(\prinel) \definedas \makelist{\prinel, \prinel} \quad \text{for } \prinel \setin \prin.
     \end{equation}
-    For instance, the list of inputs $\makelist{a, b, c}$ leads through the states $\ast, a, b, c$ and produces the list of outputs
+    For instance, with the initial state $\prstart = \ast$, the list of inputs $\makelist{a, b, c}$ leads through the states $\ast, a, b, c$ and produces the list of outputs
     \begin{equation*}
         \emptylist \listconcat \makelist{a, a} \listconcat \makelist{b, b} \listconcat \makelist{c, c} = \makelist{a, a, b, b, c, c}.
     \end{equation*}
@@ -341,8 +338,7 @@ It can be larger than $k$, smaller than $k$, or even zero.
             \tup{\true, \prstel}      & \mapsto \makelist{\prstel}.
         \end{aligned}
     \end{equation}
-    The initial state is $\prstart = \tup{\false, \prinel_\ast}$, for an arbitrarily chosen $\prinel_\ast \setin \prin$.
-    For instance, the list of inputs $\makelist{a, b, c, d}$ leads through the states
+    For instance, with the initial state $\prstart = \tup{\false, \prinel_\ast}$, for an arbitrarily chosen $\prinel_\ast \setin \prin$, the list of inputs $\makelist{a, b, c, d}$ leads through the states
     \begin{equation*}
         \tup{\false, \prinel_\ast}, \quad \tup{\true, a}, \quad \tup{\false, b}, \quad \tup{\true, c}, \quad \tup{\false, d},
     \end{equation*}
@@ -350,7 +346,7 @@ It can be larger than $k$, smaller than $k$, or even zero.
     \begin{equation*}
         \emptylist \listconcat \makelist{a} \listconcat \emptylist \listconcat \makelist{c} \listconcat \emptylist = \makelist{a, c}.
     \end{equation*}
-    The first, third, fifth, \dots{} inputs are passed on, and the others are discarded.
+    With such an initial state, the first, third, fifth, \dots{} inputs are passed on, and the others are discarded.
 \end{example}
 
 \begin{example}[Terminator]
@@ -363,8 +359,7 @@ It can be larger than $k$, smaller than $k$, or even zero.
         \qquad
         \prreadout(\prstel) \definedas \emptylist.
     \end{equation}
-    The initial state $\prstart \setin \prst$ can be any element.
-    Whatever the list of inputs is, the list of outputs \cref{eq:more-list-output} is a concatenation of empty lists, and hence the empty list.
+    Whatever the initial state and the list of inputs are, the list of outputs \cref{eq:more-list-output} is a concatenation of empty lists, and hence the empty list.
 \end{example}
 
 \begin{remark}[More machines of Mealy type]

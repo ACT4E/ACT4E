@@ -320,29 +320,102 @@ An action of a monoid is the special case where there is only one type.
 
 We will meet several functors of this kind in what follows\iflabelexists{ex:GraphsViaFunctors}{; see, for example, \cref{ex:GraphsViaFunctors}, where a very small category ``acts'' on the vertices and arrows of a graph}.
 
-We close this subsection with three examples from systems theory, in which the acting categories are the categories of systems and machines that we constructed in \cref{sec:cat-dyn-lti} and \cref{sec:cat-machines}.
-In all three, the morphisms are systems, and the action describes what a system \emph{does}: how it transforms what it receives as input into what it produces as output.
+We close this subsection with three examples from systems theory, in which the action describes what a system \emph{does}: how it transforms what it receives as input into what it produces as output.
+The systems in question are the LTI systems and the machines that are the morphisms of the categories which we constructed in \cref{sec:cat-dyn-lti} and \cref{sec:cat-machines}.
+
+\paragraph{Systems with initial states}
+\label{sec:systems-with-initial-states}
+There is one thing that we need to take care of first.
+To say what a system does with its inputs, we need to know in which state it starts: as we saw in \cref{sec:moore-machines}, the same machine produces, in general, different outputs when it is started in different states.
+However, the morphisms of $\LTI$, of $\MealyMod$ and of $\MooreMod$ do not include an initial state.
+The choice of an initial state is therefore an additional piece of data, and it has to be part of that which acts.
+(We cannot leave this choice to the functor: it would have to select an initial state for every morphism, in a way which is compatible with composition, and in general there is no natural way of doing so.
+A machine may even have no states at all.)
+
+So we now consider systems \emph{together with} a chosen initial state.
+They form categories in the same way as before; the only new ingredient is that the initial state of a composite system consists of the initial states of the two systems that are composed.
+
+\begin{ctdefinition}[Category $\LTIst$]
+    \label{def:LTIst}
+    The category $\LTIst$ of LTI systems with initial state is the category given by:
+
+    \constit
+
+    \begin{enumerate}
+        \item Objects: the real coordinate spaces $\reals^n$, for $n \setin \natnumbers$, as in $\LTI$.
+        \item Morphisms: a morphism from $\reals^n$ to $\reals^m$ is a pair $\tup{\mora, \prstart}$, where
+              \begin{equation}
+                  \mora = \tupp{\reals^k, \mat{A}, \mat{B}, \mat{C}, \mat{D}} \colon \reals^n \mto \reals^m
+              \end{equation}
+              is a morphism of $\LTI$ (\cref{def:LTICat}), and $\prstart \setin \reals^k$ is an element of its state space, the \emph{initial state}.
+        \item Composition: given morphisms $\tup{\mora, \prstart_\mora}$ from $\reals^n$ to $\reals^m$ and $\tup{\morb, \prstart_\morb}$ from $\reals^m$ to $\reals^p$, where the state spaces of $\mora$ and $\morb$ are $\reals^k$ and $\reals^l$, their composition is
+              \begin{equation}
+                  \label{eq:LTIst-composition}
+                  \tup{\mora, \prstart_\mora} \mthen \tup{\morb, \prstart_\morb} \definedas \tup{\morab, \begin{bmatrix} \prstart_\mora \\ \prstart_\morb \end{bmatrix}},
+              \end{equation}
+              where $\morab$ is the composition in $\LTI$ (\cref{eq:LTI-composition}), and where the vector obtained by stacking $\prstart_\mora$ on top of $\prstart_\morb$ is an element of the state space $\reals^{k+l}$ of $\morab$.
+        \item Identity morphisms: the identity morphism of $\reals^n$ is the pair
+              \begin{equation}
+                  \tup{\catidat{\reals^n}, \mat{0}^{\matdim{0}{1}}},
+              \end{equation}
+              where $\catidat{\reals^n}$ is the identity morphism of $\reals^n$ in $\LTI$, whose state space is $\reals^0$, and $\mat{0}^{\matdim{0}{1}}$ is the only element of $\reals^0$: the column vector with no entries.
+    \end{enumerate}
+\end{ctdefinition}
+
+Composition in $\LTIst$ is \SY{associative} and unital because composition in $\LTI$ is, and because stacking column vectors is \SY{associative}, and stacking a column vector with the column vector with no entries does not change it (compare \cref{rem:LTI-state-space-trick}).
+
+For machines we proceed in the same way.
+A \emph{Mealy machine with initial state} is a pair $\tup{\mora, \prstart}$ of a Mealy machine $\mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout}$ (\cref{def:mealy-machine}) and an element $\prstart \setin \prst$ of its set of states, the \emph{initial state}.
+Two Mealy machines with initial state $\tup{\mora, \prstart}$ and $\tup{\mora', \prstart'}$, with the same set of inputs and the same set of outputs, are \emph{isomorphic} if there is an isomorphism $\mapc$ of Mealy machines from $\mora$ to $\mora'$ (\cref{sec:cat-machines}) which is compatible with the initial states, that is, such that $\mapc(\prstart) = \prstart'$.
+As in \cref{sec:cat-machines}, this is an \SY{equivalence relation}, and we write $\stylemorph{[}\mora, \prstart\stylemorph{]}$ for the equivalence class of $\tup{\mora, \prstart}$.
+
+\begin{ctdefinition}[Category $\MealyModst$]
+    \label{def:MealyModst}
+    The category $\MealyModst$ of Mealy machines with initial state, up to isomorphism, is the category given by:
+
+    \constit
+
+    \begin{enumerate}
+        \item Objects: all sets.
+        \item Morphisms: a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\stylemorph{[}\mora, \prstart\stylemorph{]}$ of Mealy machines with initial state whose set of inputs is $\prin$ and whose set of outputs is $\prout$.
+        \item Composition: given morphisms $\stylemorph{[}\mora, \prstart_\mora\stylemorph{]}$ and $\stylemorph{[}\morb, \prstart_\morb\stylemorph{]}$, where the set of outputs of $\mora$ is the set of inputs of $\morb$, their composition is
+              \begin{equation}
+                  \label{eq:MealyModst-composition}
+                  \stylemorph{[}\mora, \prstart_\mora\stylemorph{]} \mthen \stylemorph{[}\morb, \prstart_\morb\stylemorph{]} \definedas \stylemorph{[}\morab, \tup{\prstart_\mora, \prstart_\morb}\stylemorph{]},
+              \end{equation}
+              where $\morab$ is the Mealy machine defined in \cref{eq:mealy-composition}, whose set of states is $\prst_{\mora} \cartprod \prst_{\morb}$.
+        \item Identity morphisms: the identity morphism of a set $\prin$ is $\stylemorph{[}\more, \ast\stylemorph{]}$, where $\more$ is the Mealy machine with the single state $\ast$ which represents the identity morphism of $\prin$ in $\MealyMod$ (\cref{def:MealyCat}).
+    \end{enumerate}
+\end{ctdefinition}
+
+That \cref{def:MealyModst} does define a category is checked in the same way as for $\MealyMod$ (\cref{rem:MealyMod-category}): the isomorphisms of Mealy machines that are used there -- pairs of isomorphisms of the two machines that are composed, re-bracketing of states, and forgetting the component $\ast$ -- are all compatible with the initial states.
+
+In exactly the same way, Moore machines with initial state, up to isomorphism, form a \SY{semicategory}, which we denote by $\MooreModst$.
+Its morphisms are the equivalence classes $\stylemorph{[}\mora, \prstart\stylemorph{]}$ of pairs of a Moore machine $\mora$ (\cref{def:moore-machine-first}) and an element $\prstart$ of its set of states, and its composition is given by the same formula as in \cref{eq:MealyModst-composition}, where now $\morab$ is the Moore machine of \cref{eq:MooreMod-composition}.
+
+In each of the three cases, forgetting the initial state is a functor (for Moore machines, a \SY{semifunctor}) to the category, or semicategory, that we started with: from $\LTIst$ to $\LTI$, from $\MealyModst$ to $\MealyMod$ and from $\MooreModst$ to $\MooreMod$ respectively.
+It is the systems with initial states that act on signals and on streams.
 
 \begin{example}[LTI systems act on signals]
     \label{exa:lti-action-signals}
-    Recall the category $\LTI$ (\cref{def:LTICat}): its objects are the real coordinate spaces $\reals^n$, and a morphism $\mora \colon \reals^n \mto \reals^m$ is an LTI system
+    Recall the category $\LTIst$ (\cref{def:LTIst}): its objects are the real coordinate spaces $\reals^n$, and a morphism from $\reals^n$ to $\reals^m$ is a pair $\tup{\mora, \prstart}$ of an LTI system
     \begin{equation}
-        \mora = \tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}}
+        \mora = \tupp{\reals^k, \mat{A}, \mat{B}, \mat{C}, \mat{D}}
     \end{equation}
-    with input space $\reals^n$, output space $\reals^m$, and state space $\reals^k$.
-    We now take the \emph{dynamical systems} point of view on such a tuple (\cref{def:LTI_syst_first_time}): it specifies a system in continuous time, which turns a signal with values in $\reals^n$ into a signal with values in $\reals^m$.
-    This defines an action of $\LTI$, that is, a functor
+    with input space $\reals^n$, output space $\reals^m$, and state space $\reals^k$, and an initial state $\prstart \setin \reals^k$.
+    We now take the \emph{dynamical systems} point of view on such a tuple (\cref{def:LTI_syst_first_time}): it specifies a system in continuous time, which, once it is started in the state $\prstart$, turns a signal with values in $\reals^n$ into a signal with values in $\reals^m$.
+    This defines an action of $\LTIst$, that is, a functor
     \begin{equation}
-        \funa \colon \LTI \fto \Set.
+        \funa \colon \LTIst \fto \Set.
     \end{equation}
 
     On objects, $\funa$ assigns to each coordinate space the set of signals with values in it, which we model as continuously differentiable functions of time:
     \begin{equation}
         \funaob(\reals^n) \definedas \diffun(\nonNegReals, \reals^n).
     \end{equation}
-    On morphisms, $\funa$ assigns to an LTI system $\mora \colon \reals^n \mto \reals^m$ as above the function
+    On morphisms, $\funa$ assigns to a pair $\tup{\mora, \prstart}$ as above the function
     \begin{equation}
-        \funamor(\mora) \colon \diffun(\nonNegReals, \reals^n) \sto \diffun(\nonNegReals, \reals^m)
+        \funamor(\mora, \prstart) \colon \diffun(\nonNegReals, \reals^n) \sto \diffun(\nonNegReals, \reals^m)
     \end{equation}
     which maps an input signal $\mat{u}$ to the output signal $\mat{y}$ given by
     \begin{equation}
@@ -363,36 +436,43 @@ In all three, the morphisms are systems, and the action describes what a system 
     \end{equation}
 
     Let us see why the functor conditions hold.
-    Let $\mora \colon \reals^n \mto \reals^m$ and $\morb \colon \reals^m \mto \reals^p$ be LTI systems, let $\mat{u}$ be an input signal for $\mora$, and let $\mat{y}_\mora \definedas \funamor(\mora)(\mat{u})$.
-    Let $\mat{s}_\mora$ be the solution of the initial value problem of $\mora$ for the input $\mat{u}$, and let $\mat{s}_\morb$ be the solution of the initial value problem of $\morb$ for the input $\mat{y}_\mora$.
-    Stacking $\mat{s}_\mora$ on top of $\mat{s}_\morb$, we obtain a function with values in the state space of the composite system $\morab$, and this function solves the initial value problem of the composite system $\morab$ for the input $\mat{u}$: this is precisely how the block matrices in \cref{eq:LTI-composition} were chosen.
+    Let $\tup{\mora, \prstart_\mora} \colon \reals^n \mto \reals^m$ and $\tup{\morb, \prstart_\morb} \colon \reals^m \mto \reals^p$ be LTI systems with initial states, let $\mat{u}$ be an input signal for $\mora$, and let $\mat{y}_\mora \definedas \funamor(\mora, \prstart_\mora)(\mat{u})$.
+    Let $\mat{s}_\mora$ be the solution of the initial value problem of $\mora$, with initial state $\prstart_\mora$, for the input $\mat{u}$, and let $\mat{s}_\morb$ be the solution of the initial value problem of $\morb$, with initial state $\prstart_\morb$, for the input $\mat{y}_\mora$.
+    Stacking $\mat{s}_\mora$ on top of $\mat{s}_\morb$, we obtain a function with values in the state space of the composite system $\morab$, and this function solves the initial value problem of the composite system $\morab$, with the stacked initial state of \cref{eq:LTIst-composition}, for the input $\mat{u}$: this is precisely how the block matrices in \cref{eq:LTI-composition} were chosen.
     By uniqueness, it is \emph{the} solution, and so the output signal of $\morab$ is
     \begin{equation}
         \mat{D}_\morb\mat{C}_\mora\mat{s}_\mora(t) + \mat{C}_\morb\mat{s}_\morb(t) + \mat{D}_\morb\mat{D}_\mora\mat{u}(t)
         = \mat{C}_\morb\mat{s}_\morb(t) + \mat{D}_\morb\mat{y}_\mora(t),
     \end{equation}
     which is the output signal of $\morb$ for the input $\mat{y}_\mora$.
-    Hence $\funamor(\morab) = \funamor(\mora) \mthenof{\Set} \funamor(\morb)$.
+    Hence
+    \begin{equation}
+        \funamor(\tup{\mora, \prstart_\mora} \mthen \tup{\morb, \prstart_\morb}) = \funamor(\mora, \prstart_\mora) \mthenof{\Set} \funamor(\morb, \prstart_\morb).
+    \end{equation}
     The identity morphism of $\reals^n$ has the state space $\reals^0$ and $\mat{D} = \mat{1}^{\matdim{n}{n}}$, so \cref{eq:lti-action-signals-output} reduces to $\mat{y}(t) = \mat{u}(t)$, and $\funamor(\catidat{\reals^n})$ is the identity function.
 \end{example}
 
 \begin{lemma}
     \label{lem:equivsystequivact}
-    Equivalent LTI systems act on signals in the same way: if $\mora, \morb \colon \reals^n \mto \reals^m$ are equivalent LTI systems (\cref{def:equivalence_lti}), then $\funamor(\mora) = \funamor(\morb)$ for the action $\funa \colon \LTI \fto \Set$ of \cref{exa:lti-action-signals}.
+    Equivalent LTI systems act on signals in the same way, when they are started in states that correspond to each other: if $\mora, \morb \colon \reals^n \mto \reals^m$ are equivalent LTI systems (\cref{def:equivalence_lti}), with equivalence transformation $\mat{T}$, then
+    \begin{equation}
+        \funamor(\mora, \prstart) = \funamor(\morb, \mat{T}\prstart)
+    \end{equation}
+    for every initial state $\prstart$ of $\mora$, where $\funa \colon \LTIst \fto \Set$ is the action of \cref{exa:lti-action-signals}.
 \end{lemma}
 
 \begin{proof}
     Consider two equivalent LTI systems
     \begin{equation}
-        \mora = \genericlti{\mora},\quad \morb = \genericlti{\morb},
+        \mora = \ltituple{\mora},\quad \morb = \ltituple{\morb},
     \end{equation}
-    with equivalence transformation $\mat{T}$, and let $\mat{u}$ be an input signal.
-    The initial value problem that~$\mora$ poses reads:
+    with equivalence transformation $\mat{T}$, let $\prstart$ be an initial state of $\mora$, and let $\mat{u}$ be an input signal.
+    The initial value problem that $\mora$ poses, for the initial state $\prstart$, reads:
     \begin{equation}
         \label{eq:first_lti_equiv}
         \begin{aligned}
             \dot{\mat{x}}(t) & =\mat{A}_{\mora}\mat{x}(t)+\mat{B}_{\mora}\mat{u}(t), \\
-            \mat{x}(0)       & = \prstart_\mora.
+            \mat{x}(0)       & = \prstart.
         \end{aligned}
     \end{equation}
     Let~$\mat{s}$ be the solution of \cref{eq:first_lti_equiv}, and consider~$\mat{r}(t) \definedas \mat{T}\mat{s}(t)$.
@@ -405,22 +485,22 @@ In all three, the morphisms are systems, and the action describes what a system 
                              & =\mat{A}_\morb\mat{r}(t)+\mat{B}_\morb \mat{u}(t),
         \end{aligned}
     \end{equation}
-    and~$\mat{r}(0) = \mat{T} \prstart_\mora = \prstart_\morb$.
-    So $\mat{r}$ is the unique solution of the initial value problem that $\morb$ poses for the same input signal $\mat{u}$.
-    Therefore, the action of the system~$\morb$ is:
+    and $\mat{r}(0) = \mat{T} \prstart$.
+    So $\mat{r}$ is the unique solution of the initial value problem that $\morb$ poses, for the initial state $\mat{T}\prstart$ and the same input signal $\mat{u}$.
+    Therefore, the action of the system $\morb$ with initial state $\mat{T}\prstart$ is:
     \begin{equation}
         \begin{aligned}
-            \funamor(\morb)(\mat{u})(t) & =\mat{C}_\morb \mat{r}(t)+ \mat{D}_\morb \mat{u}(t) \\
+            \funamor(\morb, \mat{T}\prstart)(\mat{u})(t) & =\mat{C}_\morb \mat{r}(t)+ \mat{D}_\morb \mat{u}(t) \\
                                         & =\mat{C}_\mora \mat{T}^{-1}\mat{T}\mat{s}(t)+\mat{D}_\mora \mat{u}(t) \\
                                         & =\mat{C}_\mora \mat{s}(t)+\mat{D}_\mora \mat{u}(t) \\
-                                        & =\funamor(\mora)(\mat{u})(t).
+                                        & =\funamor(\mora, \prstart)(\mat{u})(t).
         \end{aligned}
     \end{equation}
 \end{proof}
 
 \begin{remark}
     \label{rem:same-action-not-equivalent}
-    The converse of \cref{lem:equivsystequivact} does not hold: two LTI systems with the same action on signals are not necessarily equivalent.
+    The converse of \cref{lem:equivsystequivact} does not hold: two LTI systems which, for suitable initial states, have the same action on signals are not necessarily equivalent.
     For a simple counterexample, consider the LTI system with initial state $\prstart = \mat{0}$ and
     \begin{equation}
         \begin{aligned}
@@ -453,7 +533,7 @@ In all three, the morphisms are systems, and the action describes what a system 
     Examples are the notion of controllability (ability of an actuator/input to control all states of a system) and observability (ability to estimate all states of the system).
 \end{remark}
 
-The tuples that make up the morphisms of $\LTI$ do not, by themselves, know anything about continuous time.
+The tuples that make up the morphisms of $\LTIst$ do not, by themselves, know anything about continuous time.
 We can just as well take the \emph{machines} point of view on them, and this gives a second action of the very same category.
 
 \begin{example}[LTI systems act on streams]
@@ -463,16 +543,16 @@ We can just as well take the \emph{machines} point of view on them, and this giv
 
     We define a functor
     \begin{equation}
-        \funb \colon \LTI \fto \Set
+        \funb \colon \LTIst \fto \Set
     \end{equation}
     as follows.
     On objects, $\funb$ assigns to each coordinate space the set of streams of vectors in it:
     \begin{equation}
         \funbob(\reals^n) \definedas (\reals^n)^{\natnumbers}.
     \end{equation}
-    On morphisms, $\funb$ assigns to $\mora = \tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}} \colon \reals^n \mto \reals^m$ the function
+    On morphisms, $\funb$ assigns to an LTI system $\mora = \tupp{\reals^k, \mat{A}, \mat{B}, \mat{C}, \mat{D}} \colon \reals^n \mto \reals^m$ with initial state $\prstart \setin \reals^k$ the function
     \begin{equation}
-        \funbmor(\mora) \colon (\reals^n)^{\natnumbers} \sto (\reals^m)^{\natnumbers}
+        \funbmor(\mora, \prstart) \colon (\reals^n)^{\natnumbers} \sto (\reals^m)^{\natnumbers}
     \end{equation}
     which maps a stream $\mat{u} = \tup{\mat{u}_0, \mat{u}_1, \mat{u}_2, \dots}$ of inputs to the stream $\mat{y} = \tup{\mat{y}_0, \mat{y}_1, \mat{y}_2, \dots}$ of outputs defined, step by step, by
     \begin{equation}
@@ -483,18 +563,21 @@ We can just as well take the \emph{machines} point of view on them, and this giv
         \qquad
         \mat{y}_i \definedas \mat{C}\mat{x}_i + \mat{D}\mat{u}_i.
     \end{equation}
-    In other words, we now read the tuple $\mora$ as a discrete-time LTI system (\cref{def:LTI-discrete}), or, equivalently, as a Mealy machine with set of inputs $\reals^n$, set of states $\reals^k$, and set of outputs $\reals^m$ (\cref{exa:discrete-lti-mealy}), and we let this machine run forever.
+    In other words, we now read the tuple $\mora$ as a discrete-time LTI system (\cref{def:LTI-discrete}), or, equivalently, as a Mealy machine with set of inputs $\reals^n$, set of states $\reals^k$, and set of outputs $\reals^m$ (\cref{exa:discrete-lti-mealy}), and we let this machine run forever, starting in the state $\prstart$.
     No differential equation needs to be solved: the matrix $\mat{A}$ now describes the next state, and not the rate of change of the state.
 
     The functor conditions are checked as in \cref{exa:lti-action-signals}, and more easily.
-    If we feed the outputs of $\mora$ into $\morb$ at every step, then the stacked states satisfy the recursion \cref{eq:lti-action-streams} for the block matrices in \cref{eq:LTI-composition}; the computation is the same as in the continuous-time case, with $\mat{x}_{i+1}$ in place of $\dot{\mat{x}}(t)$.
-    Hence $\funbmor(\morab) = \funbmor(\mora) \mthenof{\Set} \funbmor(\morb)$.
+    If we feed the outputs of $\mora$ into $\morb$ at every step, then the stacked states satisfy the recursion \cref{eq:lti-action-streams} for the block matrices in \cref{eq:LTI-composition} and the stacked initial state of \cref{eq:LTIst-composition}; the computation is the same as in the continuous-time case, with $\mat{x}_{i+1}$ in place of $\dot{\mat{x}}(t)$.
+    Hence
+    \begin{equation}
+        \funbmor(\tup{\mora, \prstart_\mora} \mthen \tup{\morb, \prstart_\morb}) = \funbmor(\mora, \prstart_\mora) \mthenof{\Set} \funbmor(\morb, \prstart_\morb).
+    \end{equation}
     The identity morphism of $\reals^n$ again yields $\mat{y}_i = \mat{u}_i$, the identity function on streams.
 \end{example}
 
-The two examples have the same source category, but they are different functors: the category $\LTI$ only records how systems are specified and how they are connected in series, while each of the two actions gives these specifications a meaning.
+The two examples have the same source category, but they are different functors: the category $\LTIst$ only records how systems are specified, in which state they start, and how they are connected in series, while each of the two actions gives these specifications a meaning.
 The same morphism can mean quite different things under the two actions.
-Consider, for instance, the morphism $\tupp{\reals^1, 0, 0, 1, 1, 0} \colon \reals^1 \mto \reals^1$, in which all four matrices have a single entry.
+Consider, for instance, the LTI system $\tupp{\reals^1, 0, 1, 1, 0} \colon \reals^1 \mto \reals^1$, in which all four matrices have a single entry, together with the initial state $0$.
 Under the action $\funa$ on signals, it is an integrator: it maps a signal $u$ to the signal $t \mapsto \int_0^t u(\tau) \, d\tau$.
 Under the action $\funb$ on streams, it is a delay by one step: it maps a stream $\tup{u_0, u_1, u_2, \dots}$ to the stream $\tup{0, u_0, u_1, \dots}$.
 
@@ -503,19 +586,19 @@ The same construction works for arbitrary Mealy machines.
 
 \begin{example}[Mealy machines act on streams]
     \label{exa:mealy-action-streams}
-    Recall the category $\MealyMod$ (\cref{def:MealyCat}): its objects are sets, and a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$ of Mealy machines $\mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$, up to isomorphism.
+    Recall from \cref{def:MealyModst} the category $\MealyModst$: its objects are sets, and a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\stylemorph{[}\mora, \prstart\stylemorph{]}$ of Mealy machines $\mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout}$ with initial state $\prstart \setin \prst$, up to isomorphism.
     There is a functor
     \begin{equation}
-        \func \colon \MealyMod \fto \Set
+        \func \colon \MealyModst \fto \Set
     \end{equation}
     defined as follows.
     On objects, $\func$ assigns to each set the set of streams in it:
     \begin{equation}
         \funobspace{H}(\prin) \definedas \prin^{\natnumbers}.
     \end{equation}
-    On morphisms, $\func$ assigns to $\equivmora$ the function
+    On morphisms, $\func$ assigns to $\stylemorph{[}\mora, \prstart\stylemorph{]}$ the function
     \begin{equation}
-        \funmorspace{H}(\equivmora) \colon \prin^{\natnumbers} \sto \prout^{\natnumbers}
+        \funmorspace{H}(\stylemorph{[}\mora, \prstart\stylemorph{]}) \colon \prin^{\natnumbers} \sto \prout^{\natnumbers}
     \end{equation}
     which maps a stream $\tup{\prineln{0}, \prineln{1}, \prineln{2}, \dots}$ of inputs to the stream $\tup{\prouteln{0}, \prouteln{1}, \prouteln{2}, \dots}$ of outputs defined, step by step, by
     \begin{equation}
@@ -528,22 +611,25 @@ The same construction works for arbitrary Mealy machines.
     \end{equation}
     This is the stream version of \cref{eq:mealy-list-output}, with the entries numbered starting from $0$.
 
-    Since a morphism is an equivalence class, we need to check that the result does not depend on the chosen representative $\mora$.
-    Let $\mapc$ be an isomorphism of Mealy machines from $\mora$ to a machine $\mora'$, and let $\prsteln{i}'$ and $\prouteln{i}'$ be the states and outputs of $\mora'$ for the same stream of inputs.
+    Since a morphism is an equivalence class, we need to check that the result does not depend on the chosen representative $\tup{\mora, \prstart}$.
+    Let $\mapc$ be an isomorphism from $\tup{\mora, \prstart}$ to a Mealy machine with initial state $\tup{\mora', \prstart'}$, and let $\prsteln{i}'$ and $\prouteln{i}'$ be the states and outputs of $\mora'$, with initial state $\prstart'$, for the same stream of inputs.
     By induction on $i$, the compatibility of $\mapc$ with the initial states and the dynamics gives $\prsteln{i}' = \mapc(\prsteln{i})$, and then the compatibility with the read-outs gives $\prouteln{i}' = \prouteln{i}$ (compare \cref{sec:homomorphisms-mealy}).
 
-    For the functor conditions, consider a composite $\morab$ as in \cref{eq:mealy-composition}.
+    For the functor conditions, consider a composite as in \cref{eq:MealyModst-composition}, represented by the machine $\morab$ of \cref{eq:mealy-composition} with the initial state $\tup{\prstart_\mora, \prstart_\morb}$.
     Its state at step $i$ is the pair consisting of the state of $\mora$ at step $i$ for the given inputs, and the state of $\morb$ at step $i$ when $\morb$ receives the outputs of $\mora$ as its inputs; this follows by induction from the formula for $\prdyn_{\morab}$.
     The formula for $\prreadout_{\morab}$ then says that the $i$-th output of $\morab$ is the $i$-th output of $\morb$.
-    Hence $\funmorspace{H}(\equivmora \mthen \equivmorb) = \funmorspace{H}(\equivmora) \mthenof{\Set} \funmorspace{H}(\equivmorb)$.
+    Hence
+    \begin{equation}
+        \funmorspace{H}(\stylemorph{[}\mora, \prstart_\mora\stylemorph{]} \mthen \stylemorph{[}\morb, \prstart_\morb\stylemorph{]}) = \funmorspace{H}(\stylemorph{[}\mora, \prstart_\mora\stylemorph{]}) \mthenof{\Set} \funmorspace{H}(\stylemorph{[}\morb, \prstart_\morb\stylemorph{]}).
+    \end{equation}
     The identity morphism of $\prin$ is represented by the machine which passes each input straight through to the output, so it acts as the identity function on $\prin^{\natnumbers}$.
 \end{example}
 
 \begin{remark}
     \label{rem:lti-streams-via-mealy}
-    The action of $\LTI$ on streams in \cref{exa:lti-action-streams} is a special case of \cref{exa:mealy-action-streams}: reading an LTI system $\mora \colon \reals^n \mto \reals^m$ as a Mealy machine, as we did there, and then applying $\funmorspace{H}$ to its equivalence class gives precisely $\funbmor(\mora)$.
+    The action of $\LTIst$ on streams in \cref{exa:lti-action-streams} is a special case of \cref{exa:mealy-action-streams}: reading an LTI system $\mora \colon \reals^n \mto \reals^m$ with initial state $\prstart$ as a Mealy machine with the same initial state, as we did there, and then applying $\funmorspace{H}$ to its equivalence class gives precisely $\funbmor(\mora, \prstart)$.
 
-    In fact, this reading is itself a functor $\LTI \fto \MealyMod$, as we have seen in \cref{exa:lti-to-mealy-functor}.
+    In fact, this reading is itself a functor $\LTIst \fto \MealyModst$: it is defined in the same way as the functor $\LTI \fto \MealyMod$ of \cref{exa:lti-to-mealy-functor}, and it keeps the initial state.
     Once we know how to compose functors (\cref{def:functor-composition}), we will be able to say that the action $\funb$ is the composition of that functor with the action $\func$.
 \end{remark}
 
@@ -555,19 +641,19 @@ Such an action satisfies the first of the two conditions in \cref{eq:generalized
 
 \begin{example}[Moore machines act on streams]
     \label{exa:moore-action-streams}
-    Recall the semicategory $\MooreMod$ (\cref{def:MooreMod}): its objects are sets, and a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$ of Moore machines $\mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}$, up to isomorphism.
+    Recall the semicategory $\MooreModst$ (\cref{sec:systems-with-initial-states}): its objects are sets, and a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\stylemorph{[}\mora, \prstart\stylemorph{]}$ of Moore machines $\mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout}$ with initial state $\prstart \setin \prst$, up to isomorphism.
     There is a semifunctor
     \begin{equation}
-        \funa \colon \MooreMod \fto \Set
+        \funa \colon \MooreModst \fto \Set
     \end{equation}
     defined as follows.
     On objects, $\funa$ assigns to each set the set of streams in it (\cref{exa:lti-action-streams}):
     \begin{equation}
         \funaob(\prin) \definedas \prin^{\natnumbers}.
     \end{equation}
-    On morphisms, $\funa$ assigns to $\equivmora$ the function
+    On morphisms, $\funa$ assigns to $\stylemorph{[}\mora, \prstart\stylemorph{]}$ the function
     \begin{equation}
-        \funamor(\equivmora) \colon \prin^{\natnumbers} \sto \prout^{\natnumbers}
+        \funamor(\stylemorph{[}\mora, \prstart\stylemorph{]}) \colon \prin^{\natnumbers} \sto \prout^{\natnumbers}
     \end{equation}
     which maps a stream $\tup{\prineln{0}, \prineln{1}, \prineln{2}, \dots}$ of inputs to the stream $\tup{\prouteln{0}, \prouteln{1}, \prouteln{2}, \dots}$ of outputs defined, step by step, by
     \begin{equation}
@@ -579,15 +665,18 @@ Such an action satisfies the first of the two conditions in \cref{eq:generalized
         \prouteln{i} \definedas \prreadout(\prsteln{i}).
     \end{equation}
     This is the stream version of \cref{eq:moore-list-output}.
-    As in \cref{exa:mealy-action-streams}, the result does not depend on the chosen representative $\mora$, since isomorphic Moore machines produce the same outputs.
+    As in \cref{exa:mealy-action-streams}, the result does not depend on the chosen representative $\tup{\mora, \prstart}$, since isomorphic Moore machines, started in initial states which correspond to each other, produce the same outputs.
 
-    For the semifunctor condition, consider a composite $\morab$ as in \cref{eq:MooreMod-composition}.
+    For the semifunctor condition, consider a composite, represented by the machine $\morab$ of \cref{eq:MooreMod-composition} with the initial state $\tup{\prstart_\mora, \prstart_\morb}$.
     Its state at step $i$ is the pair consisting of the state of $\mora$ at step $i$ for the given inputs, and the state of $\morb$ at step $i$ when $\morb$ receives the outputs of $\mora$ as its inputs; this follows by induction from the formula \cref{eq:moore-comp-naive-2} for $\prdyn_{\morab}$.
     Since the read-out of $\morab$ is the read-out of $\morb$, the $i$-th output of $\morab$ is the $i$-th output of $\morb$.
-    Hence $\funamor(\equivmora \mthen \equivmorb) = \funamor(\equivmora) \mthenof{\Set} \funamor(\equivmorb)$.
+    Hence
+    \begin{equation}
+        \funamor(\stylemorph{[}\mora, \prstart_\mora\stylemorph{]} \mthen \stylemorph{[}\morb, \prstart_\morb\stylemorph{]}) = \funamor(\stylemorph{[}\mora, \prstart_\mora\stylemorph{]}) \mthenof{\Set} \funamor(\stylemorph{[}\morb, \prstart_\morb\stylemorph{]}).
+    \end{equation}
 
     Note that the first output, $\prouteln{0} = \prreadout(\prstart)$, does not depend on the inputs at all.
-    So, as soon as $\prin$ has more than one element, no Moore machine acts as the identity function on $\prin^{\natnumbers}$; this matches the fact that $\MooreMod$ has no identity morphisms (\cref{rem:MooreMod-no-identities}).
+    So, as soon as $\prin$ has more than one element, no Moore machine acts as the identity function on $\prin^{\natnumbers}$; this matches the fact that $\MooreMod$ has no identity morphisms (\cref{rem:MooreMod-no-identities}), and neither does $\MooreModst$.
 \end{example}
 
 \subsection{Contravariant category actions.}
