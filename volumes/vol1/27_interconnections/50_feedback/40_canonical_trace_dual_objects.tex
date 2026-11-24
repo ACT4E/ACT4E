@@ -331,22 +331,53 @@ In terms of string diagrams, they say that the following two compositions each e
 \end{example}
 
 \begin{example}
+    \label{exa:mRelL-compact-closed}
     The symmetric strict monoidal category $\mRelL$ of monotone relations between preorders of tuples (\cref{exa:RelL-symmetric}) is compact closed.
-    The dual of an object is its opposite preorder.
+    The dual of an object $\posA$ is its opposite preorder $\posA\op$, in which the order is reversed.
+    Since tuples are compared entry by entry, this is again a preorder of tuples.
+    The evaluation and the coevaluation are the monotone relations
+    \begin{equation}
+        \label{eq:mRelL-ev}
+        \ev_{\posA} \colon \posA\op \mtimescatob \posA \profto \emptycobj,
+        \qquad
+        \ev_{\posA} = \makeset{ \tup{\maketupconcat{\posela, \posela'}, \emptytuple} \mid \posela' \posAleq \posela }
+    \end{equation}
+    and
+    \begin{equation}
+        \label{eq:mRelL-coev}
+        \coev_{\posA} \colon \emptycobj \profto \posA \mtimescatob \posA\op,
+        \qquad
+        \coev_{\posA} = \makeset{ \tup{\emptytuple, \maketupconcat{\posela, \posela'}} \mid \posela' \posAleq \posela },
+    \end{equation}
+    where $\posela$ and $\posela'$ are elements of the underlying set of $\posA$, which is also the underlying set of $\posA\op$.
+    Compared to $\RelL$, the equality of the two elements is replaced by an inequality.
+    Written as Boolean profunctors, the same data show that $\ProfBoolL$ is compact closed, and they restrict to the full subcategories $\feasL$ and $\DPL$ of \cref{exa:codesign-strict-monoidal}; see \cref{ex:DPSnakeTrace}.
+\end{example}
 
-%Here is duality data that shows that every object in $\mRel$ is dualizable. 
-%\begin{enumerate}
-%\item For any poset $\posA$, a dual object is given by the opposite poset $\posA^\op$. 
-%\item Evaluation morphisms are given by the monotone relations
-%\begin{equation}
-%...
-%\end{equation}
-%\item Coevaluation morphisms are given by the monotone relations
-%\begin{equation}
-%...
-%\end{equation}
-%\end{enumerate}
-
+\begin{example}[Categories which are not compact closed]
+    \label{exa:not-compact-closed}
+    Not every symmetric strict monoidal category is compact closed.
+    Here are three examples in which very few objects are dualizable.
+    In each of them, we look at the left-hand side of the first snake equation \cref{eq:snake-eq-1}.
+    \begin{itemize}
+        \item In the category $\SetL$ of functions between sets of tuples (\cref{exa:SetL-symmetric}), the monoidal unit $\emptycobj$ has a single element.
+              So for an object $\setA$ with a right dual $\setA\dual$, the coevaluation $\emptycobj \mto \setA \cprod \setA\dual$ picks out one element $\maketupconcat{\ela_0, \ela_0'}$, and the evaluation is the only function $\setA\dual \cprod \setA \mto \emptycobj$.
+              The left-hand side of \cref{eq:snake-eq-1} therefore maps an element $\ela$ of $\setA$ first to $\maketupconcat{\ela_0, \ela_0', \ela}$, and then to $\ela_0$.
+              This is a constant function, and it is the identity function only if $\ela_0$ is the only element of $\setA$.
+              So in $\SetL$, only the sets with exactly one element are dualizable.
+        \item In the category $\MatR$ of real matrices with the monoidal product which adds dimensions (\cref{exa:MatR-strict-monoidal}), the monoidal unit is $\reals^0$.
+              So for an object $\reals^n$ with a right dual $\reals^m$, the coevaluation $\reals^0 \mto \reals^{n+m}$ is the matrix without columns, and the evaluation $\reals^{m+n} \mto \reals^0$ is the matrix without rows.
+              The left-hand side of \cref{eq:snake-eq-1} therefore maps a vector $\vectob{v} \setin \reals^n$ first to the vector in $\reals^{n+m+n}$ whose last $n$ entries are those of $\vectob{v}$, and whose other entries are zero, and then to the first $n$ entries of that vector, which are zero.
+              This is the zero matrix, and it is the identity matrix only if $n = 0$.
+              So here only the monoidal unit is dualizable.
+              This fits with what we saw in \cref{sec:feedback-MatR}: the formula for closing loops is not defined for all matrices.
+        \item In the category $\RelR$ of relations between sets of indexed elements (\cref{exa:SetR-symmetric}), the monoidal unit is the empty set.
+              So for an object $\setA$ with a right dual $\setA\dual$, both the coevaluation $\Emptyset \mto \setA \sprod \setA\dual$ and the evaluation $\setA\dual \sprod \setA \mto \Emptyset$ are empty relations, and the left-hand side of \cref{eq:snake-eq-1} is the empty relation as well.
+              It is the identity relation only if $\setA$ is empty.
+              So here, too, only the monoidal unit is dualizable.
+              Nevertheless, $\RelR$ has a trace (\cref{def:RelR-feedback}).
+              This shows that a trace does not have to come from dual objects in the way which we describe in this section.
+    \end{itemize}
 \end{example}
 
 
@@ -554,6 +585,25 @@ Concretely, $\ev_{\reals^n}$ is the matrix with one row and $n^2$ columns, and $
 
 \solutionof{VectSnakeEquations}
 
+\begin{example}[The dual of a matrix is its transpose]
+    \label{exa:MatR-dual-morphism}
+    Let us compute dual morphisms (\cref{def:dual-morphism}) in the category $\MatR$ of real matrices with the Kronecker product, with the duality data of \cref{prop:MatR-Kronecker-compact-closed}.
+    Let $\matmor{A} \colon \reals^k \mto \reals^m$ be a matrix with entries $a_{ij}$.
+    Its dual is a matrix $\matmor{A}\dual \colon \reals^m \mto \reals^k$, and by \cref{eq:dual_morphism} it maps a vector $\vectob{w} \setin \reals^m$ as follows, where $\vectob{e}_1, \ldots, \vectob{e}_k$ is the standard basis of $\reals^k$:
+    \begin{equation}
+        \vectob{w}
+        \ \longmapsto \
+        \sum_{j=1}^k \vectob{w} \mtimescat \vectob{e}_j \mtimescat \vectob{e}_j
+        \ \longmapsto \
+        \sum_{j=1}^k \vectob{w} \mtimescat \matmor{A}\vectob{e}_j \mtimescat \vectob{e}_j
+        \ \longmapsto \
+        \sum_{j=1}^k \Bigl( \sum_{i=1}^m w_i a_{ij} \Bigr) \vectob{e}_j.
+    \end{equation}
+    In the last step we used that $\matmor{A}\vectob{e}_j$ is the column $j$ of $\matmor{A}$, and that the evaluation \cref{eq:evaluation-MatR} multiplies the entries of $\vectob{w}$ with the entries of this column and adds up the results.
+    So the entry $j$ of $\matmor{A}\dual\vectob{w}$ is $\sum_{i=1}^m a_{ij} w_i$, which means that $\matmor{A}\dual$ is the \emph{transpose} of the matrix $\matmor{A}$.
+    In \cref{ex:RelDualsTrace} you are asked to find out what the dual of a relation is.
+\end{example}
+
 %The equations \cref{eq:dualizability-cond-1} and \cref{eq:dualizability-cond-2} form the basis for the general notion of dualizability in a \SY{monoidal category}.
 
 
@@ -677,6 +727,26 @@ This is the construction which is shown in \cref{fig:canonical-trace-constructio
 One can show that in a compact closed category, where every object is dualizable, these operations satisfy all the conditions of \cref{def:feedback-cat} and of \cref{def:trace-operator}.
 The trace which is obtained in this way is called the \emph{canonical trace} of the compact closed category.
 For $\RelL$, it is the trace of \cref{def:RelL-feedback} (\cref{ex:RelDualsTrace}), and for matrices with the Kronecker product, it is the trace of \cref{eq:MatR-Kronecker-trace}, which replaces each block of a matrix by its usual trace.
+
+\begin{example}[Canonical trace for monotone relations]
+    \label{exa:mRelL-canonical-trace}
+    Let us compute the canonical trace of the compact closed category $\mRelL$, with the duality data of \cref{exa:mRelL-compact-closed}.
+    Let $\monrelM \colon \posA \mtimescatob \posC \profto \posB \mtimescatob \posC$ be a monotone relation.
+    We go through the four factors of \cref{eq:endo_trace_gen}.
+    The coevaluation $\coev_{\posC}$ provides an element $\poselc$ of $\posC$ and an element $\poselc''$ of $\posC\op$ with $\poselc'' \posCleq \poselc$.
+    The relation $\monrelM$ relates $\maketupconcat{\posela, \poselc}$ to $\maketupconcat{\poselb, \poselc'}$.
+    The braiding brings $\poselc'$ and $\poselc''$ into the right order, and then the evaluation $\ev_{\posC}$ asks that $\poselc' \posCleq \poselc''$.
+    An element $\poselc''$ with $\poselc' \posCleq \poselc'' \posCleq \poselc$ exists precisely when $\poselc' \posCleq \poselc$.
+    Using that $\monrelM$ and the identity morphisms are closed downward in the source and upward in the target, one finds that $\Tr_{\posA,\posB}^{\posC}(\monrelM)$ relates $\posela$ to $\poselb$ precisely when there exist elements $\poselc$ and $\poselc'$ of $\posC$ such that
+    \begin{equation}
+        \tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'}} \setin \monrelM
+        \qquad \text{and} \qquad
+        \poselc' \posCleq \poselc.
+    \end{equation}
+    This is precisely the second description \cref{eq:mRelL-feedback-leq} of the trace for monotone relations of \cref{sec:trace-mRelL}.
+    So that trace is the canonical trace of $\mRelL$.
+    We also see where the inequality comes from which we met in codesign (\cref{sec:feedback-codesign}), where what is required has to be at most what is provided: it is built into the evaluation and the coevaluation.
+\end{example}
 
 \subsection{Canonical trace for linear relations}
 
