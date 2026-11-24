@@ -141,6 +141,78 @@
     We do not spell out the details here; see also \cref{rem:dimension-trick}.
 \end{remark}
 
+\begin{example}[Real matrices with the Kronecker product]
+    \label{exa:MatR-Kronecker-strict-monoidal}
+    The category $\MatR$ of real matrices also carries a second strict monoidal structure, which is different from the one of \cref{exa:MatR-strict-monoidal}: instead of adding dimensions, it multiplies them.
+    In this example, we write $\mtimescat$ for this second structure.
+
+    On objects, the monoidal product is
+    \begin{equation}
+        \reals^k \mtimescat \reals^l \definedas \reals^{kl}.
+    \end{equation}
+    On morphisms, given $\matmor{A} \colon \reals^k \mto \reals^m$ and $\matmor{B} \colon \reals^l \mto \reals^n$, we define $\matmor{A} \mtimescat \matmor{B} \colon \reals^{kl} \mto \reals^{mn}$ to be the \emph{Kronecker product} of the two matrices.
+    This is the block matrix which is obtained from $\matmor{A}$ by replacing each of its entries $a_{ij}$ by the block $a_{ij}\matmor{B}$:
+    \begin{equation}
+        \label{eq:MatR-Kronecker-product}
+        \matmor{A} \mtimescat \matmor{B} \definedas
+        \begin{bmatrix}
+            a_{11}\matmor{B} & \cdots & a_{1k}\matmor{B} \\
+            \vdots           &        & \vdots           \\
+            a_{m1}\matmor{B} & \cdots & a_{mk}\matmor{B}
+        \end{bmatrix}.
+    \end{equation}
+    It has $mn$ rows and $kl$ columns.
+    For example,
+    \begin{equation}
+        \begin{bmatrix}
+            1 & 2 \\
+            3 & 4
+        \end{bmatrix}
+        \mtimescat
+        \begin{bmatrix}
+            0 & 1 \\
+            1 & 0
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            0 & 1 & 0 & 2 \\
+            1 & 0 & 2 & 0 \\
+            0 & 3 & 0 & 4 \\
+            3 & 0 & 4 & 0
+        \end{bmatrix}.
+    \end{equation}
+    The monoidal unit is $\idmoncat \definedas \reals^1$ (and not $\reals^0$, as in \cref{exa:MatR-strict-monoidal}).
+    Its identity morphism is the $1 \times 1$ matrix with the entry $1$.
+
+    To see what this monoidal product does, we apply \cref{eq:MatR-Kronecker-product} to vectors, viewed as matrices with a single column: for $\vectob{v} \setin \reals^k$ and $\vectob{w} \setin \reals^l$, the vector $\vectob{v} \mtimescat \vectob{w} \setin \reals^{kl}$ consists of the blocks $v_1 \vectob{w}, \ldots, v_k \vectob{w}$, stacked on top of each other.
+    Then
+    \begin{equation}
+        \label{eq:MatR-Kronecker-on-vectors}
+        (\matmor{A} \mtimescat \matmor{B})(\vectob{v} \mtimescat \vectob{w}) = (\matmor{A}\vectob{v}) \mtimescat (\matmor{B}\vectob{w}),
+    \end{equation}
+    so again $\matmor{A}$ acts on the one part and $\matmor{B}$ acts on the other part.
+    The difference to \cref{exa:MatR-strict-monoidal} is in how the two parts are combined: there, a vector of $\reals^{k+l}$ is a pair of vectors, stacked on top of each other; here, the vectors of the form $\vectob{v} \mtimescat \vectob{w}$ do not make up all of $\reals^{kl}$, but only span it.
+    In linear algebra, $\reals^{kl}$ is known as the \emph{tensor product} of $\reals^k$ and $\reals^l$.
+
+    Let us check the conditions.
+    The monoidal product is a functor: for matrices $\matmor{A} \colon \reals^k \mto \reals^m$, $\matmor{C} \colon \reals^m \mto \reals^p$, $\matmor{B} \colon \reals^l \mto \reals^n$, and $\matmor{D} \colon \reals^n \mto \reals^q$, we multiply the block matrices $\matmor{C} \mtimescat \matmor{D}$ and $\matmor{A} \mtimescat \matmor{B}$ block by block, and find that the block of the product in the position $\tup{i, j}$ is
+    \begin{equation}
+        \sum_{r=1}^{m} (c_{ir}\matmor{D})(a_{rj}\matmor{B}) = \Bigl( \sum_{r=1}^{m} c_{ir} a_{rj} \Bigr) \matmor{D}\matmor{B}.
+    \end{equation}
+    The number in brackets is the entry of $\matmor{C}\matmor{A}$ in the position $\tup{i, j}$, and so
+    \begin{equation}
+        \label{eq:MatR-Kronecker-functorial}
+        (\matmor{A} \mtimescat \matmor{B}) \mthen (\matmor{C} \mtimescat \matmor{D})
+        = (\matmor{C} \mtimescat \matmor{D})(\matmor{A} \mtimescat \matmor{B})
+        = (\matmor{C}\matmor{A}) \mtimescat (\matmor{D}\matmor{B})
+        = (\matmor{A} \mthen \matmor{C}) \mtimescat (\matmor{B} \mthen \matmor{D}).
+    \end{equation}
+    Moreover, replacing each entry $1$ of an identity matrix by an identity matrix, and each entry $0$ by a block of zeros, gives an identity matrix: $\idmat_k \mtimescat \idmat_l = \idmat_{kl}$.
+    The monoidal product is associative on objects because multiplication of natural numbers is, $\reals^{(kl)p} = \reals^{k(lp)}$.
+    It is associative on morphisms because, for a third matrix $\matmor{C}$, both $(\matmor{A} \mtimescat \matmor{B}) \mtimescat \matmor{C}$ and $\matmor{A} \mtimescat (\matmor{B} \mtimescat \matmor{C})$ are the matrix which is obtained from $\matmor{A}$ by replacing each entry $a_{ij}$ by the block $a_{ij}(\matmor{B} \mtimescat \matmor{C})$.
+    Finally, the monoidal unit is neutral on objects, since $\reals^{k \cdot 1} = \reals^k = \reals^{1 \cdot k}$, and on morphisms, since the Kronecker product of a matrix $\matmor{A}$ with the $1 \times 1$ matrix with the entry $1$ is $\matmor{A}$, on both sides.
+\end{example}
+
 \subsection{Examples where the objects are natural numbers}
 \label{sec:strict-monoidal-natural-numbers}
 

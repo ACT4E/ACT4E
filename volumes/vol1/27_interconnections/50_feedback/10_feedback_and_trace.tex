@@ -694,7 +694,57 @@ Compare this with the trace of a square matrix of numbers, which is the sum of t
 We will use this trace operator for design problems in codesign; see \cref{sec:feedback-codesign} and \cref{exa:codesign-feedback-modules}.
 
 \paragraph{Matrices with Kronecker product}
+\label{sec:trace-MatR-Kronecker}
 
+Recall that the category $\MatR$ of real matrices is a symmetric strict monoidal category with the Kronecker product as its monoidal product (\cref{exa:MatR-Kronecker-strict-monoidal,exa:MatR-Kronecker-symmetric}).
+In this paragraph we write $\mtimescat$ for this monoidal product; so $\reals^m \mtimescat \reals^k = \reals^{mk}$, and the monoidal unit is $\reals^1$.
+This symmetric strict monoidal category has a trace, and it generalizes the trace of a square matrix which we know from linear algebra.
+
+A morphism $\mat{M} \colon \reals^m \mtimescat \reals^k \mto \reals^n \mtimescat \reals^k$ is a matrix with $nk$ rows and $mk$ columns.
+We divide it into blocks of size $k \times k$,
+\begin{equation}
+    \label{eq:MatR-Kronecker-blocks}
+    \mat{M} =
+    \begin{bmatrix}
+        \mat{M}_{11} & \cdots & \mat{M}_{1m} \\
+        \vdots       &        & \vdots       \\
+        \mat{M}_{n1} & \cdots & \mat{M}_{nm}
+    \end{bmatrix},
+\end{equation}
+so that there are $n$ rows and $m$ columns of blocks.
+This is the way in which a Kronecker product $\mat{A} \mtimescat \mat{B}$ of an $n \times m$ matrix $\mat{A}$ and a $k \times k$ matrix $\mat{B}$ is built up, with the blocks $a_{ij}\mat{B}$ (\cref{eq:MatR-Kronecker-product}).
+We define the trace of $\mat{M}$ to be the $n \times m$ matrix which is obtained by replacing each block by its usual trace:
+\begin{equation}
+    \label{eq:MatR-Kronecker-trace}
+    \Tr_{\reals^m,\reals^n}^{\reals^k}(\mat{M}) \definedas
+    \begin{bmatrix}
+        \operatorname{tr}(\mat{M}_{11}) & \cdots & \operatorname{tr}(\mat{M}_{1m}) \\
+        \vdots                          &        & \vdots                          \\
+        \operatorname{tr}(\mat{M}_{n1}) & \cdots & \operatorname{tr}(\mat{M}_{nm})
+    \end{bmatrix}.
+\end{equation}
+Here $\operatorname{tr}$ denotes the trace of a square matrix as it is defined in linear algebra, namely the sum of the entries on its diagonal.
+
+To see in which sense this generalizes the usual trace, consider the case $m = n = 1$.
+Since $\reals^1$ is the monoidal unit, a morphism $\reals^1 \mtimescat \reals^k \mto \reals^1 \mtimescat \reals^k$ is simply a square matrix $\mat{M} \colon \reals^k \mto \reals^k$.
+It consists of a single block, and
+\begin{equation}
+    \Tr_{\reals^1,\reals^1}^{\reals^k}(\mat{M}) = \begin{bmatrix} \operatorname{tr}(\mat{M}) \end{bmatrix}
+\end{equation}
+is the $1 \times 1$ matrix whose entry is the usual trace of $\mat{M}$.
+This is where the name ``trace'' for operators of this kind comes from.
+For example, closing a loop on the identity matrix $\idmat_k$ gives the number $k$: the dimension of the wire.
+
+One can check that \cref{eq:MatR-Kronecker-trace} satisfies all the conditions of \cref{def:feedback-cat} and of \cref{def:trace-operator}, so that it is indeed a trace.
+Several of these conditions are well-known properties of the usual trace in disguise.
+\begin{itemize}
+    \item \emph{Dinaturality.} For $m = n = 1$, the condition \cref{eq:trace-dinaturality} says that $\operatorname{tr}(\mat{G}\mat{M}) = \operatorname{tr}(\mat{M}\mat{G})$ for all matrices $\mat{M} \colon \reals^k \mto \reals^{l}$ and $\mat{G} \colon \reals^{l} \mto \reals^k$. This is the fact that the trace of a product does not depend on the order of the two factors.
+    \item \emph{Superposing.} The blocks of $\mat{G} \mtimescat \mat{M}$ are the blocks of $\mat{M}$, multiplied by the entries of $\mat{G}$. So the condition \cref{eq:feedback-superposing} holds because the usual trace is linear. Together with Vanishing II, it gives $\operatorname{tr}(\mat{A} \mtimescat \mat{B}) = \operatorname{tr}(\mat{A}) \cdot \operatorname{tr}(\mat{B})$ for square matrices $\mat{A}$ and $\mat{B}$.
+    \item \emph{Yanking.} For the braiding of $\reals^k$ with itself (\cref{eq:MatR-Kronecker-braiding}), the block in the position $\tup{i, j}$ is the $k \times k$ matrix whose only entry different from $0$ is a $1$ in the row $j$ and the column $i$. Its trace is $1$ if $i = j$, and $0$ otherwise. So \cref{eq:MatR-Kronecker-trace} gives the identity matrix $\idmat_k$, as the yanking condition \cref{eq:yanking} requires.
+\end{itemize}
+
+So with the Kronecker product as monoidal product, the category $\MatR$ has a trace.
+With the monoidal product of \cref{exa:MatR-strict-monoidal}, which adds dimensions, the situation is different.
 
 
 \paragraph{Matrices with direct sum, a non-example}
