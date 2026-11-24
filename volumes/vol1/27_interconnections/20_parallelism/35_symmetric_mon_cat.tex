@@ -44,6 +44,242 @@
 
 \todotext{08-2026, JL: make remark that if the braidings are all identity morphisms, then we call the strict monoidal category 'commutative'; however, this rarely ever is the case (give examples and non-examples)} 
 
+\subsection{Examples}
+
+\begin{example}[LTI systems up to equivalence]
+    \label{exa:LTI-quotient-symmetric}
+    Recall the \SY{strict monoidal category} $\LTI/_{\equival}$ of LTI systems up to equivalence (\cref{exa:LTI-quotient-strict-monoidal}): its objects are the coordinate spaces $\reals^n$, its morphisms are equivalence classes $\equivmora$ of LTI systems, the monoidal product stacks two systems, and the monoidal unit is $\reals^0$.
+    We now show that it is symmetric.
+
+    A wire of type $\reals^m$ carries a signal with $m$ components.
+    So the braiding of $\reals^m$ and $\reals^n$ should be the system which receives a signal with $m$ components on top of a signal with $n$ components, returns the same two signals in the opposite order, and does nothing else.
+    Such a system needs no memory, and hence no state.
+    To write it down, consider the matrix
+    \begin{equation}
+        \label{eq:LTI-swap-matrix}
+        \mat{S}_{m,n} \definedas
+        \begin{bmatrix}
+            \mat{0}  & \idmat_n \\
+            \idmat_m & \mat{0}
+        \end{bmatrix}
+        \setin \reals^{\matdim{(n+m)}{(m+n)}},
+    \end{equation}
+    where $\idmat_m$ and $\idmat_n$ are identity matrices.
+    It maps a vector with $m$ entries, stacked on top of a vector with $n$ entries, to the same two vectors stacked in the opposite order.
+    Let $\stylemorph{s}_{m,n} \colon \reals^{m+n} \mtoin\LTI \reals^{n+m}$ be the LTI system with state space $\reals^0$ which has this matrix as its matrix $\mat{D}$:
+    \begin{equation}
+        \label{eq:LTI-swap-system}
+        \stylemorph{s}_{m,n} \definedas
+        \tupp{\reals^0, \mat{0}^{\matdim{0}{0}}, \mat{0}^{\matdim{0}{(m+n)}}, \mat{0}^{\matdim{(n+m)}{0}}, \mat{S}_{m,n}}.
+    \end{equation}
+    Since this system has no state, the equations \cref{eq:cat-dyn-lti-equations} reduce to $\mat{y}(t) = \mat{S}_{m,n}\mat{u}(t)$: at each time, the output is the input with its two blocks exchanged.
+    (The identity morphisms of \LTI are systems of the same kind, with an identity matrix in place of $\mat{S}_{m,n}$, see \cref{def:LTICat}.)
+    We define the braiding to be the equivalence class of this system,
+    \begin{equation}
+        \braiding_{\reals^m,\reals^n} \definedas \stylemorph{[}\stylemorph{s}_{m,n}\stylemorph{]} \colon \reals^m \mtimescatob \reals^n \mto \reals^n \mtimescatob \reals^m.
+    \end{equation}
+
+    Let us go through the conditions of \cref{def:sym-stacking-cat}.
+    As for the conditions of a strict monoidal category in \cref{exa:LTI-stacking-not-functorial}, most of them hold already for the systems themselves, and one of them needs the passage to equivalence classes.
+
+    \emph{Symmetry.}
+    By \cref{eq:LTI-composition}, the system $\stylemorph{s}_{m,n} \mthen \stylemorph{s}_{n,m}$ has the state space $\reals^{0+0} = \reals^0$ and the matrix $\mat{D} = \mat{S}_{n,m}\mat{S}_{m,n} = \idmat_{m+n}$, since exchanging the two blocks of a vector twice gives back the original vector.
+    This is precisely the identity morphism of $\reals^{m+n}$.
+    So $\stylemorph{s}_{m,n} \mthen \stylemorph{s}_{n,m} = \catid_{\reals^{m+n}}$ holds on the nose, and in particular each braiding is an isomorphism.
+
+    \emph{Compatibility with nesting.}
+    For objects $\reals^m$, $\reals^n$, and $\reals^p$, the condition \cref{eq:hexagon-identity-symm-stacking-cat} reads
+    \begin{equation}
+        \label{eq:LTI-swap-nesting}
+        \stylemorph{s}_{m,n+p} = (\stylemorph{s}_{m,n} \mtimescatmor \catid_{\reals^p}) \mthen (\catid_{\reals^n} \mtimescatmor \stylemorph{s}_{m,p}).
+    \end{equation}
+    All the systems involved have the state space $\reals^0$, and stacking or composing such systems again gives a system with the state space $\reals^0$, whose matrix $\mat{D}$ is the block-diagonal matrix, respectively the product, of the given matrices $\mat{D}$.
+    So \cref{eq:LTI-swap-nesting} amounts to the equation of matrices
+    \begin{equation}
+        \mat{S}_{m,n+p} =
+        \begin{bmatrix}
+            \idmat_n & \mat{0}       \\
+            \mat{0}  & \mat{S}_{m,p}
+        \end{bmatrix}
+        \begin{bmatrix}
+            \mat{S}_{m,n} & \mat{0}  \\
+            \mat{0}       & \idmat_p
+        \end{bmatrix},
+    \end{equation}
+    which holds: moving a block with $m$ entries below a block with $n + p$ entries is the same as moving it first below the $n$ entries, and then below the $p$ entries.
+    Again, the condition holds on the nose.
+
+    \emph{Naturality.}
+    Let $\mora \colon \reals^m \mto \reals^p$ and $\morb \colon \reals^n \mto \reals^q$ be LTI systems with state spaces $\reals^k$ and $\reals^l$, respectively.
+    The condition \cref{eq:naturality-square-symm-stacking-cat} asks us to compare the two systems
+    \begin{equation}
+        \label{eq:LTI-swap-naturality-two-sides}
+        (\mora \mtimescatmor \morb) \mthen \stylemorph{s}_{p,q}
+        \qqand
+        \stylemorph{s}_{m,n} \mthen (\morb \mtimescatmor \mora),
+    \end{equation}
+    which are both morphisms $\reals^{m+n} \mto \reals^{q+p}$.
+    Using \cref{eq:LTI-composition}, \cref{eq:LTI-stacking-mor1}, and \cref{eq:LTI-stacking-mor2}, we find that the first one has the state space $\reals^{k+l}$ and the matrices
+    \begin{equation}
+        \label{eq:LTI-swap-naturality-first}
+        \begin{bmatrix}
+            \mat{A}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{A}_\morb
+        \end{bmatrix},
+        \quad
+        \begin{bmatrix}
+            \mat{B}_\mora & \mat{0}       \\
+            \mat{0}       & \mat{B}_\morb
+        \end{bmatrix},
+        \quad
+        \begin{bmatrix}
+            \mat{0}       & \mat{C}_\morb \\
+            \mat{C}_\mora & \mat{0}
+        \end{bmatrix},
+        \quad
+        \begin{bmatrix}
+            \mat{0}       & \mat{D}_\morb \\
+            \mat{D}_\mora & \mat{0}
+        \end{bmatrix},
+    \end{equation}
+    while the second one has the state space $\reals^{l+k}$ and the matrices
+    \begin{equation}
+        \label{eq:LTI-swap-naturality-second}
+        \begin{bmatrix}
+            \mat{A}_\morb & \mat{0}       \\
+            \mat{0}       & \mat{A}_\mora
+        \end{bmatrix},
+        \quad
+        \begin{bmatrix}
+            \mat{0}       & \mat{B}_\morb \\
+            \mat{B}_\mora & \mat{0}
+        \end{bmatrix},
+        \quad
+        \begin{bmatrix}
+            \mat{C}_\morb & \mat{0}       \\
+            \mat{0}       & \mat{C}_\mora
+        \end{bmatrix},
+        \quad
+        \begin{bmatrix}
+            \mat{0}       & \mat{D}_\morb \\
+            \mat{D}_\mora & \mat{0}
+        \end{bmatrix}
+    \end{equation}
+    (in each case these are the matrices $\mat{A}$, $\mat{B}$, $\mat{C}$, and $\mat{D}$, in this order).
+    The two systems have the same matrix $\mat{D}$, but their other matrices are different in general.
+    The reason is the same as in \cref{exa:LTI-stacking-not-functorial}: the first system lists the state of $\mora$ above the state of $\morb$, and the second system lists them in the opposite order.
+    So the naturality condition does \emph{not} hold in \LTI.
+
+    However, the two systems are equivalent in the sense of \cref{def:equivalence_lti}.
+    An equivalence transformation from the first to the second is the matrix $\mat{T} \definedas \mat{S}_{k,l}$, which exchanges the two blocks of the state; its inverse is $\mat{S}_{l,k}$.
+    Indeed, multiplying the matrices in \cref{eq:LTI-swap-naturality-first} by $\mat{S}_{k,l}$ and $\mat{S}_{l,k}$ as prescribed by \cref{def:equivalence_lti} gives
+    \begin{equation}
+        \begin{aligned}
+            \mat{S}_{k,l}
+            \begin{bmatrix}
+                \mat{A}_\mora & \mat{0}       \\
+                \mat{0}       & \mat{A}_\morb
+            \end{bmatrix}
+            \mat{S}_{l,k}
+             & =
+            \begin{bmatrix}
+                \mat{A}_\morb & \mat{0}       \\
+                \mat{0}       & \mat{A}_\mora
+            \end{bmatrix},
+            \\
+            \mat{S}_{k,l}
+            \begin{bmatrix}
+                \mat{B}_\mora & \mat{0}       \\
+                \mat{0}       & \mat{B}_\morb
+            \end{bmatrix}
+             & =
+            \begin{bmatrix}
+                \mat{0}       & \mat{B}_\morb \\
+                \mat{B}_\mora & \mat{0}
+            \end{bmatrix},
+            \\
+            \begin{bmatrix}
+                \mat{0}       & \mat{C}_\morb \\
+                \mat{C}_\mora & \mat{0}
+            \end{bmatrix}
+            \mat{S}_{l,k}
+             & =
+            \begin{bmatrix}
+                \mat{C}_\morb & \mat{0}       \\
+                \mat{0}       & \mat{C}_\mora
+            \end{bmatrix},
+        \end{aligned}
+    \end{equation}
+    which are the matrices in \cref{eq:LTI-swap-naturality-second}.
+    Hence the two systems in \cref{eq:LTI-swap-naturality-two-sides} represent the same morphism of $\LTI/_{\equival}$, and the naturality condition holds there:
+    \begin{equation}
+        (\equivmora \mtimescatmor \equivmorb) \mthen \braiding_{\reals^p,\reals^q}
+        =
+        \braiding_{\reals^m,\reals^n} \mthen (\equivmorb \mtimescatmor \equivmora).
+    \end{equation}
+
+    We conclude that $\LTI/_{\equival}$ is a symmetric strict monoidal category, with the braidings defined above.
+    In the language of block diagrams, the braiding is a crossing of two bundles of signal lines, and the naturality condition says that it makes no difference whether two signals are exchanged before or after they are processed by two independent subsystems.
+\end{example}
+
+The strict monoidal categories which we built from tuples and from indexed elements in \cref{sec:strict-monoidal-lists} and \cref{sec:strict-monoidal-sums} are all symmetric.
+We briefly record their braidings.
+
+\begin{example}[Tuples]
+    \label{exa:SetL-symmetric}
+    The strict monoidal category $\SetL$ (\cref{lem:SetL-strict-monoidal}) is symmetric.
+    The braiding of objects $\setA$ and $\setB$ is the function which exchanges the two parts of a concatenated tuple,
+    \begin{equation}
+        \label{eq:SetL-braiding}
+        \braiding_{\setA,\setB} \colon \setA \cprod \setB \mto \setB \cprod \setA,
+        \qquad
+        \maketupconcat{\ela, \elb} \mapsto \maketupconcat{\elb, \ela}.
+    \end{equation}
+    The conditions of \cref{def:sym-stacking-cat} can be checked directly on elements.
+    The same functions are braidings for $\PreL$ and for $\PosL$: they are monotone, because tuples are compared entry by entry.
+\end{example}
+
+\begin{example}[Relations between tuples]
+    \label{exa:RelL-symmetric}
+    The strict monoidal categories $\RelL$, $\mRelL$, and $\ProfBoolL$ (\cref{def:RelL}) are symmetric as well.
+    In $\RelL$, the braiding is the graph of the function \cref{eq:SetL-braiding},
+    \begin{equation}
+        \label{eq:RelL-braiding}
+        \braiding_{\setA,\setB} = \makeset{ \tup{\maketupconcat{\ela, \elb}, \maketupconcat{\elb, \ela}} \mid \ela \setin \setA \text{ and } \elb \setin \setB }.
+    \end{equation}
+    In $\mRelL$, the graph of a monotone function is in general not a monotone relation (\cref{exa:graph-not-monrel}), and the braiding is instead the companion (\cref{def:monrel-companion-conjoint}) of the function \cref{eq:SetL-braiding},
+    \begin{equation}
+        \label{eq:mRelL-braiding}
+        \braiding_{\posA,\posB} = \makeset{ \tup{\maketupconcat{\posela, \poselb}, \maketupconcat{\poselb', \posela'}} \mid \posela \posAleq \posela' \text{ and } \poselb \posBleq \poselb' }.
+    \end{equation}
+    In $\ProfBoolL$, the braiding is the corresponding Boolean profunctor: its value at $\maketupconcat{\posela, \poselb}$ and $\maketupconcat{\poselb', \posela'}$ is true precisely when $\posela \posAleq \posela'$ and $\poselb \posBleq \poselb'$.
+    These braidings also make the full subcategories $\feasL$ and $\DPL$ of \cref{exa:codesign-strict-monoidal} symmetric.
+\end{example}
+
+\begin{example}[Indexed elements]
+    \label{exa:SetR-symmetric}
+    The strict monoidal category $\SetR$ (\cref{lem:SetR-strict-monoidal}) is symmetric, too.
+    Recall that $\setA \sprod \setB$ consists of the elements of $\setA$ and of the shifted elements of $\setB$.
+    The braiding moves the shift from the one part to the other:
+    \begin{equation}
+        \label{eq:SetR-braiding}
+        \braiding_{\setA,\setB} \colon \setA \sprod \setB \mto \setB \sprod \setA,
+        \qquad
+        \ela \mapsto \indexshift{\ela}{\indexwidth{\setB}},
+        \quad
+        \indexshift{\elb}{\indexwidth{\setA}} \mapsto \elb,
+    \end{equation}
+    for $\ela \setin \setA$ and $\elb \setin \setB$.
+    The same functions are also braidings for $\PreR$, and their graphs are braidings for $\RelR$.
+\end{example}
+
+\begin{example}[Mealy machines]
+    \label{exa:MealyModL-symmetric}
+    The strict monoidal category of Mealy machines up to isomorphism, $\MealyModL$ (\cref{exa:MealyModL-strict-monoidal}), is symmetric as well.
+    The braiding of objects $\setA$ and $\setB$ is represented by the Mealy machine with the set of states $\emptycobj$ whose read-out is the function \cref{eq:SetL-braiding}: it has no memory, and it returns its two inputs in the opposite order.
+    As for LTI systems (\cref{exa:LTI-quotient-symmetric}), the naturality condition holds only up to an isomorphism of machines, namely one which exchanges the two parts of the state; so it holds in $\MealyModL$, where the morphisms are Mealy machines up to isomorphism.
+\end{example}
+
 \subsection{Props}
 \label{sec:props}
 

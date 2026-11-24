@@ -1,0 +1,956 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,hmargin=26mm,vmargin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{stmaryrd}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\crefname{equation}{}{}
+\Crefname{equation}{Equation}{Equations}
+\creflabelformat{equation}{(#2#1#3)}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Fb}{Fb}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Cut}{Cut}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rs}{\mathbb{R}(s)}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\then}{\mathbin{\fatsemi}}
+\newcommand{\Mat}{\mathbf{Mat}}
+\newcommand{\LTIq}{\mathbf{LTI}/{\sim}}
+\newcommand{\MealyMod}{\mathbf{Mealy}/{\sim}}
+\newcommand{\sys}[5]{\bigl\langle #1,\ #2,\ #3,\ #4,\ #5 \bigr\rangle}
+\newcommand{\lbl}[1]{\nolinkurl{#1}}
+\setcounter{MaxMatrixCols}{12}
+
+\title{Feedback operators on matrices:\\ the cut, guarded partial traces, and the transfer function}
+\author{Working note for the ACT4E chapter on feedback}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent
+This note is a sequel to the note \emph{The feedback operator on $\LTIq$ is a partial trace guarded by the delay} (file \lbl{LTI-feedback-vs-partial-trace}), which we call the first note.
+It answers two questions about the category $\Mat_\R$ of real matrices, with block-diagonal matrices as monoidal product (\lbl{exa:MatR-strict-monoidal}), and about its partial trace (\lbl{def:trace-for-mat}):
+\begin{quote}
+    Is there a feedback operator on $\Mat_\R$ which is analogous to the feedback operators of $\MealyMod$ and of $\LTIq$?
+    Can it be related to the partial trace through a delay?
+\end{quote}
+
+The feedback operators of $\MealyMod$ and of $\LTIq$ move a wire into the state.
+A matrix has no state, so this construction cannot be carried out inside $\Mat_\R$.
+The correct analogy is a different one: real matrices are to $\LTIq$ what functions are to $\MealyMod$.
+A real matrix is the same thing as an LTI system with state space $\R^0$, and applying the feedback operator $\Fb^p$ of the first note to such a system gives a system with state space $\R^p$, which is not of this kind if $p \geq 1$.
+
+One can nevertheless ask which feedback operators $\Mat_\R$ has.
+The results are as follows.
+\begin{enumerate}[nosep]
+    \item ``Cutting the loop'' is a feedback operator on $\Mat_\R$ (\cref{prop:cut}).
+    \item It is the only one (\cref{thm:unique}).
+          In particular, $\Mat_\R$ has no trace operator (\cref{cor:no-trace}).
+          The delay of the cut is zero, and the cut is the partial trace guarded by this delay (\cref{cor:cut-delay}).
+    \item For every scalar $\lambda$, the partial trace guarded by $\lambda$ is a partially defined operator $\Fb_\lambda$ whose delay is $\lambda$ times the identity (\cref{lem:guard,lem:delay}).
+          The partial trace is $\Fb_1$ and the cut is $\Fb_0$.
+          The argument for uniqueness shows that there is no room for other operators of this kind, with one exception (\cref{rem:classification}).
+    \item The transfer function of an LTI system is $\Fb_{1/s}$ applied to the matrix of the system (\cref{prop:evaluation}), and it turns the feedback operator of $\LTIq$ into $\Fb_{1/s}$ (\cref{thm:transfer}).
+\end{enumerate}
+What this note does \emph{not} prove is listed in \cref{rem:not-proved}.
+
+\section{Setup}
+
+\paragraph{Scalars and matrices.}
+Throughout, $K$ is a field.
+The case of the book is $K = \R$; in \cref{sec:transfer} we also need the field $K = \Rs$ of rational functions in one indeterminate $s$ with real coefficients.
+The letters $n$, $m$, $p$, $q$, $e$, $k$ denote natural numbers, and each of them may be zero.
+We write $K^{m \times n}$ for the set of matrices with $m$ rows, $n$ columns, and entries in $K$.
+We allow matrices with zero rows or with zero columns.
+We write $I_p$ for the identity matrix of size $p \times p$, and $0$ for a zero matrix whose size is determined by the context.
+In a block matrix, a block with zero rows or zero columns is simply absent.
+The matrix $I_0$, which has no entries, is invertible.
+We use the following fact: a square matrix with entries in a field is invertible if and only if the zero vector is the only vector which it maps to zero.
+
+\paragraph{The category of matrices.}
+The category $\Mat_K$ is defined as in the book for $K = \R$ (\lbl{def:MatR}, \lbl{exa:MatR-strict-monoidal}).
+Its objects are the coordinate spaces $K^n$.
+A morphism $M \colon K^n \to K^m$ is a matrix $M \in K^{m \times n}$.
+Composition is the matrix product in the opposite order, the identity of $K^n$ is $I_n$, and the monoidal product is the block-diagonal matrix:
+\begin{equation}
+    \label{eq:mat-operations}
+    M \then N = N M,
+    \qquad
+    \id_{K^n} = I_n,
+    \qquad
+    M \oplus N = \begin{bmatrix} M & 0 \\ 0 & N \end{bmatrix} .
+\end{equation}
+The isomorphisms of $\Mat_K$ are the invertible matrices; they are square.
+The braiding of $K^p$ with itself is the matrix (compare \lbl{eq:LTI-swap-matrix})
+\begin{equation}
+    \label{eq:swap}
+    S_{p,p} = \begin{bmatrix} 0 & I_p \\ I_p & 0 \end{bmatrix} \colon K^{p+p} \to K^{p+p} .
+\end{equation}
+The braiding does not occur in the axioms of a feedback operator.
+We need it only to speak about delays.
+
+\paragraph{Blocks.}
+Let $M \in K^{(m+p) \times (n+p)}$.
+The \emph{blocks of $M$ with respect to $p$} are the matrices in the decomposition
+\begin{equation}
+    \label{eq:blocks}
+    M = \begin{bmatrix} M_{11} & M_{12} \\ M_{21} & M_{22} \end{bmatrix},
+    \qquad
+    M_{11} \in K^{m \times n}, \quad
+    M_{12} \in K^{m \times p}, \quad
+    M_{21} \in K^{p \times n}, \quad
+    M_{22} \in K^{p \times p} .
+\end{equation}
+For $p = 1$ we write the decomposition as
+\begin{equation}
+    \label{eq:blocks-one}
+    M = \begin{bmatrix} M_{11} & c \\ r & d \end{bmatrix},
+\end{equation}
+where $c \in K^{m \times 1}$ is a column, $r \in K^{1 \times n}$ is a row, and $d \in K$.
+
+\begin{definition}[Feedback operator on $\Mat_K$]
+    \label{def:fb-mat}
+    A \emph{feedback operator} on $\Mat_K$ is a family of functions
+    \begin{equation}
+        \Fb^p_{n,m} \colon K^{(m+p) \times (n+p)} \to K^{m \times n},
+    \end{equation}
+    one for every triple $n$, $m$, $p$, which satisfies the following conditions.
+    We write $\Fb^p$ for $\Fb^p_{n,m}$ when $n$ and $m$ are clear from the matrix to which it is applied.
+    \begin{enumerate}[label=\textup{(F\arabic*)}, leftmargin=*]
+        \item \emph{Naturality in the source.}
+              For all $M \in K^{(m+p) \times (n+p)}$ and $G \in K^{n \times n'}$,
+              \begin{equation*}
+                  \Fb^p\bigl( M (G \oplus I_p) \bigr) = \Fb^p(M)\, G .
+              \end{equation*}
+        \item \emph{Naturality in the target.}
+              For all $M \in K^{(m+p) \times (n+p)}$ and $H \in K^{m' \times m}$,
+              \begin{equation*}
+                  \Fb^p\bigl( (H \oplus I_p) M \bigr) = H\, \Fb^p(M) .
+              \end{equation*}
+        \item \emph{Dinaturality with respect to isomorphisms.}
+              For all $M \in K^{(m+p) \times (n+p)}$ and all invertible $h \in K^{p \times p}$,
+              \begin{equation*}
+                  \Fb^p\bigl( (I_m \oplus h) M \bigr) = \Fb^p\bigl( M (I_n \oplus h) \bigr) .
+              \end{equation*}
+        \item \emph{Vanishing I.}
+              For all $M \in K^{m \times n}$, we have $\Fb^0(M) = M$.
+        \item \emph{Vanishing II.}
+              For all $M \in K^{(m+p+q) \times (n+p+q)}$,
+              \begin{equation*}
+                  \Fb^p_{n,m}\bigl( \Fb^q_{n+p,\,m+p}(M) \bigr) = \Fb^{p+q}_{n,m}(M) .
+              \end{equation*}
+        \item \emph{Superposing.}
+              For all $M \in K^{(m+p) \times (n+p)}$ and all $e$,
+              \begin{equation*}
+                  \Fb^p_{e+n,\,e+m}( I_e \oplus M ) = I_e \oplus \Fb^p_{n,m}(M) .
+              \end{equation*}
+    \end{enumerate}
+\end{definition}
+
+\begin{remark}
+    \label{rem:axioms}
+    The conditions (F1) to (F6) are the six axioms of \lbl{def:feedback-cat}, in the same order, written out for $\Mat_K$ by means of \cref{eq:mat-operations}.
+    For instance, the first axiom reads $\Fb\bigl( (g \otimes \id) \then f \bigr) = g \then \Fb(f)$; for $f = M$ and $g = G$ we have $(g \otimes \id) \then f = M (G \oplus I_p)$ and $g \then \Fb(f) = \Fb(M)\, G$.
+    In the third axiom, the isomorphism is a morphism $K^{p'} \to K^{p}$; since invertible matrices are square, $p' = p$.
+\end{remark}
+
+\begin{definition}[Partial trace]
+    \label{def:tr}
+    A matrix $M \in K^{(m+p) \times (n+p)}$, with blocks as in \cref{eq:blocks}, is \emph{$p$-traceable} if $I_p - M_{22}$ is invertible.
+    In this case,
+    \begin{equation}
+        \label{eq:tr}
+        \Tr^p(M) \coloneqq M_{11} + M_{12} (I_p - M_{22})^{-1} M_{21} \in K^{m \times n} .
+    \end{equation}
+    For $K = \R$ this is \lbl{def:trace-for-mat}, where the blocks $M_{11}$, $M_{12}$, $M_{21}$, $M_{22}$ are called $A$, $C$, $B$, $D$.
+\end{definition}
+
+\section{Cutting the loop is a feedback operator}
+
+\begin{definition}[Cut]
+    \label{def:cut}
+    For $M \in K^{(m+p) \times (n+p)}$, with blocks as in \cref{eq:blocks}, we set
+    \begin{equation}
+        \Cut^p(M) \coloneqq M_{11} \in K^{m \times n} .
+    \end{equation}
+    So $\Cut^p(M)$ consists of the first $m$ rows and the first $n$ columns of $M$.
+\end{definition}
+
+\begin{proposition}
+    \label{prop:cut}
+    The family $\Cut^p$ is a feedback operator on $\Mat_K$.
+\end{proposition}
+
+\begin{proof}
+    Let $M \in K^{(m+p) \times (n+p)}$, with blocks as in \cref{eq:blocks}.
+
+    (F1) and (F2).
+    For $G \in K^{n \times n'}$ and $H \in K^{m' \times m}$,
+    \begin{equation*}
+        M (G \oplus I_p) = \begin{bmatrix} M_{11} G & M_{12} \\ M_{21} G & M_{22} \end{bmatrix},
+        \qquad
+        (H \oplus I_p) M = \begin{bmatrix} H M_{11} & H M_{12} \\ M_{21} & M_{22} \end{bmatrix},
+    \end{equation*}
+    and these are the decompositions with respect to $p$.
+    So $\Cut^p$ of the first matrix is $M_{11} G = \Cut^p(M)\, G$, and $\Cut^p$ of the second one is $H M_{11} = H \Cut^p(M)$.
+
+    (F3).
+    For $h \in K^{p \times p}$,
+    \begin{equation*}
+        (I_m \oplus h) M = \begin{bmatrix} M_{11} & M_{12} \\ h M_{21} & h M_{22} \end{bmatrix},
+        \qquad
+        M (I_n \oplus h) = \begin{bmatrix} M_{11} & M_{12} h \\ M_{21} & M_{22} h \end{bmatrix} .
+    \end{equation*}
+    Both matrices have $M_{11}$ as their block in the upper left, so $\Cut^p$ takes the same value on both.
+    Here we did not use that $h$ is invertible.
+
+    (F4).
+    For $p = 0$, the blocks $M_{12}$, $M_{21}$, $M_{22}$ are absent, and $M = M_{11} = \Cut^0(M)$.
+
+    (F5).
+    Let $M \in K^{(m+p+q) \times (n+p+q)}$.
+    The matrix $\Cut^q(M)$ consists of the first $m+p$ rows and the first $n+p$ columns of $M$, and $\Cut^p(\Cut^q(M))$ consists of the first $m$ rows and the first $n$ columns of that matrix.
+    These are the first $m$ rows and the first $n$ columns of $M$, that is, $\Cut^{p+q}(M)$.
+
+    (F6).
+    The decomposition of $I_e \oplus M$ with respect to $p$ is
+    \begin{equation*}
+        I_e \oplus M =
+        \left[\begin{array}{cc|c}
+                I_e & 0      & 0      \\
+                0   & M_{11} & M_{12} \\ \hline
+                0   & M_{21} & M_{22}
+            \end{array}\right],
+    \end{equation*}
+    so $\Cut^p(I_e \oplus M) = \begin{bsmallmatrix} I_e & 0 \\ 0 & M_{11} \end{bsmallmatrix} = I_e \oplus \Cut^p(M)$.
+\end{proof}
+
+\section{The cut is the only feedback operator}
+\label{sec:unique}
+
+In this section, $\Fb$ denotes an arbitrary feedback operator on $\Mat_K$.
+The proof that $\Fb = \Cut$ has three steps.
+First, for one wire, $\Fb$ is determined by a single function $\varphi \colon K \to K$ (\cref{lem:one-wire}).
+Second, comparing two wires with the same two wires after a change of coordinates gives an equation for $\varphi$ (\cref{lem:functional-equation}).
+Third, this equation has no solution which is defined on all of $K$, except $\varphi = 0$ (\cref{lem:solutions}).
+
+For $d \in K$ we consider the matrix
+\begin{equation}
+    \label{eq:Kd}
+    K_d \coloneqq \begin{bmatrix} 0 & 1 \\ 1 & d \end{bmatrix} \in K^{(1+1) \times (1+1)} .
+\end{equation}
+The matrix $\Fb^1_{1,1}(K_d)$ has one row and one column.
+We define $\varphi(d) \in K$ to be its entry:
+\begin{equation}
+    \label{eq:phi}
+    \Fb^1_{1,1}(K_d) = \begin{bmatrix} \varphi(d) \end{bmatrix} .
+\end{equation}
+
+\begin{lemma}[One wire]
+    \label{lem:one-wire}
+    For all $n$ and $m$, and for every $M \in K^{(m+1) \times (n+1)}$ with blocks as in \cref{eq:blocks-one},
+    \begin{equation}
+        \label{eq:one-wire}
+        \Fb^1(M) = M_{11} + \varphi(d)\, c\, r .
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Consider the matrices
+    \begin{equation*}
+        G \coloneqq \begin{bmatrix} I_n \\ r \end{bmatrix} \in K^{(n+1) \times n},
+        \qquad
+        H \coloneqq \begin{bmatrix} M_{11} & c \end{bmatrix} \in K^{m \times (n+1)} .
+    \end{equation*}
+    We claim that
+    \begin{equation}
+        \label{eq:factorization}
+        M = (H \oplus I_1)\, (I_n \oplus K_d)\, (G \oplus I_1) .
+    \end{equation}
+    Indeed, the three factors are
+    \begin{equation*}
+        H \oplus I_1 = \begin{bmatrix} M_{11} & c & 0 \\ 0 & 0 & 1 \end{bmatrix},
+        \qquad
+        I_n \oplus K_d = \begin{bmatrix} I_n & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 1 & d \end{bmatrix},
+        \qquad
+        G \oplus I_1 = \begin{bmatrix} I_n & 0 \\ r & 0 \\ 0 & 1 \end{bmatrix},
+    \end{equation*}
+    where the columns of the first two matrices and the rows of the last two are grouped as $n + 1 + 1$.
+    We compute
+    \begin{equation*}
+        (I_n \oplus K_d)(G \oplus I_1) = \begin{bmatrix} I_n & 0 \\ 0 & 1 \\ r & d \end{bmatrix},
+        \qquad
+        (H \oplus I_1) \begin{bmatrix} I_n & 0 \\ 0 & 1 \\ r & d \end{bmatrix} = \begin{bmatrix} M_{11} & c \\ r & d \end{bmatrix} = M .
+    \end{equation*}
+    This proves \cref{eq:factorization}.
+    Now we apply $\Fb^1$:
+    \begin{align*}
+        \Fb^1(M)
+         & = \Fb^1\bigl( (H \oplus I_1)\, (I_n \oplus K_d)\, (G \oplus I_1) \bigr) \\
+         & = H\, \Fb^1\bigl( (I_n \oplus K_d)\, (G \oplus I_1) \bigr)               &  & \text{by (F2)} \\
+         & = H\, \Fb^1( I_n \oplus K_d )\, G                                        &  & \text{by (F1)} \\
+         & = H\, \bigl( I_n \oplus \Fb^1(K_d) \bigr)\, G                            &  & \text{by (F6)} \\
+         & = \begin{bmatrix} M_{11} & c \end{bmatrix}
+        \begin{bmatrix} I_n & 0 \\ 0 & \varphi(d) \end{bmatrix}
+        \begin{bmatrix} I_n \\ r \end{bmatrix}                                     &  & \text{by \cref{eq:phi}} \\
+         & = M_{11} + \varphi(d)\, c\, r .
+    \end{align*}
+    In the second line, (F2) is applied to the matrix $(I_n \oplus K_d)(G \oplus I_1) \in K^{((n+1)+1) \times (n+1)}$.
+    In the third line, (F1) is applied to the matrix $I_n \oplus K_d \in K^{((n+1)+1) \times ((n+1)+1)}$.
+    In the fourth line, (F6) is applied to $K_d$, with $e = n$.
+\end{proof}
+
+\begin{lemma}[The functional equation]
+    \label{lem:functional-equation}
+    For all $a, b \in K$,
+    \begin{equation}
+        \label{eq:functional-equation}
+        \varphi(a)\, \bigl( 1 + (b - a)\, \varphi(b) \bigr) = \varphi(b) .
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Let $a, b \in K$.
+    Consider the matrices
+    \begin{equation*}
+        N \coloneqq \begin{bmatrix} 0 & 1 & 0 \\ 0 & a & -a \\ 1 & 0 & b \end{bmatrix} \in K^{(1+2) \times (1+2)},
+        \qquad
+        h \coloneqq \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} \in K^{2 \times 2} .
+    \end{equation*}
+    The matrix $h$ is invertible.
+    Multiplying $N$ from the left by $I_1 \oplus h$ adds the third row to the second row, and multiplying $N$ from the right by $I_1 \oplus h$ adds the second column to the third column:
+    \begin{equation*}
+        L \coloneqq (I_1 \oplus h) N = \begin{bmatrix} 0 & 1 & 0 \\ 1 & a & b - a \\ 1 & 0 & b \end{bmatrix},
+        \qquad
+        R \coloneqq N (I_1 \oplus h) = \begin{bmatrix} 0 & 1 & 1 \\ 0 & a & 0 \\ 1 & 0 & b \end{bmatrix} .
+    \end{equation*}
+    By (F3), with $n = m = 1$ and $p = 2$,
+    \begin{equation}
+        \label{eq:L-equals-R}
+        \Fb^2(L) = \Fb^2(R) .
+    \end{equation}
+    We compute both sides.
+    By (F5), with $n = m = p = q = 1$, for every $X \in K^{3 \times 3}$ we have $\Fb^2_{1,1}(X) = \Fb^1_{1,1}\bigl( \Fb^1_{2,2}(X) \bigr)$, and both applications of $\Fb^1$ are given by \cref{lem:one-wire}.
+
+    \emph{The matrix $L$.}
+    Its decomposition \cref{eq:blocks-one}, as an element of $K^{(2+1) \times (2+1)}$, has
+    \begin{equation*}
+        M_{11} = \begin{bmatrix} 0 & 1 \\ 1 & a \end{bmatrix},
+        \qquad
+        c = \begin{bmatrix} 0 \\ b - a \end{bmatrix},
+        \qquad
+        r = \begin{bmatrix} 1 & 0 \end{bmatrix},
+        \qquad
+        d = b,
+        \qquad \text{so} \qquad
+        c\, r = \begin{bmatrix} 0 & 0 \\ b - a & 0 \end{bmatrix} .
+    \end{equation*}
+    By \cref{eq:one-wire},
+    \begin{equation*}
+        \Fb^1_{2,2}(L) = \begin{bmatrix} 0 & 1 \\ 1 & a \end{bmatrix} + \varphi(b) \begin{bmatrix} 0 & 0 \\ b - a & 0 \end{bmatrix}
+        = \begin{bmatrix} 0 & 1 \\ 1 + (b - a) \varphi(b) & a \end{bmatrix} .
+    \end{equation*}
+    The decomposition \cref{eq:blocks-one} of this matrix, as an element of $K^{(1+1) \times (1+1)}$, has $M_{11} = 0$, $c = 1$, $r = 1 + (b - a) \varphi(b)$, and $d = a$.
+    By \cref{eq:one-wire},
+    \begin{equation}
+        \label{eq:Fb-L}
+        \Fb^2(L) = 0 + \varphi(a) \cdot 1 \cdot \bigl( 1 + (b - a) \varphi(b) \bigr) = \varphi(a)\, \bigl( 1 + (b - a)\, \varphi(b) \bigr) .
+    \end{equation}
+
+    \emph{The matrix $R$.}
+    Its decomposition \cref{eq:blocks-one}, as an element of $K^{(2+1) \times (2+1)}$, has
+    \begin{equation*}
+        M_{11} = \begin{bmatrix} 0 & 1 \\ 0 & a \end{bmatrix},
+        \qquad
+        c = \begin{bmatrix} 1 \\ 0 \end{bmatrix},
+        \qquad
+        r = \begin{bmatrix} 1 & 0 \end{bmatrix},
+        \qquad
+        d = b,
+        \qquad \text{so} \qquad
+        c\, r = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix} .
+    \end{equation*}
+    By \cref{eq:one-wire},
+    \begin{equation*}
+        \Fb^1_{2,2}(R) = \begin{bmatrix} 0 & 1 \\ 0 & a \end{bmatrix} + \varphi(b) \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}
+        = \begin{bmatrix} \varphi(b) & 1 \\ 0 & a \end{bmatrix} .
+    \end{equation*}
+    The decomposition \cref{eq:blocks-one} of this matrix has $M_{11} = \varphi(b)$, $c = 1$, $r = 0$, and $d = a$.
+    By \cref{eq:one-wire},
+    \begin{equation}
+        \label{eq:Fb-R}
+        \Fb^2(R) = \varphi(b) + \varphi(a) \cdot 1 \cdot 0 = \varphi(b) .
+    \end{equation}
+    Here we identify a matrix with one row and one column with its entry.
+    Inserting \cref{eq:Fb-L} and \cref{eq:Fb-R} into \cref{eq:L-equals-R} gives \cref{eq:functional-equation}.
+\end{proof}
+
+\begin{remark}
+    \label{rem:conjugation}
+    The matrices $L$ and $R$ were found as follows.
+    The loop block of $R$ is the diagonal matrix with entries $a$ and $b$: in $R$, the two wires of the loop do not interact.
+    The loop block of $L$ is $h \begin{bsmallmatrix} a & 0 \\ 0 & b \end{bsmallmatrix} h^{-1}$: this is the same loop, described in other coordinates.
+    Condition (F3) says that the result of feeding back may not depend on the coordinates of the loop.
+\end{remark}
+
+The next lemma solves \cref{eq:functional-equation}.
+We state it for functions which are defined only on a subset of $K$, because we need this in \cref{sec:guarded}.
+
+\begin{lemma}[Solutions of the functional equation]
+    \label{lem:solutions}
+    Let $U \subseteq K$ be a subset, and let $\psi \colon U \to K$ be a function.
+    The following are equivalent.
+    \begin{enumerate}[label=\textup{(\roman*)}]
+        \item For all $a, b \in U$, we have $\psi(a)\, \bigl( 1 + (b - a)\, \psi(b) \bigr) = \psi(b)$.
+        \item Either $\psi(a) = 0$ for all $a \in U$, or there is an element $c \in K$ with $c \notin U$ such that
+              \begin{equation*}
+                  \psi(a) = \frac{1}{c - a} \qquad \text{for all } a \in U .
+              \end{equation*}
+    \end{enumerate}
+    In particular, if $U = K$, then \textup{(i)} holds if and only if $\psi = 0$.
+\end{lemma}
+
+\begin{proof}
+    (i) $\Rightarrow$ (ii).
+    Suppose first that $\psi(a_0) = 0$ for some $a_0 \in U$.
+    Then (i), with $a = a_0$, gives $0 = \psi(b)$ for all $b \in U$.
+    So $\psi$ is zero.
+
+    Suppose now that $\psi(a) \neq 0$ for all $a \in U$.
+    If $U$ is empty, then $\psi$ is zero and there is nothing to prove.
+    Otherwise choose $a_0 \in U$ and set $c \coloneqq a_0 + \psi(a_0)^{-1}$.
+    Let $b \in U$.
+    By (i), with $a = a_0$,
+    \begin{equation*}
+        \psi(a_0) = \psi(b) - (b - a_0)\, \psi(a_0)\, \psi(b) = \psi(b)\, \bigl( 1 - (b - a_0)\, \psi(a_0) \bigr) .
+    \end{equation*}
+    Dividing by $\psi(a_0)$ gives
+    \begin{equation*}
+        1 = \psi(b)\, \bigl( \psi(a_0)^{-1} - b + a_0 \bigr) = \psi(b)\, (c - b) .
+    \end{equation*}
+    So $c - b \neq 0$ and $\psi(b) = \frac{1}{c - b}$.
+    This holds for every $b \in U$; in particular $c \neq b$ for every $b \in U$, that is, $c \notin U$.
+
+    (ii) $\Rightarrow$ (i).
+    If $\psi$ is zero, both sides of the equation in (i) are zero.
+    If $\psi(a) = \frac{1}{c - a}$ for all $a \in U$, then for $a, b \in U$
+    \begin{equation*}
+        \psi(a)\, \bigl( 1 + (b - a)\, \psi(b) \bigr)
+        = \frac{1}{c - a} \cdot \frac{(c - b) + (b - a)}{c - b}
+        = \frac{1}{c - a} \cdot \frac{c - a}{c - b}
+        = \psi(b) .
+    \end{equation*}
+
+    The last statement: if $U = K$, there is no element $c \in K$ with $c \notin U$, so the second case of (ii) cannot occur.
+\end{proof}
+
+\begin{theorem}[Uniqueness]
+    \label{thm:unique}
+    Let $K$ be a field, and let $\Fb$ be a feedback operator on $\Mat_K$.
+    Then $\Fb = \Cut$: for all $n$, $m$, $p$ and all $M \in K^{(m+p) \times (n+p)}$, with blocks as in \cref{eq:blocks},
+    \begin{equation}
+        \Fb^p(M) = M_{11} .
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    Let $\varphi \colon K \to K$ be the function defined by \cref{eq:phi}.
+    By \cref{lem:functional-equation}, it satisfies condition (i) of \cref{lem:solutions}, with $U = K$.
+    By the last statement of \cref{lem:solutions}, $\varphi = 0$.
+    So \cref{lem:one-wire} gives, for all $n$ and $m$,
+    \begin{equation}
+        \label{eq:one-wire-cut}
+        \Fb^1(M) = M_{11} = \Cut^1(M) \qquad \text{for all } M \in K^{(m+1) \times (n+1)} .
+    \end{equation}
+    We now prove $\Fb^p_{n,m} = \Cut^p_{n,m}$ for all $n$, $m$, by induction on $p$.
+    For $p = 0$, this is (F4), together with (F4) for $\Cut$.
+    Suppose it holds for $p$, and let $M \in K^{(m+p+1) \times (n+p+1)}$.
+    Then
+    \begin{align*}
+        \Fb^{p+1}_{n,m}(M)
+         & = \Fb^p_{n,m}\bigl( \Fb^1_{n+p,\,m+p}(M) \bigr)   &  & \text{by (F5) for $\Fb$, with $q = 1$} \\
+         & = \Fb^p_{n,m}\bigl( \Cut^1_{n+p,\,m+p}(M) \bigr)  &  & \text{by \cref{eq:one-wire-cut}} \\
+         & = \Cut^p_{n,m}\bigl( \Cut^1_{n+p,\,m+p}(M) \bigr) &  & \text{by the induction hypothesis} \\
+         & = \Cut^{p+1}_{n,m}(M)                             &  & \text{by (F5) for $\Cut$ (\cref{prop:cut}).}
+    \end{align*}
+\end{proof}
+
+\begin{remark}[Which hypotheses were used]
+    The proof uses (F1), (F2), (F4), (F5), (F6), and it uses (F3) only once: for $p = 2$ and the single matrix $h$ of \cref{lem:functional-equation}.
+    It uses that $K$ is a field in \cref{lem:solutions}, where we divide by $\psi(a_0)$.
+    The braiding is not used.
+\end{remark}
+
+\begin{corollary}[No trace]
+    \label{cor:no-trace}
+    There is no trace operator on $\Mat_K$ in the sense of \lbl{def:traced-strict-monoidal-cat}.
+\end{corollary}
+
+\begin{proof}
+    The axioms of a trace operator are the axioms of a feedback operator, with dinaturality required for all morphisms instead of for isomorphisms only, together with the yanking axiom.
+    So a trace operator $\Tr$ on $\Mat_K$ would be a feedback operator, and by \cref{thm:unique} it would be $\Cut$.
+    The yanking axiom for $K^1$ requires $\Tr^1(S_{1,1}) = I_1$.
+    But $\Cut^1(S_{1,1})$ is the block in the upper left of $S_{1,1} = \begin{bsmallmatrix} 0 & 1 \\ 1 & 0 \end{bsmallmatrix}$, which is the matrix with the single entry $0$, and $0 \neq 1$ in a field.
+\end{proof}
+
+\begin{corollary}[The delay of the cut]
+    \label{cor:cut-delay}
+    The delay of the unique feedback operator on $\Mat_K$ is zero:
+    \begin{equation}
+        \partial_p \coloneqq \Cut^p(S_{p,p}) = 0 \in K^{p \times p} .
+    \end{equation}
+    For every $M \in K^{(m+p) \times (n+p)}$, the matrices $M \then (\id_{K^m} \oplus \partial_p)$ and $(\id_{K^n} \oplus \partial_p) \then M$ are $p$-traceable, and
+    \begin{equation}
+        \Cut^p(M) = \Tr^p\bigl( M \then (\id_{K^m} \oplus \partial_p) \bigr) = \Tr^p\bigl( (\id_{K^n} \oplus \partial_p) \then M \bigr) .
+    \end{equation}
+\end{corollary}
+
+\begin{proof}
+    The block in the upper left of \cref{eq:swap} is zero.
+    The second statement is the case $\lambda = 0$ of \cref{lem:guard} below, since $\lambda I_p = 0 = \partial_p$ and $\Fb_0^p = \Cut^p$.
+\end{proof}
+
+\section{Partial traces guarded by a scalar}
+\label{sec:guarded}
+
+The cut is the partial trace guarded by the zero matrix.
+We now replace zero by an arbitrary scalar.
+The result is no longer defined for all matrices.
+
+\begin{definition}[Guarded partial trace]
+    \label{def:guarded}
+    Let $\lambda \in K$.
+    A matrix $M \in K^{(m+p) \times (n+p)}$, with blocks as in \cref{eq:blocks}, is \emph{$\lambda$-traceable with respect to $p$} if $I_p - \lambda M_{22}$ is invertible.
+    In this case we define
+    \begin{equation}
+        \label{eq:guarded}
+        \Fb_\lambda^p(M) \coloneqq M_{11} + \lambda\, M_{12} (I_p - \lambda M_{22})^{-1} M_{21} \in K^{m \times n} .
+    \end{equation}
+\end{definition}
+
+For $\lambda = 1$ this is \cref{def:tr}: $\Fb_1^p = \Tr^p$.
+For $\lambda = 0$, every matrix is $0$-traceable and $\Fb_0^p = \Cut^p$.
+
+\begin{lemma}[$\Fb_\lambda$ is the partial trace guarded by $\lambda$]
+    \label{lem:guard}
+    Let $\lambda \in K$ and $M \in K^{(m+p) \times (n+p)}$.
+    The following are equivalent: $M$ is $\lambda$-traceable; the matrix $M \then (\id_{K^m} \oplus \lambda I_p)$ is $p$-traceable; the matrix $(\id_{K^n} \oplus \lambda I_p) \then M$ is $p$-traceable.
+    In this case,
+    \begin{equation}
+        \label{eq:guard}
+        \Fb_\lambda^p(M) = \Tr^p\bigl( M \then (\id_{K^m} \oplus \lambda I_p) \bigr) = \Tr^p\bigl( (\id_{K^n} \oplus \lambda I_p) \then M \bigr) .
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    By \cref{eq:mat-operations},
+    \begin{align*}
+        M \then (\id_{K^m} \oplus \lambda I_p) & = \begin{bmatrix} I_m & 0 \\ 0 & \lambda I_p \end{bmatrix} M = \begin{bmatrix} M_{11} & M_{12} \\ \lambda M_{21} & \lambda M_{22} \end{bmatrix}, \\
+        (\id_{K^n} \oplus \lambda I_p) \then M & = M \begin{bmatrix} I_n & 0 \\ 0 & \lambda I_p \end{bmatrix} = \begin{bmatrix} M_{11} & \lambda M_{12} \\ M_{21} & \lambda M_{22} \end{bmatrix} .
+    \end{align*}
+    Both matrices have the block $\lambda M_{22}$ in the lower right, so each of them is $p$-traceable if and only if $I_p - \lambda M_{22}$ is invertible, that is, if and only if $M$ is $\lambda$-traceable.
+    In this case, \cref{eq:tr} gives for the two matrices
+    \begin{equation*}
+        M_{11} + M_{12} (I_p - \lambda M_{22})^{-1} \lambda M_{21}
+        \qquad \text{and} \qquad
+        M_{11} + \lambda M_{12} (I_p - \lambda M_{22})^{-1} M_{21},
+    \end{equation*}
+    and both are equal to \cref{eq:guarded}, because the scalar $\lambda$ commutes with every matrix.
+\end{proof}
+
+\begin{lemma}[The delay of $\Fb_\lambda$]
+    \label{lem:delay}
+    For every $\lambda \in K$ and every $p$, the matrix $S_{p,p}$ is $\lambda$-traceable with respect to $p$, and
+    \begin{equation}
+        \Fb_\lambda^p(S_{p,p}) = \lambda I_p .
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    By \cref{eq:swap}, the blocks of $S_{p,p}$ with respect to $p$ are $M_{11} = 0$, $M_{12} = I_p$, $M_{21} = I_p$, and $M_{22} = 0$.
+    So $I_p - \lambda M_{22} = I_p$ is invertible, and \cref{eq:guarded} gives $0 + \lambda\, I_p\, I_p^{-1}\, I_p = \lambda I_p$.
+\end{proof}
+
+Together, \cref{lem:guard,lem:delay} say: if we write $\partial^\lambda_p \coloneqq \Fb^p_\lambda(S_{p,p})$ for the delay of $\Fb_\lambda$, then
+\begin{equation}
+    \label{eq:guarded-headline}
+    \Fb^p_\lambda(M) = \Tr^p\bigl( M \then (\id_{K^m} \oplus \partial^\lambda_p) \bigr) = \Tr^p\bigl( (\id_{K^n} \oplus \partial^\lambda_p) \then M \bigr)
+\end{equation}
+whenever one of the three expressions is defined.
+This is the analogue for matrices of the theorem of the first note.
+Here it is a reformulation of \cref{def:guarded}; the content is that the guard can be recovered from the operator, as its delay.
+
+\begin{remark}[One wire]
+    \label{rem:guarded-one-wire}
+    For $p = 1$ and $M$ as in \cref{eq:blocks-one}, the matrix $M$ is $\lambda$-traceable if and only if $\lambda d \neq 1$, and then \cref{eq:guarded} reads
+    \begin{equation}
+        \label{eq:guarded-one-wire}
+        \Fb^1_\lambda(M) = M_{11} + \varphi_\lambda(d)\, c\, r,
+        \qquad
+        \varphi_\lambda(d) \coloneqq \frac{\lambda}{1 - \lambda d} .
+    \end{equation}
+    This is the formula of \cref{lem:one-wire}.
+    The function $\varphi_\lambda$ is defined on the set $U_\lambda \coloneqq \{ d \in K \mid \lambda d \neq 1 \}$.
+    If $\lambda \neq 0$, then $U_\lambda = K \setminus \{ \lambda^{-1} \}$ and $\varphi_\lambda(d) = \frac{1}{\lambda^{-1} - d}$.
+    So $\varphi_\lambda$ is the solution of \cref{lem:solutions} with $c = \lambda^{-1}$, and $\varphi_0 = 0$ is the zero solution, with $U_0 = K$.
+\end{remark}
+
+\begin{remark}[There are no other candidates, with one exception]
+    \label{rem:classification}
+    By \cref{lem:solutions}, the functions $\psi$ which satisfy the functional equation on a subset $U \subseteq K$ are the zero function and the functions $a \mapsto \frac{1}{c - a}$ with $c \notin U$.
+    By \cref{rem:guarded-one-wire}, for $c \neq 0$ these are restrictions of the functions $\varphi_\lambda$ with $\lambda = c^{-1}$.
+    The case $c = 0$ remains: the function $\psi(a) = -a^{-1}$ on $K \setminus \{0\}$.
+    Formula \cref{eq:one-wire} with this function reads $M_{11} - d^{-1}\, c\, r$, for $d \neq 0$.
+    This is the case $p = 1$ of the operator
+    \begin{equation}
+        \label{eq:schur}
+        \Fb^p_\infty(M) \coloneqq M_{11} - M_{12}\, M_{22}^{-1}\, M_{21},
+    \end{equation}
+    which is defined if $M_{22}$ is invertible.
+    This is the Schur complement of $M_{22}$ in $M$.
+    It is not of the form $\Fb_\lambda$ for any $\lambda \in K$; formally it is the case ``$\lambda = \infty$'' of \cref{eq:guarded}.
+    The matrix $S_{p,p}$ is not in its domain if $p \geq 1$, so this operator has no delay.
+
+    This suggests that the operators $\Fb_\lambda$, together with $\Fb_\infty$, are the only partially defined operators on $\Mat_K$ which can satisfy the axioms of a feedback operator wherever both sides of an axiom are defined.
+    We do not make this statement precise here, and we do not prove it: \cref{lem:one-wire,lem:functional-equation} apply an axiom to matrices such as $K_d$, $L$, and $R$, and for a partially defined operator one has to keep track of which of these are in its domain.
+\end{remark}
+
+\section{The transfer function}
+\label{sec:transfer}
+
+We use the notation of the first note.
+An LTI system $f \colon \R^n \to \R^m$ with state space $\R^k$ is a tuple $f = \sys{\R^k}{A}{B}{C}{D}$ of real matrices $A \in \R^{k \times k}$, $B \in \R^{k \times n}$, $C \in \R^{m \times k}$, and $D \in \R^{m \times n}$.
+
+\begin{definition}[Matrix of an LTI system]
+    \label{def:static-matrix}
+Let $f = \sys{\R^k}{A}{B}{C}{D}$ be an LTI system from $\R^n$ to $\R^m$.
+    The \emph{matrix} of $f$ is
+    \begin{equation}
+        \label{eq:static-matrix}
+        M_f \coloneqq \begin{bmatrix} D & C \\ B & A \end{bmatrix} \in \R^{(m+k) \times (n+k)} .
+    \end{equation}
+    This is the decomposition of $M_f$ with respect to $k$: its blocks \cref{eq:blocks} are $M_{11} = D$, $M_{12} = C$, $M_{21} = B$, and $M_{22} = A$.
+\end{definition}
+
+In terms of the equations $\dot x = A x + B u$, $y = C x + D u$ of the system, $M_f$ is the matrix which maps the input $u$, stacked on top of the state $x$, to the output $y$, stacked on top of $\dot x$.
+The wire of the loop is the state.
+
+\begin{proposition}[Evaluating at a point]
+    \label{prop:evaluation}
+    Let $f = \sys{\R^k}{A}{B}{C}{D} \colon \R^n \to \R^m$ be an LTI system.
+    Let $K$ be $\R$ or $\Rs$, and let $c \in K$ with $c \neq 0$.
+    Then $M_f$, as a matrix with entries in $K$, is $c^{-1}$-traceable with respect to $k$ if and only if $c I_k - A$ is invertible, and in this case
+    \begin{equation}
+        \label{eq:evaluation}
+        \Fb^k_{1/c}(M_f) = D + C\, (c I_k - A)^{-1} B .
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    We have $I_k - c^{-1} A = c^{-1} (c I_k - A)$, and $c^{-1} \neq 0$.
+    So $I_k - c^{-1} A$ is invertible if and only if $c I_k - A$ is, and then $(I_k - c^{-1} A)^{-1} = c\, (c I_k - A)^{-1}$.
+    By \cref{eq:guarded}, with the blocks of \cref{def:static-matrix},
+    \begin{equation*}
+        \Fb^k_{1/c}(M_f) = D + c^{-1}\, C \cdot c\, (c I_k - A)^{-1} B = D + C\, (c I_k - A)^{-1} B . \qedhere
+    \end{equation*}
+\end{proof}
+
+For $K = \R$, the matrix $c I_k - A$ is invertible if and only if $c$ is not an eigenvalue of $A$.
+For $K = \Rs$ and $c = s$, the matrix $s I_k - A$ is always invertible: its determinant is a polynomial in $s$ of degree $k$ with leading coefficient $1$, and so it is not the zero element of $\Rs$.
+
+\begin{definition}[Transfer function]
+    \label{def:transfer}
+Let $f = \sys{\R^k}{A}{B}{C}{D}$ be an LTI system from $\R^n$ to $\R^m$.
+    The \emph{transfer function} of $f$ is
+    \begin{equation}
+        \label{eq:transfer}
+        G_f \coloneqq D + C\, (s I_k - A)^{-1} B \in \Rs^{m \times n} .
+    \end{equation}
+    By \cref{prop:evaluation}, with $K = \Rs$ and $c = s$, the matrix $M_f$ is $s^{-1}$-traceable with respect to $k$, and
+    \begin{equation}
+        \label{eq:transfer-as-fb}
+        G_f = \Fb^k_{1/s}(M_f) .
+    \end{equation}
+\end{definition}
+
+By \cref{lem:guard}, we can also write \cref{eq:transfer-as-fb} as $G_f = \Tr^k\bigl( M_f \then (\id \oplus s^{-1} I_k) \bigr)$: the transfer function is the partial trace of the matrix of the system, guarded by $s^{-1}$.
+
+\begin{lemma}
+    \label{lem:transfer-basic}
+    The transfer function has the following two properties.
+    \begin{enumerate}[label=\textup{(\alph*)}]
+        \item Equivalent LTI systems have the same transfer function: $G_{T \cdot f} = G_f$ for every invertible $T \in \R^{k \times k}$, where $T \cdot f = \sys{\R^k}{T A T^{-1}}{T B}{C T^{-1}}{D}$.
+        \item The transfer function of the system $d_p = \sys{\R^p}{0}{I_p}{I_p}{0}$, which represents the delay of $\LTIq$, is $G_{d_p} = s^{-1} I_p$.
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+    (a) We have $s I_k - T A T^{-1} = T (s I_k - A) T^{-1}$, hence $(s I_k - T A T^{-1})^{-1} = T (s I_k - A)^{-1} T^{-1}$, and therefore
+    \begin{equation*}
+        G_{T \cdot f} = D + C T^{-1} \cdot T (s I_k - A)^{-1} T^{-1} \cdot T B = D + C (s I_k - A)^{-1} B = G_f .
+    \end{equation*}
+
+    (b) By \cref{eq:transfer}, $G_{d_p} = 0 + I_p\, (s I_p - 0)^{-1} I_p = s^{-1} I_p$.
+\end{proof}
+
+So the transfer function is defined for the morphisms of $\LTIq$, and it maps the delay $\partial_p$ of $\LTIq$ to the delay $s^{-1} I_p$ of $\Fb_{1/s}$ (\cref{lem:delay}).
+The main result of this section is that it maps the feedback operator of $\LTIq$ to $\Fb_{1/s}$.
+For the proof we use a description of $\Fb_\lambda$ in terms of linear equations.
+
+\begin{lemma}[$\Fb_\lambda$ in terms of equations]
+    \label{lem:equations}
+    Let $\lambda \in K$ and $M \in K^{(m+p) \times (n+p)}$, with blocks as in \cref{eq:blocks}.
+    \begin{enumerate}[label=\textup{(\alph*)}]
+        \item The matrix $M$ is $\lambda$-traceable with respect to $p$ if and only if $x = 0$ is the only vector $x \in K^p$ with $x = \lambda M_{22}\, x$.
+        \item Suppose that $M$ is $\lambda$-traceable with respect to $p$.
+              Let $u \in K^n$, $y \in K^m$, and $x \in K^p$ be vectors with
+              \begin{equation}
+                  \label{eq:loop-equations}
+                  y = M_{11}\, u + M_{12}\, x,
+                  \qquad
+                  x = \lambda\, ( M_{21}\, u + M_{22}\, x ) .
+              \end{equation}
+              Then $y = \Fb^p_\lambda(M)\, u$.
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+    (a) The equation $x = \lambda M_{22}\, x$ is equivalent to $(I_p - \lambda M_{22})\, x = 0$, and a square matrix with entries in a field is invertible if and only if the zero vector is the only vector which it maps to zero.
+
+    (b) The second equation of \cref{eq:loop-equations} is equivalent to $(I_p - \lambda M_{22})\, x = \lambda M_{21}\, u$, hence to $x = \lambda (I_p - \lambda M_{22})^{-1} M_{21}\, u$.
+    Inserting this into the first equation gives $y = M_{11}\, u + \lambda M_{12} (I_p - \lambda M_{22})^{-1} M_{21}\, u = \Fb^p_\lambda(M)\, u$.
+\end{proof}
+
+Recall from the first note the feedback operator of LTI systems.
+Let $f \colon \R^{n+p} \to \R^{m+p}$ be an LTI system, with $f = \sys{\R^k}{A}{B}{C}{D}$ and with the blocks
+\begin{equation}
+    \label{eq:lti-blocks}
+    B = \begin{bmatrix} B_1 & B_2 \end{bmatrix},
+    \qquad
+    C = \begin{bmatrix} C_1 \\ C_2 \end{bmatrix},
+    \qquad
+    D = \begin{bmatrix} D_{11} & D_{12} \\ D_{21} & D_{22} \end{bmatrix}
+\end{equation}
+with respect to $p$.
+Then $\Fb^p(f)$ is the system
+\begin{equation}
+    \label{eq:fb-lti}
+    \Fb^p(f) = \sys{\R^{p+k}}
+    {\begin{bmatrix} D_{22} & C_2 \\ B_2 & A \end{bmatrix}}
+    {\begin{bmatrix} D_{21} \\ B_1 \end{bmatrix}}
+    {\begin{bmatrix} D_{12} & C_1 \end{bmatrix}}
+    {D_{11}}
+    \colon \R^n \to \R^m .
+\end{equation}
+
+\begin{theorem}[The transfer function maps feedback to guarded partial trace]
+    \label{thm:transfer}
+    Let $f = \sys{\R^k}{A}{B}{C}{D} \colon \R^{n+p} \to \R^{m+p}$ be an LTI system.
+    Then its transfer function $G_f \in \Rs^{(m+p) \times (n+p)}$ is $s^{-1}$-traceable with respect to $p$, and
+    \begin{equation}
+        \label{eq:transfer-theorem}
+        G_{\Fb^p(f)} = \Fb^p_{1/s}(G_f) = \Tr^p\bigl( G_f \then (\id \oplus G_{d_p}) \bigr) .
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    We work over the field $K = \Rs$, with $\lambda = s^{-1}$.
+    The second equality in \cref{eq:transfer-theorem} holds by \cref{lem:guard} and \cref{lem:transfer-basic}\,(b).
+    We prove the first one.
+
+    \emph{Step 1: the systems $f$ and $\Fb^p(f)$ have the same matrix.}
+    By \cref{eq:static-matrix} and \cref{eq:lti-blocks},
+    \begin{equation}
+        \label{eq:N}
+        M_f = \begin{bmatrix} D & C \\ B & A \end{bmatrix}
+        = \begin{bmatrix} D_{11} & D_{12} & C_1 \\ D_{21} & D_{22} & C_2 \\ B_1 & B_2 & A \end{bmatrix}
+        \eqqcolon N,
+    \end{equation}
+    where the rows are grouped as $m + p + k$ and the columns as $n + p + k$.
+    By \cref{eq:static-matrix} and \cref{eq:fb-lti}, the matrix of $\Fb^p(f)$ is
+    \begin{equation*}
+        M_{\Fb^p(f)} =
+        \left[\begin{array}{c|cc}
+                D_{11} & D_{12} & C_1 \\ \hline
+                D_{21} & D_{22} & C_2 \\
+                B_1    & B_2    & A
+            \end{array}\right]
+        = N .
+    \end{equation*}
+    The two systems differ only in which part of $N$ is regarded as the loop: for $f$ it is the last $k$ rows and columns, for $\Fb^p(f)$ it is the last $p + k$ rows and columns.
+    By \cref{eq:transfer-as-fb}, applied to $f$ and to $\Fb^p(f)$, whose state space is $\R^{p+k}$,
+    \begin{equation}
+        \label{eq:two-transfer-functions}
+        G_f = \Fb^k_{1/s}(N),
+        \qquad
+        G_{\Fb^p(f)} = \Fb^{p+k}_{1/s}(N),
+    \end{equation}
+    and in particular $N$ is $s^{-1}$-traceable with respect to $p + k$.
+    So we have to prove that $G_f$ is $s^{-1}$-traceable with respect to $p$, and that $\Fb^p_{1/s}\bigl( \Fb^k_{1/s}(N) \bigr) = \Fb^{p+k}_{1/s}(N)$.
+
+    \emph{Step 2: notation.}
+    Set $X \coloneqq (s I_k - A)^{-1} \in \Rs^{k \times k}$.
+    By \cref{eq:transfer} and \cref{eq:lti-blocks}, the blocks of $G \coloneqq G_f$ with respect to $p$ are
+    \begin{equation}
+        \label{eq:G-blocks}
+        G_{11} = D_{11} + C_1 X B_1,
+        \quad
+        G_{12} = D_{12} + C_1 X B_2,
+        \quad
+        G_{21} = D_{21} + C_2 X B_1,
+        \quad
+        G_{22} = D_{22} + C_2 X B_2 .
+    \end{equation}
+    The blocks of $N$ with respect to $p + k$ are
+    \begin{equation}
+        \label{eq:N-blocks}
+        N_{11} = D_{11},
+        \qquad
+        N_{12} = \begin{bmatrix} D_{12} & C_1 \end{bmatrix},
+        \qquad
+        N_{21} = \begin{bmatrix} D_{21} \\ B_1 \end{bmatrix},
+        \qquad
+        N_{22} = \begin{bmatrix} D_{22} & C_2 \\ B_2 & A \end{bmatrix} .
+    \end{equation}
+    We also note: for vectors $v, x \in K^k$,
+    \begin{equation}
+        \label{eq:X}
+        x = X v
+        \quad \Longleftrightarrow \quad
+        (s I_k - A)\, x = v
+        \quad \Longleftrightarrow \quad
+        x = s^{-1} ( v + A x ) .
+    \end{equation}
+
+    \emph{Step 3: $G$ is $s^{-1}$-traceable with respect to $p$.}
+    By \cref{lem:equations}\,(a), we have to show: if $w \in K^p$ satisfies $w = s^{-1} G_{22}\, w$, then $w = 0$.
+    Let $w$ be such a vector, and set $x \coloneqq X B_2\, w$.
+    By \cref{eq:X}, with $v = B_2\, w$,
+    \begin{equation*}
+        x = s^{-1} ( B_2\, w + A x ) .
+    \end{equation*}
+    By \cref{eq:G-blocks}, $G_{22}\, w = D_{22}\, w + C_2 X B_2\, w = D_{22}\, w + C_2\, x$, and so
+    \begin{equation*}
+        w = s^{-1} G_{22}\, w = s^{-1} ( D_{22}\, w + C_2\, x ) .
+    \end{equation*}
+    The last two displayed equations say, by \cref{eq:N-blocks},
+    \begin{equation*}
+        \begin{bmatrix} w \\ x \end{bmatrix} = s^{-1} N_{22} \begin{bmatrix} w \\ x \end{bmatrix} .
+    \end{equation*}
+    Since $N$ is $s^{-1}$-traceable with respect to $p + k$, \cref{lem:equations}\,(a) gives $\begin{bsmallmatrix} w \\ x \end{bsmallmatrix} = 0$, and in particular $w = 0$.
+
+    \emph{Step 4: the two matrices agree.}
+    Let $u \in K^n$ be an arbitrary vector, and set
+    \begin{gather*}
+        w \coloneqq s^{-1} (I_p - s^{-1} G_{22})^{-1} G_{21}\, u \in K^p, \\
+        y \coloneqq G_{11}\, u + G_{12}\, w \in K^m,
+        \qquad
+        x \coloneqq X ( B_1\, u + B_2\, w ) \in K^k .
+    \end{gather*}
+    The inverse exists by Step 3.
+    By the definition of $w$, and by \cref{eq:guarded} for $G$,
+    \begin{equation}
+        \label{eq:w-and-y}
+        w = s^{-1} ( G_{21}\, u + G_{22}\, w ),
+        \qquad
+        y = \Fb^p_{1/s}(G)\, u .
+    \end{equation}
+    By \cref{eq:X}, with $v = B_1\, u + B_2\, w$,
+    \begin{equation}
+        \label{eq:x-equation}
+        x = s^{-1} ( B_1\, u + B_2\, w + A x ) .
+    \end{equation}
+    By \cref{eq:G-blocks} and the definition of $x$,
+    \begin{align*}
+        G_{11}\, u + G_{12}\, w & = D_{11}\, u + D_{12}\, w + C_1 X ( B_1\, u + B_2\, w ) = D_{11}\, u + D_{12}\, w + C_1\, x, \\
+        G_{21}\, u + G_{22}\, w & = D_{21}\, u + D_{22}\, w + C_2 X ( B_1\, u + B_2\, w ) = D_{21}\, u + D_{22}\, w + C_2\, x .
+    \end{align*}
+    Inserting this into the definition of $y$ and into the first equation of \cref{eq:w-and-y}, we obtain
+    \begin{equation}
+        \label{eq:y-and-w}
+        y = D_{11}\, u + D_{12}\, w + C_1\, x,
+        \qquad
+        w = s^{-1} ( D_{21}\, u + D_{22}\, w + C_2\, x ) .
+    \end{equation}
+    By \cref{eq:N-blocks}, the equations \cref{eq:y-and-w} and \cref{eq:x-equation} together say
+    \begin{equation*}
+        y = N_{11}\, u + N_{12} \begin{bmatrix} w \\ x \end{bmatrix},
+        \qquad
+        \begin{bmatrix} w \\ x \end{bmatrix} = s^{-1} \Bigl( N_{21}\, u + N_{22} \begin{bmatrix} w \\ x \end{bmatrix} \Bigr) .
+    \end{equation*}
+    These are the equations \cref{eq:loop-equations} for the matrix $N$, decomposed with respect to $p + k$.
+    Since $N$ is $s^{-1}$-traceable with respect to $p + k$, \cref{lem:equations}\,(b) gives $y = \Fb^{p+k}_{1/s}(N)\, u$.
+    Together with the second equation of \cref{eq:w-and-y}, this shows
+    \begin{equation*}
+        \Fb^p_{1/s}(G)\, u = \Fb^{p+k}_{1/s}(N)\, u \qquad \text{for all } u \in K^n,
+    \end{equation*}
+    and so $\Fb^p_{1/s}(G_f) = \Fb^{p+k}_{1/s}(N) = G_{\Fb^p(f)}$, by \cref{eq:two-transfer-functions}.
+\end{proof}
+
+\begin{remark}[The operators on real matrices are evaluations of the transfer function]
+    \label{rem:table}
+    By \cref{prop:evaluation}, the partially defined operators of \cref{sec:guarded}, applied to the real matrix $M_f$, are the values of the transfer function at real numbers.
+    \begin{center}
+        \begin{tabular}{llll}
+            \toprule
+            $c$           & operator on $\Mat_\R$                 & value on $M_f$              & defined if                        \\
+            \midrule
+            ``$\infty$''  & $\Cut^k = \Fb^k_0$                    & $D$                         & always                            \\
+            $c \neq 0$    & $\Fb^k_{1/c}$                         & $D + C (c I_k - A)^{-1} B$  & $c$ is not an eigenvalue of $A$   \\
+            $1$           & $\Tr^k = \Fb^k_1$                     & $D + C (I_k - A)^{-1} B$    & $1$ is not an eigenvalue of $A$   \\
+            $0$           & $\Fb^k_\infty$ of \cref{eq:schur}     & $D - C A^{-1} B$            & $A$ is invertible                 \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    Two of these values have a direct meaning for the system.
+    In the discrete-time reading $x_{i+1} = A x_i + B u_i$, $y_i = C x_i + D u_i$, suppose that the input and the state are constant, $u_i = u$ and $x_i = x$.
+    Then $x = A x + B u$, and if $1$ is not an eigenvalue of $A$, the output is the constant $y = \bigl( D + C (I_k - A)^{-1} B \bigr) u$.
+    So the partial trace of \lbl{def:trace-for-mat}, applied to $M_f$, describes the system in equilibrium.
+    This is the first of the two derivations of the formula for the partial trace in the remark after \lbl{def:trace-for-mat}.
+    In the continuous-time reading, a constant input $u$ and a constant state $x$ satisfy $0 = A x + B u$, and if $A$ is invertible, the output is the constant $y = ( D - C A^{-1} B ) u$.
+
+    Every real number $c$ is an eigenvalue of some real matrix, so none of the operators $\Fb_{1/c}$ with $c \neq 0$ is defined for all real matrices, in accordance with \cref{thm:unique}.
+    The indeterminate $s$ is not an eigenvalue of any real matrix, and this is why $\Fb_{1/s}$ is defined on $M_f$ for every $f$.
+\end{remark}
+
+\begin{remark}[What is not proved here]
+    \label{rem:not-proved}
+    The following statements are not proved in this note.
+    \begin{enumerate}[label=\textup{(\arabic*)}]
+        \item That $\Fb_\lambda$ satisfies the axioms (F1) to (F6) wherever both sides are defined, and the classification suggested in \cref{rem:classification}.
+        \item That $\Fb_{1/s}$ is a feedback operator on matrices of proper rational functions.
+              In more detail: \cref{thm:unique} applies to the field $K = \Rs$ as well: the only feedback operator on $\Mat_{\Rs}$ is the cut.
+              Accordingly, $\Fb_{1/s}$ is not defined for all matrices with entries in $\Rs$; for example, the matrix $K_s$ of \cref{eq:Kd} is not $s^{-1}$-traceable, since $1 - s^{-1} s = 0$.
+              \Cref{thm:transfer} shows that $\Fb_{1/s}$ is defined on all transfer functions.
+              The entries of a transfer function are proper rational functions, that is, quotients of polynomials in which the degree of the numerator is at most the degree of the denominator.
+              The proper rational functions form a ring which is not a field: $s^{-1}$ is proper, but its inverse $s$ is not.
+              We expect that $\Fb_{1/s}$ is defined for all matrices with entries in this ring, and that it is a feedback operator on the category of such matrices.
+              This would not contradict \cref{thm:unique}, whose proof divides by $\psi(a_0)$ in \cref{lem:solutions}: for $\psi(a) = \frac{1}{s - a}$, the element $\psi(a)^{-1} = s - a$ is not proper.
+              We have not verified this expectation.
+        \item That the transfer function is a functor from $\LTIq$ to matrices of proper rational functions which preserves the monoidal product.
+              If this and the expectation in (2) are correct, then \cref{thm:transfer} and \cref{lem:transfer-basic} say that it preserves feedback operators and delays.
+              We also do not discuss in which sense it is unique with these properties.
+    \end{enumerate}
+\end{remark}
+
+\end{document}
