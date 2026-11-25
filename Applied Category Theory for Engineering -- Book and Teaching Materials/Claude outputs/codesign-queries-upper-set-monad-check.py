@@ -1,7 +1,7 @@
 """Brute-force checks for the note 'Co-design queries and the Kleisli category of the upper set monad'
 (codesign-queries-upper-set-monad.tex).
 
-Usage: python3 codesign-queries-upper-set-monad-check.py [seed] [number of random instances per test]
+Usage: python3 codesign-queries-upper-set-monad-check.py [seed] [number of random instances per test] [noexamples]
 
 Everything is checked on randomly generated small finite preorders (not necessarily posets),
 with elements represented as tuples so that the strict ("tuple") monoidal product is tuple concatenation.
@@ -419,11 +419,81 @@ def examples():
         assert Xa==exp, (a, Xa, exp)
     print("all examples ok")
 
-tests = [test_monad, test_iso, test_monoidal, test_trace, test_antichains, test_nonantisym]
+# ---------------------------------------------------------------- antichain category, directly
+def amor(P, Q, M):
+    """the antichain-valued query of a monotone relation between finite posets"""
+    return {p: Q.Min(s) for p, s in Phi(P, Q, M).items()}
+
+def is_amor(P, Q, h):
+    def aleq(X, Y): return Q.up(X) >= Q.up(Y)
+    return all(Q.is_antichain(h[p]) for p in P.elems) and all(aleq(h[p], h[p2]) for (p, p2) in P.le)
+
+def acomp(R, h, k):
+    return {p: R.Min(frozenset().union(*[k[q] for q in h[p]])) for p in h}
+
+def aid(P):
+    return {p: frozenset([p]) for p in P.elems}
+
+def atensor(h, k):
+    return {a + c: frozenset(b + d for b in h[a] for d in k[c]) for a in h for c in k}
+
+def abraid(P, Q):
+    return {a + b: frozenset([b + a]) for a in P.elems for b in Q.elems}
+
+def atrace(A, B, C, h):
+    return {a: B.Min(frozenset(b for b in B.elems if any((b + c) in h[a + c] for c in C.elems))) for a in A.elems}
+
+def test_antichain_trace():
+    """the traced symmetric strict monoidal category of antichain-valued queries, checked directly
+    from its own formulas (finite posets), and compared with the upper set version"""
+    rp = lambda lo, hi, name: rand_pre(random.randint(lo, hi), name, poset=True)
+    A, B, C = rp(1, 3, "a"), rp(1, 3, "b"), rp(1, 3, "c")
+    AC, BC = tensor(A, C), tensor(B, C)
+    M = rand_monrel(AC, BC, 0.25)
+    h = amor(AC, BC, M)
+    t = atrace(A, B, C, h)
+    assert is_amor(AC, BC, h) and is_amor(A, B, t)
+    # agrees with Min of the trace of upper-set-valued queries, and with the trace of relations
+    assert t == {a: B.Min(s) for a, s in ktrace(A, B, C, Phi(AC, BC, M)).items()}
+    assert t == amor(A, B, trace(A, B, C, M))
+    assert {a: B.up(s) for a, s in t.items()} == ktrace(A, B, C, {x: BC.up(s) for x, s in h.items()})
+    # category and symmetric strict monoidal structure
+    A2, B2 = rp(1, 3, "a2"), rp(1, 3, "b2")
+    v = amor(A2, A, rand_monrel(A2, A, 0.4)); w = amor(B, B2, rand_monrel(B, B2, 0.4))
+    assert acomp(A, aid(A2), v) == v == acomp(A, v, aid(A))
+    assert acomp(tensor(B2, C), acomp(BC, atensor(v, aid(C)), h), atensor(w, aid(C))) == \
+           acomp(tensor(B2, C), atensor(v, aid(C)), acomp(tensor(B2, C), h, atensor(w, aid(C))))
+    assert atensor(aid(A), aid(C)) == aid(AC)
+    assert acomp(tensor(B, A), atensor(v, aid(B)), abraid(A, B)) == acomp(tensor(B, A), abraid(A2, B), atensor(aid(B), v))
+    assert acomp(tensor(A, B), abraid(A, B), abraid(B, A)) == aid(tensor(A, B))
+    assert abraid(A, BC) == acomp(tensor(B, tensor(C, A)), atensor(abraid(A, B), aid(C)), atensor(aid(B), abraid(A, C)))
+    # naturality in A and in B
+    assert atrace(A2, B, C, acomp(BC, atensor(v, aid(C)), h)) == acomp(B, v, t)
+    assert atrace(A, B2, C, acomp(tensor(B2, C), h, atensor(w, aid(C)))) == acomp(B2, t, w)
+    # dinaturality for all morphisms
+    C2 = rp(1, 3, "c2")
+    hd = amor(AC, tensor(B, C2), rand_monrel(AC, tensor(B, C2), 0.25)); n = amor(C2, C, rand_monrel(C2, C, 0.4))
+    assert atrace(A, B, C, acomp(BC, hd, atensor(aid(B), n))) == atrace(A, B, C2, acomp(tensor(B, C2), atensor(aid(A), n), hd))
+    # vanishing I and II
+    h1 = amor(A, B, rand_monrel(A, B))
+    assert atrace(A, B, UNIT, h1) == h1
+    D = rp(1, 2, "d")
+    h3 = amor(tensor(AC, D), tensor(BC, D), rand_monrel(tensor(AC, D), tensor(BC, D), 0.15))
+    assert atrace(A, B, C, atrace(AC, BC, D, h3)) == atrace(A, B, tensor(C, D), h3)
+    # superposing
+    E, F = rp(1, 2, "e"), rp(1, 2, "f")
+    g = amor(E, F, rand_monrel(E, F, 0.4))
+    assert atrace(tensor(E, A), tensor(F, B), C, atensor(g, h)) == atensor(g, t)
+    # yanking
+    assert atrace(C, C, C, abraid(C, C)) == aid(C)
+
+
+tests = [test_monad, test_iso, test_monoidal, test_trace, test_antichains, test_antichain_trace, test_nonantisym]
 n = int(sys.argv[2]) if len(sys.argv) > 2 else 300
 for t in tests:
     for i in range(n if t is not test_nonantisym else 1):
         t()
     print("ok", t.__name__)
 
-examples()
+if "noexamples" not in sys.argv:
+    examples()   # takes a few minutes (large truncations of the natural numbers)

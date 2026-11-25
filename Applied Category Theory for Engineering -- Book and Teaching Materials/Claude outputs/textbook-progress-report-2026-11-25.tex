@@ -1,0 +1,396 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,left=27mm,right=27mm,top=26mm,bottom=28mm]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,stmaryrd}
+\usepackage{booktabs,tabularx,array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{rulegray}{HTML}{9AA5B1}
+
+\titleformat{\section}{\Large\bfseries\sffamily\color{accent}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\sffamily}{\thesubsection}{0.6em}{}
+\titleformat{\paragraph}[runin]{\bfseries\sffamily}{}{0pt}{}[.]
+\titlespacing*{\section}{0pt}{2.2ex plus .6ex}{1.0ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus .4ex}{0.6ex}
+\titlespacing*{\paragraph}{0pt}{1.2ex plus .3ex}{0.6em}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.62em plus 0.1em}
+\renewcommand{\arraystretch}{1.25}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{\footnotesize\sffamily\color{rulegray} ACT4E textbook -- progress 14 Oct -- 25 Nov 2026}
+\fancyfoot[R]{\footnotesize\sffamily\color{rulegray}\thepage}
+
+% notation
+\newcommand{\cat}[1]{\mathbf{#1}}
+\newcommand{\tL}[1]{\llparenthesis\mathbf{#1}\rrparenthesis}   % tuple version (product-like)
+\newcommand{\tR}[1]{\rrparenthesis\mathbf{#1}\llparenthesis}   % indexed version (sum-like)
+\newcommand{\Fb}{\mathrm{Fb}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\St}{\mathbf{St}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\file}[1]{{\small\texttt{#1}}}
+
+\begin{document}
+
+{\sffamily
+{\color{accent}\rule{\textwidth}{1.2pt}}\\[0.9em]
+{\LARGE\bfseries Textbook progress report}\\[0.35em]
+{\large Applied Compositional Thinking for Engineers \quad$\cdot$\quad 14 October -- 25 November 2026}\\[0.5em]
+{\small\color{rulegray} Prepared for the co-authors' meeting. Based on the repository history of
+\texttt{JL-working-branch} from commit \texttt{764e99e} (9 Oct) to \texttt{463ab7d} (25 Nov).}\\[0.3em]
+{\color{accent}\rule{\textwidth}{0.4pt}}
+}
+
+\section{Overview}
+
+Over the last six weeks the work has moved through the book from front to back, in step with the
+lecture schedule: the Actions chapter, then the first three chapters of the Categories part, the
+Functors chapter, and finally both chapters of the Interconnections part. In the book sources
+this amounts to about 60 commits (six merged pull requests, \#1111 and \#1113--\#1117), touching
+111 files, with roughly 11{,}300 lines added and 9{,}400 removed. A good share of both numbers is
+material that was relocated, so the three sections below describe what the numbers mean.
+
+The three most important results, one per dimension, are these.
+
+\paragraph{Content} The Interconnections part has gone from a skeleton to a written text. The
+section on strict monoidal categories now carries a full stock of examples, there is a new section
+on string diagrams, and the Feedback chapter has a new central section, ``Feedback and trace'',
+with worked examples from relations, matrices, co-design, Mealy machines and LTI systems.
+
+\paragraph{Structure} Dynamical systems and machines now follow one path through the book
+(defined in Actions, composed in Modeling with categories, acting in a new Functors application
+chapter, stacked in Parallel composition, looped in Feedback). The old chapter ``Application:
+Dynamical system behaviors'' has been dissolved into this path. The tuple categories
+$\tL{Set}$, $\tL{Rel}$, $\tL{Pos}$, $\tL{DP}$ have moved out of the Strictification section in
+Higher structures and into Parallel composition, so that the Interconnections part can be read
+without natural transformations.
+
+\paragraph{Conceptual} Three decisions shape the new text: machines and LTI systems are defined
+\emph{without} initial states; feedback operators and traces are treated together and told apart
+by the \emph{delay} of an object; and every monoidal structure used for interconnection is given
+in a strict model, of which there are now two families (product-like and sum-like).
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}P{26mm}P{47mm}L@{}}
+\toprule
+\textbf{When} & \textbf{Where} & \textbf{What}\\
+\midrule
+14--18 Oct & Algebra: Actions & Chapter re-sectioned; dynamical systems, machines, homomorphisms of actions written out\\
+24--28 Oct & Categories: Intro on series composition; Categories & Intro chapter completed; definition of category rewritten; first examples\\
+3--6 Nov & Categories: New categories from old & Subcategories, products, arrow, twisted arrow, slice and coslice reworked with applied examples\\
+10--16 Nov & Functors; Modeling with categories & ``Functors generalize familiar concepts''; categories of LTI systems and of Moore and Mealy machines\\
+18--19 Nov & Interconnections: Parallel composition & Strict monoidal examples, string diagrams, symmetric structure; systems chapter dissolved\\
+23--25 Nov & Interconnections: Feedback; Functors applications & Initial states removed; ``Actions of dynamical systems and machines''; sum-like strict models; ``Feedback and trace''; duality section made strict\\
+\bottomrule
+\end{tabularx}
+\caption{Where the work happened, in chronological order.}
+\end{table}
+
+\section{Content: what was written}
+
+\subsection{Algebra part: Actions}
+
+The chapter had five sections and now has eight; the former catch-all section ``Actions'' was
+split up. The motivating examples (a robot on a grid, a
+discrete-time system) are no longer development-only. Monoid, semigroup and group actions each have
+their own section, with the definitions aligned to one another and to the uncurried form
+$\mathrm{act}(m \fatsemi n, x) = \mathrm{act}(n, \mathrm{act}(m, x))$.
+
+The section on dynamical systems grew from about 320 to 525 lines. New in it are a subsection on
+sampling a continuous-time system (restriction of an action along the monoid morphism
+$k \mapsto kh$, the sampled exponential, a remark on aliasing) and a rewritten subsection on LTI
+systems: a discrete-time definition with a savings-account example, the continuous-time
+definition, a mass between two springs, and proper systems.
+
+``Machines'' is a new section of 515 lines: actions of sets (semiautomata, the transition monoid),
+Moore machines, Mealy machines (a change detector; discrete-time LTI systems as Mealy machines), and
+``More machines'', whose read-out returns a list of outputs (duplicator, discarder, terminator).
+
+``Homomorphisms of actions'' grew from 42 to 423 lines. It now has examples (change of coordinates,
+time-invariant filters, the 24-hour and the 12-hour clock, changing currency, conserved quantities)
+and subsections on homomorphisms of discrete-time systems, continuous-time systems, Moore machines
+and Mealy machines.
+
+\subsection{Categories part}
+
+\paragraph{Intro: Series composition} The sections ``Associativity'' and ``Neutral components''
+were eight-line stubs and are now written (182 and 146 lines). ``Interfaces'' was extended so that
+all three sections run the same cast of examples: electrical cables, sets and functions, preorders
+and monotone functions, monoids, real matrices, co-design components, journeys, and currency
+exchangers. ``Neutral components'' has subsections on examples with and without neutral
+components, on adding them by convention (the cable of length zero), and on models where their
+absence matters (exchangers with strictly positive commission).
+
+\paragraph{Categories} The chapter text was rewritten. The section ``Categories'' builds up the
+definition in four short subsections (objects and morphisms; composition and hom-sets;
+associativity; identity morphisms), states it, and gives first examples: sets, real matrices, and
+feasibility relations. Semicategories, isomorphisms, graphs and diagrams follow as separate
+sections.
+
+\paragraph{Modeling with categories} The category $\cat{LTI}$ is now defined here with real
+coordinate spaces $\R^n$ as objects, with remarks on where the composition rule comes from and on
+the state space $\R^{k+l}$ of a composite, a worked composition of two systems, and the definition
+of equivalent LTI systems. A new section ``Machines'' shows that naive series composition of Moore
+machines is associative only up to re-bracketing of states, defines the semicategory
+$\cat{Moore}/{\sim}$ with a proof that it is one, explains why it has no identities, and then
+defines the category $\cat{Mealy}/{\sim}$.
+
+\paragraph{Categories of structures} New section ``Analysis'': Euclidean spaces with continuous,
+smooth, and Lipschitz functions, each obtained by the same recipe (the property holds for
+identities and is preserved by composition). The Algebra part gained the lemma that monoid
+morphisms compose, which the intro chapter on series composition cites.
+
+\paragraph{New categories from old} ``Subcategories'' was rewritten (subcategories of $\cat{Set}$
+and $\cat{Rel}$, non-examples and near-misses, the relation to submonoids and free categories).
+Products gained examples. The arrow construction has two extended examples, casting out nines and
+fixed-point arithmetic. The twisted arrow construction now has a source-twisted and a
+target-twisted version with a remark relating them. Slice and coslice have applied examples:
+typed sets, typed graphs, all routes into an assembly, open circuits with terminals, and the
+computation tree of a system.
+
+\subsection{Functors part}
+
+In the section ``Functors'' the standard constructions are now presented as an example followed
+by a short graded exercise (``check that the proposed functor is indeed a functor''): cartesian
+product, multiplication and exponentiation with a set, probability measures, differentiation,
+fixed points, and LTI systems as Mealy machines.
+
+The new section ``Functors generalize some familiar concepts'' (422 lines) covers graph
+homomorphisms, monotone functions, monoid morphisms and monoid actions, each by unpacking the
+definition of a functor and ending in a lemma. It continues with $\cat{Set}$-valued functors as
+generalized actions, semicategory actions, contravariant actions, and the canonical actions of a
+category (the hom-functors).
+
+The new section ``Actions of dynamical systems and machines'' (400 lines), in the chapter
+``Applications: some extended examples'', defines the categories $\cat{LTI}_*$ and
+$\cat{Mealy}_*/{\sim}$ of systems with a chosen initial state and lets them act: LTI systems on
+continuous-time signals and on discrete-time streams, Mealy and Moore machines on streams. It
+includes the lemma that equivalent LTI systems act in the same way and a remark that the converse
+fails.
+
+\subsection{Interconnections part}
+
+\paragraph{Parallel composition} The section ``Strict monoidal categories'' went from 150 to
+about 2{,}360 lines. Roughly half of that is the tuple-category material brought over from
+Strictification and reworked; the rest is new. The examples are now organized as follows: real
+matrices with the dimension-adding product and with the Kronecker product; categories whose
+objects are natural numbers (functions between finite sets, polynomial maps, signal-flow
+diagrams); products ``like the cartesian product'' ($\tL{Set}$, $\tL{Pre}$, $\tL{Pos}$,
+$\tL{Rel}$, $\tL{mRel}$, $\tL{Bool\text{-}Prof}$); products ``like the sum'' ($\tR{Set}$,
+$\tR{Rel}$, $\tR{Pre}$, $\tR{Pos}$, built from indexed elements); applied examples (co-design,
+Mealy machines, LTI systems); monoidal preorders; and one-object strict monoidal categories, with
+the Eckmann--Hilton argument that these are commutative monoids.
+
+\paragraph{String diagrams} The section ``The graphical calculus of string diagrams'' is new (735
+lines) and part of the public text: boxes and wires, why the pictures are unambiguous, sliding
+boxes, from pictures to formulas, calculating with pictures (the Joyal--Street theorem, stated
+informally), and a worked example on adding matrices.
+
+\paragraph{Symmetric strict monoidal categories} This section went from 47 to 348 lines. It now
+gives the braiding in each running example: LTI systems up to equivalence, tuples, relations
+between tuples, indexed elements, Mealy machines, and matrices with the Kronecker product.
+
+\paragraph{Feedback} ``Feedback and trace'' (1{,}314 lines) replaces two short sections of 174 and
+98 lines. It defines feedback operators, traces, and the delay of a feedback operator, with a
+figure for each axiom. The basic examples are relations with the product-like and with the
+sum-like monoidal product, monotone relations, Boolean profunctors, matrices with the Kronecker
+product, matrices with the direct sum (as a non-example), and linear relations. The applied
+examples are co-design (a vehicle that transports its own battery; battery modules) and the
+construction of stateful morphisms, with Mealy machines and LTI systems as its two instances.
+
+\paragraph{Canonical trace, duality} The section was rewritten for the strict setting: snake
+equations without associators and unitors, dual morphisms, and the canonical trace. New examples:
+$\tL{mRel}$ is compact closed, three categories that are not, the dual of a matrix is its
+transpose, and the canonical trace for monotone relations. The four graded exercises of the
+section were restated for the strict categories.
+
+\paragraph{Supporting material elsewhere} The chapter on monotone relations gained Boolean
+profunctors and composition as Boolean matrix multiplication, which the interconnection examples
+use.
+
+\section{Structure: how the book was reorganized}
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}P{33mm}LL@{}}
+\toprule
+\textbf{Place} & \textbf{9 October} & \textbf{25 November}\\
+\midrule
+Actions chapter & ``Actions'' (monoid, semigroup and set actions in one section), Vector spaces, Dynamical systems (including Moore and Mealy machines), Homomorphisms, Group actions
+ & Motivations, Monoid actions, Semigroup actions, Group actions, Modules and vector spaces, Dynamical systems, Machines, Homomorphisms of actions\\
+Categories chapter & Semicategory defined first; category as a semicategory with identities
+ & Category defined first; semicategories, isomorphisms, graphs and diagrams as separate sections\\
+Functors part & After the intro chapter: ``Functors'', ``Functors at work'' (development-only content), ``Application: Dynamical system behaviors''
+ & After the intro chapter: ``Functors'' and ``Applications: some extended examples''\\
+Parallel composition & Graphical calculus development-only; ``Props'' a section
+ & Graphical calculus public; ``Props'' a subsection of the symmetric section\\
+Tuple categories & In Higher structures, under Strictification, as ``practical strictifications''
+ & In Parallel composition, as the main examples of strict monoidal categories\\
+Feedback chapter & ``Feedback categories'' and ``Traced symmetric strict monoidal categories''
+ & One section ``Feedback and trace''\\
+\bottomrule
+\end{tabularx}
+\caption{The main structural changes.}
+\end{table}
+
+\paragraph{One path for systems} Before, LTI systems and machines were introduced in the Actions
+chapter and then treated again, largely from scratch, in the chapter ``Application: Dynamical
+system behaviors'' at the end of the Functors part. That chapter has been taken apart. Its
+definitions went to where the concepts first appear: More machines and the modelling remarks on
+LTI systems to Actions; the category of LTI systems, the exercise that it is a category, and
+equivalence of systems to Modeling with categories; semicategory actions to the Functors chapter;
+and the actions on signals and streams to the new application section. A system now appears five
+times, each time with one more layer of structure: as a single object (Actions), as a morphism
+(Modeling with categories), as something that acts (Functors applications), as something that can
+be stacked (Parallel composition), and as something whose loop can be closed (Feedback).
+
+\paragraph{Strict first} The plan discussed in August, a strict-only Interconnections part with
+the non-strict theory deferred to Higher structures, is now largely carried out in the text. The
+tuple categories were moved out of ``Strictification'' and are introduced in Parallel composition
+on their own terms. The relation examples for traces were cut from the non-strict chapter on
+traced monoidal categories and rewritten strictly in ``Feedback and trace''. The duality section
+no longer uses associators or unitors. The $\tL{Set}$ version of Moore machines moved to the
+appendix on parallel composition for semicategories. What remains in Higher structures under
+``Strictification'' is the motivation and the statement of Mac Lane's theorem.
+
+\paragraph{Within-chapter order} In Categories of structures, linear algebra now comes before
+actions. In the Functors chapter, the three ``functors generalize'' stubs that sat at the end of
+the first section became a section of their own, placed before the further examples.
+
+\paragraph{Patterns applied throughout} All new definitions use the Constituents and Conditions
+layout, with identities and unitality listed last. Results of the form ``$X$ is a functor'' follow
+the example-plus-graded-exercise pattern, which keeps the exercise names and labels that the
+homework sheets and solution files refer to. The instructors' index of graded exercises was
+cleaned up (stale entries and point counts removed), and broken references were fixed after each
+move.
+
+\section{Conceptual: what changed in how the material is presented}
+
+\paragraph{Series composition before categories} The intro chapter now isolates three patterns
+(interfaces, associativity, neutral components) across one cast of examples, and the definition
+of a category is presented as the name for these patterns. Neutral components are treated as a
+modelling choice: some models have them, some gain them by convention, and in some their absence
+carries meaning. This gives semicategories a motivation of their own, as the notion for models
+without neutral components, while the category is the primary definition. The analogy
+semigroup is to monoid as semicategory is to category is used consistently, down to the order of
+items in the definitions.
+
+\paragraph{Dynamical systems versus machines} The Actions chapter now separates systems driven by
+time (the acting monoid is $\mathbb{N}$ or $\R$, its elements are durations) from systems driven
+by events (the acting monoid is a monoid of lists, only the order matters). The two overlap in
+discrete time, and the text says so in a remark titled ``Same structure, two readings'': a
+discrete-time system is a machine with one kind of event, and a discrete-time LTI system is a
+Mealy machine.
+
+\paragraph{No initial states} Moore, Mealy and More machines and LTI systems are now defined
+without an initial state; the initial state ``is not part of the machine: it is a choice that we make when we run the
+machine''. The
+reason comes from feedback: closing a loop turns the fed-back wire into part of the state, and a
+definition with initial states would then have to invent an initial value for that wire. The
+consequence is a clean split between specification and behaviour. The categories $\cat{LTI}$,
+$\cat{Moore}/{\sim}$ and $\cat{Mealy}/{\sim}$ record how systems are specified and connected.
+Behaviour belongs to a system that has been started, so the actions on signals and streams are
+functors from the categories $\cat{LTI}_*$ and $\cat{Mealy}_*/{\sim}$ of systems with an initial
+state. A remark explains why the choice of initial state cannot be left to the functor.
+
+\paragraph{Behaviour is an action} The Functors chapter now states that a functor to $\cat{Set}$
+is an action of a category, in the same sense in which a monoid action is a functor from a
+one-object category. With this in place, ``what a system does'' has a precise form, and
+functoriality says that the behaviour of a series composition is the composition of the
+behaviours. In the course of this work a lemma in the old systems chapter turned out to be false:
+the ``non-standard'' action of Moore machines is not compatible with series composition (two
+delays composed give a delay by two steps, while the action of the composite gives a delay by
+one). The lemma and its exercise were removed from the book.
+
+\paragraph{Equality up to isomorphism, made explicit} Several constructions hold only after
+passing to a quotient, and the text now says where and why. Moore and Mealy machines compose
+associatively only up to re-bracketing of states. Stacking of LTI systems is not functorial on
+the nose, because the two sides of the interchange law list the state coordinates in different
+orders; it is functorial for systems up to equivalence. The same phenomenon reappears for the
+braiding of LTI systems and for stateful morphisms.
+
+\paragraph{Two families of strict models} The cartesian product and the sum of sets are associative and unital only up to renaming, so
+neither gives a strict monoidal category directly, and the text repairs each with a concrete
+model. For product-like structures the model is flat tuples: an element of a product is an
+element of the first object \emph{and} one of the second, and something travels along every
+wire. For sum-like structures the model is new: sets of indexed elements, where an element of a
+product is an element of the first object \emph{or} of the second, together with an index, and
+the wires are alternatives. Matrices provide the contrasting case of one category with two
+strict monoidal products (adding dimensions, and Kronecker).
+
+\paragraph{Feedback versus trace} A trace is now defined as a feedback operator that also
+satisfies dinaturality for all morphisms and yanking. The new notion of the delay of an object,
+$\partial_Z := \Fb^Z_{Z,Z}(\sigma_{Z,Z})$, describes what happens to something that travels once
+around a loop. Yanking says that all delays are identities, so one non-identity delay shows that
+a feedback operator is not a trace. The text follows a naming rule: operators that are traces are
+written $\Tr$, the others $\Fb$, and for each of the latter the text says why it is not a trace.
+
+\begin{table}[h]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}P{43mm}LP{20mm}P{33mm}@{}}
+\toprule
+\textbf{Category} & \textbf{Closing a loop means} & \textbf{Status} & \textbf{Delay}\\
+\midrule
+$\tL{Rel}$, $\tL{mRel}$, $\tL{Bool\text{-}Prof}$, $\tL{Feas}$, $\tL{DP}$ & there is a loop value $c$ that is consistent on both sides & trace & identity\\
+$\tR{Rel}$ & iterate: go around the loop any number of times & trace & identity\\
+Matrices, Kronecker product & block-wise linear-algebra trace & trace & identity\\
+Linear relations & same formula as for $\tL{Rel}$ & trace & identity\\
+Matrices, direct sum & $M_{11} + M_{12}(1 - M_{22})^{-1}M_{21}$, not always defined & neither & --\\
+$\St(\cat{C})$, stateful morphisms & the wire becomes part of the state & feedback only & stores its input for one step\\
+$\tL{Mealy/{\sim}} = \St(\tL{Set})$ & as above & feedback only & one-step register\\
+$\cat{LTI}/{\sim} = \St(\cat{Mat}_\R)$ & as above & feedback only & integrator\\
+\bottomrule
+\end{tabularx}
+\caption{The feedback examples as they now stand in ``Feedback and trace''.}
+\end{table}
+
+\paragraph{Stateful morphisms unify machines and LTI systems} The construction $\St(\cat{C})$
+(after Katis, Sabadini and Walters) equips the morphisms of a symmetric strict monoidal category
+with a state object. Applied to $\tL{Set}$ it gives Mealy machines up to isomorphism; applied to
+real matrices it gives LTI systems up to equivalence, an LTI system being the block matrix
+$\bigl[\begin{smallmatrix} D & C\\ B & A\end{smallmatrix}\bigr]$. The feedback operator for LTI
+systems is therefore now in the book, with an explicit formula. The text points out what it
+means: the loop is closed through an integrator ($u_2 = w$, $\dot w = y_2$), which is different
+from the direct connection $u_2 = y_2$ that the partial trace in the appendix describes.
+
+\paragraph{What duality adds} In the strict duality section, the canonical trace of $\tL{mRel}$
+comes out in a ``$\leq$'' form, so the co-design reading of a loop (the requirement fed back must
+not exceed the functionality provided) is built into evaluation and coevaluation. The example of
+categories that are not compact closed shows two further points: for matrices with the direct sum
+only $\R^0$ is dualizable, which matches the missing trace there, and $\tR{Rel}$ has a trace
+although only the empty set is dualizable, so a trace need not come from duals.
+
+\paragraph{Groundwork not yet in the book} Four standalone notes with full proofs were written
+alongside the text and sit in the folder \file{Claude outputs}: on Mealy feedback with separate
+dynamics and read-out; on the LTI feedback operator and its relation to the partial trace; on
+feedback operators for matrices; and a longer note showing that co-design queries form the
+Kleisli category of the upper-set monad, isomorphic to monotone relations compatibly with series
+composition, parallel composition and feedback. The last one contains a proposed map for
+integrating the result into the book and a list of errata in the draft chapters on querying.
+
+\vspace{1.2em}
+{\color{rulegray}\rule{\textwidth}{0.4pt}}
+
+{\footnotesize\color{black!65}
+\textbf{Scope and method.} This report covers the textbook sources under \file{volumes/vol1}
+together with the shared macros and bibliography. The slides book, homework sheets, quizzes and
+exams were updated in parallel during the same period and are not described here. Line counts are
+raw counts of the \LaTeX{} source files, including comments and figure code, and are meant only to
+indicate scale. Section and chapter names are quoted as they appear in the sources on
+25 November 2026.}
+
+\end{document}
