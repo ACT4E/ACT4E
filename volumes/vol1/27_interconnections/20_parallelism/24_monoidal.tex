@@ -141,6 +141,78 @@
     We do not spell out the details here; see also \cref{rem:dimension-trick}.
 \end{remark}
 
+\begin{example}[Real matrices with the Kronecker product]
+    \label{exa:MatR-Kronecker-strict-monoidal}
+    The category $\MatR$ of real matrices also carries a second strict monoidal structure, which is different from the one of \cref{exa:MatR-strict-monoidal}: instead of adding dimensions, it multiplies them.
+    In this example, we write $\mtimescat$ for this second structure.
+
+    On objects, the monoidal product is
+    \begin{equation}
+        \reals^k \mtimescat \reals^l \definedas \reals^{kl}.
+    \end{equation}
+    On morphisms, given $\matmor{A} \colon \reals^k \mto \reals^m$ and $\matmor{B} \colon \reals^l \mto \reals^n$, we define $\matmor{A} \mtimescat \matmor{B} \colon \reals^{kl} \mto \reals^{mn}$ to be the \emph{Kronecker product} of the two matrices.
+    This is the block matrix which is obtained from $\matmor{A}$ by replacing each of its entries $a_{ij}$ by the block $a_{ij}\matmor{B}$:
+    \begin{equation}
+        \label{eq:MatR-Kronecker-product}
+        \matmor{A} \mtimescat \matmor{B} \definedas
+        \begin{bmatrix}
+            a_{11}\matmor{B} & \cdots & a_{1k}\matmor{B} \\
+            \vdots           &        & \vdots           \\
+            a_{m1}\matmor{B} & \cdots & a_{mk}\matmor{B}
+        \end{bmatrix}.
+    \end{equation}
+    It has $mn$ rows and $kl$ columns.
+    For example,
+    \begin{equation}
+        \begin{bmatrix}
+            1 & 2 \\
+            3 & 4
+        \end{bmatrix}
+        \mtimescat
+        \begin{bmatrix}
+            0 & 1 \\
+            1 & 0
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            0 & 1 & 0 & 2 \\
+            1 & 0 & 2 & 0 \\
+            0 & 3 & 0 & 4 \\
+            3 & 0 & 4 & 0
+        \end{bmatrix}.
+    \end{equation}
+    The monoidal unit is $\idmoncat \definedas \reals^1$ (and not $\reals^0$, as in \cref{exa:MatR-strict-monoidal}).
+    Its identity morphism is the $1 \times 1$ matrix with the entry $1$.
+
+    To see what this monoidal product does, we apply \cref{eq:MatR-Kronecker-product} to vectors, viewed as matrices with a single column: for $\vectob{v} \setin \reals^k$ and $\vectob{w} \setin \reals^l$, the vector $\vectob{v} \mtimescat \vectob{w} \setin \reals^{kl}$ consists of the blocks $v_1 \vectob{w}, \ldots, v_k \vectob{w}$, stacked on top of each other.
+    Then
+    \begin{equation}
+        \label{eq:MatR-Kronecker-on-vectors}
+        (\matmor{A} \mtimescat \matmor{B})(\vectob{v} \mtimescat \vectob{w}) = (\matmor{A}\vectob{v}) \mtimescat (\matmor{B}\vectob{w}),
+    \end{equation}
+    so again $\matmor{A}$ acts on the one part and $\matmor{B}$ acts on the other part.
+    The difference to \cref{exa:MatR-strict-monoidal} is in how the two parts are combined: there, a vector of $\reals^{k+l}$ is a pair of vectors, stacked on top of each other; here, the vectors of the form $\vectob{v} \mtimescat \vectob{w}$ do not make up all of $\reals^{kl}$, but only span it.
+    In linear algebra, $\reals^{kl}$ is known as the \emph{tensor product} of $\reals^k$ and $\reals^l$.
+
+    Let us check the conditions.
+    The monoidal product is a functor: for matrices $\matmor{A} \colon \reals^k \mto \reals^m$, $\matmor{C} \colon \reals^m \mto \reals^p$, $\matmor{B} \colon \reals^l \mto \reals^n$, and $\matmor{D} \colon \reals^n \mto \reals^q$, we multiply the block matrices $\matmor{C} \mtimescat \matmor{D}$ and $\matmor{A} \mtimescat \matmor{B}$ block by block, and find that the block of the product in the position $\tup{i, j}$ is
+    \begin{equation}
+        \sum_{r=1}^{m} (c_{ir}\matmor{D})(a_{rj}\matmor{B}) = \Bigl( \sum_{r=1}^{m} c_{ir} a_{rj} \Bigr) \matmor{D}\matmor{B}.
+    \end{equation}
+    The number in brackets is the entry of $\matmor{C}\matmor{A}$ in the position $\tup{i, j}$, and so
+    \begin{equation}
+        \label{eq:MatR-Kronecker-functorial}
+        (\matmor{A} \mtimescat \matmor{B}) \mthen (\matmor{C} \mtimescat \matmor{D})
+        = (\matmor{C} \mtimescat \matmor{D})(\matmor{A} \mtimescat \matmor{B})
+        = (\matmor{C}\matmor{A}) \mtimescat (\matmor{D}\matmor{B})
+        = (\matmor{A} \mthen \matmor{C}) \mtimescat (\matmor{B} \mthen \matmor{D}).
+    \end{equation}
+    Moreover, replacing each entry $1$ of an identity matrix by an identity matrix, and each entry $0$ by a block of zeros, gives an identity matrix: $\idmat_k \mtimescat \idmat_l = \idmat_{kl}$.
+    The monoidal product is associative on objects because multiplication of natural numbers is, $\reals^{(kl)p} = \reals^{k(lp)}$.
+    It is associative on morphisms because, for a third matrix $\matmor{C}$, both $(\matmor{A} \mtimescat \matmor{B}) \mtimescat \matmor{C}$ and $\matmor{A} \mtimescat (\matmor{B} \mtimescat \matmor{C})$ are the matrix which is obtained from $\matmor{A}$ by replacing each entry $a_{ij}$ by the block $a_{ij}(\matmor{B} \mtimescat \matmor{C})$.
+    Finally, the monoidal unit is neutral on objects, since $\reals^{k \cdot 1} = \reals^k = \reals^{1 \cdot k}$, and on morphisms, since the Kronecker product of a matrix $\matmor{A}$ with the $1 \times 1$ matrix with the entry $1$ is $\matmor{A}$, on both sides.
+\end{example}
+
 \subsection{Examples where the objects are natural numbers}
 \label{sec:strict-monoidal-natural-numbers}
 
@@ -265,84 +337,31 @@ We will point out what stands for what in the examples below.
     So $\stylecat{SigFlow}$ and the category $\stylecat{Mat}_\reals$ of \cref{rem:dimension-trick} are two different strict monoidal categories, one of descriptions and one of the things described.
 \end{example}
 
-\subsection{Examples where the objects are like lists}
+\subsection{Monoidal products like the cartesian product of sets}
 \label{sec:strict-monoidal-lists}
 
-Concatenation of lists is associative on the nose, and the empty list is neutral for it (\cref{exa:string-monoid}).
-This makes lists a very convenient source of strict monoidal categories: if the objects of a category are lists, and the monoidal product concatenates them, then the conditions on the level of objects in \cref{def:strict-monoidal-cat} hold for free.
-We start with the simplest construction of this kind, which works for any category whatsoever.
+Our first model of parallel composition was the \SY{cartesian product} of sets and functions (\cref{sec:modeling-parallelism}): placing two systems side by side yields a system whose inputs are pairs of inputs, and whose outputs are pairs of outputs.
+The \SY{cartesian product}, however, is not associative on the nose: the elements of $(\setA \cartprod \setB) \cartprod \setC$ and of $\setA \cartprod (\setB \cartprod \setC)$ are differently nested pairs (\cref{eq:assoc-fails1}).
+Nor is a set with one element neutral for it on the nose.
+So $\Set$ with the \SY{cartesian product} is not a strict monoidal category in the sense of \cref{def:strict-monoidal-cat}.
 
-\paragraph{A simple list construction} Let $\CatC$ be a category.
-We build a new category whose objects are lists of objects of $\CatC$ and whose morphisms are lists of morphisms of $\CatC$.
-We think of an object $\makelist{\Objan{1}, \dots, \Objan{n}}$ as $n$ parallel wires, of the types $\Objan{1}, \dots, \Objan{n}$, and of a morphism as $n$ boxes, one on each wire.
-
-\begin{ctdefinition}[Category of lists]
-    \label{def:list-category}
-    Let $\CatC$ be a category.
-    The \maindef{category of lists} in $\CatC$, denoted $\CatSymbol{List}(\CatC)$, is the category given by:
-
-    \constit
-
-    \begin{enumerate}
-        \item Objects: finite lists $\makelist{\Objan{1}, \dots, \Objan{n}}$ of objects of $\CatC$, for $n \setin \natnumbers$.
-              For $n = 0$ this is the empty list $\emptylist$.
-        \item Morphisms: a morphism from $\makelist{\Objan{1}, \dots, \Objan{n}}$ to $\makelist{\Objbn{1}, \dots, \Objbn{m}}$ exists only if the two lists have the same length, $n = m$, and in this case it is a list
-              \begin{equation}
-                  \makelist{\moran{1}, \dots, \moran{n}}
-              \end{equation}
-              of morphisms $\moran{i} \colon \Objan{i} \mtoin{\CatC} \Objbn{i}$ of $\CatC$, for $i = 1, \dots, n$.
-        \item Composition: entry by entry, using the composition of $\CatC$:
-              \begin{equation}
-                  \makelist{\moran{1}, \dots, \moran{n}} \mthen \makelist{\morbn{1}, \dots, \morbn{n}}
-                  \definedas
-                  \makelist{\moran{1} \mthenof{\CatC} \morbn{1}, \dots, \moran{n} \mthenof{\CatC} \morbn{n}}.
-              \end{equation}
-        \item Identity morphisms: the identity morphism of $\makelist{\Objan{1}, \dots, \Objan{n}}$ is the list $\makelist{\catidat{\Objan{1}}, \dots, \catidat{\Objan{n}}}$ of identity morphisms of $\CatC$.
-    \end{enumerate}
-\end{ctdefinition}
-
-Associativity and unitality hold in $\CatSymbol{List}(\CatC)$ because they hold in $\CatC$, entry by entry.
-Note that the empty list $\emptylist$ is an object, and that it has exactly one morphism to itself, namely the empty list of morphisms, which is its identity morphism.
-
-\begin{example}[The strict monoidal category of lists]
-    \label{exa:list-category-strict-monoidal}
-    For any category $\CatC$, the following defines a strict monoidal structure on $\CatSymbol{List}(\CatC)$.
-
-    The monoidal product is concatenation of lists, both on objects and on morphisms:
-    \begin{equation}
-        \begin{aligned}
-            \makelist{\Objan{1}, \dots, \Objan{n}} \mtimescat \makelist{\Objbn{1}, \dots, \Objbn{m}}
-             & \definedas \makelist{\Objan{1}, \dots, \Objan{n}, \Objbn{1}, \dots, \Objbn{m}}, \\
-            \makelist{\moran{1}, \dots, \moran{n}} \mtimescat \makelist{\morbn{1}, \dots, \morbn{m}}
-             & \definedas \makelist{\moran{1}, \dots, \moran{n}, \morbn{1}, \dots, \morbn{m}}.
-        \end{aligned}
-    \end{equation}
-    The monoidal unit is the empty list, $\idmoncat \definedas \emptylist$.
-
-    The monoidal product is a functor: concatenating two lists of morphisms and then composing entry by entry gives the same result as composing entry by entry and then concatenating, and a concatenation of two lists of identity morphisms is a list of identity morphisms.
-    The remaining conditions hold because concatenation of lists is associative and the empty list is neutral for it.
-    For morphisms, note that the identity morphism of the monoidal unit is the empty list of morphisms.
-\end{example}
-
-For instance, in $\CatSymbol{List}(\Set)$ an object is a list of sets, such as $\makelist{\setA, \setB}$, and a morphism $\makelist{\setA, \setB} \mto \makelist{\setC, \setD}$ is a list $\makelist{\mapa, \mapb}$ of two functions $\mapa \colon \setA \sto \setC$ and $\mapb \colon \setB \sto \setD$.
-
-The category $\CatSymbol{List}(\CatC)$ models parallel composition in its purest form: the wires never interact.
-Each morphism of $\CatC$ sits on its own wire, there are no morphisms which take two wires to one wire, or one wire to two, and there are no morphisms at all between lists of different lengths.
-In $\CatSymbol{List}(\Set)$, for example, there is no morphism $\makelist{\setA, \setB} \mto \makelist{\setC}$ which could play the role of a function of two arguments.
-The examples that follow keep the idea that objects are lists, and that the monoidal product concatenates them, but allow more morphisms.
+In this subsection we present a simple repair: we replace nested pairs by flat tuples.
+Concatenation of tuples is associative on the nose, and the empty tuple is neutral for it, just as for lists (\cref{exa:string-monoid}).
+Hence, if the objects of a category are sets of tuples, and the monoidal product concatenates tuples, then the conditions on the level of objects in \cref{def:strict-monoidal-cat} hold for free.
+We first carry this out for sets and functions.
+This gives a strict monoidal category $\SetL$ which does the same job as $\Set$ with the \SY{cartesian product}.
+The same recipe then applies to preorders, to relations, to monotone relations, and to Boolean profunctors.
+In all of these examples, an element of a monoidal product of two objects consists of an element of the first object \emph{and} an element of the second one, just as for the \SY{cartesian product}.
 
 \paragraph{The category \SetL}
 \label{sec:cartcatset}
 
-The construction $\CatSymbol{List}(\CatC)$ is not yet what we need for our motivating example, the category $\Set$ with the \SY{cartesian product}.
-An object of $\CatSymbol{List}(\Set)$ is a list of sets, which is not itself a set, and so $\CatSymbol{List}(\Set)$ is a different category from $\Set$, with far fewer morphisms.
-What we would like instead is a strict monoidal structure on $\Set$ itself which is modeled on the \SY{cartesian product}; but we have seen that the \SY{cartesian product} is not associative on the nose (\cref{eq:assoc-fails1}).
-
-The category that we introduce now reconciles the two.
-It implements the ``list idea'' \emph{inside} of $\Set$: instead of the list $\makelist{\setAn{1}, \ldots, \setAn{n}}$ of sets, we use the set of all tuples $\tup{\elna{1}, \ldots, \elna{n}}$ whose entries are taken from the sets in the list.
+We would like a strict monoidal structure on $\Set$ which is modeled on the \SY{cartesian product}.
+The idea is the following.
+Instead of forming the product of $n$ sets by taking the \SY{cartesian product} of two sets at a time, which leads to nested pairs, we form it in one go: as the set of all tuples $\tup{\elna{1}, \ldots, \elna{n}}$ whose entries are taken from the $n$ given sets $\setAn{1}, \ldots, \setAn{n}$.
 Such a set of tuples is an honest set, and so these sets, together with all functions between them, form a \SY{subcategory} of $\Set$.
-On this subcategory, concatenation of lists becomes a product of sets which does the same job as the \SY{cartesian product}, but which concatenates tuples instead of nesting them, and which is therefore associative on the nose.
-Moreover, in contrast to $\CatSymbol{List}(\CatC)$, the wires can now interact: a function of two arguments, for example, is a morphism from a set of tuples of length two to a set of tuples of length one.
+On this subcategory there is a product of sets which does the same job as the \SY{cartesian product}, but which concatenates tuples instead of nesting them, and which is therefore associative on the nose.
+In terms of wires, a set of tuples of length $n$ stands for $n$ parallel wires, one for each entry, and the wires can interact: a function of two arguments, for example, is a morphism from a set of tuples of length two to a set of tuples of length one.
 
 Concretely, we will define a category~\SetL whose objects are ``sets of tuples''.
 
@@ -1565,6 +1584,360 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
 %\end{proof}
 
 
+\subsection{Monoidal products like the sum of sets}
+\label{sec:strict-monoidal-sums}
+
+The \SY{cartesian product} is not the only way of putting two sets side by side.
+The other basic one is their sum (\cref{def:disjoint-union-of-sets}): an element of $\setA \setdisunion \setB$ is \emph{either} an element of $\setA$ \emph{or} an element of $\setB$, together with an index which records which of the two it is.
+In terms of wires, this is a different kind of parallel composition.
+With a product, something travels along every wire.
+With a sum, the wires are alternatives, and something travels along exactly one of them: think of a component which receives either a measurement or an error message, or of a machine which has several modes of operation.
+
+Like the \SY{cartesian product}, the sum of sets is associative and unital only ``up to renaming'', and not on the nose.
+In this subsection we repair this by a construction which mirrors the one of $\SetL$, and we then apply the same idea to relations and to preorders.
+In all of these examples, an element of a monoidal product of two objects is an element of the first object \emph{or} an element of the second one.
+
+\paragraph{The category \SetR}
+\label{sec:cocartcatset}
+
+We would like a strict monoidal structure on $\Set$ which is modeled on the sum of sets, with the empty set as its monoidal unit.
+The sum itself does not provide one.
+Recall that $\setA \setdisunion \setB = (\makeset{1} \cartprod \setA) \setunion (\makeset{2} \cartprod \setB)$.
+For three sets $\setA$, $\setB$, and $\setC$, the elements of $(\setA \setdisunion \setB) \setdisunion \setC$ are of the form
+\begin{equation}
+    \label{eq:sum-assoc-fails-1}
+    \tup{1, \tup{1, \ela}}, \qquad \tup{1, \tup{2, \elb}}, \qquad \tup{2, \elc},
+\end{equation}
+while the elements of $\setA \setdisunion (\setB \setdisunion \setC)$ are of the form
+\begin{equation}
+    \label{eq:sum-assoc-fails-2}
+    \tup{1, \ela}, \qquad \tup{2, \tup{1, \elb}}, \qquad \tup{2, \tup{2, \elc}},
+\end{equation}
+with $\ela \setin \setA$, $\elb \setin \setB$, and $\elc \setin \setC$.
+The two sets are isomorphic, but they are not equal: the indices are nested differently.
+Similarly, the empty set is not neutral on the nose, since $\Emptyset \setdisunion \setB = \makeset{2} \cartprod \setB$ is not equal to $\setB$ (\cref{sec:disjoint-union}).
+
+The remedy is the same as for the \SY{cartesian product}.
+Instead of forming the sum of $n$ sets by adding two sets at a time, which leads to nested indices, we form it in one go, with a single index for each element: a number between $1$ and $n$, which says from which of the $n$ sets the element comes.
+This is the $n$-ary sum of \cref{def:n-ary-disjoint-union-of-sets}.
+It is instructive to compare the elements of the two constructions.
+An element of a set of tuples $\cObj{\setAn{1}, \ldots, \setAn{n}}$ has an entry for \emph{every} one of the positions $1, \dots, n$.
+An element of a sum of $n$ sets consists of \emph{one} of the positions $1, \dots, n$, together with an entry for this position only.
+
+Concretely, we will define a category~\SetR whose objects are ``sets of indexed elements''.
+
+Given non-empty sets~$\setAn{1}, \setAn{2}, \ldots, \setAn{n}$, where $n \setin \natnumbers$, we define
+\begin{equation}
+    \label{eq:sets-of-indexed-elements}
+    \sObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}} \definedas \makeset{ \tup{i, \ela} \mid i \setin \makeset{1, 2, \ldots, n} \text{ and } \ela \setin \setAn{i} }.
+\end{equation}
+We call the number $i$ the \emph{index} of the element $\tup{i, \ela}$.
+So for example,
+\begin{equation}
+    \label{eq:setR-example}
+    \sObj{\wnumbers, \natnumbers, \reals} = \makeset{ \tup{1, \ela} \mid \ela \setin \wnumbers } \setunion \makeset{ \tup{2, \elb} \mid \elb \setin \natnumbers } \setunion \makeset{ \tup{3, \elc} \mid \elc \setin \reals }.
+\end{equation}
+The number $5$, for instance, gives rise to three different elements of this set, namely $\tup{1, 5}$, $\tup{2, 5}$, and $\tup{3, 5}$: the indices keep the three copies apart.
+
+Note the case $n = 0$, where
+\begin{equation}
+    \sObj{} = \Emptyset
+\end{equation}
+is the empty set: there are no indices, and hence there are no elements.
+
+We ask the sets $\setAn{1}, \ldots, \setAn{n}$ to be non-empty for the following reason.
+If $\setX = \sObj{\setAn{1}, \ldots, \setAn{n}}$ for non-empty sets $\setAn{1}, \ldots, \setAn{n}$, then the indices which occur in $\setX$ are precisely the numbers $1, \dots, n$.
+So we can read off from the set $\setX$ alone both the number $n$, which we call the \emph{width} of $\setX$ and denote by $\indexwidth{\setX}$, and the sets
+\begin{equation}
+    \label{eq:indexed-elements-summands}
+    \setAn{i} = \makeset{ \ela \mid \tup{i, \ela} \setin \setX }.
+\end{equation}
+In other words, a set of indexed elements determines the list of sets that it was built from.
+This would no longer be true if we allowed empty sets.
+An empty set contributes no elements, and so, for example, the list consisting of $\setA$ and $\Emptyset$ would give the same set $\makeset{1} \cartprod \setA$ as the list consisting of $\setA$ alone, although the first list has length two and the second one has length one.
+We will need the width in a moment, and so we do not allow empty sets in our lists.
+Nothing is lost by this: an alternative which can never occur is not much of an alternative.
+
+All the sets of indexed elements are in particular just sets, so we can package them into a category whose morphisms are simply functions between such sets.
+
+\begin{ctdefinition}[\SetR]\label{def:SetR}
+    The category \SetR is the category whose objects are those sets which are of the form~$\sObj{\setAn{1}, \setAn{2}, \ldots, \setAn{n}}$, for any~$n \setin \natnumbers$ and any non-empty sets~$\setAn{1}, \setAn{2}, \ldots, \setAn{n}$.
+    Morphisms in \SetR are any functions between such sets, and the composition operations and identities are the usual ones for functions.
+\end{ctdefinition}
+
+\paragraph{From \Set to~\SetR}
+
+Observe that we can turn any set into an object of \SetR: given a set~\setA, there is the associated set
+\begin{equation}
+    \label{eq:setintosetr}
+    \makeset{1} \cartprod \setA = \makeset{ \tup{1, \ela} \mid \ela \setin \setA }
+\end{equation}
+whose elements are the elements of~\setA, each one with the index $1$.
+If~\setA is non-empty, this is the object $\sObj{\setA}$, of width one; if~\setA is empty, it is the object $\emptysobj = \Emptyset$, of width zero.
+This defines a function
+\begin{equation}
+    \label{eq:setintosetrfunction}
+    \begin{aligned}
+        \Obof{\Set} & \to \Obof{\SetR} \\
+        \setA       & \mapsto \makeset{1} \cartprod \setA
+    \end{aligned}
+\end{equation}
+which one might call ``bracket'', as for \SetL.
+
+Similarly, given a function~$\mapa \colon \setA \sto \setB$ between sets, there is an associated function~$\sMor{ \mapa }\colon \makeset{1} \cartprod \setA \mto \makeset{1} \cartprod \setB$ given by
+\begin{equation}
+    \label{eq:functionintosetrmor}
+    \sMor{ \mapa } ( \tup{1, \ela }) \definedas \tup{1, \mapa(\ela)}.
+\end{equation}
+This defines a function
+\begin{equation}
+    \label{eq:functionintosetrmorfun}
+    \Hom_{\Set}(\setA,\setB) \to \Hom_{\SetR}(\makeset{1} \cartprod \setA, \makeset{1} \cartprod \setB)
+\end{equation}
+for any sets~\setA and~\setB.
+
+\paragraph{Shifting indices}
+
+Given an indexed element $\tup{j, \elb}$ and a natural number $m$, we can \emph{shift} its index by $m$.
+We write
+\begin{equation}
+    \label{eq:index-shift-element}
+    \indexshift{\tup{j, \elb}}{m} \definedas \tup{m + j, \elb}
+\end{equation}
+for the resulting indexed element.
+Given a set $\setB$ of indexed elements, we write
+\begin{equation}
+    \label{eq:index-shift-set}
+    \indexshift{\setB}{m} \definedas \makeset{ \tup{m + j, \elb} \mid \tup{j, \elb} \setin \setB }
+\end{equation}
+for the set which is obtained by shifting the indices of all of its elements by $m$.
+For example, the indices which occur in $\indexshift{\sObj{\setBn{1}, \setBn{2}}}{3}$ are $4$ and $5$.
+
+Shifting by $0$ changes nothing, and shifting by $m$ and then by $l$ is the same as shifting by $l + m$.
+These two facts, which express that addition of natural numbers has the neutral element $0$ and is \SY{associative}, will play the role which the concatenation of tuples played for~\SetL.
+
+\paragraph{Multiplication in \SetR}
+\label{sec:multiplication-for-SetR}
+We define a multiplication for objects of \SetR.
+The symbol~$\sprod$ will denote this multiplication in infix notation.
+
+Given~$\sObj{\setAn{1}, \ldots, \setAn{m}}$ and~$\sObj{\setBn{1}, \ldots, \setBn{n}}$ we define the operation
+\begin{equation}
+    \label{eq:mult-setr-sign}
+    \sprod \colon \Obof{\SetR} \cartprod \Obof{\SetR} \to \Obof{\SetR}
+\end{equation}
+by
+\begin{equation}
+    \label{eq:strict-monoidal-sum-sets}
+    \sObj{\setAn{1}, \ldots, \setAn{m}} \sprod \sObj{\setBn{1}, \ldots, \setBn{n}}
+    \definedas \sObj{\setAn{1}, \ldots, \setAn{m}, \setBn{1}, \ldots, \setBn{n}}
+\end{equation}
+for any $n, m \setin \natnumbers$.
+This is well-defined because, as we saw above, an object of \SetR determines the list of non-empty sets that it was built from.
+
+In terms of elements, for any objects $\setX$ and $\setY$ of \SetR we have
+\begin{equation}
+    \label{eq:strict-monoidal-sum-sets-elements}
+    \setX \sprod \setY = \setX \setunion \indexshift{\setY}{\indexwidth{\setX}}.
+\end{equation}
+So the elements of~$\setX \sprod \setY$ are the elements of~$\setX$, unchanged, together with the elements of~$\setY$, whose indices have been shifted by the width of~$\setX$, so that they come after the indices of~$\setX$.
+The two kinds of elements cannot be confused: an element of $\setX \sprod \setY$ belongs to $\setX$ if its index is at most $\indexwidth{\setX}$, and it belongs to the shifted copy of $\setY$ otherwise.
+Note also that the widths add up: $\indexwidth{\setX \sprod \setY} = \indexwidth{\setX} + \indexwidth{\setY}$.
+
+Equation \cref{eq:strict-monoidal-sum-sets} holds in particular also in the cases when~$m = 0$ or~$n =0$:
+\begin{equation}
+    \emptysobj \sprod \sObj{\setBn{1}, \ldots, \setBn{n}}
+    =
+    \sObj{\setBn{1}, \ldots, \setBn{n}}
+\end{equation}
+and
+\begin{equation}
+    \sObj{\setAn{1}, \ldots, \setAn{m}} \sprod \emptysobj
+    =
+    \sObj{\setAn{1}, \ldots, \setAn{m}}.
+\end{equation}
+In other words, the empty set is neutral for the multiplication on the nose: $\Emptyset \sprod \setY = \setY$ and $\setX \sprod \Emptyset = \setX$.
+
+The multiplication of objects in~\SetR is \SY{associative}.
+Indeed, both
+\begin{equation}
+    ( \sObj{\setAn{1}, \ldots, \setAn{l}} \sprod \sObj{\setBn{1}, \ldots, \setBn{m}} ) \sprod \sObj{\setCn{1}, \ldots, \setCn{n}}
+\end{equation}
+and
+\begin{equation}
+    \sObj{\setAn{1}, \ldots, \setAn{l}} \sprod ( \sObj{\setBn{1}, \ldots, \setBn{m}} \sprod \sObj{\setCn{1}, \ldots, \setCn{n}} )
+\end{equation}
+are equal to
+\begin{equation}
+    \sObj{\setAn{1}, \ldots, \setAn{l}, \setBn{1}, \ldots, \setBn{m}, \setCn{1}, \ldots, \setCn{n}}.
+\end{equation}
+
+\begin{remark}
+    Note that, for any non-empty sets $\setA, \setB$, we have
+    \begin{equation}
+        \sObj{\setA, \setB} = \setA \setdisunion \setB,
+    \end{equation}
+    and, more generally, $\sObj{\setAn{1}, \ldots, \setAn{n}}$ is the $n$-ary sum of \cref{def:n-ary-disjoint-union-of-sets}.
+    In other words, the multiplication operation in $\SetR$ ``coincides'' with the sum operation in the special case when we are adding two non-empty sets together.
+
+    Because of this, the sum is well-defined as an operation on the non-empty objects of $\SetR$.
+    Namely, given non-empty sets of indexed elements $\sObj{\setAn{1}, \ldots, \setAn{l}}$ and $\sObj{\setBn{1}, \ldots, \setBn{m}}$, their sum is again a set of indexed elements:
+    \begin{equation}
+        \sObj{\setAn{1}, \ldots, \setAn{l}} \setdisunion \sObj{\setBn{1}, \ldots, \setBn{m}} = \sObj{\sObj{\setAn{1}, \ldots, \setAn{l}}, \sObj{\setBn{1}, \ldots, \setBn{m}}},
+    \end{equation}
+    (which is a ``nested'' set of indexed elements, of width two).
+\end{remark}
+
+\begin{lemma}
+    \label{lem:SetR-strict-monoidal}
+    The following defines a strict monoidal structure on $\SetR$:
+    \begin{itemize}
+        \item on objects, the monoidal product is the multiplication $\sprod$ of \cref{eq:strict-monoidal-sum-sets};
+        \item on morphisms, the monoidal product is defined as follows: for $\mora \colon \setA \mtoin\SetR \setB$ and $\morb \colon \setC \mtoin\SetR \setD$, the function $\mora \mtimescatmor \morb \colon \setA \sprod \setC \mtoin\SetR \setB \sprod \setD$ is given by
+              \begin{equation}
+                  \label{eq:SetR-monoidal-product-morphisms}
+                  \begin{aligned}
+                      (\mora \mtimescatmor \morb)(\ela)                                  & \definedas \mora(\ela)                                  &  & \text{for } \ela \setin \setA, \\
+                      (\mora \mtimescatmor \morb)(\indexshift{\elc}{\indexwidth{\setA}}) & \definedas \indexshift{\morb(\elc)}{\indexwidth{\setB}} &  & \text{for } \elc \setin \setC;
+                  \end{aligned}
+              \end{equation}
+        \item the monoidal unit is the empty set, $\idmoncat \definedas \emptysobj = \Emptyset$.
+    \end{itemize}
+\end{lemma}
+
+In words: an element of $\setA$ is mapped to an element of $\setB$ by $\mora$.
+For an element of the shifted copy of $\setC$, we undo the shift, apply $\morb$, and shift the result by the width of $\setB$, so that it lands in the shifted copy of $\setD$.
+Note that the two shifts are different in general: the first one is by the width of the source $\setA$ of $\mora$, and the second one is by the width of its target $\setB$.
+
+\begin{proof}
+    We check the conditions of \cref{def:strict-monoidal-cat}.
+    First, $\mora \mtimescatmor \morb$ is a well-defined function, since every element of $\setA \sprod \setC$ is either an element of $\setA$, or it is obtained from a unique element of $\setC$ by a shift by $\indexwidth{\setA}$, and never both.
+
+    The monoidal product is a functor.
+    It maps identity functions to identity functions, since $\catidat{\setA} \mtimescatmor \catidat{\setC}$ maps $\ela$ to $\ela$ and $\indexshift{\elc}{\indexwidth{\setA}}$ to $\indexshift{\elc}{\indexwidth{\setA}}$.
+    For the compatibility with composition, let also $\mora' \colon \setB \mtoin\SetR \setB'$ and $\morb' \colon \setD \mtoin\SetR \setD'$ be given.
+    The function $\mora \mtimescatmor \morb$ maps elements of $\setA$ to elements of $\setB$, and shifted elements of $\setC$ to shifted elements of $\setD$.
+    Hence $(\mora \mtimescatmor \morb) \mthen (\mora' \mtimescatmor \morb')$ maps $\ela$ to $\mora'(\mora(\ela))$, and it maps $\indexshift{\elc}{\indexwidth{\setA}}$ first to $\indexshift{\morb(\elc)}{\indexwidth{\setB}}$ and then to $\indexshift{\morb'(\morb(\elc))}{\indexwidth{\setB'}}$.
+    This is what $(\mora \mthen \mora') \mtimescatmor (\morb \mthen \morb')$ does.
+
+    The monoidal product is associative on objects, as we saw above.
+    For morphisms, let $\mora \colon \setA \mtoin\SetR \setB$, $\morb \colon \setC \mtoin\SetR \setD$, and $\morc \colon \setE \mtoin\SetR \setF$ be given.
+    The elements of $\setA \sprod \setC \sprod \setE$ are the elements $\ela$ of $\setA$, the elements $\elc$ of $\setC$, shifted by $\indexwidth{\setA}$, and the elements $\ele$ of $\setE$, shifted by $\indexwidth{\setA} + \indexwidth{\setC}$.
+    Both $(\mora \mtimescatmor \morb) \mtimescatmor \morc$ and $\mora \mtimescatmor (\morb \mtimescatmor \morc)$ map
+    \begin{equation}
+        \begin{aligned}
+            \ela                                                 & \mapsto \mora(\ela), \\
+            \indexshift{\elc}{\indexwidth{\setA}}                    & \mapsto \indexshift{\morb(\elc)}{\indexwidth{\setB}}, \\
+            \indexshift{\ele}{\indexwidth{\setA} + \indexwidth{\setC}} & \mapsto \indexshift{\morc(\ele)}{\indexwidth{\setB} + \indexwidth{\setD}}.
+        \end{aligned}
+    \end{equation}
+    Here we use that the widths add up, and that shifting by $\indexwidth{\setC}$ and then by $\indexwidth{\setA}$ is the same as shifting by $\indexwidth{\setA} + \indexwidth{\setC}$.
+
+    Finally, the monoidal unit is neutral on objects, as we saw above, and it is neutral on morphisms.
+    Indeed, $\setA \sprod \Emptyset = \setA$, and $\mora \mtimescatmor \catidat{\Emptyset}$ maps every $\ela \setin \setA$ to $\mora(\ela)$.
+    And $\Emptyset \sprod \setA = \setA$, where every element of $\setA$ is regarded as shifted by $\indexwidth{\Emptyset} = 0$, and $\catidat{\Emptyset} \mtimescatmor \mora$ maps $\ela = \indexshift{\ela}{0}$ to $\indexshift{\mora(\ela)}{0} = \mora(\ela)$.
+\end{proof}
+
+The monoidal product of morphisms in \SetR is a strict version of the sum of functions (\cref{def:sum-of-functions}): for functions $\mapa \colon \setA \sto \setB$ and $\mapb \colon \setC \sto \setD$ between non-empty sets, the function $\sMor{\mapa} \mtimescatmor \sMor{\mapb}$ is equal to the sum $\mapa \funcsum \mapb \colon \setA \setdisunion \setC \sto \setB \setdisunion \setD$.
+
+\paragraph{The category~\RelR}
+\label{sec:RelR}
+\phantomsection\label{def:RelR}%
+In the same way as we passed from $\SetL$ to $\RelL$, we can define a category~\RelR whose objects are the objects of~\SetR, that is, sets of indexed elements, and whose morphisms are relations, with the usual composition and identities of relations.
+
+The category~\RelR can be equipped with a strict monoidal structure which is modeled on the sum.
+On objects, the monoidal product and the monoidal unit are those of~\SetR.
+On morphisms, the monoidal product of two relations $\relA \colon \setA \mto \setB$ and $\relB \colon \setC \mto \setD$ is the relation $\relA \mtimescatmor \relB \colon \setA \sprod \setC \mto \setB \sprod \setD$ given by
+\begin{equation}
+    \label{eq:RelR-monoidal-product}
+    \relA \mtimescatmor \relB
+    \definedas
+    \relA \setunion
+    \makeset{
+        \tup{\indexshift{\elc}{\indexwidth{\setA}}, \indexshift{\eld}{\indexwidth{\setB}}}
+        \mid
+        \tup{\elc, \eld} \setin \relB
+    }.
+\end{equation}
+So $\relA \mtimescatmor \relB$ relates the elements of $\setA$ to the elements of $\setB$ in the way $\relA$ does, it relates the shifted elements of $\setC$ to the shifted elements of $\setD$ in the way $\relB$ does, and it never relates an element of one of the two parts to an element of the other part.
+Compare this with the monoidal product of $\RelL$ in \cref{eq:RelL-monoidal-product}: there, a pair of related elements consists of a pair of elements related by $\relA$ \emph{and} a pair of elements related by $\relB$; here, it is a pair of elements related by $\relA$ \emph{or} a (shifted) pair of elements related by $\relB$.
+
+That this defines a strict monoidal structure is checked in the same way as for~\SetR in \cref{lem:SetR-strict-monoidal}.
+For example, the monoidal product is compatible with composition because a composition of two relations of the form \cref{eq:RelR-monoidal-product} can only pass through elements of one and the same part, and the empty relation $\Emptyset \mto \Emptyset$, which is the identity morphism of the monoidal unit, is neutral because forming the union with an empty set changes nothing.
+If $\relA$ and $\relB$ are functions, then so is $\relA \mtimescatmor \relB$, and it is the function defined in \cref{eq:SetR-monoidal-product-morphisms}; so the monoidal product of~\RelR extends the one of~\SetR.
+
+\paragraph{The category~\PreR}
+\label{sec:PreR}
+
+Finally, we apply the same idea to preorders.
+Recall that the sum of two preorders (\cref{def:disjoint-union-of-posets}) has the sum of the two underlying sets as its underlying set, and that two of its elements can only be related if they come from the same preorder.
+We define a category analogous to~\SetR, whose objects are ``preorders of indexed elements''.
+
+Given non-empty \SY{preorders}~$\posA_1,\ldots, \posA_n$, where $n \setin \natnumbers$, we define the preorder
+\begin{equation}
+    \label{eq:preorderofindexedelements}
+    \sObj{\posA_1,\ldots, \posA_n}\definedas \tup{\sObj{\posAsetn{1},\ldots, \posAsetn{n}}, \posleqof{\sObj{\posA_1,\ldots, \posA_n}}},
+\end{equation}
+where~$\sObj{\posAsetn{1},\ldots, \posAsetn{n}}$ is the set of indexed elements \cref{eq:sets-of-indexed-elements}, and where two elements are compared only if they have the same index:
+\begin{equation}
+    \label{eq:indexed-preorder-order}
+    \prfdoubleperiod{
+        \tup{i, \posela}
+        \posleqof{\sObj{\posA_1,\ldots, \posA_n}}
+        \tup{j, \poselb}
+    }{
+        i = j \text{ and } \posela \posleqof{\posA_i} \poselb
+    }
+\end{equation}
+This relation is reflexive and transitive because each of the relations $\posleqof{\posA_i}$ is (compare \cref{lem:sum-preorder}), so $\sObj{\posA_1,\ldots, \posA_n}$ is indeed a preorder.
+In the case $n = 0$, it is the empty preorder $\emptysobj$, and in the case $n = 2$, it is the sum $\posA_1 \Pplus \posA_2$ of \cref{def:disjoint-union-of-posets}.
+
+\begin{definition}[The category~\PreR]
+    \label{def:PreR}
+    The category~\PreR is the \SY{subcategory} of $\Pre$ where the objects are preorders of indexed elements, that is, \SY{preorders} of the form
+    \begin{equation}
+        \sObj{\posA_1,\ldots, \posA_n} = \tup{\sObj{\posAsetn{1},\ldots, \posAsetn{n}}, \posleqof{\sObj{\posA_1,\ldots, \posA_n}}},
+    \end{equation}
+    for any $n \setin \natnumbers$ and any non-empty preorders $\posA_1,\ldots, \posA_n$, and where the morphisms are all monotone functions between such preorders.
+\end{definition}
+
+\begin{lemma}
+    \label{lem:PreR-strict-monoidal}
+    The following defines a strict monoidal structure on $\PreR$:
+    \begin{itemize}
+        \item on objects, the monoidal product concatenates the lists of preorders,
+              \begin{equation}
+                  \label{eq:multpresum}
+                  \sObj{\posA_1,\ldots, \posA_m} \mtimescatob \sObj{\posB_1,\ldots, \posB_n} \definedas
+                  \sObj{\posA_1,\ldots, \posA_m, \posB_1,\ldots, \posB_n};
+              \end{equation}
+              so the underlying set of a monoidal product is the product $\sprod$ of the underlying sets (\cref{eq:strict-monoidal-sum-sets}), two elements of the first preorder are compared as before, and so are two shifted elements of the second preorder, while an element of the first preorder is never related to a shifted element of the second one;
+        \item on morphisms, the monoidal product is defined as in \cref{lem:SetR-strict-monoidal}: for monotone functions $\mora \colon \posA \mtoin\PreR \posB$ and $\morb \colon \posC \mtoin\PreR \posD$, the function $\mora \mtimescatmor \morb$ from $\posA \mtimescatob \posC$ to $\posB \mtimescatob \posD$ is given by \cref{eq:SetR-monoidal-product-morphisms};
+        \item the monoidal unit is the empty preorder, $\idmoncat \definedas \emptysobj$.
+    \end{itemize}
+\end{lemma}
+
+\begin{proof}
+    The function $\mora \mtimescatmor \morb$ is monotone.
+    Indeed, if one element of $\posA \mtimescatob \posC$ is below another one, then they are either both elements of $\posA$, or both shifted elements of $\posC$.
+    In the first case, their images are compared as their images under $\mora$ are, and in the second case as their images under $\morb$ are, since shifting the indices of two elements by the same number does not affect how they are compared.
+    So $\mora \mtimescatmor \morb$ is monotone because $\mora$ and $\morb$ are.
+
+    All the conditions in \cref{def:strict-monoidal-cat} then follow from the corresponding statements for $\SetR$ (\cref{lem:SetR-strict-monoidal}), as in the proof of \cref{lem:PreL-strict-monoidal}.
+    On the level of morphisms, this is because two monotone functions with the same source and target are equal as soon as their underlying functions are equal.
+    On the level of objects, the underlying sets on the two sides of each condition are equal, and so are the orders, since by \cref{eq:indexed-preorder-order} two elements are always compared within the preorder that they come from, however the list of preorders was put together.
+\end{proof}
+
+\begin{remark}[The category~\PosR]
+    \label{def:PosR}
+    A preorder of indexed elements $\sObj{\posA_1,\ldots, \posA_n}$ is a \SY{poset} precisely when all of the preorders $\posA_1,\ldots, \posA_n$ are posets.
+    We write $\PosR$ for the \SY{full subcategory} of $\PreR$ whose objects are the preorders of indexed elements which are posets.
+    It is also a subcategory of the category $\Pos$ of posets and monotone functions.
+
+    A monoidal product of two posets in $\PreR$ is again a poset, and the monoidal unit, the empty preorder, is a poset.
+    Hence the strict monoidal structure of \cref{lem:PreR-strict-monoidal} restricts to $\PosR$, which is thus a strict monoidal category as well.
+    It is a strict version of the category $\Pos$ with the sum of posets, just as $\PosL$ is a strict version of $\Pos$ with the product of posets.
+\end{remark}
 
 
 \subsection{Applied examples}
@@ -1603,7 +1976,7 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
     Its objects are the objects of $\SetL$.
     A morphism from $\prin$ to $\prout$ is an equivalence class $\equivmora$ of Mealy machines
     \begin{equation}
-        \mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart},
+        \mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout},
     \end{equation}
     in which the set $\prin$ of inputs, the set $\prst$ of states, and the set $\prout$ of outputs are all objects of $\SetL$, the dynamics and the read-out are morphisms
     \begin{equation}
@@ -1611,10 +1984,10 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
         \qqand
         \prreadout \colon \prin \cprod \prst \mtoin\SetL \prout
     \end{equation}
-    of $\SetL$, and $\prstart \setin \prst$ is the initial state.
-    As before, two such machines with the same inputs and outputs are equivalent if they are isomorphic, that is, if there is a bijection between their sets of states which is compatible with the initial states, the dynamics, and the read-outs.
+    of $\SetL$.
+    As before, two such machines with the same inputs and outputs are equivalent if they are isomorphic, that is, if there is a bijection between their sets of states which is compatible with the dynamics and the read-outs.
 
-    Composition is defined as in $\MealyMod$ (\cref{eq:mealy-composition}), with $\cprod$ in place of the \SY{cartesian product}: given Mealy machines $\mora$ and $\morb$ with $\prout_{\mora} = \prin_{\morb}$, the machine $\morab$ has the set of states $\prst_{\mora} \cprod \prst_{\morb}$, the initial state $\maketupconcat{\prstart_{\mora}, \prstart_{\morb}}$, and
+    Composition is defined as in $\MealyMod$ (\cref{eq:mealy-composition}), with $\cprod$ in place of the \SY{cartesian product}: given Mealy machines $\mora$ and $\morb$ with $\prout_{\mora} = \prin_{\morb}$, the machine $\morab$ has the set of states $\prst_{\mora} \cprod \prst_{\morb}$, and
     \begin{equation}
         \label{eq:mealyL-composition}
         \begin{aligned}
@@ -1632,13 +2005,13 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
     On morphisms, given morphisms $\equivmora$ and $\equivmorb$ represented by Mealy machines
     \begin{equation}
         \begin{aligned}
-            \mora & = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}, \\
-            \morb & = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
+            \mora & = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora}}, \\
+            \morb & = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb}},
         \end{aligned}
     \end{equation}
     we define $\equivmora \mtimescatmor \equivmorb$ to be the equivalence class of the Mealy machine
     \begin{equation}
-        \mora \mtimescatmor \morb \definedas \tupp{\prin_{\mora} \cprod \prin_{\morb},\ \prst_{\mora} \cprod \prst_{\morb},\ \prout_{\mora} \cprod \prout_{\morb},\ \prdyn,\ \prreadout,\ \maketupconcat{\prstart_{\mora}, \prstart_{\morb}}},
+        \mora \mtimescatmor \morb \definedas \tupp{\prin_{\mora} \cprod \prin_{\morb},\ \prst_{\mora} \cprod \prst_{\morb},\ \prout_{\mora} \cprod \prout_{\morb},\ \prdyn,\ \prreadout},
     \end{equation}
     whose dynamics and read-out are
     \begin{equation}
@@ -1681,32 +2054,32 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
     On the side of morphisms, stacking is associative on the nose as well, since it is given by block-diagonal matrices.
     The identity morphism of $\reals^0$ is the LTI system
     \begin{equation*}
-        \catid_\idmoncat=\tupp{\reals^0, \mat{0}^{0\times 1}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0},\mat{0}^{0\times 0}},
+        \catid_\idmoncat=\tupp{\reals^0, \mat{0}^{0\times 0}, \mat{0}^{0\times 0}, \mat{0}^{0\times 0},\mat{0}^{0\times 0}},
     \end{equation*}
     whose state space is $\reals^0$, in accordance with \cref{def:LTICat}, and it is neutral for stacking.
-    Indeed, consider a morphism $\mora = \tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}} \colon \reals^l\mto \reals^m$, with state space $\reals^k$.
+    Indeed, consider a morphism $\mora = \tupp{\reals^k, \mat{A}, \mat{B}, \mat{C}, \mat{D}} \colon \reals^l\mto \reals^m$, with state space $\reals^k$.
     Using $\reals^{k+0} = \reals^k$, we have:
     \begin{equation*}
         \begin{aligned}
             \mora \mtimescatmor \catid_\idmoncat & =
-            \langle \reals^{k+0}, \begin{bmatrix}\prstart \\ \mat{0}^{0\times 1}\end{bmatrix},
+            \langle \reals^{k+0},
             \begin{bmatrix}\mat{A}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
             \begin{bmatrix}\mat{B}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
             \begin{bmatrix}\mat{C}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix},
             \begin{bmatrix}\mat{D}&\mat{0}\\ \mat{0}&\mat{0}^{0\times 0}\end{bmatrix}\rangle \\
-                                                 & =\tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}} = \mora.
+                                                 & =\tupp{\reals^k, \mat{A}, \mat{B}, \mat{C}, \mat{D}} = \mora.
         \end{aligned}
     \end{equation*}
     Similarly, using $\reals^{0+k} = \reals^k$:
     \begin{equation*}
         \begin{aligned}
             \catid_\idmoncat \mtimescatmor \mora & =
-            \langle \reals^{0+k}, \begin{bmatrix}\mat{0}^{0\times 1}\\ \prstart\end{bmatrix},
+            \langle \reals^{0+k},
             \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{A}\end{bmatrix},
             \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{B}\end{bmatrix},
             \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{C}\end{bmatrix},
             \begin{bmatrix}\mat{0}^{0\times 0}&\mat{0}\\\mat{0}&\mat{D}\end{bmatrix}\rangle \\
-                                                 & =\tupp{\reals^k, \prstart, \mat{A}, \mat{B}, \mat{C}, \mat{D}} = \mora.
+                                                 & =\tupp{\reals^k, \mat{A}, \mat{B}, \mat{C}, \mat{D}} = \mora.
         \end{aligned}
     \end{equation*}
 
@@ -1719,26 +2092,41 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
         (\mora \mtimescatmor \morb) \mthen (\morc \mtimescatmor \mord).
     \end{equation}
     Both series composition (\cref{eq:LTI-composition}) and stacking (\cref{eq:LTI-stacking-mor1}) build the state of the resulting system by stacking the states of the two given systems on top of each other, with the first system on top.
-    Hence the start states of the two systems in \cref{eq:LTI-interchange-two-sides} are
+    Hence, writing $\mat{x}_\mora$, $\mat{x}_\morb$, $\mat{x}_\morc$, and $\mat{x}_\mord$ for states of the four given systems, the states of the two systems in \cref{eq:LTI-interchange-two-sides} are the vectors
     \begin{equation}
-        \label{eq:LTI-interchange-start-states}
+        \label{eq:LTI-interchange-states}
         \begin{bmatrix}
-            \prstart_\mora \\
-            \prstart_\morc \\
-            \prstart_\morb \\
-            \prstart_\mord
+            \mat{x}_\mora \\
+            \mat{x}_\morc \\
+            \mat{x}_\morb \\
+            \mat{x}_\mord
         \end{bmatrix}
         \qqand
         \begin{bmatrix}
-            \prstart_\mora \\
-            \prstart_\morb \\
-            \prstart_\morc \\
-            \prstart_\mord
+            \mat{x}_\mora \\
+            \mat{x}_\morb \\
+            \mat{x}_\morc \\
+            \mat{x}_\mord
+        \end{bmatrix},
+    \end{equation}
+    respectively: the coordinates belonging to $\morb$ and to $\morc$ appear in the opposite order.
+    Consequently, the blocks of the matrices which belong to $\morb$ and to $\morc$ appear in the opposite order in the two systems as well.
+    For instance, by \cref{eq:LTI-composition} and \cref{eq:LTI-stacking-mor2}, the matrices $\mat{C}$ of the two systems are
+    \begin{equation}
+        \label{eq:LTI-interchange-C-matrices}
+        \begin{bmatrix}
+            \mat{D}_\morc\mat{C}_\mora & \mat{C}_\morc & \mat{0}                    & \mat{0}       \\
+            \mat{0}                    & \mat{0}       & \mat{D}_\mord\mat{C}_\morb & \mat{C}_\mord
+        \end{bmatrix}
+        \qqand
+        \begin{bmatrix}
+            \mat{D}_\morc\mat{C}_\mora & \mat{0}                    & \mat{C}_\morc & \mat{0}       \\
+            \mat{0}                    & \mat{D}_\mord\mat{C}_\morb & \mat{0}       & \mat{C}_\mord
         \end{bmatrix},
     \end{equation}
     respectively.
-    These are different vectors in general: for instance, if all four state spaces are $\reals^1$, they differ as soon as $\prstart_\morb \neq \prstart_\morc$.
-    The same happens for the matrices: the blocks belonging to $\morb$ and to $\morc$ appear in the opposite order in the two systems (computing the two matrices $\mat{A}$ is the subject of \linkifexists{ex:StackingLTI}).
+    These are different matrices in general: for instance, if all four state spaces are $\reals^1$, they differ as soon as $\mat{C}_\morc \neq \mat{0}$.
+    (Computing the two matrices $\mat{A}$ is the subject of \linkifexists{ex:StackingLTI}.)
 
     Note that the two systems in \cref{eq:LTI-interchange-two-sides} are ``essentially the same'': they have the same four subsystems, connected in the same way, and they only list the coordinates of their state in a different order.
     But as morphisms of \LTI they are not equal.
@@ -1750,9 +2138,9 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
 
     Recall from \cref{def:equivalence_lti} that two LTI systems $\mora$ and $\mora'$ with the same input space, the same output space, and state spaces of the same dimension $k$ are \emph{equivalent}, written $\mora \equival \mora'$, if there is an invertible matrix $\mat{T} \setin \reals^{\matdim{k}{k}}$ such that
     \begin{equation}
-        \mat{A}_{\mora'} = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \quad \mat{B}_{\mora'} = \mat{T}\mat{B}_\mora, \quad \mat{C}_{\mora'} =\mat{C}_\mora\mat{T}^{-1},\quad \mat{D}_{\mora'}=\mat{D}_\mora, \quad \prstart_{\mora'}=\mat{T}\prstart_\mora.
+        \mat{A}_{\mora'} = \mat{T}\mat{A}_\mora \mat{T}^{-1}, \quad \mat{B}_{\mora'} = \mat{T}\mat{B}_\mora, \quad \mat{C}_{\mora'} =\mat{C}_\mora\mat{T}^{-1},\quad \mat{D}_{\mora'}=\mat{D}_\mora.
     \end{equation}
-    Equivalent systems transform every input signal into the same output signal; they are the same system, described in different coordinates.
+    Equivalent systems are the same system, described in different coordinates of the state space: started in states which correspond to each other under $\mat{T}$, they transform every input signal into the same output signal (\cref{lem:equivsystequivact}).
 
     This \SY{equivalence relation} is a \SY{congruence} on \LTI (\cref{def:congruence-category}): if $\mat{T}_1$ is an equivalence transformation from $\mora$ to $\mora'$ and $\mat{T}_2$ is one from $\morb$ to $\morb'$, then the block-diagonal matrix
     \begin{equation}
@@ -1780,7 +2168,7 @@ For $\ProfBoolL$, we spell out the resulting strict monoidal structure.
             \mat{0} & \mat{0} & \mat{0} & \mat{1}
         \end{bmatrix},
     \end{equation}
-    in which the blocks $\mat{1}$ are identity matrices of the appropriate sizes; it exchanges the two middle blocks of the state, as in \cref{eq:LTI-interchange-start-states}.
+    in which the blocks $\mat{1}$ are identity matrices of the appropriate sizes; it exchanges the two middle blocks of the state, as in \cref{eq:LTI-interchange-states}.
     The second condition in \cref{def:functorial-stacking-cat}, on identity morphisms, holds already for representatives.
 \end{example}
 

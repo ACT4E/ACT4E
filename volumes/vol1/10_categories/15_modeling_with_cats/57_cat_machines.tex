@@ -22,19 +22,19 @@ In other words, given Moore machines
 %
 \begin{equation}
     \label{eq:moore-mora}
-    \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}
+    \mora = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora}}
 \end{equation}
 %
 and
 %
 \begin{equation}
     \label{eq:moore-morb}
-    \morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
+    \morb = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb}},
 \end{equation}
 with~$\prout_{\mora} = \prin_{\morb}$, we'd like to define their composition as a Moore machine
 \begin{equation}
     \label{eq:moore-morab-comp}
-    \morab = \tupp{\prin_{\morab},\prst_{\morab},\prout_{\morab},\prdyn_{\morab},\prreadout_{\morab},\prstart_{\morab}}.
+    \morab = \tupp{\prin_{\morab},\prst_{\morab},\prout_{\morab},\prdyn_{\morab},\prreadout_{\morab}}.
 \end{equation}
 The situation is illustrated in \cref{fig:comp_moore_1}.
 
@@ -45,8 +45,7 @@ Here is one way to do it: we set
     \begin{aligned}
         \prin_{\morab}    & \definedas \prin_{\mora}, \\
         \prst_{\morab}    & \definedas \prst_{\mora} \cartprod \prst_{\morb}, \\
-        \prout_{\morab}   & \definedas \prout_{\morb}, \\
-        \prstart_{\morab} & \definedas \tupp{\prstart_{\mora}, \prstart_{\morb}},
+        \prout_{\morab}   & \definedas \prout_{\morb},
     \end{aligned}
 \end{equation}
 %
@@ -134,22 +133,20 @@ There are here, too, several possible approaches; we discuss one below, and anot
 
 Recall from \cref{sec:homomorphisms-moore} that a homomorphism of Moore machines (\cref{def:moore-machine-homomorphism}) from a machine
 \begin{equation}
-    \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}
+    \tupp{\prin, \prst, \prout, \prdyn, \prreadout}
 \end{equation}
 to a machine
 \begin{equation}
-    \tupp{\prin, \prst', \prout, \prdyn', \prreadout', \prstart'}
+    \tupp{\prin, \prst', \prout, \prdyn', \prreadout'}
 \end{equation}
 with the same set $\prin$ of inputs and the same set $\prout$ of outputs is a function of state spaces
 \begin{equation}
     \mapc \colon \prst \sto \prst'
 \end{equation}
-which is compatible with the respective initial states, dynamics, and read-outs.
+which is compatible with the respective dynamics and read-outs.
 Explicitly, this means that
 \begin{equation}
     \label{eq:moore-homomorphism-conditions}
-    \mapc(\prstart) = \prstart',
-    \qquad
     \mapc(\prdyn(\prinel, \prstel)) = \prdyn'(\prinel, \mapc(\prstel)),
     \qquad
     \prreadout'(\mapc(\prstel)) = \prreadout(\prstel)
@@ -158,7 +155,7 @@ for all $\prinel \setin \prin$ and $\prstel \setin \prst$.
 When the above function of state spaces is \SY{bijective}, we call it an \emph{isomorphism of Moore machines}, and we say that the two machines are \emph{isomorphic}.
 In this case the inverse function $\mapc^{-1} \colon \prst' \sto \prst$ is a homomorphism of Moore machines as well, as one sees by applying $\mapc^{-1}$ to the equations in \cref{eq:moore-homomorphism-conditions}.
 Such isomorphisms are analogous to changing coordinates; two isomorphic Moore machines are ``essentially the same'' and differ at most superficially, in how they are mathematically specified.
-In particular, by \cref{lem:moore-homomorphism-behavior}, isomorphic Moore machines transform every list of inputs into the same list of outputs.
+In particular, by \cref{lem:moore-homomorphism-behavior}, isomorphic Moore machines transform every list of inputs into the same list of outputs, when they are started in states which correspond to each other under the isomorphism.
 
 Now, one approach to the failure of associativity of composing \SY{Moore machines} is to consider \SY{Moore machines} only ``up to isomorphism''.
 To set this up formally, for every set $\prin$ of inputs and every set $\prout$ of outputs we define an \SY{equivalence relation} on the collection of Moore machines from $\prin$ to $\prout$ by declaring two Moore machines equivalent if, and only if, they are isomorphic.
@@ -181,7 +178,7 @@ This is one way to resolve our ``associativity issue'' from before.
         \item Objects: all sets.
         \item Morphisms: a morphism from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$, with respect to isomorphism of Moore machines, of Moore machines
               \begin{equation}
-                  \mora = \tupp{\prin,\prst,\prout,\prdyn,\prreadout,\prstart}
+                  \mora = \tupp{\prin,\prst,\prout,\prdyn,\prreadout}
               \end{equation}
               whose set of inputs is $\prin$ and whose set of outputs is $\prout$.
         \item Composition: given morphisms $\equivmora$ and $\equivmorb$, represented by Moore machines $\mora$ and $\morb$ with $\prout_{\mora} = \prin_{\morb}$, their composition is
@@ -217,7 +214,7 @@ Since composition is defined by choosing representatives, we need to make sure t
         }
     \end{equation}
     is an isomorphism of Moore machines from $\morab$ to $\mora' \mthen \morb'$.
-    It is \SY{bijective} because $\mapc_1$ and $\mapc_2$ are, and it maps the initial state $\tupp{\prstart_{\mora}, \prstart_{\morb}}$ to $\tupp{\prstart_{\mora'}, \prstart_{\morb'}}$.
+    It is \SY{bijective} because $\mapc_1$ and $\mapc_2$ are.
     For the dynamics, we compute
     \begin{equation}
         \begin{aligned}
@@ -240,7 +237,6 @@ Since composition is defined by choosing representatives, we need to make sure t
 
     For associativity, let $\mora$, $\morb$, and $\morc$ be three composable Moore machines.
     The machines $(\morab) \mthen \morc$ and $\mora \mthen (\morb \mthen \morc)$ have the same inputs and outputs, and the re-bracketing function \cref{eq:assoc-fails2} between their state spaces is \SY{bijective}.
-    It maps the initial state $\tupp{\tupp{\prstart_{\mora}, \prstart_{\morb}}, \prstart_{\morc}}$ to the initial state $\tupp{\prstart_{\mora}, \tupp{\prstart_{\morb}, \prstart_{\morc}}}$.
     Unfolding the definition \cref{eq:moore-comp-naive-2} twice, the dynamics of $(\morab) \mthen \morc$ maps an input $\prinel$ and a state $\tupp{ \tupp{\prsteln{\mora}, \prsteln{\morb}}, \prsteln{\morc} }$ to
     \begin{equation}
         \tupp{ \tupp{\prdyn_{\mora} (\prinel, \prsteln{\mora}), \prdyn_{\morb}(\prreadout_{\mora}(\prsteln{\mora}), \prsteln{\morb})}, \prdyn_{\morc}(\prreadout_{\morb}(\prsteln{\morb}), \prsteln{\morc}) },
@@ -262,7 +258,7 @@ Since composition is defined by choosing representatives, we need to make sure t
     We have been careful to say \SY{semicategory}, and not category: in general, $\MooreMod$ does not have identity morphisms.
     The reason is that the read-out of a Moore machine only depends on its state, and not on its current input.
     An identity morphism for a set $\prout$ would have to be represented by a machine $\more$ which outputs exactly what it receives as input, with the property that $\mora \mthen \more$ is isomorphic to $\mora$ for every machine $\mora$ with set of outputs $\prout$.
-    If $\mora$ has finitely many states, this forces $\more$ to have exactly one state, because the state space of $\mora \mthen \more$ is $\prst_{\mora} \cartprod \prst_{\more}$.
+    If $\mora$ has a finite, non-zero number of states, this forces $\more$ to have exactly one state, because the state space of $\mora \mthen \more$ is $\prst_{\mora} \cartprod \prst_{\more}$.
     But then the read-out of $\more$, and hence the read-out of $\mora \mthen \more$, always returns the same output, while the read-out of $\mora$ need not do so as soon as $\prout$ has at least two elements.
 
     We will see next that \emph{Mealy machines}, whose read-out may also depend on the current input, do not have this defect: up to isomorphism, they form a category.
@@ -276,7 +272,7 @@ They can be composed in series in the same way as \SY{Moore machines}: the outpu
 Consequently, we meet the same issue as before: this composition is \SY{associative} only up to re-bracketing of states, and not on the nose.
 We resolve it in the same way, by considering Mealy machines up to isomorphism.
 
-Recall from \cref{sec:homomorphisms-mealy} that a homomorphism of Mealy machines, between two machines with the same set of inputs and the same set of outputs, is a function between their state spaces which is compatible with the respective initial states, dynamics, and read-outs (\cref{def:mealy-machine-homomorphism}).
+Recall from \cref{sec:homomorphisms-mealy} that a homomorphism of Mealy machines, between two machines with the same set of inputs and the same set of outputs, is a function between their state spaces which is compatible with the respective dynamics and read-outs (\cref{def:mealy-machine-homomorphism}).
 As for \SY{Moore machines}, when this function is \SY{bijective} we call it an \emph{isomorphism of Mealy machines}, and we say that two Mealy machines are \emph{isomorphic} if there is an isomorphism from one to the other.
 
 For every set $\prin$ of inputs and every set $\prout$ of outputs, we now declare two Mealy machines from $\prin$ to $\prout$ -- that is, two machines with the same source and the same target -- to be equivalent if, and only if, they are isomorphic.
@@ -293,38 +289,36 @@ The category $\MealyMod$ is:
     \item \emph{Objects}: All sets.
     \item \emph{Morphisms}: A morphism in $\MealyMod$ from a set $\prin$ to a set $\prout$ is an equivalence class $\equivmora$ of Mealy machines from $\prin$ to $\prout$, that is, of tuples
     \begin{equation}
-        \mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout, \prstart}
+        \mora = \tupp{\prin, \prst, \prout, \prdyn, \prreadout}
     \end{equation}
     where
     \begin{itemize}
     \item $\prin$, $\prst$, and $\prout$ are an input set, state set, and output set, respectively;
     \item $\prdyn \colon \prin \cartprod \prst \sto \prst$ is the \emph{dynamics} (or \emph{update}) function;
-    \item $\prreadout \colon \prin \cartprod \prst \sto \prout$ is the \emph{read-out} function;
-    \item $\prstart \setin \prst$ is an initial state.
+    \item $\prreadout \colon \prin \cartprod \prst \sto \prout$ is the \emph{read-out} function.
     \end{itemize}
     \item \emph{Composition}: Given morphisms $\equivmora$ and $\equivmorb$ represented by the Mealy machines
     \begin{equation}
         \begin{aligned}
-            \mora & = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora},\prstart_{\mora}}, \\
-            \morb & = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb},\prstart_{\morb}},
+            \mora & = \tupp{\prin_{\mora},\prst_{\mora},\prout_{\mora},\prdyn_{\mora},\prreadout_{\mora}}, \\
+            \morb & = \tupp{\prin_{\morb},\prst_{\morb},\prout_{\morb},\prdyn_{\morb},\prreadout_{\morb}},
         \end{aligned}
     \end{equation}
     with $\prout_{\mora} = \prin_{\morb}$, their composition $\equivmora \mthen \equivmorb$ is represented by the Mealy machine
     \begin{equation}
-        \morab = \tupp{\prin_{\mora},\ \prst_{\mora} \cartprod \prst_{\morb},\ \prout_{\morb},\ \prdyn_{\morab},\ \prreadout_{\morab},\ \prstart_{\morab}},
+        \morab = \tupp{\prin_{\mora},\ \prst_{\mora} \cartprod \prst_{\morb},\ \prout_{\morb},\ \prdyn_{\morab},\ \prreadout_{\morab}},
     \end{equation}
     where
     \begin{equation}
         \label{eq:mealy-composition}
         \begin{aligned}
-            \prstart_{\morab} &= \tupp{\prstart_{\mora}, \prstart_{\morb}}, \\
             \prdyn_{\morab}\bigl(\prinel, \tupp{\prsteln{\mora}, \prsteln{\morb}}\bigr) &= \tupp{\prdyn_{\mora}(\prinel, \prsteln{\mora}),\; \prdyn_{\morb}\bigl(\prreadout_{\mora}(\prinel, \prsteln{\mora}),\, \prsteln{\morb}\bigr)}, \\
             \prreadout_{\morab}\bigl(\prinel, \tupp{\prsteln{\mora}, \prsteln{\morb}}\bigr) &= \prreadout_{\morb}\bigl(\prreadout_{\mora}(\prinel, \prsteln{\mora}),\, \prsteln{\morb}\bigr).
         \end{aligned}
     \end{equation}
     \item \emph{Identities}: the identity for a set $\prin$ is represented by the Mealy machine
     \begin{equation}
-        \tupp{\prin, \{\ast\}, \prin, \prdyn, \prreadout, \ast}
+        \tupp{\prin, \{\ast\}, \prin, \prdyn, \prreadout}
     \end{equation}
     whose state set $\{\ast\}$ is a singleton, where $\prdyn(\prinel, \ast) = \ast$ and $\prreadout(\prinel, \ast) = \prinel$ for all $\prinel \setin \prin$.
 \end{enumerate}

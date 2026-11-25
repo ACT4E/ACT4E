@@ -1,0 +1,646 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,hmargin=26mm,vmargin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{stmaryrd}
+\usepackage{microtype}
+\usepackage{enumitem}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\crefname{equation}{}{}
+\Crefname{equation}{Equation}{Equations}
+\creflabelformat{equation}{(#2#1#3)}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Fb}{Fb}
+\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\then}{\mathbin{\fatsemi}}
+\newcommand{\LTI}{\mathbf{LTI}}
+\newcommand{\LTIq}{\mathbf{LTI}/{\sim}}
+\newcommand{\sys}[5]{\bigl\langle #1,\ #2,\ #3,\ #4,\ #5 \bigr\rangle}
+\newcommand{\lbl}[1]{\nolinkurl{#1}}
+\setcounter{MaxMatrixCols}{12}
+
+\title{The feedback operator on $\LTIq$\\ is a partial trace guarded by the delay}
+\author{Working note for the ACT4E chapter on feedback}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent
+This note proves the following statement about LTI systems up to equivalence.
+Let $\Fb^p$ be the feedback operator which moves a wire of type $\R^p$ into the state, let $\Tr^p$ be the partial trace of the appendix section on partial traces, and let $\partial_p = \Fb^p(\sigma_{p,p})$ be the delay.
+Then, for every morphism $[f] \colon \R^{n+p} \to \R^{m+p}$ of $\LTIq$,
+\begin{equation}
+    \label{eq:headline}
+    \Fb^p([f])
+    \;=\; \Tr^p\bigl( (\id_{\R^n} \otimes \partial_p) \then [f] \bigr)
+    \;=\; \Tr^p\bigl( [f] \then (\id_{\R^m} \otimes \partial_p) \bigr),
+\end{equation}
+and the two partial traces on the right are defined for \emph{every} $[f]$, without any condition.
+The precise statement is \cref{thm:main}.
+
+Two remarks on the status of the ingredients.
+\begin{itemize}[nosep]
+    \item The partial trace $\Tr^p$ is the one in the book (\lbl{def:trace-lti}), with one misprint corrected; see \cref{rem:misprint}.
+    \item The feedback operator $\Fb^p$ on $\LTIq$ is \emph{not} in the book at present.
+          It is defined in \cref{def:fb} below.
+          It is the analogue for LTI systems of the feedback operator for Mealy machines (\lbl{exa:mealy-feedback}), and it is Example 2 of Di Lavore, Gianola, Rom\'an, Sabadini, Soboci\'nski, \emph{A canonical algebra of open transition systems}, written in the conventions of the book.
+\end{itemize}
+This note does \emph{not} verify that $\Fb^p$ satisfies the axioms of a feedback operator (\lbl{def:feedback-cat}), nor that $\Tr^p$ satisfies the axioms of a partial trace.
+None of the statements below uses these axioms: everything is a computation with the defining formulas.
+
+\section{Setup}
+
+We recall the definitions from the book, to fix notation.
+Throughout, $n$, $m$, $p$, $q$, $k$, $l$ denote natural numbers, and each of them may be zero.
+
+\paragraph{Matrices.}
+We allow matrices with zero rows or with zero columns.
+We write $I_p$ for the identity matrix of size $p \times p$, and $0$ for a zero matrix whose size is determined by the context.
+In a block matrix, a block with zero rows or zero columns is simply absent.
+The matrix $I_0$, which has no entries, is invertible.
+
+\paragraph{LTI systems.}
+Following \lbl{def:LTICat}, an LTI system from $\R^n$ to $\R^m$ with state space $\R^k$ is a tuple
+\begin{equation}
+    f = \sys{\R^k}{A}{B}{C}{D},
+    \qquad
+    A \in \R^{k \times k}, \quad
+    B \in \R^{k \times n}, \quad
+    C \in \R^{m \times k}, \quad
+    D \in \R^{m \times n}.
+\end{equation}
+We write $f \colon \R^n \to \R^m$.
+Two LTI systems are equal if and only if they have the same state space and the same four matrices.
+The tuple stands for the equations
+\begin{equation}
+    \label{eq:lti-equations}
+    \dot x = A x + B u, \qquad y = C x + D u,
+\end{equation}
+with input $u$, state $x$, and output $y$.
+We use \cref{eq:lti-equations} only to motivate definitions.
+All definitions and all proofs below are in terms of the matrices alone.
+In particular, they apply without any change to the discrete-time reading $x_{i+1} = A x_i + B u_i$, $y_i = C x_i + D u_i$ of the same tuple.
+
+\paragraph{Composition, stacking, identities.}
+Let $f = \sys{\R^{k}}{A_f}{B_f}{C_f}{D_f} \colon \R^n \to \R^m$ and $g = \sys{\R^{l}}{A_g}{B_g}{C_g}{D_g} \colon \R^m \to \R^q$.
+Their composition (\lbl{eq:LTI-composition}) is the LTI system
+\begin{equation}
+    \label{eq:comp}
+    f \then g = \sys{\R^{k+l}}
+    {\begin{bmatrix} A_f & 0 \\ B_g C_f & A_g \end{bmatrix}}
+    {\begin{bmatrix} B_f \\ B_g D_f \end{bmatrix}}
+    {\begin{bmatrix} D_g C_f & C_g \end{bmatrix}}
+    {D_g D_f}
+    \colon \R^n \to \R^q .
+\end{equation}
+For $f$ as above and any $g = \sys{\R^{l}}{A_g}{B_g}{C_g}{D_g} \colon \R^{n'} \to \R^{m'}$, their stacking (\lbl{eq:LTI-stacking-mor1}, \lbl{eq:LTI-stacking-mor2}) is the LTI system
+\begin{equation}
+    \label{eq:stack}
+    f \otimes g = \sys{\R^{k+l}}
+    {\begin{bmatrix} A_f & 0 \\ 0 & A_g \end{bmatrix}}
+    {\begin{bmatrix} B_f & 0 \\ 0 & B_g \end{bmatrix}}
+    {\begin{bmatrix} C_f & 0 \\ 0 & C_g \end{bmatrix}}
+    {\begin{bmatrix} D_f & 0 \\ 0 & D_g \end{bmatrix}}
+    \colon \R^{n+n'} \to \R^{m+m'} .
+\end{equation}
+The identity of $\R^n$ and the swap of $\R^p$ with itself (\lbl{eq:LTI-swap-system}) are the systems with state space $\R^0$
+\begin{equation}
+    \label{eq:id-swap}
+    \id_n = \sys{\R^0}{0}{0}{0}{I_n},
+    \qquad
+    s_{p,p} = \sys{\R^0}{0}{0}{0}{\begin{bmatrix} 0 & I_p \\ I_p & 0 \end{bmatrix}} \colon \R^{p+p} \to \R^{p+p} .
+\end{equation}
+
+\paragraph{Equivalence.}
+For an LTI system $f = \sys{\R^k}{A}{B}{C}{D}$ and an invertible matrix $T \in \R^{k \times k}$ we write
+\begin{equation}
+    \label{eq:action}
+    T \cdot f \coloneqq \sys{\R^k}{T A T^{-1}}{T B}{C T^{-1}}{D} .
+\end{equation}
+Two systems $f$ and $f'$ are \emph{equivalent} (\lbl{def:equivalence_lti}), written $f \sim f'$, if $f' = T \cdot f$ for some invertible $T$.
+Equivalent systems have the same input space, the same output space, the same matrix $D$, and state spaces of the same dimension.
+We write $[f]$ for the equivalence class of $f$.
+The category $\LTIq$ (\lbl{exa:LTI-quotient-strict-monoidal}, \lbl{exa:LTI-quotient-symmetric}) has the classes $[f]$ as morphisms, with
+\begin{equation}
+    \label{eq:quotient-operations}
+    [f] \then [g] = [f \then g],
+    \qquad
+    [f] \otimes [g] = [f \otimes g],
+    \qquad
+    \id_{\R^n} = [\id_n],
+    \qquad
+    \sigma_{p,p} = [s_{p,p}] ,
+\end{equation}
+where $\sigma_{p,p}$ is the braiding of $\R^p$ with itself.
+
+\paragraph{Blocks.}
+Let $f = \sys{\R^k}{A}{B}{C}{D} \colon \R^{n+p} \to \R^{m+p}$.
+The \emph{blocks of $f$ with respect to $p$} are the matrices in the decompositions
+\begin{equation}
+    \label{eq:blocks}
+    B = \begin{bmatrix} B_1 & B_2 \end{bmatrix},
+    \qquad
+    C = \begin{bmatrix} C_1 \\ C_2 \end{bmatrix},
+    \qquad
+    D = \begin{bmatrix} D_{11} & D_{12} \\ D_{21} & D_{22} \end{bmatrix},
+\end{equation}
+in which $B_2$ consists of the last $p$ columns of $B$, $C_2$ of the last $p$ rows of $C$, and $D_{22}$ of the last $p$ rows and last $p$ columns of $D$.
+So $B_1 \in \R^{k \times n}$, $B_2 \in \R^{k \times p}$, $C_1 \in \R^{m \times k}$, $C_2 \in \R^{p \times k}$, $D_{11} \in \R^{m \times n}$, $D_{12} \in \R^{m \times p}$, $D_{21} \in \R^{p \times n}$, and $D_{22} \in \R^{p \times p}$.
+Splitting the input as $u = (u_1, u_2)$ and the output as $y = (y_1, y_2)$ accordingly, the equations \cref{eq:lti-equations} become
+\begin{equation}
+    \label{eq:lti-equations-blocks}
+    \begin{aligned}
+        \dot x & = A x + B_1 u_1 + B_2 u_2, \\
+        y_1    & = C_1 x + D_{11} u_1 + D_{12} u_2, \\
+        y_2    & = C_2 x + D_{21} u_1 + D_{22} u_2 .
+    \end{aligned}
+\end{equation}
+The pair $u_2$, $y_2$ is the wire of type $\R^p$ on which we want to close a loop.
+
+\section{Two ways of closing a loop}
+
+\begin{definition}[Partial trace]
+    \label{def:tr}
+    Let $f = \sys{\R^k}{A}{B}{C}{D} \colon \R^{n+p} \to \R^{m+p}$ be an LTI system, with blocks as in \cref{eq:blocks}.
+    We say that $f$ is \emph{$p$-traceable} if the matrix $I_p - D_{22}$ is invertible.
+    In this case we set $E \coloneqq (I_p - D_{22})^{-1}$ and define
+    \begin{equation}
+        \label{eq:tr}
+        \Tr^p(f) \coloneqq \sys{\R^k}
+        {A + B_2 E C_2}
+        {B_1 + B_2 E D_{21}}
+        {C_1 + D_{12} E C_2}
+        {D_{11} + D_{12} E D_{21}}
+        \colon \R^n \to \R^m .
+    \end{equation}
+    If $f$ is not $p$-traceable, then $\Tr^p(f)$ is not defined.
+\end{definition}
+
+\begin{remark}[Where the formula comes from]
+    \label{rem:tr-origin}
+    Connect the output $y_2$ directly to the input $u_2$, that is, impose $u_2 = y_2$ in \cref{eq:lti-equations-blocks}.
+    The third equation becomes $(I_p - D_{22}) u_2 = C_2 x + D_{21} u_1$, which determines $u_2$ if and only if $I_p - D_{22}$ is invertible, and then $u_2 = E C_2 x + E D_{21} u_1$.
+    Substituting this into the first two equations gives the equations of the system \cref{eq:tr}.
+    The state space does not change.
+\end{remark}
+
+\begin{remark}[Comparison with the book]
+    \label{rem:misprint}
+    \Cref{def:tr} is \lbl{def:trace-lti}, where the dimensions are called $i$, $j$, $k$ instead of $n$, $m$, $p$.
+    In the current text of \lbl{def:trace-lti}, the second matrix reads ``$B_1 + D_2(I - D_{22})^{-1} D_{21}$''.
+    There is no matrix $D_2$; by \cref{rem:tr-origin} it has to be $B_1 + B_2 (I - D_{22})^{-1} D_{21}$, as in \cref{eq:tr}.
+    If $D = 0$, then $E = I_p$ and \cref{eq:tr} reduces to $\sys{\R^k}{A + B_2 C_2}{B_1}{C_1}{0}$, the formula for proper LTI systems in \lbl{def:trace-lti-prop}.
+\end{remark}
+
+\begin{definition}[Feedback operator]
+    \label{def:fb}
+    Let $f = \sys{\R^k}{A}{B}{C}{D} \colon \R^{n+p} \to \R^{m+p}$ be an LTI system, with blocks as in \cref{eq:blocks}.
+    We define
+    \begin{equation}
+        \label{eq:fb}
+        \Fb^p(f) \coloneqq \sys{\R^{p+k}}
+        {\begin{bmatrix} D_{22} & C_2 \\ B_2 & A \end{bmatrix}}
+        {\begin{bmatrix} D_{21} \\ B_1 \end{bmatrix}}
+        {\begin{bmatrix} D_{12} & C_1 \end{bmatrix}}
+        {D_{11}}
+        \colon \R^n \to \R^m .
+    \end{equation}
+    This is defined for every $f$.
+\end{definition}
+
+\begin{remark}[Where the formula comes from]
+    \label{rem:fb-origin}
+    Introduce a new state variable $w$ with values in $\R^p$.
+    In \cref{eq:lti-equations-blocks}, feed $w$ into the input $u_2$, and let the output $y_2$ drive $w$:
+    \begin{equation}
+        \label{eq:fb-wiring}
+        u_2 = w, \qquad \dot w = y_2 .
+    \end{equation}
+    This gives
+    \begin{equation}
+        \begin{aligned}
+            \dot w & = D_{22} w + C_2 x + D_{21} u_1, \\
+            \dot x & = B_2 w + A x + B_1 u_1, \\
+            y_1    & = D_{12} w + C_1 x + D_{11} u_1,
+        \end{aligned}
+    \end{equation}
+    which are the equations of the system \cref{eq:fb}, for the state with $w$ stacked on top of $x$.
+    The four matrices of $\Fb^p(f)$ have, taken together, the same entries as the four matrices of $f$, arranged as the block matrix
+    $\begin{bsmallmatrix} D & C \\ B & A \end{bsmallmatrix}$;
+    the feedback operator only re-reads the wire $\R^p$ as a part of the state.
+    This is what the feedback operator for Mealy machines does (\lbl{exa:mealy-feedback}), where the new set of states is $C \times X$, with the wire first.
+\end{remark}
+
+Both constructions are compatible with equivalence, and therefore pass to $\LTIq$.
+
+\begin{lemma}[Compatibility with equivalence]
+    \label{lem:equivalence}
+    Let $f = \sys{\R^k}{A}{B}{C}{D} \colon \R^{n+p} \to \R^{m+p}$ be an LTI system, and let $T \in \R^{k \times k}$ be invertible.
+    \begin{enumerate}[label=\textup{(\alph*)}]
+        \item The system $T \cdot f$ is $p$-traceable if and only if $f$ is, and in this case
+              \begin{equation}
+                  \Tr^p(T \cdot f) = T \cdot \Tr^p(f) .
+              \end{equation}
+        \item With $\widehat{T} \coloneqq \begin{bsmallmatrix} I_p & 0 \\ 0 & T \end{bsmallmatrix} \in \R^{(p+k) \times (p+k)}$, which is invertible,
+              \begin{equation}
+                  \Fb^p(T \cdot f) = \widehat{T} \cdot \Fb^p(f) .
+              \end{equation}
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+    By \cref{eq:action}, the blocks of $T \cdot f$ with respect to $p$ are
+    \begin{equation}
+        \label{eq:blocks-of-Tf}
+        T B_1, \quad T B_2, \quad C_1 T^{-1}, \quad C_2 T^{-1}, \quad D_{11}, \quad D_{12}, \quad D_{21}, \quad D_{22},
+    \end{equation}
+    and its first matrix is $T A T^{-1}$.
+
+    (a) The block $D_{22}$ is the same for $f$ and for $T \cdot f$, so one of them is $p$-traceable if and only if the other is, and the matrix $E$ is the same for both.
+    Inserting \cref{eq:blocks-of-Tf} into \cref{eq:tr}, the first three matrices of $\Tr^p(T \cdot f)$ are
+    \begin{align*}
+        T A T^{-1} + T B_2 E C_2 T^{-1}  & = T (A + B_2 E C_2) T^{-1}, \\
+        T B_1 + T B_2 E D_{21}           & = T (B_1 + B_2 E D_{21}), \\
+        C_1 T^{-1} + D_{12} E C_2 T^{-1} & = (C_1 + D_{12} E C_2) T^{-1},
+    \end{align*}
+    its fourth matrix is $D_{11} + D_{12} E D_{21}$, as for $\Tr^p(f)$, and its state space is $\R^k$.
+    By \cref{eq:action}, this is $T \cdot \Tr^p(f)$.
+
+    (b) Inserting \cref{eq:blocks-of-Tf} into \cref{eq:fb}, the system $\Fb^p(T \cdot f)$ has the state space $\R^{p+k}$ and the matrices
+    \begin{equation*}
+        \begin{bmatrix} D_{22} & C_2 T^{-1} \\ T B_2 & T A T^{-1} \end{bmatrix},
+        \qquad
+        \begin{bmatrix} D_{21} \\ T B_1 \end{bmatrix},
+        \qquad
+        \begin{bmatrix} D_{12} & C_1 T^{-1} \end{bmatrix},
+        \qquad
+        D_{11} .
+    \end{equation*}
+    On the other hand, $\widehat{T}^{-1} = \begin{bsmallmatrix} I_p & 0 \\ 0 & T^{-1} \end{bsmallmatrix}$, and so
+    \begin{gather*}
+        \widehat{T} \begin{bmatrix} D_{22} & C_2 \\ B_2 & A \end{bmatrix} \widehat{T}^{-1}
+        = \begin{bmatrix} D_{22} & C_2 \\ T B_2 & T A \end{bmatrix} \begin{bmatrix} I_p & 0 \\ 0 & T^{-1} \end{bmatrix}
+        = \begin{bmatrix} D_{22} & C_2 T^{-1} \\ T B_2 & T A T^{-1} \end{bmatrix}, \\
+        \widehat{T} \begin{bmatrix} D_{21} \\ B_1 \end{bmatrix} = \begin{bmatrix} D_{21} \\ T B_1 \end{bmatrix},
+        \qquad
+        \begin{bmatrix} D_{12} & C_1 \end{bmatrix} \widehat{T}^{-1} = \begin{bmatrix} D_{12} & C_1 T^{-1} \end{bmatrix} .
+    \end{gather*}
+    These are the same matrices, so $\Fb^p(T \cdot f) = \widehat{T} \cdot \Fb^p(f)$.
+\end{proof}
+
+\begin{definition}[The two operators on $\LTIq$]
+    \label{def:quotient}
+    Let $[f] \colon \R^{n+p} \to \R^{m+p}$ be a morphism of $\LTIq$.
+    We say that $[f]$ is $p$-traceable if $f$ is, and in this case we set $\Tr^p([f]) \coloneqq [\Tr^p(f)]$.
+    We set $\Fb^p([f]) \coloneqq [\Fb^p(f)]$.
+    By \cref{lem:equivalence}, none of this depends on the choice of the representative $f$.
+\end{definition}
+
+So $\Tr^p$ is a \emph{partial} function from the set of morphisms $\R^{n+p} \to \R^{m+p}$ of $\LTIq$ to the set of morphisms $\R^n \to \R^m$, and $\Fb^p$ is a \emph{total} function between the same two sets.
+
+\section{The delay}
+
+\begin{lemma}[The delay]
+    \label{lem:delay}
+    For every $p$,
+    \begin{equation}
+        \label{eq:delay}
+        \Fb^p(s_{p,p}) = \sys{\R^p}{0}{I_p}{I_p}{0} \eqqcolon d_p \colon \R^p \to \R^p .
+    \end{equation}
+    In contrast, $s_{p,p}$ is $p$-traceable and $\Tr^p(s_{p,p}) = \id_p$.
+\end{lemma}
+
+\begin{proof}
+    By \cref{eq:id-swap}, the system $s_{p,p} \colon \R^{p+p} \to \R^{p+p}$ has the state space $\R^0$.
+    So here $k = 0$, $n = m = p$, the matrices $A$, $B_1$, $B_2$, $C_1$, $C_2$ have no entries, and the blocks of $D$ with respect to $p$ are
+    \begin{equation*}
+        D_{11} = 0, \qquad D_{12} = I_p, \qquad D_{21} = I_p, \qquad D_{22} = 0 .
+    \end{equation*}
+    In \cref{eq:fb}, the blocks $C_2$, $B_2$, $A$, $B_1$, $C_1$ are absent, the state space is $\R^{p+0} = \R^p$, and we obtain
+    \begin{equation*}
+        \Fb^p(s_{p,p}) = \sys{\R^{p}}{D_{22}}{D_{21}}{D_{12}}{D_{11}} = \sys{\R^p}{0}{I_p}{I_p}{0} .
+    \end{equation*}
+
+    For the partial trace, $I_p - D_{22} = I_p$ is invertible, with $E = I_p$.
+    In \cref{eq:tr}, the first three matrices have no entries, and the fourth one is $D_{11} + D_{12} E D_{21} = 0 + I_p I_p I_p = I_p$.
+    So $\Tr^p(s_{p,p}) = \sys{\R^0}{0}{0}{0}{I_p} = \id_p$.
+\end{proof}
+
+\begin{definition}[Delay]
+    The \emph{delay} of $\R^p$ is the morphism
+    \begin{equation}
+        \partial_p \coloneqq \Fb^p(\sigma_{p,p}) = [d_p] \colon \R^p \to \R^p
+    \end{equation}
+    of $\LTIq$; the second equality holds by \cref{eq:quotient-operations}, \cref{def:quotient}, and \cref{lem:delay}.
+\end{definition}
+
+\begin{remark}
+    \label{rem:delay-reading}
+    The system $d_p$ has the equations $\dot x = u$, $y = x$: it is a bank of $p$ integrators.
+    In the discrete-time reading, the equations are $x_{i+1} = u_i$, $y_i = x_i$, so that $y_{i+1} = u_i$: this is a delay by one step, which explains the name.
+    The second statement of \cref{lem:delay} says that the partial trace satisfies the yanking axiom for $\R^p$, while $\Fb^p$ does not if $p \geq 1$: the systems $d_p$ and $\id_p$ have state spaces of different dimensions, and hence $\partial_p \neq \id_{\R^p}$.
+\end{remark}
+
+\section{The feedback operator as a guarded partial trace}
+
+We first compute the two systems which are obtained from $f$ by inserting the delay on the wire $\R^p$, once behind $f$ and once in front of $f$.
+
+\begin{lemma}[The two guarded systems]
+    \label{lem:guarded}
+    Let $f = \sys{\R^k}{A}{B}{C}{D} \colon \R^{n+p} \to \R^{m+p}$ be an LTI system, with blocks as in \cref{eq:blocks}.
+    Then
+    \begin{align}
+        \label{eq:post}
+        f \then (\id_m \otimes d_p)
+         & = \sys{\R^{k+p}}
+        {\begin{bmatrix} A & 0 \\ C_2 & 0 \end{bmatrix}}
+        {\begin{bmatrix} B_1 & B_2 \\ D_{21} & D_{22} \end{bmatrix}}
+        {\begin{bmatrix} C_1 & 0 \\ 0 & I_p \end{bmatrix}}
+        {\begin{bmatrix} D_{11} & D_{12} \\ 0 & 0 \end{bmatrix}},
+        \\[1ex]
+        \label{eq:pre}
+        (\id_n \otimes d_p) \then f
+         & = \sys{\R^{p+k}}
+        {\begin{bmatrix} 0 & 0 \\ B_2 & A \end{bmatrix}}
+        {\begin{bmatrix} 0 & I_p \\ B_1 & 0 \end{bmatrix}}
+        {\begin{bmatrix} D_{12} & C_1 \\ D_{22} & C_2 \end{bmatrix}}
+        {\begin{bmatrix} D_{11} & 0 \\ D_{21} & 0 \end{bmatrix}} .
+    \end{align}
+    Both are LTI systems $\R^{n+p} \to \R^{m+p}$, and the block matrices on the right are decomposed with respect to $p$, as in \cref{eq:blocks}.
+\end{lemma}
+
+\begin{proof}
+    For any $q$, the stacking formula \cref{eq:stack}, applied to $\id_q = \sys{\R^0}{0}{0}{0}{I_q}$ and $d_p = \sys{\R^p}{0}{I_p}{I_p}{0}$, gives
+    \begin{equation}
+        \label{eq:id-stack-d}
+        \id_q \otimes d_p = \sys{\R^{p}}{0}
+        {\begin{bmatrix} 0 & I_p \end{bmatrix}}
+        {\begin{bmatrix} 0 \\ I_p \end{bmatrix}}
+        {\begin{bmatrix} I_q & 0 \\ 0 & 0 \end{bmatrix}}
+        \colon \R^{q+p} \to \R^{q+p} .
+    \end{equation}
+    Here the state space is $\R^{0+p} = \R^p$.
+    The matrices of $\id_q$ with zero rows contribute no rows, and those with zero columns contribute no columns.
+    So the first matrix is the zero matrix of size $p \times p$, the second one has size $p \times (q+p)$, the third one has size $(q+p) \times p$, and the fourth one has size $(q+p) \times (q+p)$.
+
+    \emph{Proof of \cref{eq:post}.}
+    We apply the composition formula \cref{eq:comp} to $f$ and to $g = \id_m \otimes d_p$, which is given by \cref{eq:id-stack-d} with $q = m$.
+    So $A_g = 0$, $B_g = \begin{bsmallmatrix} 0 & I_p \end{bsmallmatrix}$, $C_g = \begin{bsmallmatrix} 0 \\ I_p \end{bsmallmatrix}$, and $D_g = \begin{bsmallmatrix} I_m & 0 \\ 0 & 0 \end{bsmallmatrix}$.
+    The state space of $f \then g$ is $\R^{k+p}$.
+    Using the decompositions \cref{eq:blocks}, we compute
+    \begin{gather*}
+        B_g C = \begin{bmatrix} 0 & I_p \end{bmatrix} \begin{bmatrix} C_1 \\ C_2 \end{bmatrix} = C_2,
+        \qquad
+        B_g D = \begin{bmatrix} 0 & I_p \end{bmatrix} \begin{bmatrix} D_{11} & D_{12} \\ D_{21} & D_{22} \end{bmatrix} = \begin{bmatrix} D_{21} & D_{22} \end{bmatrix}, \\
+        D_g C = \begin{bmatrix} I_m & 0 \\ 0 & 0 \end{bmatrix} \begin{bmatrix} C_1 \\ C_2 \end{bmatrix} = \begin{bmatrix} C_1 \\ 0 \end{bmatrix},
+        \qquad
+        D_g D = \begin{bmatrix} I_m & 0 \\ 0 & 0 \end{bmatrix} \begin{bmatrix} D_{11} & D_{12} \\ D_{21} & D_{22} \end{bmatrix} = \begin{bmatrix} D_{11} & D_{12} \\ 0 & 0 \end{bmatrix} .
+    \end{gather*}
+    Therefore the four matrices of $f \then g$ are
+    \begin{gather*}
+        \begin{bmatrix} A & 0 \\ B_g C & A_g \end{bmatrix} = \begin{bmatrix} A & 0 \\ C_2 & 0 \end{bmatrix},
+        \qquad
+        \begin{bmatrix} B \\ B_g D \end{bmatrix} = \begin{bmatrix} B_1 & B_2 \\ D_{21} & D_{22} \end{bmatrix}, \\
+        \begin{bmatrix} D_g C & C_g \end{bmatrix} = \begin{bmatrix} C_1 & 0 \\ 0 & I_p \end{bmatrix},
+        \qquad
+        D_g D = \begin{bmatrix} D_{11} & D_{12} \\ 0 & 0 \end{bmatrix} .
+    \end{gather*}
+
+    \emph{Proof of \cref{eq:pre}.}
+    We apply \cref{eq:comp} to $h = \id_n \otimes d_p$, which is given by \cref{eq:id-stack-d} with $q = n$, and to $f$.
+    So $A_h = 0$, $B_h = \begin{bsmallmatrix} 0 & I_p \end{bsmallmatrix}$, $C_h = \begin{bsmallmatrix} 0 \\ I_p \end{bsmallmatrix}$, and $D_h = \begin{bsmallmatrix} I_n & 0 \\ 0 & 0 \end{bsmallmatrix}$.
+    The state space of $h \then f$ is $\R^{p+k}$.
+    We compute
+    \begin{gather*}
+        B C_h = \begin{bmatrix} B_1 & B_2 \end{bmatrix} \begin{bmatrix} 0 \\ I_p \end{bmatrix} = B_2,
+        \qquad
+        B D_h = \begin{bmatrix} B_1 & B_2 \end{bmatrix} \begin{bmatrix} I_n & 0 \\ 0 & 0 \end{bmatrix} = \begin{bmatrix} B_1 & 0 \end{bmatrix}, \\
+        D C_h = \begin{bmatrix} D_{11} & D_{12} \\ D_{21} & D_{22} \end{bmatrix} \begin{bmatrix} 0 \\ I_p \end{bmatrix} = \begin{bmatrix} D_{12} \\ D_{22} \end{bmatrix},
+        \qquad
+        D D_h = \begin{bmatrix} D_{11} & D_{12} \\ D_{21} & D_{22} \end{bmatrix} \begin{bmatrix} I_n & 0 \\ 0 & 0 \end{bmatrix} = \begin{bmatrix} D_{11} & 0 \\ D_{21} & 0 \end{bmatrix} .
+    \end{gather*}
+    Therefore the four matrices of $h \then f$ are
+    \begin{gather*}
+        \begin{bmatrix} A_h & 0 \\ B C_h & A \end{bmatrix} = \begin{bmatrix} 0 & 0 \\ B_2 & A \end{bmatrix},
+        \qquad
+        \begin{bmatrix} B_h \\ B D_h \end{bmatrix} = \begin{bmatrix} 0 & I_p \\ B_1 & 0 \end{bmatrix}, \\
+        \begin{bmatrix} D C_h & C \end{bmatrix} = \begin{bmatrix} D_{12} & C_1 \\ D_{22} & C_2 \end{bmatrix},
+        \qquad
+        D D_h = \begin{bmatrix} D_{11} & 0 \\ D_{21} & 0 \end{bmatrix} .
+    \end{gather*}
+
+    In both cases, the vertical lines of the decomposition with respect to $p$ separate the first $n$ columns from the last $p$ columns, and the horizontal lines separate the first $m$ rows from the last $p$ rows; this is how the block matrices in \cref{eq:post} and \cref{eq:pre} are written.
+\end{proof}
+
+\begin{theorem}
+    \label{thm:main}
+    Let $f = \sys{\R^k}{A}{B}{C}{D} \colon \R^{n+p} \to \R^{m+p}$ be an LTI system, with blocks as in \cref{eq:blocks}.
+    \begin{enumerate}[label=\textup{(\alph*)}]
+        \item The system $(\id_n \otimes d_p) \then f$ is $p$-traceable, and
+              \begin{equation}
+                  \label{eq:main-pre}
+                  \Tr^p\bigl( (\id_n \otimes d_p) \then f \bigr) = \Fb^p(f) .
+              \end{equation}
+              This is an equality of LTI systems, not only an equivalence.
+        \item The system $f \then (\id_m \otimes d_p)$ is $p$-traceable, and
+              \begin{equation}
+                  \label{eq:main-post-formula}
+                  \Tr^p\bigl( f \then (\id_m \otimes d_p) \bigr) = \sys{\R^{k+p}}
+                  {\begin{bmatrix} A & B_2 \\ C_2 & D_{22} \end{bmatrix}}
+                  {\begin{bmatrix} B_1 \\ D_{21} \end{bmatrix}}
+                  {\begin{bmatrix} C_1 & D_{12} \end{bmatrix}}
+                  {D_{11}} .
+              \end{equation}
+              With the permutation matrix $P \coloneqq \begin{bsmallmatrix} 0 & I_p \\ I_k & 0 \end{bsmallmatrix} \in \R^{(p+k) \times (k+p)}$, we have
+              \begin{equation}
+                  \label{eq:main-post}
+                  P \cdot \Tr^p\bigl( f \then (\id_m \otimes d_p) \bigr) = \Fb^p(f) .
+              \end{equation}
+        \item Consequently, in $\LTIq$, the morphisms $(\id_{\R^n} \otimes \partial_p) \then [f]$ and $[f] \then (\id_{\R^m} \otimes \partial_p)$ are $p$-traceable, and
+              \begin{equation}
+                  \label{eq:main-quotient}
+                  \Fb^p([f])
+                  = \Tr^p\bigl( (\id_{\R^n} \otimes \partial_p) \then [f] \bigr)
+                  = \Tr^p\bigl( [f] \then (\id_{\R^m} \otimes \partial_p) \bigr) .
+              \end{equation}
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+    (a) By \cref{eq:pre}, the blocks of $f'' \coloneqq (\id_n \otimes d_p) \then f$ with respect to $p$ are
+    \begin{equation*}
+        \begin{gathered}
+            A'' = \begin{bmatrix} 0 & 0 \\ B_2 & A \end{bmatrix},
+            \quad
+            B''_1 = \begin{bmatrix} 0 \\ B_1 \end{bmatrix},
+            \quad
+            B''_2 = \begin{bmatrix} I_p \\ 0 \end{bmatrix},
+            \quad
+            C''_1 = \begin{bmatrix} D_{12} & C_1 \end{bmatrix},
+            \quad
+            C''_2 = \begin{bmatrix} D_{22} & C_2 \end{bmatrix}, \\
+            D''_{11} = D_{11}, \quad D''_{12} = 0, \quad D''_{21} = D_{21}, \quad D''_{22} = 0 .
+        \end{gathered}
+    \end{equation*}
+    Since $D''_{22} = 0$, the matrix $I_p - D''_{22} = I_p$ is invertible, so $f''$ is $p$-traceable, with $E = I_p$.
+    By \cref{eq:tr}, the system $\Tr^p(f'')$ has the state space $\R^{p+k}$ and the matrices
+    \begin{align*}
+        A'' + B''_2 C''_2
+         & = \begin{bmatrix} 0 & 0 \\ B_2 & A \end{bmatrix} + \begin{bmatrix} I_p \\ 0 \end{bmatrix} \begin{bmatrix} D_{22} & C_2 \end{bmatrix}
+        = \begin{bmatrix} 0 & 0 \\ B_2 & A \end{bmatrix} + \begin{bmatrix} D_{22} & C_2 \\ 0 & 0 \end{bmatrix}
+        = \begin{bmatrix} D_{22} & C_2 \\ B_2 & A \end{bmatrix}, \\
+        B''_1 + B''_2 D''_{21}
+         & = \begin{bmatrix} 0 \\ B_1 \end{bmatrix} + \begin{bmatrix} I_p \\ 0 \end{bmatrix} D_{21}
+        = \begin{bmatrix} D_{21} \\ B_1 \end{bmatrix}, \\
+        C''_1 + D''_{12} C''_2
+         & = \begin{bmatrix} D_{12} & C_1 \end{bmatrix} + 0
+        = \begin{bmatrix} D_{12} & C_1 \end{bmatrix}, \\
+        D''_{11} + D''_{12} D''_{21}
+         & = D_{11} + 0 = D_{11} .
+    \end{align*}
+    By \cref{eq:fb}, these are the state space and the matrices of $\Fb^p(f)$.
+
+    (b) By \cref{eq:post}, the blocks of $f' \coloneqq f \then (\id_m \otimes d_p)$ with respect to $p$ are
+    \begin{equation*}
+        \begin{gathered}
+            A' = \begin{bmatrix} A & 0 \\ C_2 & 0 \end{bmatrix},
+            \quad
+            B'_1 = \begin{bmatrix} B_1 \\ D_{21} \end{bmatrix},
+            \quad
+            B'_2 = \begin{bmatrix} B_2 \\ D_{22} \end{bmatrix},
+            \quad
+            C'_1 = \begin{bmatrix} C_1 & 0 \end{bmatrix},
+            \quad
+            C'_2 = \begin{bmatrix} 0 & I_p \end{bmatrix}, \\
+            D'_{11} = D_{11}, \quad D'_{12} = D_{12}, \quad D'_{21} = 0, \quad D'_{22} = 0 .
+        \end{gathered}
+    \end{equation*}
+    Since $D'_{22} = 0$, the system $f'$ is $p$-traceable, with $E = I_p$.
+    By \cref{eq:tr}, the system $\Tr^p(f')$ has the state space $\R^{k+p}$ and the matrices
+    \begin{align*}
+        A' + B'_2 C'_2
+         & = \begin{bmatrix} A & 0 \\ C_2 & 0 \end{bmatrix} + \begin{bmatrix} B_2 \\ D_{22} \end{bmatrix} \begin{bmatrix} 0 & I_p \end{bmatrix}
+        = \begin{bmatrix} A & 0 \\ C_2 & 0 \end{bmatrix} + \begin{bmatrix} 0 & B_2 \\ 0 & D_{22} \end{bmatrix}
+        = \begin{bmatrix} A & B_2 \\ C_2 & D_{22} \end{bmatrix}, \\
+        B'_1 + B'_2 D'_{21}
+         & = \begin{bmatrix} B_1 \\ D_{21} \end{bmatrix} + 0
+        = \begin{bmatrix} B_1 \\ D_{21} \end{bmatrix}, \\
+        C'_1 + D'_{12} C'_2
+         & = \begin{bmatrix} C_1 & 0 \end{bmatrix} + D_{12} \begin{bmatrix} 0 & I_p \end{bmatrix}
+        = \begin{bmatrix} C_1 & D_{12} \end{bmatrix}, \\
+        D'_{11} + D'_{12} D'_{21}
+         & = D_{11} + 0 = D_{11} .
+    \end{align*}
+    This proves \cref{eq:main-post-formula}.
+
+    The matrix $P$ is square of size $k + p$, and it is invertible, with
+    \begin{equation*}
+        P^{-1} = \begin{bmatrix} 0 & I_k \\ I_p & 0 \end{bmatrix},
+        \qquad \text{since} \qquad
+        \begin{bmatrix} 0 & I_p \\ I_k & 0 \end{bmatrix} \begin{bmatrix} 0 & I_k \\ I_p & 0 \end{bmatrix} = \begin{bmatrix} I_p & 0 \\ 0 & I_k \end{bmatrix} .
+    \end{equation*}
+    By \cref{eq:action} and \cref{eq:main-post-formula}, the system $P \cdot \Tr^p(f')$ has the state space $\R^{k+p} = \R^{p+k}$ and the matrices
+    \begin{align*}
+        P \begin{bmatrix} A & B_2 \\ C_2 & D_{22} \end{bmatrix} P^{-1}
+         & = \begin{bmatrix} C_2 & D_{22} \\ A & B_2 \end{bmatrix} \begin{bmatrix} 0 & I_k \\ I_p & 0 \end{bmatrix}
+        = \begin{bmatrix} D_{22} & C_2 \\ B_2 & A \end{bmatrix}, \\
+        P \begin{bmatrix} B_1 \\ D_{21} \end{bmatrix}
+         & = \begin{bmatrix} D_{21} \\ B_1 \end{bmatrix}, \\
+        \begin{bmatrix} C_1 & D_{12} \end{bmatrix} P^{-1}
+         & = \begin{bmatrix} D_{12} & C_1 \end{bmatrix},
+    \end{align*}
+    together with $D_{11}$.
+    By \cref{eq:fb}, these are the state space and the matrices of $\Fb^p(f)$.
+    This proves \cref{eq:main-post}.
+
+    (c) By \cref{eq:quotient-operations} and the definition $\partial_p = [d_p]$,
+    \begin{equation*}
+        (\id_{\R^n} \otimes \partial_p) \then [f] = \bigl[ (\id_n \otimes d_p) \then f \bigr],
+        \qquad
+        [f] \then (\id_{\R^m} \otimes \partial_p) = \bigl[ f \then (\id_m \otimes d_p) \bigr] .
+    \end{equation*}
+    By (a) and (b), the representatives on the right are $p$-traceable, so by \cref{def:quotient} both morphisms are $p$-traceable, and
+    \begin{align*}
+        \Tr^p\bigl( (\id_{\R^n} \otimes \partial_p) \then [f] \bigr)
+         & = \bigl[ \Tr^p\bigl( (\id_n \otimes d_p) \then f \bigr) \bigr]
+        = [\Fb^p(f)] = \Fb^p([f]), \\
+        \Tr^p\bigl( [f] \then (\id_{\R^m} \otimes \partial_p) \bigr)
+         & = \bigl[ \Tr^p\bigl( f \then (\id_m \otimes d_p) \bigr) \bigr]
+        = [\Fb^p(f)] = \Fb^p([f]) .
+    \end{align*}
+    In the first line we used \cref{eq:main-pre}.
+    In the second line we used \cref{eq:main-post}: it says that $\Tr^p( f \then (\id_m \otimes d_p))$ and $\Fb^p(f)$ are equivalent, with equivalence transformation $P$.
+\end{proof}
+
+\section{Remarks and a consequence}
+
+\begin{remark}[Why the guarded trace is always defined]
+    The partial trace of $f$ itself is defined only if $I_p - D_{22}$ is invertible; this is the condition under which the equation $u_2 = y_2$ of \cref{rem:tr-origin} can be solved.
+    In \cref{eq:post}, the lower block row of the fourth matrix is zero: behind the delay, the output on the wire $\R^p$ does not depend directly on any input.
+    In \cref{eq:pre}, the right block column of the fourth matrix is zero: in front of the delay, the input on the wire $\R^p$ does not directly influence any output.
+    In both cases the block in the position of $D_{22}$ is zero, so that $E = I_p$: there is nothing to solve, and the formula \cref{eq:tr} involves no inverse of a matrix.
+    In terms of equations, both guarded traces impose precisely the wiring \cref{eq:fb-wiring} of \cref{rem:fb-origin}, with $w$ the state of the delay.
+\end{remark}
+
+\begin{remark}[Equality versus equivalence]
+    The equality \cref{eq:main-pre} holds for the systems themselves, while the equality \cref{eq:main-post} needs the permutation $P$.
+    The reason is the order of the state variables.
+    The composition formula \cref{eq:comp} puts the state of the first system on top.
+    So in $(\id_n \otimes d_p) \then f$ the state $w$ of the delay is on top of the state $x$ of $f$, as in \cref{def:fb}, and in $f \then (\id_m \otimes d_p)$ it is below; the matrix $P$ maps the stacked vector with $x$ on top of $w$ to the one with $w$ on top of $x$.
+    Had we defined $\Fb^p(f)$ with the state space $\R^{k+p}$ and the matrices in \cref{eq:main-post-formula}, the roles of (a) and (b) would be exchanged.
+    In $\LTIq$ the difference disappears.
+\end{remark}
+
+\begin{remark}[The two operators never agree]
+    Let $p \geq 1$, and let $f \colon \R^{n+p} \to \R^{m+p}$ be $p$-traceable, with state space $\R^k$.
+    Then $\Tr^p(f)$ has the state space $\R^k$ and $\Fb^p(f)$ has the state space $\R^{p+k}$.
+    Since equivalent systems have state spaces of the same dimension, $\Tr^p([f]) \neq \Fb^p([f])$.
+    So $\Fb^p$ is not an extension of $\Tr^p$ to all morphisms: by \cref{thm:main}, it is $\Tr^p$ applied after inserting a delay into the loop.
+\end{remark}
+
+\begin{corollary}[Every LTI system is a guarded trace of a static system]
+    \label{cor:static}
+    Let $g \colon \R^n \to \R^m$ be an LTI system, with $g = \sys{\R^k}{A}{B}{C}{D}$.
+    Consider the following system, whose state space is $\R^0$:
+    \begin{equation}
+        M_g \coloneqq \sys{\R^0}{0}{0}{0}{\begin{bmatrix} D & C \\ B & A \end{bmatrix}} \colon \R^{n+k} \to \R^{m+k} .
+    \end{equation}
+    Then
+    \begin{equation}
+        g = \Fb^k(M_g) = \Tr^k\bigl( (\id_n \otimes d_k) \then M_g \bigr) .
+    \end{equation}
+\end{corollary}
+
+\begin{proof}
+    The system $M_g$ has the state space $\R^0$, and the blocks of its fourth matrix with respect to $k$ are $D_{11} = D$, $D_{12} = C$, $D_{21} = B$, and $D_{22} = A$.
+    All its other blocks have no entries.
+    So \cref{eq:fb}, with $p = k$ and with state space $\R^{k+0} = \R^k$, gives
+    \begin{equation*}
+        \Fb^k(M_g) = \sys{\R^k}{D_{22}}{D_{21}}{D_{12}}{D_{11}} = \sys{\R^k}{A}{B}{C}{D} = g .
+    \end{equation*}
+    The second equality is \cref{eq:main-pre}, applied to $M_g$.
+\end{proof}
+
+\begin{remark}
+    In the continuous-time reading, \cref{cor:static} is the familiar block diagram of a state-space model: a constant matrix, with a bank of $k$ integrators connecting $k$ of its outputs back to $k$ of its inputs.
+    In the discrete-time reading, the integrators are replaced by one-step delays.
+\end{remark}
+
+\end{document}

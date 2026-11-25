@@ -1,0 +1,1314 @@
+% !TEX root = chapter-standalone.tex
+
+\section{Feedback and trace}
+\label{sec:feedback-categories}
+
+
+
+\begin{ctdefinition}[Feedback category]
+    \label{def:feedback-cat}
+    Let $\tup{\CatC, \mtimescat, \idmoncat, \braiding}$ be a symmetric \SY{strict monoidal category} (\cref{def:sym-stacking-cat}). A \emph{feedback operator} on it is
+    \constit
+    \begin{enumerate} 
+    \item a family of functions
+    \begin{equation}
+        \Fb_{\Obja,\Objb}^\Objc\colon \HomSet{\CatC}{\Obja \mtimescatob \Objc}{\Objb\mtimescatob \Objc}\to \HomSet{\CatC}{\Obja}{\Objb},
+    \end{equation}
+    \end{enumerate}
+    satisfying the following
+    
+    \condit
+    \begin{enumerate}
+        \item \emph{Naturality in $\Obja$:} For any morphisms $\mora\colon \Obja\mtimescatob \Objc \mto \Objb\mtimescatob \Objc$ and $\morb \colon \Obja' \mto \Obja$,
+              \begin{equation}\label{eq:feedback-naturality-1}
+                  \Fb_{\Obja', \Objb}^\Objc ( (\morb \mtimescatmor \catidat\Objc) \mthen \mora) = \morb \mthen \Fb_{\Obja, \Objb}^\Objc (\mora)
+              \end{equation}
+        \item \emph{Naturality in $\Objb$:} For any morphisms $\mora\colon \Obja\mtimescatob \Objc \mto \Objb\mtimescatob \Objc$ and $\morb \colon \Objb \mto \Objb'$,
+              \begin{equation}\label{eq:feedback-naturality-2}
+                  \Fb_{\Obja, \Objb'}^\Objc ( \mora \mthen (\morb \mtimescatmor \catidat\Objc) ) = \Fb_{\Obja, \Objb}^\Objc (\mora) \mthen \morb
+              \end{equation}
+        \item \emph{Dinaturality in $\Objc$ with respect to isomorphisms:}
+              For any morphism $\mora \colon \Obja  \mtimescatob \Objc \mto \Objb \mtimescatob \Objc'$ and any isomorphism $\morb \colon \Objc' \mto \Objc$,
+              \begin{equation}\label{eq:feedback-dinaturality}
+                  \Fb_{\Obja, \Objb}^{\Objc} (\mora \mthen (\catidat\Objb \mtimescatmor \morb)) = \Fb_{\Obja, \Objb}^{\Objc'}((\catidat\Obja \mtimescatmor \morb) \mthen \mora).
+              \end{equation}
+
+        \item \emph{Vanishing I:}
+              For any morphisms~$\mora \colon \Obja \mtimescatob \idmoncat \mto \Objb \mtimescatob \idmoncat$ in \CatC,
+              \begin{equation}
+                  \label{eq:feedback-vanishing_1}
+                  \Fb_{\Obja,\Objb}^\idmoncat (\mora)=  \mora.
+              \end{equation}
+        \item \emph{Vanishing II:}
+              For any morphism~$\mora \colon (\Obja\mtimescatob \Objc) \mtimescatob \Objd \mto (\Objb\mtimescatob \Objc) \mtimescatob \Objd$ in \CatC,
+              \begin{equation}
+                  \label{eq:feedback-vanishing_2}
+                  \Fb_{\Obja,\Objb}^\Objc\pars{
+                      \Fb_{\Obja \mtimescatob \Objc, \Objb \mtimescatob \Objc}^\Objd(\mora)} = \Fb_{\Obja,\Objb}^{\Objc\mtimescatob \Objd}( \mora).
+              \end{equation}
+        \item \emph{Superposing:}
+              For any morphisms~$\mora\colon \Obja\mtimescatob \Objc \mto \Objb\mtimescatob \Objc$ and $\morb \colon \Obje \mto \Objf$ in \CatC,
+              \begin{equation}
+                  \label{eq:feedback-superposing}
+                  \Fb_{\Obje\mtimescatob \Obja,\Objf\mtimescatob \Objb}^{\Objc}( \morb\mtimescatmor \mora  )=\morb\mtimescatmor \Fb_{\Obja,\Objb}^\Objc(\mora).
+              \end{equation}
+    \end{enumerate}
+\end{ctdefinition}
+
+
+\begin{ctdefinition}
+\label{def:trace-operator}
+A feedback operator on a symmetric strict monoidal category ... is called a \emph{trace}, with its members denoted
+\begin{equation}
+        \Tr_{\Obja,\Objb}^\Objc\colon \HomSet{\CatC}{\Obja \mtimescatob \Objc}{\Objb\mtimescatob \Objc}\to \HomSet{\CatC}{\Obja}{\Objb},
+    \end{equation}
+if it (additionally) satisfies 
+\begin{enumerate}
+\item \emph{Dinaturality} not just for isomorphisms: For any morphisms $\mora \colon \Obja  \mtimescatob \Objc \mto \Objb \mtimescatob \Objc'$ and $\morb \colon \Objc' \mto \Objc$,
+              \begin{equation}\label{eq:trace-dinaturality}
+                  \Tr_{\Obja, \Objb}^{\Objc} (\mora \mthen (\catidat\Objb \mtimescatmor \morb)) = \Tr_{\Obja, \Objb}^{\Objc'}((\catidat\Obja \mtimescatmor \morb) \mthen \mora).
+              \end{equation}
+\item \emph{Yanking:}
+              \begin{equation}
+                  \label{eq:yanking}
+                  \Tr_{\Objc,\Objc}^\Objc\pars{\braiding_{\Objc,\Objc}}=\catidat\Objc.
+              \end{equation}
+\end{enumerate}
+
+\end{ctdefinition}
+
+% Styles for the string diagrams which illustrate the conditions in the
+% definitions of feedback operator and trace (figures of this section).
+% A dashed frame marks a sub-expression; nested frames are shaded darker.
+\tikzset{
+    fbaxwire/.style={draw=objects, thick},
+    fbaxbox/.style={draw=morphisms, fill=white, thick, rectangle, inner sep=2pt, minimum width=7.5mm, minimum height=6.5mm},
+    fbaxtall/.style={fbaxbox, minimum width=8mm, minimum height=17mm},
+    fbaxlab/.style={font=\footnotesize, inner sep=1.5pt},
+    fbaxframe/.style={draw=black!75, densely dashed, fill=graphcolor!#1!white},
+    fbaxframe/.default=35,
+}
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        \draw[fbaxframe] (-0.93,-1.4) rectangle (0.93,1.07);
+        \node[fbaxtall] (f) at (0,0) {$\mora$};
+        \draw[fbaxwire] (-1.7,0.45) -- ([yshift=4.5mm]f.west);
+        \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (1.7,0.45);
+        \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (0.7,-0.45) -- (0.7,-1.2) -- (-0.7,-1.2) -- (-0.7,-0.45) -- ([yshift=-4.5mm]f.west);
+        \node[fbaxlab, above] at (-1.35,0.45) {$\Obja$};
+        \node[fbaxlab, above] at (1.35,0.45) {$\Objb$};
+        \node[fbaxlab, above] at (-0.7,-0.45) {$\Objc$};
+        \node[fbaxlab, above] at (0.7,-0.45) {$\Objc$};
+    \end{tikzpicture}
+    \caption{The trace operator: given a morphism~$\mora \colon \Obja \mtimescatob \Objc \mto \Objb \mtimescatob \Objc$, its trace~$\Tr_{\Obja,\Objb}^\Objc(\mora) \colon \Obja \mto \Objb$ is obtained by ``closing the loop'' on the~$\Objc$ wire.}
+    \label{fig:trace-operator}
+\end{figure}
+
+The diagrams in the figures \cref{fig:trace-naturality-x} to \cref{fig:trace-superposing} illustrate each of the axioms in the definition. Each axiom has an interpretation as a kind of compatibility condition. 
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        % Left-hand side: Fb( (g (x) id_Z) ; f )
+        \begin{scope}
+            \draw[fbaxframe=35] (-1.1,-1.55) rectangle (2.5,1.25);
+            \draw[fbaxframe=70] (-0.68,-1.07) rectangle (2.08,1.07);
+            \draw[fbaxframe=100] (-0.52,-0.92) rectangle (0.52,0.92);
+            \node[fbaxbox] (g) at (0,0.45) {$\morb$};
+            \node[fbaxbox] (i) at (0,-0.45) {$\catidat{\Objc}$};
+            \node[fbaxtall] (f) at (1.5,0) {$\mora$};
+            \draw[fbaxwire] (-1.7,0.45) -- (g.west);
+            \draw[fbaxwire] (g.east) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] (i.east) -- ([yshift=-4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (3.1,0.45);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (2.29,-0.45) -- (2.29,-1.33) -- (-0.89,-1.33) -- (-0.89,-0.45) -- (i.west);
+            \node[fbaxlab, above] at (-1.4,0.45) {$\Obja'$};
+            \node[fbaxlab, above] at (0.81,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (0.81,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (2.8,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (-0.89,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (2.29,-0.45) {$\Objc$};
+        \end{scope}
+        \node at (3.52,-0.15) {$=$};
+        % Right-hand side: g ; Fb(f)
+        \begin{scope}[xshift=5.15cm]
+            \draw[fbaxframe=35] (-0.6,-1.55) rectangle (2.75,1.25);
+            \draw[fbaxframe=70] (0.72,-1.4) rectangle (2.58,1.07);
+            \node[fbaxbox] (g) at (0,0.45) {$\morb$};
+            \node[fbaxtall] (f) at (1.65,0) {$\mora$};
+            \draw[fbaxwire] (-1.2,0.45) -- (g.west);
+            \draw[fbaxwire] (g.east) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (3.35,0.45);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (2.35,-0.45) -- (2.35,-1.2) -- (0.95,-1.2) -- (0.95,-0.45) -- ([yshift=-4.5mm]f.west);
+            \node[fbaxlab, above] at (-0.9,0.45) {$\Obja'$};
+            \node[fbaxlab, above] at (0.985,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (3.05,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (0.95,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (2.35,-0.45) {$\Objc$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Naturality in $\Obja$}
+    \label{fig:trace-naturality-x}
+\end{figure}
+
+The axiom in \cref{fig:trace-naturality-x} is about compatibility of feedback with series composition via precomposition. 
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        % Left-hand side: Fb( f ; (g (x) id_Z) )
+        \begin{scope}
+            \draw[fbaxframe=35] (-1.0,-1.55) rectangle (2.6,1.25);
+            \draw[fbaxframe=70] (-0.58,-1.07) rectangle (2.18,1.07);
+            \draw[fbaxframe=100] (0.98,-0.92) rectangle (2.02,0.92);
+            \node[fbaxtall] (f) at (0,0) {$\mora$};
+            \node[fbaxbox] (g) at (1.5,0.45) {$\morb$};
+            \node[fbaxbox] (i) at (1.5,-0.45) {$\catidat{\Objc}$};
+            \draw[fbaxwire] (-1.6,0.45) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (g.west);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (i.west);
+            \draw[fbaxwire] (g.east) -- (3.2,0.45);
+            \draw[fbaxwire] (i.east) -- (2.39,-0.45) -- (2.39,-1.33) -- (-0.79,-1.33) -- (-0.79,-0.45) -- ([yshift=-4.5mm]f.west);
+            \node[fbaxlab, above] at (-1.3,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (0.69,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (0.69,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (2.9,0.45) {$\Objb'$};
+            \node[fbaxlab, above] at (-0.79,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (2.39,-0.45) {$\Objc$};
+        \end{scope}
+        \node at (3.62,-0.15) {$=$};
+        % Right-hand side: Fb(f) ; g
+        \begin{scope}[xshift=5.75cm]
+            \draw[fbaxframe=35] (-1.1,-1.55) rectangle (2.45,1.25);
+            \draw[fbaxframe=70] (-0.93,-1.4) rectangle (0.93,1.07);
+            \node[fbaxtall] (f) at (0,0) {$\mora$};
+            \node[fbaxbox] (g) at (1.85,0.45) {$\morb$};
+            \draw[fbaxwire] (-1.7,0.45) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (g.west);
+            \draw[fbaxwire] (g.east) -- (3.05,0.45);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (0.7,-0.45) -- (0.7,-1.2) -- (-0.7,-1.2) -- (-0.7,-0.45) -- ([yshift=-4.5mm]f.west);
+            \node[fbaxlab, above] at (-1.4,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (1.21,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (2.75,0.45) {$\Objb'$};
+            \node[fbaxlab, above] at (-0.7,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (0.7,-0.45) {$\Objc$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Naturality in $\Objb$}
+    \label{fig:trace-naturality-y}
+\end{figure}
+
+
+The axiom in \cref{fig:trace-naturality-y} is about compatibility of feedback with series composition via postcomposition. 
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        % Left-hand side: Fb^Z( f ; (id_Y (x) g) )
+        \begin{scope}
+            \draw[fbaxframe=35] (-1.0,-1.55) rectangle (2.6,1.25);
+            \draw[fbaxframe=70] (-0.58,-1.07) rectangle (2.18,1.07);
+            \draw[fbaxframe=100] (0.98,-0.92) rectangle (2.02,0.92);
+            \node[fbaxtall] (f) at (0,0) {$\mora$};
+            \node[fbaxbox] (i) at (1.5,0.45) {$\catidat{\Objb}$};
+            \node[fbaxbox] (g) at (1.5,-0.45) {$\morb$};
+            \draw[fbaxwire] (-1.6,0.45) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (i.west);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (g.west);
+            \draw[fbaxwire] (i.east) -- (3.2,0.45);
+            \draw[fbaxwire] (g.east) -- (2.39,-0.45) -- (2.39,-1.33) -- (-0.79,-1.33) -- (-0.79,-0.45) -- ([yshift=-4.5mm]f.west);
+            \node[fbaxlab, above] at (-1.3,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (0.69,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (0.69,-0.45) {$\Objc'$};
+            \node[fbaxlab, above] at (2.9,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (-0.79,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (2.39,-0.45) {$\Objc$};
+        \end{scope}
+        \node at (3.62,-0.15) {$=$};
+        % Right-hand side: Fb^{Z'}( (id_X (x) g) ; f )
+        \begin{scope}[xshift=5.75cm]
+            \draw[fbaxframe=35] (-1.1,-1.55) rectangle (2.5,1.25);
+            \draw[fbaxframe=70] (-0.68,-1.07) rectangle (2.08,1.07);
+            \draw[fbaxframe=100] (-0.52,-0.92) rectangle (0.52,0.92);
+            \node[fbaxbox] (i) at (0,0.45) {$\catidat{\Obja}$};
+            \node[fbaxbox] (g) at (0,-0.45) {$\morb$};
+            \node[fbaxtall] (f) at (1.5,0) {$\mora$};
+            \draw[fbaxwire] (-1.7,0.45) -- (i.west);
+            \draw[fbaxwire] (i.east) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] (g.east) -- ([yshift=-4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (3.1,0.45);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (2.29,-0.45) -- (2.29,-1.33) -- (-0.89,-1.33) -- (-0.89,-0.45) -- (g.west);
+            \node[fbaxlab, above] at (-1.4,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (0.81,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (0.81,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (2.8,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (-0.89,-0.45) {$\Objc'$};
+            \node[fbaxlab, above] at (2.29,-0.45) {$\Objc'$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Dinaturality in $\Objc$}
+    \label{fig:trace-dinaturality-z}
+\end{figure}
+
+The axiom in \cref{fig:trace-dinaturality-z} is about compatibility of feedback with series composition in the feedback variable; it is a kind of ``cyclicity'' condition. 
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        % Left-hand side: Fb^1(f)
+        \begin{scope}
+            \draw[fbaxframe] (-0.93,-1.4) rectangle (0.93,1.07);
+            \node[fbaxtall] (f) at (0,0) {$\mora$};
+            \draw[fbaxwire] (-1.7,0.45) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (1.7,0.45);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (0.7,-0.45) -- (0.7,-1.2) -- (-0.7,-1.2) -- (-0.7,-0.45) -- ([yshift=-4.5mm]f.west);
+            \node[fbaxlab, above] at (-1.35,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (1.35,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (-0.7,-0.45) {$\idmoncat$};
+            \node[fbaxlab, above] at (0.7,-0.45) {$\idmoncat$};
+        \end{scope}
+        \node at (2.3,-0.15) {$=$};
+        % Right-hand side: f
+        \begin{scope}[xshift=4.2cm, yshift=-0.15cm]
+            \node[fbaxbox] (f) at (0,0) {$\mora$};
+            \draw[fbaxwire] (-1.3,0) -- (f.west) node[fbaxlab, above, pos=0.35] {$\Obja$};
+            \draw[fbaxwire] (f.east) -- (1.3,0) node[fbaxlab, above, pos=0.65] {$\Objb$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Vanishing I}
+    \label{fig:trace-vanishing-i}
+\end{figure}
+
+
+The axiom in \cref{fig:trace-vanishing-i} is about compatibility of feedback with the monoidal unit. 
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        % Left-hand side: Fb^Z( Fb^U(f) ), inner loop for U and outer loop for Z
+        \begin{scope}
+            \draw[fbaxframe=35] (-1.85,-1.9) rectangle (1.85,1.3);
+            \draw[fbaxframe=70] (-1.1,-1.42) rectangle (1.1,1.15);
+            \node[fbaxtall, minimum height=20mm] (f) at (0,0) {$\mora$};
+            \draw[fbaxwire] (-2.45,0.6) -- ([yshift=6mm]f.west);
+            \draw[fbaxwire] ([yshift=6mm]f.east) -- (2.45,0.6);
+            % outer loop: Z
+            \draw[fbaxwire] (f.east) -- (1.55,0) -- (1.55,-1.67) -- (-1.55,-1.67) -- (-1.55,0) -- (f.west);
+            % inner loop: U
+            \draw[fbaxwire] ([yshift=-6mm]f.east) -- (0.85,-0.6) -- (0.85,-1.22) -- (-0.85,-1.22) -- (-0.85,-0.6) -- ([yshift=-6mm]f.west);
+            \node[fbaxlab, above] at (-2.15,0.6) {$\Obja$};
+            \node[fbaxlab, above] at (2.15,0.6) {$\Objb$};
+            \node[fbaxlab, above] at (-1.33,0) {$\Objc$};
+            \node[fbaxlab, above] at (1.33,0) {$\Objc$};
+            \node[fbaxlab, above] at (-0.63,-0.6) {$\Objd$};
+            \node[fbaxlab, above] at (0.63,-0.6) {$\Objd$};
+        \end{scope}
+        \node at (2.88,-0.15) {$=$};
+        % Right-hand side: Fb^{Z (x) U}(f), with a single loop for the bundle Z (x) U
+        \begin{scope}[xshift=5.45cm]
+            \draw[fbaxframe] (-1.55,-1.75) rectangle (1.55,1.3);
+            \node[fbaxtall, minimum height=20mm] (f) at (0,0) {$\mora$};
+            \draw[fbaxwire] (-2.15,0.6) -- ([yshift=6mm]f.west);
+            \draw[fbaxwire] ([yshift=6mm]f.east) -- (2.15,0.6);
+            \draw[fbaxwire] ([yshift=-3mm]f.east) -- (1.3,-0.3) -- (1.3,-1.5) -- (-1.3,-1.5) -- (-1.3,-0.3) -- ([yshift=-3mm]f.west);
+            \node[fbaxlab, above] at (-1.85,0.6) {$\Obja$};
+            \node[fbaxlab, above] at (1.85,0.6) {$\Objb$};
+            \node[fbaxlab, above] at (-0.88,-0.3) {$\Objc \mtimescatob \Objd$};
+            \node[fbaxlab, above] at (0.88,-0.3) {$\Objc \mtimescatob \Objd$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Vanishing II}
+    \label{fig:trace-vanishing-ii}
+\end{figure}
+
+The axiom in \cref{fig:trace-vanishing-ii} is about compatibility of feedback with the monoidal product. 
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        % Left-hand side: Fb( g (x) f )
+        \begin{scope}
+            \draw[fbaxframe=35] (-1.05,-1.55) rectangle (1.05,2.18);
+            \draw[fbaxframe=70] (-0.58,-1.02) rectangle (0.58,2.0);
+            \node[fbaxbox] (g) at (0,1.5) {$\morb$};
+            \node[fbaxtall] (f) at (0,0) {$\mora$};
+            \draw[fbaxwire] (-1.75,1.5) -- (g.west);
+            \draw[fbaxwire] (g.east) -- (1.75,1.5);
+            \draw[fbaxwire] (-1.75,0.45) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (1.75,0.45);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (0.81,-0.45) -- (0.81,-1.33) -- (-0.81,-1.33) -- (-0.81,-0.45) -- ([yshift=-4.5mm]f.west);
+            \node[fbaxlab, above] at (-1.4,1.5) {$\Obje$};
+            \node[fbaxlab, above] at (1.4,1.5) {$\Objf$};
+            \node[fbaxlab, above] at (-1.4,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (1.4,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (-0.81,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (0.81,-0.45) {$\Objc$};
+        \end{scope}
+        \node at (2.45,0.3) {$=$};
+        % Right-hand side: g (x) Fb(f)
+        \begin{scope}[xshift=4.9cm]
+            \draw[fbaxframe=35] (-1.1,-1.55) rectangle (1.1,2.18);
+            \draw[fbaxframe=70] (-0.93,-1.4) rectangle (0.93,1.02);
+            \node[fbaxbox] (g) at (0,1.5) {$\morb$};
+            \node[fbaxtall] (f) at (0,0) {$\mora$};
+            \draw[fbaxwire] (-1.8,1.5) -- (g.west);
+            \draw[fbaxwire] (g.east) -- (1.8,1.5);
+            \draw[fbaxwire] (-1.8,0.45) -- ([yshift=4.5mm]f.west);
+            \draw[fbaxwire] ([yshift=4.5mm]f.east) -- (1.8,0.45);
+            \draw[fbaxwire] ([yshift=-4.5mm]f.east) -- (0.7,-0.45) -- (0.7,-1.2) -- (-0.7,-1.2) -- (-0.7,-0.45) -- ([yshift=-4.5mm]f.west);
+            \node[fbaxlab, above] at (-1.45,1.5) {$\Obje$};
+            \node[fbaxlab, above] at (1.45,1.5) {$\Objf$};
+            \node[fbaxlab, above] at (-1.45,0.45) {$\Obja$};
+            \node[fbaxlab, above] at (1.45,0.45) {$\Objb$};
+            \node[fbaxlab, above] at (-0.7,-0.45) {$\Objc$};
+            \node[fbaxlab, above] at (0.7,-0.45) {$\Objc$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Superposing}
+    \label{fig:trace-superposing}
+\end{figure}
+
+The axiom in \cref{fig:trace-superposing} is about compatibility of feedback with parallel composition. 
+
+
+% Flush the pending float queue before the next mdframed environment.
+% Without this, the seven consecutive [h!] figures above leave no space on the
+% page and mdframed loops forever ("Not enough space on this page").
+\FloatBarrier
+
+
+The diagrammatic equation in \cref{fig:trace-yanking} illustrates the Yanking axiom. 
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        % Left-hand side: Tr(br_{Z,Z}); the box with the crossing is the braiding
+        \draw[fbaxframe] (-1.05,-1.4) rectangle (1.05,1.07);
+        \node[fbaxtall, minimum width=10mm] (b) at (0,0) {};
+        \draw[draw=morphisms, thick] (-0.5,0.45) -- (-0.3,0.45) -- (0.3,-0.45) -- (0.5,-0.45);
+        \draw[draw=morphisms, thick] (-0.5,-0.45) -- (-0.3,-0.45) -- (0.3,0.45) -- (0.5,0.45);
+        \draw[fbaxwire] (-1.8,0.45) -- ([yshift=4.5mm]b.west);
+        \draw[fbaxwire] ([yshift=4.5mm]b.east) -- (1.8,0.45);
+        \draw[fbaxwire] ([yshift=-4.5mm]b.east) -- (0.82,-0.45) -- (0.82,-1.2) -- (-0.82,-1.2) -- (-0.82,-0.45) -- ([yshift=-4.5mm]b.west);
+        \node[fbaxlab, above] at (-1.45,0.45) {$\Objc$};
+        \node[fbaxlab, above] at (1.45,0.45) {$\Objc$};
+        \node[fbaxlab, above] at (-0.82,-0.45) {$\Objc$};
+        \node[fbaxlab, above] at (0.82,-0.45) {$\Objc$};
+        \node at (2.3,-0.15) {$=$};
+        % Right-hand side: the identity morphism of Z
+        \draw[fbaxwire] (2.8,0.45) -- (4.8,0.45);
+        \node[fbaxlab, above] at (3.1,0.45) {$\Objc$};
+        \node[fbaxlab, above] at (4.5,0.45) {$\Objc$};
+    \end{tikzpicture}
+    \caption{Yanking}
+    \label{fig:trace-yanking}
+\end{figure}
+
+
+% Flush the yanking figure before the next mdframed environment (see the note above).
+\FloatBarrier
+
+The left-hand side of the yanking condition deserves a name of its own, because it also makes sense for feedback operators which are not traces.
+
+\begin{ctdefinition}[Delay of a feedback operator]
+    \label{def:feedback-delay}
+    Let $\Fb$ be a feedback operator on a symmetric \SY{strict monoidal category} $\tup{\CatC, \mtimescat, \idmoncat, \braiding}$, and let $\Objc$ be an object of $\CatC$.
+    The \emph{delay} of $\Objc$ with respect to $\Fb$ is the morphism
+    \begin{equation}
+        \label{eq:feedback-delay}
+        \fbdelay_{\Objc} \definedas \Fb_{\Objc,\Objc}^{\Objc}\pars{\braiding_{\Objc,\Objc}} \colon \Objc \mto \Objc.
+    \end{equation}
+\end{ctdefinition}
+
+The idea is the following.
+The braiding $\braiding_{\Objc,\Objc}$ has two inputs and two outputs of type $\Objc$; it passes its first input on to its second output, and its second input on to its first output.
+When we feed its second output back into its second input, as on the left-hand side of \cref{fig:trace-yanking}, whatever enters at the remaining input is therefore first sent into the loop, travels around the loop once, and only then leaves at the remaining output.
+So the delay $\fbdelay_{\Objc}$ describes what happens to something of type $\Objc$ when it travels once around a feedback loop.
+
+In these terms, the yanking condition \cref{eq:yanking} says that all delays are identity morphisms: for a trace, travelling around a loop has no effect, and a loop with nothing on it can be pulled straight.
+For a feedback operator which is not a trace, travelling around a loop may leave a mark.
+In the examples of machines and of dynamical systems which we discuss in \cref{sec:mealy-stateful-processes} and \cref{sec:lti-stateful-processes}, the delay of $\Objc$ holds back whatever passes through it for one step of time, or integrates it; this is where the name comes from.
+In particular, to show that a feedback operator is not a trace, it is enough to find one object whose delay is not an identity morphism.
+
+
+\subsection{Basic examples}
+
+%\begin{ctdefinition}[Trace for $\RelL$ with concatenation as monoidal product]
+%    \label{def:tuple-REL-trace}
+%    Consider the symmetric strict monoidal category $\RelL$, where the monoidal product is defined via the concatenation operation $\cprod$ for lists of sets.
+%    Given a relation $\relA \colon \cObj{\setA, \setC}  \to \cObj{\setB, \setC}$, its \emph{trace} is defined as
+%    %
+%    \begin{equation}
+%        \label{eq:tupel-REL-tracedef}
+%        \begin{aligned}
+%            \Tr_{\cObj{\setA}, \cObj{\setB}}^{\cObj{\setC}}(\relA) = \{ & \tup{\ela, \elb} \in \cObj{\setA} \times \cObj{\setB} \mid \\
+%                                                                           & \exists \ \elc \in \cObj{\setC} : \tup{\ela \tupconcat \elc, \elb \tupconcat \elc} \in \relA \}
+%        \end{aligned}
+%    \end{equation}
+%\end{ctdefinition}
+
+
+\paragraph{Relations with a monoidal product like the cartesian product}
+\label{sec:feedback-RelL}
+
+Recall the strict monoidal category $\RelL$ (\cref{def:RelL}).
+Its objects are sets of tuples, its morphisms are relations, and its monoidal product is given, on objects, by the multiplication $\cprod$ of $\SetL$, and, on morphisms, by relating concatenated tuples entry by entry, as in \cref{eq:RelL-monoidal-product}.
+
+\begin{ctdefinition}[Trace for $\RelL$]
+    \label{def:RelL-feedback}
+    For the strict monoidal category $\RelL$, a trace operator is defined as follows.
+    Given objects $\setA$, $\setB$, and $\setC$ of $\RelL$, and a relation
+    \begin{equation}
+        \relA \colon \setA \cprod \setC \mto \setB \cprod \setC,
+    \end{equation}
+    we set
+    \begin{equation}
+        \label{eq:RelL-feedback}
+        \Tr_{\setA,\setB}^\setC (\relA) \definedas \makeset{ \tup{\ela, \elb} \setin \setA \cartprod \setB \mid \exists \ \elc \setin \setC \colon \tup{\maketupconcat{\ela, \elc}, \maketupconcat{\elb, \elc}} \setin \relA }.
+    \end{equation}
+\end{ctdefinition}
+
+In words: $\Tr_{\setA,\setB}^\setC (\relA)$ relates $\ela$ to $\elb$ if there is an element $\elc$ of $\setC$ such that $\relA$ relates $\maketupconcat{\ela, \elc}$ to $\maketupconcat{\elb, \elc}$.
+So the trace operator asks for a value on the wire $\setC$ which is the same on both sides of $\relA$, and it then hides this wire.
+
+This operator satisfies all the conditions of \cref{def:feedback-cat} and of \cref{def:trace-operator}, so it is indeed a trace.
+For example, the yanking condition holds: by \cref{eq:RelL-braiding}, we have $\tup{\maketupconcat{\elc, \elc''}, \maketupconcat{\elc', \elc''}} \setin \braiding_{\setC,\setC}$ precisely when $\elc'' = \elc'$ and $\elc = \elc''$, and so $\Tr_{\setC,\setC}^{\setC}(\braiding_{\setC,\setC})$ is the equality relation on $\setC$, which is the identity morphism of $\setC$.
+In other words, the delay of every object (\cref{def:feedback-delay}) is an identity morphism.
+Two of the other conditions are the subject of the following exercise.
+
+\begin{gradedexercise}[\exname{TracingRelations}]
+    \label{ex:TracingRelations}
+
+    Consider the strict monoidal category $\RelL$ and the trace operator
+    \begin{equation*}
+        \Tr_{\setA,\setB}^\setC \colon \HomSet{\RelL}{\setA \cprod \setC}{\setB \cprod \setC}\to \HomSet{\RelL}{\setA}{\setB}
+    \end{equation*}
+    which is defined, for a morphism $\relA \setin\HomSet{\RelL}{\setA \cprod \setC}{\setB\cprod \setC}$, by
+    \begin{equation}
+        \Tr_{\setA,\setB}^\setC(\relA) = \makeset{\tup{\ela, \elb} \setin\setA \cartprod \setB \mid \exists \ \elc \setin\setC \colon \tup{\maketupconcat{\ela, \elc}, \maketupconcat{\elb, \elc}} \setin\relA}.
+    \end{equation}
+
+    Your task is to check that this definition satisfies the following two conditions of \cref{def:feedback-cat}, which every trace operator has to satisfy:
+
+    \begin{enumerate}
+
+        \item \emph{Vanishing II}:
+
+              For any relation~$\relA \colon \setA \cprod \setC \cprod \setD \mto \setB \cprod \setC \cprod \setD$ in $\RelL$,
+              \begin{equation}
+                  \Tr_{\setA,\setB}^\setC\pars{
+                      \Tr_{\setA \cprod \setC, \setB \cprod \setC}^\setD(\relA)} = \Tr_{\setA,\setB}^{\setC\cprod \setD}(\relA).
+              \end{equation}
+
+        \item \emph{Superposing}:
+
+              For any relations~$\relA \colon \setA\cprod \setC \mto \setB\cprod \setC$ and $\relB \colon \setE \mto \setF$ in $\RelL$,
+              \begin{equation}
+                  \Tr_{\setE\cprod \setA,\setF\cprod \setB}^{\setC}\pars{\relB \mtimescatmor \relA} = \relB \mtimescatmor \Tr_{\setA,\setB}^\setC(\relA).
+              \end{equation}
+    \end{enumerate}
+\end{gradedexercise}
+
+\solutionof{TracingRelations}
+
+
+\paragraph{Relations with a monoidal product like the sum}
+\label{sec:feedback-RelR}
+
+Recall from \cref{def:RelR} the strict monoidal category $\RelR$.
+Its objects are sets of indexed elements, its morphisms are relations, and its monoidal product is given, on objects, by the multiplication $\sprod$ of $\SetR$, and, on morphisms, by \cref{eq:RelR-monoidal-product}.
+Recall also from \cref{eq:strict-monoidal-sum-sets-elements} that, for objects $\setA$ and $\setC$, the set $\setA \sprod \setC$ consists of the elements of $\setA$, together with the elements of $\setC$ with their indices shifted by the width $\indexwidth{\setA}$ of $\setA$.
+
+In $\RelR$, the monoidal product of any two objects always comes with canonical inclusion relations
+\begin{equation}
+    \begin{aligned}
+        \inj_1 \colon & \setA \mto \setA\sprod\setC \\
+                      & \makeset{ \tup{\ela, \ela} \mid \ela \setin \setA },
+    \end{aligned}
+    \qquad \qquad
+    \begin{aligned}
+        \inj_2 \colon & \setC  \mto \setA\sprod\setC \\
+                      & \makeset{ \tup{\elc, \indexshift{\elc}{\indexwidth{\setA}}} \mid \elc \setin \setC },
+    \end{aligned}
+\end{equation}
+and canonical projection relations
+\begin{equation}
+    \begin{aligned}
+        \proj_1 \colon & \setA\sprod\setC \mto \setA \\
+                       & \makeset{ \tup{\ela, \ela} \mid \ela \setin \setA },
+    \end{aligned}
+    \qquad \qquad
+    \begin{aligned}
+        \proj_2 \colon & \setA\sprod\setC  \mto \setC \\
+                       & \makeset{ \tup{\indexshift{\elc}{\indexwidth{\setA}}, \elc} \mid \elc \setin \setC }.
+    \end{aligned}
+\end{equation}
+Now suppose we are given a relation of type
+\begin{equation}
+    \relA \colon \setA \sprod \setC \mto \setB \sprod \setD.
+\end{equation}
+We can pre-compose it with the inclusion $\inj_1 \colon \setA \mto \setA\sprod\setC$ and post-compose it with the projection $\proj_1 \colon \setB \sprod\setD \mto \setB$ to obtain a relation
+\begin{equation}
+    \relA_{1,1} \colon \setA \overset{\inj_1}{\mto} \setA \sprod \setC \overset{\relA}{\mto} \setB \sprod \setD \overset{\proj_1}{\mto} \setB.
+\end{equation}
+In a similar manner we also obtain relations
+\begin{equation}
+    \relA_{2, 1} \colon \setC \mto \setB, \qquad \relA_{1, 2} \colon \setA \mto \setD, \qquad \relA_{2, 2} \colon \setC \mto \setD,
+\end{equation}
+induced from $\relA$.
+Explicitly, these four relations are obtained from $\relA$ by undoing the shifts of the indices:
+\begin{equation}
+    \label{eq:RelR-blocks}
+    \begin{aligned}
+        \relA_{1,1} & = \makeset{ \tup{\ela, \elb} \mid \tup{\ela, \elb} \setin \relA },                                               &
+        \relA_{2,1} & = \makeset{ \tup{\elc, \elb} \mid \tup{\indexshift{\elc}{\indexwidth{\setA}}, \elb} \setin \relA },                \\
+        \relA_{1,2} & = \makeset{ \tup{\ela, \eld} \mid \tup{\ela, \indexshift{\eld}{\indexwidth{\setB}}} \setin \relA },               &
+        \relA_{2,2} & = \makeset{ \tup{\elc, \eld} \mid \tup{\indexshift{\elc}{\indexwidth{\setA}}, \indexshift{\eld}{\indexwidth{\setB}}} \setin \relA },
+    \end{aligned}
+\end{equation}
+where $\ela \setin \setA$, $\elb \setin \setB$, $\elc \setin \setC$, and $\eld \setin \setD$.
+Together, the four relations obtained in this way contain the same information as the original relation $\relA$, and we can arrange them in a block-matrix notation
+\begin{equation}
+    \begin{bmatrix}
+        \relA_{1,1} & \relA_{2,1} \\
+        \relA_{1,2} & \relA_{2,2}
+    \end{bmatrix}
+\end{equation}
+which highlights that this decomposition is analogous to block-matrices between vector spaces.
+
+\begin{ctdefinition}[Trace for $\RelR$]
+    \label{def:RelR-feedback}
+    For the strict monoidal category $\RelR$, a trace operator is defined as follows.
+    Given objects $\setA$, $\setB$, and $\setC$ of $\RelR$, and a relation
+    \begin{equation}
+        \relA \colon \setA \sprod \setC \mto \setB \sprod \setC,
+    \end{equation}
+    we set
+    \begin{equation}\label{eq:trace-rel-sum}
+        \Tr_{\setA,\setB}^\setC (\relA) \definedas \relA_{1,1} \setunion \bigcup_{n \geq 0} ( \relA_{1,2} \mthen \relA_{2,2}^n \mthen \relA_{2,1} ).
+    \end{equation}
+    Here, ``$\relA_{2,2}^n$'' means ``$\relA_{2,2}$ composed with itself $n$-many times''; for $n = 0$, it is the identity relation of $\setC$.
+\end{ctdefinition}
+
+In words: $\Tr_{\setA,\setB}^\setC (\relA)$ relates an element of $\setA$ to an element of $\setB$ if $\relA$ relates them directly, or if we can get from the one to the other by going around the loop: first from $\setA$ to $\setC$, then any number of times from $\setC$ back to $\setC$, and finally from $\setC$ to $\setB$.
+So here the trace operator describes \emph{iteration}.
+Compare this with the trace operator for $\RelL$ in \cref{def:RelL-feedback}, where a single value has to be present on both sides of the relation at once.
+
+This operator is a trace as well.
+For example, the braiding $\braiding_{\setC,\setC}$ of $\RelR$ (\cref{exa:SetR-symmetric}) relates each element of the first part of $\setC \sprod \setC$ to the corresponding element of the second part, and vice versa.
+So its blocks $(\braiding_{\setC,\setC})_{1,1}$ and $(\braiding_{\setC,\setC})_{2,2}$ are empty relations, and its blocks $(\braiding_{\setC,\setC})_{1,2}$ and $(\braiding_{\setC,\setC})_{2,1}$ are identity relations.
+Hence only the term for $n = 0$ contributes to \cref{eq:trace-rel-sum}, and $\Tr_{\setC,\setC}^{\setC}(\braiding_{\setC,\setC})$ is the identity relation of $\setC$: the yanking condition holds.
+
+\paragraph{A trace for monotone relations}
+\label{sec:trace-mRelL}
+
+Recall from \cref{def:mRelL} the category $\mRelL$.
+Its objects are preorders of tuples, that is, the objects of $\PreL$, and its morphisms are monotone relations (\cref{def:monotone-relation}).
+It is a strict monoidal category: on objects, its monoidal product is the one of $\PreL$, and on morphisms, it is given by the same formula as in $\RelL$, namely \cref{eq:RelL-monoidal-product}.
+A trace operator for $\mRelL$ is also defined by the same formula as in $\RelL$, namely \cref{eq:RelL-feedback}.
+
+Let $\posA$, $\posB$, and $\posC$ be objects of $\mRelL$, and let
+\begin{equation}
+    \monrelM \colon \posA \mtimescatob \posC \profto \posB \mtimescatob \posC
+\end{equation}
+be a monotone relation.
+We set
+\begin{equation}
+    \label{eq:mRelL-feedback}
+    \Tr_{\posA,\posB}^{\posC}(\monrelM) \definedas \makeset{ \tup{\posela, \poselb} \mid \exists \ \poselc \setin \posC \colon \tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc}} \setin \monrelM },
+\end{equation}
+where $\posela \setin \posA$ and $\poselb \setin \posB$.
+
+This relation is again monotone, and so it is a morphism $\posA \profto \posB$ of $\mRelL$.
+Indeed, suppose that $\tup{\posela, \poselb}$ is an element of $\Tr_{\posA,\posB}^{\posC}(\monrelM)$, and let $\poselc$ be an element of $\posC$ such that $\tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc}} \setin \monrelM$.
+If $\posela' \posAleq \posela$, then $\maketupconcat{\posela', \poselc}$ is below $\maketupconcat{\posela, \poselc}$, because tuples are compared entry by entry.
+Since $\monrelM$ is closed downward in the source, it follows that $\tup{\maketupconcat{\posela', \poselc}, \maketupconcat{\poselb, \poselc}} \setin \monrelM$, and so $\tup{\posela', \poselb}$ is an element of $\Tr_{\posA,\posB}^{\posC}(\monrelM)$.
+In the same way one sees that $\Tr_{\posA,\posB}^{\posC}(\monrelM)$ is closed upward in the target.
+
+The conditions of \cref{def:feedback-cat} and of \cref{def:trace-operator} can be checked in a similar way as for $\RelL$ (\cref{ex:TracingRelations}); so this operator is a trace as well.
+Here one has to keep in mind that the identity morphism of an object $\posA$ of $\mRelL$ is not the equality relation, but the preorder relation $\posAleq$ (\cref{lem:monrel-leq-neutral}).
+For example, by \cref{eq:mRelL-braiding}, a pair $\tup{\poselc, \poselc'}$ is an element of $\Tr_{\posC,\posC}^{\posC}(\braiding_{\posC,\posC})$ precisely when there exists an element $\poselc''$ of $\posC$ with $\poselc \posCleq \poselc''$ and $\poselc'' \posCleq \poselc'$, that is, when $\poselc \posCleq \poselc'$.
+So $\Tr_{\posC,\posC}^{\posC}(\braiding_{\posC,\posC})$ is the preorder relation of $\posC$, and the yanking condition holds.
+
+For monotone relations, there is a second way to describe this trace operator: a pair $\tup{\posela, \poselb}$ is an element of $\Tr_{\posA,\posB}^{\posC}(\monrelM)$ if and only if there exist elements $\poselc$ and $\poselc'$ of $\posC$ such that
+\begin{equation}
+    \label{eq:mRelL-feedback-leq}
+    \poselc' \posCleq \poselc
+    \qquad \text{and} \qquad
+    \tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'}} \setin \monrelM.
+\end{equation}
+Indeed, if $\tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc}} \setin \monrelM$, then we can choose $\poselc' = \poselc$.
+Conversely, if \cref{eq:mRelL-feedback-leq} holds, then $\maketupconcat{\poselb, \poselc'}$ is below $\maketupconcat{\poselb, \poselc}$, and since $\monrelM$ is closed upward in the target, it follows that $\tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc}} \setin \monrelM$.
+So in $\mRelL$, closing the loop does not require that the element of $\posC$ on the side of the target is \emph{equal} to the one on the side of the source; it is enough that it is below it.
+
+This is the form in which the trace appears in codesign, as we will see in \cref{sec:feedback-codesign}.
+
+\paragraph{Trace for Boolean profunctors}
+\label{sec:trace-ProfBoolL}
+
+Recall the strict monoidal structure on the category $\ProfBoolL$ (\cref{lem:ProfBoolL-strict-monoidal}).
+Its objects are again the objects of $\PreL$, and its morphisms are Boolean profunctors (\cref{def:boolean-profunctor}).
+A trace operator for $\ProfBoolL$ is defined as follows.
+
+Let $\posA$, $\posB$, and $\posC$ be objects of $\ProfBoolL$, and let
+\begin{equation}
+    \stylemorph{\phi} \colon (\posA \mtimescatob \posC)\op \Ptimes (\posB \mtimescatob \posC) \mto \Bool
+\end{equation}
+be a Boolean profunctor.
+We define the Boolean profunctor
+\begin{equation}
+    \Tr_{\posA,\posB}^{\posC}(\stylemorph{\phi}) \colon \posAop \Ptimes \posB \mto \Bool
+\end{equation}
+by
+\begin{equation}
+    \label{eq:ProfBoolL-feedback}
+    \Tr_{\posA,\posB}^{\posC}(\stylemorph{\phi})(\posela, \poselb)
+    \definedas
+    \bigvee_{\poselc \setin \posC} \stylemorph{\phi}\bigl(\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc}\bigr)
+\end{equation}
+for all $\posela \setin \posA$ and $\poselb \setin \posB$.
+So $\Tr_{\posA,\posB}^{\posC}(\stylemorph{\phi})(\posela, \poselb)$ is true precisely when there exists an element $\poselc$ of $\posC$ such that $\stylemorph{\phi}(\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc})$ is true.
+
+This is the trace operator for monotone relations \cref{eq:mRelL-feedback}, written in the language of Boolean profunctors.
+Recall that Boolean profunctors and monotone relations are two presentations of the same thing (\cref{lem:monrel-as-bool-map}): a Boolean profunctor corresponds to the monotone relation which consists of the pairs for which it is true.
+If $\stylemorph{\phi}$ corresponds to the monotone relation $\monrelM$, then, comparing \cref{eq:ProfBoolL-feedback} with \cref{eq:mRelL-feedback}, we see that $\Tr_{\posA,\posB}^{\posC}(\stylemorph{\phi})$ corresponds to $\Tr_{\posA,\posB}^{\posC}(\monrelM)$.
+In particular, $\Tr_{\posA,\posB}^{\posC}(\stylemorph{\phi})$ is indeed monotone, and by \cref{eq:mRelL-feedback-leq} we can also write it as
+\begin{equation}
+    \label{eq:ProfBoolL-feedback-leq}
+    \Tr_{\posA,\posB}^{\posC}(\stylemorph{\phi})(\posela, \poselb)
+    =
+    \bigvee_{\substack{\poselc, \poselc' \setin \posC \\ \poselc' \posCleq \poselc}} \stylemorph{\phi}\bigl(\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'}\bigr).
+\end{equation}
+
+The ``matrix point of view'' on Boolean profunctors gives another way to read \cref{eq:ProfBoolL-feedback}.
+Consider the special case in which $\posA$ and $\posB$ are both the monoidal unit $\emptycobj$.
+Then $\stylemorph{\phi}$ is a Boolean profunctor from $\posC$ to $\posC$, which, if $\posC$ is finite, we can write as a square matrix with entries in $\Bool$.
+Its image under the trace operator is a Boolean profunctor from $\emptycobj$ to $\emptycobj$, that is, a single truth value, namely
+\begin{equation}
+    \bigvee_{\poselc \setin \posC} \stylemorph{\phi}(\poselc, \poselc).
+\end{equation}
+If we list the rows and the columns of the matrix in the same order, then this is the join of the entries on its diagonal.
+Compare this with the trace of a square matrix of numbers, which is the sum of the entries on its diagonal.
+
+We will use this trace operator for design problems in codesign; see \cref{sec:feedback-codesign} and \cref{exa:codesign-feedback-modules}.
+
+\paragraph{Matrices with Kronecker product}
+\label{sec:trace-MatR-Kronecker}
+
+Recall that the category $\MatR$ of real matrices is a symmetric strict monoidal category with the Kronecker product as its monoidal product (\cref{exa:MatR-Kronecker-strict-monoidal,exa:MatR-Kronecker-symmetric}).
+In this paragraph we write $\mtimescat$ for this monoidal product; so $\reals^m \mtimescat \reals^k = \reals^{mk}$, and the monoidal unit is $\reals^1$.
+This symmetric strict monoidal category has a trace, and it generalizes the trace of a square matrix which we know from linear algebra.
+
+A morphism $\mat{M} \colon \reals^m \mtimescat \reals^k \mto \reals^n \mtimescat \reals^k$ is a matrix with $nk$ rows and $mk$ columns.
+We divide it into blocks of size $k \times k$,
+\begin{equation}
+    \label{eq:MatR-Kronecker-blocks}
+    \mat{M} =
+    \begin{bmatrix}
+        \mat{M}_{11} & \cdots & \mat{M}_{1m} \\
+        \vdots       &        & \vdots       \\
+        \mat{M}_{n1} & \cdots & \mat{M}_{nm}
+    \end{bmatrix},
+\end{equation}
+so that there are $n$ rows and $m$ columns of blocks.
+This is the way in which a Kronecker product $\mat{A} \mtimescat \mat{B}$ of an $n \times m$ matrix $\mat{A}$ and a $k \times k$ matrix $\mat{B}$ is built up, with the blocks $a_{ij}\mat{B}$ (\cref{eq:MatR-Kronecker-product}).
+We define the trace of $\mat{M}$ to be the $n \times m$ matrix which is obtained by replacing each block by its usual trace:
+\begin{equation}
+    \label{eq:MatR-Kronecker-trace}
+    \Tr_{\reals^m,\reals^n}^{\reals^k}(\mat{M}) \definedas
+    \begin{bmatrix}
+        \operatorname{tr}(\mat{M}_{11}) & \cdots & \operatorname{tr}(\mat{M}_{1m}) \\
+        \vdots                          &        & \vdots                          \\
+        \operatorname{tr}(\mat{M}_{n1}) & \cdots & \operatorname{tr}(\mat{M}_{nm})
+    \end{bmatrix}.
+\end{equation}
+Here $\operatorname{tr}$ denotes the trace of a square matrix as it is defined in linear algebra, namely the sum of the entries on its diagonal.
+
+To see in which sense this generalizes the usual trace, consider the case $m = n = 1$.
+Since $\reals^1$ is the monoidal unit, a morphism $\reals^1 \mtimescat \reals^k \mto \reals^1 \mtimescat \reals^k$ is simply a square matrix $\mat{M} \colon \reals^k \mto \reals^k$.
+It consists of a single block, and
+\begin{equation}
+    \Tr_{\reals^1,\reals^1}^{\reals^k}(\mat{M}) = \begin{bmatrix} \operatorname{tr}(\mat{M}) \end{bmatrix}
+\end{equation}
+is the $1 \times 1$ matrix whose entry is the usual trace of $\mat{M}$.
+This is where the name ``trace'' for operators of this kind comes from.
+For example, closing a loop on the identity matrix $\idmat_k$ gives the number $k$: the dimension of the wire.
+
+One can check that \cref{eq:MatR-Kronecker-trace} satisfies all the conditions of \cref{def:feedback-cat} and of \cref{def:trace-operator}, so that it is indeed a trace.
+Several of these conditions are well-known properties of the usual trace in disguise.
+\begin{itemize}
+    \item \emph{Dinaturality.} For $m = n = 1$, the condition \cref{eq:trace-dinaturality} says that $\operatorname{tr}(\mat{G}\mat{M}) = \operatorname{tr}(\mat{M}\mat{G})$ for all matrices $\mat{M} \colon \reals^k \mto \reals^{l}$ and $\mat{G} \colon \reals^{l} \mto \reals^k$. This is the fact that the trace of a product does not depend on the order of the two factors.
+    \item \emph{Superposing.} The blocks of $\mat{G} \mtimescat \mat{M}$ are the blocks of $\mat{M}$, multiplied by the entries of $\mat{G}$. So the condition \cref{eq:feedback-superposing} holds because the usual trace is linear. Together with Vanishing II, it gives $\operatorname{tr}(\mat{A} \mtimescat \mat{B}) = \operatorname{tr}(\mat{A}) \cdot \operatorname{tr}(\mat{B})$ for square matrices $\mat{A}$ and $\mat{B}$.
+    \item \emph{Yanking.} For the braiding of $\reals^k$ with itself (\cref{eq:MatR-Kronecker-braiding}), the block in the position $\tup{i, j}$ is the $k \times k$ matrix whose only entry different from $0$ is a $1$ in the row $j$ and the column $i$. Its trace is $1$ if $i = j$, and $0$ otherwise. So \cref{eq:MatR-Kronecker-trace} gives the identity matrix $\idmat_k$, as the yanking condition \cref{eq:yanking} requires.
+\end{itemize}
+
+So with the Kronecker product as monoidal product, the category $\MatR$ has a trace.
+With the monoidal product of \cref{exa:MatR-strict-monoidal}, which adds dimensions, the situation is different.
+
+
+\paragraph{Matrices with direct sum, a non-example}
+\label{sec:feedback-MatR}
+
+Recall the strict monoidal category $\MatR$ of real matrices (\cref{exa:MatR-strict-monoidal}): its objects are the coordinate spaces $\reals^n$, a morphism from $\reals^k$ to $\reals^m$ is an $m \times k$ real matrix, composition is given by the matrix product, and the monoidal product of two matrices is the block-diagonal matrix which they form.
+It is symmetric, with the braidings given by the matrices $\mat{S}_{m,n}$ of \cref{eq:LTI-swap-matrix}.
+Can we close loops in $\MatR$?
+
+A morphism $\mat{M} \colon \reals^{m+k} \mto \reals^{n+k}$ of $\MatR$ is a block matrix
+\begin{equation}
+    \label{eq:MatR-blocks}
+    \mat{M} =
+    \begin{bmatrix}
+        \mat{M}_{11} & \mat{M}_{12} \\
+        \mat{M}_{21} & \mat{M}_{22}
+    \end{bmatrix},
+\end{equation}
+whose blocks $\mat{M}_{11}$, $\mat{M}_{12}$, $\mat{M}_{21}$, and $\mat{M}_{22}$ are matrices of the sizes $n \times m$, $n \times k$, $k \times m$, and $k \times k$, respectively.
+We are looking for a matrix $\reals^m \mto \reals^n$ which describes what we obtain when we feed the last $k$ components of the output back into the last $k$ components of the input.
+There are two heuristic ways to guess a formula for it, one for each of the two traces for relations which we have just seen.
+
+The first way imitates the trace for $\RelL$ (\cref{def:RelL-feedback}), which asks for a value on the wire which is fed back that is the same on both sides.
+We think of $\mat{M}$ as a function which maps a vector $\mat{u} \setin \reals^m$, stacked on top of a vector $\mat{x} \setin \reals^k$, to a vector in $\reals^n$ stacked on top of a vector in $\reals^k$, and we consider the equation
+\begin{equation}
+    \label{eq:MatR-fixpoint-condition}
+    \begin{bmatrix}
+        \mat{M}_{11} & \mat{M}_{12} \\
+        \mat{M}_{21} & \mat{M}_{22}
+    \end{bmatrix}
+    \begin{bmatrix}
+        \mat{u} \\
+        \mat{x}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        \mat{y} \\
+        \mat{x}
+    \end{bmatrix}.
+\end{equation}
+Here we think of $\mat{u}$ as the input, of $\mat{y}$ as the output, and of $\mat{x}$ as the value on the wire which is fed back.
+Written out, \cref{eq:MatR-fixpoint-condition} says that the output is given by
+\begin{equation}
+    \label{eq:MatR-fixpoint-output-equation}
+    \mat{y} = \mat{M}_{11} \mat{u} + \mat{M}_{12} \mat{x},
+\end{equation}
+where $\mat{x}$ is required to satisfy the equation
+\begin{equation}
+    \label{eq:MatR-fixpoint-loop-equation}
+    \mat{x} = \mat{M}_{21} \mat{u} + \mat{M}_{22} \mat{x}.
+\end{equation}
+If the matrix $\idmat_k - \mat{M}_{22}$ is invertible, then the latter equation can be solved for $\mat{x}$,
+\begin{equation}
+    \mat{x} = (\idmat_k - \mat{M}_{22})^{-1} \mat{M}_{21} \mat{u},
+\end{equation}
+and substituting this into \cref{eq:MatR-fixpoint-output-equation}, we obtain
+\begin{equation}
+    \mat{y} = \mat{M}_{11} \mat{u} + \mat{M}_{12} (\idmat_k - \mat{M}_{22})^{-1} \mat{M}_{21} \mat{u}.
+\end{equation}
+
+The second way imitates the trace for $\RelR$ (\cref{def:RelR-feedback}), which describes going around the loop any number of times.
+The four blocks of $\mat{M}$ play the same role as the four relations in \cref{eq:RelR-blocks}: the block $\mat{M}_{11}$ leads directly from the input to the output, the block $\mat{M}_{21}$ leads from the input into the loop, the block $\mat{M}_{22}$ leads once around the loop, and the block $\mat{M}_{12}$ leads from the loop to the output.
+In \cref{eq:trace-rel-sum} we form the union over all the ways of getting from the input to the output.
+If we replace the union of relations by the sum of matrices, and the composition of relations by the product of matrices (which is written in the opposite order), then we arrive at the expression
+\begin{equation}
+    \label{eq:MatR-trace-series}
+    \mat{M}_{11} + \mat{M}_{12} \left( \sum_{i=0}^\infty \mat{M}_{22}^i \right) \mat{M}_{21}.
+\end{equation}
+Under suitable assumptions on $\mat{M}_{22}$, the geometric series $\sum_{i=0}^\infty \mat{M}_{22}^i$ converges, and its limit is $(\idmat_k - \mat{M}_{22})^{-1}$.
+
+So both heuristics suggest the same formula, namely
+\begin{equation}
+    \label{eq:MatR-trace-formula}
+    \Tr_{\reals^m,\reals^n}^{\reals^k} (\mat{M}) \definedas \mat{M}_{11} + \mat{M}_{12} (\idmat_k - \mat{M}_{22})^{-1} \mat{M}_{21}.
+\end{equation}
+Evidently, however, this is not defined for all matrices: it only makes sense if $\idmat_k - \mat{M}_{22}$ is invertible.
+For example, it is not defined for the identity matrix of $\reals^{m+k}$ if $k \geq 1$, because then $\mat{M}_{22} = \idmat_k$.
+So \cref{eq:MatR-trace-formula} defines neither a trace nor a feedback operator on $\MatR$ in the sense of \cref{def:feedback-cat}.
+
+One way to deal with this is to weaken the definition, and to consider so-called \emph{partial traces}, which need not be defined for all morphisms.
+These have been studied \cite{malherbe2012partially}, but we will not explore them further in this book.
+Another approach is to view the matrices as forming a subcategory of a larger category, the category of linear relations.
+This larger category does turn out to have a trace, which is defined for all of its morphisms, and which generalizes \cref{eq:MatR-trace-formula}.
+We explain this next.
+
+
+\paragraph{Linear relations}
+\label{sec:trace-LinRel}
+
+Recall the strict monoidal category of real linear relations (\cref{rem:LinRel-strict-monoidal}).
+Its objects are again the coordinate spaces $\reals^n$, and a morphism $\relA \colon \reals^k \mto \reals^m$ is a linear subspace of $\reals^{k+m}$.
+We write the elements of $\reals^{k+m}$ as pairs $\tup{\mat{u}, \mat{y}}$, where $\mat{u} \setin \reals^k$ and $\mat{y} \setin \reals^m$ are the two vectors which are stacked on top of each other, and we think of $\relA$ as relating $\mat{u}$ to $\mat{y}$.
+Linear relations are composed like relations, and the monoidal product places two linear relations side by side.
+This strict monoidal category is symmetric: the braiding relates a vector $\mat{u}$ stacked on top of a vector $\mat{u}'$ to the vector with the two parts exchanged.
+
+Every matrix $\mat{M} \colon \reals^k \mto \reals^m$ gives a linear relation $\reals^k \mto \reals^m$, namely its \emph{graph}
+\begin{equation}
+    \label{eq:matrix-graph}
+    \makeset{ \tup{\mat{u}, \mat{M}\mat{u}} \mid \mat{u} \setin \reals^k }.
+\end{equation}
+Different matrices have different graphs, the graph of a product of matrices is the composition of their graphs, and the graph of a block-diagonal matrix is the monoidal product of the graphs of its blocks.
+In this way we can view $\MatR$ as a subcategory of the category of linear relations, with the same objects.
+
+A trace for linear relations is defined as follows.
+Given a linear relation $\relA \colon \reals^{m+k} \mto \reals^{n+k}$, we set
+\begin{equation}
+    \label{eq:LinRel-trace}
+    \Tr_{\reals^m,\reals^n}^{\reals^k} (\relA) \definedas
+    \makeset{ \tup{\mat{u}, \mat{y}} \mid \exists \ \mat{x} \setin \reals^k \colon
+        \tup{\begin{bmatrix} \mat{u} \\ \mat{x} \end{bmatrix}, \begin{bmatrix} \mat{y} \\ \mat{x} \end{bmatrix}} \setin \relA },
+\end{equation}
+where $\mat{u} \setin \reals^m$ and $\mat{y} \setin \reals^n$.
+This is the same formula as the one for $\RelL$ in \cref{eq:RelL-feedback}, with the stacking of vectors in place of the concatenation of tuples: the trace relates $\mat{u}$ to $\mat{y}$ if there is a value $\mat{x}$ on the wire which is fed back that is the same on both sides.
+The result is again a linear subspace, because $\relA$ is one, and so it is a linear relation $\reals^m \mto \reals^n$.
+Note that there is no condition on $\relA$: this trace is defined for all morphisms.
+One can check that it satisfies all the conditions of \cref{def:feedback-cat} and of \cref{def:trace-operator}.
+For example, the yanking condition holds, because the braiding of $\reals^k$ with itself relates $\mat{u}$ stacked on top of $\mat{x}$ to $\mat{y}$ stacked on top of $\mat{x}$ precisely when $\mat{y} = \mat{x}$ and $\mat{x} = \mat{u}$.
+We will meet this trace again, from a more conceptual point of view, in \cref{eq:canonical-trace-linrel}.
+
+Let us now see how this trace generalizes the formula \cref{eq:MatR-trace-formula} for matrices.
+Let $\mat{M} \colon \reals^{m+k} \mto \reals^{n+k}$ be a matrix with blocks as in \cref{eq:MatR-blocks}, and let $\relA$ be its graph.
+Then the condition in \cref{eq:LinRel-trace} is precisely the equation \cref{eq:MatR-fixpoint-condition} from our first heuristic.
+So the trace of $\relA$ relates $\mat{u}$ to $\mat{y}$ precisely when there exists a vector $\mat{x} \setin \reals^k$ such that
+\begin{equation}
+    \label{eq:LinRel-trace-of-graph}
+    \mat{y} = \mat{M}_{11} \mat{u} + \mat{M}_{12} \mat{x}
+    \qqand
+    (\idmat_k - \mat{M}_{22}) \mat{x} = \mat{M}_{21} \mat{u}.
+\end{equation}
+If $\idmat_k - \mat{M}_{22}$ is invertible, then $\mat{x}$ is determined by $\mat{u}$, as we saw above, and the trace of $\relA$ is the graph of the matrix $\mat{M}_{11} + \mat{M}_{12} (\idmat_k - \mat{M}_{22})^{-1} \mat{M}_{21}$.
+So whenever the formula \cref{eq:MatR-trace-formula} is defined, the trace of linear relations agrees with it.
+
+If $\idmat_k - \mat{M}_{22}$ is not invertible, then the trace of the graph of $\mat{M}$ is still defined, but in general it is no longer the graph of a matrix.
+Here are two examples.
+If $\mat{M}$ is the identity matrix of $\reals^{m+k}$, then the conditions in \cref{eq:LinRel-trace-of-graph} read $\mat{y} = \mat{u}$ and $\mat{0} = \mat{0}$, and the trace is the graph of the identity matrix of $\reals^m$; this is what we expect from closing a loop on a wire which is not connected to anything else.
+If $m = n = k = 1$ and
+\begin{equation}
+    \mat{M} =
+    \begin{bmatrix}
+        0 & 1 \\
+        1 & 1
+    \end{bmatrix},
+\end{equation}
+then the conditions read $y = x$ and $0 = u$.
+So the trace relates the number $0$ to every real number, and it relates no other number to anything; this linear relation is not the graph of a matrix.
+In this sense, the price which we pay for a trace which is defined for all morphisms is that closing a loop can lead us out of $\MatR$.
+
+
+
+
+\subsection{Applied examples}
+
+\paragraph{Codesign}
+\label{sec:feedback-codesign}
+
+Recall from \cref{exa:codesign-strict-monoidal} that in codesign we describe the components of an engineering system in two equivalent ways: as feasibility relations $\monrelM \colon \funsp \profto \ressp$, which are the morphisms of the strict monoidal category $\feasL$, and as design problems $\adp \colon \funspop \Ptimes \ressp \mto \Bool$, which are the morphisms of the strict monoidal category $\DPL$.
+The objects of both categories are posets of tuples; $\feasL$ is a \SY{full subcategory} of $\mRelL$, and $\DPL$ is a \SY{full subcategory} of $\ProfBoolL$.
+The trace operators for monotone relations and for Boolean profunctors (\cref{sec:trace-mRelL,sec:trace-ProfBoolL}) turn a morphism from $\posA \mtimescatob \posC$ to $\posB \mtimescatob \posC$ into a morphism from $\posA$ to $\posB$; no other objects are involved.
+Therefore they restrict to trace operators for $\feasL$ and for $\DPL$.
+We now explain what these operators describe, and why they are two versions of the same operation.
+
+\begin{marginfigure}
+    \centering
+    \includesag{50_trace}
+    \caption{Design problem with a functionality and a requirement of the same type.
+    }
+    \label{fig:extrace_1}
+\end{marginfigure}
+
+\begin{marginfigure}
+    \centering
+    \includesag{50_trace2}
+    \caption{Closing the loop in the design problem.}
+    \label{fig:extrace_2}
+\end{marginfigure}
+
+Consider a component which provides functionalities in $\posA$ and in $\posC$, and which has requirements in $\posB$ and in $\posC$ (\cref{fig:extrace_1}).
+The poset $\posC$ appears on both sides: the component requires something of the same kind as what it provides.
+For example, a vehicle has to transport its own battery, and a power plant uses part of the electricity which it generates.
+\emph{Closing the loop} means that we let the component cover its own requirement in $\posC$ with the functionality in $\posC$ which it provides (\cref{fig:extrace_2}).
+What remains is a component which provides functionalities in $\posA$ and which has requirements in $\posB$.
+
+In terms of feasibility relations, the component is a morphism
+\begin{equation}
+    \monrelM \colon \posA \mtimescatob \posC \profto \posB \mtimescatob \posC
+\end{equation}
+of $\feasL$, where $\tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'}} \setin \monrelM$ means that it is feasible to provide $\posela$ and $\poselc$ with the requirements $\poselb$ and $\poselc'$.
+The component can cover its own requirement $\poselc'$ with what it provides if $\poselc' \posCleq \poselc$, that is, if what is required is at most what is provided.
+This is the meaning of the symbol ``$\geq$'' on the loop in \cref{fig:extrace_2}.
+So, for the component with the loop closed, it is feasible to provide $\posela$ with the requirement $\poselb$ precisely when there exist elements $\poselc$ and $\poselc'$ of $\posC$ such that
+\begin{equation}
+    \label{eq:codesign-loop-feasibility}
+    \tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'}} \setin \monrelM
+    \qquad \text{and} \qquad
+    \poselc' \posCleq \poselc.
+\end{equation}
+By \cref{eq:mRelL-feedback-leq}, this says precisely that $\tup{\posela, \poselb}$ is an element of $\Tr_{\posA,\posB}^{\posC}(\monrelM)$.
+So the trace operator of $\feasL$ describes closing the loop.
+We also saw in \cref{sec:trace-mRelL} (see \cref{eq:mRelL-feedback-leq}) that we may as well ask for $\poselc' = \poselc$ in \cref{eq:codesign-loop-feasibility}: since it is always feasible to require more, the component may as well require all of what it provides.
+
+In terms of design problems, the component is a morphism
+\begin{equation}
+    \adp \colon (\posA \mtimescatob \posC)\op \Ptimes (\posB \mtimescatob \posC) \mto \Bool
+\end{equation}
+of $\DPL$, where $\adp(\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'})$ is the truth value of the statement that it is feasible to provide $\posela$ and $\poselc$ with the requirements $\poselb$ and $\poselc'$.
+By \cref{eq:ProfBoolL-feedback} and \cref{eq:ProfBoolL-feedback-leq}, the component with the loop closed is the design problem given by
+\begin{equation}
+    \label{eq:codesign-loop-dp}
+    \begin{aligned}
+        \Tr_{\posA,\posB}^{\posC}(\adp)(\posela, \poselb)
+         & = \bigvee_{\poselc \setin \posC} \adp\bigl(\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc}\bigr) \\
+         & = \bigvee_{\substack{\poselc, \poselc' \setin \posC \\ \poselc' \posCleq \poselc}} \adp\bigl(\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'}\bigr).
+    \end{aligned}
+\end{equation}
+Here the joins play the role of the words ``there exist'' above: a join of truth values is true precisely when at least one of them is true.
+
+These are two versions of the same operation.
+Recall that a design problem $\adp$ and its feasible set $\feasibleset{\adp}$ (\cref{def:dp-feasible-set}), viewed as a feasibility relation, carry the same information.
+Comparing \cref{eq:codesign-loop-dp} with \cref{eq:mRelL-feedback}, we see that
+\begin{equation}
+    \label{eq:codesign-loop-feasible-set}
+    \feasibleset{\Tr_{\posA,\posB}^{\posC}(\adp)} = \Tr_{\posA,\posB}^{\posC}(\feasibleset{\adp}).
+\end{equation}
+In words: the feasible set of the design problem with the loop closed is the feasible set of the original design problem, with the loop closed.
+So it does not matter in which of the two languages we close a loop.
+
+\begin{example}[A vehicle which transports its own battery]
+    \label{exa:codesign-feedback-vehicle}
+    Consider an electric vehicle which transports a payload, and which has to transport its own battery as well.
+    Let $\posA$, $\posB$, and $\posC$ each be the poset of tuples of length one over $\tup{\nonNegReals, \leq}$; we write such tuples simply as numbers.
+    Suppose that moving a mass of one kilogram requires $\kappa$ kilograms of battery, where $0 < \kappa < 1$, and that one kilogram of battery costs $\beta > 0$.
+    We model the vehicle as the feasibility relation $\monrelM \colon \posA \mtimescatob \posC \profto \posB \mtimescatob \posC$ given by
+    \begin{equation}
+        \label{eq:codesign-vehicle}
+        \monrelM \definedas \makeset{ \tup{\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'}} \mid \kappa \cdot (\posela + \poselc) \leq \poselc' \text{ and } \beta \cdot \poselc \leq \poselb }.
+    \end{equation}
+    The functionalities are the mass $\posela$ of the payload which is transported and the mass $\poselc$ of the battery which is on board.
+    The requirements are the cost $\poselb$, which has to cover the battery on board, and the mass $\poselc'$ of battery which is needed to move the payload and the battery on board.
+    Closing the loop expresses that the battery which is needed is covered by the battery which is on board.
+    Using \cref{eq:mRelL-feedback}, we find
+    \begin{equation}
+        \label{eq:codesign-vehicle-loop}
+        \begin{aligned}
+            \Tr_{\posA,\posB}^{\posC}(\monrelM)
+             & = \makeset{ \tup{\posela, \poselb} \mid \exists \ \poselc \colon \kappa \cdot (\posela + \poselc) \leq \poselc \text{ and } \beta \cdot \poselc \leq \poselb } \\
+             & = \makeset{ \tup{\posela, \poselb} \mid \tfrac{\beta \kappa}{1 - \kappa} \cdot \posela \leq \poselb }.
+        \end{aligned}
+    \end{equation}
+    For the second equality, note that the condition $\kappa \cdot (\posela + \poselc) \leq \poselc$ is equivalent to $\tfrac{\kappa}{1 - \kappa} \cdot \posela \leq \poselc$: the battery has to be large enough to move the payload and to move itself.
+    So the vehicle with the loop closed is a component which transports a payload of mass $\posela$ at a cost of at least $\tfrac{\beta \kappa}{1 - \kappa} \cdot \posela$.
+
+    It is instructive to write the factor which appears here as a sum,
+    \begin{equation}
+        \tfrac{\kappa}{1 - \kappa} = \kappa + \kappa^2 + \kappa^3 + \cdots.
+    \end{equation}
+    To move the payload, we need a battery of mass $\kappa \cdot \posela$; to move this battery, we need a further $\kappa^2 \cdot \posela$ of battery; to move that, a further $\kappa^3 \cdot \posela$; and so on.
+    Closing the loop takes care of all these rounds at once.
+
+    In terms of design problems, the vehicle is the design problem $\adp$ for which $\adp(\maketupconcat{\posela, \poselc}, \maketupconcat{\poselb, \poselc'})$ is true precisely when $\kappa \cdot (\posela + \poselc) \leq \poselc'$ and $\beta \cdot \poselc \leq \poselb$, and $\Tr_{\posA,\posB}^{\posC}(\adp)(\posela, \poselb)$ is true precisely when $\tfrac{\beta \kappa}{1 - \kappa} \cdot \posela \leq \poselb$.
+\end{example}
+
+\begin{example}[Battery modules]
+    \label{exa:codesign-feedback-modules}
+    Here is a variant of \cref{exa:codesign-feedback-vehicle} with finitely many battery sizes, which we describe in terms of design problems.
+    Suppose that the battery of the vehicle consists of modules, and that there is room for at most three of them.
+    We measure masses in units of the mass of one module, and we suppose that one module can move two units of mass.
+    This time we do not keep track of the cost.
+
+    Let $\posA$ be the poset of tuples of length one over $\tup{\natnumbers, \leq}$, let $\posC$ be the poset of tuples of length one over $\tup{\makeset{0, 1, 2, 3}, \leq}$, and let $\posB$ be the monoidal unit $\emptycobj$; again we write tuples of length one as numbers.
+    Since $\posB$ is the monoidal unit of a strict monoidal category, we have $\posB \mtimescatob \posC = \posC$.
+    We model the vehicle as the design problem
+    \begin{equation}
+        \adp \colon (\posA \mtimescatob \posC)\op \Ptimes \posC \mto \Bool
+    \end{equation}
+    for which $\adp(\maketupconcat{\posela, \poselc}, \poselc')$ is true precisely when
+    \begin{equation}
+        \posela + \poselc \leq 2 \cdot \poselc'.
+    \end{equation}
+    The functionalities are the mass $\posela$ of the payload and the number $\poselc$ of modules on board, and the only requirement is the number $\poselc'$ of modules which are needed to move both.
+
+    For a fixed payload $\posela$, the values of $\adp$ form a square matrix with entries in $\Bool$.
+    For $\posela = 2$, it is the following matrix, where we write $1$ for $\true$ and $0$ for $\false$, and where we list both the rows, which stand for $\poselc$, and the columns, which stand for $\poselc'$, in increasing order:
+    \begin{equation}
+        \label{eq:codesign-modules-matrix}
+        \begin{array}{c|cccc}
+              & 0 & 1 & 2 & 3 \\ \hline
+            0 & 0 & 1 & 1 & 1 \\
+            1 & 0 & 0 & 1 & 1 \\
+            2 & 0 & 0 & 1 & 1 \\
+            3 & 0 & 0 & 0 & 1
+        \end{array}
+    \end{equation}
+    By the first line of \cref{eq:codesign-loop-dp}, closing the loop means taking the join of the entries on the diagonal.
+    Here this join is true, because of the entries in the rows $2$ and $3$: with two or three modules on board, the vehicle can move a payload of mass $2$ together with its own battery.
+    The second line of \cref{eq:codesign-loop-dp} is the join of all the entries which lie on the diagonal or to the left of it.
+    This gives the same result, for any design problem: since $\adp$ is monotone, a row which contains a $1$ continues with $1$s to the right of it, and so a row with a $1$ to the left of the diagonal also has a $1$ on the diagonal.
+
+    For an arbitrary payload $\posela$, we find
+    \begin{equation}
+        \Tr_{\posA,\posB}^{\posC}(\adp)(\posela, \emptytuple)
+        = \bigvee_{\poselc \setin \posC} \adp(\maketupconcat{\posela, \poselc}, \poselc),
+    \end{equation}
+    and $\adp(\maketupconcat{\posela, \poselc}, \poselc)$ is true precisely when $\posela + \poselc \leq 2 \cdot \poselc$, that is, when $\posela \leq \poselc$.
+    Since $\poselc$ is at most $3$, the join is true precisely when $\posela \leq 3$.
+    So the vehicle with the loop closed is a component without requirements which can transport any payload of mass at most three.
+\end{example}
+
+
+\subsection{Stateful morphisms}
+\label{sec:stateful-processes}
+
+The feedback operator for Mealy machines, which we describe below in \cref{sec:mealy-stateful-processes}, follows a simple recipe: the wire which is fed back becomes a part of the state.
+This recipe is an instance of a general construction.
+It starts from an arbitrary symmetric strict monoidal category, equips its morphisms with states, and in this way produces a category with a feedback operator.
+We give a brief account of this construction here; for details see \cite{katis2002feedback,dilavore2020canonical}.
+
+\begin{ctdefinition}[Stateful morphism]
+    \label{def:stateful-process}
+    Let $\tup{\CatC, \mtimescat, \idmoncat, \braiding}$ be a symmetric \SY{strict monoidal category} (\cref{def:sym-stacking-cat}), and let $\Obja$ and $\Objb$ be objects of $\CatC$.
+    A \emph{stateful morphism} from $\Obja$ to $\Objb$ is a pair $\tup{\styleobj{S}, \mora}$ given by
+
+    \constit
+    \begin{enumerate}
+        \item an object $\styleobj{S}$ of $\CatC$, called the \emph{state object};
+        \item a morphism $\mora \colon \Obja \mtimescatob \styleobj{S} \mto \Objb \mtimescatob \styleobj{S}$ of $\CatC$.
+    \end{enumerate}
+    Two stateful morphisms $\tup{\styleobj{S}, \mora}$ and $\tup{\styleobj{S'}, \mora'}$ from $\Obja$ to $\Objb$ are \emph{equivalent} if there exists an isomorphism $\morc \colon \styleobj{S} \mto \styleobj{S'}$ of $\CatC$ such that
+    \begin{equation}
+        \label{eq:stateful-process-equivalence}
+        \mora \mthen (\catidat\Objb \mtimescatmor \morc) = (\catidat\Obja \mtimescatmor \morc) \mthen \mora'.
+    \end{equation}
+\end{ctdefinition}
+
+We think of $\mora$ as one step of a process with a memory: it receives an input in $\Obja$ and its current state in $\styleobj{S}$, and it returns an output in $\Objb$ and its next state.
+Equivalent stateful morphisms differ only in how their states are named.
+A morphism $\morb \colon \Obja \mto \Objb$ of $\CatC$ can be seen as a stateful morphism without memory, namely $\tup{\idmoncat, \morb}$.
+
+Stateful morphisms up to equivalence are the morphisms of a category $\stylecat{St}(\CatC)$, which has the same objects as $\CatC$.
+Its structure is given, in terms of representatives, as follows.
+\begin{itemize}
+    \item \emph{Composition}: the composition of $\tup{\styleobj{S}, \mora} \colon \Obja \mto \Objb$ and $\tup{\styleobj{T}, \morb} \colon \Objb \mto \Objc$ has the state object $\styleobj{S} \mtimescatob \styleobj{T}$ and the morphism
+          \begin{equation}
+              \label{eq:stateful-process-composition}
+              (\mora \mtimescatmor \catidat{\styleobj{T}}) \mthen (\catidat\Objb \mtimescatmor \braiding_{\styleobj{S},\styleobj{T}}) \mthen (\morb \mtimescatmor \catidat{\styleobj{S}}) \mthen (\catidat\Objc \mtimescatmor \braiding_{\styleobj{T},\styleobj{S}}).
+          \end{equation}
+          So first $\mora$ makes a step, using its own state, and then $\morb$ makes a step, using its own state and the output of $\mora$; the braidings only move the state which is not needed out of the way.
+    \item \emph{Identity morphisms}: the identity morphism of $\Obja$ is $\tup{\idmoncat, \catidat\Obja}$.
+    \item \emph{Monoidal product}: on objects, it is the one of $\CatC$; the monoidal product of $\tup{\styleobj{S}, \mora} \colon \Obja \mto \Objb$ and $\tup{\styleobj{S'}, \mora'} \colon \Obja' \mto \Objb'$ has the state object $\styleobj{S} \mtimescatob \styleobj{S'}$ and the morphism
+          \begin{equation}
+              \label{eq:stateful-process-product}
+              (\catidat\Obja \mtimescatmor \braiding_{\Obja',\styleobj{S}} \mtimescatmor \catidat{\styleobj{S'}}) \mthen (\mora \mtimescatmor \mora') \mthen (\catidat\Objb \mtimescatmor \braiding_{\styleobj{S},\Objb'} \mtimescatmor \catidat{\styleobj{S'}}),
+          \end{equation}
+          in which the two stateful morphisms make their steps side by side.
+    \item \emph{Feedback operator}: let $\tup{\styleobj{S}, \mora}$ be a stateful morphism from $\Obja \mtimescatob \Objc$ to $\Objb \mtimescatob \Objc$, so that $\mora$ is a morphism $\Obja \mtimescatob \Objc \mtimescatob \styleobj{S} \mto \Objb \mtimescatob \Objc \mtimescatob \styleobj{S}$.
+          We set
+          \begin{equation}
+              \label{eq:stateful-process-feedback}
+              \Fb_{\Obja,\Objb}^{\Objc} \tup{\styleobj{S}, \mora} \definedas \tup{\Objc \mtimescatob \styleobj{S}, \mora}.
+          \end{equation}
+          The morphism $\mora$ is not changed at all: we only read $\Objc$ as a part of the state, instead of as a part of the input and of the output.
+\end{itemize}
+One can show that all of this is compatible with the equivalence of stateful morphisms, that $\stylecat{St}(\CatC)$ is a symmetric strict monoidal category, and that \cref{eq:stateful-process-feedback} defines a feedback operator on it in the sense of \cref{def:feedback-cat} \cite{katis2002feedback}. 
+
+Two remarks are in order.
+First, the passage to equivalence classes is needed for the same reason as in \cref{exa:LTI-stacking-not-functorial}: for example, the two sides of the interchange law have the state objects $\styleobj{S} \mtimescatob \styleobj{T} \mtimescatob \styleobj{S'} \mtimescatob \styleobj{T'}$ and $\styleobj{S} \mtimescatob \styleobj{S'} \mtimescatob \styleobj{T} \mtimescatob \styleobj{T'}$, which are isomorphic, but in general not equal.
+Second, this feedback operator is in general not a trace.
+To see this, we compute the delay of an object $\Objc$ (\cref{def:feedback-delay}).
+Feeding back the braiding $\braiding_{\Objc,\Objc}$, seen as a stateful morphism without memory, gives
+\begin{equation}
+    \label{eq:stateful-process-delay}
+    \fbdelay_{\Objc} = \tup{\Objc, \braiding_{\Objc,\Objc}}.
+\end{equation}
+This stateful morphism returns its current state and stores its current input; that is, it holds back its input for one step.
+It can only be equivalent to the identity morphism $\tup{\idmoncat, \catidat\Objc}$ if their state objects are isomorphic, that is, if $\Objc$ is isomorphic to the monoidal unit $\idmoncat$.
+So as soon as $\CatC$ has an object which is not isomorphic to $\idmoncat$, there is a delay which is not an identity morphism, and the yanking condition \cref{eq:yanking} fails.
+
+\subsection{Mealy machines as stateful morphisms}
+\label{sec:mealy-stateful-processes}
+
+Let $\CatC$ be the symmetric strict monoidal category $\SetL$ (\cref{exa:SetL-symmetric}).
+A stateful morphism from $\setA$ to $\setB$ is then an object $\prst$ of $\SetL$ together with a function
+\begin{equation}
+    \setA \cprod \prst \mtoin\SetL \setB \cprod \prst.
+\end{equation}
+By \cref{rem:mealy-single-function}, this is the same thing as a Mealy machine with the set of inputs $\setA$, the set of states $\prst$, and the set of outputs $\setB$: the read-out and the dynamics of the machine are the two components of this function, which maps $\maketupconcat{\styleelements{a}, \prstel}$ to $\maketupconcat{\prreadout(\maketupconcat{\styleelements{a}, \prstel}), \prdyn(\maketupconcat{\styleelements{a}, \prstel})}$.
+An isomorphism of $\SetL$ is a bijection, and \cref{eq:stateful-process-equivalence} says that it is compatible with the read-outs and with the dynamics; so two stateful morphisms are equivalent precisely when the two Mealy machines are isomorphic.
+Writing out \cref{eq:stateful-process-composition} and \cref{eq:stateful-process-product} for functions, we find the composition \cref{eq:mealyL-composition} of Mealy machines and their monoidal product (\cref{exa:MealyModL-strict-monoidal}).
+
+So $\stylecat{St}(\SetL)$ is the category $\MealyModL$ of Mealy machines up to isomorphism.
+In particular, \cref{eq:stateful-process-feedback} gives us a feedback operator for $\MealyModL$, and it satisfies the conditions of \cref{def:feedback-cat}.
+We now describe this feedback operator in terms of the dynamics and the read-out of a Mealy machine.
+
+Let $\setA$, $\setB$, and $\setC$ be objects of $\MealyModL$, and let
+\begin{equation}
+    \equivmora \colon \setA \cprod \setC \mto \setB \cprod \setC
+\end{equation}
+be a morphism, represented by a Mealy machine
+\begin{equation}
+    \mora = \tupp{\setA \cprod \setC,\ \prst,\ \setB \cprod \setC,\ \prdyn_\mora,\ \prreadout_\mora},
+\end{equation}
+with set of states $\prst$, dynamics, and read-out
+\begin{equation}
+    \begin{aligned}
+        \prdyn_\mora     & \colon \setA \cprod \setC \cprod \prst \mtoin\SetL \prst, \\
+        \prreadout_\mora & \colon \setA \cprod \setC \cprod \prst \mtoin\SetL \setB \cprod \setC.
+    \end{aligned}
+\end{equation}
+Every element of $\setB \cprod \setC$ is the concatenation $\maketupconcat{\styleelements{b}, \styleelements{c}}$ of a unique element $\styleelements{b}$ of $\setB$ and a unique element $\styleelements{c}$ of $\setC$ (all elements of $\setB$ are tuples of the same length).
+So the read-out of $\mora$ consists of two components,
+\begin{equation}
+    \begin{aligned}
+        \prreadout_\mora^{\setB} & \colon \setA \cprod \setC \cprod \prst \mtoin\SetL \setB, \\
+        \prreadout_\mora^{\setC} & \colon \setA \cprod \setC \cprod \prst \mtoin\SetL \setC,
+    \end{aligned}
+\end{equation}
+which are determined by
+\begin{equation}
+    \prreadout_\mora(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel}) = \maketupconcat{\prreadout_\mora^{\setB}(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel}),\ \prreadout_\mora^{\setC}(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel})}
+\end{equation}
+for all $\styleelements{a} \setin \setA$, $\styleelements{c} \setin \setC$, and $\prstel \setin \prst$.
+
+As a stateful morphism, the machine $\mora$ is the set of states $\prst$ together with the single function
+\begin{equation}
+    \label{eq:mealy-feedback-single-function}
+    \begin{aligned}
+        \setA \cprod \setC \cprod \prst & \mtoin\SetL \setB \cprod \setC \cprod \prst, \\
+        \maketupconcat{\styleelements{a}, \styleelements{c}, \prstel} & \mapsto \maketupconcat{\prreadout_\mora(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel}),\ \prdyn_\mora(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel})}.
+    \end{aligned}
+\end{equation}
+By \cref{eq:stateful-process-feedback}, the feedback operator does not change this function at all; the only change is that it shifts $\setC$ to be read as part of the state, on both sides.
+We now split the function into a read-out and dynamics again, this time with the set of states $\setC \cprod \prst$.
+We find that
+\begin{equation}
+    \Fb_{\setA, \setB}^{\setC}(\equivmora) \colon \setA \mto \setB
+\end{equation}
+is the morphism of $\MealyModL$ which is represented by the Mealy machine
+\begin{equation}
+    \label{eq:mealy-feedback-machine}
+    \tupp{\setA,\ \setC \cprod \prst,\ \setB,\ \prdyn_{\Fb},\ \prreadout_{\Fb}}
+\end{equation}
+whose set of states is $\setC \cprod \prst$, and whose dynamics and read-out
+\begin{equation}
+    \begin{aligned}
+        \prdyn_{\Fb}     & \colon \setA \cprod \setC \cprod \prst \mtoin\SetL \setC \cprod \prst, \\
+        \prreadout_{\Fb} & \colon \setA \cprod \setC \cprod \prst \mtoin\SetL \setB
+    \end{aligned}
+\end{equation}
+are given by
+\begin{equation}
+    \label{eq:mealy-feedback-dyn}
+    \prdyn_{\Fb}(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel}) = \maketupconcat{\prreadout_\mora^{\setC}(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel}),\ \prdyn_\mora(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel})}
+\end{equation}
+and
+\begin{equation}
+    \label{eq:mealy-feedback-ro}
+    \prreadout_{\Fb}(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel}) = \prreadout_\mora^{\setB}(\maketupconcat{\styleelements{a}, \styleelements{c}, \prstel}).
+\end{equation}
+Note that the dynamics and the read-out of the new machine have the same domain $\setA \cprod \setC \cprod \prst$ as those of $\mora$.
+What changes is the way in which we read this set: for the machine $\mora$, its elements consist of an input in $\setA \cprod \setC$ and a state in $\prst$; for the new machine, they consist of an input in $\setA$ and a state in $\setC \cprod \prst$.
+Since the multiplication $\cprod$ is \SY{associative}, no re-bracketing is involved.
+
+In other words, the feedback operator $\Fb_{\setA, \setB}^{\setC}$ moves $\setC$ from the inputs and the outputs of the machine into its state.
+The $\setB$-component of the read-out of $\mora$ becomes the read-out of the new machine, and the $\setC$-component of the read-out of $\mora$ becomes part of the \emph{dynamics} of the new machine: it is no longer shown to the outside, but it is stored, and it is fed back to $\mora$ as the $\setC$-component of its input in the next step.
+
+Concretely, if the new machine is in the state $\maketupconcat{\styleelements{c}_{i-1}, \prsteln{i-1}}$ and receives the input $\styleelements{a}_i$, then it returns the output $\styleelements{b}_i$ and moves to the state $\maketupconcat{\styleelements{c}_i, \prsteln{i}}$, where
+\begin{equation}
+    \label{eq:mealy-feedback-steps}
+    \begin{aligned}
+        \styleelements{b}_i         & = \prreadout_\mora^{\setB}(\maketupconcat{\styleelements{a}_i, \styleelements{c}_{i-1}, \prsteln{i-1}}), \\
+        \styleelements{c}_i         & = \prreadout_\mora^{\setC}(\maketupconcat{\styleelements{a}_i, \styleelements{c}_{i-1}, \prsteln{i-1}}), \\
+        \prsteln{i} & = \prdyn_\mora(\maketupconcat{\styleelements{a}_i, \styleelements{c}_{i-1}, \prsteln{i-1}}).
+    \end{aligned}
+\end{equation}
+So the value which $\mora$ emits on the wire $\setC$ in one step is the value which $\mora$ receives on the wire $\setC$ in the following step: this is feedback with a delay of one step.
+
+The morphism $\Fb_{\setA, \setB}^{\setC}(\equivmora)$ does not depend on the choice of the representative $\mora$.
+Indeed, if $\mapc \colon \prst \sto \prst'$ is an isomorphism of Mealy machines from $\mora$ to a machine $\mora'$, then it is compatible with both components of the read-outs, and therefore the function
+\begin{equation}
+    \setC \cprod \prst \sto \setC \cprod \prst', \qquad \maketupconcat{\styleelements{c}, \prstel} \mapsto \maketupconcat{\styleelements{c}, \mapc(\prstel)},
+\end{equation}
+is an isomorphism of Mealy machines between the machines \cref{eq:mealy-feedback-machine} obtained from $\mora$ and from $\mora'$.
+
+This feedback operator is not a trace.
+Indeed, by \cref{eq:mealy-feedback-dyn} and \cref{eq:mealy-feedback-ro}, the delay of an object $\setC$ (\cref{def:feedback-delay}) is represented by the Mealy machine whose sets of inputs, of states, and of outputs are all equal to $\setC$, and whose dynamics and read-out are given by
+\begin{equation}
+    \label{eq:mealy-delay}
+    \prdyn(\maketupconcat{\styleelements{a}, \styleelements{c}}) = \styleelements{a}
+    \qqand
+    \prreadout(\maketupconcat{\styleelements{a}, \styleelements{c}}) = \styleelements{c}
+\end{equation}
+for all $\styleelements{a}, \styleelements{c} \setin \setC$.
+This machine is a register: in each step, it returns the element which it has stored, and it stores the element which it receives.
+So its output in each step is its input of the previous step, which is why it is called a delay.
+Now isomorphic Mealy machines have sets of states of the same size, and the identity morphism of $\setC$ is represented by a machine with a single state.
+Therefore the delay of $\setC$ is not the identity morphism of $\setC$, unless $\setC$ has exactly one element, and the yanking condition \cref{eq:yanking} fails.
+
+\begin{remark}[Feedback and initial states]
+    \label{rem:mealy-feedback-initial-states}
+    The feedback operator for Mealy machines which we have just described makes use of the fact that our Mealy machines do not include an initial state.
+    The set of states of the new machine is $\setC \cprod \prst$, so an initial state for it would have to contain an element of $\setC$: an initial value on the wire that is fed back.
+    The machine $\mora$ does not provide such a value, and there is no natural choice for it; the set $\setC$ may even be empty.
+    To handle Mealy machines with initial state (\cref{def:MealyModst}) one may use a generalization of feedback categories called structured feedback categories. 
+\end{remark}
+
+\todotext{Add reference for the above remark}
+
+
+\subsection{LTI systems as stateful morphisms}
+\label{sec:lti-stateful-processes}
+
+Now let $\CatC$ be the strict monoidal category $\MatR$ of real matrices (\cref{exa:MatR-strict-monoidal}), which is symmetric, with the braidings given by the matrices $\mat{S}_{m,n}$ of \cref{eq:LTI-swap-matrix}.
+A stateful morphism from $\reals^n$ to $\reals^m$ is then a state object $\reals^k$ together with a matrix $\reals^{n+k} \mto \reals^{m+k}$, which we write in blocks as
+\begin{equation}
+    \label{eq:lti-stateful-process-matrix}
+    \begin{bmatrix}
+        \mat{D} & \mat{C} \\
+        \mat{B} & \mat{A}
+    \end{bmatrix},
+    \qquad \text{with} \quad
+    \mat{D} \setin \reals^{\matdim{m}{n}}, \
+    \mat{C} \setin \reals^{\matdim{m}{k}}, \
+    \mat{B} \setin \reals^{\matdim{k}{n}}, \
+    \mat{A} \setin \reals^{\matdim{k}{k}}.
+\end{equation}
+This is precisely the data of an LTI system $\tupp{\reals^k, \mat{A}, \mat{B}, \mat{C}, \mat{D}}$ from $\reals^n$ to $\reals^m$ (\cref{def:LTICat}).
+The matrix \cref{eq:lti-stateful-process-matrix} maps an input $\mat{u}$, stacked on top of a state $\mat{x}$, to the output $\mat{C}\mat{x} + \mat{D}\mat{u}$, stacked on top of $\mat{A}\mat{x} + \mat{B}\mat{u}$; these are the right-hand sides of the equations \cref{eq:cat-dyn-lti-equations}.
+An isomorphism of $\MatR$ is an invertible matrix $\mat{T}$, and \cref{eq:stateful-process-equivalence} says that $\mat{T}$ is an equivalence transformation in the sense of \cref{def:equivalence_lti}.
+Writing out \cref{eq:stateful-process-composition} and \cref{eq:stateful-process-product} for block matrices, we find the composition \cref{eq:LTI-composition} of LTI systems and their monoidal product (\cref{exa:LTI-quotient-strict-monoidal}).
+
+So $\stylecat{St}(\MatR)$ is the category $\LTI/_{\equival}$ of LTI systems up to equivalence, and \cref{eq:stateful-process-feedback} gives us a feedback operator for it.
+Explicitly, consider an LTI system $\tupp{\reals^k, \mat{A}, \mat{B}, \mat{C}, \mat{D}}$ from $\reals^{n+p}$ to $\reals^{m+p}$, and divide its matrices into blocks according to these decompositions of the input and of the output:
+\begin{equation}
+    \mat{B} = \begin{bmatrix} \mat{B}_1 & \mat{B}_2 \end{bmatrix},
+    \qquad
+    \mat{C} = \begin{bmatrix} \mat{C}_1 \\ \mat{C}_2 \end{bmatrix},
+    \qquad
+    \mat{D} = \begin{bmatrix} \mat{D}_{11} & \mat{D}_{12} \\ \mat{D}_{21} & \mat{D}_{22} \end{bmatrix}.
+\end{equation}
+The feedback operator, applied with respect to $\reals^p$, gives the LTI system from $\reals^n$ to $\reals^m$ with the state space $\reals^{p+k}$ and the matrices
+\begin{equation}
+    \label{eq:lti-feedback}
+    \begin{bmatrix} \mat{D}_{22} & \mat{C}_2 \\ \mat{B}_2 & \mat{A} \end{bmatrix},
+    \quad
+    \begin{bmatrix} \mat{D}_{21} \\ \mat{B}_1 \end{bmatrix},
+    \quad
+    \begin{bmatrix} \mat{D}_{12} & \mat{C}_1 \end{bmatrix},
+    \quad
+    \mat{D}_{11}
+\end{equation}
+(these are the matrices $\mat{A}$, $\mat{B}$, $\mat{C}$, and $\mat{D}$ of the new system, in this order).
+Taken together, they have the same entries as the matrices of the original system; only the wire $\reals^p$ has become a part of the state.
+
+In terms of the equations \cref{eq:cat-dyn-lti-equations}, the new part $\mat{w}$ of the state is fed into the second input, and its derivative is the second output: $\mat{u}_2(t) = \mat{w}(t)$ and $\dot{\mat{w}}(t) = \mat{y}_2(t)$.
+So this feedback operator closes the loop through an integrator.
+It does not connect the second output directly to the second input, which would amount to the equation $\mat{u}_2(t) = \mat{y}_2(t)$.
+
+In particular, this feedback operator is not a trace.
+The braiding of $\reals^p$ with itself is the system without state whose matrix $\mat{D}$ is $\mat{S}_{p,p}$ (\cref{eq:LTI-swap-matrix}).
+Applying \cref{eq:lti-feedback} to it, we find that the delay of $\reals^p$ (\cref{def:feedback-delay}) is represented by the LTI system
+\begin{equation}
+    \label{eq:lti-delay}
+    \tupp{\reals^p, \mat{0}, \idmat_p, \idmat_p, \mat{0}},
+\end{equation}
+whose equations \cref{eq:cat-dyn-lti-equations} read $\dot{\mat{x}}(t) = \mat{u}(t)$ and $\mat{y}(t) = \mat{x}(t)$.
+This system is an integrator; it plays the role which the register plays for Mealy machines (\cref{eq:mealy-delay}).
+Equivalent LTI systems have state spaces of the same dimension, and the identity morphism of $\reals^p$ has the state space $\reals^0$.
+Therefore, for $p \geq 1$, the delay of $\reals^p$ is not the identity morphism of $\reals^p$, and the yanking condition \cref{eq:yanking} fails.
