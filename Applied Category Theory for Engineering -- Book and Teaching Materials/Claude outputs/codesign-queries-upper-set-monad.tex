@@ -1,0 +1,1948 @@
+% Co-design queries and the Kleisli category of the upper set monad
+% Working note for the ACT4E book, 24 November 2026.
+%
+% Standalone file: compile with pdflatex (three runs for the references and the table of contents).
+% It uses only standard packages and none of the macro files of the book.
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,hmargin=25mm,vmargin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{stmaryrd}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz-cd}
+\usepackage{graphicx}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\crefname{equation}{}{}
+\Crefname{equation}{Equation}{Equations}
+\creflabelformat{equation}{(#2#1#3)}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---------------------------------------------------------------- macros
+% A wide check accent (the book has \widecheck from its font setup; here we build one
+% by flipping \widehat, so that the note compiles with a plain TeX installation).
+\makeatletter
+\providecommand{\widecheck}[1]{\mathpalette\note@widecheck{#1}}
+\newcommand{\note@widecheck}[2]{%
+    \begingroup
+    \setbox\z@\hbox{$\m@th#1#2$}%
+    \setbox\tw@\hbox{$\m@th#1\widehat{\vrule width\wd\z@ height\z@ depth\z@}$}%
+    \setbox4\hbox{$\m@th#1\widehat{#2}$}%
+    \rlap{\smash{\raise\dimexpr\ht\z@+\ht\tw@+0.4ex\relax
+        \hbox to\wd\z@{\hss\scalebox{1}[-1]{\copy\tw@}\hss}}}%
+    \vrule width\z@ height\ht4 depth\z@
+    \box\z@
+    \endgroup
+}
+\makeatother
+% categories
+\newcommand{\Cat}[1]{\mathbf{#1}}
+\newcommand{\Set}{\Cat{Set}}
+\newcommand{\Rel}{\Cat{Rel}}
+\newcommand{\Pre}{\Cat{Pre}}
+\newcommand{\Pos}{\Cat{Pos}}
+\newcommand{\mRel}{\Cat{mRel}}
+\newcommand{\Feas}{\Cat{Feas}}
+\newcommand{\DP}{\Cat{DP}}
+\newcommand{\BoolProf}{\Cat{Bool}\text{-}\Cat{Prof}}
+\newcommand{\Bool}{\Cat{Bool}}
+% monads
+\newcommand{\U}{\mathsf{U}}
+\newcommand{\Lo}{\mathsf{L}}
+\newcommand{\pow}{\mathcal{P}}
+\newcommand{\An}{\mathcal{A}}
+\newcommand{\SetP}{\Set_{\pow}}
+\newcommand{\PreU}{\Pre_{\U}}
+\newcommand{\PosU}{\Pos_{\U}}
+\newcommand{\PreL}{\Pre_{\Lo}}
+\newcommand{\PosL}{\Pos_{\Lo}}
+\newcommand{\PosA}{\Pos^{\mathrm{wf}}_{\An}}
+\newcommand{\PosUwf}{\Pos^{\mathrm{wf}}_{\U}}
+% tuple ("strict") versions; the double angle brackets are built from single ones
+% in case the font setup does not provide \llangle and \rrangle
+\providecommand{\llangle}{\mathopen{\langle\mkern-3.5mu\langle}}
+\providecommand{\rrangle}{\mathclose{\rangle\mkern-3.5mu\rangle}}
+\newcommand{\tL}[1]{\llangle #1 \rrangle}
+% composition, concatenation
+\newcommand{\then}{\mathbin{\fatsemi}}
+\newcommand{\thenU}{\mathbin{\fatsemi_{\U}}}
+\newcommand{\thenL}{\mathbin{\fatsemi_{\Lo}}}
+\newcommand{\thenP}{\mathbin{\fatsemi_{\pow}}}
+\newcommand{\thenT}{\mathbin{\fatsemi_{T}}}
+\newcommand{\thenA}{\mathbin{\fatsemi_{\An}}}
+\newcommand{\tc}{\mathbin{\fatsemi_{\!\scriptscriptstyle\langle}}}
+\newcommand{\tup}[1]{\langle #1 \rangle}
+\newcommand{\etup}{\langle\,\rangle}
+% arrows
+\newcommand{\profto}{\mathrel{\ooalign{\hfil$\mapstochar\mkern 5mu$\hfil\cr$\to$\cr}}}
+\newcommand{\rel}[3]{#1 \mathrel{#2} #3}
+% order
+\newcommand{\up}{\mathord{\uparrow}}
+\newcommand{\dn}{\mathord{\downarrow}}
+\newcommand{\op}{^{\mathrm{op}}}
+\DeclareMathOperator{\Min}{Min}
+\DeclareMathOperator{\Max}{Max}
+\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rp}{\mathbb{R}_{\geq 0}}
+\newcommand{\Fix}{\mathsf{FixFunMinRes}}
+\newcommand{\FixR}{\mathsf{FixResMaxFun}}
+\newcommand{\comp}[1]{#1_{*}}
+\newcommand{\lbl}[1]{\nolinkurl{#1}}
+\newcommand{\file}[1]{\nolinkurl{#1}}
+\newcommand{\defeq}{\mathrel{:=}}
+
+\title{Co-design queries and the Kleisli category\\ of the upper set monad}
+\author{Working note for the ACT4E book:\\ series, parallel, and feedback composition for the query\\ ``fix the functionality, minimize the required resources''}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\section{Overview}
+
+A component in co-design is a monotone relation $M \colon F \profto R$ between a preorder $F$ of functionalities and a preorder $R$ of requirements (a \emph{feasibility relation}), or, equivalently, a design problem $d \colon F\op \times R \to \Bool$.
+The query ``fix the functionality, minimize the required resources'' ($\Fix$) asks, for a given $f \in F$, for the set
+\begin{equation*}
+    \widehat{M}(f) = \{\, r \in R \mid \rel{f}{M}{r} \,\}
+\end{equation*}
+of feasible requirements, or for its minimal elements.
+The dual query ``fix the requirement, maximize the functionality'' ($\FixR$) asks, for a given $r \in R$, for the set $\widecheck{M}(r) = \{ f \in F \mid \rel{f}{M}{r} \}$, or for its maximal elements.
+
+This note studies the passage $M \mapsto \widehat{M}$ as a functor, and shows that it is compatible with the three ways of connecting components: in series, in parallel, and with feedback.
+Here are the results, in the order of the questions which they answer.
+
+\begin{enumerate}[leftmargin=2em]
+    \item \emph{The upper set monad and its Kleisli category} (\cref{sec:upper-set-monad}).
+          Write $\U P$ for the set of upper sets of a preorder $P$, ordered by \emph{reverse} inclusion.
+          Then $\U$, with unit $p \mapsto \up p$ and multiplication given by union, is a monad on the category $\Pre$ of preorders and monotone functions, and it restricts to a monad on $\Pos$ (\cref{thm:U-monad}).
+          Its Kleisli category $\PreU$ is the expected one: a morphism $P \to Q$ is a monotone function $f \colon P \to \U Q$, the composite of $f$ and $g$ sends $p$ to $\bigcup_{q \in f(p)} g(q)$, and the identity sends $p$ to $\up p$ (\cref{prop:kleisli-U}).
+          The reverse inclusion order is essential: with the inclusion order, the unit $p \mapsto \up p$ would not be monotone (\cref{rem:order}).
+    \item \emph{Upper sets and antichains} (\cref{sec:antichains}).
+          For a preorder $P$, upper closure is a bijection from the antichains of $P$ to the upper sets of $P$ if and only if $P$ is a poset in which every non-empty subset has a minimal element, that is, a well-founded poset (\cref{thm:antichains-wf}); the inverse is then $\Min$.
+          This covers all finite posets and, for instance, $\N^k$.
+          All antichains are moreover finite if and only if $P$ is a well partial order (\cref{prop:wpo}).
+          Without well-foundedness, antichains still correspond to the upper sets which are generated by their minimal elements; an example are the topologically closed upper sets of $\Rp^n$ (\cref{exa:closed-upper-sets}).
+    \item \emph{Relations are Kleisli morphisms} (\cref{sec:warm-up,sec:mrel-kleisli}).
+          The category $\Rel$ is isomorphic to the Kleisli category $\SetP$ of the powerset monad (\cref{thm:rel-kleisli}), and the category $\mRel$ of preorders and monotone relations is isomorphic to $\PreU$, by the functor $\Phi$ which is the identity on objects and sends $M$ to $\widehat{M}$ (\cref{thm:mrel-kleisli}).
+          Restricted to posets, this is an isomorphism $\Feas \cong \PosU$, and hence $\DP \cong \PosU$.
+          Dually, $M \mapsto \widecheck{M}$ is an isomorphism from $\mRel\op$ to the Kleisli category of the lower set monad (\cref{thm:mrel-kleisli-lower}).
+    \item \emph{Parallel composition} (\cref{sec:parallel}).
+          The monoidal product of $\PreU$ which corresponds to the product of monotone relations is $(f \otimes g)(p, q) = f(p) \times g(q)$, with the coherence isomorphisms $\tup{\tup{p,q},r} \mapsto \up \tup{p, \tup{q,r}}$, and so on.
+          With these structures, $\Phi$ is an isomorphism of symmetric monoidal categories (\cref{thm:PreU-monoidal}).
+    \item \emph{Strict versions} (\cref{sec:strict}).
+          The same holds for the tuple categories of the book: $\Phi$ restricts to an isomorphism of symmetric strict monoidal categories $\tL{\mRel} \to \tL{\PreU}$, where the monoidal product of $\tL{\PreU}$ concatenates tuples, $(f \otimes g)(a \tc c) = \{ b \tc d \mid b \in f(a),\ d \in g(c) \}$ (\cref{thm:strict-monoidal}).
+    \item \emph{Feedback} (\cref{sec:feedback}).
+          The formula
+          \begin{equation*}
+              \Tr^{C}_{A,B}(h)(a) = \{\, b \in B \mid \exists\, c \in C \colon\ b \tc c \in h(a \tc c) \,\}
+          \end{equation*}
+          defines a trace on $\tL{\PreU}$, and $\Phi \colon \tL{\mRel} \to \tL{\PreU}$ is an isomorphism of traced symmetric strict monoidal categories (\cref{thm:trace}).
+          It restricts to $\tL{\Feas} \to \tL{\PosU}$, and composed with the passage from design problems to feasibility relations it is the functor $\Fix \colon \tL{\DP} \to \tL{\PosU}$ (\cref{cor:fixfunminres}).
+\end{enumerate}
+
+\Cref{tab:dictionary} summarizes the resulting dictionary.
+Its last column describes the same operations in terms of antichains of minimal requirements, for posets in which this is possible (\cref{prop:antichain-category,prop:antichain-product,prop:trace-antichains}).
+
+\begin{table}[ht]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{@{}p{14mm}p{40mm}p{45mm}p{47mm}@{}}
+        \toprule
+                 & feasibility relations $M$, $N$ & queries $f = \widehat{M}$, $g = \widehat{N}$ (upper sets) & queries $h = \Min \widehat{M}$, $k = \Min \widehat{N}$ (antichains) \\
+        \midrule
+        identity & $a \leq a'$ & $a \mapsto \up a$ & $a \mapsto \{a\}$ \\
+        series   & $\exists\, b \colon \rel{a}{M}{b}$ and $\rel{b}{N}{c}$ & $a \mapsto \bigcup_{b \in f(a)} g(b)$ & $a \mapsto \Min \bigcup_{b \in h(a)} k(b)$ \\
+        parallel & $\rel{a}{M}{b}$ and $\rel{c}{N}{d}$ & $a \tc c \mapsto f(a) \tc g(c)$ & $a \tc c \mapsto h(a) \tc k(c)$ \\
+        feedback & $\exists\, c \colon \rel{(a \tc c)}{M}{(b \tc c)}$ & $a \mapsto \{ b \mid \exists\, c \colon b \tc c \in f(a \tc c) \}$ & $a \mapsto \Min \{ b \mid \exists\, c \colon b \tc c \in h(a \tc c) \}$ \\
+        \bottomrule
+    \end{tabular}
+    \caption{Design problems and their queries. Here $S \tc T$ denotes the set of all concatenations $s \tc t$ with $s \in S$ and $t \in T$.}
+    \label{tab:dictionary}
+\end{table}
+
+\paragraph{How the proofs are organized.}
+All verifications of axioms are carried out once, in the language of relations, where they are short element chases (\cref{sec:parallel} and \cref{app:mrel-strict,app:mrel-trace}).
+The isomorphism $\Phi$ then transports the structures to the Kleisli category (\cref{lem:transport}), and what remains is to compute the transported structures explicitly.
+In this way the Kleisli category needs no separate proofs of the pentagon, hexagon, or trace axioms.
+\Cref{sec:examples} contains worked computations, and \cref{sec:integration} suggests where the material could go in the book.
+
+\paragraph{Machine check.}
+All statements of this note which make sense for finite preorders were also tested by brute force on several thousand randomly generated small preorders and monotone relations: the monad laws, the Kleisli composition formula, functoriality and bijectivity of $\Phi$, all axioms of a symmetric strict monoidal category and of a trace for $\tL{\mRel}$, the compatibility of $\Phi$ with products, braidings, and traces, the dual statements for lower sets, and the antichain formulas.
+The numbers in \cref{sec:examples} were computed in the same way.
+The script is the file \file{codesign-queries-upper-set-monad-check.py}, which accompanies this note.
+This is no substitute for the proofs, but it guards against misprints in the formulas.
+
+\section{Conventions and recollections}
+\label{sec:conventions}
+
+References of the form \lbl{def:monotone-relation} are labels in the source of the book.
+
+\subsection{Preorders and upper sets}
+
+A \emph{preorder} $P$ is a set, also denoted $P$, with a reflexive and transitive relation $\leq_P$; it is a \emph{poset} if $\leq_P$ is also antisymmetric.
+We write $\Pre$ for the category of preorders and monotone functions, and $\Pos$ for its full subcategory of posets.
+We compose in diagrammatic order: for $f \colon P \to Q$ and $g \colon Q \to R$, the composite is $f \then g \colon P \to R$, with $(f \then g)(p) = g(f(p))$.
+
+A subset $S \subseteq P$ is an \emph{upper set} if $p \in S$ and $p \leq p'$ imply $p' \in S$, and a \emph{lower set} if $p \in S$ and $p' \leq p$ imply $p' \in S$.
+For $X \subseteq P$ we write
+\begin{equation*}
+    \up X = \{\, p' \in P \mid \exists\, p \in X \colon p \leq p' \,\},
+    \qquad
+    \dn X = \{\, p' \in P \mid \exists\, p \in X \colon p' \leq p \,\}
+\end{equation*}
+for its upper and lower closure, and $\up p = \up \{p\}$, $\dn p = \dn \{p\}$.
+For a function $f$ and a subset $X$ of its source, $f[X]$ denotes the image of $X$.
+
+\begin{lemma}
+    \label{lem:upper-closure}
+    Let $P$ and $Q$ be preorders.
+    \begin{enumerate}[label=(\alph*)]
+        \item For $X \subseteq P$, the set $\up X$ is an upper set which includes $X$, and it is included in every upper set which includes $X$.
+              In particular, $\up S = S$ for every upper set $S$.
+        \item Unions of upper sets are upper sets, and $\up \bigcup_{i} X_i = \bigcup_{i} \up X_i$ for every family of subsets $X_i \subseteq P$.
+        \item For $p, p' \in P$, we have $p \leq p'$ if and only if $\up p \supseteq \up p'$.
+        \item For a monotone function $f \colon P \to Q$ and $X \subseteq P$, we have $\up f[\up X] = \up f[X]$.
+        \item For upper sets $S \subseteq P$ and $T \subseteq Q$, the set $S \times T$ is an upper set of the product preorder $P \times Q$, and $\up X \times \up Y = \up (X \times Y)$ for all $X \subseteq P$ and $Y \subseteq Q$.
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    (a) is \lbl{lem:upper-closure-is-upper-set} and \lbl{lem:upper-closure-smallest} of the book, and (b) is immediate from the definitions.
+
+    (c) If $p \leq p'$ and $p' \leq p''$, then $p \leq p''$ by transitivity, so $\up p' \subseteq \up p$.
+    Conversely, $p' \in \up p'$ by reflexivity, so $\up p' \subseteq \up p$ gives $p \leq p'$.
+
+    (d) The inclusion $\supseteq$ holds because $X \subseteq \up X$.
+    For $\subseteq$, let $q \in \up f[\up X]$.
+    Then there are $p \in X$ and $p' \in P$ with $p \leq p'$ and $f(p') \leq q$.
+    Since $f$ is monotone, $f(p) \leq f(p') \leq q$, so $q \in \up f[X]$.
+
+    (e) In $P \times Q$ we have $\tup{p,q} \leq \tup{p',q'}$ if and only if $p \leq p'$ and $q \leq q'$.
+    So if $\tup{p,q} \in S \times T$ and $\tup{p,q} \leq \tup{p',q'}$, then $p' \in S$ and $q' \in T$.
+    The second claim is immediate from the same description of the order.
+\end{proof}
+
+\subsection{Relations and monotone relations}
+
+A relation $R \colon X \to Y$ between sets is a subset $R \subseteq X \times Y$; we write $\rel{x}{R}{y}$ for $\tup{x,y} \in R$.
+The composite of $R \colon X \to Y$ and $S \colon Y \to Z$ is
+\begin{equation}
+    \label{eq:rel-composition}
+    R \then S = \{\, \tup{x,z} \mid \exists\, y \in Y \colon \rel{x}{R}{y} \text{ and } \rel{y}{S}{z} \,\},
+\end{equation}
+and the identity of $X$ is the equality relation.
+This is the category $\Rel$.
+
+A \emph{monotone relation} $M \colon P \profto Q$ between preorders (\lbl{def:monotone-relation}) is a relation $M \subseteq P \times Q$ which is
+\begin{align}
+    \label{eq:closed-source}
+    \text{closed downward in the source:} & \quad p' \leq p \text{ and } \rel{p}{M}{q} \ \text{ imply }\ \rel{p'}{M}{q}, \\
+    \label{eq:closed-target}
+    \text{closed upward in the target:}   & \quad \rel{p}{M}{q} \text{ and } q \leq q' \ \text{ imply }\ \rel{p}{M}{q'}.
+\end{align}
+Monotone relations compose as relations (\lbl{lem:monrel-composition}), and the preorder relation $\leq_P \colon P \profto P$ is neutral for this composition (\lbl{lem:monrel-leq-neutral}).
+So there is a category $\mRel$ whose objects are preorders, whose morphisms are monotone relations, and in which the identity morphism of $P$ is $\leq_P$.
+Its full subcategory on the posets is the category $\Feas$ of feasibility relations (\lbl{def:Feas}).
+
+A monotone relation $M \colon P \profto Q$ carries the same information as the Boolean profunctor $\phi_M \colon P\op \times Q \to \Bool$ with $\phi_M(p, q) = \top$ if and only if $\rel{p}{M}{q}$ (\lbl{lem:monrel-as-bool-map}), and all the operations on monotone relations which we use have a counterpart for Boolean profunctors, obtained by replacing ``there exists'' by a join and ``and'' by a meet.
+So $\mRel$ is isomorphic to the category $\BoolProf$ of preorders and Boolean profunctors, and $\Feas$ is isomorphic to the category $\DP$ of posets and design problems (\lbl{def:DP}).
+We work with monotone relations, and translate to design problems only in the final statements.
+
+Every monotone function $f \colon P \to Q$ has a \emph{companion} (\lbl{def:monrel-companion-conjoint}), the monotone relation
+\begin{equation}
+    \label{eq:companion}
+    \comp{f} \colon P \profto Q,
+    \qquad
+    \rel{p}{\comp{f}}{q} \iff f(p) \leq q.
+\end{equation}
+We have $\comp{(\id_P)} = {\leq_P}$ and $\comp{(f \then g)} = \comp{f} \then \comp{g}$ (\lbl{exa:companion-identity}, \lbl{lem:companion-conjoint-composition}).
+In other words, taking companions is a functor $\comp{(-)} \colon \Pre \to \mRel$ which is the identity on objects.
+
+\subsection{Monads and their Kleisli categories}
+
+A \emph{monad} $\tup{T, \mu, \eta}$ on a category $\Cat{C}$ (\lbl{def:monad}) consists of a functor $T \colon \Cat{C} \to \Cat{C}$ and natural transformations $\mu \colon TT \Rightarrow T$ and $\eta \colon \id_{\Cat{C}} \Rightarrow T$ such that, for every object $A$,
+\begin{equation}
+    \label{eq:monad-laws}
+    \mu_{TA} \then \mu_A = T\mu_A \then \mu_A,
+    \qquad
+    \eta_{TA} \then \mu_A = \id_{TA} = T\eta_A \then \mu_A.
+\end{equation}
+Its \emph{Kleisli category} $\Cat{C}_T$ (\lbl{def:kleisli-category}) has the same objects as $\Cat{C}$; a morphism $A \to B$ of $\Cat{C}_T$ is a morphism $f \colon A \to TB$ of $\Cat{C}$; the composite of $f \colon A \to TB$ and $g \colon B \to TC$ is
+\begin{equation}
+    \label{eq:kleisli-composition}
+    f \thenT g \defeq f \then Tg \then \mu_C \colon A \to TC;
+\end{equation}
+and the identity morphism of $A$ is $\eta_A$.
+There is a functor $J_T \colon \Cat{C} \to \Cat{C}_T$ which is the identity on objects and sends $u \colon A \to B$ to $u \then \eta_B$.
+(That $J_T$ preserves composition follows from the naturality of $\eta$ and the unit laws: $(u \then \eta) \thenT (v \then \eta) = u \then \eta \then T v \then T\eta \then \mu = u \then v \then \eta$.)
+
+\section{Warm-up: relations and the powerset monad}
+\label{sec:warm-up}
+
+The \emph{powerset monad} $\tup{\pow, \mu, \eta}$ on $\Set$ sends a set $X$ to its set of subsets $\pow X$ and a function $u \colon X \to Y$ to the image function $\pow u \colon \pow X \to \pow Y$, $S \mapsto u[S]$; its unit and multiplication are
+\begin{equation*}
+    \eta_X \colon X \to \pow X,\ x \mapsto \{x\},
+    \qquad \qquad
+    \mu_X \colon \pow \pow X \to \pow X,\ \mathcal{S} \mapsto \textstyle\bigcup \mathcal{S}.
+\end{equation*}
+
+\begin{lemma}
+    \label{lem:powerset-monad}
+    $\tup{\pow, \mu, \eta}$ is a monad on $\Set$.
+    In its Kleisli category $\SetP$, the composite of $f \colon X \to \pow Y$ and $g \colon Y \to \pow Z$ is given by
+    \begin{equation}
+        \label{eq:kleisli-powerset}
+        (f \thenP g)(x) = \bigcup_{y \in f(x)} g(y).
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    $\pow$ is a functor, since $\id[S] = S$ and $v[u[S]] = (u \then v)[S]$.
+    Naturality of $\eta$: $u[\{x\}] = \{u(x)\}$.
+    Naturality of $\mu$: for $\mathcal{S} \in \pow\pow X$, both $\pow u (\mu_X(\mathcal{S}))$ and $\mu_Y(\pow\pow u(\mathcal{S}))$ are equal to $\bigcup_{S \in \mathcal{S}} u[S]$, because images commute with unions.
+    Unit laws: for $S \in \pow X$, we have $\mu_X(\eta_{\pow X}(S)) = \bigcup \{S\} = S$ and $\mu_X(\pow \eta_X(S)) = \bigcup_{x \in S} \{x\} = S$.
+    Associativity: for $\mathfrak{S} \in \pow\pow\pow X$, both $\mu_X(\mu_{\pow X}(\mathfrak{S}))$ and $\mu_X(\pow\mu_X(\mathfrak{S}))$ are equal to the set of all $x$ for which there are $S \in \mathcal{S} \in \mathfrak{S}$ with $x \in S$.
+    Finally, by \cref{eq:kleisli-composition}, $(f \thenP g)(x) = \mu_Z(g[f(x)]) = \bigcup \{ g(y) \mid y \in f(x) \}$.
+\end{proof}
+
+\begin{theorem}
+    \label{thm:rel-kleisli}
+    There is an isomorphism of categories $\Gamma \colon \Rel \to \SetP$ which is the identity on objects and which sends a relation $R \colon X \to Y$ to the function
+    \begin{equation*}
+        \widehat{R} \colon X \to \pow Y,
+        \qquad
+        \widehat{R}(x) = \{\, y \in Y \mid \rel{x}{R}{y} \,\}.
+    \end{equation*}
+    Its inverse sends a function $f \colon X \to \pow Y$ to the relation $\{ \tup{x,y} \mid y \in f(x) \}$.
+\end{theorem}
+\begin{proof}
+    \emph{Bijection on hom-sets.}
+    For a relation $R$ we have $\tup{x,y} \in R$ if and only if $y \in \widehat{R}(x)$, so the relation associated with $\widehat{R}$ is $R$.
+    For a function $f \colon X \to \pow Y$ and the relation $R_f = \{ \tup{x,y} \mid y \in f(x) \}$, we have $\widehat{R_f}(x) = \{ y \mid y \in f(x) \} = f(x)$.
+
+    \emph{Identities.}
+    The identity of $X$ in $\Rel$ is equality, and $\{ y \mid x = y \} = \{x\} = \eta_X(x)$.
+
+    \emph{Composition.}
+    For $R \colon X \to Y$ and $S \colon Y \to Z$, by \cref{eq:rel-composition} and \cref{eq:kleisli-powerset},
+    \begin{equation*}
+        \widehat{R \then S}(x)
+        = \{\, z \mid \exists\, y \colon y \in \widehat{R}(x) \text{ and } z \in \widehat{S}(y) \,\}
+        = \bigcup_{y \in \widehat{R}(x)} \widehat{S}(y)
+        = (\widehat{R} \thenP \widehat{S})(x).
+    \end{equation*}
+    So $\Gamma$ is a functor which is bijective on objects and on each hom-set, and therefore an isomorphism of categories; its inverse is the functor described in the statement.
+\end{proof}
+
+This is the graded exercise \lbl{ex:HwkRelKleisli} of the book.
+Under $\Gamma$, the graph of a function $u \colon X \to Y$ corresponds to $J_{\pow}(u) = u \then \eta_Y$, the function $x \mapsto \{u(x)\}$.
+
+\section{The upper set monad}
+\label{sec:upper-set-monad}
+
+\begin{definition}[Upper set monad]
+    \label{def:U}
+    For a preorder $P$, let $\U P$ be the set of all upper sets of $P$, ordered by reverse inclusion:
+    \begin{equation}
+        \label{eq:order-UP}
+        S \leq_{\U P} T \quad \text{if and only if} \quad S \supseteq T.
+    \end{equation}
+    The \emph{upper set monad} $\tup{\U, \mu, \eta}$ on $\Pre$ is given by:
+    \begin{enumerate}
+        \item on objects, $P \mapsto \U P$;
+        \item on morphisms, for a monotone function $u \colon P \to Q$,
+              \begin{equation*}
+                  \U u \colon \U P \to \U Q, \qquad S \mapsto \up u[S];
+              \end{equation*}
+        \item the unit $\eta_P \colon P \to \U P$, $p \mapsto \up p$;
+        \item the multiplication $\mu_P \colon \U\U P \to \U P$, $\mathcal{S} \mapsto \bigcup \mathcal{S}$.
+    \end{enumerate}
+\end{definition}
+
+Note that $\U P$ is a poset, even if $P$ is only a preorder.
+An element $\mathcal{S}$ of $\U\U P$ is a set of upper sets of $P$ which is an upper set of $\U P$; by \cref{eq:order-UP} this means that it is closed under passing to smaller upper sets: if $S \in \mathcal{S}$ and $T \in \U P$ with $T \subseteq S$, then $T \in \mathcal{S}$.
+For a set $\mathcal{X}$ of upper sets of $P$, its upper closure in $\U P$ is
+\begin{equation}
+    \label{eq:upper-closure-in-UP}
+    \up \mathcal{X} = \{\, T \in \U P \mid T \subseteq S \text{ for some } S \in \mathcal{X} \,\},
+    \qquad \text{and} \qquad
+    \textstyle\bigcup \up \mathcal{X} = \bigcup \mathcal{X}.
+\end{equation}
+For the second equation, ``$\supseteq$'' holds because $\mathcal{X} \subseteq \up \mathcal{X}$, and ``$\subseteq$'' holds because every element of $\up\mathcal{X}$ is included in an element of $\mathcal{X}$.
+
+\begin{theorem}
+    \label{thm:U-monad}
+    $\tup{\U, \mu, \eta}$ is a monad on $\Pre$.
+    Since $\U P$ is always a poset, it restricts to a monad on $\Pos$.
+\end{theorem}
+\begin{proof}
+    \emph{$\U$ is a functor.}
+    For monotone $u \colon P \to Q$, the set $\up u[S]$ is an upper set of $Q$, and $S \supseteq S'$ implies $\up u[S] \supseteq \up u[S']$, so $\U u$ is a monotone function $\U P \to \U Q$.
+    We have $\U(\id_P)(S) = \up S = S$.
+    For monotone $u \colon P \to Q$ and $v \colon Q \to R$, \cref{lem:upper-closure}(d) gives
+    \begin{equation*}
+        \U v(\U u(S)) = \up v[\up u[S]] = \up v[u[S]] = \U(u \then v)(S).
+    \end{equation*}
+
+    \emph{$\eta$ is a natural transformation.}
+    By \cref{lem:upper-closure}(c), $\eta_P$ is monotone: $p \leq p'$ implies $\up p \supseteq \up p'$, that is, $\up p \leq_{\U P} \up p'$.
+    Naturality: by \cref{lem:upper-closure}(d), $\U u(\eta_P(p)) = \up u[\up p] = \up u(p) = \eta_Q(u(p))$.
+
+    \emph{$\mu$ is a natural transformation.}
+    A union of upper sets is an upper set, and $\mathcal{S} \supseteq \mathcal{S}'$ implies $\bigcup \mathcal{S} \supseteq \bigcup \mathcal{S}'$, so $\mu_P$ is a monotone function $\U\U P \to \U P$.
+    Naturality: for $\mathcal{S} \in \U\U P$, by \cref{eq:upper-closure-in-UP} and \cref{lem:upper-closure}(b),
+    \begin{equation*}
+        \mu_Q(\U\U u(\mathcal{S}))
+        = \textstyle\bigcup \up \{ \U u(S) \mid S \in \mathcal{S} \}
+        = \bigcup_{S \in \mathcal{S}} \up u[S]
+        = \up u\bigl[\bigcup \mathcal{S}\bigr]
+        = \U u(\mu_P(\mathcal{S})).
+    \end{equation*}
+
+    \emph{Unit laws.}
+    Let $S \in \U P$.
+    By \cref{eq:upper-closure-in-UP},
+    \begin{equation*}
+        \mu_P(\eta_{\U P}(S)) = \textstyle\bigcup \up \{S\} = S
+        \qquad \text{and} \qquad
+        \mu_P(\U\eta_P(S)) = \textstyle\bigcup \up \{ \up p \mid p \in S \} = \bigcup_{p \in S} \up p = \up S = S.
+    \end{equation*}
+
+    \emph{Associativity.}
+    Let $\mathfrak{S} \in \U\U\U P$.
+    Then $\mu_P(\mu_{\U P}(\mathfrak{S})) = \bigcup \bigcup \mathfrak{S}$, and by \cref{eq:upper-closure-in-UP},
+    \begin{equation*}
+        \mu_P(\U\mu_P(\mathfrak{S}))
+        = \textstyle\bigcup \up \{ \bigcup \mathcal{S} \mid \mathcal{S} \in \mathfrak{S} \}
+        = \bigcup_{\mathcal{S} \in \mathfrak{S}} \bigcup \mathcal{S}
+        = \bigcup \bigcup \mathfrak{S}. \qedhere
+    \end{equation*}
+\end{proof}
+
+\begin{proposition}[The Kleisli category of the upper set monad]
+    \label{prop:kleisli-U}
+    The Kleisli category $\PreU$ of the upper set monad is the following category.
+    \begin{enumerate}
+        \item Objects: preorders.
+        \item Morphisms $P \to Q$: monotone functions $f \colon P \to \U Q$; that is, functions which assign to each $p \in P$ an upper set $f(p)$ of $Q$, such that
+              \begin{equation}
+                  \label{eq:kleisli-antitone}
+                  p \leq p' \quad \text{implies} \quad f(p) \supseteq f(p').
+              \end{equation}
+        \item Composition: for $f \colon P \to \U Q$ and $g \colon Q \to \U R$,
+              \begin{equation}
+                  \label{eq:kleisli-U}
+                  (f \thenU g)(p) = \bigcup_{q \in f(p)} g(q).
+              \end{equation}
+        \item Identity morphisms: $\eta_P \colon P \to \U P$, $p \mapsto \up p$.
+    \end{enumerate}
+    The functor $J_{\U} \colon \Pre \to \PreU$ sends a monotone function $u \colon P \to Q$ to the function $p \mapsto \up u(p)$.
+\end{proposition}
+\begin{proof}
+    Everything is the definition of the Kleisli category, except \cref{eq:kleisli-U}.
+    By \cref{eq:kleisli-composition} and \cref{eq:upper-closure-in-UP},
+    \begin{equation*}
+        (f \thenU g)(p) = \mu_R(\U g(f(p))) = \textstyle\bigcup \up g[f(p)] = \bigcup g[f(p)] = \bigcup_{q \in f(p)} g(q). \qedhere
+    \end{equation*}
+\end{proof}
+
+We write $\PosU$ for the full subcategory of $\PreU$ whose objects are the posets; it is the Kleisli category of the restriction of $\U$ to $\Pos$.
+This is the category called $\Cat{Pos}_{\U}$ in the draft chapter \file{60_computation/15_query_equiv} (\lbl{def:upos_cat}), where it is defined directly by the formulas of \cref{prop:kleisli-U}.
+
+\begin{remark}[The order on upper sets]
+    \label{rem:order}
+    The order \cref{eq:order-UP} is forced.
+    If we ordered the upper sets by inclusion, the function $p \mapsto \up p$ would reverse the order (\cref{lem:upper-closure}(c)), so it would not be a morphism of $\Pre$, and there would be no unit.
+    With reverse inclusion, a larger element of $\U P$ is a smaller set: a harder query has fewer answers.
+
+    The condition \cref{eq:kleisli-antitone} says that a morphism $f \colon P \to Q$ of $\PreU$ is the same thing as a monotone function $P\op \to \tup{\U Q, \subseteq}$.
+    This is the form in which the curried design problem $\widehat{d} \colon F\op \to \tup{\U R, \subseteq}$ appears in the book (\lbl{lem:dp-currying-monotone}); the form $F \to \tup{\U R, \supseteq}$ is \lbl{rem:dp-curry-other-form}.
+\end{remark}
+
+\begin{remark}
+    The poset $\U P$ is a complete lattice in which the meet of a family of upper sets is their union, and $\eta_P \colon P \to \U P$ is the universal monotone function from $P$ to a poset with all meets; so $\U$ is the ``free complete meet-semilattice'' monad.
+    We do not use this description.
+\end{remark}
+
+\section{Monotone relations are Kleisli morphisms}
+\label{sec:mrel-kleisli}
+
+For a monotone relation $M \colon P \profto Q$ and $p \in P$, let
+\begin{equation}
+    \label{eq:hat}
+    \widehat{M}(p) = \{\, q \in Q \mid \rel{p}{M}{q} \,\}.
+\end{equation}
+
+\begin{theorem}
+    \label{thm:mrel-kleisli}
+    There is an isomorphism of categories
+    \begin{equation*}
+        \Phi \colon \mRel \to \PreU
+    \end{equation*}
+    which is the identity on objects and which sends a monotone relation $M \colon P \profto Q$ to the function $\widehat{M} \colon P \to \U Q$ of \cref{eq:hat}.
+    Its inverse sends a morphism $f \colon P \to \U Q$ of $\PreU$ to the monotone relation
+    \begin{equation}
+        \label{eq:phi-inverse}
+        M_f = \{\, \tup{p,q} \in P \times Q \mid q \in f(p) \,\} \colon P \profto Q.
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    \emph{$\Phi$ is well defined.}
+    Let $M \colon P \profto Q$ be a monotone relation.
+    Each $\widehat{M}(p)$ is an upper set of $Q$: if $q \in \widehat{M}(p)$ and $q \leq q'$, then $\rel{p}{M}{q'}$ by \cref{eq:closed-target}.
+    The function $\widehat{M}$ is monotone $P \to \U Q$: if $p \leq p'$ and $q \in \widehat{M}(p')$, then $\rel{p}{M}{q}$ by \cref{eq:closed-source}, so $\widehat{M}(p) \supseteq \widehat{M}(p')$, which is \cref{eq:kleisli-antitone}.
+
+    \emph{The inverse is well defined.}
+    Let $f \colon P \to \U Q$ be monotone.
+    If $\rel{p}{M_f}{q}$ and $q \leq q'$, then $q' \in f(p)$ because $f(p)$ is an upper set; so $M_f$ is closed upward in the target.
+    If $p' \leq p$ and $\rel{p}{M_f}{q}$, then $q \in f(p) \subseteq f(p')$ by \cref{eq:kleisli-antitone}; so $M_f$ is closed downward in the source.
+
+    \emph{Bijection on hom-sets.}
+    As in the proof of \cref{thm:rel-kleisli}: $\tup{p,q} \in M_{\widehat{M}}$ if and only if $q \in \widehat{M}(p)$, if and only if $\rel{p}{M}{q}$; and $\widehat{M_f}(p) = \{ q \mid q \in f(p) \} = f(p)$.
+
+    \emph{Identities.}
+    The identity of $P$ in $\mRel$ is $\leq_P$, and $\widehat{\leq_P}(p) = \{ p' \mid p \leq p' \} = \up p = \eta_P(p)$.
+
+    \emph{Composition.}
+    For $M \colon P \profto Q$ and $N \colon Q \profto R$, by \cref{eq:rel-composition} and \cref{eq:kleisli-U},
+    \begin{equation*}
+        \widehat{M \then N}(p)
+        = \{\, r \mid \exists\, q \colon q \in \widehat{M}(p) \text{ and } r \in \widehat{N}(q) \,\}
+        = \bigcup_{q \in \widehat{M}(p)} \widehat{N}(q)
+        = (\widehat{M} \thenU \widehat{N})(p).
+    \end{equation*}
+    Hence $\Phi$ is a functor which is bijective on objects and on hom-sets, so it is an isomorphism of categories.
+\end{proof}
+
+So the two conditions in the definition of a monotone relation correspond exactly to the two conditions on a Kleisli morphism: closure upward in the target says that the values are upper sets, and closure downward in the source says that the function is monotone.
+
+\begin{corollary}
+    \label{cor:feas-posU}
+    $\Phi$ restricts to an isomorphism of categories $\Feas \to \PosU$.
+    Composing it with the isomorphism $\DP \to \Feas$, which sends a design problem to its feasible set, we obtain an isomorphism of categories
+    \begin{equation*}
+        \Fix \colon \DP \to \PosU,
+        \qquad
+        d \mapsto \widehat{d},
+        \qquad
+        \widehat{d}(f) = \{\, r \mid d(f^*, r) = \top \,\}.
+    \end{equation*}
+\end{corollary}
+\begin{proof}
+    $\Feas$ and $\PosU$ are the full subcategories of $\mRel$ and $\PreU$ on the same class of objects, the posets, and $\Phi$ is the identity on objects.
+\end{proof}
+
+\begin{remark}[Literature]
+    Both \cref{thm:rel-kleisli} and \cref{thm:mrel-kleisli} are known in substance.
+    The first is a standard example of a Kleisli category.
+    Monotone relations between posets are the feasibility relations, or $\Bool$-profunctors, of \cite[Chapter 4]{fong-spivak}; the queries are those of \cite{censi}; and the extension of the description of $\Rel$ as a Kleisli category from sets to preorders and posets is treated in \cite{bkpv}.
+    What this note adds is a complete and elementary account in the conventions of the book, including parallel composition, the strict versions, and feedback.
+\end{remark}
+
+\begin{proposition}[Companions are the free morphisms]
+    \label{prop:companion-free}
+    For every monotone function $u \colon P \to Q$ we have $\Phi(\comp{u}) = J_{\U}(u)$.
+    That is, the triangle of functors
+    \begin{equation*}
+        \begin{tikzcd}[column sep=large]
+            & \Pre \arrow[dl, "\comp{(-)}"'] \arrow[dr, "J_{\U}"] & \\
+            \mRel \arrow[rr, "\Phi", "\cong"'] & & \PreU
+        \end{tikzcd}
+    \end{equation*}
+    commutes.
+\end{proposition}
+\begin{proof}
+    All three functors are the identity on objects, and $\widehat{\comp{u}}(p) = \{ q \mid u(p) \leq q \} = \up u(p) = J_{\U}(u)(p)$.
+\end{proof}
+
+By \lbl{lem:which-monrels-are-companions}, a monotone relation $M$ is a companion precisely when each $\widehat{M}(p)$ has a least element.
+In terms of queries: the morphisms in the image of $J_{\U}$ are the queries which have a least feasible requirement for every functionality.
+
+\begin{remark}[The discrete case]
+    \label{rem:discrete}
+    Let $D \colon \Set \to \Pre$ be the functor which equips a set with the discrete order.
+    The upper sets of $DX$ are all subsets of $X$, so $\U D X$ is $\pow X$ ordered by reverse inclusion, and every function $X \to \pow Y$ is a monotone function $DX \to \U DY$.
+    Comparing \cref{eq:kleisli-powerset} with \cref{eq:kleisli-U}, we get a full and faithful functor $\SetP \to \PreU$, which sends $X$ to $DX$ and is the identity on morphisms.
+    Likewise there is a full and faithful functor $\Rel \to \mRel$ (\lbl{exa:monrel-discrete}), and the two isomorphisms $\Gamma$ and $\Phi$ are compatible with these functors.
+    So \cref{thm:rel-kleisli} is the special case of \cref{thm:mrel-kleisli} for discrete preorders.
+\end{remark}
+
+\begin{remark}[Order on hom-sets]
+    For monotone relations $M, N \colon P \profto Q$ we have $M \subseteq N$ if and only if $\widehat{M}(p) \subseteq \widehat{N}(p)$ for all $p$, that is, if and only if $\widehat{N} \leq \widehat{M}$ in the point-wise order on functions $P \to \U Q$.
+    So $\Phi$ \emph{reverses} the order of the hom-sets: a design problem with more feasible pairs gives a query whose answers are larger sets, that is, smaller elements of $\U Q$.
+    Unions and intersections of monotone relations correspond to point-wise unions and intersections of upper sets.
+\end{remark}
+
+\section{The dual query: lower sets}
+\label{sec:lower}
+
+For a preorder $P$, let $\Lo P$ be the set of lower sets of $P$, ordered by inclusion.
+The \emph{lower set monad} $\tup{\Lo, \mu, \eta}$ on $\Pre$ sends a monotone function $u \colon P \to Q$ to $\Lo u \colon S \mapsto \dn u[S]$, and has unit $\eta_P(p) = \dn p$ and multiplication $\mu_P(\mathcal{S}) = \bigcup \mathcal{S}$.
+
+It is obtained from the upper set monad by reversing all orders.
+Let $(-)\op \colon \Pre \to \Pre$ be the functor which sends a preorder to its opposite and a monotone function to itself; it is an isomorphism of categories and its own inverse.
+The lower sets of $P$ are the upper sets of $P\op$, and inclusion is the opposite of reverse inclusion, so
+\begin{equation}
+    \label{eq:L-from-U}
+    \Lo P = (\U(P\op))\op,
+    \qquad
+    \Lo u = (\U(u\op))\op,
+\end{equation}
+and the unit and multiplication of $\Lo$ at $P$ are those of $\U$ at $P\op$, as functions.
+Hence the monad laws for $\Lo$ are the monad laws for $\U$, and the Kleisli category $\PreL$ is described as in \cref{prop:kleisli-U}: a morphism $P \to Q$ is a monotone function $g \colon P \to \Lo Q$, that is, a function with values in lower sets such that $p \leq p'$ implies $g(p) \subseteq g(p')$; composition is $(g \thenL g')(p) = \bigcup_{q \in g(p)} g'(q)$; and the identity of $P$ is $p \mapsto \dn p$.
+
+For a monotone relation $M \colon P \profto Q$ and $q \in Q$, let $\widecheck{M}(q) = \{ p \in P \mid \rel{p}{M}{q} \}$.
+
+\begin{theorem}
+    \label{thm:mrel-kleisli-lower}
+    There is an isomorphism of categories
+    \begin{equation*}
+        \Psi \colon \mRel\op \to \PreL
+    \end{equation*}
+    which is the identity on objects and which sends a monotone relation $M \colon P \profto Q$ to the function $\widecheck{M} \colon Q \to \Lo P$.
+    In particular,
+    \begin{equation}
+        \label{eq:check-composition}
+        \widecheck{M \then N}(r) = \bigcup_{q \in \widecheck{N}(r)} \widecheck{M}(q)
+        \qquad \text{and} \qquad
+        \widecheck{\leq_P}(p) = \dn p.
+    \end{equation}
+    It restricts to an isomorphism $\Feas\op \to \PosL$.
+    Composed with the passage from design problems to feasible sets, it gives an isomorphism
+    \begin{equation*}
+        \FixR \colon \DP\op \to \PosL, \qquad d \mapsto \widecheck{d}.
+    \end{equation*}
+\end{theorem}
+\begin{proof}
+    This is the proof of \cref{thm:mrel-kleisli} with the roles of source and target exchanged.
+    Each $\widecheck{M}(q)$ is a lower set of $P$ by \cref{eq:closed-source}, and $q \leq q'$ implies $\widecheck{M}(q) \subseteq \widecheck{M}(q')$ by \cref{eq:closed-target}; so $\widecheck{M}$ is a morphism $Q \to P$ of $\PreL$.
+    Conversely, for a morphism $g \colon Q \to \Lo P$ of $\PreL$, the relation $\{ \tup{p,q} \mid p \in g(q) \}$ is closed downward in the source because the values of $g$ are lower sets, and closed upward in the target because $g$ is monotone.
+    The two assignments are inverse to each other.
+    The second equation of \cref{eq:check-composition} is the definition of $\dn p$, and the first one holds because $p \in \widecheck{M \then N}(r)$ means that there is $q$ with $\rel{p}{M}{q}$ and $\rel{q}{N}{r}$, that is, with $q \in \widecheck{N}(r)$ and $p \in \widecheck{M}(q)$.
+    The right-hand side is $(\widecheck{N} \thenL \widecheck{M})(r)$, so $\Psi$ reverses the order of composition.
+\end{proof}
+
+The query $\FixR$ reads a design problem backwards, from requirements to functionalities; this is why $\Psi$ is contravariant.
+
+\begin{remark}
+    \label{rem:U-L}
+    By \cref{eq:L-from-U}, a morphism $P \to Q$ of $\PreL$ is the same function as a morphism $P\op \to Q\op$ of $\PreU$, and this is an isomorphism of categories $\PreL \cong \PreU$ which sends $P$ to $P\op$.
+    Under this isomorphism, $\Psi$ corresponds to $\Phi$ composed with the isomorphism $\mRel\op \to \mRel$ which sends $P$ to $P\op$ and $M \colon P \profto Q$ to its transpose $Q\op \profto P\op$.
+
+    The draft chapter states that $\FixR$ is a functor $\DP \to \Cat{Pos}_{\Lo}$ (\lbl{lem:confunctor}); since it sends a design problem $F \profto R$ to a morphism $R \to F$, this should read $\DP\op \to \Cat{Pos}_{\Lo}$.
+\end{remark}
+
+\section{Upper sets and antichains}
+\label{sec:antichains}
+
+In practice one does not want to list all feasible requirements, but only the minimal ones.
+This section makes precise when the two descriptions are equivalent, and describes the Kleisli category in terms of antichains.
+
+\subsection{The correspondence}
+
+Let $P$ be a preorder and $X \subseteq P$.
+An element $x \in X$ is \emph{minimal} in $X$ if every $y \in X$ with $y \leq x$ satisfies $x \leq y$; if $P$ is a poset, this means that $y \in X$ and $y \leq x$ imply $y = x$.
+We write $\Min X$ for the set of minimal elements of $X$.
+A subset $A \subseteq P$ is an \emph{antichain} if, for all $a, a' \in A$, $a \leq a'$ implies $a = a'$.
+We write $\An P$ for the set of antichains of $P$.
+The empty set and all singletons are antichains.
+
+\begin{lemma}
+    \label{lem:min-up}
+    Let $P$ be a poset and $X \subseteq P$.
+    \begin{enumerate}[label=(\alph*)]
+        \item $\Min X$ is an antichain.
+        \item $\Min \up X = \Min X$.
+        \item If $A$ is an antichain, then $\Min \up A = A$.
+              In particular, $\up A = \up B$ implies $A = B$ for antichains $A$ and $B$.
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    (a) If $x, y \in \Min X$ and $x \leq y$, then $x = y$ because $y$ is minimal in $X$.
+
+    (b) Let $x \in \Min X$.
+    Then $x \in \up X$.
+    If $y \in \up X$ and $y \leq x$, there is $x' \in X$ with $x' \leq y \leq x$; since $x$ is minimal in $X$, $x' = x$, and then $y = x$ by antisymmetry.
+    So $x \in \Min \up X$.
+    Conversely, let $y \in \Min \up X$.
+    There is $x \in X$ with $x \leq y$, and $x \in \up X$, so $x = y$ because $y$ is minimal in $\up X$.
+    Hence $y \in X$, and $y$ is minimal in $X$ because $X \subseteq \up X$.
+
+    (c) An antichain satisfies $\Min A = A$, so this follows from (b).
+\end{proof}
+
+Parts (a) and (c) are \lbl{lem:Min-is-antichain}, \lbl{lem:up-cl-inj-antichains}, and \lbl{prop:antichains-upper-sets}(1) of the book.
+By (c), upper closure is always an injective function $\An P \to \U P$ when $P$ is a poset, and by (b) and (c) its image consists of the upper sets $S$ with $S = \up \Min S$; we say that such an upper set is \emph{generated by its minimal elements}.
+(In the book these are called \emph{downward-closed} upper sets, \lbl{def:downward-closed-upperset}.)
+So for every poset, $\up$ and $\Min$ are inverse bijections between antichains and upper sets generated by their minimal elements (\lbl{prop:antichains-upper-sets}).
+The question is when \emph{every} upper set is of this kind.
+
+\begin{definition}
+    A preorder $P$ is \emph{well-founded} if every non-empty subset of $P$ has a minimal element.
+\end{definition}
+
+Assuming the axiom of dependent choice, $P$ is well-founded if and only if there is no infinite strictly decreasing sequence $p_0 > p_1 > p_2 > \cdots$ in $P$, where $p > p'$ means $p' \leq p$ and not $p \leq p'$.
+
+\begin{theorem}
+    \label{thm:antichains-wf}
+    For a preorder $P$, the following are equivalent.
+    \begin{enumerate}[label=(\roman*)]
+        \item Upper closure $A \mapsto \up A$ is a bijection from the set $\An P$ of antichains of $P$ to the set of upper sets of $P$.
+        \item $P$ is a well-founded poset.
+    \end{enumerate}
+    If these conditions hold, the inverse bijection is $S \mapsto \Min S$.
+\end{theorem}
+\begin{proof}
+    (ii) $\Rightarrow$ (i).
+    By \cref{lem:min-up}(c), $\up$ is injective on antichains and $\Min \up A = A$.
+    It remains to show that every upper set $S$ satisfies $S = \up \Min S$; then $\up$ is surjective, with inverse $\Min$.
+    The inclusion $\up \Min S \subseteq S$ holds because $S$ is an upper set.
+    Let $x \in S$.
+    The set $X = \{ y \in S \mid y \leq x \}$ is non-empty, so it has a minimal element $m$.
+    This $m$ is minimal in $S$: if $y \in S$ and $y \leq m$, then $y \leq x$, so $y \in X$, and hence $y = m$.
+    Since $m \leq x$, we get $x \in \up \Min S$.
+
+    (i) $\Rightarrow$ (ii).
+    \emph{$P$ is a poset.}
+    Suppose $p \leq q$ and $q \leq p$.
+    Then $\{p\}$ and $\{q\}$ are antichains with $\up p = \up q$, so $\{p\} = \{q\}$ by injectivity, that is, $p = q$.
+
+    \emph{$P$ is well-founded.}
+    Let $X \subseteq P$ be non-empty.
+    By surjectivity, $\up X = \up A$ for some antichain $A$, and $A$ is non-empty because $\up X$ is.
+    By \cref{lem:min-up}, $A = \Min \up A = \Min \up X = \Min X$.
+    So $\Min X$ is non-empty.
+\end{proof}
+
+\begin{example}
+    \label{exa:wf}
+    Every finite poset is well-founded; this is \lbl{lem:finite-upper-sets-dc}.
+    The posets $\N$ and $\N^k$ (with the product order) are well-founded, and so is every product of two well-founded posets (\cref{lem:wf-product} below).
+    So in the example of paying with coins (\lbl{exa:coins-dp}), where the requirements form the poset $\N \times \N$, every set of feasible requirements is generated by its minimal elements, although the poset is infinite.
+
+    The posets $\Z$, $\tup{\mathbb{Q}_{\geq 0}, \leq}$, and $\tup{\Rp, \leq}$ are not well-founded.
+    In $\Rp$, the upper set $\{ x \mid x > 1 \}$ has no minimal element (\lbl{exa:upper-set-no-min}).
+    Here the antichains are the empty set and the singletons, which correspond to the upper sets $\emptyset$ and $[x, \infty)$, while the upper sets $(x, \infty)$ are not generated by their minimal elements.
+\end{example}
+
+\begin{lemma}
+    \label{lem:wf-product}
+    If $P$ and $Q$ are well-founded posets, then so is $P \times Q$.
+\end{lemma}
+\begin{proof}
+    Let $X \subseteq P \times Q$ be non-empty.
+    Let $p_0$ be a minimal element of $\{ p \mid \tup{p,q} \in X \text{ for some } q \}$, and let $q_0$ be a minimal element of $\{ q \mid \tup{p_0, q} \in X \}$.
+    If $\tup{p,q} \in X$ and $\tup{p,q} \leq \tup{p_0,q_0}$, then $p \leq p_0$ gives $p = p_0$, and then $q \leq q_0$ gives $q = q_0$.
+    So $\tup{p_0,q_0}$ is minimal in $X$.
+\end{proof}
+
+\begin{remark}[Preorders]
+    \label{rem:antichains-preorders}
+    By \cref{thm:antichains-wf}, the correspondence fails for every preorder which is not a poset: two different elements $p$, $q$ with $p \leq q \leq p$ generate the same upper set.
+    This is harmless.
+    The upper sets of a preorder $P$ are the preimages of the upper sets of its quotient poset (\file{05_order/20_preorders/72_preorders_to_posets.tex}), so one can apply the theorem to the quotient poset: if it is well-founded, the upper sets of $P$ correspond to the antichains of $P$ \emph{up to replacing elements by equivalent ones}.
+\end{remark}
+
+\subsection{Finite antichains}
+
+For computations one would like the antichains to be finite.
+
+\begin{proposition}[Higman]
+    \label{prop:wpo}
+    For a poset $P$, the following are equivalent.
+    \begin{enumerate}[label=(\roman*)]
+        \item Every upper set of $P$ is the upper closure of a finite set.
+        \item $P$ is well-founded and has no infinite antichain.
+        \item Upper closure is a bijection from the set of \emph{finite} antichains of $P$ to the set of upper sets of $P$.
+    \end{enumerate}
+\end{proposition}
+\begin{proof}
+    (ii) $\Rightarrow$ (iii): by \cref{thm:antichains-wf}, since all antichains are finite.
+    (iii) $\Rightarrow$ (i) is clear.
+
+    (i) $\Rightarrow$ (ii).
+    Let $X \subseteq P$ be non-empty, and let $F$ be a finite set with $\up X = \up F$.
+    Then $F$ is non-empty and finite, so $\Min F$ is non-empty, and $\Min F = \Min \up F = \Min \up X = \Min X$ by \cref{lem:min-up}(b).
+    So $P$ is well-founded.
+    If $A$ is an antichain and $\up A = \up F$ with $F$ finite, then $A = \Min \up A = \Min \up F = \Min F \subseteq F$ by \cref{lem:min-up}, so $A$ is finite.
+\end{proof}
+
+Posets with these properties are called \emph{well partial orders}, and (i) is called the \emph{finite basis property}; the equivalence goes back to Higman \cite{higman}.
+Finite posets and $\N$ are well partial orders, and a product of two well partial orders is again one; for $\N^k$ this is Dickson's lemma (see for instance \cite{dickson-survey}).
+So for requirements in $\N^k$ every query has a \emph{finite} antichain of minimal answers.
+An infinite set with the discrete order is well-founded but not a well partial order: all its subsets are antichains.
+
+\begin{example}[Closed upper sets of $\Rp^n$]
+    \label{exa:closed-upper-sets}
+    The poset $\Rp^n$ is not well-founded, but every upper set $S \subseteq \Rp^n$ which is topologically closed is generated by its minimal elements.
+    Indeed, let $x \in S$.
+    The set $K = \{ y \in S \mid y \leq x \}$ is closed and bounded, hence compact, and it is non-empty.
+    So the continuous function $y \mapsto y_1 + \cdots + y_n$ attains a minimum on $K$, at a point $m$.
+    If $y \in S$ and $y \leq m$, then $y \in K$ and $y_1 + \cdots + y_n \leq m_1 + \cdots + m_n$, with equality only if $y = m$; by the choice of $m$, equality holds.
+    So $m \in \Min S$ and $m \leq x$.
+
+    Therefore $\up$ and $\Min$ are inverse bijections between the closed upper sets of $\Rp^n$ and those antichains whose upper closure is closed.
+    Not every antichain is of this kind: for the antichain $A = \{ \tup{t, 1-t} \mid 0 < t < 1 \}$ of $\Rp^2$, the set $\up A$ does not contain its limit point $\tup{0,1}$.
+\end{example}
+
+\subsection{Queries in terms of antichains}
+
+Let $P$ be a poset.
+Following \lbl{def:antichain-order}, we order the antichains of $P$ by
+\begin{equation}
+    \label{eq:antichain-order}
+    A \leq_{\An P} B
+    \quad \text{if and only if} \quad
+    \up A \supseteq \up B,
+\end{equation}
+that is, if and only if for every $b \in B$ there is $a \in A$ with $a \leq b$.
+By \cref{lem:min-up}(c) this is a partial order, and by \cref{thm:antichains-wf}, for a well-founded poset $P$ the functions
+\begin{equation}
+    \label{eq:min-up-iso}
+    \Min \colon \U P \to \An P
+    \qquad \text{and} \qquad
+    \up \colon \An P \to \U P
+\end{equation}
+are order isomorphisms, inverse to each other.
+
+\begin{proposition}[The category of antichain-valued queries]
+    \label{prop:antichain-category}
+    The following data define a category $\PosA$.
+    \begin{enumerate}
+        \item Objects: well-founded posets.
+        \item Morphisms $P \to Q$: monotone functions $h \colon P \to \An Q$, that is, functions with values in antichains such that $p \leq p'$ implies $h(p) \leq_{\An Q} h(p')$.
+        \item Composition: for $h \colon P \to \An Q$ and $k \colon Q \to \An R$,
+              \begin{equation}
+                  \label{eq:antichain-composition}
+                  (h \thenA k)(p) = \Min \bigcup_{q \in h(p)} k(q).
+              \end{equation}
+        \item Identity morphisms: $p \mapsto \{p\}$.
+    \end{enumerate}
+    Let $\PosUwf$ be the full subcategory of $\PosU$ on the well-founded posets.
+    There is an isomorphism of categories $\PosUwf \to \PosA$ which is the identity on objects and sends $f \colon P \to \U Q$ to $f \then \Min$, that is, to $p \mapsto \Min f(p)$; its inverse sends $h$ to $p \mapsto \up h(p)$.
+\end{proposition}
+\begin{proof}
+    By \cref{eq:min-up-iso}, composing with $\Min$ is a bijection from monotone functions $P \to \U Q$ to monotone functions $P \to \An Q$, with inverse given by composing with $\up$.
+    We transport the composition and the identities of $\PosUwf$ along these bijections; this gives a category which is isomorphic to $\PosUwf$, and we have to show that its composition and identities are the ones in the statement.
+    For the identities: $\Min \up p = \{p\}$.
+    For the composition, let $h$ and $k$ be as in the statement, and let $f = h \then \up$ and $g = k \then \up$.
+    For $p \in P$ we claim
+    \begin{equation}
+        \label{eq:antichain-composition-proof}
+        (f \thenU g)(p)
+        = \bigcup_{q \in \up h(p)} \up k(q)
+        = \bigcup_{q \in h(p)} \up k(q)
+        = \up \bigcup_{q \in h(p)} k(q).
+    \end{equation}
+    The first equality is \cref{eq:kleisli-U}, and the third is \cref{lem:upper-closure}(b).
+    For the second, ``$\supseteq$'' is clear.
+    For ``$\subseteq$'', if $q \in \up h(p)$, there is $q_0 \in h(p)$ with $q_0 \leq q$, and $g(q) \subseteq g(q_0)$ by \cref{eq:kleisli-antitone}, because $g$ is a morphism of $\PosU$.
+    Applying $\Min$ to \cref{eq:antichain-composition-proof} and using \cref{lem:min-up}(b) gives \cref{eq:antichain-composition}.
+\end{proof}
+
+\begin{remark}
+    \label{rem:book-series-queries}
+    \Cref{eq:antichain-composition} is the formula of \lbl{prop:dp-series-queries} for the minimal requirements function of a series composition, slightly simplified: there the union is taken over the sets $\up k(q)$, which by \cref{lem:min-up}(b) is not necessary.
+    In words: collect the minimal requirements $k(q)$ of the second component for each minimal requirement $q$ of the first one, and discard the dominated elements.
+    If $Q$ and $R$ are well partial orders, this is a finite computation.
+\end{remark}
+
+\begin{remark}
+    The upper set monad does \emph{not} restrict to a monad on well-founded posets: for an infinite set $X$ with the discrete order, $\U X$ is the powerset of $X$ ordered by reverse inclusion, which contains infinite strictly decreasing sequences.
+    This is the reason why $\PosA$ is defined as a category in its own right, and not as the Kleisli category of an ``antichain monad''.
+    On the category of finite posets there is no such problem: there $\An$, with the order \cref{eq:antichain-order}, is a monad which is isomorphic to $\U$.
+\end{remark}
+
+\section{Parallel composition}
+\label{sec:parallel}
+
+In this section we work with the cartesian product of preorders, which is associative and unital only up to isomorphism; the strict versions follow in \cref{sec:strict}.
+
+\subsection{Monoidal categories and two lemmas on transport}
+
+Recall that a \emph{monoidal category} $\tup{\Cat{C}, \otimes, I, \alpha, \lambda, \rho}$ consists of a category $\Cat{C}$, a functor $\otimes \colon \Cat{C} \times \Cat{C} \to \Cat{C}$, an object $I$, and natural isomorphisms
+\begin{equation*}
+    \alpha_{A,B,C} \colon (A \otimes B) \otimes C \to A \otimes (B \otimes C),
+    \qquad
+    \lambda_A \colon I \otimes A \to A,
+    \qquad
+    \rho_A \colon A \otimes I \to A,
+\end{equation*}
+which satisfy the pentagon and triangle equations.
+It is \emph{symmetric} if it is equipped with a natural isomorphism $\sigma_{A,B} \colon A \otimes B \to B \otimes A$ which satisfies $\sigma_{A,B} \then \sigma_{B,A} = \id$ and the hexagon equation.
+It is \emph{strict} if all $\alpha_{A,B,C}$, $\lambda_A$, $\rho_A$ are identity morphisms; this is the notion of \lbl{def:strict-monoidal-cat}.
+
+A functor $G \colon \Cat{C} \to \Cat{D}$ between monoidal categories is \emph{strict monoidal} if it preserves all of this structure on the nose:
+\begin{equation}
+    \label{eq:strict-monoidal-functor}
+    \begin{aligned}
+        G(A \otimes B) & = GA \otimes GB, & \qquad G(I) & = I, & \qquad G(u \otimes v) & = Gu \otimes Gv, \\
+        G(\alpha) & = \alpha, & G(\lambda) & = \lambda, & G(\rho) & = \rho,
+    \end{aligned}
+\end{equation}
+with the evident indices.
+It is \emph{symmetric} if, moreover, $G(\sigma_{A,B}) = \sigma_{GA,GB}$.
+An \emph{isomorphism of (symmetric) monoidal categories} is a strict (symmetric) monoidal functor which is an isomorphism of categories; its inverse is then strict (symmetric) monoidal as well.
+
+The category $\Pre$ is symmetric monoidal with the cartesian product: $P \times Q$ carries the product order, $(u \times v)\tup{p,q} = \tup{u(p), v(q)}$, the unit is the one-element preorder $1 = \{*\}$, and
+\begin{equation}
+    \label{eq:pre-coherence}
+    \alpha\tup{\tup{p,q},r} = \tup{p,\tup{q,r}},
+    \qquad
+    \lambda\tup{*,p} = p,
+    \qquad
+    \rho\tup{p,*} = p,
+    \qquad
+    \sigma\tup{p,q} = \tup{q,p}.
+\end{equation}
+
+The first lemma says that structure can be moved along an isomorphism of categories.
+We state it for functors which are the identity on objects, which is all we need.
+
+\begin{lemma}[Transport of structure]
+    \label{lem:transport}
+    Let $\Cat{C}$ and $\Cat{D}$ be categories with the same objects, and let $\Phi \colon \Cat{C} \to \Cat{D}$ be an isomorphism of categories which is the identity on objects.
+    \begin{enumerate}[label=(\alph*)]
+        \item If $\tup{\otimes, I, \alpha, \lambda, \rho}$ is a monoidal structure on $\Cat{C}$, then
+              \begin{equation}
+                  \label{eq:transport}
+                  u \otimes' v \defeq \Phi\bigl(\Phi^{-1}u \otimes \Phi^{-1}v\bigr),
+                  \qquad
+                  \alpha' \defeq \Phi(\alpha),
+                  \quad
+                  \lambda' \defeq \Phi(\lambda),
+                  \quad
+                  \rho' \defeq \Phi(\rho),
+              \end{equation}
+              together with the product of objects and the unit of $\Cat{C}$, is a monoidal structure on $\Cat{D}$.
+              It is strict if the one on $\Cat{C}$ is.
+        \item If, moreover, $\sigma$ is a symmetry for $\Cat{C}$, then $\sigma' \defeq \Phi(\sigma)$ is a symmetry for $\Cat{D}$.
+        \item If, moreover, $\Cat{C}$ is strict and $\Tr$ is a feedback operator, or a trace, on $\Cat{C}$ (\lbl{def:feedback-cat}, \lbl{def:trace-operator}), then $\Tr'(h) \defeq \Phi(\Tr(\Phi^{-1}h))$ is a feedback operator, respectively a trace, on $\Cat{D}$.
+    \end{enumerate}
+    In each case, $\Phi$ preserves the structure on the nose, and the structure on $\Cat{D}$ is the only one with this property.
+\end{lemma}
+\begin{proof}
+    The operation $\otimes'$ is the composite functor $\Cat{D} \times \Cat{D} \to \Cat{C} \times \Cat{C} \to \Cat{C} \to \Cat{D}$ of $\Phi^{-1} \times \Phi^{-1}$, $\otimes$, and $\Phi$, so it is a functor, and by construction $\Phi(u_0 \otimes v_0) = \Phi u_0 \otimes' \Phi v_0$ for all morphisms $u_0$, $v_0$ of $\Cat{C}$.
+    Every condition in the definitions of a monoidal structure, of a symmetry, and of a feedback operator or trace is of one of the following kinds: an equation between objects built from $\otimes$ and $I$, which is the same statement for $\Cat{C}$ and $\Cat{D}$; the requirement that a structure morphism be invertible, which is preserved by the functor $\Phi$; or an equation between two morphisms which are built from arbitrary morphisms $u, v, \ldots$ and from the structure morphisms by means of composition, $\otimes$, and $\Tr$ (naturality conditions are of this kind).
+    Given morphisms $u, v, \ldots$ of $\Cat{D}$, such an equation in $\Cat{D}$ is the image under $\Phi$ of the corresponding equation in $\Cat{C}$ for the morphisms $\Phi^{-1}u, \Phi^{-1}v, \ldots$, because $\Phi$ preserves composition and identities and turns $\otimes$, $\Tr$, and the structure morphisms of $\Cat{C}$ into $\otimes'$, $\Tr'$, and the structure morphisms of $\Cat{D}$.
+    So all conditions hold in $\Cat{D}$.
+    The formulas for the structure on $\Cat{D}$ are forced by the requirement that $\Phi$ preserve the structure, which gives uniqueness.
+\end{proof}
+
+The second lemma produces a monoidal structure from one on a smaller category.
+
+\begin{lemma}[Extension along an identity-on-objects functor]
+    \label{lem:extension}
+    Let $\tup{\Cat{C}, \otimes, I, \alpha, \lambda, \rho}$ be a monoidal category, let $\Cat{D}$ be a category with the same objects, and let $J \colon \Cat{C} \to \Cat{D}$ be a functor which is the identity on objects.
+    Let $\boxtimes \colon \Cat{D} \times \Cat{D} \to \Cat{D}$ be a functor which agrees with $\otimes$ on objects and satisfies $J(u \otimes v) = Ju \boxtimes Jv$ for all morphisms $u$, $v$ of $\Cat{C}$.
+    Suppose that the families $J\alpha$, $J\lambda$, and $J\rho$ are natural with respect to all morphisms of $\Cat{D}$.
+    Then $\tup{\Cat{D}, \boxtimes, I, J\alpha, J\lambda, J\rho}$ is a monoidal category, and $J$ is a strict monoidal functor.
+    If, moreover, $\sigma$ is a symmetry for $\Cat{C}$ and the family $J\sigma$ is natural with respect to all morphisms of $\Cat{D}$, then $J\sigma$ is a symmetry for $\Cat{D}$, and $J$ is symmetric.
+\end{lemma}
+\begin{proof}
+    The morphisms $J\alpha_{A,B,C}$, $J\lambda_A$, $J\rho_A$, $J\sigma_{A,B}$ are isomorphisms because functors preserve isomorphisms, and they are natural by assumption.
+    Each of the remaining conditions (pentagon, triangle, hexagon, $\sigma_{A,B} \then \sigma_{B,A} = \id$) is an equation between composites of morphisms of the form $x \otimes y$, where $x$ and $y$ are identities or components of $\alpha$, $\lambda$, $\rho$, $\sigma$.
+    Applying $J$ to such an equation in $\Cat{C}$, and using $J(x \otimes y) = Jx \boxtimes Jy$ and $J(\id) = \id$, gives the corresponding equation in $\Cat{D}$.
+    That $J$ is strict (symmetric) monoidal is then true by construction.
+\end{proof}
+
+\subsection{The monoidal category of monotone relations}
+
+For monotone relations $M \colon P \profto P'$ and $N \colon Q \profto Q'$, their product (\lbl{def:monrel-product}) is the monotone relation $M \times N \colon P \times Q \profto P' \times Q'$ with
+\begin{equation}
+    \label{eq:monrel-product}
+    \rel{\tup{p,q}}{(M \times N)}{\tup{p',q'}}
+    \iff
+    \rel{p}{M}{p'} \text{ and } \rel{q}{N}{q'}.
+\end{equation}
+
+\begin{lemma}[Sliding]
+    \label{lem:sliding}
+    Let $u \colon P \to Q$ be a monotone function and $N \colon Q \profto R$ a monotone relation.
+    Then
+    \begin{equation}
+        \label{eq:sliding-left}
+        \comp{u} \then N = \{\, \tup{p,r} \mid \rel{u(p)}{N}{r} \,\}.
+    \end{equation}
+    Let $M \colon P \profto Q$ be a monotone relation and $v \colon Q \to R$ an order isomorphism.
+    Then
+    \begin{equation}
+        \label{eq:sliding-right}
+        M \then \comp{v} = \{\, \tup{p,r} \mid \rel{p}{M}{v^{-1}(r)} \,\}.
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    By \cref{eq:companion}, $\rel{p}{(\comp{u} \then N)}{r}$ means that there is $q$ with $u(p) \leq q$ and $\rel{q}{N}{r}$.
+    If so, then $\rel{u(p)}{N}{r}$ by \cref{eq:closed-source}; conversely, we can take $q = u(p)$.
+    Similarly, $\rel{p}{(M \then \comp{v})}{r}$ means that there is $q$ with $\rel{p}{M}{q}$ and $v(q) \leq r$, that is, $q \leq v^{-1}(r)$, since $v$ is an order isomorphism.
+    If so, then $\rel{p}{M}{v^{-1}(r)}$ by \cref{eq:closed-target}; conversely, we can take $q = v^{-1}(r)$.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:mrel-monoidal}
+    $\mRel$ is a symmetric monoidal category with the product \cref{eq:monrel-product}, the unit $1$, and the companions $\comp{\alpha}$, $\comp{\lambda}$, $\comp{\rho}$, $\comp{\sigma}$ of the coherence isomorphisms \cref{eq:pre-coherence} of $\Pre$.
+    The functor $\comp{(-)} \colon \Pre \to \mRel$ is strict symmetric monoidal.
+\end{proposition}
+\begin{proof}
+    We verify the hypotheses of \cref{lem:extension} for $J = \comp{(-)}$.
+
+    \emph{The product is a functor.}
+    $M \times N$ is a monotone relation by \lbl{lem:monrel-product}.
+    It preserves identities, ${\leq_P} \times {\leq_Q} = {\leq_{P \times Q}}$, by the definition of the product order.
+    It preserves composition: for $M' \colon P' \profto P''$ and $N' \colon Q' \profto Q''$, both $(M \then M') \times (N \then N')$ and $(M \times N) \then (M' \times N')$ relate $\tup{p,q}$ to $\tup{p'',q''}$ precisely when there are $p'$ and $q'$ with $\rel{p}{M}{p'}$, $\rel{p'}{M'}{p''}$, $\rel{q}{N}{q'}$, and $\rel{q'}{N'}{q''}$.
+
+    \emph{Compatibility with $J$.}
+    For monotone functions $u$, $v$, both $\comp{(u \times v)}$ and $\comp{u} \times \comp{v}$ relate $\tup{p,q}$ to $\tup{p',q'}$ precisely when $u(p) \leq p'$ and $v(q) \leq q'$.
+
+    \emph{Naturality.}
+    Let $M \colon P \profto P'$, $N \colon Q \profto Q'$, and $L \colon R \profto R'$ be monotone relations.
+    By \cref{eq:sliding-right} and \cref{eq:sliding-left}, both
+    \begin{equation*}
+        ((M \times N) \times L) \then \comp{\alpha}
+        \qquad \text{and} \qquad
+        \comp{\alpha} \then (M \times (N \times L))
+    \end{equation*}
+    relate $\tup{\tup{p,q},r}$ to $\tup{p',\tup{q',r'}}$ precisely when $\rel{p}{M}{p'}$, $\rel{q}{N}{q'}$, and $\rel{r}{L}{r'}$.
+    In the same way, both $({\leq_1} \times M) \then \comp{\lambda}$ and $\comp{\lambda} \then M$ relate $\tup{*,p}$ to $p'$ precisely when $\rel{p}{M}{p'}$, and similarly for $\rho$; and both $(M \times N) \then \comp{\sigma}$ and $\comp{\sigma} \then (N \times M)$ relate $\tup{p,q}$ to $\tup{q',p'}$ precisely when $\rel{p}{M}{p'}$ and $\rel{q}{N}{q'}$.
+\end{proof}
+
+Explicitly, the coherence isomorphisms of $\mRel$ are obtained from those of $\Pre$ by replacing equality with the order: for instance, $\comp{\alpha}$ relates $\tup{\tup{p,q},r}$ to $\tup{p',\tup{q',r'}}$ precisely when $p \leq p'$, $q \leq q'$, and $r \leq r'$.
+
+\subsection{The monoidal category of queries}
+
+\begin{theorem}
+    \label{thm:PreU-monoidal}
+    The following data define a symmetric monoidal structure on $\PreU$.
+    \begin{enumerate}
+        \item On objects, the monoidal product is the product of preorders, and the unit is $1$.
+        \item On morphisms, for $f \colon P \to \U P'$ and $g \colon Q \to \U Q'$,
+              \begin{equation}
+                  \label{eq:kleisli-product}
+                  f \otimes g \colon P \times Q \to \U(P' \times Q'),
+                  \qquad
+                  (f \otimes g)\tup{p,q} = f(p) \times g(q).
+              \end{equation}
+        \item The coherence isomorphisms are the images under $J_{\U}$ of those of $\Pre$:
+              \begin{equation}
+                  \label{eq:kleisli-coherence}
+                  \begin{aligned}
+                      \alpha^{\U}\tup{\tup{p,q},r} & = \up \tup{p,\tup{q,r}}, &
+                      \lambda^{\U}\tup{*,p} & = \up p, \\
+                      \sigma^{\U}\tup{p,q} & = \up \tup{q,p}, &
+                      \rho^{\U}\tup{p,*} & = \up p.
+                  \end{aligned}
+              \end{equation}
+    \end{enumerate}
+    With this structure, $\Phi \colon \mRel \to \PreU$ is an isomorphism of symmetric monoidal categories, and $J_{\U} \colon \Pre \to \PreU$ is a strict symmetric monoidal functor.
+    In particular, for all monotone relations $M$ and $N$,
+    \begin{equation}
+        \label{eq:hat-product}
+        \widehat{M \times N}\tup{p,q} = \widehat{M}(p) \times \widehat{N}(q).
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    By \cref{lem:transport}, applied to $\Phi$ and to the symmetric monoidal structure of $\mRel$ (\cref{prop:mrel-monoidal}), there is exactly one symmetric monoidal structure on $\PreU$ for which $\Phi$ is an isomorphism of symmetric monoidal categories.
+    We compute it.
+    The product of objects and the unit are those of $\mRel$.
+    For morphisms $f$ and $g$ as in the statement, \cref{eq:transport}, \cref{eq:phi-inverse}, and \cref{eq:monrel-product} give
+    \begin{equation*}
+        \Phi(M_f \times M_g)\tup{p,q}
+        = \{\, \tup{p',q'} \mid p' \in f(p) \text{ and } q' \in g(q) \,\}
+        = f(p) \times g(q),
+    \end{equation*}
+    which is \cref{eq:kleisli-product}; taking $f = \widehat{M}$ and $g = \widehat{N}$ gives \cref{eq:hat-product}.
+    The coherence isomorphisms are $\Phi(\comp{\alpha}) = J_{\U}(\alpha)$, and so on, by \cref{prop:companion-free}, and $J_{\U}(u)(x) = \up u(x)$.
+    Finally, $J_{\U}$ is the composite of the strict symmetric monoidal functors $\comp{(-)}$ and $\Phi$.
+\end{proof}
+
+It is worth making explicit what the theorem contains.
+The set $f(p) \times g(q)$ is an upper set of $P' \times Q'$ (\cref{lem:upper-closure}(e)), and $f \otimes g$ is monotone.
+The product is a functor: it preserves identities, $\up p \times \up q = \up \tup{p,q}$, and composition,
+\begin{equation}
+    \label{eq:kleisli-interchange}
+    (f \thenU f') \otimes (g \thenU g') = (f \otimes g) \thenU (f' \otimes g'),
+\end{equation}
+which at $\tup{p,q}$ is the equation $\bigl(\bigcup_{p' \in f(p)} f'(p')\bigr) \times \bigl(\bigcup_{q' \in g(q)} g'(q')\bigr) = \bigcup_{\tup{p',q'} \in f(p) \times g(q)} f'(p') \times g'(q')$.
+Naturality of $\alpha^{\U}$ says that, for all morphisms $f$, $g$, $e$ of $\PreU$, the upper sets $(f(p) \times g(q)) \times e(r)$ and $f(p) \times (g(q) \times e(r))$ correspond to each other under the order isomorphism $\alpha$.
+All of these facts can also be checked directly; here they follow from the corresponding facts for relations.
+
+\begin{remark}[Where the product comes from]
+    \label{rem:monoidal-monad}
+    The product \cref{eq:kleisli-product} is an instance of a general construction.
+    The functions
+    \begin{equation*}
+        \nabla_{P,Q} \colon \U P \times \U Q \to \U(P \times Q),
+        \qquad
+        \tup{S,T} \mapsto S \times T,
+    \end{equation*}
+    are monotone and natural in $P$ and $Q$, they are compatible with the coherence isomorphisms \cref{eq:pre-coherence}, and they are compatible with the unit and the multiplication of the monad:
+    \begin{equation*}
+        (\eta_P \times \eta_Q) \then \nabla_{P,Q} = \eta_{P \times Q},
+        \qquad
+        (\mu_P \times \mu_Q) \then \nabla_{P,Q} = \nabla_{\U P, \U Q} \then \U\nabla_{P,Q} \then \mu_{P \times Q}.
+    \end{equation*}
+    (The first equation is $\up p \times \up q = \up\tup{p,q}$, and both sides of the second one send $\tup{\mathcal{S},\mathcal{T}}$ to $\bigcup\mathcal{S} \times \bigcup\mathcal{T}$.)
+    So $\U$ is a symmetric monoidal monad, also called a commutative monad, on $\tup{\Pre, \times, 1}$.
+    For every such monad the Kleisli category inherits a symmetric monoidal structure, with $f \otimes g = (f \times g) \then \nabla$ and with coherence isomorphisms the images of those of the base category; see \cite{kock,power-robinson}.
+    This is the structure of \cref{thm:PreU-monoidal}.
+    The powerset monad is commutative in the same way, and $\Gamma \colon \Rel \to \SetP$ is an isomorphism of symmetric monoidal categories; by \cref{rem:discrete} this is the discrete case.
+\end{remark}
+
+\begin{remark}
+    Although the monoidal product of $\PreU$ is the cartesian product on objects, it is \emph{not} the categorical product of $\PreU$, just as the cartesian product of sets is not the categorical product in $\Rel$.
+\end{remark}
+
+\subsection{Parallel composition in terms of antichains}
+
+\begin{lemma}
+    \label{lem:min-product}
+    Let $P$ and $Q$ be posets, $X \subseteq P$, and $Y \subseteq Q$.
+    Then $\Min(X \times Y) = \Min X \times \Min Y$.
+    In particular, a product of two antichains is an antichain.
+\end{lemma}
+\begin{proof}
+    If $x \in \Min X$ and $y \in \Min Y$, and $\tup{x',y'} \in X \times Y$ with $\tup{x',y'} \leq \tup{x,y}$, then $x' = x$ and $y' = y$.
+    Conversely, let $\tup{x,y}$ be minimal in $X \times Y$.
+    If $x' \in X$ and $x' \leq x$, then $\tup{x',y} \leq \tup{x,y}$, so $x' = x$; hence $x \in \Min X$, and in the same way $y \in \Min Y$.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:antichain-product}
+    The symmetric monoidal structure of $\PreU$ restricts to the full subcategory $\PosUwf$ on the well-founded posets.
+    Under the isomorphism $\PosUwf \cong \PosA$ of \cref{prop:antichain-category}, the monoidal product of $h \colon P \to \An P'$ and $k \colon Q \to \An Q'$ is
+    \begin{equation}
+        \label{eq:antichain-product}
+        (h \otimes k)\tup{p,q} = h(p) \times k(q),
+    \end{equation}
+    and the coherence isomorphisms are $\tup{\tup{p,q},r} \mapsto \{\tup{p,\tup{q,r}}\}$, and so on.
+\end{proposition}
+\begin{proof}
+    A product of two well-founded posets is well-founded (\cref{lem:wf-product}), and $1$ is well-founded.
+    For $f = h \then \up$ and $g = k \then \up$, \cref{lem:upper-closure}(e), \cref{lem:min-up}(b), and \cref{lem:min-product} give
+    \begin{equation*}
+        \Min\bigl( f(p) \times g(q) \bigr) = \Min \up \bigl( h(p) \times k(q) \bigr) = \Min\bigl( h(p) \times k(q) \bigr) = h(p) \times k(q).
+    \end{equation*}
+    For the coherence isomorphisms, use $\Min \up x = \{x\}$.
+\end{proof}
+
+In words: the minimal requirements of two components in parallel are the pairs of minimal requirements of the two components; no domination check is needed.
+
+\section{Strict versions}
+\label{sec:strict}
+
+\subsection{Tuple preorders}
+
+We recall the constructions of the book (\file{27_interconnections/20_parallelism/24_monoidal.tex}).
+For preorders $P_1, \ldots, P_n$, with $n \in \N$, the \emph{tuple preorder} $\tL{P_1, \ldots, P_n}$ is the set of all tuples $\tup{p_1, \ldots, p_n}$ with $p_i \in P_i$, ordered entry by entry.
+For $n = 0$ it is the preorder $\tL{\,} = \{\etup\}$ whose only element is the empty tuple.
+We write $a \tc b$ for the concatenation of two tuples; it is associative, and the empty tuple is neutral for it.
+For sets of tuples $S$ and $T$ we write
+\begin{equation}
+    \label{eq:concat-sets}
+    S \tc T = \{\, a \tc b \mid a \in S,\ b \in T \,\}.
+\end{equation}
+
+The category $\tL{\Pre}$ is the full subcategory of $\Pre$ on the tuple preorders (\lbl{def:PreL}).
+It is a strict monoidal category (\lbl{lem:PreL-strict-monoidal}): the monoidal product of objects concatenates the lists of preorders,
+\begin{equation*}
+    \tL{P_1, \ldots, P_m} \otimes \tL{Q_1, \ldots, Q_n} = \tL{P_1, \ldots, P_m, Q_1, \ldots, Q_n},
+\end{equation*}
+so that, as a set, $P \otimes Q = P \tc Q$; the monoidal product of monotone functions is $(u \otimes v)(a \tc c) = u(a) \tc v(c)$; and the unit is $\tL{\,}$.
+It is symmetric, with braiding $a \tc b \mapsto b \tc a$ (\lbl{exa:SetL-symmetric}).\footnote{If one of the $P_i$ is empty, then $\tL{P_1, \ldots, P_n}$ is empty and does not determine the list $P_1, \ldots, P_n$. This causes no problems: the monoidal product of an empty object with any object is empty, and every statement below is trivially true when one of the objects involved is empty. A non-empty tuple preorder determines its list.}
+
+\begin{lemma}[Splitting]
+    \label{lem:splitting}
+    Let $P$ and $Q$ be objects of $\tL{\Pre}$.
+    Every element of $P \otimes Q$ can be written as $a \tc b$ with $a \in P$ and $b \in Q$ in exactly one way, and
+    \begin{equation*}
+        a \tc b \leq a' \tc b' \quad \text{if and only if} \quad a \leq a' \text{ and } b \leq b'.
+    \end{equation*}
+    Consequently, $S \tc T$ is an upper set of $P \otimes Q$ for all upper sets $S \subseteq P$ and $T \subseteq Q$, and $\up X \tc \up Y = \up (X \tc Y)$ for all subsets $X \subseteq P$ and $Y \subseteq Q$.
+\end{lemma}
+\begin{proof}
+    If $P = \tL{P_1, \ldots, P_m}$ and $Q = \tL{Q_1, \ldots, Q_n}$, a tuple of length $m + n$ is the concatenation of its first $m$ entries and its last $n$ entries, and of no other pair of tuples of lengths $m$ and $n$; and tuples are compared entry by entry.
+    The consequences follow as in \cref{lem:upper-closure}(e).
+\end{proof}
+
+In other words, $\tup{a,b} \mapsto a \tc b$ is an order isomorphism $P \times Q \to P \otimes Q$.
+The strict monoidal product does the same job as the cartesian product, with concatenation instead of pairing.
+
+The categories $\tL{\mRel}$ and $\tL{\Feas}$ of the book are the full subcategories of $\mRel$ on the tuple preorders, and on the tuple preorders which are posets, respectively (\lbl{def:mRelL}, \lbl{def:DPL}).
+
+\begin{proposition}
+    \label{prop:mRelL}
+    $\tL{\mRel}$ is a symmetric strict monoidal category (\lbl{def:sym-stacking-cat}) with the following structure.
+    On objects, the monoidal product and the unit are those of $\tL{\Pre}$.
+    For monotone relations $M \colon A \profto B$ and $N \colon C \profto D$,
+    \begin{equation}
+        \label{eq:mRelL-product}
+        M \otimes N = \{\, \tup{a \tc c,\ b \tc d} \mid \rel{a}{M}{b} \text{ and } \rel{c}{N}{d} \,\} \colon A \otimes C \profto B \otimes D,
+    \end{equation}
+    and the braiding is
+    \begin{equation}
+        \label{eq:mRelL-braiding}
+        \sigma_{A,B} = \{\, \tup{a \tc b,\ b' \tc a'} \mid a \leq a' \text{ and } b \leq b' \,\} \colon A \otimes B \profto B \otimes A.
+    \end{equation}
+    The structure restricts to $\tL{\Feas}$.
+\end{proposition}
+
+This is stated in the book (\lbl{eq:RelL-monoidal-product}, \lbl{exa:RelL-symmetric}).
+For completeness, \cref{app:mrel-strict} contains a proof.
+
+\subsection{The strict monoidal category of queries}
+
+\begin{definition}
+    \label{def:PreUL}
+    $\tL{\PreU}$ is the full subcategory of $\PreU$ whose objects are the tuple preorders, and $\tL{\PosU}$ is the full subcategory of $\PreU$ whose objects are the tuple preorders which are posets.
+\end{definition}
+
+So a morphism $A \to B$ of $\tL{\PreU}$ is a monotone function $f \colon A \to \U B$ between tuple preorders, and composition and identities are as in \cref{prop:kleisli-U}.
+The isomorphism $\Phi$ of \cref{thm:mrel-kleisli} is the identity on objects, so it restricts to isomorphisms of categories
+\begin{equation*}
+    \Phi \colon \tL{\mRel} \to \tL{\PreU}
+    \qquad \text{and} \qquad
+    \Phi \colon \tL{\Feas} \to \tL{\PosU}.
+\end{equation*}
+
+\begin{theorem}
+    \label{thm:strict-monoidal}
+    The following data define a symmetric strict monoidal structure on $\tL{\PreU}$.
+    \begin{enumerate}
+        \item On objects, the monoidal product and the unit are those of $\tL{\Pre}$.
+        \item On morphisms, for $f \colon A \to \U B$ and $g \colon C \to \U D$, the morphism $f \otimes g \colon A \otimes C \to \U(B \otimes D)$ is
+              \begin{equation}
+                  \label{eq:strict-kleisli-product}
+                  (f \otimes g)(a \tc c) = f(a) \tc g(c) = \{\, b \tc d \mid b \in f(a),\ d \in g(c) \,\}.
+              \end{equation}
+        \item The braiding is
+              \begin{equation}
+                  \label{eq:strict-kleisli-braiding}
+                  \sigma_{A,B} \colon A \otimes B \to \U(B \otimes A),
+                  \qquad
+                  \sigma_{A,B}(a \tc b) = \up (b \tc a) = \up b \tc \up a.
+              \end{equation}
+    \end{enumerate}
+    With this structure, $\Phi \colon \tL{\mRel} \to \tL{\PreU}$ is an isomorphism of symmetric strict monoidal categories; in particular,
+    \begin{equation}
+        \label{eq:hat-strict-product}
+        \widehat{M \otimes N}(a \tc c) = \widehat{M}(a) \tc \widehat{N}(c).
+    \end{equation}
+    The structure restricts to $\tL{\PosU}$, and $\Phi \colon \tL{\Feas} \to \tL{\PosU}$ is an isomorphism of symmetric strict monoidal categories.
+    Moreover, $J_{\U}$ restricts to a strict symmetric monoidal functor $\tL{\Pre} \to \tL{\PreU}$.
+\end{theorem}
+\begin{proof}
+    By \cref{lem:transport} and \cref{prop:mRelL}, there is exactly one symmetric strict monoidal structure on $\tL{\PreU}$ for which $\Phi$ is an isomorphism of symmetric strict monoidal categories, and we compute it.
+    The product of objects and the unit are those of $\tL{\mRel}$, hence of $\tL{\Pre}$.
+    For $f$ and $g$ as in the statement, \cref{eq:transport}, \cref{eq:phi-inverse}, and \cref{eq:mRelL-product} give
+    \begin{equation*}
+        \Phi(M_f \otimes M_g)(a \tc c) = \{\, b \tc d \mid b \in f(a) \text{ and } d \in g(c) \,\} = f(a) \tc g(c).
+    \end{equation*}
+    By \cref{eq:mRelL-braiding}, $\Phi(\sigma_{A,B})(a \tc b) = \{ b' \tc a' \mid a \leq a',\ b \leq b' \} = \up b \tc \up a$, which is $\up(b \tc a)$ by \cref{lem:splitting}.
+    A monoidal product of two posets is a poset, and the unit is a poset, so the structure restricts to $\tL{\PosU}$ and $\tL{\Feas}$.
+    For a monotone function $u$ between tuple preorders, $\Phi(\comp{u}) = J_{\U}(u)$ by \cref{prop:companion-free}.
+    The functor $\comp{(-)} \colon \tL{\Pre} \to \tL{\mRel}$ is strict symmetric monoidal: both $\comp{(u \otimes v)}$ and $\comp{u} \otimes \comp{v}$ relate $a \tc c$ to $b \tc d$ precisely when $u(a) \leq b$ and $v(c) \leq d$, and the braiding \cref{eq:mRelL-braiding} is the companion of $a \tc b \mapsto b \tc a$.
+    Hence so is the composite $J_{\U}$ of $\comp{(-)}$ and $\Phi$.
+\end{proof}
+
+Let us spell out what strictness means for queries.
+For morphisms $f$, $g$, $e$ of $\tL{\PreU}$, both $(f \otimes g) \otimes e$ and $f \otimes (g \otimes e)$ send $a \tc b \tc c$ to $f(a) \tc g(b) \tc e(c)$.
+The identity of the unit $\tL{\,}$ sends $\etup$ to $\up \etup = \{\etup\}$, and so $(f \otimes \id_{\tL{\,}})(a \tc \etup) = f(a) \tc \{\etup\} = f(a)$.
+Note also that a morphism $\tL{\,} \to B$ of $\tL{\PreU}$ is just an upper set of $B$.
+The poset $\U\tL{\,}$ has two elements, $\{\etup\}$ (``feasible'') and $\emptyset$ (``infeasible''), with $\{\etup\} \leq \emptyset$; so a morphism $f \colon A \to \tL{\,}$ is determined by the lower set $\{ a \mid f(a) = \{\etup\} \}$ of feasible functionalities.
+
+\begin{remark}[Strict and non-strict]
+    The inclusion $\tL{\PreU} \to \PreU$ is full and faithful, and every preorder $P$ is isomorphic in $\PreU$ to the tuple preorder $\tL{P}$, by $J_{\U}$ of the order isomorphism $p \mapsto \tup{p}$.
+    So the inclusion is an equivalence of categories.
+    Together with the isomorphisms $J_{\U}(\tup{a,b} \mapsto a \tc b) \colon P \times Q \to P \otimes Q$ of \cref{lem:splitting}, it relates the monoidal structure of \cref{thm:PreU-monoidal} to the strict one of \cref{thm:strict-monoidal}, in the same way as for $\tL{\Pre}$ and $\Pre$.
+    We do not need this here.
+\end{remark}
+
+\begin{remark}[Is $\tL{\PreU}$ a Kleisli category?]
+    The functor $\U$ does not map $\tL{\Pre}$ to itself, since the elements of $\U P$ are upper sets, not tuples.
+    This is why \cref{def:PreUL} defines $\tL{\PreU}$ as a full subcategory of $\PreU$, in the same way as the book defines $\tL{\mRel}$ as a full subcategory of $\mRel$.
+    If one prefers a Kleisli category, one can use the monad $P \mapsto \tL{\U P}$ on $\tL{\Pre}$, whose values are preorders of tuples of length one; its Kleisli category is isomorphic to $\tL{\PreU}$, by removing the brackets around each value.
+\end{remark}
+
+By \cref{lem:wf-product,lem:splitting}, a monoidal product of two well-founded tuple posets is well-founded.
+So everything restricts to the full subcategory of $\tL{\PosU}$ on the well-founded posets, and, exactly as in \cref{prop:antichain-product}, in terms of antichains the monoidal product is
+\begin{equation}
+    \label{eq:strict-antichain-product}
+    (h \otimes k)(a \tc c) = h(a) \tc k(c),
+\end{equation}
+and the braiding is $a \tc b \mapsto \{ b \tc a \}$.
+We write $\tL{\PosA}$ for the resulting symmetric strict monoidal category: its objects are the well-founded tuple posets, and its morphisms, composition, and identities are those of $\PosA$ (\cref{prop:antichain-category}).
+
+\section{Feedback}
+\label{sec:feedback}
+
+\subsection{Traces and traced functors}
+
+Let $\tup{\Cat{C}, \otimes, I, \sigma}$ be a symmetric strict monoidal category.
+Following \lbl{def:feedback-cat} and \lbl{def:trace-operator}, a \emph{trace} on $\Cat{C}$ is a family of functions
+\begin{equation*}
+    \Tr^{C}_{A,B} \colon \operatorname{Hom}_{\Cat{C}}(A \otimes C, B \otimes C) \to \operatorname{Hom}_{\Cat{C}}(A, B)
+\end{equation*}
+which satisfies the following conditions, for all morphisms for which the two sides are defined.
+\begin{align}
+    \label{eq:ax-nat-A}
+    & \text{Naturality in $A$:} &
+    \Tr^{C}_{A',B}\bigl((v \otimes \id_C) \then u\bigr) & = v \then \Tr^{C}_{A,B}(u)
+    && (v \colon A' \to A) \\
+    \label{eq:ax-nat-B}
+    & \text{Naturality in $B$:} &
+    \Tr^{C}_{A,B'}\bigl(u \then (v \otimes \id_C)\bigr) & = \Tr^{C}_{A,B}(u) \then v
+    && (v \colon B \to B') \\
+    \label{eq:ax-dinat}
+    & \text{Dinaturality in $C$:} &
+    \Tr^{C}_{A,B}\bigl(u \then (\id_B \otimes v)\bigr) & = \Tr^{C'}_{A,B}\bigl((\id_A \otimes v) \then u\bigr)
+    && (v \colon C' \to C) \\
+    \label{eq:ax-van-1}
+    & \text{Vanishing I:} &
+    \Tr^{I}_{A,B}(u) & = u \\
+    \label{eq:ax-van-2}
+    & \text{Vanishing II:} &
+    \Tr^{C}_{A,B}\bigl(\Tr^{D}_{A \otimes C, B \otimes C}(u)\bigr) & = \Tr^{C \otimes D}_{A,B}(u) \\
+    \label{eq:ax-sup}
+    & \text{Superposing:} &
+    \Tr^{C}_{E \otimes A, F \otimes B}(v \otimes u) & = v \otimes \Tr^{C}_{A,B}(u)
+    && (v \colon E \to F) \\
+    \label{eq:ax-yank}
+    & \text{Yanking:} &
+    \Tr^{C}_{C,C}(\sigma_{C,C}) & = \id_C
+\end{align}
+In \cref{eq:ax-nat-A,eq:ax-nat-B,eq:ax-sup} we have $u \colon A \otimes C \to B \otimes C$; in \cref{eq:ax-dinat}, $u \colon A \otimes C \to B \otimes C'$; in \cref{eq:ax-van-1}, $u \colon A \to B$; and in \cref{eq:ax-van-2}, $u \colon A \otimes C \otimes D \to B \otimes C \otimes D$.
+(A \emph{feedback operator} satisfies \cref{eq:ax-nat-A,eq:ax-nat-B,eq:ax-van-1,eq:ax-van-2,eq:ax-sup}, and \cref{eq:ax-dinat} for isomorphisms $v$ only.)
+
+\begin{definition}
+    \label{def:traced-functor}
+    Let $\Cat{C}$ and $\Cat{D}$ be symmetric strict monoidal categories, each equipped with a trace.
+    A strict symmetric monoidal functor $G \colon \Cat{C} \to \Cat{D}$ is \emph{traced} if
+    \begin{equation}
+        \label{eq:traced-functor}
+        G\bigl(\Tr^{C}_{A,B}(u)\bigr) = \Tr^{GC}_{GA,GB}(Gu)
+    \end{equation}
+    for all morphisms $u \colon A \otimes C \to B \otimes C$ of $\Cat{C}$.
+    An \emph{isomorphism of traced symmetric strict monoidal categories} is a traced strict symmetric monoidal functor which is an isomorphism of categories.
+\end{definition}
+
+Note that the right-hand side of \cref{eq:traced-functor} makes sense because $G(A \otimes C) = GA \otimes GC$.
+
+\subsection{The trace of monotone relations}
+
+For objects $A$, $B$, $C$ of $\tL{\mRel}$ and a monotone relation $M \colon A \otimes C \profto B \otimes C$, the book defines (\lbl{eq:mRelL-feedback})
+\begin{equation}
+    \label{eq:mRelL-trace}
+    \Tr^{C}_{A,B}(M) = \{\, \tup{a,b} \mid \exists\, c \in C \colon \rel{(a \tc c)}{M}{(b \tc c)} \,\} \colon A \profto B.
+\end{equation}
+
+\begin{proposition}
+    \label{prop:mRelL-trace}
+    \Cref{eq:mRelL-trace} defines a trace on the symmetric strict monoidal category $\tL{\mRel}$.
+    Moreover, $\tup{a,b} \in \Tr^{C}_{A,B}(M)$ if and only if there are $c, c' \in C$ with $c' \leq c$ and $\rel{(a \tc c)}{M}{(b \tc c')}$.
+\end{proposition}
+
+The second statement is \lbl{eq:mRelL-feedback-leq}.
+The book states the first one and checks the yanking condition; \cref{app:mrel-trace} contains a proof of all the conditions.
+
+\subsection{The trace of queries}
+
+\begin{theorem}
+    \label{thm:trace}
+    For objects $A$, $B$, $C$ of $\tL{\PreU}$ and a morphism $h \colon A \otimes C \to B \otimes C$ of $\tL{\PreU}$, that is, a monotone function $h \colon A \otimes C \to \U(B \otimes C)$, define
+    \begin{equation}
+        \label{eq:kleisli-trace}
+        \Tr^{C}_{A,B}(h) \colon A \to \U B,
+        \qquad
+        \Tr^{C}_{A,B}(h)(a) = \{\, b \in B \mid \exists\, c \in C \colon\ b \tc c \in h(a \tc c) \,\}.
+    \end{equation}
+    \begin{enumerate}[label=(\alph*)]
+        \item $\Tr^{C}_{A,B}(h)$ is a morphism $A \to B$ of $\tL{\PreU}$.
+        \item These operators form a trace on the symmetric strict monoidal category $\tL{\PreU}$ of \cref{thm:strict-monoidal}.
+        \item For every monotone relation $M \colon A \otimes C \profto B \otimes C$,
+              \begin{equation}
+                  \label{eq:hat-trace}
+                  \widehat{\Tr^{C}_{A,B}(M)} = \Tr^{C}_{A,B}\bigl(\widehat{M}\bigr).
+              \end{equation}
+              That is, $\Phi \colon \tL{\mRel} \to \tL{\PreU}$ is an isomorphism of traced symmetric strict monoidal categories.
+        \item The trace restricts to $\tL{\PosU}$, and $\Phi \colon \tL{\Feas} \to \tL{\PosU}$ is an isomorphism of traced symmetric strict monoidal categories.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    By \cref{lem:transport}(c), \cref{prop:mRelL-trace}, and \cref{thm:strict-monoidal}, the operators $\Tr'(h) = \Phi(\Tr(\Phi^{-1}h))$ form a trace on $\tL{\PreU}$, and it is the only one for which $\Phi$ is traced.
+    We compute it.
+    By \cref{eq:phi-inverse}, $\Phi^{-1}h$ relates $a \tc c$ to $b \tc c'$ precisely when $b \tc c' \in h(a \tc c)$.
+    By \cref{eq:mRelL-trace}, $\tup{a,b} \in \Tr(\Phi^{-1}h)$ precisely when there is $c \in C$ with $b \tc c \in h(a \tc c)$.
+    Hence
+    \begin{equation*}
+        \Tr'(h)(a) = \{\, b \mid \tup{a,b} \in \Tr(\Phi^{-1}h) \,\} = \{\, b \mid \exists\, c \colon b \tc c \in h(a \tc c) \,\},
+    \end{equation*}
+    which is \cref{eq:kleisli-trace}.
+    This proves (a), (b), and (c).
+    For (d), the trace does not change the objects involved, so it restricts to the full subcategories on the posets.
+\end{proof}
+
+\begin{corollary}[The query functor]
+    \label{cor:fixfunminres}
+    The functor
+    \begin{equation*}
+        \Fix \colon \tL{\DP} \to \tL{\PosU},
+        \qquad
+        d \mapsto \widehat{d},
+        \qquad
+        \widehat{d}(a) = \{\, b \mid d(a^*, b) = \top \,\},
+    \end{equation*}
+    is an isomorphism of traced symmetric strict monoidal categories.
+    Explicitly, for design problems $d$ and $e$ for which the left-hand sides are defined,
+    \begin{align}
+        \label{eq:query-series}
+        \widehat{d \then e}(a) & = \textstyle\bigcup_{b \in \widehat{d}(a)} \widehat{e}(b), &
+        \widehat{\id_A}(a) & = \up a, \\
+        \label{eq:query-parallel}
+        \widehat{d \otimes e}(a \tc c) & = \widehat{d}(a) \tc \widehat{e}(c), &
+        \widehat{\sigma_{A,B}}(a \tc b) & = \up (b \tc a), \\
+        \label{eq:query-feedback}
+        \widehat{\Tr^{C}_{A,B}(d)}(a) & = \{\, b \mid \exists\, c \colon b \tc c \in \widehat{d}(a \tc c) \,\}.
+    \end{align}
+\end{corollary}
+\begin{proof}
+    $\Fix$ is the composite of $\Phi \colon \tL{\Feas} \to \tL{\PosU}$ with the functor $\tL{\DP} \to \tL{\Feas}$ which sends a design problem to its feasible set.
+    The latter is an isomorphism of categories (\lbl{def:DP}), it is compatible with the monoidal products (\lbl{eq:dpmulti}, \lbl{eq:RelL-monoidal-product}) and the braidings (\lbl{exa:RelL-symmetric}), and it is compatible with the traces (\lbl{eq:codesign-loop-feasible-set}).
+    Now apply \cref{thm:trace}(d).
+\end{proof}
+
+So the answer to the query for a system which is built from components by series composition, parallel composition, and feedback can be computed from the answers for the components, by \cref{eq:query-series,eq:query-parallel,eq:query-feedback}.
+
+\subsection{Reading the trace formula}
+
+For a fixed functionality $a$, call $c \in C$ a \emph{loop value for $b$} if $b \tc c \in h(a \tc c)$: providing the functionality $c$ on the loop wire, in addition to $a$, is feasible with the requirements $b$ and with the \emph{same} $c$ as requirement on the loop wire.
+Then \cref{eq:kleisli-trace} says that $b$ is a feasible requirement for $a$ in the system with the loop closed if and only if there is a loop value for $b$.
+As for relations, one may relax the condition on the loop wire to an inequality.
+
+\begin{proposition}
+    \label{prop:trace-leq}
+    Let $h \colon A \otimes C \to B \otimes C$ be a morphism of $\tL{\PreU}$, and let $a \in A$ and $b \in B$.
+    The following are equivalent.
+    \begin{enumerate}[label=(\roman*)]
+        \item $b \in \Tr^{C}_{A,B}(h)(a)$.
+        \item There are $c, c' \in C$ with $c' \leq c$ and $b \tc c' \in h(a \tc c)$.
+    \end{enumerate}
+    More precisely, if $c' \leq c$ and $b \tc c' \in h(a \tc c)$, then both $c$ and $c'$ are loop values for $b$.
+\end{proposition}
+\begin{proof}
+    (i) $\Rightarrow$ (ii): take $c' = c$.
+    For the last statement, which implies (ii) $\Rightarrow$ (i), suppose $c' \leq c$ and $b \tc c' \in h(a \tc c)$.
+    Since $b \tc c' \leq b \tc c$ and $h(a \tc c)$ is an upper set, $b \tc c \in h(a \tc c)$.
+    Since $a \tc c' \leq a \tc c$ and $h$ is monotone, $h(a \tc c) \subseteq h(a \tc c')$ by \cref{eq:kleisli-antitone}, so $b \tc c' \in h(a \tc c')$.
+\end{proof}
+
+The two halves of this argument are the two closure conditions of a monotone relation: one may \emph{require more} on the loop wire (closure upward in the target), or \emph{provide less} (closure downward in the source).
+
+\begin{remark}[Direct proofs]
+    \label{rem:direct-proofs}
+    The conditions \cref{eq:ax-nat-A}--\cref{eq:ax-yank} for $\tL{\PreU}$ can of course also be checked directly from \cref{eq:kleisli-U}, \cref{eq:strict-kleisli-product}, and \cref{eq:kleisli-trace}.
+    The draft chapter does this for $\Cat{Pos}_{\U}$ (\lbl{lem:UPos-is-traced}), with one step left open, namely naturality in $B$.
+    With \cref{prop:trace-leq}, this step is as follows.
+    For $h \colon A \otimes C \to \U(B \otimes C)$ and $g \colon B \to \U B'$, and $a \in A$,
+    \begin{align*}
+        \Tr\bigl(h \thenU (g \otimes \id_C)\bigr)(a)
+        & = \{\, b' \mid \exists\, c,\ b,\ c' \colon\ b \tc c' \in h(a \tc c),\ b' \in g(b),\ c' \leq c \,\}, \\
+        \bigl(\Tr(h) \thenU g\bigr)(a)
+        & = \{\, b' \mid \exists\, c,\ b \colon\ b \tc c \in h(a \tc c),\ b' \in g(b) \,\}.
+    \end{align*}
+    The second set is included in the first (take $c' = c$), and the first is included in the second by \cref{prop:trace-leq}.
+    The point is that the identity morphism of $C$ in $\tL{\PreU}$ is $c' \mapsto \up c'$ and not $c' \mapsto \{c'\}$, which produces the inequality $c' \leq c$, and that this inequality can be absorbed because $h$ is monotone with values in upper sets.
+\end{remark}
+
+\subsection{Feedback in terms of antichains}
+
+\begin{proposition}
+    \label{prop:trace-antichains}
+    Let $A$, $B$, and $C$ be well-founded tuple posets, and let $h \colon A \otimes C \to \An(B \otimes C)$ be a morphism of $\tL{\PosA}$, with corresponding morphism $f = h \then \up$ of $\tL{\PosU}$.
+    Then, for every $a \in A$,
+    \begin{equation}
+        \label{eq:antichain-trace}
+        \Min \Tr^{C}_{A,B}(f)(a) = \Min \{\, b \in B \mid \exists\, c \in C \colon\ b \tc c \in h(a \tc c) \,\}.
+    \end{equation}
+    So, in terms of antichains, the trace is given by the same formula as \cref{eq:kleisli-trace}, followed by $\Min$.
+\end{proposition}
+\begin{proof}
+    Let $X_a = \{ b \mid \exists\, c \colon b \tc c \in h(a \tc c) \}$.
+    We show $\Tr(f)(a) = \up X_a$; then \cref{eq:antichain-trace} follows from \cref{lem:min-up}(b).
+
+    ``$\supseteq$'': if $b_0 \tc c \in h(a \tc c)$, then $b_0 \tc c \in f(a \tc c)$, so $b_0 \in \Tr(f)(a)$; and $\Tr(f)(a)$ is an upper set.
+
+    ``$\subseteq$'': let $b \in \Tr(f)(a)$.
+    The set $K = \{ c \in C \mid b \tc c \in f(a \tc c) \}$ is non-empty, so, since $C$ is well-founded, it has a minimal element $c$.
+    Since $b \tc c \in f(a \tc c) = \up h(a \tc c)$, there is an element $b_0 \tc c_0 \in h(a \tc c)$ with $b_0 \leq b$ and $c_0 \leq c$ (\cref{lem:splitting}).
+    Then $b \tc c_0 \in f(a \tc c)$, because $f(a \tc c)$ is an upper set, and so $c_0 \in K$ by \cref{prop:trace-leq}.
+    Since $c$ is minimal in $K$ and $c_0 \leq c$, we get $c_0 = c$.
+    Hence $b_0 \tc c \in h(a \tc c)$, that is, $b_0 \in X_a$, and $b_0 \leq b$.
+\end{proof}
+
+In words: to close a loop on the level of Pareto fronts, go through the loop values $c$; in the Pareto front $h(a \tc c)$ of the open system, keep the points whose requirement on the loop wire is \emph{exactly} $c$; forget the loop coordinate; and finally discard the dominated points.
+Points $b \tc c'$ of $h(a \tc c)$ with $c' < c$ need not be considered separately: by \cref{prop:trace-leq}, such a $b$ lies in $\Tr(f)(a) = \up X_a$, so it is above a point which is found in the way just described.
+\Cref{exa:two-modules} shows that the final $\Min$ is needed.
+
+\subsection{The dual query}
+
+The isomorphism $\Psi$ of \cref{thm:mrel-kleisli-lower} is compatible with parallel composition and feedback in the same way.
+
+\begin{proposition}
+    \label{prop:dual-monoidal-trace}
+    For monotone relations $M \colon A \profto B$ and $N \colon C \profto D$ in $\tL{\mRel}$,
+    \begin{equation*}
+        \widecheck{M \otimes N}(b \tc d) = \widecheck{M}(b) \tc \widecheck{N}(d),
+    \end{equation*}
+    and for a monotone relation $M \colon A \otimes C \profto B \otimes C$,
+    \begin{equation*}
+        \widecheck{\Tr^{C}_{A,B}(M)}(b) = \{\, a \in A \mid \exists\, c \in C \colon\ a \tc c \in \widecheck{M}(b \tc c) \,\}.
+    \end{equation*}
+\end{proposition}
+\begin{proof}
+    By \cref{eq:mRelL-product}, $a \tc c \in \widecheck{M \otimes N}(b \tc d)$ if and only if $\rel{a}{M}{b}$ and $\rel{c}{N}{d}$.
+    By \cref{eq:mRelL-trace}, $a \in \widecheck{\Tr(M)}(b)$ if and only if there is $c$ with $\rel{(a \tc c)}{M}{(b \tc c)}$, that is, with $a \tc c \in \widecheck{M}(b \tc c)$.
+\end{proof}
+
+So the right-hand sides define a monoidal product and a trace on the full subcategory $\tL{\PreL}$ of $\PreL$ on the tuple preorders, and $\Psi$ identifies $\tL{\mRel}\op$, with the same monoidal product and trace operators as $\tL{\mRel}$, with $\tL{\PreL}$.
+If the posets involved are \emph{dually} well-founded (every non-empty subset has a maximal element), lower sets correspond to antichains via $\dn$ and $\Max$, and the statements of \cref{prop:antichain-category,prop:antichain-product,prop:trace-antichains} hold with $\Max$ in place of $\Min$.
+
+\begin{remark}[Computation]
+    \Cref{eq:kleisli-trace} is a specification, not an algorithm: it quantifies over all elements of $C$.
+    If $C$ is finite, it is a finite search, and \cref{prop:trace-antichains} reduces it to a search for fixed points on Pareto fronts.
+    For infinite posets, such as the real numbers, the minimal requirements of a system with a loop are computed in \cite{censi} as a least fixed point, by an iteration which converges under continuity assumptions; see also the draft section \file{60_computation/20_solving/18_handling_loops.tex}.
+    The relation of that iteration to \cref{prop:trace-antichains} is not treated in this note.
+\end{remark}
+
+\section{Worked examples}
+\label{sec:examples}
+
+In the examples we write tuples of length one as numbers.
+
+\begin{example}[Series: paying with coins, and carrying them]
+    \label{exa:coins}
+    Let $\N$ be the natural numbers with their usual order.
+    As in \lbl{exa:coins-dp}, consider the feasibility relation
+    \begin{equation*}
+        \mathit{pay} \colon \tL{\N} \profto \tL{\N, \N},
+        \qquad
+        \rel{a}{\mathit{pay}}{\tup{x,y}} \iff a \leq x + 2y,
+    \end{equation*}
+    which says that $x$ one-franc coins and $y$ two-franc coins suffice to pay the amount $a$.
+    Suppose that a one-franc coin weighs $5$ grams and a two-franc coin weighs $8$ grams, and consider
+    \begin{equation*}
+        \mathit{carry} \colon \tL{\N, \N} \profto \tL{\N},
+        \qquad
+        \rel{\tup{x,y}}{\mathit{carry}}{w} \iff 5x + 8y \leq w,
+    \end{equation*}
+    which says that a purse for $w$ grams can carry the coins.
+    The series composition $\mathit{pay} \then \mathit{carry} \colon \tL{\N} \profto \tL{\N}$ relates an amount to the purses with which it can be paid.
+
+    All posets involved are well partial orders, so by \cref{prop:wpo} all queries have finite antichains of minimal answers.
+    For the first component, the set $\widehat{\mathit{pay}}(a) = \{ \tup{x,y} \mid a \leq x + 2y \}$ has the minimal elements
+    \begin{equation*}
+        h_{\mathit{pay}}(a) = \{\, \tup{a - 2j,\, j} \mid 0 \leq j \leq \lfloor a/2 \rfloor \,\} \cup \{\, \tup{0, (a+1)/2} \mid a \text{ odd} \,\};
+    \end{equation*}
+    for instance $h_{\mathit{pay}}(3) = \{ \tup{3,0}, \tup{1,1}, \tup{0,2} \}$, in agreement with \lbl{exa:coins-dp}.
+    For the second component, $\widehat{\mathit{carry}}\tup{x,y} = \up (5x + 8y)$ has the least element $5x + 8y$, so $h_{\mathit{carry}}\tup{x,y} = \{ 5x + 8y \}$; this is a companion (\cref{prop:companion-free}).
+    By \cref{eq:antichain-composition},
+    \begin{equation*}
+        (h_{\mathit{pay}} \thenA h_{\mathit{carry}})(3) = \Min\bigl( \{15\} \cup \{13\} \cup \{16\} \bigr) = \{13\}.
+    \end{equation*}
+    The three ways of paying three francs give the weights $15$, $13$, and $16$, and $\Min$ discards the dominated ones: the lightest way to pay three francs is one coin of each kind.
+    In the same way one finds, for every $a$,
+    \begin{equation*}
+        (h_{\mathit{pay}} \thenA h_{\mathit{carry}})(a) = \begin{cases} \{4a\} & \text{if $a$ is even,} \\ \{4a + 1\} & \text{if $a$ is odd.} \end{cases}
+    \end{equation*}
+    In terms of upper sets, \cref{eq:kleisli-U} gives $\widehat{\mathit{pay} \then \mathit{carry}}(3) = \bigcup_{3 \leq x + 2y} \up (5x + 8y) = \up 13$, a union of infinitely many upper sets; the antichain form needs only the three minimal elements.
+\end{example}
+
+\begin{example}[Parallel]
+    \label{exa:coins-parallel}
+    To pay $3$ francs to one person and $2$ francs to another, we use $\mathit{pay} \otimes \mathit{pay} \colon \tL{\N,\N} \profto \tL{\N,\N,\N,\N}$.
+    Since $h_{\mathit{pay}}(2) = \{ \tup{2,0}, \tup{0,1} \}$, \cref{eq:strict-antichain-product} gives
+    \begin{align*}
+        (h_{\mathit{pay}} \otimes h_{\mathit{pay}})(3 \tc 2)
+        & = h_{\mathit{pay}}(3) \tc h_{\mathit{pay}}(2) \\
+        & = \{ \tup{3,0,2,0}, \tup{3,0,0,1}, \tup{1,1,2,0}, \tup{1,1,0,1}, \tup{0,2,2,0}, \tup{0,2,0,1} \},
+    \end{align*}
+    an antichain with $3 \cdot 2 = 6$ elements; no element is discarded.
+    The functoriality of the monoidal product \cref{eq:kleisli-interchange} can be seen at work here: computing $(\mathit{pay} \then \mathit{carry}) \otimes (\mathit{pay} \then \mathit{carry})$ at $3 \tc 2$ gives $\{13\} \tc \{8\} = \{ \tup{13,8} \}$, and computing $(\mathit{pay} \otimes \mathit{pay}) \then (\mathit{carry} \otimes \mathit{carry})$ gives the minimal elements of the six pairs of weights $\tup{15,10}, \tup{15,8}, \tup{13,10}, \tup{13,8}, \tup{16,10}, \tup{16,8}$, which is again $\{ \tup{13,8} \}$.
+\end{example}
+
+\begin{example}[Feedback: battery modules]
+    \label{exa:modules}
+    We redo \lbl{exa:codesign-feedback-modules} in terms of queries.
+    Let $A = \tL{\N}$, $C = \tL{\{0,1,2,3\}}$, and $B = \tL{\,}$, so that $B \otimes C = C$, and let
+    \begin{equation*}
+        M \colon A \otimes C \profto C,
+        \qquad
+        \rel{(a \tc c)}{M}{c'} \iff a + c \leq 2c'.
+    \end{equation*}
+    Here $a$ is the mass of the payload, $c$ is the number of battery modules on board, and $c'$ is the number of modules which are needed to move both; each module has mass one and can move two units of mass, and there is room for at most three modules.
+    The query of the open system is
+    \begin{align*}
+        \widehat{M}(a \tc c) & = \{\, c' \in C \mid a + c \leq 2c' \,\}, \\
+        h(a \tc c) = \Min \widehat{M}(a \tc c) & =
+        \begin{cases}
+            \{ \lceil (a+c)/2 \rceil \} & \text{if } \lceil (a+c)/2 \rceil \leq 3, \\
+            \emptyset & \text{otherwise.}
+        \end{cases}
+    \end{align*}
+    By \cref{eq:kleisli-trace}, $\Tr^{C}_{A,B}(\widehat{M})(a)$ is $\{\etup\}$ if there is a loop value $c$, that is, a $c \leq 3$ with $c \in \widehat{M}(a \tc c)$, and $\emptyset$ otherwise.
+    The condition $c \in \widehat{M}(a \tc c)$ reads $a + c \leq 2c$, that is, $a \leq c$.
+    Hence
+    \begin{equation*}
+        \Tr^{C}_{A,B}(\widehat{M})(a) =
+        \begin{cases}
+            \{\etup\} & \text{if } a \leq 3, \\
+            \emptyset & \text{if } a > 3,
+        \end{cases}
+    \end{equation*}
+    which is the answer found in the book: the vehicle with the loop closed can transport any payload of mass at most three, and has no requirements.
+
+    In terms of antichains (\cref{prop:trace-antichains}), we look for $c$ with $c \in h(a \tc c)$, that is, $c = \lceil (a+c)/2 \rceil$, which holds precisely for $c = a$ and $c = a + 1$.
+    So for $a = 1$, the loop values found on the Pareto fronts are $c = 1$ and $c = 2$, while in the sense of upper sets all of $c = 1, 2, 3$ are loop values.
+\end{example}
+
+\begin{example}[Feedback with a Pareto front: two kinds of modules]
+    \label{exa:two-modules}
+    Suppose now that there are two kinds of battery modules.
+    Both have mass one and can move two units of mass, and there is room for at most three modules of each kind.
+    A module of the first kind costs $1$ and causes emissions $3$; a module of the second kind costs $2$ and causes emissions $1$.
+    Let
+    \begin{equation*}
+        A = \tL{\N},
+        \qquad
+        C = \tL{\{0,1,2,3\}, \{0,1,2,3\}},
+        \qquad
+        B = \tL{\N, \N},
+    \end{equation*}
+    where the elements of $B$ are pairs of a price and an amount of emissions, and let $M \colon A \otimes C \profto B \otimes C$ relate $a \tc \tup{c_1, c_2}$ to $\tup{p, e} \tc \tup{c_1', c_2'}$ if and only if
+    \begin{equation*}
+        a + c_1 + c_2 \leq 2(c_1' + c_2'),
+        \qquad
+        c_1 + 2c_2 \leq p,
+        \qquad
+        3c_1 + c_2 \leq e.
+    \end{equation*}
+    As in \lbl{exa:codesign-feedback-vehicle}, the price and the emissions are those of the modules on board, and the modules which are needed are a requirement; one checks that $M$ is closed downward in the source and upward in the target.
+    The Pareto fronts of the open system are
+    \begin{equation*}
+        h(a \tc \tup{c_1, c_2}) = \bigl\{\, \tup{c_1 + 2c_2,\ 3c_1 + c_2} \tc \tup{c_1', c_2'} \bigm| c_1' + c_2' = \lceil (a + c_1 + c_2)/2 \rceil,\ c_1', c_2' \leq 3 \,\bigr\};
+    \end{equation*}
+    for instance $h(2 \tc \tup{1,1}) = \{ \tup{3,4,0,2}, \tup{3,4,1,1}, \tup{3,4,2,0} \}$.
+    A point of $h(a \tc c)$ has the loop requirement $c$ precisely when $c_1 + c_2 = \lceil (a + c_1 + c_2)/2 \rceil$, that is, when $c_1 + c_2 \in \{a, a+1\}$.
+    So the set $X_a$ of \cref{prop:trace-antichains} is
+    \begin{equation*}
+        X_a = \{\, \tup{c_1 + 2c_2,\ 3c_1 + c_2} \mid c_1, c_2 \leq 3,\ c_1 + c_2 \in \{a, a+1\} \,\}.
+    \end{equation*}
+    For $a = 2$ this is
+    \begin{equation*}
+        X_2 = \{ \tup{2,6}, \tup{3,4}, \tup{4,2} \} \cup \{ \tup{3,9}, \tup{4,7}, \tup{5,5}, \tup{6,3} \},
+    \end{equation*}
+    where the first three points come from two modules on board and the last four from three modules.
+    Each of the last four is dominated by one of the first three, so
+    \begin{equation*}
+        \Min \Tr^{C}_{A,B}(\widehat{M})(2) = \Min X_2 = \{ \tup{2,6}, \tup{3,4}, \tup{4,2} \}.
+    \end{equation*}
+    This shows that the $\Min$ in \cref{eq:antichain-trace} cannot be omitted.
+    In general, the minimal requirements of the vehicle with the loop closed are obtained from exactly $a$ modules, and they form a trade-off between price and emissions:
+    \begin{center}
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{cl}
+            \toprule
+            payload $a$ & minimal requirements $\tup{\text{price}, \text{emissions}}$ \\
+            \midrule
+            $0$ & $\tup{0,0}$ \\
+            $1$ & $\tup{1,3}$, $\tup{2,1}$ \\
+            $2$ & $\tup{2,6}$, $\tup{3,4}$, $\tup{4,2}$ \\
+            $3$ & $\tup{3,9}$, $\tup{4,7}$, $\tup{5,5}$, $\tup{6,3}$ \\
+            $4$ & $\tup{5,10}$, $\tup{6,8}$, $\tup{7,6}$ \\
+            $5$ & $\tup{7,11}$, $\tup{8,9}$ \\
+            $6$ & $\tup{9,12}$ \\
+            $\geq 7$ & none (infeasible) \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    As the payload grows, the antichains move up in the order \cref{eq:antichain-order}, until they reach the empty antichain.
+\end{example}
+
+\section{Integrating the material into the book}
+\label{sec:integration}
+
+The story has four layers, which fit four different places in the book: formulas for composing answers to queries, which need only order theory; the statement that passing to queries is a functor, and an isomorphism of categories; its compatibility with parallel composition and feedback; and the description in terms of a monad.
+The following suggestions go through the book in order.
+File names are relative to \file{volumes/vol1}.
+
+\paragraph{Part ``Order'', chapter on monotone relations (\file{05_order/50_monotone_relations}).}
+The function $\widehat{M}$ is already introduced there, before \lbl{lem:which-monrels-are-companions}.
+Two short lemmas would prepare everything that follows.
+First, in the subsection on composing monotone relations, next to the matrix formula \lbl{lem:boolprof-composition-matrix}: the formula $\widehat{M \then N}(p) = \bigcup_{q \in \widehat{M}(p)} \widehat{N}(q)$ and $\widehat{\leq_P}(p) = \up p$ (the last two steps of the proof of \cref{thm:mrel-kleisli}).
+Second, in \file{40_products_sums.tex}, after \lbl{lem:monrel-product}: the formula $\widehat{M \times N}\tup{p,q} = \widehat{M}(p) \times \widehat{N}(q)$, together with \cref{lem:upper-closure}(e).
+The observation after \cref{thm:mrel-kleisli}, that the two closure conditions of a monotone relation are exactly ``values are upper sets'' and ``the function is monotone'', would fit the summary at the end of \file{10_monotone_relations.tex}.
+
+\paragraph{Part ``Order'', chapter on design problems (\file{05_order/60_design_problems}).}
+In \file{40_optimality.tex}, subsection ``Antichains and upper sets'':
+\begin{itemize}
+    \item \lbl{lem:finite-upper-sets-dc} can be stated for well-founded posets instead of finite ones, with a shorter proof (the first half of the proof of \cref{thm:antichains-wf}), and \cref{thm:antichains-wf} answers the question of when exactly upper sets and antichains correspond.
+          This also covers the running example: for paying with coins (\lbl{exa:coins-dp}) the poset of requirements $\N \times \N$ is infinite, so the present lemma does not apply to it, although its sets of feasible requirements are generated by the minimal elements which the text computes; with \cref{lem:wf-product} it is covered.
+          The sensor catalogue (\lbl{exa:sensor-catalogue}) has requirements in $\Rp \times \Rp$, which is not well-founded; there the sets of feasible requirements are upper closures of finite sets by construction, so \lbl{prop:antichains-upper-sets} applies directly.
+    \item \cref{lem:min-up}(b), $\Min \up X = \Min X$, is worth stating; with it, the last formula of \lbl{prop:dp-series-queries} simplifies to $\Min \bigcup_{q} h_e(q)$ (\cref{rem:book-series-queries}).
+    \item A subsection ``Answering queries for parallel compositions'' could follow the one for series compositions, with \cref{lem:min-product} and \cref{eq:antichain-product}, once products of design problems are available in that chapter (at present only the product of monotone relations is defined in the Order part).
+    \item \Cref{prop:wpo} and \cref{exa:closed-upper-sets} could be remarks: the first explains why answers are finite for requirements in $\N^k$, the second what replaces well-foundedness for real-valued requirements.
+    \item A remark on terminology: the name ``downward-closed upper set'' of \lbl{def:downward-closed-upperset} may be read as ``upper set which is also a lower set''. A phrase such as ``upper set generated by its minimal elements'' says what is meant.
+\end{itemize}
+\Cref{exa:coins} could serve as a second example for \lbl{prop:dp-series-queries}, since it continues the running example of that chapter.
+
+\paragraph{Parts ``Categories'' and ``Functors''.}
+The section on codesign queries in the chapter of extended examples of that part,
+\begin{center}
+    \file{25_functors/30_application_examples_functors/15_codesign-querying.tex}
+\end{center}
+(\lbl{sec:functors-at-work-codesign-queries}), currently consists of a to-do item asking for the functors from design problems to the two query types.
+\Cref{thm:mrel-kleisli,thm:mrel-kleisli-lower} are these functors, and they can be presented there without monads: define the category of queries directly by the formulas of \cref{prop:kleisli-U} (as the draft \lbl{def:upos_cat} does), and state that $\Fix \colon \DP \to \Cat{Pos}_{\U}$ is a functor and an isomorphism of categories.
+The message for the reader is that functoriality means precisely that the answer for a series composition can be computed from the answers for the components.
+$\FixR$ is a natural example of a \emph{contravariant} functor, $\DP\op \to \Cat{Pos}_{\Lo}$, and \cref{prop:companion-free} is an example of a commuting triangle of functors.
+The category of queries could also be mentioned as a third description in the remark after \lbl{def:DP} in \file{10_categories/15_modeling_with_cats/46_series.tex}.
+Possible graded exercises: the category axioms for $\Cat{Pos}_{\U}$ (unit laws use both ``upper set'' and ``monotone''); functoriality of $d \mapsto \widehat{d}$; the contravariant version.
+
+\paragraph{Part ``Interconnection'', parallel composition (\file{27_interconnections/20_parallelism}).}
+The category $\tL{\Cat{Pos}_{\U}}$ with the product \cref{eq:strict-kleisli-product} can be added to the paragraph on $\tL{\Rel}$, $\tL{\mRel}$, $\tL{\BoolProf}$ in \file{24_monoidal.tex}, or to the example on codesign (\lbl{exa:codesign-strict-monoidal}): the queries of two components side by side.
+The section \file{50_symmetric_monoidal_functors.tex} is a stub.
+The definition \cref{eq:strict-monoidal-functor} and three examples from this note would fill it: the companion functor $\tL{\Pre} \to \tL{\mRel}$, the passage $\tL{\DP} \to \tL{\Feas}$ from design problems to feasible sets, and $\Fix \colon \tL{\Feas} \to \tL{\Cat{Pos}_{\U}}$ (\cref{thm:strict-monoidal}).
+\Cref{lem:transport} is a useful general tool there: it shows that $\tL{\Cat{Pos}_{\U}}$ is symmetric strict monoidal without checking any axiom.
+\Cref{app:mrel-strict} is a proof of the statement about $\tL{\mRel}$ which the book currently makes without proof.
+
+\paragraph{Part ``Interconnection'', feedback (\file{27_interconnections/50_feedback}).}
+\begin{itemize}
+    \item In \file{10_feedback_and_trace.tex}, paragraph ``A trace for monotone relations'': the sentence that the conditions ``can be checked in a similar way as for $\tL{\Rel}$'' can be backed by \cref{app:mrel-trace}, either as a proof or as graded exercises. Naturality in $B$ and dinaturality are instructive, because they are the places where the closure conditions of a monotone relation are used; for plain relations they are not needed.
+    \item In the paragraph on codesign (\lbl{sec:feedback-codesign}): the query form \cref{eq:query-feedback} of closing the loop, the notion of a loop value, and \cref{prop:trace-leq}. \Cref{exa:modules} is the example \lbl{exa:codesign-feedback-modules} of the book in query form, and \cref{exa:two-modules} is a variant in which the answer is a Pareto front.
+    \item The section \file{45_traced_monoidal_functors.tex} is a stub. \Cref{def:traced-functor} and \cref{cor:fixfunminres} would be its definition and its main example: closing a loop commutes with passing to queries.
+    \item The draft section \file{20_closing_loop_codesign.tex} contains a longer verification of the trace axioms for design problems in the non-strict setting; \cref{app:mrel-trace} could replace it.
+\end{itemize}
+
+\paragraph{Part on monads (\file{34_monads-comonads/10_monads}).}
+In \file{20_monads.tex}, after the example of the powerset monad: the upper set monad (\cref{def:U}, \cref{thm:U-monad}) and the lower set monad as examples, with \cref{rem:order} on the order.
+In \file{30_kleisli.tex}, after the graded exercise \lbl{ex:HwkRelKleisli}: \cref{thm:mrel-kleisli} as its ordered analogue, and \cref{rem:discrete}.
+Note that \cref{sec:warm-up} of this note is a solution of that graded exercise, so it should not go into the text.
+\Cref{rem:monoidal-monad} is optional there.
+
+\paragraph{Part ``Compositional computation'' (\file{60_computation}, draft).}
+The chapters \file{15_query_equiv} and \file{40_uncertainty/30_LU_monads.tex} already contain $\Cat{Pos}_{\U}$, $\Cat{Pos}_{\Lo}$, a monoidal product, a trace, and the monad $\U$.
+This note can be used to complete and shorten them.
+\begin{itemize}
+    \item \lbl{lem:upos_moncat} (proof missing), \lbl{lem:UPos-is-sym-mon} (a long direct check of the hexagon), and \lbl{lem:UPos-is-traced} (naturality in $B$ left open) all follow from the isomorphism with monotone relations by \cref{lem:transport}. If the direct proof of the trace axioms is kept, \cref{rem:direct-proofs} supplies the missing step.
+    \item The lemma which states that $\Fix$ and its inverse form an \emph{equivalence}, with a to-do item about naturality: the two functors are inverse to each other on the nose, so this is an isomorphism of categories and no natural isomorphisms are needed.
+    \item \lbl{lem:confunctor} should say that $\FixR$ is a functor $\DP\op \to \Cat{Pos}_{\Lo}$ (\cref{rem:U-L}).
+    \item In \file{15_query_equiv/05_intro.tex}, the function $h_d$ is typed as a monotone function $F\op \to \tup{\An R, \subseteq}$. Inclusion is not the right order on antichains: in \lbl{exa:sensor-catalogue}, $h(30) = \{\tup{50,1}\}$ and $h(50) = \{\tup{100,5}, \tup{200,2}\}$ are not related by inclusion. It should be $F \to \An R$ with the order of \lbl{def:antichain-order}.
+    \item In \file{30_LU_monads.tex}, the order on $\U P$ is not specified (it must be reverse inclusion, \cref{rem:order}), and the proof that $\U$ is a monad has open to-do items; the proof of \cref{thm:U-monad} can replace it. \lbl{lem:unpack_u_functor} is \cref{lem:upper-closure}(d), in the form $\up f[\up X] = \up f[X]$ suggested in the to-do item there.
+    \item \lbl{lem:uposkleisli} (``$\Cat{Pos}_{\U}$ is the Kleisli category of $\U$'') is \cref{prop:kleisli-U}; the notation $\Cat{Pos}_{\U}$ already agrees with the notation $\Cat{C}_T$ of the book for Kleisli categories.
+\end{itemize}
+
+\paragraph{What this note does not cover.}
+The relation between the trace formula and the fixed point iteration of \cite{censi}; a trace for the non-strict monoidal category $\PreU$ (the formula is the same, with pairs instead of concatenated tuples, and the non-strict axioms would be obtained by the same transport argument from $\mRel$); and the monoidal equivalence between $\tL{\PreU}$ and $\PreU$.
+
+\appendix
+
+\section{The symmetric strict monoidal category of monotone relations}
+\label{app:mrel-strict}
+
+We prove \cref{prop:mRelL}.
+Throughout, $A, B, C, \ldots$ are objects of $\tL{\mRel}$, that is, tuple preorders, and we use \cref{lem:splitting} without mention: every element of $A \otimes C$ is of the form $a \tc c$ for unique $a \in A$ and $c \in C$, and tuples are compared entry by entry.
+
+\paragraph{The product is well defined.}
+Let $M \colon A \profto B$ and $N \colon C \profto D$ be monotone relations.
+If $a' \tc c' \leq a \tc c$ and $\rel{(a \tc c)}{(M \otimes N)}{(b \tc d)}$, then $a' \leq a$, $\rel{a}{M}{b}$, $c' \leq c$, and $\rel{c}{N}{d}$, so $\rel{a'}{M}{b}$ and $\rel{c'}{N}{d}$ by \cref{eq:closed-source}, that is, $\rel{(a' \tc c')}{(M \otimes N)}{(b \tc d)}$.
+Closure upward in the target is proved in the same way from \cref{eq:closed-target}.
+
+\paragraph{The product is a functor.}
+It preserves identities: ${\leq_A} \otimes {\leq_C}$ relates $a \tc c$ to $a' \tc c'$ precisely when $a \leq a'$ and $c \leq c'$, that is, when $a \tc c \leq a' \tc c'$.
+It preserves composition: for $M \colon A \profto A'$, $M' \colon A' \profto A''$, $N \colon C \profto C'$, and $N' \colon C' \profto C''$, both $(M \then M') \otimes (N \then N')$ and $(M \otimes N) \then (M' \otimes N')$ relate $a \tc c$ to $a'' \tc c''$ precisely when there are $a' \in A'$ and $c' \in C'$ with $\rel{a}{M}{a'}$, $\rel{a'}{M'}{a''}$, $\rel{c}{N}{c'}$, and $\rel{c'}{N'}{c''}$.
+
+\paragraph{Strictness.}
+On objects, the monoidal product is that of $\tL{\Pre}$, which is associative and has $\tL{\,}$ as a neutral element.
+For monotone relations $M$, $N$, $L$, both $(M \otimes N) \otimes L$ and $M \otimes (N \otimes L)$ relate $a \tc b \tc c$ to $a' \tc b' \tc c'$ precisely when $\rel{a}{M}{a'}$, $\rel{b}{N}{b'}$, and $\rel{c}{L}{c'}$, because concatenation is associative.
+The identity of $\tL{\,}$ is $\{\tup{\etup, \etup}\}$, so $M \otimes \id_{\tL{\,}}$ relates $a \tc \etup = a$ to $b \tc \etup = b$ precisely when $\rel{a}{M}{b}$; hence $M \otimes \id_{\tL{\,}} = M$, and likewise $\id_{\tL{\,}} \otimes M = M$.
+
+\paragraph{Companions.}
+For monotone functions $u \colon A \to B$ and $v \colon C \to D$ between tuple preorders, we have
+\begin{equation}
+    \label{eq:companion-strict-product}
+    \comp{(u \otimes v)} = \comp{u} \otimes \comp{v},
+\end{equation}
+since both sides relate $a \tc c$ to $b \tc d$ precisely when $u(a) \leq b$ and $v(c) \leq d$.
+Together with $\comp{(\id)} = {\leq}$ and $\comp{(u \then v)} = \comp{u} \then \comp{v}$, this says that every equation between monotone functions which is built from composition, identities, and $\otimes$ gives an equation between their companions.
+
+\paragraph{The braiding.}
+Let $s_{A,B} \colon A \otimes B \to B \otimes A$ be the order isomorphism $a \tc b \mapsto b \tc a$.
+The relation \cref{eq:mRelL-braiding} is its companion: $\sigma_{A,B}$ relates $a \tc b$ to $b' \tc a'$ precisely when $b \tc a \leq b' \tc a'$.
+In particular it is a monotone relation.
+The functions $s$ satisfy
+\begin{equation*}
+    s_{A,B} \then s_{B,A} = \id_{A \otimes B},
+    \qquad
+    s_{A, B \otimes C} = (s_{A,B} \otimes \id_C) \then (\id_B \otimes s_{A,C}),
+\end{equation*}
+as one sees by evaluating both sides at $a \tc b$ and at $a \tc b \tc c$.
+Taking companions, we obtain the symmetry condition $\sigma_{A,B} \then \sigma_{B,A} = \id_{A \otimes B}$, which also shows that $\sigma_{A,B}$ is an isomorphism, and the compatibility with nesting $\sigma_{A, B \otimes C} = (\sigma_{A,B} \otimes \id_C) \then (\id_B \otimes \sigma_{A,C})$.
+
+It remains to prove naturality.
+Let $M \colon A \profto A'$ and $N \colon B \profto B'$ be monotone relations.
+By \cref{lem:sliding}, both
+\begin{equation*}
+    (M \otimes N) \then \sigma_{A',B'}
+    \qquad \text{and} \qquad
+    \sigma_{A,B} \then (N \otimes M)
+\end{equation*}
+relate $a \tc b$ to $b' \tc a'$ precisely when $\rel{a}{M}{a'}$ and $\rel{b}{N}{b'}$: for the first relation, by \cref{eq:sliding-right}, the condition is $\rel{(a \tc b)}{(M \otimes N)}{s_{A',B'}^{-1}(b' \tc a')}$, and for the second, by \cref{eq:sliding-left}, it is $\rel{s_{A,B}(a \tc b)}{(N \otimes M)}{(b' \tc a')}$.
+
+\paragraph{Restriction to posets.}
+A monoidal product of two tuple posets is a poset, the unit is a poset, and the braidings between tuple posets are morphisms of $\tL{\Feas}$; so the structure restricts to $\tL{\Feas}$.
+This completes the proof of \cref{prop:mRelL}. \qed
+
+\section{The trace axioms for monotone relations}
+\label{app:mrel-trace}
+
+We prove \cref{prop:mRelL-trace}.
+The conventions are those of \cref{app:mrel-strict}.
+Recall that the identity morphism of $C$ is $\leq_C$, so that for a monotone relation $N \colon A' \profto A$,
+\begin{equation}
+    \label{eq:tensor-with-identity}
+    \rel{(a' \tc c)}{(N \otimes \id_C)}{(a \tc c_1)} \iff \rel{a'}{N}{a} \text{ and } c \leq c_1.
+\end{equation}
+
+\paragraph{The trace is well defined, and the second description.}
+Let $M \colon A \otimes C \profto B \otimes C$ be a monotone relation.
+If $\tup{a,b} \in \Tr^{C}_{A,B}(M)$, with $\rel{(a \tc c)}{M}{(b \tc c)}$, and $a' \leq a$, then $a' \tc c \leq a \tc c$, so $\rel{(a' \tc c)}{M}{(b \tc c)}$ by \cref{eq:closed-source}, and $\tup{a',b} \in \Tr^{C}_{A,B}(M)$.
+In the same way, $b \leq b'$ implies $\tup{a,b'} \in \Tr^{C}_{A,B}(M)$.
+So $\Tr^{C}_{A,B}(M)$ is a monotone relation.
+If $c' \leq c$ and $\rel{(a \tc c)}{M}{(b \tc c')}$, then $b \tc c' \leq b \tc c$, so $\rel{(a \tc c)}{M}{(b \tc c)}$ by \cref{eq:closed-target}; this proves the second statement of \cref{prop:mRelL-trace}.
+
+\paragraph{Naturality in $A$.}
+Let $M \colon A \otimes C \profto B \otimes C$ and $N \colon A' \profto A$.
+By \cref{eq:tensor-with-identity}, $\tup{a', b}$ is an element of $\Tr^{C}_{A',B}((N \otimes \id_C) \then M)$ if and only if
+\begin{equation}
+    \label{eq:nat-A-lhs}
+    \text{there are } c, c_1 \in C \text{ and } a \in A \text{ with } \rel{a'}{N}{a},\quad c \leq c_1, \quad \rel{(a \tc c_1)}{M}{(b \tc c)},
+\end{equation}
+and it is an element of $N \then \Tr^{C}_{A,B}(M)$ if and only if
+\begin{equation}
+    \label{eq:nat-A-rhs}
+    \text{there are } c \in C \text{ and } a \in A \text{ with } \rel{a'}{N}{a}, \quad \rel{(a \tc c)}{M}{(b \tc c)}.
+\end{equation}
+\Cref{eq:nat-A-rhs} implies \cref{eq:nat-A-lhs} with $c_1 = c$.
+Conversely, if \cref{eq:nat-A-lhs} holds, then $a \tc c \leq a \tc c_1$, so $\rel{(a \tc c)}{M}{(b \tc c)}$ by \cref{eq:closed-source}, which gives \cref{eq:nat-A-rhs}.
+
+\paragraph{Naturality in $B$.}
+Let $M \colon A \otimes C \profto B \otimes C$ and $N \colon B \profto B'$.
+Then $\tup{a, b'}$ is an element of $\Tr^{C}_{A,B'}(M \then (N \otimes \id_C))$ if and only if
+\begin{equation}
+    \label{eq:nat-B-lhs}
+    \text{there are } c, c_1 \in C \text{ and } b \in B \text{ with } \rel{(a \tc c)}{M}{(b \tc c_1)}, \quad \rel{b}{N}{b'}, \quad c_1 \leq c,
+\end{equation}
+and it is an element of $\Tr^{C}_{A,B}(M) \then N$ if and only if
+\begin{equation}
+    \label{eq:nat-B-rhs}
+    \text{there are } c \in C \text{ and } b \in B \text{ with } \rel{(a \tc c)}{M}{(b \tc c)}, \quad \rel{b}{N}{b'}.
+\end{equation}
+\Cref{eq:nat-B-rhs} implies \cref{eq:nat-B-lhs} with $c_1 = c$.
+Conversely, if \cref{eq:nat-B-lhs} holds, then $b \tc c_1 \leq b \tc c$, so $\rel{(a \tc c)}{M}{(b \tc c)}$ by \cref{eq:closed-target}, which gives \cref{eq:nat-B-rhs}.
+
+\paragraph{Dinaturality in $C$, for all morphisms.}
+Let $M \colon A \otimes C \profto B \otimes C'$ and $N \colon C' \profto C$.
+The pair $\tup{a,b}$ is an element of $\Tr^{C}_{A,B}(M \then (\id_B \otimes N))$ if and only if there are $c \in C$, $c' \in C'$, and $b_1 \in B$ with
+\begin{equation*}
+    \rel{(a \tc c)}{M}{(b_1 \tc c')}, \qquad b_1 \leq b, \qquad \rel{c'}{N}{c}.
+\end{equation*}
+By \cref{eq:closed-target}, applied to $b_1 \tc c' \leq b \tc c'$, this holds if and only if
+\begin{equation}
+    \label{eq:dinat-middle}
+    \text{there are } c \in C \text{ and } c' \in C' \text{ with } \rel{(a \tc c)}{M}{(b \tc c')} \text{ and } \rel{c'}{N}{c}.
+\end{equation}
+The pair $\tup{a,b}$ is an element of $\Tr^{C'}_{A,B}((\id_A \otimes N) \then M)$ if and only if there are $c' \in C'$, $c \in C$, and $a_1 \in A$ with
+\begin{equation*}
+    a \leq a_1, \qquad \rel{c'}{N}{c}, \qquad \rel{(a_1 \tc c)}{M}{(b \tc c')}.
+\end{equation*}
+By \cref{eq:closed-source}, applied to $a \tc c \leq a_1 \tc c$, this also holds if and only if \cref{eq:dinat-middle} holds.
+
+\paragraph{Vanishing I.}
+Let $M \colon A \profto B$; recall that $A \otimes \tL{\,} = A$ and $B \otimes \tL{\,} = B$.
+The only element of $\tL{\,}$ is $\etup$, and $a \tc \etup = a$, so $\tup{a,b} \in \Tr^{\tL{\,}}_{A,B}(M)$ if and only if $\rel{a}{M}{b}$.
+
+\paragraph{Vanishing II.}
+Let $M \colon A \otimes C \otimes D \profto B \otimes C \otimes D$.
+By definition, $\Tr^{D}_{A \otimes C, B \otimes C}(M)$ relates $a \tc c$ to $b \tc c'$ precisely when there is $d \in D$ with $\rel{(a \tc c \tc d)}{M}{(b \tc c' \tc d)}$.
+So $\tup{a,b}$ is an element of $\Tr^{C}_{A,B}(\Tr^{D}_{A \otimes C, B \otimes C}(M))$ if and only if there are $c \in C$ and $d \in D$ with $\rel{(a \tc c \tc d)}{M}{(b \tc c \tc d)}$.
+Since the elements of $C \otimes D$ are precisely the tuples $c \tc d$, this is the condition for $\tup{a,b}$ to be an element of $\Tr^{C \otimes D}_{A,B}(M)$.
+
+\paragraph{Superposing.}
+Let $M \colon A \otimes C \profto B \otimes C$ and $N \colon E \profto F$.
+Then $N \otimes M$ relates $e \tc a \tc c$ to $f \tc b \tc c'$ precisely when $\rel{e}{N}{f}$ and $\rel{(a \tc c)}{M}{(b \tc c')}$.
+So $\Tr^{C}_{E \otimes A, F \otimes B}(N \otimes M)$ relates $e \tc a$ to $f \tc b$ precisely when $\rel{e}{N}{f}$ and there is $c \in C$ with $\rel{(a \tc c)}{M}{(b \tc c)}$, that is, precisely when $N \otimes \Tr^{C}_{A,B}(M)$ does.
+
+\paragraph{Yanking.}
+By \cref{eq:mRelL-braiding}, $\sigma_{C,C}$ relates $c \tc c''$ to $c' \tc c''$ precisely when $c \leq c''$ and $c'' \leq c'$.
+So $\tup{c,c'} \in \Tr^{C}_{C,C}(\sigma_{C,C})$ if and only if there is $c''$ with $c \leq c'' \leq c'$, that is, if and only if $c \leq c'$.
+Hence $\Tr^{C}_{C,C}(\sigma_{C,C}) = {\leq_C} = \id_C$.
+This completes the proof of \cref{prop:mRelL-trace}. \qed
+
+\begin{thebibliography}{9}
+    \bibitem{dickson-survey}
+    E. Aichinger and F. Aichinger,
+    \emph{Dickson's lemma, Higman's theorem and beyond: a survey of some basic results in order theory},
+    Expositiones Mathematicae (2020), arXiv:1812.03024.
+
+    \bibitem{bkpv}
+    M. B\'{\i}lkov\'a, A. Kurz, D. Petri\c{s}an, and J. Velebil,
+    \emph{Relation liftings on preorders and posets},
+    arXiv:1210.1433.
+
+    \bibitem{censi}
+    A. Censi,
+    \emph{A mathematical theory of co-design},
+    arXiv:1512.08055.
+
+    \bibitem{fong-spivak}
+    B. Fong and D. I. Spivak,
+    \emph{An Invitation to Applied Category Theory: Seven Sketches in Compositionality},
+    Cambridge University Press, 2019.
+
+    \bibitem{higman}
+    G. Higman,
+    \emph{Ordering by divisibility in abstract algebras},
+    Proceedings of the London Mathematical Society (3) 2 (1952), 326--336.
+
+    \bibitem{kock}
+    A. Kock,
+    \emph{Strong functors and monoidal monads},
+    Archiv der Mathematik 23 (1972), 113--120.
+
+    \bibitem{power-robinson}
+    J. Power and E. Robinson,
+    \emph{Premonoidal categories and notions of computation},
+    Mathematical Structures in Computer Science 7 (1997), 453--468.
+\end{thebibliography}
+
+\end{document}
